@@ -1,10 +1,19 @@
 (function() {
 	'use strict';
 	angular.module('civic.search')
-		.controller('SearchController', SearchController);
+		.controller('SearchController', SearchController)
+		.filter('sortFilter',function(naturalService) {
+			return function(array, predicteObject, reverse) {
+				var neg = "";
+				if(reverse) {
+					neg = "-";
+				}
+				array.sort(naturalService.naturalSort(neg + predicteObject));
+				return array;
+		}});
 
 	// @ngInject
-	function SearchController($rootScope, $scope, $log, Search, $sce, ngDialog) {
+	function SearchController($rootScope, $scope, $log, Search, $sce, ngDialog, naturalService) {
 		var vm = $scope.vm = {};
 
 		vm.onSubmit = onSubmit;
@@ -125,6 +134,8 @@
 			Search.diseaseQuery(vm.model).
 				then(function(response) {
 					vm.results.diseaseResults = response.data;
+					//vm.results.diseaseResults = vm.results.diseaseResults.sort(naturalService.naturalSort('disease'));
+					vm.results.diseaseResults.summaryRows.sort(naturalService.naturalSort('disease'));
 					vm.tabs.diseaseTab.count = vm.results.diseaseResults.totalCount;
 					vm.mustHide = true;
 				}, function (error) {

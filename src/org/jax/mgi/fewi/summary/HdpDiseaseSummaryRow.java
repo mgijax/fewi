@@ -1,9 +1,5 @@
 package org.jax.mgi.fewi.summary;
 
-//public class GxdMarkerSummary {
-//
-//}
-
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -11,102 +7,71 @@ import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
 import org.jax.mgi.fewi.util.FormatHelper;
 
-
-/**
- * wrapper around a marker;  represents on row in summary
- */
 public class HdpDiseaseSummaryRow {
-	//-------------------
-		// instance variables
-		//-------------------
 
-		// encapsulated row object
-		private final SolrVocTerm term;
-		
-		private List<String> highlightedFields;
+	private final SolrVocTerm term;
+	private String score;
+	private List<String> highlightedFields;
 
-		// config values
-	  String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+	private String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
 
-		private String score;
+	public HdpDiseaseSummaryRow (SolrVocTerm term) {
+		this.term = term;
+	}
 
-		//-------------
-		// constructors
-		//-------------
+	public void setScore(String score) {
+		this.score = score;
+	}
 
-	  public HdpDiseaseSummaryRow (SolrVocTerm term) {
-	  	this.term = term;
-	  }
+	public String getScore() {
+		return score;
+	}	
 
+	public void setHighlightedFields(List<String> highlightedFields) {
+		this.highlightedFields = highlightedFields;
+	}
 
-	  //------------------------------------------------------------------------
-	  // public instance methods;  JSON serializer will call all public methods
-	  //------------------------------------------------------------------------
-		public void setScore(String score)
-		{
-			this.score = score;
+	public String getHighlightedFields() {
+		if(highlightedFields == null) return "";
+		return "<span class=\"hl\">" + StringUtils.join(highlightedFields,"<br/>") + "</span>";
+	}
+
+	public String getDisease() {
+		// disease links to disease detail
+		return term.getTerm();
+	}
+
+	public String getDiseaseId() {
+		return term.getPrimaryId();
+	}
+
+	public int getDiseaseModels() {
+		if(term.getDiseaseModelCount() == null || term.getDiseaseModelCount() < 1) return 0;
+		return term.getDiseaseModelCount();
+	}
+
+	public String getMouseMarkers(){
+		List<String> markers = term.getDiseaseMouseMarkers();
+		String markersToDisplay =  "";
+		if (markers != null) {
+			markersToDisplay = FormatHelper.commaDelimit(markers);
 		}
-		
-		public String getScore() 
-		{
-			return score;
-		}	
-		
-		public void setHighlightedFields(List<String> highlightedFields)
-		{
-			this.highlightedFields = highlightedFields;
-		}
-		
-		public String getHighlightedFields()
-		{
-			if(highlightedFields==null) return "";
-			return "<span class=\"hl\">"+StringUtils.join(this.highlightedFields,"<br/>")+"</span>";
-		}
+		return FormatHelper.superscript(markersToDisplay);
+	}
 
-		public String getDisease() 
-		{
-			// disease links to disease detail
-			String url = fewiUrl + "disease/" + term.getPrimaryId();
-			return "<a href=\""+url+"\">"+term.getTerm()+"</a>";
+	public String getHumanMarkers(){
+		List<String> markers = term.getDiseaseHumanMarkers();
+		String markersToDisplay =  "";
+		if (markers != null) {
+			markersToDisplay = FormatHelper.commaDelimit(markers);
 		}
-		  
-		public String getDiseaseId() 
-		{
-		      return term.getPrimaryId();
+		return FormatHelper.superscript(markersToDisplay);
+	}
+
+	public int getRefCount(){
+		if(term.getDiseaseRefCount() != null && term.getDiseaseRefCount() > 0) {
+			return term.getDiseaseRefCount();
 		}
-		
-		public String getDiseaseModels()
-		{
-			if(term.getDiseaseModelCount()==null || term.getDiseaseModelCount()<1) return "";
-			
-			// links to disease models page
-			String url = fewiUrl + "disease/models/" + term.getPrimaryId();
-			return "<a href=\""+url+"\">"+term.getDiseaseModelCount()+"</a>";
-		}
-		
-		public String getMouseMarkers(){
-	        List<String> markers = term.getDiseaseMouseMarkers();
-	        String markersToDisplay =  "";
-	        if (markers != null) {
-	        	markersToDisplay = FormatHelper.commaDelimit(markers);
-		    }
-	        return FormatHelper.superscript(markersToDisplay);
-	    }
-		
-		public String getHumanMarkers(){
-	        List<String> markers = term.getDiseaseHumanMarkers();
-	        String markersToDisplay =  "";
-	        if (markers != null) {
-	        	markersToDisplay = FormatHelper.commaDelimit(markers);
-		    }
-	        return FormatHelper.superscript(markersToDisplay);
-	    }
-		
-		public String getRefCount(){
-			if(term.getDiseaseRefCount()!=null && term.getDiseaseRefCount()>0)
-			{
-				return "<a href=\""+fewiUrl+"reference/disease/"+term.getPrimaryId()+"?typeFilter=Literature\">"+term.getDiseaseRefCount()+"</a>";
-			}
-			return "";
-		}
+		return 0;
+	}
 }
