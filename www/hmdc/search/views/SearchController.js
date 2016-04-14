@@ -10,14 +10,43 @@
 				}
 				array.sort(naturalService.naturalSort(neg + predicteObject));
 				return array;
-		}});
+		}})
+		.directive('stReset', function() {
+			return {
+				require: '^stTable',
+				scope: { stReset: "=stReset" },
+				link: function (scope, element, attr, ctrl) {
+                
+					scope.$watch("stReset", function () {
+						  
+						if (scope.stReset) {
+
+							// remove local storage
+							if (attr.stPersist) {
+								localStorage.removeItem(attr.stPersist);
+							}
+
+							// reset table state
+							var tableState = ctrl.tableState();
+							tableState.search = {};
+							tableState.sort = {predicate: "disease", reverse: false};
+							ctrl.pipe();
+							// reset scope value
+							scope.stReset = false;
+						}
+
+					});
+				}
+			};
+		});
 
 	// @ngInject
-	function SearchController($rootScope, $scope, $log, Search, $sce, ngDialog, naturalService) {
+	function SearchController($rootScope, $scope, $log, Search, $sce, ngDialog) {
 		var vm = $scope.vm = {};
 
 		vm.onSubmit = onSubmit;
 		vm.mustHide = false;
+		vm.resetTable = false;
 
 		$scope.displayHTML = function(html) {
 			return $sce.trustAsHtml(html);
@@ -59,9 +88,9 @@
 				then(function(response) {
 					vm.results.diseaseResults = response.data;
 					//vm.results.diseaseResults = vm.results.diseaseResults.sort(naturalService.naturalSort('disease'));
-					vm.results.diseaseResults.summaryRows.sort(naturalService.naturalSort('disease'));
 					vm.tabs.diseaseTab.count = vm.results.diseaseResults.totalCount;
 					vm.mustHide = true;
+					vm.resetTable = true;
 				}, function (error) {
 					console.log(error);
 					vm.errorMessage = error;
