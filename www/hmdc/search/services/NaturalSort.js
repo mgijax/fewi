@@ -60,7 +60,7 @@ angular.module("naturalSort", [])
             if(natCache[value]) {
                 return natCache[value];
             }
-            var newValue = fixNumbers(fixDates(value));
+            var newValue = fixNumbers(fixDates(value)).toLowerCase();
             return natCache[value] = newValue;
         };
 

@@ -31,6 +31,7 @@
 		<script src="${configBean.FEWI_URL}/assets/hmdc/search/forms/fieldTypes/basicFieldTypes.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/search/forms/fieldTypes/multiInput.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/search/services/SearchService.js"></script>
+		<script src="${configBean.FEWI_URL}/assets/hmdc/search/services/NaturalSort.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/search/views/StyleController.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/search/views/SearchController.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/search/forms/queryBuilder.type.js"></script>
