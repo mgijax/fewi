@@ -1748,20 +1748,20 @@ public class DiseasePortalController
 
 		List<HdpMarkerSummaryRow> summaryRows = new ArrayList<HdpMarkerSummaryRow>();
 
-		Map<String,Set<String>> highlights = searchResults.getResultSetMeta().getSetHighlights();
+		//Map<String,Set<String>> highlights = searchResults.getResultSetMeta().getSetHighlights();
 
 		for (SolrDiseasePortalMarker m : mList) {
 			if (m != null) {
 				HdpMarkerSummaryRow summaryRow = new HdpMarkerSummaryRow(m);
-				if(highlights.containsKey(m.getMarkerKey()))
-				{
-					summaryRow.setHighlightedFields(new ArrayList<String>(highlights.get(m.getMarkerKey())));
-				}
+				//if(highlights.containsKey(m.getMarkerKey())) {
+				//	summaryRow.setHighlightedFields(new ArrayList<String>(highlights.get(m.getMarkerKey())));
+				//}
 				summaryRows.add(summaryRow);
 			} else {
 				logger.debug("--> Null Object");
 			}
 		}
+		
 		JsonSummaryResponse<HdpMarkerSummaryRow> jsonResponse = new JsonSummaryResponse<HdpMarkerSummaryRow>();
 		jsonResponse.setSummaryRows(summaryRows);
 		jsonResponse.setTotalCount(searchResults.getTotalCount());
@@ -1796,13 +1796,13 @@ public class DiseasePortalController
 		
 		List<HdpDiseaseSummaryRow> termList = new ArrayList<HdpDiseaseSummaryRow>();
 
-		Map<String,Set<String>> highlights = searchResults.getResultSetMeta().getSetHighlights();
+		//Map<String,Set<String>> highlights = searchResults.getResultSetMeta().getSetHighlights();
 
 		for(SolrVocTerm term : searchResults.getResultObjects()) {
 			HdpDiseaseSummaryRow summaryRow = new HdpDiseaseSummaryRow(term);
-			if(highlights.containsKey(term.getPrimaryId())) {
-				summaryRow.setHighlightedFields(new ArrayList<String>(highlights.get(term.getPrimaryId())));
-			}
+			//if(highlights.containsKey(term.getPrimaryId())) {
+			//	summaryRow.setHighlightedFields(new ArrayList<String>(highlights.get(term.getPrimaryId())));
+			//}
 			termList.add(summaryRow);
 		}
 
