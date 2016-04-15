@@ -60,7 +60,11 @@ angular.module("naturalSort", [])
             if(natCache[value]) {
                 return natCache[value];
             }
-            var newValue = fixNumbers(fixDates(value)).toLowerCase();
+				// Remove special chars like , and ; and -
+				value = value.replace(/[^a-zA-Z0-9 ]/g, ' ').toLowerCase();
+				// Turn extra spaces into 1 space
+				value = value.replace(/\s+/g, ' ');
+            var newValue = fixNumbers(value);
             return natCache[value] = newValue;
         };
 
