@@ -81,10 +81,24 @@
   vertical-align: bottom;
 }
 
-.st-sort-ascent:before {
-    content: '\25B2';
-}
 
-.st-sort-descent:before {
-    content: '\25BC';
+.sortable {
+	cursor: pointer;
+}
+.sortable i:after {
+	float: right;
+	content: url(data:image/gif;base64,R0lGODlhCwALAJEAAAAAAP///xUVFf///yH5BAEAAAMALAAAAAALAAsAAAIUnC2nKLnT4or00PvyrQwrPzUZshQAOw==);
+	opacity: 0.63;
+}
+.st-sort-ascent i,
+.st-sort-descent i {
+	float: right;
+}
+.st-sort-ascent i:after {
+	content: '\25B2';
+	opacity: 1;
+}
+.st-sort-descent i:after {
+	content: '\25BC';
+	opacity: 1;
 }
