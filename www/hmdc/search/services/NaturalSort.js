@@ -16,7 +16,7 @@ angular.module("naturalSort", [])
 		// Replaces all suspected dates with a standardized yyyy-m-d, which is fixed below
         fixDates = function(value) {
 			// first look for dd?-dd?-dddd, where "-" can be one of "-", "/", or "."
-            return value.toString().replace(/(\d\d?)[-\/\.](\d\d?)[-\/\.](\d{4})/, function($0, $m, $d, $y) {
+            return value.replace(/(\d\d?)[-\/\.](\d\d?)[-\/\.](\d{4})/, function($0, $m, $d, $y) {
 				// temporary holder for swapping below
                 var t = $d;
 				// if the month is not first, we'll swap month and day...
@@ -61,10 +61,14 @@ angular.module("naturalSort", [])
                 return natCache[value];
             }
 				// Remove special chars like , and ; and -
-				value = value.replace(/[^a-zA-Z0-9 ]/g, ' ').toLowerCase();
+				//console.log(value);
+				value = value.toString().replace(/[^a-zA-Z0-9 ]/g, ' ').toLowerCase();
+				//console.log(value);
 				// Turn extra spaces into 1 space
 				value = value.replace(/\s+/g, ' ');
+				//console.log(value);
             var newValue = fixNumbers(value);
+				//console.log(newValue);
             return natCache[value] = newValue;
         };
 
