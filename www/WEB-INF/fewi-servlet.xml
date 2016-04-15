@@ -38,6 +38,11 @@
 
     <!-- Configures the @Controller programming model -->
     <mvc:annotation-driven />
+    <!--
+    <mvc:interceptors>
+       <bean class="org.jax.mgi.fewi.interceptor.BotInterceptor" />
+    </mvc:interceptors> 
+    -->
     
      <bean id="contentNegotiatingViewResolver" 
             class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
