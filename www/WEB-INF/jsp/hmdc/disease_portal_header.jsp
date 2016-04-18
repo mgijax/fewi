@@ -9,7 +9,6 @@
 		<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/hmdc/bower_components/bootstrap/spacelab/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/hmdc/bower_components/ng-dialog/css/ngDialog.min.css" />
 		<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/hmdc/bower_components/ng-dialog/css/ngDialog-theme-default.css" />
-		<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/hmdc/bower_components/angular-table/src/main/webapp/css/lib/angular-table.css" />
 		<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/hmdc/bower_components/ng-cells/dist/0.4.0/ng-cells.css" />
 		<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/css/hmdc/search.css" />
 
@@ -20,7 +19,6 @@
 		<script src="${configBean.FEWI_URL}/assets/hmdc/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/bower_components/angular-resource/angular-resource.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/bower_components/angular-sanitize/angular-sanitize.js"></script>
-		<script src="${configBean.FEWI_URL}/assets/hmdc/bower_components/angular-table/src/main/webapp/js/lib/angular-table.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/bower_components/angular-smart-table/dist/smart-table.min.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/bower_components/ng-dialog/js/ngDialog.min.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/bower_components/ng-cells/dist/0.4.0/ng-cells.min.js"></script>
