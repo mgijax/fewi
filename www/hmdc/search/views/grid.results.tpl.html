@@ -8,7 +8,8 @@
 		row-number="vm.results.grid.rowcount"
 		data="vm.results.grid.data"
     >
-		<ngc-range top="1" bottom="vm.results.grid.totalrowcount" left="2" right="9999" style-fn="styleFun" click-fn="handleClick" custom-html-fn="formatFun"></ngc-range>
+		<ngc-range top="1" bottom="vm.results.grid.totalrowcount" left="2" right="9999" style-fn="styleCell" click-fn="handleClick" custom-html-fn="formatCell"></ngc-range>
+		<ngc-range top="0" bottom="1" left="2" right="9999" custom-html-fn="customHTMLHeader"></ngc-range>
 	</div>
 	
 </div>

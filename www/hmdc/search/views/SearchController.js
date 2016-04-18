@@ -65,14 +65,24 @@
 			console.log(cellData);
 		}
 
-		$scope.formatFun = function(value, row, col, formattedValue) {
+		$scope.customHTMLHeader = function(value, row, col, formattedValue) {
+			if(value) {
+				var key = Object.keys(value)[0];
+				if(value[key] != -1) {
+					return "<span><mark>" + key + "</mark></span>";
+				} else {
+					return "<span>" + key + "</span>";
+				}
+			}
+		}
+
+		$scope.formatCell = function(value, row, col, formattedValue) {
 			if(value && value.isNormal) {
-				console.log(value);
 				return "N";
 			}
 		}
 
-		$scope.styleFun = function(value, row, col) {
+		$scope.styleCell = function(value, row, col) {
 			if(value) {
 				var hac = "#F7861D";
 				if(value.humanAnnotCount < 100) hac = "#F4A041";
@@ -115,12 +125,25 @@
 					headerContent.push("Human Gene");
 					headerContent.push("Mouse Gene");
 					// Push the MP Headers into the headerContent row
+					var hash = {};
 					for(var header in response.data.gridMPHeaders) {
-						headerContent.push("<span>" + response.data.gridMPHeaders[header] + "</span>");
+						if(response.data.gridHighLights) {
+							hash[response.data.gridMPHeaders[header]] = response.data.gridHighLights.indexOf(response.data.gridMPHeaders[header]);
+						} else {
+							hash[response.data.gridMPHeaders[header]] = -1;
+						}
+						headerContent.push(hash);
+						hash = {};
 					}
 					// Push the OMIM Headers into the headerContent row
 					for(var header in response.data.gridOMIMHeaders) {
-						headerContent.push("<span>" + response.data.gridOMIMHeaders[header] + "</span>");
+						if(response.data.gridHighLights) {
+							hash[response.data.gridOMIMHeaders[header]] = response.data.gridHighLights.indexOf(response.data.gridOMIMHeaders[header]);
+						} else {
+							hash[response.data.gridOMIMHeaders[header]] = -1;
+						}
+						headerContent.push(hash);
+						hash = {};
 					}
 					headerContent.push("");
 					vm.results.grid.data.push(headerContent);

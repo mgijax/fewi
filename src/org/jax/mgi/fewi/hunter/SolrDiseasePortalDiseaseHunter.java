@@ -19,11 +19,8 @@ public class SolrDiseasePortalDiseaseHunter extends SolrHunter<SolrHdpEntity> {
 
 
 	public SolrDiseasePortalDiseaseHunter() {
-
 		keyString = DiseasePortalFields.UNIQUE_KEY;
 	}
-
-
 
 	@Override
 	protected void packInformation(QueryResponse rsp, SearchResults<SolrHdpEntity> sr, SearchParams sp) {
