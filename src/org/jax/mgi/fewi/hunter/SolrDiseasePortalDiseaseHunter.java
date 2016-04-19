@@ -8,14 +8,14 @@ import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
-import org.jax.mgi.fewi.searchUtil.entities.group.SolrHdpEntity;
+import org.jax.mgi.fewi.searchUtil.entities.hmdc.SolrHdpEntityInterface;
+import org.jax.mgi.fewi.searchUtil.entities.hmdc.SolrHdpDisease;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolrDiseasePortalDiseaseHunter extends SolrHunter<SolrHdpEntity> {
+public class SolrDiseasePortalDiseaseHunter extends SolrHunter<SolrHdpEntityInterface> {
 
 
 	public SolrDiseasePortalDiseaseHunter() {
@@ -23,7 +23,7 @@ public class SolrDiseasePortalDiseaseHunter extends SolrHunter<SolrHdpEntity> {
 	}
 
 	@Override
-	protected void packInformation(QueryResponse rsp, SearchResults<SolrHdpEntity> sr, SearchParams sp) {
+	protected void packInformation(QueryResponse rsp, SearchResults<SolrHdpEntityInterface> sr, SearchParams sp) {
 
 		SolrDocumentList sdl = rsp.getResults();
 
@@ -31,7 +31,7 @@ public class SolrDiseasePortalDiseaseHunter extends SolrHunter<SolrHdpEntity> {
 
 		for (SolrDocument doc : sdl) {
 
-			SolrVocTerm vt = new SolrVocTerm();
+			SolrHdpDisease vt = new SolrHdpDisease();
 
 			// this is a term object
 			String termId =(String)doc.getFieldValue(DiseasePortalFields.TERM_ID);

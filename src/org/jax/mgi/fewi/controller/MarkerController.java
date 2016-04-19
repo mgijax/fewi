@@ -46,7 +46,6 @@ import org.hibernate.SessionFactory;
 import org.jax.mgi.fewi.antlr.BooleanSearch.BooleanSearch;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.DbInfoFinder;
-import org.jax.mgi.fewi.finder.DiseasePortalFinderOLD;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.QueryFormOptionFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
@@ -67,12 +66,12 @@ import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.MarkerSummaryRow;
 import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
+import org.jax.mgi.fewi.util.GOGraphConverter;
 import org.jax.mgi.fewi.util.NotesTagConverter;
+import org.jax.mgi.fewi.util.file.TextFileReader;
 import org.jax.mgi.fewi.util.link.FewiLinker;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.fewi.util.link.ProviderLinker;
-import org.jax.mgi.fewi.util.GOGraphConverter;
-import org.jax.mgi.fewi.util.file.TextFileReader;
 import org.jax.org.mgi.shr.fe.util.TextFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,9 +108,6 @@ public class MarkerController {
 
 	@Autowired
 	private ReferenceFinder referenceFinder;
-
-	@Autowired
-	private DiseasePortalFinderOLD hdpFinder;
 
 	@Autowired
 	private IDLinker idLinker;

@@ -1,11 +1,9 @@
-package org.jax.mgi.fewi.searchUtil.entities;
+package org.jax.mgi.fewi.searchUtil.entities.hmdc;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jax.mgi.fewi.searchUtil.entities.group.SolrHdpEntity;
-
-public class SolrDiseasePortalMarker implements SolrHdpEntity
+public class SolrHdpMarker implements SolrHdpEntityInterface
 {
 	String markerKey;
 	String symbol = new String();

@@ -62,6 +62,7 @@ angular.module("naturalSort", [])
             }
 				// Remove special chars like , and ; and -
 				//console.log(value);
+				if(value == null) value = '';
 				value = value.toString().replace(/[^a-zA-Z0-9 ]/g, ' ').toLowerCase();
 				//console.log(value);
 				// Turn extra spaces into 1 space

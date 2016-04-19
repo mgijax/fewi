@@ -2,49 +2,61 @@ package org.jax.mgi.fewi.finder;
 
 import org.jax.mgi.fewi.hunter.SolrDiseasePortalDiseaseHunter;
 import org.jax.mgi.fewi.hunter.SolrDiseasePortalGeneHunter;
+import org.jax.mgi.fewi.hunter.SolrDiseasePortalGridHunter;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
-import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
-import org.jax.mgi.fewi.searchUtil.entities.group.SolrHdpEntity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jax.mgi.fewi.searchUtil.entities.hmdc.SolrHdpMarker;
+import org.jax.mgi.fewi.searchUtil.entities.hmdc.SolrHdpEntityInterface;
+import org.jax.mgi.fewi.searchUtil.entities.hmdc.SolrHdpGridRow;
+import org.jax.mgi.fewi.searchUtil.entities.hmdc.SolrHdpDisease;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class DiseasePortalFinder {
 
-
-	private final Logger logger = LoggerFactory.getLogger(DiseasePortalFinderOLD.class);
-
 	@Autowired
 	private SolrDiseasePortalDiseaseHunter hdpDiseaseHunter;
 	
 	@Autowired
 	private SolrDiseasePortalGeneHunter hdpGeneHunter;
+	
+	@Autowired
+	private SolrDiseasePortalGridHunter hdpGridHunter;
 
 	
-	public SearchResults<SolrVocTerm> getDiseases(SearchParams params) {
+	public SearchResults<SolrHdpDisease> getDiseases(SearchParams params) {
 		
-		SearchResults<SolrHdpEntity> results = new SearchResults<SolrHdpEntity>();
+		SearchResults<SolrHdpEntityInterface> results = new SearchResults<SolrHdpEntityInterface>();
 
 		hdpDiseaseHunter.hunt(params, results);
 
-		SearchResults<SolrVocTerm> srVT = new SearchResults<SolrVocTerm>();
-		srVT.cloneFrom(results,SolrVocTerm.class);
+		SearchResults<SolrHdpDisease> srVT = new SearchResults<SolrHdpDisease>();
+		srVT.cloneFrom(results,SolrHdpDisease.class);
 		return srVT;
 	}
 
-	public SearchResults<SolrDiseasePortalMarker> getMarkers(SearchParams params) {
+	public SearchResults<SolrHdpMarker> getMarkers(SearchParams params) {
 		
-		SearchResults<SolrHdpEntity> results = new SearchResults<SolrHdpEntity>();
+		SearchResults<SolrHdpEntityInterface> results = new SearchResults<SolrHdpEntityInterface>();
 
 		hdpGeneHunter.hunt(params, results);
 
-		SearchResults<SolrDiseasePortalMarker> srM = new SearchResults<SolrDiseasePortalMarker>();
-		srM.cloneFrom(results,SolrDiseasePortalMarker.class);
+		SearchResults<SolrHdpMarker> srM = new SearchResults<SolrHdpMarker>();
+		srM.cloneFrom(results,SolrHdpMarker.class);
 
+		return srM;
+	}
+	
+	public SearchResults<SolrHdpGridRow> getGrid(SearchParams params) {
+		
+		SearchResults<SolrHdpEntityInterface> results = new SearchResults<SolrHdpEntityInterface>();
+
+		hdpGridHunter.hunt(params, results);
+
+		SearchResults<SolrHdpGridRow> srM = new SearchResults<SolrHdpGridRow>();
+		srM.cloneFrom(results,SolrHdpGridRow.class);
+		
 		return srM;
 	}
 

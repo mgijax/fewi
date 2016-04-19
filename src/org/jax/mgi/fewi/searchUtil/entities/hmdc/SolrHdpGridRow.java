@@ -1,10 +1,7 @@
-package org.jax.mgi.fewi.searchUtil.entities;
+package org.jax.mgi.fewi.searchUtil.entities.hmdc;
 
-import org.jax.mgi.fewi.searchUtil.entities.group.SolrHdpEntity;
 
-import mgi.frontend.datamodel.hdp.HdpGridAnnotation;
-
-public class SolrHdpGridData implements HdpGridAnnotation,SolrHdpEntity
+public class SolrHdpGridRow implements SolrHdpEntityInterface
 {
 	Integer gridClusterKey;
 	Integer genoClusterKey;

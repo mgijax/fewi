@@ -1,25 +1,25 @@
 Export: <a class="btn" href="/diseasePortal/marker/report.txt?phenotypes=105830&amp;numDCol=100"><img src="http://www.informatics.jax.org/webshare/images/text.png" width="10" height="10">Text File</a> 
 
-<table class="table table-bordered table-striped" st-reset="vm.resetTable" st-table="displayedCollection" st-set-sort="sortFilter" st-safe-src="vm.results.diseaseResults.summaryRows" ng-show="vm.results.diseaseResults.totalCount > 0">
+<table class="table table-bordered table-striped" st-reset="vm.resetTable" st-table="displayedCollection" st-set-sort="sortFilter" st-safe-src="vm.results.diseaseResults" ng-show="vm.results.diseaseResults.length > 0">
 	<thead>
 		<tr>
-			<th st-ratio="35" st-sort="disease" st-skip-natural="true" st-sort-default="true" class="sortable">Disease <i st-sort="disease"></i></th>
-			<th st-ratio="5" st-sort="diseaseId" st-skip-natural="true" class="sortable">OMIM ID <i st-sort="diseaseId"></i></th>
-			<th st-ratio="10" st-sort="diseaseModels" st-skip-natural="true" class="sortable">Mouse Models <i st-sort="diseaseModels"></i></th>
-			<th st-ratio="30" st-sort="mouseMarkers" st-skip-natural="true" class="sortable">Associated Genes from Mouse Models <i st-sort="mouseMarkers"></i></th>
-			<th st-ratio="10" st-sort="humanMarkers" st-skip-natural="true" class="sortable">Associated Human Genes (<a href="" ng-click="openDiseaseSource();">Source</a>) <i st-sort="humanMarkers"></i></th>
-			<th st-ratio="10" st-sort="refCount" st-skip-natural="true" class="sortable">References using <br>Mouse Models <i st-sort="refCount"></i></th>
+			<th st-ratio="35" st-sort="term" st-skip-natural="true" st-sort-default="true" class="sortable">Disease <i st-sort="term"></i></th>
+			<th st-ratio="5" st-sort="primaryId" st-skip-natural="true" class="sortable">OMIM ID <i st-sort="primaryId"></i></th>
+			<th st-ratio="10" st-sort="diseaseModelCount" st-skip-natural="true" class="sortable">Mouse Models <i st-sort="diseaseModelCount"></i></th>
+			<th st-ratio="30" st-sort="diseaseMouseMarkers" st-skip-natural="true" class="sortable">Associated Genes from Mouse Models <i st-sort="diseaseMouseMarkers"></i></th>
+			<th st-ratio="10" st-sort="diseaseHumanMarkers" st-skip-natural="true" class="sortable">Associated Human Genes (<a href="" ng-click="openDiseaseSource();">Source</a>) <i st-sort="diseaseHumanMarkers"></i></th>
+			<th st-ratio="10" st-sort="diseaseRefCount" st-skip-natural="true" class="sortable">References using <br>Mouse Models <i st-sort="diseaseRefCount"></i></th>
 		</tr>
 	</thead>
 	
 	<tbody>
 		<tr ng-repeat="row in displayedCollection">
-			<td><a href="/disease/{{ row.diseaseId }}">{{ row.disease }}</a></td>
-			<td><a href="/disease/{{ row.diseaseId }}">{{ row.diseaseId }}</a></td>
-			<td><a ng-if="row.diseaseModels > 0" href="/disease/models/{{ row.diseaseId }}">{{ row.diseaseModels }}</a></td>
-			<td><div ng-bind-html="displayHTML(row.mouseMarkers)"></div></td>
-			<td><div ng-bind-html="displayHTML(row.humanMarkers)"></div></td>
-			<td><a ng-if="row.refCount > 0" href="/reference/disease/{{ row.diseaseId }}?typeFilter=Literature">{{ row.refCount }}</a></td>
+			<td><a href="/disease/{{ row.primaryId }}">{{ row.term }}</a></td>
+			<td><a href="/disease/{{ row.primaryId }}">{{ row.primaryId }}</a></td>
+			<td><a ng-if="row.diseaseModelCount > 0" href="/disease/models/{{ row.primaryId }}">{{ row.diseaseModelCount }}</a></td>
+			<td><div ng-bind-html="row.diseaseMouseMarkers"></div></td>
+			<td><div ng-bind-html="row.diseaseHumanMarkers"></div></td>
+			<td><a ng-if="row.diseaseRefCount > 0" href="/reference/disease/{{ row.primaryId }}?typeFilter=Literature">{{ row.diseaseRefCount }}</a></td>
 		</tr>
 	</tbody>
 	<tfoot>
@@ -30,7 +30,7 @@ Export: <a class="btn" href="/diseasePortal/marker/report.txt?phenotypes=105830&
 		</tr>
 	</tfoot>
 </table>
-Showing {{ vm.results.diseaseResults.summaryRows.length }} of {{ vm.results.diseaseResults.totalCount }} total records.
+
 <script type="text/ng-template" id="DiseaseSource">
-Disease associations for human genes are from the NCBI mim2gene_medgen file and include annotations from OMIM, NCBI curation, Gene Reviews, and Gene Tests.
+	Disease associations for human genes are from the NCBI mim2gene_medgen file and include annotations from OMIM, NCBI curation, Gene Reviews, and Gene Tests.
 </script>

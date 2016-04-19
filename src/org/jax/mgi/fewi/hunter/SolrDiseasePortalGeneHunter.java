@@ -8,14 +8,14 @@ import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
-import org.jax.mgi.fewi.searchUtil.entities.group.SolrHdpEntity;
+import org.jax.mgi.fewi.searchUtil.entities.hmdc.SolrHdpMarker;
+import org.jax.mgi.fewi.searchUtil.entities.hmdc.SolrHdpEntityInterface;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolrDiseasePortalGeneHunter extends SolrHunter<SolrHdpEntity> {
+public class SolrDiseasePortalGeneHunter extends SolrHunter<SolrHdpEntityInterface> {
 
 	public SolrDiseasePortalGeneHunter() {
 		keyString = DiseasePortalFields.UNIQUE_KEY;
@@ -23,7 +23,7 @@ public class SolrDiseasePortalGeneHunter extends SolrHunter<SolrHdpEntity> {
 
 
 	@Override
-	protected void packInformation(QueryResponse rsp, SearchResults<SolrHdpEntity> sr, SearchParams sp) {
+	protected void packInformation(QueryResponse rsp, SearchResults<SolrHdpEntityInterface> sr, SearchParams sp) {
 
 		SolrDocumentList sdl = rsp.getResults();
 
@@ -37,7 +37,7 @@ public class SolrDiseasePortalGeneHunter extends SolrHunter<SolrHdpEntity> {
 			if(markerKey != null) keys.add(markerKey.toString());
 			String markerKeyString = markerKey != null ? markerKey.toString() : "";
 
-			SolrDiseasePortalMarker marker = new SolrDiseasePortalMarker();
+			SolrHdpMarker marker = new SolrHdpMarker();
 			marker.setMarkerKey(markerKey.toString());
 			marker.setOrganism((String)doc.getFieldValue(DiseasePortalFields.ORGANISM));
 			marker.setGridClusterKey((Integer)doc.getFieldValue(DiseasePortalFields.GRID_CLUSTER_KEY));

@@ -1,23 +1,6 @@
 package org.jax.mgi.fewi.test.base;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import mgi.frontend.datamodel.hdp.HdpGenoCluster;
-
-import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.controller.DiseasePortalController;
-import org.jax.mgi.fewi.matrix.HdpGridMapper.GridCell;
-import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
-import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster.SolrDpGridClusterMarker;
-import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
-import org.jax.mgi.fewi.summary.HdpGenoByHeaderPopupRow;
-import org.jax.mgi.fewi.summary.HdpGridClusterSummaryRow;
-import org.jax.mgi.fewi.summary.HdpMarkerByHeaderPopupRow;
-import org.jax.mgi.fewi.test.mock.MockHdpControllerQuery;
-import org.jax.mgi.fewi.test.mock.MockHdpHttpQuery;
-import org.jax.mgi.fewi.util.NotesTagConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /*
@@ -31,10 +14,12 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     @Autowired
     private DiseasePortalController hdpController;
     
+    /*
     public List<String> getSymbolsByDisease(String diseaseID) throws Exception
     {
     	return getSymbolsByPhenotype(diseaseID);
     }
+    
 
     public List<String> getSymbolsByPhenotype(String mpID) throws Exception
     {
@@ -42,13 +27,13 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	mq.setPhenotypes(mpID);
     	return getGeneSymbols(mq);
     }
-    
+
 
     public Integer getGeneCountByDisease(String diseaseID) throws Exception
     {	
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
     	mq.setPhenotypes(diseaseID);
-    	SearchResults<SolrDiseasePortalMarker> markers = mq.getGenes();
+    	SearchResults<SolrHdpMarker> markers = mq.getGenes();
     	return markers.getTotalCount();
     }
     
@@ -57,8 +42,8 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	List<String> termNames = new ArrayList<String>();
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
     	mq.setPhenotypes(disease);
-    	SearchResults<SolrVocTerm> sr = mq.getDiseases();
-    	for(SolrVocTerm term : sr.getResultObjects())
+    	SearchResults<SolrHdpDisease> sr = mq.getDiseases();
+    	for(SolrHdpDisease term : sr.getResultObjects())
     	{
     		termNames.add(term.getTerm());
     	}
@@ -70,8 +55,8 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	List<String> termIds = new ArrayList<String>();
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
     	mq.setPhenotypes(disease);
-    	SearchResults<SolrVocTerm> sr = mq.getDiseases();
-    	for(SolrVocTerm term : sr.getResultObjects())
+    	SearchResults<SolrHdpDisease> sr = mq.getDiseases();
+    	for(SolrHdpDisease term : sr.getResultObjects())
     	{
     		termIds.add(term.getPrimaryId());
     	}
@@ -83,7 +68,7 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     {	
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
     	mq.setPhenotypes(diseaseID);
-    	SearchResults<SolrVocTerm> terms = mq.getDiseases();
+    	SearchResults<SolrHdpDisease> terms = mq.getDiseases();
     	return terms.getTotalCount();
     }
 
@@ -92,8 +77,8 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	List<String> termNames = new ArrayList<String>();
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
     	mq.setPhenotypes(phenotype);
-    	SearchResults<SolrVocTerm> sr = mq.getPhenotypes();
-    	for(SolrVocTerm term : sr.getResultObjects())
+    	SearchResults<SolrHdpDisease> sr = mq.getPhenotypes();
+    	for(SolrHdpDisease term : sr.getResultObjects())
     	{
     		termNames.add(term.getTerm());
     	}
@@ -105,8 +90,8 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	List<String> termIds = new ArrayList<String>();
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
     	mq.setPhenotypes(phenotype);
-    	SearchResults<SolrVocTerm> sr = mq.getPhenotypes();
-    	for(SolrVocTerm term : sr.getResultObjects())
+    	SearchResults<SolrHdpDisease> sr = mq.getPhenotypes();
+    	for(SolrHdpDisease term : sr.getResultObjects())
     	{
     		termIds.add(term.getPrimaryId());
     	}
@@ -119,7 +104,7 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     {	
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
     	mq.setPhenotypes(phenotype);
-    	SearchResults<SolrDiseasePortalMarker> markers = mq.getGenes();
+    	SearchResults<SolrHdpMarker> markers = mq.getGenes();
     	return markers.getTotalCount();
     }
     
@@ -128,7 +113,7 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     {
     	List<String> diseases = new ArrayList<String>();
     	
-    	SolrDiseasePortalMarker m = getMarkerByPhenotypeSymbol(phenotype,symbol);
+    	SolrHdpMarker m = getMarkerByPhenotypeSymbol(phenotype,symbol);
     	if(m!=null)
     	{
 			for(String disease : m.getDisease())
@@ -144,7 +129,7 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     {
     	List<String> systems = new ArrayList<String>();
     	
-    	SolrDiseasePortalMarker m = getMarkerByPhenotypeSymbol(phenotype,symbol);
+    	SolrHdpMarker m = getMarkerByPhenotypeSymbol(phenotype,symbol);
     	if(m!=null)
     	{
 			for(String system : m.getSystem())
@@ -155,12 +140,12 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	return StringUtils.join(systems,", ");
     }
     
-    public SolrDiseasePortalMarker getMarkerByPhenotypeSymbol(String phenotype,String symbol) throws Exception
+    public SolrHdpMarker getMarkerByPhenotypeSymbol(String phenotype,String symbol) throws Exception
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
     	mq.setPhenotypes(phenotype);
-    	SearchResults<SolrDiseasePortalMarker> markers = mq.getGenes();
-    	for(SolrDiseasePortalMarker m : markers.getResultObjects())
+    	SearchResults<SolrHdpMarker> markers = mq.getGenes();
+    	for(SolrHdpMarker m : markers.getResultObjects())
     	{
     		if(m.getSymbol().equals(symbol))
     		{
@@ -509,10 +494,10 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	mq.setPhenotypes(phenotype);
     	
     	// get the grid cluster key
-    	List<SolrDiseasePortalMarker> humanMarkers = mq.getDiseasePopupHumanMarkers(markerRow,diseaseCol);
+    	List<SolrHdpMarker> humanMarkers = mq.getDiseasePopupHumanMarkers(markerRow,diseaseCol);
     	List<String> markerSymbols = new ArrayList<String>();
     	
-    	for(SolrDiseasePortalMarker marker : humanMarkers)
+    	for(SolrHdpMarker marker : humanMarkers)
     	{
     		markerSymbols.add(marker.getSymbol());
     	}
@@ -526,10 +511,10 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     
     private List<String> getGeneSymbols(MockHdpControllerQuery mq) throws Exception
     {
-		SearchResults<SolrDiseasePortalMarker> markers = mq.getGenes();
+		SearchResults<SolrHdpMarker> markers = mq.getGenes();
 		    	
 		List<String> symbols = new ArrayList<String>();
-    	for(SolrDiseasePortalMarker m : markers.getResultObjects())
+    	for(SolrHdpMarker m : markers.getResultObjects())
     	{
     		symbols.add(m.getSymbol());
     	}
@@ -548,7 +533,7 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     		}
     		if(includeMouse)
     		{
-    			for(SolrDpGridClusterMarker m : cluster.getMouseMarkers())
+    			for(SolrHdpGene m : cluster.getMouseMarkers())
     			{
     				symbols.add(m.getSymbol());
     			}
@@ -563,7 +548,7 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	for(HdpGridClusterSummaryRow cluster : mq.getGridClusters())
     	{
     		List<String> markers = new ArrayList<String>();
-    		for(SolrDpGridClusterMarker m : cluster.getMouseMarkers())
+    		for(SolrHdpGene m : cluster.getMouseMarkers())
     		{
     			markers.add(m.getSymbol());
     		}
@@ -595,7 +580,7 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	for(HdpGridClusterSummaryRow cluster : mq.getGridClusters())
     	{
     		List<String> markers = new ArrayList<String>();
-    		for(SolrDpGridClusterMarker m : cluster.getMouseMarkers())
+    		for(SolrHdpGene m : cluster.getMouseMarkers())
     		{
     			markers.add(m.getSymbol());
     		}
@@ -629,7 +614,7 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	for(HdpGridClusterSummaryRow cluster : mq.getGridClusters())
     	{
     		List<String> markers = new ArrayList<String>();
-    		for(SolrDpGridClusterMarker m : cluster.getMouseMarkers())
+    		for(SolrHdpGene m : cluster.getMouseMarkers())
     		{
     			markers.add(m.getSymbol());
     		}
@@ -714,5 +699,6 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	// otherwise return no, because we can't easily determine if the column exists or not
     	return "no";
     }
+    */
 }
 	

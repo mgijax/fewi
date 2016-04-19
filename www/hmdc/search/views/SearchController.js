@@ -29,7 +29,7 @@
 							// reset table state
 							var tableState = ctrl.tableState();
 							tableState.search = {};
-							tableState.sort = {predicate: "disease", reverse: false};
+							tableState.sort = {predicate: "term", reverse: false};
 							ctrl.pipe();
 							// reset scope value
 							scope.stReset = false;
@@ -187,7 +187,7 @@
 				then(function(response) {
 					vm.results.diseaseResults = response.data;
 					//vm.results.diseaseResults = vm.results.diseaseResults.sort(naturalService.naturalSort('disease'));
-					vm.tabs.diseaseTab.count = vm.results.diseaseResults.totalCount;
+					vm.tabs.diseaseTab.count = vm.results.diseaseResults.length;
 					vm.mustHide = true;
 					vm.resetTable = true;
 				}, function (error) {

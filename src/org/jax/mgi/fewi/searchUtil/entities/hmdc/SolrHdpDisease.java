@@ -1,28 +1,22 @@
-package org.jax.mgi.fewi.searchUtil.entities;
+package org.jax.mgi.fewi.searchUtil.entities.hmdc;
 
 import java.util.List;
-
-import org.jax.mgi.fewi.searchUtil.entities.group.SolrHdpEntity;
 
 /*
  * This entity represents a vocab term object
  * 
  * Some fields may not pertain to every term, but maybe for a specific vocabulary.
  */
-public class SolrVocTerm implements SolrHdpEntity
-{
-	String primaryId;
-	String term;
-	String vocabName;
+public class SolrHdpDisease implements SolrHdpEntityInterface {
+
+	private String primaryId;
+	private String term;
+	private String vocabName;
 	
-	/*
-	 *  vocabName=OMIM specific fields
-	 *  They will likely be null for any other type of term
-	 */
-	Integer diseaseModelCount;
-	Integer diseaseRefCount;
-	List<String> diseaseMouseMarkers;
-	List<String> diseaseHumanMarkers;
+	private Integer diseaseModelCount;
+	private Integer diseaseRefCount;
+	private List<String> diseaseMouseMarkers;
+	private List<String> diseaseHumanMarkers;
 	
 	public String getPrimaryId() {
 		return primaryId;

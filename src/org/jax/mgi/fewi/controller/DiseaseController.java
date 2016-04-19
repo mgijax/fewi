@@ -5,9 +5,8 @@ import java.util.List;
 import mgi.frontend.datamodel.Disease;
 
 import org.jax.mgi.fewi.finder.DiseaseFinder;
-import org.jax.mgi.fewi.finder.DiseasePortalFinderOLD;
+import org.jax.mgi.fewi.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +31,7 @@ public class DiseaseController {
 	private DiseaseFinder diseaseFinder;
 
 	@Autowired 
-	DiseasePortalFinderOLD diseasePortalFinder;
+	DiseasePortalFinder diseasePortalFinder;
 
 	@Autowired
 	private IDLinker idLinker;
@@ -124,13 +123,15 @@ public class DiseaseController {
 				disease.getPrimaryID(), disease.getPrimaryID() ) );
 
 		// get disease reference count from DiseasePortal logic
+		
+		// TODO Need to revisit this
 		logger.debug("hitting diseasePortal index for diseaseRefCount");
-		List<SolrVocTerm> dpDiseases = diseasePortalFinder.getDiseaseByID(diseaseID);
-		if(dpDiseases.size()>0)
-		{
-			SolrVocTerm dpDisease = dpDiseases.get(0);
-			mav.addObject("diseaseRefCount",dpDisease.getDiseaseRefCount());
-		}
+//		List<SolrVocTerm> dpDiseases = diseasePortalFinder.getDiseases(diseaseID);
+//		if(dpDiseases.size()>0)
+//		{
+//			SolrVocTerm dpDisease = dpDiseases.get(0);
+//			mav.addObject("diseaseRefCount",dpDisease.getDiseaseRefCount());
+//		}
 
 		return mav;
 	}

@@ -1,12 +1,12 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
-import org.jax.mgi.fewi.searchUtil.entities.group.SolrHdpEntity;
+import org.jax.mgi.fewi.searchUtil.entities.hmdc.SolrHdpEntityInterface;
 
 /*
  * wrapper on a string object to appease hunter Generics
  */
-public class SolrString implements SolrHdpEntity,SolrGxdEntity
+public class SolrString implements SolrHdpEntityInterface,SolrGxdEntity
 {
 	private final String string;
 	public SolrString(String string)
