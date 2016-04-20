@@ -9,4 +9,4 @@
 	  <tr><td>${statistic.value}</td><td>${statistic.name}</td></tr>
 	</c:forEach>
 </table>
-<a class="small homeLink" href="${configBean.WI_URL}homepages/stats/all_stats.shtml#allstats_cre">More...</a>
+<a class="small homeLink" href="${configBean.MGIHOME_URL}homepages/stats/all_stats.shtml#allstats_cre">More...</a>
