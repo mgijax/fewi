@@ -9,7 +9,7 @@ import org.apache.solr.common.SolrDocumentList;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.entities.hmdc.SolrHdpEntityInterface;
-import org.jax.mgi.fewi.searchUtil.entities.hmdc.SolrHdpGridRow;
+import org.jax.mgi.fewi.searchUtil.entities.hmdc.SolrHdpGridEntry;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -30,33 +30,18 @@ public class SolrDiseasePortalGridHunter extends SolrHunter<SolrHdpEntityInterfa
 		List<String> keys = new ArrayList<String>();
 		
 		for (SolrDocument doc : sdl) {
-			System.out.println(doc);
 			
-			Integer gridClusterKey;
-			Integer genoClusterKey;
-			Integer markerKey;
-			String term;
-			String termType;
-			String termId;
-			String vocabName;
-			String qualifier;
-			Integer annotCount;
-			Integer humanAnnotCount;
-			
-			SolrHdpGridRow gridResult = new SolrHdpGridRow();
-			gridResult.setGridClusterKey((Integer) doc.getFieldValue(DiseasePortalFields.GRID_KEY));
+			SolrHdpGridEntry gridResult = new SolrHdpGridEntry();
+			gridResult.setAllelePairs((String)doc.getFieldValue(DiseasePortalFields.ALLELE_PAIRS));
 			gridResult.setGenoClusterKey((Integer) doc.getFieldValue(DiseasePortalFields.GENO_CLUSTER_KEY));
-			gridResult.setMarkerKey((Integer) doc.getFieldValue(DiseasePortalFields.MARKER_KEY));
-			gridResult.setTerm((String) doc.getFieldValue(DiseasePortalFields.TERM));
-			gridResult.setTermId((String) doc.getFieldValue(DiseasePortalFields.TERM_ID));
-			gridResult.setTermType((String) doc.getFieldValue(DiseasePortalFields.TERM_TYPE));
-			gridResult.setVocabName((String) doc.getFieldValue(DiseasePortalFields.VOCAB_NAME));
-			gridResult.setQualifier((String) doc.getFieldValue(DiseasePortalFields.TERM_QUALIFIER));
-			gridResult.setAnnotCount((Integer) doc.getFieldValue(DiseasePortalFields.ANNOT_COUNT));
-			gridResult.setHumanAnnotCount((Integer) doc.getFieldValue(DiseasePortalFields.HUMAN_ANNOT_COUNT));
+			gridResult.setGridClusterKey((Integer) doc.getFieldValue(DiseasePortalFields.GRID_KEY));
+			gridResult.setGridHumanSymbols((List<String>)doc.getFieldValue(DiseasePortalFields.GRID_HUMAN_SYMBOLS));
+			gridResult.setGridKey((Integer)doc.getFieldValue(DiseasePortalFields.GRID_KEY));
+			gridResult.setGridMouseSymbols((List<String>)doc.getFieldValue(DiseasePortalFields.GRID_MOUSE_SYMBOLS));
+			gridResult.setHomologyClusterKey((Integer)doc.getFieldValue(DiseasePortalFields.HOMOLOGY_CLUSTER_KEY));
 			
 			sr.addResultObjects(gridResult);
-			keys.add(gridResult.getGridClusterKey().toString());
+			keys.add(gridResult.getGridKey().toString());
 		}
 
 		if (keys != null) {
