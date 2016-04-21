@@ -48,12 +48,12 @@
         <tr><td class="rightBorderThinGray padded label top">Definition: </td>
 	  <td class="padded top">${term.definition}</td></tr>
 	</c:if>
-	<c:if test="${not empty term.parents}">
+	<c:if test="${not empty term.emapParentEdges}">
         <tr><td class="rightBorderThinGray padded label top">Parent Terms: </td>
 	  <td class="padded top">
-	    <c:forEach var="parent" items="${term.parents}" varStatus="status">
-	    <i>${fn:replace(parent.edgeLabel, "_", "-")}</i>
-	    <a href="${configBean.FEWI_URL}vocab/gxd/anatomy/${parent.ancestorID}" onClick="resetPanes('${parent.ancestorID}'); return false">${parent.ancestorTerm}</a><br/>
+	    <c:forEach var="parentEdge" items="${term.emapParentEdges}" varStatus="status">
+	    <i>${fn:replace(parentEdge.edgeLabel, "_", "-")}</i>
+	    <a href="${configBean.FEWI_URL}vocab/gxd/anatomy/${parentEdge.parent.primaryId}" onClick="resetPanes('${parentEdge.parent.primaryId}'); return false">${parentEdge.parent.term}</a><br/>
 	    </c:forEach>
 	  </td></tr>
 	</c:if>
