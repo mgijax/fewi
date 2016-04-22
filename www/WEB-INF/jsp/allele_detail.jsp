@@ -22,48 +22,11 @@
     StyleAlternator rightTdStyles = new StyleAlternator("detailData1","detailData2");
 %>
 
-<style>
-td.padLR { padding-left:4px; padding-right:4px }
-td.padTop { padding-top:4px }
-.creSubmitButton {
-    font-size:12px;
-    font-family:Verdana, Arial,Helvetica;
-    color:#002255;
-    font-weight:bolder;
-    background-color:#FAFAFA;
-    border: 1px #7D95B9 solid;
-    padding:2px;
-    -moz-outline-style: none;
-    outline:0;
-    cursor: pointer;
-}
-td.detailCat3 {
-    background-color: #d0e0f0;
-    border: 1px solid black;
-    color: #000001;
-    font-family: Verdana,Arial,Helvetica;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 3px;
-    text-align: left;
-    vertical-align: top;
-}
-td.cm { 
-    text-align: center;
-    vertical-align: middle;
-    padding: 4px; 
-    border: 1px solid black;
-}
-td.lm { 
-    text-align: left;
-    vertical-align: middle;
-    padding: 4px; 
-    border: 1px solid black;
-}
-</style>
+<script type="text/javascript" SRC='${configBean.WEBSHARE_URL}js/hideshow.js'></script>
+<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/allele/allele_detail.css">
 
 
-<script TYPE="text/javascript" SRC='${configBean.WEBSHARE_URL}js/hideshow.js'></script>
+<script type="text/javascript" SRC='${configBean.WEBSHARE_URL}js/hideshow.js'></script>
 
 <script language="Javascript">
 function toggleMutationDescription ()
@@ -136,12 +99,6 @@ function formatFastaArgs() {
 </script>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
-
-<style type="text/css">
-td.padded { padding:4px; }
-td.label { text-align: left; vertical-align: top; width: 1%; white-space: nowrap}
-td.right { text-align: right }
-</style>
 
 
 <!-- initialize variables for fixed-width div -->
@@ -777,34 +734,46 @@ td.right { text-align: right }
     <td id="notesHeader" class="<%=leftTdStyles.getNext() %>">
       <a name="notes"></a>Notes</td>
     <td class="<%=rightTdStyles.getNext() %>">
-      ${fixedDivOpen}
-      <font class="small spaced">
-	<c:if test="${not empty derivationNote}">
-	  ${derivationNote}<p>
-	</c:if>
-	<c:if test="${not empty generalNote}">
-	  ${generalNote}<p>
-	</c:if>
-	<c:if test="${not empty knockoutNote}">
-	  ${knockoutNote}<p>
-	</c:if>
-	<c:if test="${not empty qtlCandidateGenes}">
-	<font class="label">Candidate Genes</font><p>
-  	  <c:forEach var="qtlExpt" items="${qtlCandidateGenes}">
-	    (<i><a href="${configBean.FEWI_URL}reference/${qtlExpt.jnumID}" class='MP'>${qtlExpt.jnumID}</a></i>)<br/>
-	    <fewi:qtlNote value="${qtlExpt.note}" /><p/>
-	  </c:forEach>
-	</c:if>
-	<c:if test="${not empty qtlExpts}">
-	<font class="label">Mapping and Phenotype information for this QTL,
-	  its variants and associated markers</font><p>
-  	  <c:forEach var="qtlExpt" items="${qtlExpts}">
-	    (<i><a href="${configBean.FEWI_URL}reference/${qtlExpt.jnumID}" class='MP'>${qtlExpt.jnumID}</a></i>)<br/>
-	    <fewi:qtlNote value="${qtlExpt.note}" /><p/>
-	  </c:forEach>
-	</c:if>
-      </font>
-      ${fixedDivClose}
+    
+    <section class="qtlSection">
+    
+		<c:if test="${not empty derivationNote}">
+	      <span class="small spaced">${derivationNote}</span>
+		</c:if>
+		<c:if test="${not empty generalNote}">
+		  <span class="small spaced">${generalNote}</span>
+		</c:if>
+		<c:if test="${not empty knockoutNote}">
+		  <span class="small spaced">${knockoutNote}</span>
+		</c:if>
+		
+		
+		<c:if test="${not empty qtlCandidateGenes}">
+		<h3 class="label qtl">Candidate Genes</h3><p>
+	  	  <c:forEach var="qtlExpt" items="${qtlCandidateGenes}">
+		    (<i><a href="${configBean.FEWI_URL}reference/${qtlExpt.jnumID}" class='MP'>${qtlExpt.jnumID}</a></i>)<br/>
+		    <fewi:qtlNote value="${qtlExpt.note}" /><p/>
+		  </c:forEach>
+		</c:if>
+		<c:if test="${not empty qtlExpts}">
+		  <h3 class="label qtl">Mapping and Phenotype information for this QTL,
+		    its variants and associated markers</h3>
+	  	  <c:forEach var="qtlExpt" items="${qtlExpts}">
+		    <span>(<i><a href="${configBean.FEWI_URL}reference/${qtlExpt.jnumID}" class='MP'>${qtlExpt.jnumID}</a></i>)</span>
+		    <br>
+		    <fewi:qtlNote value="${qtlExpt.note}" />
+		    
+		    <c:if test="${not empty qtlExpt.refNote}">
+		      <section class="qtlRefNoteSec">
+		        <h4 class="label qtl">QTL Reference Notes</h4>
+		        <p>${qtlExpt.refNote}</p>
+		      </section>
+		    </c:if>
+		    
+		  </c:forEach>
+		</c:if>
+	
+	</section>
     </td>
   </tr>
   </c:if>
