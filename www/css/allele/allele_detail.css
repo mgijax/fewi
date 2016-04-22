@@ -42,20 +42,44 @@ td.label { text-align: left; vertical-align: top; width: 1%; white-space: nowrap
 td.right { text-align: right }
 
 
+/* QTL Ribbon styles */
+.qtlSection .label {
+	text-align: left;
+}
+
 .qtlSection p {
-	padding: .5em 0em;
+	padding: 0px;
+	margin: 1.5em 0em;
+}
+
+.qtlSection p:nth-of-type(1) {
+	margin-top: 0em;
+}
+
+.qtlSection .topNote {
+	margin-bottom: 1em;
 }
 
 .qtl {
 	text-align: left;
 }
 
-h3.qtl {
-	margin-top: 1em;
-	margin-bottom: .5em;
+.qtlSection .notesBlock {
+	margin-top: 1.75em;
 }
 
-h4.qtl {
+.qtlSection h4 {
+	font-size: 12px;
+	font-style: italic;
+}
+.qtlSection h4::before {
+	content: "(";
+}
+.qtlSection h4::after {
+	content: ")";
+}
+
+.qtlSection h5 {
 	font-size: 11px;
 }
 

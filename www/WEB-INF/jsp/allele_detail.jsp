@@ -738,37 +738,41 @@ function formatFastaArgs() {
     <section class="qtlSection small spaced">
     
 		<c:if test="${not empty derivationNote}">
-	      <span>${derivationNote}</span>
+	      <div class="topNote">${derivationNote}</div>
 		</c:if>
 		<c:if test="${not empty generalNote}">
-		  <span>${generalNote}</span>
+		  <div class="topNote">${generalNote}</div>
 		</c:if>
 		<c:if test="${not empty knockoutNote}">
-		  <span>${knockoutNote}</span>
+		  <div class="topNote">${knockoutNote}</div>
 		</c:if>
 		
 		
 		<c:if test="${not empty qtlCandidateGenes}">
-		<h3 class="label qtl">Candidate Genes</h3><p>
+		<h3 class="label">Candidate Genes</h3><p>
 	  	  <c:forEach var="qtlExpt" items="${qtlCandidateGenes}">
-		    (<i><a href="${configBean.FEWI_URL}reference/${qtlExpt.jnumID}" class='MP'>${qtlExpt.jnumID}</a></i>)<br/>
-		    <fewi:qtlNote value="${qtlExpt.note}" /><p/>
+	  	    <section class="notesBlock">
+		      <h4><a href="${configBean.FEWI_URL}reference/${qtlExpt.jnumID}" class='MP'>${qtlExpt.jnumID}</a></h4>
+		      <fewi:qtlNote value="${qtlExpt.note}" />
+		    </section>
 		  </c:forEach>
 		</c:if>
 		<c:if test="${not empty qtlExpts}">
-		  <h3 class="label qtl">Mapping and Phenotype information for this QTL,
+		  <h3 class="label">Mapping and Phenotype information for this QTL,
 		    its variants and associated markers</h3>
 	  	  <c:forEach var="qtlExpt" items="${qtlExpts}">
-		    <span>(<i><a href="${configBean.FEWI_URL}reference/${qtlExpt.jnumID}" class='MP'>${qtlExpt.jnumID}</a></i>)</span>
-		    <br>
-		    <fewi:qtlNote value="${qtlExpt.note}" />
+	  	    <section class="notesBlock">
+		      <h4><a href="${configBean.FEWI_URL}reference/${qtlExpt.jnumID}" class='MP'>${qtlExpt.jnumID}</a></h4>
+		      <fewi:qtlNote value="${qtlExpt.note}" />
 		    
-		    <c:if test="${not empty qtlExpt.refNote}">
-		      <section class="qtlRefNoteSec">
-		        <h4 class="label qtl">QTL Reference Notes</h4>
-		        <p>${qtlExpt.refNote}</p>
-		      </section>
-		    </c:if>
+		      <c:if test="${not empty qtlExpt.refNote}">
+		        <section class="qtlRefNoteSec">
+		          <h5 class="label qtl">QTL Reference Notes</h4>
+		          <p>${qtlExpt.refNote}</p>
+		        </section>
+		      </c:if>
+		    
+		    </section>
 		    
 		  </c:forEach>
 		</c:if>
