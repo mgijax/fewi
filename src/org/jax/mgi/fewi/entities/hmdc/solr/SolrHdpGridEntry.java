@@ -1,6 +1,8 @@
-package org.jax.mgi.fewi.searchUtil.entities.hmdc;
+package org.jax.mgi.fewi.entities.hmdc.solr;
 
 import java.util.List;
+
+import org.jax.org.mgi.shr.fe.util.GridMarker;
 
 public class SolrHdpGridEntry implements SolrHdpEntityInterface {
 	
@@ -10,9 +12,8 @@ public class SolrHdpGridEntry implements SolrHdpEntityInterface {
 	private Integer homologyClusterKey;
 	
 	private String allelePairs;
-	private List<String> gridHumanSymbols;
-	private List<String> gridMouseSymbols;
-	
+	private List<GridMarker> gridHumanSymbols;
+	private List<GridMarker> gridMouseSymbols;
 	
 	public Integer getGridKey() {
 		return gridKey;
@@ -44,16 +45,16 @@ public class SolrHdpGridEntry implements SolrHdpEntityInterface {
 	public void setAllelePairs(String allelePairs) {
 		this.allelePairs = allelePairs;
 	}
-	public List<String> getGridHumanSymbols() {
+	public List<GridMarker> getGridHumanSymbols() {
 		return gridHumanSymbols;
 	}
-	public void setGridHumanSymbols(List<String> gridHumanSymbols) {
+	public void setGridHumanSymbols(List<GridMarker> gridHumanSymbols) {
 		this.gridHumanSymbols = gridHumanSymbols;
 	}
-	public List<String> getGridMouseSymbols() {
+	public List<GridMarker> getGridMouseSymbols() {
 		return gridMouseSymbols;
 	}
-	public void setGridMouseSymbols(List<String> gridMouseSymbols) {
+	public void setGridMouseSymbols(List<GridMarker> gridMouseSymbols) {
 		this.gridMouseSymbols = gridMouseSymbols;
 	}
 }

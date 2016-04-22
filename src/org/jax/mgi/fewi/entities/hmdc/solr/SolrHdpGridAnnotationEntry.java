@@ -1,4 +1,4 @@
-package org.jax.mgi.fewi.searchUtil.entities.hmdc;
+package org.jax.mgi.fewi.entities.hmdc.solr;
 
 
 public class SolrHdpGridAnnotationEntry implements SolrHdpEntityInterface {
@@ -8,9 +8,10 @@ public class SolrHdpGridAnnotationEntry implements SolrHdpEntityInterface {
 	private String term;
 	private String termId;
 	private String termHeader;
-	private String byTermName;
-	private String byTermHeader;
-	
+	private String termType;
+	private String qualifier;
+	private Integer byTermName;
+	private Integer byTermHeader;
 	
 	public String getUniqueKey() {
 		return uniqueKey;
@@ -42,16 +43,28 @@ public class SolrHdpGridAnnotationEntry implements SolrHdpEntityInterface {
 	public void setTermHeader(String termHeader) {
 		this.termHeader = termHeader;
 	}
-	public String getByTermName() {
+	public String getTermType() {
+		return termType;
+	}
+	public void setTermType(String termType) {
+		this.termType = termType;
+	}
+	public String getQualifier() {
+		return qualifier;
+	}
+	public void setQualifier(String qualifier) {
+		this.qualifier = qualifier;
+	}
+	public Integer getByTermName() {
 		return byTermName;
 	}
-	public void setByTermName(String byTermName) {
+	public void setByTermName(Integer byTermName) {
 		this.byTermName = byTermName;
 	}
-	public String getByTermHeader() {
+	public Integer getByTermHeader() {
 		return byTermHeader;
 	}
-	public void setByTermHeader(String byTermHeader) {
+	public void setByTermHeader(Integer byTermHeader) {
 		this.byTermHeader = byTermHeader;
 	}
 }

@@ -77,8 +77,8 @@
 		}
 
 		$scope.formatCell = function(value, row, col, formattedValue) {
-			if(value && value.isNormal) {
-				return "N";
+			if(value && value.normal) {
+				return "<strong>N</strong>";
 			}
 		}
 
@@ -148,11 +148,13 @@
 					headerContent.push("");
 					vm.results.grid.data.push(headerContent);
 
+					//Object.keys(response.data.gridRows).forEach(function (key) { 
+					//	var value = hash[key]
+					//});
+
 					for(var key in response.data.gridRows) {
 						key = response.data.gridRows[key];
 						var rowContent = [];
-
-						var subscript = 
 
 						rowContent.push(key.gridCluster.humanSymbols.join().replace(/<([^>]*)>/, "<sup>$1</sup>"));
 						rowContent.push(key.gridCluster.mouseSymbols.join().replace(/<([^>]*)>/, "<sup>$1</sup>"));

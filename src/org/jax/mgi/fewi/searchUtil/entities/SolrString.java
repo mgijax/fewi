@@ -1,7 +1,7 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
+import org.jax.mgi.fewi.entities.hmdc.solr.SolrHdpEntityInterface;
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
-import org.jax.mgi.fewi.searchUtil.entities.hmdc.SolrHdpEntityInterface;
 
 /*
  * wrapper on a string object to appease hunter Generics

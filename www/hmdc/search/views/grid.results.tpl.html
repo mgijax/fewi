@@ -1,5 +1,4 @@
-<div ng-if="vm.results.grid.data">
-
+<div ng-if="vm.results.grid.rowcount > 0">
 	<div ngc-table
 		show-column-names="false"
 		show-row-numbers="false"
@@ -11,5 +10,8 @@
 		<ngc-range top="1" bottom="vm.results.grid.totalrowcount" left="2" right="9999" style-fn="styleCell" click-fn="handleClick" custom-html-fn="formatCell"></ngc-range>
 		<ngc-range top="0" bottom="1" left="2" right="9999" custom-html-fn="customHTMLHeader"></ngc-range>
 	</div>
-	
+</div>
+
+<div ng-if="vm.results.grid.rowcount < 1">
+	No data available for your query.
 </div>

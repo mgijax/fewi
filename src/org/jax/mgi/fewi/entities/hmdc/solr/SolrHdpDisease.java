@@ -1,12 +1,7 @@
-package org.jax.mgi.fewi.searchUtil.entities.hmdc;
+package org.jax.mgi.fewi.entities.hmdc.solr;
 
 import java.util.List;
 
-/*
- * This entity represents a vocab term object
- * 
- * Some fields may not pertain to every term, but maybe for a specific vocabulary.
- */
 public class SolrHdpDisease implements SolrHdpEntityInterface {
 
 	private String primaryId;

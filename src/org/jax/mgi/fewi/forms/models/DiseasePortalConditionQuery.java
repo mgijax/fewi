@@ -27,19 +27,19 @@ public class DiseasePortalConditionQuery {
 	public Filter genFilter() {
 		List<String> tokens = Arrays.asList(condition.getTokens());
 		// TODO this is where tokenization will happen
-		if(
-			field.equals(DiseasePortalFields.MARKER_NOMEN_SEARCH) ||
-			field.equals(DiseasePortalFields.MARKER_ID_SEARCH) ||
-			field.equals(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_TEXT) ||
-			field.equals(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_ID)
-			) {
+		
+		if(field.equals(DiseasePortalFields.MARKER_NOMEN_SEARCH) || field.equals(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_TEXT)) {
+			return new Filter(field, condition.getInput(), Operator.OP_HAS_WORD);
+		}
+		
+		if(field.equals(DiseasePortalFields.MARKER_ID_SEARCH) || field.equals(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_ID)) {
+			
 			if(condition.getInput().toLowerCase().startsWith("omim:")) {
 				condition.setInput(condition.getInput().replaceAll("(?i)omim:", ""));
 			}
 			return new Filter(field, "\"" + condition.getInput() + "\"", Operator.OP_HAS_WORD);
-		} else {
-			return new Filter(field, tokens, Operator.OP_HAS_WORD);
 		}
 		
+		return new Filter(field, tokens, Operator.OP_HAS_WORD);
 	}
 }

@@ -1,0 +1,43 @@
+package org.jax.mgi.fewi.entities.hmdc.models;
+
+import java.util.List;
+
+import org.jax.mgi.fewi.entities.hmdc.visitors.GridVisitorInterface;
+
+public class GridResult extends AbstractGridModel {
+
+	private List<String> gridMPHeaders;
+	private List<String> gridOMIMHeaders;
+	private List<String> gridHighLights;
+	private List<GridRow> gridRows;
+	
+	public List<String> getGridMPHeaders() {
+		return gridMPHeaders;
+	}
+	public void setGridMPHeaders(List<String> gridMPHeaders) {
+		this.gridMPHeaders = gridMPHeaders;
+	}
+	public List<String> getGridOMIMHeaders() {
+		return gridOMIMHeaders;
+	}
+	public void setGridOMIMHeaders(List<String> gridOMIMHeaders) {
+		this.gridOMIMHeaders = gridOMIMHeaders;
+	}
+	public List<String> getGridHighLights() {
+		return gridHighLights;
+	}
+	public void setGridHighLights(List<String> gridHighLights) {
+		this.gridHighLights = gridHighLights;
+	}
+	public List<GridRow> getGridRows() {
+		return gridRows;
+	}
+	public void setGridRows(List<GridRow> gridRows) {
+		this.gridRows = gridRows;
+	}
+	
+	@Override
+	public void Accept(GridVisitorInterface pi) {
+		pi.Visit(this);
+	}
+}
