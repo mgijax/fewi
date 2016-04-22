@@ -735,16 +735,16 @@ function formatFastaArgs() {
       <a name="notes"></a>Notes</td>
     <td class="<%=rightTdStyles.getNext() %>">
     
-    <section class="qtlSection">
+    <section class="qtlSection small spaced">
     
 		<c:if test="${not empty derivationNote}">
-	      <span class="small spaced">${derivationNote}</span>
+	      <span>${derivationNote}</span>
 		</c:if>
 		<c:if test="${not empty generalNote}">
-		  <span class="small spaced">${generalNote}</span>
+		  <span>${generalNote}</span>
 		</c:if>
 		<c:if test="${not empty knockoutNote}">
-		  <span class="small spaced">${knockoutNote}</span>
+		  <span>${knockoutNote}</span>
 		</c:if>
 		
 		
