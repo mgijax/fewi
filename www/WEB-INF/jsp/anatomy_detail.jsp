@@ -40,6 +40,9 @@ var fewiurl = "${configBean.FEWI_URL}";
 
 <style>
 td.bordered { border: 1px solid black }
+#termPaneDetails th {
+  padding: 4px;
+}
 td.top { vertical-align: top }
 td.padded { padding: 4px }
 td.padTop { padding-top: 2px }
