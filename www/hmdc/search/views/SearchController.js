@@ -171,6 +171,8 @@
 					vm.results.grid.data.push([]);
 
 					vm.results.grid.rowcount = response.data.gridRows.length >= 18 ? 18 : response.data.gridRows.length;
+					vm.results.grid.colcount = response.data.gridOMIMHeaders.length + response.data.gridMPHeaders.length;
+					vm.results.grid.colcount = vm.results.grid.colcount >= 35 ? 35 : vm.results.grid.colcount;
 					vm.results.grid.totalrowcount = response.data.gridRows.length + 1;
 
 					vm.mustHide = true;
