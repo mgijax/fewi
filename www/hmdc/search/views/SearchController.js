@@ -62,7 +62,7 @@
 		}
 
 		$scope.handleClick = function(event, cellData) {
-			console.log(cellData);
+			console.log(cellData.data);
 		}
 
 		$scope.customHTMLHeader = function(value, row, col, formattedValue) {
@@ -91,7 +91,7 @@
 				if(value.humanAnnotCount < 1) hac = "";
 
 				var ac = "#0C2255";
-				if(value.annotCount < 100) ac = "#48648B";
+				if(value.annotCount < 100) ac = "#49648B";
 				if(value.annotCount < 6) ac = "#879EBA";
 				if(value.annotCount < 2) ac = "#C6D6E8";
 				if(value.annotCount < 1) ac = "";
@@ -192,6 +192,7 @@
 					vm.tabs.diseaseTab.count = vm.results.diseaseResults.length;
 					vm.mustHide = true;
 					vm.resetTable = true;
+					vm.tabs.gridTab.active = true;
 				}, function (error) {
 					vm.errorMessage = error;
 			});
