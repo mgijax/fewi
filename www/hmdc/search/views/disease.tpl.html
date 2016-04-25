@@ -17,8 +17,8 @@ Export: <a class="btn" href="/diseasePortal/marker/report.txt?phenotypes=105830&
 			<td><a href="/disease/{{ row.primaryId }}">{{ row.term }}</a></td>
 			<td><a href="/disease/{{ row.primaryId }}">{{ row.primaryId }}</a></td>
 			<td><a ng-if="row.diseaseModelCount > 0" href="/disease/models/{{ row.primaryId }}">{{ row.diseaseModelCount }}</a></td>
-			<td><div ng-bind-html="row.diseaseMouseMarkers"></div></td>
-			<td><div ng-bind-html="row.diseaseHumanMarkers"></div></td>
+			<td><div ng-bind-html="row.diseaseMouseMarkers | joinBy:', '"></div></td>
+			<td><div ng-bind-html="row.diseaseHumanMarkers | joinBy:', '"></div></td>
 			<td><a ng-if="row.diseaseRefCount > 0" href="/reference/disease/{{ row.primaryId }}?typeFilter=Literature">{{ row.diseaseRefCount }}</a></td>
 		</tr>
 	</tbody>

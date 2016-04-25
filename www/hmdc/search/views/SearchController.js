@@ -11,6 +11,11 @@
 				array.sort(naturalService.naturalSort(neg + predicteObject));
 				return array;
 		}})
+		.filter('joinBy', function () {
+			return function (input,delimiter) {
+				return (input || []).join(delimiter || ', ');
+			};
+		})
 		.directive('stReset', function() {
 			return {
 				require: '^stTable',
