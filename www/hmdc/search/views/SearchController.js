@@ -46,7 +46,7 @@
 		});
 
 	// @ngInject
-	function SearchController($rootScope, $scope, $log, Search, $sce, ngDialog) {
+	function SearchController($rootScope, $scope, $log, Search, $sce, ngDialog, naturalService) {
 		var vm = $scope.vm = {};
 
 		vm.onSubmit = onSubmit;
@@ -131,7 +131,7 @@
 					headerContent.push("Mouse Gene");
 					// Push the MP Headers into the headerContent row
 					var hash = {};
-					for(var header in response.data.gridMPHeaders) {
+					for(var header in response.data.gridMPHeaders.sort(naturalService.naturalSortFunction)) {
 						if(response.data.gridHighLights) {
 							hash[response.data.gridMPHeaders[header]] = response.data.gridHighLights.indexOf(response.data.gridMPHeaders[header]);
 						} else {
@@ -141,7 +141,7 @@
 						hash = {};
 					}
 					// Push the OMIM Headers into the headerContent row
-					for(var header in response.data.gridOMIMHeaders) {
+					for(var header in response.data.gridOMIMHeaders.sort(naturalService.naturalSortFunction)) {
 						if(response.data.gridHighLights) {
 							hash[response.data.gridOMIMHeaders[header]] = response.data.gridHighLights.indexOf(response.data.gridOMIMHeaders[header]);
 						} else {
@@ -195,7 +195,6 @@
 			Search.diseaseQuery(vm.model).
 				then(function(response) {
 					vm.results.diseaseResults = response.data;
-					//vm.results.diseaseResults = vm.results.diseaseResults.sort(naturalService.naturalSort('disease'));
 					vm.tabs.diseaseTab.count = vm.results.diseaseResults.length;
 					vm.mustHide = true;
 					vm.resetTable = true;

@@ -44,29 +44,27 @@ public class SolrDiseasePortalGridHunter extends SolrHunter<SolrHdpEntityInterfa
 			
 			TypeFactory typeFactory = TypeFactory.defaultInstance();
 			
-			List<GridMarker> gridHumanSymbols = null;
+			List<GridMarker> gridHumanSymbols = new ArrayList<GridMarker>();
 			String humanSymbols = (String)doc.getFieldValue(DiseasePortalFields.GRID_HUMAN_SYMBOLS);
 			
 			try {
-				gridHumanSymbols = mapper.readValue(
-					humanSymbols,
-					typeFactory.constructCollectionType(ArrayList.class, GridMarker.class));
+				if(humanSymbols != null && !humanSymbols.equals("")) {
+					gridHumanSymbols = mapper.readValue(humanSymbols, typeFactory.constructCollectionType(ArrayList.class, GridMarker.class));
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				gridHumanSymbols = null;
 			}
 			gridResult.setGridHumanSymbols(gridHumanSymbols);
 						
-			List<GridMarker> gridMouseSymbols = null;
+			List<GridMarker> gridMouseSymbols = new ArrayList<GridMarker>();
 			String mouseSymbols = (String)doc.getFieldValue(DiseasePortalFields.GRID_MOUSE_SYMBOLS);
 
 			try {
-				gridMouseSymbols = mapper.readValue(
-						mouseSymbols,
-						typeFactory.constructCollectionType(ArrayList.class, GridMarker.class));
+				if(mouseSymbols != null && !mouseSymbols.equals("")) {
+					gridMouseSymbols = mapper.readValue(mouseSymbols, typeFactory.constructCollectionType(ArrayList.class, GridMarker.class));
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				gridMouseSymbols = null;
 			}
 			gridResult.setGridMouseSymbols(gridMouseSymbols);
 

@@ -171,12 +171,12 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 			
 			List<String> list = new ArrayList<String>();
 			String np = gridMPHeaders.remove("normal phenotype");
-			for(String s: gridMPHeaders.keySet()) { list.add(s); }
+			for(String s: gridMPHeaders.values()) { list.add(s); }
 			if(np != null && !np.equals("")) list.add(np);
 			result.setGridMPHeaders(list);
 			
 			List<String> list2 = new ArrayList<String>();
-			for(String s: gridOMIMHeaders.keySet()) { list2.add(s); }
+			for(String s: gridOMIMHeaders.values()) { list2.add(s); }
 			result.setGridOMIMHeaders(list2);
 			
 			result.setGridRows(new ArrayList<GridRow>());
