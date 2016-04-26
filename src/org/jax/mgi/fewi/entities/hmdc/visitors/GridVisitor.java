@@ -21,8 +21,8 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 	//private List<String> gridMPHeaders = null;
 	
 	private List<String> gridHighLights = null;
-	private TreeMap<String, String> gridMPHeaders = null;
-	private TreeMap<String, String> gridOMIMHeaders = null;
+	private List<String> gridMPHeaders = null;
+	private List<String> gridOMIMHeaders = null;
 
 	private SolrHdpGridEntry currentGridEntry;
 	
@@ -34,15 +34,15 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 		this.gridResults = gridResults;
 		
 		gridHighLights = new ArrayList<String>();
-		gridMPHeaders = new TreeMap<String, String>();
-		gridOMIMHeaders = new TreeMap<String, String>();
+		gridMPHeaders = new ArrayList<String>();
+		gridOMIMHeaders = new ArrayList<String>();
 		
 		for(SolrHdpGridAnnotationEntry ar: annotationResults.getResultObjects()) {
-			if(!gridMPHeaders.containsKey(ar.getTermHeader()) && "Mammalian Phenotype".equals(ar.getTermType())) {
-				gridMPHeaders.put(ar.getTermHeader(), ar.getTermHeader());
+			if(!gridMPHeaders.contains(ar.getTermHeader()) && "Mammalian Phenotype".equals(ar.getTermType())) {
+				gridMPHeaders.add(ar.getTermHeader());
 			}
-			if(!gridOMIMHeaders.containsKey(ar.getTermHeader()) && "OMIM".equals(ar.getTermType())) {
-				gridOMIMHeaders.put(ar.getTermHeader(), ar.getTermHeader());
+			if(!gridOMIMHeaders.contains(ar.getTermHeader()) && "OMIM".equals(ar.getTermType())) {
+				gridOMIMHeaders.add(ar.getTermHeader());
 			}
 			
 			if(!annotationMap.containsKey(ar.getGridKey())) {
@@ -168,17 +168,8 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 		if(result == null) {
 			result = new GridResult();
 			result.setGridHighLights(gridHighLights);
-			
-			List<String> list = new ArrayList<String>();
-			String np = gridMPHeaders.remove("normal phenotype");
-			for(String s: gridMPHeaders.values()) { list.add(s); }
-			if(np != null && !np.equals("")) list.add(np);
-			result.setGridMPHeaders(list);
-			
-			List<String> list2 = new ArrayList<String>();
-			for(String s: gridOMIMHeaders.values()) { list2.add(s); }
-			result.setGridOMIMHeaders(list2);
-			
+			result.setGridMPHeaders(gridMPHeaders);
+			result.setGridOMIMHeaders(gridOMIMHeaders);
 			result.setGridRows(new ArrayList<GridRow>());
 			result.Accept(this);
 		}

@@ -126,9 +126,17 @@
 					var headerContent = [];
 					headerContent.push("Human Gene");
 					headerContent.push("Mouse Gene");
+					
+					var i = response.data.gridMPHeaders.indexOf("normal phenotype");
+					if(i != -1) response.data.gridMPHeaders.splice(i, 1);
+					response.data.gridMPHeaders.sort(naturalService.naturalSortFunction)
+					if(i != -1) response.data.gridMPHeaders.push("normal phenotype");
+
+					response.data.gridOMIMHeaders.sort(naturalService.naturalSortFunction)
+
 					// Push the MP Headers into the headerContent row
 					var hash = {};
-					for(var header in response.data.gridMPHeaders.sort(naturalService.naturalSortFunction)) {
+					for(var header in response.data.gridMPHeaders) {
 						if(response.data.gridHighLights) {
 							hash[response.data.gridMPHeaders[header]] = response.data.gridHighLights.indexOf(response.data.gridMPHeaders[header]);
 						} else {
@@ -137,8 +145,9 @@
 						headerContent.push(hash);
 						hash = {};
 					}
+
 					// Push the OMIM Headers into the headerContent row
-					for(var header in response.data.gridOMIMHeaders.sort(naturalService.naturalSortFunction)) {
+					for(var header in response.data.gridOMIMHeaders) {
 						if(response.data.gridHighLights) {
 							hash[response.data.gridOMIMHeaders[header]] = response.data.gridHighLights.indexOf(response.data.gridOMIMHeaders[header]);
 						} else {
