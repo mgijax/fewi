@@ -94,8 +94,11 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 			rowMap.get(gridClusterKey).Accept(this);
 			
 			String index = "";
+			for (String s: rowMap.get(gridClusterKey).getGridCluster().getHumanSymbols()) {
+			    index += s.toLowerCase();
+			}
 			for (String s: rowMap.get(gridClusterKey).getGridCluster().getMouseSymbols()) {
-			    index += s;
+			    index += s.toLowerCase();
 			}
 			sortedMap.put(index, rowMap.get(gridClusterKey));
 		}
