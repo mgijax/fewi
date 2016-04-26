@@ -763,15 +763,15 @@ function formatFastaArgs() {
 	  	  <c:forEach var="qtlExpt" items="${qtlExpts}">
 	  	    <section class="notesBlock">
 		      <h4><a href="${configBean.FEWI_URL}reference/${qtlExpt.jnumID}" class='MP'>${qtlExpt.jnumID}</a></h4>
-		      <fewi:qtlNote value="${qtlExpt.note}" />
-		    
+		      		    
 		      <c:if test="${not empty qtlExpt.refNote}">
 		        <section class="qtlRefNoteSec">
 		          <h5 class="label qtl">QTL Reference Notes</h4>
 		          <p>${qtlExpt.refNote}</p>
 		        </section>
 		      </c:if>
-		    
+		      
+		      <fewi:qtlNote value="${qtlExpt.note}" />
 		    </section>
 		    
 		  </c:forEach>
