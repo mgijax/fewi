@@ -167,8 +167,8 @@
 						key = response.data.gridRows[key];
 						var rowContent = [];
 
-						rowContent.push(key.gridCluster.humanSymbols.join().replace(/<([^>]*)>/, "<sup>$1</sup>"));
-						rowContent.push(key.gridCluster.mouseSymbols.join().replace(/<([^>]*)>/, "<sup>$1</sup>"));
+						rowContent.push(key.gridCluster.humanSymbols.join(', ').replace(/<([^>]*)>/, "<sup>$1</sup>"));
+						rowContent.push(key.gridCluster.mouseSymbols.join(', ').replace(/<([^>]*)>/, "<sup>$1</sup>"));
 						for(var header in response.data.gridMPHeaders) {
 							header = response.data.gridMPHeaders[header];
 							rowContent.push(key.mpHeaderCells[header]);

@@ -61,8 +61,7 @@ public class DiseasePortalController {
 	public @ResponseBody GridResult gridQuery(@RequestBody String jsonInput) throws Exception {
 
 		SearchParams params = new SearchParams();
-		params.setPageSize(100000);
-
+		params.setPageSize(1000000);
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			DiseasePortalConditionGroup group = (DiseasePortalConditionGroup)mapper.readValue(jsonInput, DiseasePortalConditionGroup.class);
@@ -81,7 +80,7 @@ public class DiseasePortalController {
 		
 		Filter gridFilter = new Filter(DiseasePortalFields.GRID_KEY, gridKeys, Operator.OP_IN);
 		params.setFilter(gridFilter);
-		
+		params.setPageSize(1000000);
 		SearchResults<SolrHdpGridAnnotationEntry> annotationResults = hdpFinder.getGridAnnotationResults(params);
 
 		GridVisitor gv = new GridVisitor(results, annotationResults);
@@ -112,7 +111,7 @@ public class DiseasePortalController {
 	public @ResponseBody List<SolrHdpMarker> geneQuery(@RequestBody String jsonInput) throws Exception {
 
 		SearchParams params = new SearchParams();
-		params.setPageSize(100000);
+		params.setPageSize(1000000);
 
 		try {
 			ObjectMapper mapper = new ObjectMapper();
@@ -131,7 +130,7 @@ public class DiseasePortalController {
 	public @ResponseBody List<SolrHdpDisease> diseaseQuery(@RequestBody String jsonInput) throws Exception {
 
 		SearchParams params = new SearchParams();
-		params.setPageSize(10000);
+		params.setPageSize(1000000);
 
 		try {
 			ObjectMapper mapper = new ObjectMapper();
