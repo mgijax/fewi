@@ -11,11 +11,8 @@
 				array.sort(naturalService.naturalSort(neg + predicteObject));
 				return array;
 		}})
-		.filter('joinBy', function () {
-			return function (input,delimiter) {
-				return (input || []).join(delimiter || ', ');
-			};
-		})
+		.filter('joinBy', function () { return function (input,delimiter) { return (input || []).join(delimiter || ', '); }; })
+		.filter('handleSubscript', function () { return function (input) { return input.replace(/<([^>]*)>/, "<sup>$1</sup>"); }; })
 		.directive('stReset', function() {
 			return {
 				require: '^stTable',
