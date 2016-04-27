@@ -214,7 +214,7 @@ tr.gray td {background-color:#EEEEEE;}
                 	For <b concordion:set="#system">pigmentation</b> there is <span style="background-color:#FFFF00;">NO</span> <b cc:assertNotEquals="gridCheckForMpHeaderByPhenotype(#pheno,#symbol,#system)">check</b></li>
                 <li>Clear the query form.</li>
                 <li>Enter <b concordion:set="#pheno">MP:0000664</b> (small prostate gland anterior lobe), in the Phenotypes and Diseases section and hit search.</li>
-                <li>Click on the Grid tab and confirm AT LEAST the following phenotype header columns are displayed (data from <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1628">Ahr&lt;tm1Bra&gt;</a> which has 4 homozygous genotypes.):
+                <li>Click on the Grid tab and confirm AT LEAST the following phenotype header columns are displayed (data from <a href="http://www.informatics.jax.org/allele/key/1628">Ahr&lt;tm1Bra&gt;</a> which has 4 homozygous genotypes.):
                 	<table cc:verifySupersetOf="#systems : gridMpHeadersByPhenotype(#pheno)">
                 	<tr><th concordion:assertEquals="#systems">MP Header</th><th>Notes to testers</th></tr>
 					<tr><td>cardiovascular system</td><td>comes from same genotype as query: <a href="http://www.informatics.jax.org/allele/genoview/MGI:4361635">MGI:4361635</a></td></tr>
@@ -251,7 +251,7 @@ tr.gray td {background-color:#EEEEEE;}
            		</li>
                 <li>Clear the query form.</li>
                 <li>Enter <b concordion:set="#pheno">MP:0009167</b> (increased pancreatic islet number), in the Phenotypes and Diseases section and hit search.</li>
-                <li><span style="background-color:#FFFF00;">Verify checkmarks</span> for <b concordion:set="#symbol">Cpe</b> for ALL OF the following phenotype headers are displayed (based on hm1 and hm2 for allele <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;id=MGI:1856395">Cpe&lt;fat&gt;</a>):
+                <li><span style="background-color:#FFFF00;">Verify checkmarks</span> for <b concordion:set="#symbol">Cpe</b> for ALL OF the following phenotype headers are displayed (based on hm1 and hm2 for allele <a href="http://www.informatics.jax.org/allele/MGI:1856395">Cpe&lt;fat&gt;</a>):
                 	<table cc:verifySupersetOf="#systems : gridMpHeadersWithChecksByPhenotype(#pheno,#symbol)">
                 	<tr><th concordion:assertEquals="#systems">MP Header</th><th>Notes to tester</th></tr>
 					<tr><td>adipose tissue</td><td></td></tr>
@@ -495,7 +495,7 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">MP:0004521</b> (abnormal cochlear hair cell) in the Phenotypes and Diseases section and hit search</li>
 				<li>Verify that marker <b concordion:set="#row">Actb</b> and MP header <b concordion:set="#system">hearing/vestibular/ear</b> has a <b concordion:assertEquals="gridCheckForMpHeaderByPhenotype(#pheno,#row,#system)">check</b>.<br/>
-					(Both "normal" and abnormal annotations exist for the "simple" genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:4882050">MGI:4882050</a>.)
+					(Both "normal" and abnormal annotations exist for the "simple" genotype <a href="http://scrumdog.informatics.jax.org/allele/genoview/MGI:4882050">MGI:4882050</a>.)
 				</li>
 			</ol>
 			</li>
