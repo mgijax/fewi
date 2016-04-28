@@ -59,6 +59,8 @@ public class DiseasePortalController {
 
 		SearchParams params = new SearchParams();
 		params.setPageSize(1000000);
+		params.setReturnFilterQuery(true);
+		
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			DiseasePortalConditionGroup group = (DiseasePortalConditionGroup)mapper.readValue(jsonInput, DiseasePortalConditionGroup.class);
@@ -109,7 +111,6 @@ public class DiseasePortalController {
 
 		SearchParams params = new SearchParams();
 		params.setPageSize(1000000);
-		params.setReturnFilterQuery(true);
 
 		try {
 			ObjectMapper mapper = new ObjectMapper();
