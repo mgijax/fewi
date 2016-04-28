@@ -173,6 +173,7 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 			result.setGridHighLights(gridHighLights);
 			result.setGridMPHeaders(gridMPHeaders);
 			result.setGridOMIMHeaders(gridOMIMHeaders);
+			result.setFilterQuery(gridResults.getFilterQuery());
 			result.setGridRows(new ArrayList<GridRow>());
 			result.Accept(this);
 		}

@@ -126,6 +126,7 @@
 					var headerContent = [];
 					headerContent.push("Human Gene");
 					headerContent.push("Mouse Gene");
+					vm.solrQuery = response.data.filterQuery;
 					
 					var i = response.data.gridMPHeaders.indexOf("normal phenotype");
 					if(i != -1) response.data.gridMPHeaders.splice(i, 1);

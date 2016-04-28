@@ -10,7 +10,8 @@ public class GridResult extends AbstractGridModel {
 	private List<String> gridOMIMHeaders;
 	private List<String> gridHighLights;
 	private List<GridRow> gridRows;
-	
+	private String filterQuery;
+
 	public List<String> getGridMPHeaders() {
 		return gridMPHeaders;
 	}
@@ -34,6 +35,12 @@ public class GridResult extends AbstractGridModel {
 	}
 	public void setGridRows(List<GridRow> gridRows) {
 		this.gridRows = gridRows;
+	}	
+	public String getFilterQuery() {
+		return filterQuery;
+	}
+	public void setFilterQuery(String filterQuery) {
+		this.filterQuery = filterQuery;
 	}
 	
 	@Override

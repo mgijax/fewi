@@ -225,6 +225,7 @@ public class SolrHunter<T> implements Hunter<T> {
 		String queryString = translateFilter(searchParams.getFilter(), propertyMap);
 
 		if(!searchParams.getSuppressLogs()) logger.debug("TranslatedFilters: " + queryString);
+		if(searchParams.getReturnFilterQuery()) searchResults.setFilterQuery(queryString);
 
 		// If a join field is specified add the join clause to the beginning of the query string
 		if(doJoin) {

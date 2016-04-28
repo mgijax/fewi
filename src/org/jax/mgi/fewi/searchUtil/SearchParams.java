@@ -30,6 +30,7 @@ public class SearchParams {
 	private boolean includeGenerated = false;
 	private boolean fetchKeysOnly = false;
 	private boolean suppressLogs = false;
+	private boolean returnFilterQuery = false;
 
 	public String toString() {
 	    String s = "SearchParams [Filter: ";
@@ -45,6 +46,7 @@ public class SearchParams {
 	    if (includeGenerated) { s = s + ", includeGenerated"; }
 	    if (fetchKeysOnly) { s = s + ", fetchKeysOnlyl"; }
 	    if (suppressLogs) { s = s + ", suppressLogs"; }
+	    if (returnFilterQuery) { s = s + ", returnFilterQuery"; }
 	    s = s + "]";
 
 	    return s;
@@ -176,4 +178,12 @@ public class SearchParams {
 	public void setIncludeHighlightMarkup(boolean includeHighlightMarkup) {
 		this.includeHighlightMarkup = includeHighlightMarkup;
 	}
+
+	public boolean getReturnFilterQuery() {
+		return returnFilterQuery;
+	}
+	public void setReturnFilterQuery(boolean returnFilterQuery) {
+		this.returnFilterQuery = returnFilterQuery;
+	}
+
 }

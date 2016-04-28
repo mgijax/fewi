@@ -19,21 +19,21 @@ import org.jax.mgi.shr.fe.sort.SmartAlphaComparator;
 public class SearchResults<T> {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    //////////////////////////////////////////////////////////////////////////
-    //  INTERNAL FIELDS
-    //////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////
+	//  INTERNAL FIELDS
+	//////////////////////////////////////////////////////////////////////////
 
 	// Database keys identified as the results from a search
 	protected List<String> resultKeys = new ArrayList<String>();
 
 	// Scores for the matched documents
-/*    protected List<String> resultScores = new ArrayList<String>();*/
+	/*    protected List<String> resultScores = new ArrayList<String>();*/
 
 	// Database keys identified as the results from a search
 	protected List<String> resultStrings = new ArrayList<String>();
 
 	// Database keys identified as the results from a search
-    protected List<String> resultFacets = new ArrayList<String>();
+	protected List<String> resultFacets = new ArrayList<String>();
 
 	// Result Objects of a given search
 	protected List<T> resultObjects = new ArrayList<T>();
@@ -47,211 +47,146 @@ public class SearchResults<T> {
 	// Total number of possible results
 	protected int totalCount = -1;
 
+	// String to store the solr query that was run
+	protected String filterQuery = "";
 
+	//////////////////////////////////////////////////////////////////////////
+	//  BASIC ACCESSORS
+	//////////////////////////////////////////////////////////////////////////
 
-    //////////////////////////////////////////////////////////////////////////
-    //  BASIC ACCESSORS
-    //////////////////////////////////////////////////////////////////////////
-
-	/**
-	 * Get the keys of the results returned
-	 */
+	
 	public List<String> getResultKeys() {
 		return resultKeys;
 	}
-
-	/**
-	 * Set the result keys of the search.
-	 */
 	public void setResultKeys(List<String> resultKeys) {
 		this.resultKeys = resultKeys;
 	}
-
-	/**
-	 * Get a mapping of object key -> MetaData
-	 * @return
-	 */
-
 	public Map<String, MetaData> getMetaMapping() {
-        return metaMapping;
-    }
-
-	/**
-	 * set the MetaData mapping list
-	 * @param metaMapping
-	 */
-
-    public void setMetaMapping(Map<String, MetaData> metaMapping) {
-        this.metaMapping = metaMapping;
-    }
-
-    /**
-	 * Get the list of scores for the documents returned
-	 */
-/*	public List<String> getResultScores() {
-        return resultScores;
-    }*/
-
-	/**
-	 * Set the list of scores for the documents to be returned.
-	 */
-/*    public void setResultScores(List<String> resultScores) {
-        this.resultScores = resultScores;
-    }*/
-
-    /**
-	 * Get the keys of the results returned
-	 */
+		return metaMapping;
+	}
+	public void setMetaMapping(Map<String, MetaData> metaMapping) {
+		this.metaMapping = metaMapping;
+	}
 	public List<String> getResultStrings() {
 		return resultStrings;
 	}
-
-	/**
-	 * Set the result keys of the search.
-	 */
 	public void setResultStrings(List<String> resultStrings) {
 		this.resultStrings= resultStrings;
 	}
-
-	/**
-	 * Get the result objects of the search
-	 */
 	public List<T> getResultObjects() {
 		return resultObjects;
 	}
-
-	/**
-	 * Set the result objects of the search.
-	 */
 	public void setResultObjects(List<T> resultObjects) {
 		this.resultObjects = resultObjects;
 	}
-
-
-	/**
-	 * Add a result object
-	 */
 	public void addResultObjects(T resultObject) {
 		this.resultObjects.add(resultObject);
 	}
-
-
-    /**
-	 * Get the total number of possible results (-1 means unspecified)
-	 */
 	public int getTotalCount() {
 		return totalCount;
 	}
-
-	/**
-	 * Get the total number of possible results (-1 means unspecified)
-	 */
 	public void setTotalCount(int totalCount) {
 		this.totalCount = totalCount;
 	}
-
-    public ResultSetMetaData getResultSetMeta() {
-        return resultSetMeta;
-    }
-
-    public void setResultSetMeta(ResultSetMetaData resultSetMeta) {
-        this.resultSetMeta = resultSetMeta;
-    }
-
-    /**
-	 * Get facets
-	 */
-    public List<String> getResultFacets() {
-        return resultFacets;
-    }
-
+	public ResultSetMetaData getResultSetMeta() {
+		return resultSetMeta;
+	}
+	public void setResultSetMeta(ResultSetMetaData resultSetMeta) {
+		this.resultSetMeta = resultSetMeta;
+	}
+	public List<String> getResultFacets() {
+		return resultFacets;
+	}
 	public List<String> getSortedResultFacets() {
 		List<String> sortedFacets = new ArrayList<String>(resultFacets);
 		Collections.sort (sortedFacets, new SmartAlphaComparator());
-        return sortedFacets;
-    }
+		return sortedFacets;
+	}
+	public void setResultFacets(List<String> resultFacets) {
+		this.resultFacets = resultFacets;
+	}
+	public String getFilterQuery() {
+		return filterQuery;
+	}
+	public void setFilterQuery(String filterQuery) {
+		this.filterQuery = filterQuery;
+	}
 
-    /**
-	 * Set facets
+	/**
+	 * uniques the list of result objects, and preserves order
+	 * result object must implement UniqueableObject interface
 	 */
-    public void setResultFacets(List<String> resultFacets) {
-        this.resultFacets = resultFacets;
-    }
+	public void uniqueifyResultObjects()
+	{
+		// No reason to unique a list of less than 2 items.
+		// also, objects need to implement the correct interface
+		if(this.resultObjects.size() > 1)
+		{
+			if(this.resultObjects.get(0) instanceof UniqueableObject)
+			{
+				HashSet<Object> uniqueKeys = new HashSet<Object>();
+				List<T> uniqueResultObjects = new ArrayList<T>();
+				for(T result : this.resultObjects)
+				{
+					Object uniqueKey = ((UniqueableObject) result).getUniqueKey();
+					if(!uniqueKeys.contains(uniqueKey))
+					{
+						uniqueResultObjects.add(result);
+						uniqueKeys.add(uniqueKey);
+					}
+				}
+				this.setResultObjects(uniqueResultObjects);
+			}
+			else
+			{
+				logger.warn("Result Object ["+this.resultObjects.get(0).getClass()+"] does not implement "+
+						UniqueableObject.class+" interface. Cannot uniqueify original result set.");
+			}
+		}
+	}
 
-    /**
-     * uniques the list of result objects, and preserves order
-     * result object must implement UniqueableObject interface
-     */
-    public void uniqueifyResultObjects()
-    {
-    	// No reason to unique a list of less than 2 items.
-    	// also, objects need to implement the correct interface
-    	if(this.resultObjects.size() > 1)
-    	{
-    		if(this.resultObjects.get(0) instanceof UniqueableObject)
-    		{
-    			HashSet<Object> uniqueKeys = new HashSet<Object>();
-    			List<T> uniqueResultObjects = new ArrayList<T>();
-    			for(T result : this.resultObjects)
-    			{
-    				Object uniqueKey = ((UniqueableObject) result).getUniqueKey();
-    				if(!uniqueKeys.contains(uniqueKey))
-    				{
-    					uniqueResultObjects.add(result);
-    					uniqueKeys.add(uniqueKey);
-    				}
-    			}
-    			this.setResultObjects(uniqueResultObjects);
-    		}
-    		else
-    		{
-    			logger.warn("Result Object ["+this.resultObjects.get(0).getClass()+"] does not implement "+
-    					UniqueableObject.class+" interface. Cannot uniqueify original result set.");
-    		}
-    	}
-    }
-
-    /*
-     * takes an existing SR object and copies over every non-T field (I.e. excludes resultObjects)
-     * 	unless clazz != null, then it will try to cast every object in resultObjects to clazz
-     */
-    public void cloneFrom(SearchResults<?> existingSr)
-    {
-    	cloneFrom(existingSr,null);
-    }
-    @SuppressWarnings("unchecked")
+	/*
+	 * takes an existing SR object and copies over every non-T field (I.e. excludes resultObjects)
+	 * 	unless clazz != null, then it will try to cast every object in resultObjects to clazz
+	 */
+	public void cloneFrom(SearchResults<?> existingSr)
+	{
+		cloneFrom(existingSr,null);
+	}
+	@SuppressWarnings("unchecked")
 	public void cloneFrom(SearchResults<?> existingSr,Class<T> clazz)
-    {
-    	this.setTotalCount(existingSr.getTotalCount());
-    	this.setResultKeys(existingSr.getResultKeys());
-    	this.setResultStrings(existingSr.getResultStrings());
-    	this.setMetaMapping(existingSr.getMetaMapping());
-    	this.setResultFacets(existingSr.getResultFacets());
-    	this.setResultSetMeta(existingSr.getResultSetMeta());
-    	if(clazz != null)
-    	{
-    		List<T> newResultObjects = new ArrayList<T>();
-    		for(Object obj : existingSr.getResultObjects())
-    		{
-    			newResultObjects.add((T) obj);
-    		}
-    		this.setResultObjects(newResultObjects);
-    	}
-    }
+	{
+		this.setTotalCount(existingSr.getTotalCount());
+		this.setResultKeys(existingSr.getResultKeys());
+		this.setResultStrings(existingSr.getResultStrings());
+		this.setMetaMapping(existingSr.getMetaMapping());
+		this.setResultFacets(existingSr.getResultFacets());
+		this.setResultSetMeta(existingSr.getResultSetMeta());
+		this.setFilterQuery(existingSr.getFilterQuery());
+		if(clazz != null)
+		{
+			List<T> newResultObjects = new ArrayList<T>();
+			for(Object obj : existingSr.getResultObjects())
+			{
+				newResultObjects.add((T) obj);
+			}
+			this.setResultObjects(newResultObjects);
+		}
+	}
 }
 
 class FacetSorter implements Comparator<String> {
-    public FacetSorter() {}
+	public FacetSorter() {}
 
-    public int compare (String a, String b) {
-	String a1 = a.toLowerCase();
-	String b1 = b.toLowerCase();
+	public int compare (String a, String b) {
+		String a1 = a.toLowerCase();
+		String b1 = b.toLowerCase();
 
-	return a1.compareTo(b1);
-    }
+		return a1.compareTo(b1);
+	}
 
-    public boolean equals (Object c) {
-	if (this == c) { return true; }
-	return false;
-    }
+	public boolean equals (Object c) {
+		if (this == c) { return true; }
+		return false;
+	}
 }
