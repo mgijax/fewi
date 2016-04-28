@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.hunter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -10,8 +11,11 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.type.TypeFactory;
 import org.jax.mgi.fewi.entities.hmdc.solr.SolrHdpEntityInterface;
 import org.jax.mgi.fewi.entities.hmdc.solr.SolrHdpGridEntry;
+import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
+import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 import org.jax.org.mgi.shr.fe.util.GridMarker;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +28,8 @@ public class SolrDiseasePortalGridHunter extends SolrHunter<SolrHdpEntityInterfa
 
 	public SolrDiseasePortalGridHunter() {
 		keyString = DiseasePortalFields.UNIQUE_KEY;
+		
+        propertyMap.put(SearchConstants.ALL_PHENOTYPE, new SolrPropertyMapper(Arrays.asList(IndexConstants.ALL_PHENO_ID, IndexConstants.ALL_PHENO_TEXT),"OR"));
 	}
 
 	@Override

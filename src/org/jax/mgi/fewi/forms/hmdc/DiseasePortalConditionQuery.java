@@ -1,5 +1,6 @@
-package org.jax.mgi.fewi.forms.models;
+package org.jax.mgi.fewi.forms.hmdc;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,21 +26,24 @@ public class DiseasePortalConditionQuery {
 		this.condition = condition;
 	}
 	public Filter genFilter() {
-		List<String> tokens = Arrays.asList(condition.getTokens());
-		// TODO this is where tokenization will happen
-		
-		if(field.equals(DiseasePortalFields.MARKER_NOMEN_SEARCH) || field.equals(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_TEXT)) {
-			return new Filter(field, condition.getInput(), Operator.OP_HAS_WORD);
-		}
-		
+		List<String> tokens = null;
 		if(field.equals(DiseasePortalFields.MARKER_ID_SEARCH) || field.equals(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_ID)) {
-			
 			if(condition.getInput().toLowerCase().startsWith("omim:")) {
 				condition.setInput(condition.getInput().replaceAll("(?i)omim:", ""));
 			}
-			return new Filter(field, "\"" + condition.getInput() + "\"", Operator.OP_HAS_WORD);
+			tokens = condition.getIdTokens();
+			List<Filter> filterList = new ArrayList<Filter>();
+			for(String token: tokens) {
+				filterList.add(new Filter(field, token, Operator.OP_EQUAL));
+			}
+			return Filter.or(filterList);
+		} else {
+			tokens = condition.getWordTokens();
+			List<Filter> filterList = new ArrayList<Filter>();
+			for(String token: tokens) {
+				filterList.add(new Filter(field, token, Operator.OP_EQUAL_WILDCARD_ALLOWED));
+			}
+			return Filter.and(filterList);
 		}
-		
-		return new Filter(field, tokens, Operator.OP_HAS_WORD);
 	}
 }
