@@ -86,14 +86,14 @@ public class GxdLitQueryForm {
     	ages.put("19.5", "19.5");
     	ages.put("20", "20");
     	ages.put("E", "E");
-    	ages.put("A", "A");
+    	ages.put("P", "P");
     	
     	age.add("ANY");
     	
     	assayTypes.put("ANY", "ANY");
-    	assayTypes.put("In situ protein (section)", "In situ protein (section)");
+    	assayTypes.put("Immunohistochemistry (section)", "Immunohistochemistry (section)");
     	assayTypes.put("In situ RNA (section)", "In situ RNA (section)");
-    	assayTypes.put("In situ protein (whole mount)", "In situ protein (whole mount)");
+    	assayTypes.put("Immunohistochemistry (whole mount)", "Immunohistochemistry (whole mount)");
     	assayTypes.put("In situ RNA (whole mount)", "In situ RNA (whole mount)");
     	assayTypes.put("In situ reporter (knock in)", "In situ reporter (knock in)");
     	assayTypes.put("Northern blot", "Northern blot");
@@ -116,7 +116,18 @@ public class GxdLitQueryForm {
 	}
     public String getAgesSelected () {
     	if (! age.contains("ANY")) {
-    		return StringUtils.join(age, " or ");
+    		
+    		// append 'E' to all numeric values
+    		List<String> display = new ArrayList<String>();
+    		for (String ageVal : age) {
+    			if (!ageVal.equalsIgnoreCase("e") &&
+    					!ageVal.equalsIgnoreCase("p")
+    			) {
+    				ageVal = 'E' + ageVal;
+    			}
+    			display.add(ageVal);
+    		}
+    		return StringUtils.join(display, " or ");
     	}
     	return null;
     }

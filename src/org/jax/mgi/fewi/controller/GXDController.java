@@ -1247,13 +1247,13 @@ public class GXDController {
 		gxdLitTSMap.put(24,Arrays.asList("16","16.5","17"));
 		gxdLitTSMap.put(25,Arrays.asList("17","17.5","18"));
 		gxdLitTSMap.put(26,Arrays.asList("18","18.5","19","19.5","20"));
-		gxdLitTSMap.put(28,Arrays.asList("A")); //GXD Lit Option for postnatal
+		gxdLitTSMap.put(28,Arrays.asList("P")); //GXD Lit Option for postnatal
 	}
 	private static Map<String,List<String>> gxdLitAssayTypeMap = new HashMap<String,List<String>>();
 	static
 	{
 		// Only assay type mappings that are not an exact 1:1 are defined
-		gxdLitAssayTypeMap.put("Immunohistochemistry", Arrays.asList("In situ protein (section)","In situ protein (whole mount)"));
+		gxdLitAssayTypeMap.put("Immunohistochemistry", Arrays.asList("Immunohistochemistry (section)","Immunohistochemistry (whole mount)"));
 		gxdLitAssayTypeMap.put("RNA in situ", Arrays.asList("In situ RNA (section)","In situ RNA (whole mount)"));
 	}
 
