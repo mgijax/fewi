@@ -16,7 +16,7 @@
 			<c:set var="extrastate" value="" />
 			<c:set var="arrowtext" value="more" />
 			<c:set var="titletext" value="Show More" />
-			<c:if test="${not (showJBrowser or showDownloadSequence or showGenomeBrowserLinks or geneticMapExtra)}">
+			<c:if test="${not (showJBrowser or showDownloadSequence or showGenomeBrowserLinks or hasMinimap)}">
 				<c:set var="arrowstate" value="hdCollapse" />
 				<c:set var="extrastate" value="extra" />
 				<c:set var="arrowtext" value="less" />
@@ -190,8 +190,21 @@
 							<li class="extra closed">
 								<div class="value">
 									<a href="${linkmapUrl}">Detailed Genetic Map &#177; 1 cM</a>
-									<c:if test="${not empty miniMap}">
-										<br/><a href="${linkmapUrl}" style="background-color: transparent"><img src="${miniMap}" border="0" style="padding-top: 4px"></a>
+									<c:if test="${hasMinimap}">
+									    <div class="minimapWrap">
+									      <a href="${linkmapUrl}">
+									        <canvas id="minimap"></canvas>
+									      </a>
+									    </div>
+									    <script>
+									    	window.loadMinimap = function(){
+									    		Minimap.draw({
+									    			id: "minimap",
+									    			data: ${minimapInitJson},
+									    			rotate90: true
+									    		});
+									    	}
+									    </script>
 									</c:if>
 								</div>
 							</li>
