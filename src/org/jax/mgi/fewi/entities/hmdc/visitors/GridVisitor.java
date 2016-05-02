@@ -50,7 +50,7 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 				}
 			}
 			
-			if(!gridMPHeaders.contains(ar.getTermHeader()) && "Mammalian Phenotype".equals(ar.getTermType())) {
+			if(!gridMPHeaders.contains(ar.getTermHeader()) && ("Mammalian Phenotype".equals(ar.getTermType()) || "Human Phenotype Ontology".equals(ar.getTermType()))) {
 				gridMPHeaders.add(ar.getTermHeader());
 			}
 			if(!gridOMIMHeaders.contains(ar.getTermHeader()) && "OMIM".equals(ar.getTermType())) {
@@ -139,6 +139,12 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 				} else {
 					annotation.incHumanAnnotCount();
 				}
+			} else if("Human Phenotype Ontology".equals(shgae.getTermType())) {
+				if(!mpHeaderCells.containsKey(term)) {
+					mpHeaderCells.put(term, new GridTermHeaderAnnotation());
+				}
+				annotation = mpHeaderCells.get(term);
+				annotation.incHumanAnnotCount();
 			}
 			
 			if(annotation != null) {
