@@ -168,8 +168,31 @@
 						key = response.data.gridRows[key];
 						var rowContent = [];
 
-						rowContent.push(key.gridCluster.humanSymbols.join(', ').replace(/<([^>]*)>/, "<sup>$1</sup>"));
-						rowContent.push(key.gridCluster.mouseSymbols.join(', ').replace(/<([^>]*)>/, "<sup>$1</sup>"));
+						var humanSymbolString = [];
+						for(var human in key.gridCluster.humanSymbols) {
+							var h = key.gridCluster.humanSymbols[human];
+							var temp = "";
+							if(key.gridCluster.homologyClusterKey) {
+								temp = "<a href=\"/homology/cluster/key/" + key.gridCluster.homologyClusterKey + "\">";
+								temp += h.symbol.replace(/<([^>]*)>/, "<sup>$1</sup>");
+								temp += "</a>";
+							} else {
+								temp = h.symbol.replace(/<([^>]*)>/, "<sup>$1</sup>");
+							}
+							humanSymbolString.push(temp);
+						}
+						rowContent.push(humanSymbolString.join(", "));
+
+						var markerSymbolString = [];
+						for(var marker in key.gridCluster.mouseSymbols) {
+							var m = key.gridCluster.mouseSymbols[marker];
+							var temp = "<a href=\"/marker/" + m.primaryID + "\">";
+							temp += m.symbol.replace(/<([^>]*)>/, "<sup>$1</sup>");
+							temp += "</a>";
+							markerSymbolString.push(temp);
+						}
+						rowContent.push(markerSymbolString.join(", "));
+
 						for(var header in response.data.gridMPHeaders) {
 							header = response.data.gridMPHeaders[header];
 							rowContent.push(key.mpHeaderCells[header]);

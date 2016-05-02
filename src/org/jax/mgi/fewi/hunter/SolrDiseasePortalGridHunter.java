@@ -46,7 +46,7 @@ public class SolrDiseasePortalGridHunter extends SolrHunter<SolrHdpEntityInterfa
 			gridResult.setGenoClusterKey((Integer) doc.getFieldValue(DiseasePortalFields.GENO_CLUSTER_KEY));
 			gridResult.setGridClusterKey((Integer) doc.getFieldValue(DiseasePortalFields.GRID_CLUSTER_KEY));
 			gridResult.setGridKey((Integer)doc.getFieldValue(DiseasePortalFields.GRID_KEY));
-			//gridResult.setHomologyClusterKey((Integer)doc.getFieldValue(DiseasePortalFields.HOMOLOGY_CLUSTER_KEY));
+			gridResult.setHomologyClusterKey(((List<Integer>)doc.getFieldValue(DiseasePortalFields.HOMOLOGY_CLUSTER_KEY)).get(0));
 			
 			TypeFactory typeFactory = TypeFactory.defaultInstance();
 			

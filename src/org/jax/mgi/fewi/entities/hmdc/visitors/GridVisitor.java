@@ -53,29 +53,6 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 	}
 
 	@Override
-	public void Visit(GridCluster gridCluster) {
-
-		if(gridCluster.getHumanSymbols() == null) {
-			gridCluster.setHumanSymbols(new ArrayList<String>());
-		}
-		List<String> humanSymbols = gridCluster.getHumanSymbols();
-
-		for(GridMarker gm: currentGridEntry.getGridHumanSymbols()) {
-			humanSymbols.add(gm.getSymbol());
-		}
-		
-		if(gridCluster.getMouseSymbols() == null) {
-			gridCluster.setMouseSymbols(new ArrayList<String>());
-		}
-		List<String> mouseSymbols = gridCluster.getMouseSymbols();
-		
-		for(GridMarker gm: currentGridEntry.getGridMouseSymbols()) {
-			mouseSymbols.add(gm.getSymbol());
-		}
-
-	}
-
-	@Override
 	public void Visit(GridResult gridResult) {
 
 		
@@ -94,11 +71,11 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 			rowMap.get(gridClusterKey).Accept(this);
 			
 			String index = "";
-			for (String s: rowMap.get(gridClusterKey).getGridCluster().getHumanSymbols()) {
-			    index += s.toLowerCase();
+			for (GridMarker gm: rowMap.get(gridClusterKey).getGridCluster().getHumanSymbols()) {
+			    index += gm.getSymbol().toLowerCase();
 			}
-			for (String s: rowMap.get(gridClusterKey).getGridCluster().getMouseSymbols()) {
-			    index += s.toLowerCase();
+			for (GridMarker gm: rowMap.get(gridClusterKey).getGridCluster().getMouseSymbols()) {
+			    index += gm.getSymbol().toLowerCase();
 			}
 			sortedMap.put(index, rowMap.get(gridClusterKey));
 		}
@@ -165,6 +142,13 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 	@Override
 	public void Visit(GridTermHeaderAnnotation gridTermHeaderAnnotation) {
 
+	}
+	
+	@Override
+	public void Visit(GridCluster gridCluster) {
+		gridCluster.setMouseSymbols(currentGridEntry.getGridMouseSymbols());
+		gridCluster.setHumanSymbols(currentGridEntry.getGridHumanSymbols());
+		gridCluster.setHomologyClusterKey(currentGridEntry.getHomologyClusterKey());
 	}
 
 	public GridResult getGridResult() {
