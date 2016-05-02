@@ -8,6 +8,8 @@ import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 
+import com.google.common.base.Joiner;
+
 public class DiseasePortalConditionQuery {
 
 	private String field;
@@ -39,11 +41,7 @@ public class DiseasePortalConditionQuery {
 			return Filter.or(filterList);
 		} else {
 			tokens = condition.getWordTokens();
-			List<Filter> filterList = new ArrayList<Filter>();
-			for(String token: tokens) {
-				filterList.add(new Filter(field, token, Operator.OP_EQUAL_WILDCARD_ALLOWED));
-			}
-			return Filter.and(filterList);
+			return new Filter(field, Joiner.on(" ").join(tokens), 100);
 		}
 	}
 }

@@ -69,20 +69,20 @@ public class SolrPropertyMapper {
 	 */
 
 	public String getClause(String value,Operator operator) {
-		return getClause(value,operator,false);
+		return getClause(value,operator,false, 0);
 	}
 	
 	public String getClause(Filter filter) {
 		if(filter.getOperator() == Filter.Operator.OP_RANGE) {
 			return getClause(filter.getValues(),filter.getOperator(),filter.isNegate());
 		} else {
-			return getClause(filter.getValue(),filter.getOperator(),filter.isNegate());
+			return getClause(filter.getValue(),filter.getOperator(),filter.isNegate(), filter.getProximity());
 		}
 	}
 	
-	public String getClause(String value,Operator operator,boolean negate)  {
+	public String getClause(String value, Operator operator, boolean negate, int proximity)  {
 		if (!singleField.equals("")) {
-			return handleOperand(operator, value, singleField, negate);
+			return handleOperand(operator, value, singleField, negate, proximity);
 		}
 		// else handle multiple fields
 		List<String> outClauses = new ArrayList<String>();
@@ -118,9 +118,9 @@ public class SolrPropertyMapper {
 	 */
 	protected String handleOperand(Operator operand, String value, String field)
 	{
-		return handleOperand(operand,value,field,false);
+		return handleOperand(operand,value,field,false, 0);
 	}
-	protected String handleOperand(Operator operand, String value, String field,boolean negate) 
+	protected String handleOperand(Operator operand, String value, String field,boolean negate, int proximity) 
 	{
 		String val = "";
 		if (operand == Filter.Operator.OP_EQUAL) {
@@ -129,6 +129,13 @@ public class SolrPropertyMapper {
 		else if (operand == Filter.Operator.OP_EQUAL_WILDCARD_ALLOWED) {
 			if (value.indexOf("*") >= 0) {
 				val =  field + ":" + value;
+			} else {
+				val =  field + ":\"" + value + "\"";
+			}
+		}
+		else if (operand == Filter.Operator.OP_PROXIMITY) {
+			if(proximity > 0) {
+				val =  field + ":\"" + value + "\"~" + proximity;
 			} else {
 				val =  field + ":\"" + value + "\"";
 			}

@@ -33,19 +33,16 @@ public class Filter {
 	// This is mostly for display purposes
 	protected boolean quoted=false;
 	
+	// Used for proximity searches in multi valued fields
+	protected int proximity = 0;
+	
 
     //////////////////////////////////////////////////////////////////////////
     //  CONSTRUCTORS
     //////////////////////////////////////////////////////////////////////////
 
-	/**
-	 * Create an empty filter
-	 */
 	public Filter() {}
 
-	/**
-	 * Creates a basic filter;  default operator 'equals'
-	 */
 	public Filter(String property, String value) {
 		this.property = property;
 		values.add(value);
@@ -80,11 +77,14 @@ public class Filter {
 		this.operator = operator;
 	}
 
-    //////////////////////////////////////////////////////////////////////////
-    //  BASIC ACCESSORS
-    //////////////////////////////////////////////////////////////////////////
+	public Filter(String property, String value, int proximity) {
+		this.property = property;
+		values.add(value);
+		this.operator = Operator.OP_PROXIMITY;
+		this.proximity = proximity;
+	}
 
-	// property
+
 	public String getProperty() {
 		return property;
 	}
@@ -92,24 +92,22 @@ public class Filter {
 		this.property = property;
 	}
 
-	// value
 	public String getValue() {
 		if (values.size() > 0){
 			return values.get(0);
 		} 
 		return null;
 	}
+	public void setValues(List<String> values) {
+		this.values = values;
+	}
+	
 	public List<String> getValues() {
 		return values;
 	}
 	public void setValue(String value) {
 		values.add(value);
 	}
-	public void setValues(List<String> values) {
-		this.values = values;
-	}
-
-	// operator
 	public Operator getOperator() {
 		return operator;
 	}
@@ -126,6 +124,13 @@ public class Filter {
 	}
 	public void negate() {
 		negate = !negate;
+	}
+	
+	public int getProximity() {
+		return proximity;
+	}
+	public void setProximity(int proximity) {
+		this.proximity = proximity;
 	}
 	
 	// filters
@@ -425,6 +430,7 @@ public class Filter {
 	    OP_GREEDY_BEGINS(99, "GREEDY BEGIN"),
 		OP_IN(100, "IN"),
 		OP_NOT_IN(101, "!IN"),
+		OP_PROXIMITY(103, "proximity"),
 		OP_STRING_CONTAINS(102, "STRING CONTAINS"),
 		OP_EQUAL_WILDCARD_ALLOWED(200, "EQUAL WITH WILDCARD"),
 		OP_RANGE(201, "RANGE")
