@@ -199,7 +199,7 @@ public class SolrMarkerSummaryHunter extends SolrHunter<SolrSummaryMarker> {
         
         // A mapping of field -> set of highlighted words
         // for the result set.
-        Map<String, Set<String>> setHighlights = new HashMap<String, Set<String>> ();
+        Map<String, List<String>> setHighlights = new HashMap<String, List<String>> ();
 
         if (sp.includeSetMeta()) {
             sr.setResultSetMeta(new ResultSetMetaData(setHighlights));
@@ -221,7 +221,7 @@ public class SolrMarkerSummaryHunter extends SolrHunter<SolrSummaryMarker> {
             	if(!keyToResultMap.containsKey(uniqueKey)) continue;
             	SolrSummaryMarker marker = keyToResultMap.get(uniqueKey);
 
-            	Set<String> highlightList = new LinkedHashSet<String>();
+            	ArrayList<String> highlightList = new ArrayList<String>();
             	
             	// just add the field names that matched for now
 //            	for(String field : highlight.keySet())

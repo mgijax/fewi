@@ -1,8 +1,9 @@
 package org.jax.mgi.fewi.hunter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
@@ -11,11 +12,9 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.type.TypeFactory;
 import org.jax.mgi.fewi.entities.hmdc.solr.SolrHdpEntityInterface;
 import org.jax.mgi.fewi.entities.hmdc.solr.SolrHdpGridEntry;
-import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
-import org.jax.mgi.fewi.searchUtil.SearchConstants;
+import org.jax.mgi.fewi.searchUtil.ResultSetMetaData;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 import org.jax.org.mgi.shr.fe.util.GridMarker;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +28,14 @@ public class SolrDiseasePortalGridHunter extends SolrHunter<SolrHdpEntityInterfa
 	public SolrDiseasePortalGridHunter() {
 		keyString = DiseasePortalFields.UNIQUE_KEY;
 		
-        propertyMap.put(SearchConstants.ALL_PHENOTYPE, new SolrPropertyMapper(Arrays.asList(IndexConstants.ALL_PHENO_ID, IndexConstants.ALL_PHENO_TEXT),"OR"));
+		highlightFields.add(DiseasePortalFields.TERM);
+		
+        highlightRequireFieldMatch = false;
+        highlightFragmentSize=100;
+        highlightSnippets = 1;
+        highlightPre = ""; // to be replaced later, because we need to superscript the data also
+        highlightPost = "";
+		
 	}
 
 	@Override
@@ -37,6 +43,22 @@ public class SolrDiseasePortalGridHunter extends SolrHunter<SolrHdpEntityInterfa
 
 		SolrDocumentList sdl = rsp.getResults();
 
+		Map<String, Map<String, List<String>>> highlights = rsp.getHighlighting();
+		
+		Map<String, List<String>> setHighlights = new HashMap<String, List<String>>();
+		
+		for(String key: highlights.keySet()) {
+			if(highlights.get(key).containsKey(DiseasePortalFields.TERM)) {
+				
+	
+				
+				setHighlights.put(key, highlights.get(key).get(DiseasePortalFields.TERM));
+			}
+		}
+
+		sr.setResultSetMeta(new ResultSetMetaData(setHighlights));
+		System.out.println(highlights);
+		
 		List<String> keys = new ArrayList<String>();
 		
 		for (SolrDocument doc : sdl) {
@@ -46,7 +68,7 @@ public class SolrDiseasePortalGridHunter extends SolrHunter<SolrHdpEntityInterfa
 			gridResult.setGenoClusterKey((Integer) doc.getFieldValue(DiseasePortalFields.GENO_CLUSTER_KEY));
 			gridResult.setGridClusterKey((Integer) doc.getFieldValue(DiseasePortalFields.GRID_CLUSTER_KEY));
 			gridResult.setGridKey((Integer)doc.getFieldValue(DiseasePortalFields.GRID_KEY));
-			gridResult.setHomologyClusterKey(((List<Integer>)doc.getFieldValue(DiseasePortalFields.HOMOLOGY_CLUSTER_KEY)).get(0));
+			gridResult.setHomologyClusterKey((Integer)doc.getFieldValue(DiseasePortalFields.HOMOLOGY_CLUSTER_KEY));
 			
 			TypeFactory typeFactory = TypeFactory.defaultInstance();
 			

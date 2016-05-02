@@ -4,19 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import mgi.frontend.datamodel.group.RecombinaseEntity;
 
+import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.Group;
 import org.apache.solr.client.solrj.response.GroupCommand;
 import org.apache.solr.client.solrj.response.GroupResponse;
 import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.common.SolrDocument;
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.MetaData;
-import org.jax.mgi.fewi.searchUtil.ResultSetMetaData;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
@@ -147,12 +145,6 @@ public class SolrCreAssayResultSummaryHunter extends SolrHunter<RecombinaseEntit
 		// A list of all the primary keys in the document
 		List<String> keys = new ArrayList<String>();
 
-		// A mapping of field -> set of highlighted words
-		// for the result set.
-		Map<String, Set<String>> setHighlights = new HashMap<String, Set<String>>();
-
-		rsp.getHighlighting();
-
 		// A mapping of documentKey -> Row level Metadata objects.
 		Map<String, MetaData> metaList = new HashMap<String, MetaData>();
 
@@ -206,10 +198,6 @@ public class SolrCreAssayResultSummaryHunter extends SolrHunter<RecombinaseEntit
 
 		if (keys != null) {
 			sr.setResultKeys(keys);
-		}
-
-		if (sp.includeSetMeta()) {
-			sr.setResultSetMeta(new ResultSetMetaData(setHighlights));
 		}
 
 		if (sp.includeRowMeta()) {

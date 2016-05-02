@@ -3,6 +3,7 @@ package org.jax.mgi.fewi.entities.hmdc.visitors;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 import org.jax.mgi.fewi.entities.hmdc.models.GridCluster;
@@ -37,7 +38,18 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 		gridMPHeaders = new ArrayList<String>();
 		gridOMIMHeaders = new ArrayList<String>();
 		
+		Map<String, List<String>> highLights = gridResults.getResultSetMeta().getSetHighlights();
+
 		for(SolrHdpGridAnnotationEntry ar: annotationResults.getResultObjects()) {
+			
+			if(highLights.containsKey(ar.getGridKey().toString())) {
+				String term = highLights.get(ar.getGridKey().toString()).get(0);
+
+				if(ar.getTerm().equals(term) && !gridHighLights.contains(ar.getTermHeader())) {
+					gridHighLights.add(ar.getTermHeader());
+				}
+			}
+			
 			if(!gridMPHeaders.contains(ar.getTermHeader()) && "Mammalian Phenotype".equals(ar.getTermType())) {
 				gridMPHeaders.add(ar.getTermHeader());
 			}
@@ -55,9 +67,6 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 	@Override
 	public void Visit(GridResult gridResult) {
 
-		
-		//TODO Setup Highlights
-		
 		HashMap<Integer, GridRow> rowMap = new HashMap<Integer, GridRow>();
 		TreeMap<String, GridRow> sortedMap = new TreeMap<String, GridRow>();
 		
@@ -83,6 +92,7 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 		for(GridRow gr: sortedMap.values()) {
 			gridResult.getGridRows().add(gr);
 		}
+		gridResult.setGridHighLights(gridHighLights);
 	}
 
 	@Override

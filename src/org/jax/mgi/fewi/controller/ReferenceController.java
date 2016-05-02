@@ -10,13 +10,10 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.Collections;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -173,8 +170,8 @@ public class ReferenceController {
 			SearchResults<Reference> searchResults = getSummaryResults(request, query, page, result);	
         List<Reference> refList = searchResults.getResultObjects();
 
-        Map<String, Set<String>> highlighting = searchResults.getResultSetMeta().getSetHighlights();
-        Set<String> textHl = new HashSet<String>(), authorHL = new HashSet<String>();
+        Map<String, List<String>> highlighting = searchResults.getResultSetMeta().getSetHighlights();
+        List<String> textHl = new ArrayList<String>(), authorHL = new ArrayList<String>();
         if (highlighting != null){
 	        if (query.getAuthor() != null && !"".equals(query.getAuthor())){
 	        	if (highlighting.containsKey(SearchConstants.REF_AUTHOR)){

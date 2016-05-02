@@ -1,7 +1,6 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
 
 /**
  * Marker on marker summary
@@ -21,7 +20,7 @@ public class SolrSummaryMarker
 	private String coordinateDisplay = "";
 	private String locationDisplay = "";
 
-	Set<String> highlights=new LinkedHashSet<String>();
+	ArrayList<String> highlights = new ArrayList<String>();
 
 
 	// marker key
@@ -146,10 +145,10 @@ public class SolrSummaryMarker
 	}
 
 	// highlights
-	public Set<String> getHighlights() {
+	public ArrayList<String> getHighlights() {
 		return highlights;
 	}
-	public void setHighlights(Set<String> highlights) {
+	public void setHighlights(ArrayList<String> highlights) {
 		this.highlights = highlights;
 	}
 

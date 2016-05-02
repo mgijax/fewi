@@ -2,7 +2,6 @@ package org.jax.mgi.fewi.hunter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -220,8 +219,6 @@ public class SolrHunter<T> implements Hunter<T> {
 		// Create the query string by invoking the translate filter method.
 		SolrQuery query = new SolrQuery();
 
-		query.setHighlightRequireFieldMatch(this.highlightRequireFieldMatch);
-
 		String queryString = translateFilter(searchParams.getFilter(), propertyMap);
 
 		if(!searchParams.getSuppressLogs()) logger.debug("TranslatedFilters: " + queryString);
@@ -268,7 +265,9 @@ public class SolrHunter<T> implements Hunter<T> {
 
 		// Perform highlighting, assuming its needed.  This method will take
 		// care of determining that.
-		addHighlightingFields(searchParams, query);
+		if(searchParams.includeMetaHighlight() || searchParams.includeHighlightMarkup()) {
+			addHighlightingFields(searchParams, query);
+		}
 
 		// Set the pagination parameters.
 		query.setRows(searchParams.getPageSize());
@@ -528,6 +527,7 @@ public class SolrHunter<T> implements Hunter<T> {
 			query.setHighlight(Boolean.TRUE);
 			query.setHighlightFragsize(this.highlightFragmentSize);
 			query.setHighlightSnippets(this.highlightSnippets);
+			query.setHighlightRequireFieldMatch(this.highlightRequireFieldMatch);
 			if(this.highlightPre!=null)
 			{
 				query.setParam("hl.simple.pre", this.highlightPre);
@@ -636,7 +636,7 @@ public class SolrHunter<T> implements Hunter<T> {
 
 		// A mapping of field -> set of highlighted words
 		// for the result set.
-		Map<String, Set<String>> setHighlights = new HashMap<String, Set<String>> ();
+		Map<String, List<String>> setHighlights = new HashMap<String, List<String>> ();
 
 		// A mapping of documentKey -> Mapping of FieldName
 		// -> list of highlighted words.
@@ -771,7 +771,7 @@ public class SolrHunter<T> implements Hunter<T> {
 								else {
 									setHighlights.put(fieldToParamMap
 											.get(key),
-											new HashSet <String> ());
+											new ArrayList <String> ());
 
 									setHighlights.get(fieldToParamMap
 											.get(key)).add(frag);
@@ -864,8 +864,7 @@ public class SolrHunter<T> implements Hunter<T> {
 
 		// A mapping of field -> set of highlighted words
 		// for the result set.
-		Map<String, Set<String>> setHighlights =
-				new HashMap<String, Set<String>> ();
+		Map<String, List<String>> setHighlights = new HashMap<String, List<String>> ();
 
 		// A mapping of documentKey -> Mapping of FieldName
 		// -> list of highlighted words.

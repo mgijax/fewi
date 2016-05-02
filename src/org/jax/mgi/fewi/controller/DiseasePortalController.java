@@ -60,7 +60,8 @@ public class DiseasePortalController {
 		SearchParams params = new SearchParams();
 		params.setPageSize(1000000);
 		params.setReturnFilterQuery(true);
-		
+		params.setIncludeMetaHighlight(true);
+
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			DiseasePortalConditionGroup group = (DiseasePortalConditionGroup)mapper.readValue(jsonInput, DiseasePortalConditionGroup.class);
@@ -80,6 +81,7 @@ public class DiseasePortalController {
 		Filter gridFilter = new Filter(DiseasePortalFields.GRID_KEY, gridKeys, Operator.OP_IN);
 		params.setFilter(gridFilter);
 		params.setPageSize(1000000);
+		params.setIncludeMetaHighlight(false);
 		SearchResults<SolrHdpGridAnnotationEntry> annotationResults = hdpFinder.getGridAnnotationResults(params);
 
 		GridVisitor gv = new GridVisitor(results, annotationResults);
