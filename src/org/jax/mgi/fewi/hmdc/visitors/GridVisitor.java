@@ -1,4 +1,4 @@
-package org.jax.mgi.fewi.entities.hmdc.visitors;
+package org.jax.mgi.fewi.hmdc.visitors;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,13 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.jax.mgi.fewi.entities.hmdc.models.GridCluster;
-import org.jax.mgi.fewi.entities.hmdc.models.GridResult;
-import org.jax.mgi.fewi.entities.hmdc.models.GridRow;
-import org.jax.mgi.fewi.entities.hmdc.models.GridTermHeaderAnnotation;
-import org.jax.mgi.fewi.entities.hmdc.solr.SolrHdpGridAnnotationEntry;
-import org.jax.mgi.fewi.entities.hmdc.solr.SolrHdpGridEntry;
+import org.jax.mgi.fewi.hmdc.models.GridCluster;
+import org.jax.mgi.fewi.hmdc.models.GridResult;
+import org.jax.mgi.fewi.hmdc.models.GridRow;
+import org.jax.mgi.fewi.hmdc.models.GridTermHeaderAnnotation;
+import org.jax.mgi.fewi.hmdc.solr.SolrHdpGridAnnotationEntry;
+import org.jax.mgi.fewi.hmdc.solr.SolrHdpGridEntry;
 import org.jax.mgi.fewi.searchUtil.PrinterUtil;
+import org.jax.mgi.fewi.searchUtil.ResultSetMetaData;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.org.mgi.shr.fe.util.GridMarker;
 
@@ -31,24 +32,14 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 
 	private SearchResults<SolrHdpGridEntry> gridResults;
 	
-	public GridVisitor(SearchResults<SolrHdpGridEntry> gridResults, SearchResults<SolrHdpGridAnnotationEntry> annotationResults) {
+	public GridVisitor(SearchResults<SolrHdpGridEntry> gridResults, SearchResults<SolrHdpGridAnnotationEntry> annotationResults, List<String> highLights) {
 		this.gridResults = gridResults;
 		
-		gridHighLights = new ArrayList<String>();
+		gridHighLights = highLights;
 		gridMPHeaders = new ArrayList<String>();
 		gridOMIMHeaders = new ArrayList<String>();
-		
-		Map<String, List<String>> highLights = gridResults.getResultSetMeta().getSetHighlights();
 
 		for(SolrHdpGridAnnotationEntry ar: annotationResults.getResultObjects()) {
-			
-			if(highLights.containsKey(ar.getGridKey().toString())) {
-				String term = highLights.get(ar.getGridKey().toString()).get(0);
-
-				if(ar.getTerm().equals(term) && !gridHighLights.contains(ar.getTermHeader())) {
-					gridHighLights.add(ar.getTermHeader());
-				}
-			}
 			
 			if(!gridMPHeaders.contains(ar.getTermHeader()) && ("Mammalian Phenotype".equals(ar.getTermType()) || "Human Phenotype Ontology".equals(ar.getTermType()))) {
 				gridMPHeaders.add(ar.getTermHeader());

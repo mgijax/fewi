@@ -1,10 +1,10 @@
 package org.jax.mgi.fewi.test.mock;
 
 import org.jax.mgi.fewi.controller.AlleleController;
-import org.jax.mgi.fewi.controller.DiseasePortalController;
 import org.jax.mgi.fewi.controller.GOController;
 import org.jax.mgi.fewi.controller.GXDController;
 import org.jax.mgi.fewi.controller.MarkerController;
+import org.jax.mgi.fewi.hmdc.controller.DiseasePortalController;
 
 /*
  * A useful way to encapsulate the inner workings of how mock queries get created

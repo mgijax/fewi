@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class ResultSetMetaData {
     
-    Map<String, List<String>> setHighlights = new HashMap<String, List<String>> ();
+    Map<String, List<String>> highlights = new HashMap<String, List<String>> ();
 
 
 	Map<String, Integer> counts = new HashMap<String, Integer> ();
@@ -14,15 +14,15 @@ public class ResultSetMetaData {
     public ResultSetMetaData() {};
     
     public ResultSetMetaData(Map<String, List<String>> highlights) {
-        this.setHighlights = highlights;
+        this.highlights = highlights;
     };
     
-    public Map<String, List<String>> getSetHighlights() {
-		return setHighlights;
+    public Map<String, List<String>> getHighlights() {
+		return highlights;
 	}
 
-	public void setSetHighlights(Map<String, List<String>> setHighlights) {
-		this.setHighlights = setHighlights;
+	public void setHighlights(Map<String, List<String>> highlights) {
+		this.highlights = highlights;
 	}
  
 //    public String toString() {

@@ -1,6 +1,6 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
-import org.jax.mgi.fewi.entities.hmdc.solr.SolrHdpEntityInterface;
+import org.jax.mgi.fewi.hmdc.solr.SolrHdpEntityInterface;
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
 
 /*

@@ -1,4 +1,4 @@
-package org.jax.mgi.fewi.entities.hmdc.solr;
+package org.jax.mgi.fewi.hmdc.solr;
 
 import java.util.ArrayList;
 import java.util.List;

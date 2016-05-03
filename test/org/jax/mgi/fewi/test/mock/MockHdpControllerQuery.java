@@ -2,10 +2,10 @@ package org.jax.mgi.fewi.test.mock;
 
 import java.util.List;
 
-import org.jax.mgi.fewi.controller.DiseasePortalController;
-import org.jax.mgi.fewi.entities.hmdc.models.GridResult;
-import org.jax.mgi.fewi.entities.hmdc.solr.SolrHdpDisease;
-import org.jax.mgi.fewi.entities.hmdc.solr.SolrHdpMarker;
+import org.jax.mgi.fewi.hmdc.controller.DiseasePortalController;
+import org.jax.mgi.fewi.hmdc.models.GridResult;
+import org.jax.mgi.fewi.hmdc.solr.SolrHdpDisease;
+import org.jax.mgi.fewi.hmdc.solr.SolrHdpMarker;
 
 public class MockHdpControllerQuery extends AbstractMockHdpQuery {
 

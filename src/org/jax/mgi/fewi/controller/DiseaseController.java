@@ -5,7 +5,7 @@ import java.util.List;
 import mgi.frontend.datamodel.Disease;
 
 import org.jax.mgi.fewi.finder.DiseaseFinder;
-import org.jax.mgi.fewi.finder.DiseasePortalFinder;
+import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.slf4j.Logger;

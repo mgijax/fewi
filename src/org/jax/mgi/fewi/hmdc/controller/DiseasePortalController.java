@@ -1,23 +1,26 @@
-package org.jax.mgi.fewi.controller;
+package org.jax.mgi.fewi.hmdc.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.jax.mgi.fewi.entities.hmdc.models.GridResult;
-import org.jax.mgi.fewi.entities.hmdc.solr.SolrHdpDisease;
-import org.jax.mgi.fewi.entities.hmdc.solr.SolrHdpGridAnnotationEntry;
-import org.jax.mgi.fewi.entities.hmdc.solr.SolrHdpGridEntry;
-import org.jax.mgi.fewi.entities.hmdc.solr.SolrHdpMarker;
-import org.jax.mgi.fewi.entities.hmdc.visitors.GridVisitor;
-import org.jax.mgi.fewi.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.TermFinder;
 import org.jax.mgi.fewi.forms.hmdc.DiseasePortalConditionGroup;
 import org.jax.mgi.fewi.forms.hmdc.DiseasePortalConditionQuery;
+import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
+import org.jax.mgi.fewi.hmdc.models.GridResult;
+import org.jax.mgi.fewi.hmdc.solr.SolrHdpDisease;
+import org.jax.mgi.fewi.hmdc.solr.SolrHdpGridAnnotationEntry;
+import org.jax.mgi.fewi.hmdc.solr.SolrHdpGridEntry;
+import org.jax.mgi.fewi.hmdc.solr.SolrHdpMarker;
+import org.jax.mgi.fewi.hmdc.visitors.GridVisitor;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.Operator;
+import org.jax.mgi.fewi.searchUtil.ResultSetMetaData;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
@@ -59,17 +62,20 @@ public class DiseasePortalController {
 
 		SearchParams params = new SearchParams();
 		params.setPageSize(1000000);
-		params.setReturnFilterQuery(true);
-		params.setIncludeMetaHighlight(true);
 
+		Filter mainFilter = null;
+		Filter highlightFilter = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			DiseasePortalConditionGroup group = (DiseasePortalConditionGroup)mapper.readValue(jsonInput, DiseasePortalConditionGroup.class);
-			params.setFilter(genQueryFilter(group));
+			mainFilter = genQueryFilter(group);
+			highlightFilter = genHighlightFilter(group);
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
+		params.setFilter(mainFilter);
 		SearchResults<SolrHdpGridEntry> results = hdpFinder.getGridResults(params);
 		
 		List<String> gridKeys = new ArrayList<String>();
@@ -81,14 +87,14 @@ public class DiseasePortalController {
 		Filter gridFilter = new Filter(DiseasePortalFields.GRID_KEY, gridKeys, Operator.OP_IN);
 		params.setFilter(gridFilter);
 		params.setPageSize(1000000);
-		params.setIncludeMetaHighlight(false);
 		SearchResults<SolrHdpGridAnnotationEntry> annotationResults = hdpFinder.getGridAnnotationResults(params);
-
-		GridVisitor gv = new GridVisitor(results, annotationResults);
+		
+		params.setFilter(highlightFilter);
+		List<String> highLights = hdpFinder.getGridHighlights(params);
+		
+		GridVisitor gv = new GridVisitor(results, annotationResults, highLights);
 
 		return gv.getGridResult();
-
-		
 
 		//List<SolrHdpGridData>
 
@@ -103,10 +109,7 @@ public class DiseasePortalController {
 
 		//Map<String, Map<String, List<String>>> highlights = rsp.getHighlighting();
 
-
 	}
-
-
 
 	@RequestMapping(value="/geneQuery")
 	public @ResponseBody List<SolrHdpMarker> geneQuery(@RequestBody String jsonInput) throws Exception {
@@ -147,6 +150,23 @@ public class DiseasePortalController {
 
 	}
 
+	private Filter genHighlightFilter(DiseasePortalConditionGroup group) {
+		
+		List<Filter> filterList = new ArrayList<Filter>();
+
+		for(DiseasePortalConditionQuery cq: group.getQueries()) {
+			Filter f = cq.genHighlightFilter();
+			if(f != null) {
+				filterList.add(f);
+			}
+		}
+
+		if(group.getOperator().equals("AND")) {
+			return Filter.and(filterList);
+		} else {
+			return Filter.or(filterList);
+		}
+	}
 
 	private Filter genQueryFilter(DiseasePortalConditionGroup group) {
 

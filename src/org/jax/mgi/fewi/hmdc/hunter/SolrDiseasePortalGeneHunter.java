@@ -1,4 +1,4 @@
-package org.jax.mgi.fewi.hunter;
+package org.jax.mgi.fewi.hmdc.hunter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,8 +6,9 @@ import java.util.List;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
-import org.jax.mgi.fewi.entities.hmdc.solr.SolrHdpEntityInterface;
-import org.jax.mgi.fewi.entities.hmdc.solr.SolrHdpMarker;
+import org.jax.mgi.fewi.hmdc.solr.SolrHdpEntityInterface;
+import org.jax.mgi.fewi.hmdc.solr.SolrHdpMarker;
+import org.jax.mgi.fewi.hunter.SolrHunter;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;

@@ -170,7 +170,7 @@ public class ReferenceController {
 			SearchResults<Reference> searchResults = getSummaryResults(request, query, page, result);	
         List<Reference> refList = searchResults.getResultObjects();
 
-        Map<String, List<String>> highlighting = searchResults.getResultSetMeta().getSetHighlights();
+        Map<String, List<String>> highlighting = searchResults.getResultSetMeta().getHighlights();
         List<String> textHl = new ArrayList<String>(), authorHL = new ArrayList<String>();
         if (highlighting != null){
 	        if (query.getAuthor() != null && !"".equals(query.getAuthor())){

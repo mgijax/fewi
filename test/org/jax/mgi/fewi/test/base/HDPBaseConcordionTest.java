@@ -1,6 +1,6 @@
 package org.jax.mgi.fewi.test.base;
 
-import org.jax.mgi.fewi.controller.DiseasePortalController;
+import org.jax.mgi.fewi.hmdc.controller.DiseasePortalController;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /*

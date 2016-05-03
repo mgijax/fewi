@@ -1,6 +1,6 @@
-package org.jax.mgi.fewi.entities.hmdc.models;
+package org.jax.mgi.fewi.hmdc.models;
 
-import org.jax.mgi.fewi.entities.hmdc.visitors.GridVisitorInterface;
+import org.jax.mgi.fewi.hmdc.visitors.GridVisitorInterface;
 
 public class GridTermHeaderAnnotation extends AbstractGridModel {
 

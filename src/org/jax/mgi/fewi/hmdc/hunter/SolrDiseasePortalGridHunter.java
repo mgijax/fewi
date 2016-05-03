@@ -1,18 +1,16 @@
-package org.jax.mgi.fewi.hunter;
+package org.jax.mgi.fewi.hmdc.hunter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.type.TypeFactory;
-import org.jax.mgi.fewi.entities.hmdc.solr.SolrHdpEntityInterface;
-import org.jax.mgi.fewi.entities.hmdc.solr.SolrHdpGridEntry;
-import org.jax.mgi.fewi.searchUtil.ResultSetMetaData;
+import org.jax.mgi.fewi.hmdc.solr.SolrHdpEntityInterface;
+import org.jax.mgi.fewi.hmdc.solr.SolrHdpGridEntry;
+import org.jax.mgi.fewi.hunter.SolrHunter;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
@@ -27,15 +25,7 @@ public class SolrDiseasePortalGridHunter extends SolrHunter<SolrHdpEntityInterfa
 
 	public SolrDiseasePortalGridHunter() {
 		keyString = DiseasePortalFields.UNIQUE_KEY;
-		
-		highlightFields.add(DiseasePortalFields.TERM);
-		
-        highlightRequireFieldMatch = false;
-        highlightFragmentSize=100;
-        highlightSnippets = 1;
-        highlightPre = ""; // to be replaced later, because we need to superscript the data also
-        highlightPost = "";
-		
+
 	}
 
 	@Override
@@ -43,22 +33,6 @@ public class SolrDiseasePortalGridHunter extends SolrHunter<SolrHdpEntityInterfa
 
 		SolrDocumentList sdl = rsp.getResults();
 
-		Map<String, Map<String, List<String>>> highlights = rsp.getHighlighting();
-		
-		Map<String, List<String>> setHighlights = new HashMap<String, List<String>>();
-		
-		for(String key: highlights.keySet()) {
-			if(highlights.get(key).containsKey(DiseasePortalFields.TERM)) {
-				
-	
-				
-				setHighlights.put(key, highlights.get(key).get(DiseasePortalFields.TERM));
-			}
-		}
-
-		sr.setResultSetMeta(new ResultSetMetaData(setHighlights));
-		System.out.println(highlights);
-		
 		List<String> keys = new ArrayList<String>();
 		
 		for (SolrDocument doc : sdl) {
