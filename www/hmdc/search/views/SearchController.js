@@ -210,6 +210,8 @@
 					vm.results.grid.colcount = vm.results.grid.totalcolcount >= 35 ? 35 : vm.results.grid.totalcolcount;
 					vm.results.grid.totalrowcount = response.data.gridRows.length;
 
+					vm.tabs.gridTab.count = response.data.gridRows.length + " x " + vm.results.grid.totalcolcount;
+
 					vm.mustHide = true;
 				}, function (error) {
 					vm.errorMessage = error;
