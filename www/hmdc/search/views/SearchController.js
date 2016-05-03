@@ -80,7 +80,11 @@
 
 		$scope.formatCell = function(value, row, col, formattedValue) {
 			if(value && value.normalCount > 0 && value.normalCount == value.annotCount) {
-				return "<strong>N</strong>";
+				if(value.humanAnnotCount > 0) {
+					return "<div class=\"normal normaloffset\">N</div>";
+				} else {
+					return "<div class=\"normal\">N</div>";
+				}
 			}
 		}
 

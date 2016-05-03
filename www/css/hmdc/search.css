@@ -209,3 +209,12 @@ td.cell.right.header.last {
    float: right;
 }
 
+.normal {
+	font-weight: bold;
+}
+
+.normaloffset {
+	position: relative;
+	top: 7px;
+	left: 7px;
+}
