@@ -125,6 +125,9 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 				
 				if(currentGridEntry.getGenoClusterKey() != null && !currentGridEntry.getGenoClusterKey().equals("")) {
 					annotation.incAnnotCount();
+					if(annotation != null) {
+						annotation.incNormal("normal".equals(shgae.getQualifier()));
+					}
 				} else {
 					annotation.incHumanAnnotCount();
 				}
@@ -136,6 +139,9 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 				
 				if(currentGridEntry.getGenoClusterKey() != null && !currentGridEntry.getGenoClusterKey().equals("")) {
 					annotation.incAnnotCount();
+					if(annotation != null) {
+						annotation.incNormal("normal".equals(shgae.getQualifier()));
+					}
 				} else {
 					annotation.incHumanAnnotCount();
 				}
@@ -146,13 +152,7 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 				annotation = mpHeaderCells.get(term);
 				annotation.incHumanAnnotCount();
 			}
-			
-			if(annotation != null) {
-				annotation.incNormal("normal".equals(shgae.getQualifier()));
-			}
-			
 		}
-
 	}
 
 	@Override
