@@ -79,7 +79,7 @@
 		}
 
 		$scope.formatCell = function(value, row, col, formattedValue) {
-			if(value && value.normal) {
+			if(value && value.normalCount > 0 && value.normalCount == value.annotCount) {
 				return "<strong>N</strong>";
 			}
 		}

@@ -4,15 +4,15 @@ import org.jax.mgi.fewi.entities.hmdc.visitors.GridVisitorInterface;
 
 public class GridTermHeaderAnnotation extends AbstractGridModel {
 
-	private boolean normal = true;
+	private Integer normalCount = 0;
 	private Integer annotCount = 0;
 	private Integer humanAnnotCount = 0;
 	
-	public boolean isNormal() {
-		return normal;
+	public Integer getNormalCount() {
+		return normalCount;
 	}
-	public void setNormal(boolean normal) {
-		this.normal = normal;
+	public void setNormalCount(Integer normalCount) {
+		this.normalCount = normalCount;
 	}
 	public Integer getAnnotCount() {
 		return annotCount;
@@ -26,9 +26,8 @@ public class GridTermHeaderAnnotation extends AbstractGridModel {
 	public void setHumanAnnotCount(Integer humanAnnotCount) {
 		this.humanAnnotCount = humanAnnotCount;
 	}
-	
-	public void incNormal(boolean normal) {
-		this.normal &= normal;
+	public void incNormalCount() {
+		normalCount += 1;
 	}
 	public void incAnnotCount() {
 		annotCount += 1;
