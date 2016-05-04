@@ -144,7 +144,6 @@ public class GoForMarkerTest extends GOBaseConcordionTest {
 			String jNumber, String evidenceCode, String termId, String propType) throws Exception
 	{
 
-		
 		NotesTagConverter ntc = new NotesTagConverter();
 		List<String> values = new ArrayList<String>();
 		
