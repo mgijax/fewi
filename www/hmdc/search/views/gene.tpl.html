@@ -1,34 +1,47 @@
 Export: <a id="markersTextDownload" class="btn" href="/diseasePortal/marker/report.txt?phenotypes=105830&amp;numDCol=100"><img src="http://www.informatics.jax.org/webshare/images/text.png" width="10" height="10">Text File</a> 
 
-
-<table class="table table-bordered table-striped" ng-show="vm.results.geneResults.totalCount > 0">
+<table class="table table-bordered table-striped" st-reset="vm.resetTable" st-table="displayedCollection" st-set-sort="sortFilter" st-safe-src="vm.results.geneResults" ng-show="vm.results.geneResults.length > 0">
 	<thead>
 		<tr>
-			<td>Organism</td>
-			<td>Gene Symbol</td>
-			<td>Genetic Location</td>
-			<td>Genome Coordinates</td>
-			<td>Associated Human Diseases (<a href="" ng-click="openGeneSource();">Source</a>)</td>
-			<td>Abnormal Mouse Phenotypes<br>Reported in these Systems</td>
-			<td>References in MGI</td>
-			<td>Mice With Mutations<br>In this Gene (IMSR)</td>
+			<th st-sort="organism" st-skip-natural="true" st-sort-default="true" class="sortable">Organism <i st-sort="organism"></i></th>
+			<th st-sort="symbol" st-skip-natural="true" class="sortable">Gene Symbol <i st-sort="symbol"></i></th>
+			<th>Genetic Location</th>
+			<th>Genome Coordinates</th>
+			<th>Associated Human Diseases (<a href="" ng-click="openGeneSource();">Source</a>)</th>
+			<th>Abnormal Mouse Phenotypes<br>Reported in these Systems</th>
+			<th>References in MGI</th>
+			<th>Mice With Mutations<br>In this Gene (IMSR)</th>
 		</tr>
 	</thead>
 	
 	<tbody>
-		<tr ng-repeat="sumrow in vm.results.geneResults.summaryRows">
-			<td>{{ sumrow.organism }}</td>
-			<td><nobr><div ng-bind-html="displayHTML(sumrow.symbol)"></div></nobr></td>
-			<td><nobr>{{ sumrow.location }}</nobr></td>
-			<td><div ng-bind-html="displayHTML(sumrow.coordinate)"></div></td>
-			<td><div ng-bind-html="displayHTML(sumrow.disease)"></div></td>
-			<td>{{ sumrow.system }}</td>
-			<td><div ng-bind-html="displayHTML(sumrow.allRefCount)"></div></td>
-			<td><div ng-bind-html="displayHTML(sumrow.imsrCount)"></div></td>
+		<tr ng-repeat="row in displayedCollection">
+			<td>{{ row.organism }}</td>
+			<td><nobr><div ng-bind-html="row.symbol | handleSubscript "></div></nobr></td>
+			<td>{{ row.location }}</td>
+			<td><div ng-bind-html="row.coordinate"></div></td>
+			<td><div ng-bind-html="row.disease"></div></td>
+			<td><div ng-bind-html="row.system"></div></td>
+			<td>
+				<div ng-if="row.allRefCount > 0">
+					<nobr>All Mouse: <a href="/reference/marker/{{ row.mgiId }}?typeFilter=Literature">{{ row.allRefCount }}</a></nobr>
+				</div>
+				<div ng-if="row.diseaseRefCount > 0">
+					<nobr>Disease Relevant: <a href="/reference/diseaseRelevantMarker/{{ row.mgiId }}?typeFilter=Literature">{{ row.diseaseRefCount }}</a></nobr>
+				</div>
+			</td>
+			<td><div ng-bind-html="row.imsrCount"></div></td>
 		</tr>
 	</tbody>
+	<tfoot>
+		<tr>
+			<td colspan="6" class="text-center">
+				<div st-items-by-page="250" st-pagination=""></div>
+			</td>
+		</tr>
+	</tfoot>
 </table>
-Showing {{ vm.results.geneResults.summaryRows.length }} of {{ vm.results.geneResults.totalCount }} total records.
+
 <script type="text/ng-template" id="GeneSource">
-Disease associations for human genes are from the NCBI mim2gene_medgen file and include annotations from OMIM, NCBI curation, Gene Reviews, and Gene Tests. Mouse genes are associated with human diseases through mouse genotypes described in publications.
+	Disease associations for human genes are from the NCBI mim2gene_medgen file and include annotations from OMIM, NCBI curation, Gene Reviews, and Gene Tests. Mouse genes are associated with human diseases through mouse genotypes described in publications.
 </script>

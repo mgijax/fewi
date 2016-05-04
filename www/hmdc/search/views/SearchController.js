@@ -220,14 +220,15 @@
 				}, function (error) {
 					vm.errorMessage = error;
 			});
-//			Search.geneQuery(vm.model).
-//				then(function(response) {
-//					vm.results.geneResults = response.data;
-//					vm.tabs.geneTab.count = vm.results.geneResults.totalCount;
-//					vm.mustHide = true;
-//				}, function (error) {
-//					vm.errorMessage = error;
-//			});
+			Search.geneQuery(vm.model).
+				then(function(response) {
+					vm.results.geneResults = response.data;
+					vm.tabs.geneTab.count = vm.results.geneResults.length;
+					vm.mustHide = true;
+					vm.resetTable = true;
+				}, function (error) {
+					vm.errorMessage = error;
+			});
 			Search.diseaseQuery(vm.model).
 				then(function(response) {
 					vm.results.diseaseResults = response.data;
