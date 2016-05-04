@@ -31,7 +31,11 @@
 							// reset table state
 							var tableState = ctrl.tableState();
 							tableState.search = {};
-							tableState.sort = {predicate: "term", reverse: false};
+							if(attr.stReset == "vm.resetDiseaseTable") {
+								tableState.sort = {predicate: "term", reverse: false};
+							} else if(attr.stReset == "vm.resetGeneTable") {
+								tableState.sort = {predicate: "symbol", reverse: false};
+							}
 							ctrl.pipe();
 							// reset scope value
 							scope.stReset = false;
@@ -49,7 +53,8 @@
 		vm.onSubmit = onSubmit;
 		vm.mustHide = false;
 		vm.mustHideLegend = true;
-		vm.resetTable = false;
+		vm.resetGeneTable = false;
+		vm.resetDiseaseTable = false;
 
 		$scope.displayHTML = function(html) {
 			return $sce.trustAsHtml(html);
@@ -177,7 +182,7 @@
 							var h = key.gridCluster.humanSymbols[human];
 							var temp = "";
 							if(key.gridCluster.homologyClusterKey) {
-								temp = "<a href=\"/homology/cluster/key/" + key.gridCluster.homologyClusterKey + "\">";
+								temp = "<a target=\"_blank\" href=\"/homology/cluster/key/" + key.gridCluster.homologyClusterKey + "\">";
 								temp += h.symbol.replace(/<([^>]*)>/, "<sup>$1</sup>");
 								temp += "</a>";
 							} else {
@@ -190,7 +195,7 @@
 						var markerSymbolString = [];
 						for(var marker in key.gridCluster.mouseSymbols) {
 							var m = key.gridCluster.mouseSymbols[marker];
-							var temp = "<a href=\"/marker/" + m.primaryID + "\">";
+							var temp = "<a target=\"_blank\" href=\"/marker/" + m.primaryID + "\">";
 							temp += m.symbol.replace(/<([^>]*)>/, "<sup>$1</sup>");
 							temp += "</a>";
 							markerSymbolString.push(temp);
@@ -225,7 +230,7 @@
 					vm.results.geneResults = response.data;
 					vm.tabs.geneTab.count = vm.results.geneResults.length;
 					vm.mustHide = true;
-					vm.resetTable = true;
+					vm.resetGeneTable = true;
 				}, function (error) {
 					vm.errorMessage = error;
 			});
@@ -234,7 +239,7 @@
 					vm.results.diseaseResults = response.data;
 					vm.tabs.diseaseTab.count = vm.results.diseaseResults.length;
 					vm.mustHide = true;
-					vm.resetTable = true;
+					vm.resetDiseaseTable = true;
 					vm.tabs.gridTab.active = true;
 				}, function (error) {
 					vm.errorMessage = error;

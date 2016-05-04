@@ -53,7 +53,8 @@ public class SolrDiseasePortalGeneHunter extends SolrHunter<SolrHdpEntityInterfa
 			marker.setCoordinate((String)doc.getFieldValue(DiseasePortalFields.COORDINATE_DISPLAY));
 			marker.setCoordinateBuild((String)doc.getFieldValue(DiseasePortalFields.BUILD_IDENTIFIER));
 			marker.setDisease((List<String>)doc.getFieldValue(DiseasePortalFields.MARKER_DISEASE));
-			marker.setSystem((List<String>)doc.getFieldValue(DiseasePortalFields.MARKER_SYSTEM));
+			marker.setMouseSystem((List<String>)doc.getFieldValue(DiseasePortalFields.MOUSE_MARKER_SYSTEM));
+			marker.setHumanSystem((List<String>)doc.getFieldValue(DiseasePortalFields.HUMAN_MARKER_SYSTEM));
 			marker.setAllRefCount((Integer)doc.getFieldValue(DiseasePortalFields.MARKER_ALL_REF_COUNT));
 			marker.setDiseaseRefCount((Integer)doc.getFieldValue(DiseasePortalFields.MARKER_DISEASE_REF_COUNT));
 			marker.setImsrCount((Integer)doc.getFieldValue(DiseasePortalFields.MARKER_IMSR_COUNT));
