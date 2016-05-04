@@ -76,6 +76,7 @@ public class DiseasePortalController {
 		}
 
 		params.setFilter(mainFilter);
+		params.setReturnFilterQuery(true);
 		SearchResults<SolrHdpGridEntry> results = hdpFinder.getGridResults(params);
 		
 		List<String> gridKeys = new ArrayList<String>();
@@ -87,6 +88,7 @@ public class DiseasePortalController {
 		Filter gridFilter = new Filter(DiseasePortalFields.GRID_KEY, gridKeys, Operator.OP_IN);
 		params.setFilter(gridFilter);
 		params.setPageSize(1000000);
+		
 		SearchResults<SolrHdpGridAnnotationEntry> annotationResults = hdpFinder.getGridAnnotationResults(params);
 		
 		params.setFilter(highlightFilter);
