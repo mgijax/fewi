@@ -1,0 +1,360 @@
+/* Styles for the GXD query summary */
+
+
+#toolbar span {
+	text-align: right;
+}
+
+#paginationBottom {
+	float:right;
+}
+
+.visHidden {
+	visibility: hidden;
+}
+
+#resultSummary
+{
+	display:table;
+}
+#gxdLitInfo
+{
+	font-weight:bold;
+}
+
+/* Styles for image summary tab */
+#imagesdata table
+{
+border-collapse: collapse;
+}
+#imagesdata tr.yui-dt-odd
+{
+	border-top:solid 1px #ccc;
+	border-bottom:solid 1px #ccc;
+}
+#imagesdata td.yui-dt-col-image
+{
+	width: 240px;
+	max-width: 240px;
+}
+#imagesdata td.yui-dt-col-image .yui-dt-liner
+{ display: inline; }
+
+#imagesdata td li {
+	list-style-type: none;
+	margin-left: 0px;
+	margin-bottom: 4px;
+}
+.copySymbol
+{
+	font-weight:bold;
+	padding-left:4px;
+}
+
+
+
+#matrixPopupButtonWrapper
+{
+	width:100%;
+	height: 40px;
+	font-size: 90%;
+	font-weight: bold;
+	border-top-style: solid;
+	background-color:#EEEEEE;
+	border-color: #111111;
+	border-width: 2px;
+
+}
+#matrixPopupResultsButton
+{
+	padding: 3px;
+	margin-top: 8px;
+	margin-left: 12px;
+	background-color:#EBCA6D;
+	float:left;
+}
+#matrixPopupImagesButton
+{
+	padding: 3px;
+	margin-top: 8px;
+	margin-right: 12px;
+	background-color:#EBCA6D;
+	float:right;
+}
+
+#structStagePopupContents
+{
+	width:100%;
+	background-color: #FFFFFF;
+}
+#structGenePopupContents
+{
+	width:100%;
+	background-color: #FFFFFF;
+}
+
+#stagePopupTable
+{
+	border-collapse: separate;
+	border-spacing: 2px;
+	width:100%;
+	background-color: #FFFFFF;
+	margin: 0 auto;
+	border:1px;
+}
+
+#stagePopupTable th
+{
+	background-color: #EBCA6D;
+	padding:10px;
+	text-align: center;
+	border:3px;
+}
+#stagePopupTable td
+{
+	padding:10px;
+	text-align: center;
+	border:1px;
+}
+#structStagePopup_h
+{
+	cursor: move;
+	border-width:0px;
+	line-height:2.5;
+	background:	#EEE;
+}
+#structGenePopup_h
+{
+	cursor: move;
+	border-width:0px;
+	line-height:2.5;
+	background:	#EEE;
+}
+
+
+.validStageWrapper {
+	width: 100%;
+	height: 100%;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #CCC;
+	position:relative;
+	overflow:hidden;
+	background:#FFF;
+}
+.validStageIndicator {
+	color:#CCCCCC;
+	font-family:"Courier New";
+	padding-left: 5px;
+	padding-bottom: 1px;
+	font-size:160%
+}
+*:focus {
+    outline: 0;
+}
+
+/* GXD Matrix Styles */
+
+#stagegriddata .gridTitle {
+	text-align:center;
+	font-weight:bold;
+	font-size:120%;	
+}
+.gridWrapper {
+	background-color: white;
+}
+
+#sgTarget line, #ggTarget line {
+    stroke: #aaa;
+    stroke-width: 1px;
+}
+#sgTarget .blue1, #ggTarget .blue1 {
+	fill: rgb(215,228,255);
+}
+#sgTarget .blue2, #ggTarget .blue2 {
+	fill: rgb(102,153,255);
+}
+#sgTarget .blue3, #ggTarget .blue3 {
+	fill: rgb(0,64,192);
+}
+#sgTarget .red1, #ggTarget .red1 {
+	fill: rgb(255,215,215);
+}
+#sgTarget .red2, #ggTarget .red2 {
+	fill: rgb(255,103,103);
+}
+#sgTarget .red3, #ggTarget .red3 {
+	fill: rgb(192,0,0);
+}
+#sgTarget .gray {
+	/* fill: rgb(191,191,191); */
+	fill: url(#sash28);
+}
+#ggTarget .gray {
+	/* fill: rgb(191,191,191); */
+	fill: url(#sash24);
+}
+#sgTarget .gold, #ggTarget .gold {
+	fill: rgb(255,219,103);
+	/*fill: rgb(243,223,157);*/
+}
+
+#sgTarget .matrixButtonText, #ggTarget .matrixButtonText {
+	font-weight: bold;
+}
+
+#sgTarget .matrixFilterButton, #ggTarget .matrixFilterButton {
+		padding-bottom: 20px;
+		margin-bottom: 20px;
+}
+
+#sgTarget .fh, #ggTarget .fh{
+	fill: rgb(230,230,230);
+	/*
+    fill:white;
+    stroke:#aaa;
+    stroke-width: 2px; */
+}
+.matrixContainer {
+	height:100%;
+	width:100%;
+	overflow: scroll;
+	border: solid 1px black;
+}
+.matrixContainer svg {
+	border: solid 1px black;
+	border-top: none;
+	border-left: none;
+	background-color: white;
+}
+
+/* Matrix Legend */
+.legendWrapper {
+	width:240px;
+	overflow: auto;
+}
+.legendSection{
+	width: 100%;
+	margin-bottom:20px;
+	font-size:11px;
+}
+.legendSelectionRow{
+	height:21px;
+}
+.legendExampleCell {
+	height:20px;
+	width:20px;
+	float:left;
+	box-sizing: border-box;
+}
+.legendExampleRange {
+	margin-left:5px;
+	vertical-align:text-top;
+}
+#legendPopupPanel .hd {
+	color: black;
+	background-color: #aaa;
+}
+.hiddenNegIndicatorWrapper {
+	width: 100%;
+	height: 100%;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #CCC;
+	position:relative;
+	overflow:hidden;
+	background:#6699FF;
+}
+.hiddenNegIndicator {
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-width: 0 20px 20px 0;
+	border-color: transparent #FF6767 transparent transparent;
+	position: absolute;
+	top: -6px;
+	left: 0;
+}
+.inSubStructIndicatorWrapper {
+	width: 100%;
+	height: 100%;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #CCC;
+	position:relative;
+	overflow:hidden;
+	background:#FFF;
+}
+.inSubStructIndicator {
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-width: 0 20px 20px 0;
+	border-color: transparent #FFDB67 transparent transparent;
+	position: absolute;
+	top: -6px;
+	left: 0;
+}
+.legendExampleCell.blue1 {
+	background-color: rgb(215,228,255);
+	margin-left: 50px;
+}
+.legendExampleCell.blue2 {
+	background-color: rgb(102,153,255);
+	margin-left: 30px;
+}
+.legendExampleCell.blue3 {
+	background-color: rgb(0,64,192);
+	margin-left: 10px;
+}
+.legendExampleCell.red1 {
+	background-color: rgb(255,215,215);
+	margin-left: 50px;
+}
+.legendExampleCell.red2 {
+	background-color: rgb(255,103,103);
+	margin-left: 30px;
+}
+.legendExampleCell.red3 {
+	background-color: rgb(192,0,0);
+	margin-left: 10px;
+}
+
+/* adjust some cell positions in legend */
+.legendExampleCell.posNegCell,
+.legendExampleCell.subStructCell {
+	margin-top: 3px;
+}
+
+.legendSection h4 {
+	margin-bottom: 10px; 
+	text-align:center; 
+	font-weight:bold;
+}
+
+.legendFilterSection {
+	text-align:center;
+}
+.legendBottom {
+	text-align: center;
+	font-style: italic;
+	margin-bottom: 0px;
+}
+
+/* hide gene legend text from tissue matrix legend */
+#structLegendPopupPanel .geneOnly {
+	display: none;
+}
+/* hide theiler stage legend text from gene matrix legend */
+#geneLegendPopupPanel .theilerStageOnly {
+	display: none;
+}
+
+/* Filters */
+
+/* hidden by default */
+#filterSummary,
+#filterSummary #defaultText,
+#filterSummary #fCount {
+	display: none;
+}

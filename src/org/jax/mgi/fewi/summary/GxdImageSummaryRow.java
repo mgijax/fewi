@@ -1,9 +1,15 @@
 package org.jax.mgi.fewi.summary;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.ImageUtils;
+import org.jax.mgi.shr.jsonmodel.GxdImageMeta;
+import org.jax.mgi.shr.jsonmodel.GxdSpecimenLabel;
 
 /**
  * wrapper around an image (from solr); represents on row in summary
@@ -57,97 +63,100 @@ public class GxdImageSummaryRow {
 	public String getImageLabel() {
 		return image.getImageLabel();
 	}
-
-	public String getMetaData() {
-		String html = "<table id=\"gxd_image_meta\">"
-				+ "<tr><th>Gene</th><th>Assay Type</th><th>Result Details</th></tr>";
-		for (String metaData : image.getMetaData()) {
-			// each meta data row needs to be unpacked. It has a format like
-			// such
-			// "gene"||"assayType"||"specLabel1"|"assayID1","specLabel2"|"assayID2"
-			// etc
-			// as of 2013-04-18 there are no pipe or comma characters in any
-			// specimen label.
-			// if this changes, we can either pick different delimiters, or use
-			// a better format, like JSON, for encoding this data
-
-			// parse the meta data into columns
-			String[] cols = metaData.split("\\|\\|"); // split on the double
-														// pipes ||
-			if (cols.length > 1) {
-				String assayType = cols[0];
-				String markerSymbol = cols[1];
-
-				String specLabelsHtml = "";
-				boolean firstSpecimen = true;
-				if (cols.length > 2 && cols[2] != null) {
-					String[] specLabels = cols[2].split("\t\t"); // split by
-																	// double
-																	// tab ,
-					for (String specLabel : specLabels) {
-						if (specLabel != null) {
-							String[] specItems = specLabel.split("\\|"); // split
-																			// by
-																			// single
-																			// pipe
-																			// |
-							if (specItems.length > 1) {
-								if (!firstSpecimen)
-									specLabelsHtml += ", ";
-								String label = specItems[0];
-								String assayId = specItems[1];
-								if (label == null || label.equals("null")) {
-									label = image.getImageLabel();
-									specLabelsHtml += "<a class=\"nowrap\" href=\""
-											+ fewiUrl
-											+ "assay/"
-											+ assayId
-											+ "\">"
-											+ image.getImageLabel()
-											+ "</a>";
-								} else {
-									String anchorLink = FormatHelper
-											.makeCssSafe(label) + "_id"; // needs
-																			// to
-																			// match
-																			// css
-																			// id
-																			// for
-																			// specimens
-																			// on
-																			// assay
-																			// detail
-									specLabelsHtml += "<a class=\"nowrap\" href=\""
-											+ fewiUrl
-											+ "assay/"
-											+ assayId
-											+ "#"
-											+ anchorLink
-											+ "\">"
-											+ FormatHelper.superscript(label)
-											+ "</a>";
-								}
-
-								firstSpecimen = false;
-							}
-						}
-					}
-
-				}
-				if (specLabelsHtml == "") {
-					// link by figure label + pane label if this is blot (or if
-					// something is wrong with specimen label that caused it to
-					// be blank)
-					specLabelsHtml = "<a class=\"nowrap\" href=\"" + fewiUrl
-							+ "assay/" + image.getAssayID() + "\">"
-							+ image.getImageLabel() + "</a>";
-				}
-				html += "<tr><td class=\"nowrap\">" + markerSymbol + "</td>"
-						+ "<td class=\"nowrap\">" + assayType + "</td>"
-						+ "<td>" + specLabelsHtml + "</td></tr>";
-			}
+	
+	public String getGene() {
+		List<String> genes = new ArrayList<String>();
+		for (GxdImageMeta metaData : image.getMetaData()) {
+			
+			String geneHtml = "<li class=\"nowrap\">" + metaData.getMarkerSymbol() + "</li>";			
+			genes.add(geneHtml);
+			
 		}
-		html += "</table>";
-		return html;
+		
+		return "<ul>" + StringUtils.join(genes, "") + "</ul>";
+	}
+	
+	public String getAssayType() {
+		List<String> assayTypes = new ArrayList<String>();
+		for (GxdImageMeta metaData : image.getMetaData()) {
+			
+			String assayTypeHtml = "<li class=\"nowrap\">" + metaData.getAssayType() + "</li>";			
+			assayTypes.add(assayTypeHtml);
+			
+		}
+		
+		return "<ul>" + StringUtils.join(assayTypes, "") + "</ul>";
+	}
+	
+	
+	public String getHybridization() {
+		List<String> hybridizations = new ArrayList<String>();
+		for (GxdImageMeta metaData : image.getMetaData()) {
+			
+			String type = "";
+			if (metaData.getHybridization() != null) {
+				type = metaData.getHybridization();
+			}
+			String html = "<li class=\"nowrap\">" + type + "</li>";			
+			hybridizations.add(html);
+			
+		}
+		
+		return "<ul>" + StringUtils.join(hybridizations, "") + "</ul>";
+	}
+	
+	public String getSpecimenLabel() {
+		
+		List<String> specLabels = new ArrayList<String>();
+		for (GxdImageMeta metaData : image.getMetaData()) {
+			
+			// generate the correct specimen label links
+			List<String> specLabelLinks = new ArrayList<String>();
+			for(GxdSpecimenLabel labelObject : metaData.getSpecimenLabels()) {
+				
+				String label = labelObject.getLabel();
+				String assayId = labelObject.getAssayId();
+				
+				if (label != null && !label.equals("")) {
+					// needs to match css id for specimens on assay detail
+					String anchorLink = FormatHelper.makeCssSafe(label) + "_id"; 
+					
+					String specLabelLink = "<a class=\"nowrap\" href=\""
+							+ fewiUrl
+							+ "assay/"
+							+ assayId
+							+ "#"
+							+ anchorLink
+							+ "\">"
+							+ FormatHelper.superscript(label)
+							+ "</a>";
+					
+					specLabelLinks.add(specLabelLink);
+				} 
+
+			}
+			
+			// join all links for insitu assays with specimens 
+			String specLabelsHtml = StringUtils.join(specLabelLinks, ", ");
+			
+			/*
+			 *  link by figure label + pane label if this is blot (or if
+			 *  something is wrong with specimen label that caused it to
+			 *  be blank)
+			 */
+			if (specLabelsHtml == "") {
+				specLabelsHtml = "<a class=\"nowrap\" href=\"" + fewiUrl
+						+ "assay/" + image.getAssayID() + "\">"
+						+ image.getImageLabel() + "</a>";
+			}
+			
+			specLabelsHtml = "<li>" + specLabelsHtml + "</li>";
+			specLabels.add(specLabelsHtml);
+
+		}
+		
+		return "<ul>" + StringUtils.join(specLabels, "") + "</ul>";
+		
+			
 	}
 }

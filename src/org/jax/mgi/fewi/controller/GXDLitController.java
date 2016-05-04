@@ -640,16 +640,16 @@ public class GXDLitController {
 		ages.add("19.5");
 		ages.add("20");
 		ages.add("E");
-		ages.add("A");
+		ages.add("P");
 
 		for (String age: ages) {
 			hasAgeMap.put(age, Boolean.FALSE);
 		}
 
 		List<String> assayTypes = new ArrayList<String> ();
-		assayTypes.add("In situ protein (section)");
+		assayTypes.add("Immunohistochemistry (section)");
 		assayTypes.add("In situ RNA (section)");
-		assayTypes.add("In situ protein (whole mount)");
+		assayTypes.add("Immunohistochemistry (whole mount)");
 		assayTypes.add("In situ RNA (whole mount)");
 		assayTypes.add("In situ reporter (knock in)");
 		assayTypes.add("Northern blot");

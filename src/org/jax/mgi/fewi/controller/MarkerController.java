@@ -1,12 +1,6 @@
 package org.jax.mgi.fewi.controller;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -17,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -34,6 +26,7 @@ import mgi.frontend.datamodel.MarkerIDOtherMarker;
 import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.MarkerProbeset;
 import mgi.frontend.datamodel.MarkerSynonym;
+import mgi.frontend.datamodel.MinimapMarker;
 import mgi.frontend.datamodel.OrganismOrtholog;
 import mgi.frontend.datamodel.QueryFormOption;
 import mgi.frontend.datamodel.Reference;
@@ -42,6 +35,9 @@ import mgi.frontend.datamodel.Sequence;
 import mgi.frontend.datamodel.SequenceSource;
 
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.hibernate.SessionFactory;
 import org.jax.mgi.fewi.antlr.BooleanSearch.BooleanSearch;
 import org.jax.mgi.fewi.config.ContextLoader;
@@ -72,7 +68,7 @@ import org.jax.mgi.fewi.util.file.TextFileReader;
 import org.jax.mgi.fewi.util.link.FewiLinker;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.fewi.util.link.ProviderLinker;
-import org.jax.org.mgi.shr.fe.util.TextFormat;
+import org.jax.mgi.shr.fe.util.TextFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -445,7 +441,7 @@ public class MarkerController {
 		setupPageVariables(mav, marker);
 
 		setupRibbon1(mav, marker);
-		setupRibbon4(mav, marker);
+		setupLocationRibbon(mav, marker);
 		setupRibbon5(mav, marker);
 		setupDiseaseRibbon(mav, marker);
 		setupHomologyRibbons(mav, marker);
@@ -534,56 +530,25 @@ public class MarkerController {
 		mav.addObject("memberCount", marker.getClusterMembers().size());
 	}
 
-	private void setupRibbon4(ModelAndView mav, Marker marker) {
+	
+	/*
+	 * marker locations ribbon
+	 */
+	private void setupLocationRibbon(ModelAndView mav, Marker marker) {
 
-		// if we have not yet looked up the full suite of marker minimaps that
-		// have already been generated, then do so
-
-		if (minimaps.size() == 0) {
-			String returnedString = getAllMinimapUrls();
-			String[] allMinimaps = returnedString.split("\n");
-
-			logger.debug ("Got " + allMinimaps.length + " minimap URL lines");
-
-			Pattern findKey = Pattern.compile("@([0-9]+).gif");
-			Matcher matcher = null;
-
-			for (String url : allMinimaps) {
-				matcher = findKey.matcher(url);
-				if (matcher.find()) {
-					minimaps.put (new Integer(matcher.group(1)), url);
-				}
+		// Generate the JSON string for initializing minimap javascript widget
+		List<MinimapMarker> minimapMarkers = marker.getMinimapMarkers();
+		ObjectMapper mapper = new ObjectMapper();
+		
+		if (minimapMarkers != null && minimapMarkers.size() > 0) {
+			try {
+				mav.addObject("hasMinimap", true);
+				mav.addObject("minimapInitJson", mapper.writeValueAsString(minimapMarkers));
+			} catch (IOException e) {
+				logger.error("Failed to parse minimapMarkers into JSON",e);
 			}
 		}
-
-		// if we already know what the minimap URL needs to be for this
-		// marker, then just put it in.
-
-		String minimapUrl = null;
-		Integer markerKey = new Integer(marker.getMarkerKey());
-
-		if (minimaps.containsKey(markerKey)) {
-			minimapUrl = minimaps.get(markerKey);
-		} else {
-			// otherwise, if this marker has a cM location, we can request the
-			// URL for its minimap individually
-
-			MarkerLocation cmPos = marker.getPreferredCentimorgans();
-			if (cmPos != null) {
-				if (!cmPos.getChromosome().equalsIgnoreCase("UN")) {
-					Float cM = cmPos.getCmOffset();
-					if ((cM != null) && (cM.floatValue() >= 0.0)) {
-						minimapUrl = getMinimapUrl(markerKey);
-						minimaps.put (markerKey, minimapUrl);
-					}
-				}
-			}
-		}
-
-		if (minimapUrl != null) {
-			mav.addObject ("miniMap", minimapUrl);
-		}
-
+		
 		ArrayList<String> qtlIDs = new ArrayList<String>();
 
 		for (MarkerID anId: marker.getIds()) {
@@ -1388,6 +1353,28 @@ public class MarkerController {
 
 		return mav;
 	}
+	
+	@RequestMapping("/minimap/json/{markerId}")
+	public @ResponseBody String minimapJson(HttpServletRequest request, 
+			@PathVariable("markerId") String markerId) throws JsonGenerationException, JsonMappingException, IOException {
+		logger.debug("->minimapJson started");
+
+		SearchResults<Marker> markerResults = markerFinder.getMarkerByID(markerId);
+
+		if (markerResults.getTotalCount() != 1) {
+			logger.warn("no single marker match for " + markerId);
+			return "[]";
+		}
+		
+		Marker marker = markerResults.getResultObjects().get(0);
+		
+		List<MinimapMarker> minimapMarkers = marker.getMinimapMarkers();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		
+		return mapper.writeValueAsString(minimapMarkers);
+	}
+	
 
 	@RequestMapping("/json")
 	public @ResponseBody JsonSummaryResponse<MarkerSummaryRow> seqSummaryJson(HttpServletRequest request, @ModelAttribute MarkerQueryForm query, @ModelAttribute Paginator page) throws org.antlr.runtime.RecognitionException {
@@ -1411,6 +1398,7 @@ public class MarkerController {
 		jsonResponse.setTotalCount(searchResults.getTotalCount());
 		return jsonResponse;
 	}
+
 
 	/*
 	 * This is exposed for our automated tests to use
@@ -1539,59 +1527,6 @@ public class MarkerController {
 	 */
 	private void dbDate(ModelAndView mav) {
 		mav.addObject("databaseDate", dbInfoFinder.getSourceDatabaseDate());
-	}
-
-	/** get a String containing URLs to all currently rendered minimaps; they
-	 * will be delimited by line-breaks
-	 */
-	private String getAllMinimapUrls() {
-		return getMinimapUrl("all");
-	}
-
-	/** get a String containing the URL to the minimap for the marker with the
-	 * given markerKey
-	 */
-	private String getMinimapUrl(Integer markerKey){
-		return getMinimapUrl(markerKey.toString());
-	}
-
-	/** get a String containing one or more URLs for minimaps.  If parm
-	 * contains an integer, then it will be the URL for a single marker.  If
-	 * parm is "all", then it will be a line break-delimited string containing
-	 * the URLs for all minimaps currently rendered.
-	 */
-	private String getMinimapUrl(String parm) {
-		StringBuffer urlString = new StringBuffer();
-		logger.debug("get minimap: " + parm);
-		try {
-			URL url = new URL(ContextLoader.getConfigBean().getProperty("WI_URL") + "searches/markerMiniMap.cgi?" + parm);
-			URLConnection urlConnection = url.openConnection();
-			HttpURLConnection connection = null;
-
-			if (urlConnection instanceof HttpURLConnection) {
-				connection = (HttpURLConnection) urlConnection;
-				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				String current;
-				current = in.readLine();
-				while (current != null) {
-					if (urlString.length() > 0) {
-						urlString.append("\n");
-					}
-					urlString.append(current);
-					current = in.readLine();
-				}
-				in.close();
-				connection.disconnect();
-			} else {
-				logger.debug("miniMap URL not an HTTP URL.");
-			}
-		} catch (MalformedURLException mue) {
-			logger.error(mue.getMessage());
-		} catch (IOException ioe) {
-			logger.error(ioe.getMessage());
-		}
-		logger.debug("done");
-		return urlString.toString();
 	}
 
 	// generate the sorts

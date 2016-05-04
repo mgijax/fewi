@@ -20,7 +20,7 @@ import mgi.frontend.datamodel.util.DatamodelUtils;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
-import org.jax.org.mgi.shr.fe.util.TextFormat;
+import org.jax.mgi.shr.fe.util.TextFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.util.HtmlUtils;

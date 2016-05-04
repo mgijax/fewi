@@ -1,0 +1,88 @@
+
+td.padLR { padding-left:4px; padding-right:4px }
+td.padTop { padding-top:4px }
+.creSubmitButton {
+    font-size:12px;
+    font-family:Verdana, Arial,Helvetica;
+    color:#002255;
+    font-weight:bolder;
+    background-color:#FAFAFA;
+    border: 1px #7D95B9 solid;
+    padding:2px;
+    -moz-outline-style: none;
+    outline:0;
+    cursor: pointer;
+}
+td.detailCat3 {
+    background-color: #d0e0f0;
+    border: 1px solid black;
+    color: #000001;
+    font-family: Verdana,Arial,Helvetica;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 3px;
+    text-align: left;
+    vertical-align: top;
+}
+td.cm { 
+    text-align: center;
+    vertical-align: middle;
+    padding: 4px; 
+    border: 1px solid black;
+}
+td.lm { 
+    text-align: left;
+    vertical-align: middle;
+    padding: 4px; 
+    border: 1px solid black;
+}
+
+td.padded { padding:4px; }
+td.label { text-align: left; vertical-align: top; width: 1%; white-space: nowrap}
+td.right { text-align: right }
+
+
+/* QTL Ribbon styles */
+.qtlSection .label {
+	text-align: left;
+}
+
+.qtlSection p {
+	padding: 0px;
+	margin: 1.5em 0em;
+}
+
+.qtlSection p:nth-of-type(1) {
+	margin-top: 0em;
+}
+
+.qtlSection .topNote {
+	margin-bottom: 1em;
+}
+
+.qtl {
+	text-align: left;
+}
+
+.qtlSection .notesBlock {
+	margin-top: 1.75em;
+}
+
+.qtlSection h4 {
+	font-size: 12px;
+	font-style: italic;
+}
+.qtlSection h4::before {
+	content: "(";
+}
+.qtlSection h4::after {
+	content: ")";
+}
+
+.qtlSection h5 {
+	font-size: 11px;
+}
+
+.qtlRefNoteSec {
+	margin: .5em 0em 1em 1em;
+}

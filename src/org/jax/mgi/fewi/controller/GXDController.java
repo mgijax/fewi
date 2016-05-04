@@ -157,7 +157,7 @@ public class GXDController {
 
 		logger.debug("->getQueryForm started");
 
-		ModelAndView mav = new ModelAndView("gxd_query");
+		ModelAndView mav = new ModelAndView("gxd/gxd_query");
 		mav.addObject("sort", new Paginator());
 		mav.addObject("gxdQueryForm", new GxdQueryForm());
 		mav.addObject("gxdBatchQueryForm", new GxdQueryForm());
@@ -172,7 +172,7 @@ public class GXDController {
 
 		logger.debug("->getDifferentialQueryForm started");
 
-		ModelAndView mav = new ModelAndView("gxd_query");
+		ModelAndView mav = new ModelAndView("gxd/gxd_query");
 		mav.addObject("sort", new Paginator());
 		mav.addObject("gxdQueryForm", new GxdQueryForm());
 		mav.addObject("gxdBatchQueryForm", new GxdQueryForm());
@@ -268,7 +268,7 @@ public class GXDController {
 
 		logger.debug("->getBatchSearchForm started");
 
-		ModelAndView mav = new ModelAndView("gxd_query");
+		ModelAndView mav = new ModelAndView("gxd/gxd_query");
 		mav.addObject("sort", new Paginator());
 		mav.addObject("gxdQueryForm", new GxdQueryForm());
 		mav.addObject("gxdBatchQueryForm", query);
@@ -302,7 +302,7 @@ public class GXDController {
 		logger.debug("query string: " + request.getQueryString());
 		logger.debug("query form: " + query);
 
-		ModelAndView mav = new ModelAndView("gxd_generic_summary");
+		ModelAndView mav = new ModelAndView("gxd/gxd_generic_summary");
 		mav.addObject("queryString", request.getQueryString());
 
 		// the marker ID is an optional field; if it exists, get the
@@ -398,7 +398,7 @@ public class GXDController {
 		logger.debug("->summaryByStructureId started");
 
 		// setup view object
-		ModelAndView mav = new ModelAndView("gxd_summary_by_structure");
+		ModelAndView mav = new ModelAndView("gxd/gxd_summary_by_structure");
 
 		// setup search parameters object to gather the requested term
 		SearchParams searchParams = new SearchParams();
@@ -436,7 +436,7 @@ public class GXDController {
 		logger.debug("->summeryByRefId started");
 
 		// setup view object
-		ModelAndView mav = new ModelAndView("gxd_summary_by_reference");
+		ModelAndView mav = new ModelAndView("gxd/gxd_summary_by_reference");
 
 		// setup search parameters object to gather the requested marker
 		SearchParams referenceSearchParams = new SearchParams();
@@ -477,7 +477,7 @@ public class GXDController {
 		logger.debug("->summeryByallId started");
 
 		// setup view object
-		ModelAndView mav = new ModelAndView("gxd_summary_by_allele");
+		ModelAndView mav = new ModelAndView("gxd/gxd_summary_by_allele");
 
 
 		// setup search parameters object to gather the requested marker
@@ -546,7 +546,7 @@ public class GXDController {
 		logger.debug("->summeryByMrkId started");
 
 		// setup view object
-		ModelAndView mav = new ModelAndView("gxd_summary_by_marker");
+		ModelAndView mav = new ModelAndView("gxd/gxd_summary_by_marker");
 
 		String error = addMarkerToMav(mav, mrkID);
 		if (error != null) {
@@ -797,8 +797,8 @@ public class GXDController {
 		params.setPaginator(page);
 		params.setFilter(parseGxdQueryForm(query));
 
-		// sort using byDefaultSort
-		params.setSorts(Arrays.asList(new Sort(SortConstants.BY_DEFAULT)));
+		// sort using byAssayType
+		params.setSorts(Arrays.asList(new Sort(SortConstants.BY_IMAGE_ASSAY_TYPE)));
 
 		SearchResults<SolrGxdImage> results = gxdFinder.searchImages(params);
 
@@ -1247,13 +1247,13 @@ public class GXDController {
 		gxdLitTSMap.put(24,Arrays.asList("16","16.5","17"));
 		gxdLitTSMap.put(25,Arrays.asList("17","17.5","18"));
 		gxdLitTSMap.put(26,Arrays.asList("18","18.5","19","19.5","20"));
-		gxdLitTSMap.put(28,Arrays.asList("A")); //GXD Lit Option for postnatal
+		gxdLitTSMap.put(28,Arrays.asList("P")); //GXD Lit Option for postnatal
 	}
 	private static Map<String,List<String>> gxdLitAssayTypeMap = new HashMap<String,List<String>>();
 	static
 	{
 		// Only assay type mappings that are not an exact 1:1 are defined
-		gxdLitAssayTypeMap.put("Immunohistochemistry", Arrays.asList("In situ protein (section)","In situ protein (whole mount)"));
+		gxdLitAssayTypeMap.put("Immunohistochemistry", Arrays.asList("Immunohistochemistry (section)","Immunohistochemistry (whole mount)"));
 		gxdLitAssayTypeMap.put("RNA in situ", Arrays.asList("In situ RNA (section)","In situ RNA (whole mount)"));
 	}
 
@@ -2197,6 +2197,56 @@ public class GXDController {
 		return sorts;
 
 	}
+	
+	/*
+	 * Parses requested sort parameters for gxd marker image summary.
+	 */
+	private List<Sort> parseImageSorts(HttpServletRequest request) {
+
+		logger.debug("->parseImageSorts started");
+
+		List<Sort> sorts = new ArrayList<Sort>();
+
+		// retrieve requested sort order; set default if not supplied
+		String sortRequested = request.getParameter("sort");
+
+		// empty
+		if (sortRequested == null) {
+			return sorts;
+		}
+		
+
+		String dirRequested  = request.getParameter("dir");
+		boolean desc = false;
+		if("desc".equalsIgnoreCase(dirRequested)){
+			desc = true;
+		}
+
+		// expected sort values
+		if ("hybridization".equalsIgnoreCase(sortRequested)){
+			
+			// There is a custom sort on hybridization/"Specimen Type" for descending vs ascending
+			//   Not Specified and blot assays always sort to the bottom either way
+			if (desc) {
+				sorts.add(new Sort(SortConstants.BY_IMAGE_HYBRIDIZATION_DESC, false));
+			}
+			else {
+				sorts.add(new Sort(SortConstants.BY_IMAGE_HYBRIDIZATION_ASC, false));
+			}
+			
+		} else if ("gene".equalsIgnoreCase(sortRequested)){
+			
+			sorts.add(new Sort(SortConstants.BY_IMAGE_MARKER, desc));
+			
+		} else {
+			
+			sorts.add(new Sort(SortConstants.BY_IMAGE_ASSAY_TYPE, desc));
+		}
+
+
+		logger.debug ("sort: " + StringUtils.join(sorts, ", "));
+		return sorts;
+	}
 
 
 	// -----------------------------------------------------------------//
@@ -2317,9 +2367,9 @@ public class GXDController {
 		params.setPaginator(page);
 		params.setFilter(parseGxdQueryForm(query));
 
-		// sort using byDefaultSort
-		params.setSorts(Arrays.asList(new Sort(SortConstants.BY_DEFAULT)));
-
+		// sort using byAssayType
+		params.setSorts(this.parseImageSorts(request));
+		
 		// perform query and return results as json
 		logger.debug("params parsed");
 

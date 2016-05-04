@@ -1,5 +1,6 @@
 package org.jax.mgi.fewi.hunter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import org.apache.solr.client.solrj.response.GroupResponse;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.jax.mgi.fewi.propertyMapper.SolrJoinMapper;
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
@@ -32,6 +34,7 @@ import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.shr.fe.indexconstants.ImagePaneFields;
+import org.jax.mgi.shr.jsonmodel.GxdImageMeta;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
@@ -42,6 +45,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
+	
+	
+	private final ObjectMapper objectMapper = new ObjectMapper();
+	
 	/***
 	 * The constructor sets up this hunter so that it is specific to gxd
 	 * summary pages. Each item in the constructor sets a value that it has
@@ -176,11 +183,13 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 		sortMap.put(SortConstants.GXD_LOCATION, new SolrSortMapper(
 				GxdResultFields.M_BY_LOCATION));
 
-		// this is only available on the join index gxdImagePane (use wisely my
+		// these are only available on the join index gxdImagePane (use wisely my
 		// friend)
-		sortMap.put(SortConstants.BY_DEFAULT, new SolrSortMapper(
-				IndexConstants.BY_DEFAULT));
-
+		sortMap.put(SortConstants.BY_IMAGE_ASSAY_TYPE, new SolrSortMapper(ImagePaneFields.BY_ASSAY_TYPE));
+		sortMap.put(SortConstants.BY_IMAGE_MARKER, new SolrSortMapper(ImagePaneFields.BY_MARKER));
+		sortMap.put(SortConstants.BY_IMAGE_HYBRIDIZATION_ASC, new SolrSortMapper(ImagePaneFields.BY_HYBRIDIZATION_ASC));
+		sortMap.put(SortConstants.BY_IMAGE_HYBRIDIZATION_DESC, new SolrSortMapper(ImagePaneFields.BY_HYBRIDIZATION_DESC));
+		
 		/*
 		 * Groupings list of fields that can be uniquely grouped on
 		 */
@@ -226,7 +235,6 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 			String assayKey = (String) doc
 					.getFieldValue(GxdResultFields.ASSAY_KEY);
 			String age = (String) doc.getFieldValue(GxdResultFields.AGE);
-			//List<String> anatomicalSystems = (List<String>) doc.getFieldValue(GxdResultFields.ANATOMICAL_SYSTEM);
 			String assayMgiid = (String) doc
 					.getFieldValue(GxdResultFields.ASSAY_MGIID);
 			String detectionLevel = (String) doc
@@ -262,7 +270,6 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 			resultObject.setAssayKey(assayKey);
 			resultObject.setAssayType(assayType);
 			resultObject.setAge(age);
-//			resultObject.setAnatomicalSystems(anatomicalSystems);
 			resultObject.setAssayMgiid(assayMgiid);
 			resultObject.setDetectionLevel(detectionLevel);
 			resultObject.setFigures(figures);
@@ -412,29 +419,29 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 		for (SolrDocument doc : sdl) {
 
 			SolrGxdImage image = new SolrGxdImage();
-			image.setImagePaneKey((Integer) doc
-					.getFieldValue(ImagePaneFields.IMAGE_PANE_KEY));
-			image.setImageID((String) doc
-					.getFieldValue(IndexConstants.IMAGE_ID));
-			String pixeldbID = (String) doc
-					.getFieldValue(ImagePaneFields.IMAGE_PIXELDBID);
+			image.setImagePaneKey((Integer) doc.getFieldValue(ImagePaneFields.IMAGE_PANE_KEY));
+			image.setImageID((String) doc.getFieldValue(IndexConstants.IMAGE_ID));
+			String pixeldbID = (String) doc.getFieldValue(ImagePaneFields.IMAGE_PIXELDBID);
 			image.setPixeldbID(pixeldbID);
-			image.setImageLabel((String) doc
-					.getFieldValue(ImagePaneFields.IMAGE_LABEL));
-			image.setPaneWidth((Integer) doc
-					.getFieldValue(ImagePaneFields.PANE_WIDTH));
-			image.setPaneHeight((Integer) doc
-					.getFieldValue(ImagePaneFields.PANE_HEIGHT));
+			image.setImageLabel((String) doc.getFieldValue(ImagePaneFields.IMAGE_LABEL));
+			image.setPaneWidth((Integer) doc.getFieldValue(ImagePaneFields.PANE_WIDTH));
+			image.setPaneHeight((Integer) doc.getFieldValue(ImagePaneFields.PANE_HEIGHT));
 			image.setPaneX((Integer) doc.getFieldValue(ImagePaneFields.PANE_X));
 			image.setPaneY((Integer) doc.getFieldValue(ImagePaneFields.PANE_Y));
-			image.setImageWidth((Integer) doc
-					.getFieldValue(ImagePaneFields.IMAGE_WIDTH));
-			image.setImageHeight((Integer) doc
-					.getFieldValue(ImagePaneFields.IMAGE_HEIGHT));
-			image.setAssayID((String) doc
-					.getFieldValue(GxdResultFields.ASSAY_MGIID));
-			image.setMetaData((List<String>) doc
-					.getFieldValue(ImagePaneFields.IMAGE_META));
+			image.setImageWidth((Integer) doc.getFieldValue(ImagePaneFields.IMAGE_WIDTH));
+			image.setImageHeight((Integer) doc.getFieldValue(ImagePaneFields.IMAGE_HEIGHT));
+			image.setAssayID((String) doc.getFieldValue(GxdResultFields.ASSAY_MGIID));
+			
+			List<String> metaDataJsons = (List<String>) doc.getFieldValue(ImagePaneFields.IMAGE_META);
+			List<GxdImageMeta> metaData = new ArrayList<GxdImageMeta>();
+			for(String metaDataJson : metaDataJsons) {
+				try {
+					metaData.add(objectMapper.readValue(metaDataJson, GxdImageMeta.class));
+				} catch (IOException e) {
+					logger.error("Error parsing GxdImageMeta JSON from GXD Image Summary Solr Index", e);
+				} 
+			}
+			image.setMetaData(metaData);
 
 			sr.addResultObjects(image);
 		}

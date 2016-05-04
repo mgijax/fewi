@@ -10,7 +10,7 @@
 
 			<c:set var="showGeneticMap" value="${(not empty marker.preferredCentimorgans) or (not empty marker.preferredCytoband) or (marker.countOfMappingExperiments > 0) or (not empty qtlIDs) or (not empty marker.aliases)}" />
 			
-			<c:set var="geneticMapExtra" value="${not empty linkmapUrl or not empty qtlIDs or marker.countOfMappingExperiments > 0 or not empty marker.aliases}" />
+			<c:set var="geneticMapExtra" value="${not empty linkmapUrl or not empty qtlIDs or marker.countOfMappingExperiments > 0 or not empty marker.aliases or hasMiniMap}" />
 
 			<c:set var="arrowstate" value="hdExpand" />
 			<c:set var="extrastate" value="" />
@@ -190,8 +190,21 @@
 							<li class="extra closed">
 								<div class="value">
 									<a href="${linkmapUrl}">Detailed Genetic Map &#177; 1 cM</a>
-									<c:if test="${not empty miniMap}">
-										<br/><a href="${linkmapUrl}" style="background-color: transparent"><img src="${miniMap}" border="0" style="padding-top: 4px"></a>
+									<c:if test="${hasMinimap}">
+									    <div class="minimapWrap">
+									      <a href="${linkmapUrl}">
+									        <canvas id="minimap"></canvas>
+									      </a>
+									    </div>
+									    <script>
+									    	window.loadMinimap = function(){
+									    		Minimap.draw({
+									    			id: "minimap",
+									    			data: ${minimapInitJson},
+									    			rotate90: true
+									    		});
+									    	}
+									    </script>
 									</c:if>
 								</div>
 							</li>

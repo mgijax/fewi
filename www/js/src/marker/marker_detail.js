@@ -139,6 +139,8 @@
 				$(this).attr('title', 'Show More');
 			}
 		});
+		
+		loadMinimap();
 
 	});
 

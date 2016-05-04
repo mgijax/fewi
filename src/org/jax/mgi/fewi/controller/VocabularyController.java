@@ -1,10 +1,12 @@
 package org.jax.mgi.fewi.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import mgi.frontend.datamodel.VocabTerm;
+import mgi.frontend.datamodel.sort.VocabTermComparator;
 
 import org.hibernate.SessionFactory;
 import org.jax.mgi.fewi.finder.VocabularyFinder;
@@ -143,7 +145,10 @@ public class VocabularyController {
 	StringBuffer sb = new StringBuffer();
 	sb.append("{ children: [");
 
-	for (VocabTerm child : term.getChildren()) {
+	List<VocabTerm> children = term.getChildren();
+	Collections.sort(children, new VocabTermComparator());
+	
+	for (VocabTerm child : children) {
 	    sb.append ( (new TreeNode(child)).getJson() );
 	}
 
@@ -489,6 +494,7 @@ public class VocabularyController {
 	mav.addObject("dropdown", dropdown.toString()); 
 	mav.addObject("dropdownMsg", dropdownMsg);
 
+	
 	return mav;
     }
 

@@ -24,8 +24,6 @@
 
 <script TYPE="text/javascript" SRC='${configBean.WEBSHARE_URL}js/hideshow.js'></script>
 
-<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/marker_detail.js"></script>
-
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <!-- header bar -->
@@ -104,6 +102,9 @@ YAHOO.mp.container.phenoHelp = new YAHOO.widget.Panel("sgPhenoHelp", { width:"36
 YAHOO.mp.container.phenoHelp.render();
 YAHOO.util.Event.addListener("sgPhenoHelpImage", "click", YAHOO.mp.container.phenoHelp.show, YAHOO.mp.container.phenoHelp, true);
 </script>
+
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/marker/marker_detail.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/marker/minimap.js"></script>
 
 <!--	close page template -->
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

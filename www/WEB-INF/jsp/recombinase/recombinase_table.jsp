@@ -15,8 +15,6 @@
 NotesTagConverter ntc = new NotesTagConverter(); 
 %>
 
-<script type="text/javascript" src="${configBean.WEBSHARE_URL}js/jquery-1.10.2.min.js"></script>
-
 <style type="text/css">
 
   .stripe1 {background-color:#FFF;}
@@ -102,67 +100,67 @@ td.notBold { font-weight: normal; }
       <!-- system level row data -->
       <td  id="" class="noWrap borderUnder" style="min-width:60px" >
         <c:if test="${alleleSystem.ageE1 == '1' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridSystem'>&#8730;</div></a>
         </c:if>
         <c:if test="${alleleSystem.ageE1 == '0' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridSystemNeg'>-</div></a>
         </c:if>
       </td>
       <td  id="" class="noWrap borderUnder" style="min-width:60px" >
         <c:if test="${alleleSystem.ageE2 == '1' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridSystem'>&#8730;</div></a>
         </c:if>
         <c:if test="${alleleSystem.ageE2 == '0' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridSystemNeg'>-</div></a>
         </c:if>
       </td>
       <td  id="" class="noWrap borderUnder" style="min-width:60px" >
         <c:if test="${alleleSystem.ageE3 == '1' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridSystem'>&#8730;</div></a>
         </c:if>
         <c:if test="${alleleSystem.ageE3 == '0' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridSystemNeg'>-</div></a>
         </c:if>
       </td>
       <td  id="" class="noWrap borderUnder" style="min-width:60px" >
         <c:if test="${alleleSystem.ageP1 == '1' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridSystem'>&#8730;</div></a>
         </c:if>
         <c:if test="${alleleSystem.ageP1 == '0' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridSystemNeg'>-</div></a>
         </c:if>
       </td>
       <td  id="" class="noWrap borderUnder" style="min-width:60px" >
         <c:if test="${alleleSystem.ageP2 == '1' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridSystem'>&#8730;</div></a>
         </c:if>
         <c:if test="${alleleSystem.ageP2 == '0' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridSystemNeg'>-</div></a>
         </c:if>
       </td>
       <td  id="" class="noWrap borderUnder" style="min-width:60px" >
         <c:if test="${alleleSystem.ageP3 == '1' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridSystem'>&#8730;</div></a>
         </c:if>
         <c:if test="${alleleSystem.ageP3 == '0' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridSystemNeg'>-</div></a>
         </c:if>
       </td>
       <td  id="" class="noWrap borderUnder" style="min-width:50px" >
         <c:if test="${alleleSystem.hasImage == '1' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridSystem'>&#8730;</div></a>
         </c:if>
       </td>
@@ -185,67 +183,67 @@ td.notBold { font-weight: normal; }
       <!-- structure level row data -->
       <td  id="" class="noWrap borderUnder" style="" >
         <c:if test="${structure.ageE1 == '1' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridStructure'>&#8730;</div></a>
         </c:if>
         <c:if test="${structure.ageE1 == '0' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridStructureNeg'>-</div></a>
         </c:if>
       </td>
       <td  id="" class="noWrap borderUnder" style="" >
         <c:if test="${structure.ageE2 == '1' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridStructure'>&#8730;</div></a>
         </c:if>
         <c:if test="${structure.ageE2 == '0' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridStructureNeg'>-</div></a>
         </c:if>
       </td>
       <td  id="" class="noWrap borderUnder" style="" >
         <c:if test="${structure.ageE3 == '1' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridStructure'>&#8730;</div></a>
         </c:if>
         <c:if test="${structure.ageE3 == '0' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridStructureNeg'>-</div></a>
         </c:if>
       </td>
       <td  id="" class="noWrap borderUnder" style="" >
         <c:if test="${structure.ageP1 == '1' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridStructure'>&#8730;</div></a>
         </c:if>
         <c:if test="${structure.ageP1 == '0' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridStructureNeg'>-</div></a>
         </c:if>
       </td>
       <td  id="" class="noWrap borderUnder" style="" >
         <c:if test="${structure.ageP2 == '1' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridStructure'>&#8730;</div></a>
         </c:if>
         <c:if test="${structure.ageP2 == '0' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridStructureNeg'>-</div></a>
         </c:if>
       </td>
       <td  id="" class="noWrap borderUnder" style="" >
         <c:if test="${structure.ageP3 == '1' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridStructure'>&#8730;</div></a>
         </c:if>
         <c:if test="${structure.ageP3 == '0' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridStructureNeg'>-</div></a>
         </c:if>
       </td>
       <td  id="" class="noWrap borderUnder" style="" >
         <c:if test="${structure.hasImage == '1' }">
-          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&systemKey=${alleleSystem.alleleSystemKey}' 
+          <a href='${configBean.FEWI_URL}recombinase/specificity?id=${allele.primaryID}&system=<fewi:encode value="${alleleSystem.system}"/>' 
           target='_blank' class='gridLink' ><div class='gridStructure'>&#8730;</div></a>
         </c:if>
       </td>

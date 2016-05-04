@@ -90,21 +90,39 @@ body.yui-skin-sam div#outer {position:relative;}
 	<span class="titleBarMainTitleGxd" style='display:inline-block; margin-top: 20px;'>Gene Expression Data</span>
 </div>
 
-<c:set var="isGxd" value="Gxd"/>
-<%@ include file="/WEB-INF/jsp/allele_header.jsp" %>
+
+
+<!-- marker header table -->
+<table class="summaryHeader">
+	<tr >
+	  <td class="summaryHeaderCat1Gxd" style="vertical-align:bottom">
+		  <div style="padding-top:7px; font-weight: bold"><b>Structure</b></div>
+	       <div style="padding-top:3px; font-weight: bold">Present at</div>
+	       <div style="padding-top:2px; font-weight: bold">ID</span>
+	  </td>
+	  <td class="summaryHeaderData1" style="vertical-align:bottom">
+	    <div style="">
+		<a style="font-size:large;  font-weight: bold;" href="${configBean.FEWI_URL}vocab/gxd/anatomy/${structure.primaryID}">${structure.term}</a>
+		<span style="color: gray; font-size: 90%">includes substructures</span></div>
+	    <div style="padding-top:3px;">${structure.stageRange}</div>
+	    <div style="padding-top:2px;">${structure.primaryID}</div>
+	  </td>
+	</tr>
+</table>
 
 
 <!-- GXD Summary -->
 <div class="summaryControl" style="">
-	<%@ include file="/WEB-INF/jsp/gxd_summary.jsp" %>
+	<%@ include file="/WEB-INF/jsp/gxd/gxd_summary.jsp" %>
 </div>
 
 <script type="text/javascript">
     var fewiurl = "${configBean.FEWI_URL}";
-    var querystring = "alleleId=${allele.primaryID}";
+    var querystring = "structureID=${structure.primaryID}&tab=${tab}";
     var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>
-<%@ include file="/WEB-INF/jsp/gxd_summary_js.jsp" %>
+
+<%@ include file="/WEB-INF/jsp/gxd/gxd_summary_js.jsp" %>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary_filters.js"></script>
 <script type="text/javascript">

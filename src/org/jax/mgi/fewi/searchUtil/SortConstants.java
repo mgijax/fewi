@@ -27,8 +27,6 @@ public class SortConstants {
 	public static final String CRE_TYPE            = "alleleType";
 	public static final String CRE_INDUCIBLE       = "inducibleNote";
 	public static final String CRE_REF_COUNT       = "countOfReferences";
-	public static final String CRE_DETECTED_COUNT  = "detectedCount";
-	public static final String CRE_NOT_DETECTED_COUNT  = "notDetectedCount";
 
     // Cre sorting strings, for the detail page
 	public static final String CRE_BY_STRUCTURE                 = "byStructure";
@@ -98,6 +96,14 @@ public class SortConstants {
 
 	// general...
 	public static final String SEQUENCE_NUM = "sequenceNum";
+	
+	// gxd image panes
+
+	public static final String BY_IMAGE_ASSAY_TYPE = "byImageAssayType";
+	public static final String BY_IMAGE_MARKER = "byImageMarker";
+	public static final String BY_IMAGE_HYBRIDIZATION_ASC = "byImageHybridizationAsc";
+	public static final String BY_IMAGE_HYBRIDIZATION_DESC = "byImageHybridizationDesc";
+
 
     // faux entry;  used by webapp class template
 	public static final String FOO_SORT              = "fooSort";

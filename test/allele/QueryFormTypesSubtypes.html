@@ -71,15 +71,6 @@
 </div>
 
 
-<!-- 
-Some helpful SQL: uses 2 Views to get the Marker key, Type and Subtype for alleles along with their Symbol, Name, and Allele key, and whether allele is Wild Type.
-select v._Allele_key, v.isWildType, v.symbol, v.alleleType, s.term as Subtype, v._Marker_key, v.name
-from ALL_Allele_Strain_View v, ALL_Allele_SubType_View s
-where v._Allele_key = s._Allele_key
-order by v._Marker_key, v._Allele_key
-
- -->
-
 
 <div id="tests">
     <h2>Tests</h2>

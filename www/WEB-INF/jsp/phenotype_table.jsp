@@ -53,10 +53,10 @@ NotesTagConverter ntc = new NotesTagConverter();
 td.border { border-bottom:thin solid grey; border-top:thin solid grey; border-left:thin solid grey; border-right:thin solid grey }
 td.padLR { padding-left:4px; padding-right:4px }
 td.padTop { padding-top:4px }
-.small { font-size: 80% }
+.smaller { font-size: 80% }
 </style>
 
-<table>
+<table class="phenoTable">
 <tr>
   <td class="rightBorderThinGray padLR" ALIGN="right" WIDTH="1%" style="vertical-align:top;"><span class="label">Key:</span></td>
   <td NOWRAP="nowrap" class="padLR" style="vertical-align:top;">
@@ -64,24 +64,24 @@ td.padTop { padding-top:4px }
     <!-- begin key -->
     <TABLE WIDTH="!" BORDER="0" CELLPADDING="1" CELLSPACING="1" BGCOLOR="#888888">
     <TR>
-	    <TD class="border padLR" ALIGN="center" BGCOLOR="#FFD57A"><span class='small'>hm</span></TD>
-	    <TD class="border padLR" BGCOLOR="#FFD57A" NOWRAP="nowrap"><span class='small'>homozygous</span></TD>
-	    <TD class="border padLR" ALIGN="center" BGCOLOR="#BCFFEB"><span class='small'>ht</span></TD>
-	    <TD class="border padLR" BGCOLOR="#BCFFEB" NOWRAP="nowrap"><span class='small'>heterozygous</span></TD>
-	    <TD class="border padLR" ALIGN="center" BGCOLOR="#FFC7F4"><span class='small'>tg</span></TD>
-	    <TD class="border padLR" BGCOLOR="#FFC7F4" NOWRAP="nowrap"><span class='small'>involves transgenes</span></TD>
-	    <TD class="border padLR" ALIGN="center" BGCOLOR="#FFFFFF"><span class='small'>&#8730;</span></TD>
-	    <TD class="border padLR" BGCOLOR="#FFFFFF" NOWRAP="nowrap"><span class='small'>phenotype observed</span></TD>
+	    <TD class="border padLR" ALIGN="center" BGCOLOR="#FFD57A"><span class='smaller'>hm</span></TD>
+	    <TD class="border padLR" BGCOLOR="#FFD57A" NOWRAP="nowrap"><span class='smaller'>homozygous</span></TD>
+	    <TD class="border padLR" ALIGN="center" BGCOLOR="#BCFFEB"><span class='smaller'>ht</span></TD>
+	    <TD class="border padLR" BGCOLOR="#BCFFEB" NOWRAP="nowrap"><span class='smaller'>heterozygous</span></TD>
+	    <TD class="border padLR" ALIGN="center" BGCOLOR="#FFC7F4"><span class='smaller'>tg</span></TD>
+	    <TD class="border padLR" BGCOLOR="#FFC7F4" NOWRAP="nowrap"><span class='smaller'>involves transgenes</span></TD>
+	    <TD class="border padLR" ALIGN="center" BGCOLOR="#FFFFFF"><span class='smaller'>&#8730;</span></TD>
+	    <TD class="border padLR" BGCOLOR="#FFFFFF" NOWRAP="nowrap"><span class='smaller'>phenotype observed</span></TD>
     </TR>
     <TR>
-	    <TD class="border padLR" ALIGN="center" BGCOLOR="#E7FFBC"><span class='small'>cn</span></TD>
-	    <TD class="border padLR" BGCOLOR="#E7FFBC" NOWRAP="nowrap"><span class='small'>conditional&nbsp;genotype&nbsp;</span></TD>
-	    <TD class="border padLR" ALIGN="center" BGCOLOR="#E0E0FF"><span class='small'>cx</span></TD>
-	    <TD class="border padLR" BGCOLOR="#E0E0FF" NOWRAP="nowrap"><span class='small'>complex: > 1 genome feature</span></TD>
-	    <TD class="border padLR" ALIGN="center" BGCOLOR="#F7DCC0"><span class='small'>ot</span></TD>
-	    <TD class="border padLR" BGCOLOR="#F7DCC0" NOWRAP="nowrap"><span class='small'>other: hemizygous, indeterminate,...</span></TD>
-	    <TD class="border padLR" ALIGN="center" BGCOLOR="#FFFFFF"><span class='small'>N</span></TD>
-	    <TD class="border padLR" BGCOLOR="#FFFFFF" NOWRAP="nowrap"><span class='small'>normal phenotype</span></TD>
+	    <TD class="border padLR" ALIGN="center" BGCOLOR="#E7FFBC"><span class='smaller'>cn</span></TD>
+	    <TD class="border padLR" BGCOLOR="#E7FFBC" NOWRAP="nowrap"><span class='smaller'>conditional&nbsp;genotype&nbsp;</span></TD>
+	    <TD class="border padLR" ALIGN="center" BGCOLOR="#E0E0FF"><span class='smaller'>cx</span></TD>
+	    <TD class="border padLR" BGCOLOR="#E0E0FF" NOWRAP="nowrap"><span class='smaller'>complex: > 1 genome feature</span></TD>
+	    <TD class="border padLR" ALIGN="center" BGCOLOR="#F7DCC0"><span class='smaller'>ot</span></TD>
+	    <TD class="border padLR" BGCOLOR="#F7DCC0" NOWRAP="nowrap"><span class='smaller'>other: hemizygous, indeterminate,...</span></TD>
+	    <TD class="border padLR" ALIGN="center" BGCOLOR="#FFFFFF"><span class='smaller'>N</span></TD>
+	    <TD class="border padLR" BGCOLOR="#FFFFFF" NOWRAP="nowrap"><span class='smaller'>normal phenotype</span></TD>
     </TR>
     </TABLE><!-- end legend -->
 
@@ -117,7 +117,7 @@ td.padTop { padding-top:4px }
 	  <th class="genoHeader genoBorder <c:if test="${gStatus.last}">rightGenoBorder</c:if>" colspan="${phenoTableGenotype.columnSpan}">
 	  <c:set var="genotype" value="${phenoTableGenotype.genotype}" scope="request"/>
 	  <div class="${genotype.genotypeType}Geno ${genotype.genotypeType}GenoButton genoButton">
-	  	<a href='${configBean.FEWI_URL}allele/genoview/${phenoTableGenotype.genotype.primaryID}?counter=${phenoTableGenotype.genotypeSeq}' target="_blank" class='genoLink small' title='phenotype details'>
+	  	<a href='${configBean.FEWI_URL}allele/genoview/${phenoTableGenotype.genotype.primaryID}?counter=${phenoTableGenotype.genotypeSeq}' target="_blank" class='genoLink smaller' title='phenotype details'>
 	  ${phenoTableGenotype.genotype.genotypeType}${phenoTableGenotype.genotypeSeq}</a></div>
 	
 	  </th>
@@ -127,13 +127,13 @@ td.padTop { padding-top:4px }
 <tr class="stripe1">
 <th>
   <div>
-    <span style="float:left;" class="small">
+    <span style="float:left;" class="smaller">
     <A id='showPhenoButton' style='cursor: pointer; color:blue;' CLASS='MP'>show</A> or
     <A id='hidePhenoButton' style='cursor: pointer; color:blue;' CLASS='MP'>hide</A> all annotated terms
     </span>
 
     <c:if test="${hasSexCols}">
-      <span style="float:right;" class="small">Sex:</span>
+      <span style="float:right;" class="smaller">Sex:</span>
     </c:if>
 
     <c:if test="${!hasSourceCols}">
@@ -165,7 +165,7 @@ td.padTop { padding-top:4px }
 </script>
 <c:if test="${hasSourceCols}">
 <tr class="stripe1" id="sourceRow">
-<th style="text-align:right;" class="small"><span onMouseOut="nd();" onMouseOver="return overlib('Mouse over source labels to view Data Interpretation and Phenotyping Centers for high-throughput phenotype annotations.<P><B>Data Interpretation Center:</B> The source of Mammalian Phenotype calls made from primary phenotyping data.<P><B>Phenotyping Center:</B> The source of primary phenotyping data (where phenotyping tests were performed for annotations shown).', LEFT, WIDTH, 400);">Source:</span><br>
+<th style="text-align:right;" class="smaller"><span onMouseOut="nd();" onMouseOver="return overlib('Mouse over source labels to view Data Interpretation and Phenotyping Centers for high-throughput phenotype annotations.<P><B>Data Interpretation Center:</B> The source of Mammalian Phenotype calls made from primary phenotyping data.<P><B>Phenotyping Center:</B> The source of primary phenotyping data (where phenotyping tests were performed for annotations shown).', LEFT, WIDTH, 400);">Source:</span><br>
 <img src="${configBean.WEBSHARE_URL}images/help_small_transp.gif" alt="Help" onMouseOut="nd();" onMouseOver="return overlib('Mouse over source labels to view Data Interpretation and Phenotyping Centers for high-throughput phenotype annotations.<P><B>Data Interpretation Center:</B> The source of Mammalian Phenotype calls made from primary phenotyping data.<P><B>Phenotyping Center:</B> The source of primary phenotyping data (where phenotyping tests were performed for annotations shown).', LEFT, WIDTH, 400);">
 </th>
 <c:forEach var="phenoTableGenotype" items="${phenoTableGenotypes}" varStatus="gStatus">
@@ -253,7 +253,7 @@ td.padTop { padding-top:4px }
         <c:forEach var="cell" items="${phenoTableTerm.cells}" varStatus="cStatus">
           <td class="<c:if test="${genoID!=cell.genotypeID}">genoBorder </c:if> borderUnder <c:if test="${genoID==cell.genotypeID && sex=='F' && cell.sex=='M'}">sexBorder </c:if> <c:if test="${cStatus.last}">rightGenoBorder</c:if>" style="text-align:center;">
 		    <c:if test="${cell.hasCall}">
-		    <a href='${configBean.FEWI_URL}allele/genoview/${cell.genotypeID}?counter=${cell.genotypeSeq}#${phenoTableSystem.cssId}_${phenoTableTerm.cssId}' target="_blank" class='genoLink small' title='details'>
+		    <a href='${configBean.FEWI_URL}allele/genoview/${cell.genotypeID}?counter=${cell.genotypeSeq}#${phenoTableSystem.cssId}_${phenoTableTerm.cssId}' target="_blank" class='genoLink smaller' title='details'>
   			<c:out value="${cell.callString}" escapeXml="false"/></a>
   			</c:if>
           </td>

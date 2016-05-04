@@ -82,8 +82,6 @@ public class SolrCreAssayResultSummaryHunter extends SolrHunter<RecombinaseEntit
         sortMap.put(SortConstants.CRE_TYPE, new SolrSortMapper(CreFields.ALL_TYPE_SORT));
         sortMap.put(SortConstants.CRE_INDUCIBLE, new SolrSortMapper(CreFields.INDUCER));
         sortMap.put(SortConstants.CRE_REF_COUNT, new SolrSortMapper(CreFields.ALL_REFERENCE_COUNT_SORT));
-        sortMap.put(SortConstants.CRE_DETECTED_COUNT, new SolrSortMapper(CreFields.DETECTED_COUNT));
-        sortMap.put(SortConstants.CRE_NOT_DETECTED_COUNT, new SolrSortMapper(CreFields.NOT_DETECTED_COUNT));
 
         // result level sorts
         sortMap.put(SortConstants.CRE_BY_STRUCTURE, new SolrSortMapper(CreFields.BY_STRUCTURE));

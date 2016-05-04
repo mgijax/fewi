@@ -6,9 +6,15 @@
 <% StyleAlternator stripe  = (StyleAlternator)request.getAttribute("stripe"); %>
 <%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
-<title>Mouse Gene Expression Data Search</title>
-
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
+
+<c:if test="${empty fromSlimgrid}">
+  <c:set var="pageTitle" value="Mouse Gene Expression Data Search"/>
+</c:if>
+<c:if test="${not empty fromSlimgrid}">
+  <c:set var="pageTitle" value="${marker.symbol} ${structure} gene expression"/>
+</c:if>
+<title>${pageTitle}</title>
 
 <style>
 .left { float: left; }
@@ -83,39 +89,24 @@ body.yui-skin-sam div#outer {position:relative;}
 <iframe id="yui-history-iframe" src="/fewi/blank.html"></iframe>
 <input id="yui-history-field" type="hidden">
 
+<% // special help link for slimgrid %>
+<c:set var="helpHash" value="#summary"/>
+<c:if test="${not (empty marker or empty structure or empty structureId)}">
+  <c:set var="helpHash" value="#tissuematrix"/>
+</c:if>
 
 <!-- header bar -->
-<div id="titleBarWrapperGxd" userdoc="EXPRESSION_help.shtml#summary">	
-	<a href="${configBean.HOMEPAGES_URL}expression.shtml"><img class="gxdLogo" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="75"></a>
+<div id="titleBarWrapperGxd" userdoc="EXPRESSION_help.shtml${helpHash}">	
+		<a href="${configBean.HOMEPAGES_URL}expression.shtml"><img class="gxdLogo" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="75"></a>
 	<span class="titleBarMainTitleGxd" style='display:inline-block; margin-top: 20px;'>Gene Expression Data</span>
 </div>
 
-
-
-<!-- header table -->
-<table class="summaryHeader">
-<tr >
-  <td class="summaryHeaderCat1Gxd">
-       <b>Reference</b>
-  </td>
-  <td class="summaryHeaderData1">
-    
-    <a style="font-size:x-large;  font-weight: bold; padding-bottom:10px;" 
-      href="${configBean.FEWI_URL}reference/${reference.jnumID}">
-      ${reference.jnumID}
-    </a>
-    
-    <div style="padding:4px;"> </div>
-    
-    ${reference.shortCitation}
-  </td>
-</tr>
-</table>
-
+<!-- include a marker header, if needed -->
+<%@ include file="/WEB-INF/jsp/gxd/gxd_marker_header.jsp" %>
 
 <!-- GXD Summary -->
 <div class="summaryControl" style="">
-	<%@ include file="/WEB-INF/jsp/gxd_summary.jsp" %>
+	<%@ include file="/WEB-INF/jsp/gxd/gxd_summary.jsp" %>
 </div>
 
 <script type="text/javascript">
@@ -123,11 +114,14 @@ body.yui-skin-sam div#outer {position:relative;}
     var mgiMarkerId = "${marker.primaryID}";
     var searchedStage = "${theilerStage}";
     var searchedAssayType = "${assayType}";
-    var querystring = "jnum=${reference.jnumID}";
+    var searchedStructure = "${structure}";
+    var searchedStructureId = "${structureId}";
+    var nomenclature = "${nomenclature}";
+    var querystring = "${queryString}";
     var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>
 
-<%@ include file="/WEB-INF/jsp/gxd_summary_js.jsp" %>
+<%@ include file="/WEB-INF/jsp/gxd/gxd_summary_js.jsp" %>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_by_marker_query.js">
 </script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary.js"></script>
@@ -135,6 +129,5 @@ body.yui-skin-sam div#outer {position:relative;}
 <script type="text/javascript">
 prepFilters();
 </script>
-
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

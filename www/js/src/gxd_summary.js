@@ -983,20 +983,10 @@ var gxdResultsTable = function() {
 			setText(filterCount, YAHOO.util.Number.format(oPayload.totalRecords, numConfig));
 		}
 
-		var sortKey = "gene";
-		if ('sort' in pRequest) {
-			sortKey = pRequest['sort'];
-		}
-
-		var sortDir = "yui-dt-desc";
-		if ('dir' in pRequest) {
-			sortDir = "yui-dt-" + pRequest['dir'];
-		}
-
 		oPayload.sortedBy = {
-				key: sortKey,
-				dir: sortDir
-				// Convert from server value to DataTable format
+				key: pRequest['sort'] || "gene",
+				dir: pRequest['dir'] ? "yui-dt-" + pRequest['dir'] : "yui-dt-desc"
+					// Convert from server value to DataTable format
 		};
 
 		var rowCount = paginator.getRowsPerPage();
@@ -1030,8 +1020,11 @@ var gxdImagesTable = function() {
 	// Column definitions
 	var myColumnDefs = [
 	                    // sortable:true enables sorting
-	                    {key: "image", label: "Image", sortable: false},
-	                    {key: "metaData", label: "Meta Data", sortable:false}
+	                    {key: "image", label: "", sortable: false},
+	                    {key: "gene", label: "Gene", sortable: true},
+	                    {key: "assayType", label: "Assay Type", sortable: true},
+	                    {key: "hybridization", label: "Specimen Type", sortable: true},
+	                    {key: "specimenLabel", label: "Result Details", sortable: false}
 	                    ];
 
 	// DataSource instance
@@ -1041,7 +1034,10 @@ var gxdImagesTable = function() {
 			resultsList: "summaryRows",
 			fields: [
 			         {key: "image"},
-			         {key: "metaData"}
+			         {key: "gene"},
+			         {key: "assayType"},
+			         {key: "hybridization"},
+			         {key: "specimenLabel"}
 			         ],
 			         metaFields: {
 			        	 totalRecords: "totalCount",
@@ -1101,7 +1097,13 @@ var gxdImagesTable = function() {
 		if (!YAHOO.lang.isNull(filterCount)) {
 			setText(filterCount, YAHOO.util.Number.format(oPayload.totalRecords, numConfig));
 		}
-
+		
+		oPayload.sortedBy = {
+				key: pRequest['sort'] || "assayType",
+				dir: pRequest['dir'] ? "yui-dt-" + pRequest['dir'] : "yui-dt-desc"
+					// Convert from server value to DataTable format
+		};
+		
 		oPayload.pagination = {
 				rowsPerPage: Number(pRequest['results']) || paginator.getRowsPerPage(),
 				recordOffset: Number(pRequest['startIndex']) || 0
@@ -1109,6 +1111,7 @@ var gxdImagesTable = function() {
 
 		return true;
 	};
+
 
 	// Add tooltips to the camera icons
 	gxdDataTable.subscribe('postRenderEvent', addCameraIconTooltips);

@@ -32,9 +32,11 @@ public class RecombinaseRibbonTest extends BaseConcordionTest
     	return age;
     }
     public Boolean intToBool(Integer i)
-    {
-    	if(i.equals(1)) return true;
-    	if(i.equals(0)) return false;
+    {	
+    	if(i != null) {
+    		if(i.equals(1)) return true;
+    		if(i.equals(0)) return false;
+    	}
     	return null;
     }
     private Boolean getExpressedForSystem(AlleleSystem as,String translatedAge)

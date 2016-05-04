@@ -42,8 +42,8 @@
 	<div class="extraLarge">${assayType}</div>
 	<div class="extraLarge">
 	<c:if test="${age == 'E'}">Embryonic, DPC unknown</c:if>
-	<c:if test="${age == 'A'}">Adult</c:if>
-	<c:if test="${age != 'E' && age !='A'}">${age} DPC</c:if>
+	<c:if test="${age == 'P'}">Postnatal</c:if>
+	<c:if test="${age != 'E' && age !='P'}">${age} DPC</c:if>
 	</div>
   </td>
 </tr>
