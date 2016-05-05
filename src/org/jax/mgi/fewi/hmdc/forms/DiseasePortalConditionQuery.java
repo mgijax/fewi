@@ -48,24 +48,9 @@ public class DiseasePortalConditionQuery {
 	public Filter genHighlightFilter() {
 		
 		if(field.equals(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_TEXT)) {
-			List<String> fields = Arrays.asList(
-				DiseasePortalFields.TERM,
-				DiseasePortalFields.TERM_SYNONYM,
-				DiseasePortalFields.TERM_ANCESTOR_TEXT
-			);
-			
-			List<Filter> filterList = new ArrayList<Filter>();
-			for(String f: fields) {
-				filterList.add(new Filter(f, condition.getInput(), 100));
-			}
-			return Filter.or(filterList);
+			return new Filter(DiseasePortalFields.TERM_TEXT_HIGHLIGHT, condition.getInput(), 100);
 				
 		} else if(field.equals(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_ID)) {
-			List<String> fields = Arrays.asList(
-				DiseasePortalFields.TERM_ID,
-				DiseasePortalFields.TERM_ALT_ID,
-				DiseasePortalFields.TERM_ANCESTOR_ID
-			);
 			List<Filter> filterList = new ArrayList<Filter>();
 
 			if(condition.getInput().toLowerCase().startsWith("omim:")) {
@@ -73,9 +58,7 @@ public class DiseasePortalConditionQuery {
 			}
 			List<String> tokens = condition.getIdTokens();
 			for(String token: tokens) {
-				for(String f: fields) {
-					filterList.add(new Filter(f, token, Operator.OP_EQUAL));
-				}
+				filterList.add(new Filter(DiseasePortalFields.TERM_ID_HIGHLIGHT, token, Operator.OP_EQUAL));
 			}
 			return Filter.or(filterList);
 		}
