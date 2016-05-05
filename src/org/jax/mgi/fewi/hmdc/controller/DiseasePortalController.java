@@ -162,12 +162,8 @@ public class DiseasePortalController {
 				filterList.add(f);
 			}
 		}
-
-		if(group.getOperator().equals("AND")) {
-			return Filter.and(filterList);
-		} else {
-			return Filter.or(filterList);
-		}
+		// Always return OR so that multiple terms across an AND search will be highlighted.
+		return Filter.or(filterList);
 	}
 
 	private Filter genQueryFilter(DiseasePortalConditionGroup group) {
