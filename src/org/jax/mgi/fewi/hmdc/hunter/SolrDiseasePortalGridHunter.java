@@ -14,7 +14,7 @@ import org.jax.mgi.fewi.hunter.SolrHunter;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
-import org.jax.org.mgi.shr.fe.util.GridMarker;
+import org.jax.mgi.shr.jsonmodel.GridMarker;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 

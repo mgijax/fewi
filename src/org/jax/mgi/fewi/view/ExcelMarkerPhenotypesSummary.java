@@ -1,26 +1,24 @@
 package org.jax.mgi.fewi.view;
 
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import mgi.frontend.datamodel.Marker;
-import mgi.frontend.datamodel.MPGenotype;
 import mgi.frontend.datamodel.MPAnnotation;
 import mgi.frontend.datamodel.MPAnnotationReference;
+import mgi.frontend.datamodel.MPGenotype;
+import mgi.frontend.datamodel.Marker;
+
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.jax.mgi.fewi.util.FormatHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ExcelMarkerPhenotypesSummary  extends AbstractBigExcelView
 {

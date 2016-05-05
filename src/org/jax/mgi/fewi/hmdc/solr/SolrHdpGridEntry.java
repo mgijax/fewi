@@ -2,7 +2,7 @@ package org.jax.mgi.fewi.hmdc.solr;
 
 import java.util.List;
 
-import org.jax.org.mgi.shr.fe.util.GridMarker;
+import org.jax.mgi.shr.jsonmodel.GridMarker;
 
 public class SolrHdpGridEntry implements SolrHdpEntityInterface {
 	

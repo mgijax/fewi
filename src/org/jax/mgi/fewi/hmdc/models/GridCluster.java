@@ -3,7 +3,7 @@ package org.jax.mgi.fewi.hmdc.models;
 import java.util.List;
 
 import org.jax.mgi.fewi.hmdc.visitors.GridVisitorInterface;
-import org.jax.org.mgi.shr.fe.util.GridMarker;
+import org.jax.mgi.shr.jsonmodel.GridMarker;
 
 public class GridCluster extends AbstractGridModel {
 

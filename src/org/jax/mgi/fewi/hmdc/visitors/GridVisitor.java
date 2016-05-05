@@ -13,7 +13,7 @@ import org.jax.mgi.fewi.hmdc.solr.SolrHdpGridAnnotationEntry;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpGridEntry;
 import org.jax.mgi.fewi.searchUtil.PrinterUtil;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.org.mgi.shr.fe.util.GridMarker;
+import org.jax.mgi.shr.jsonmodel.GridMarker;
 
 public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 
