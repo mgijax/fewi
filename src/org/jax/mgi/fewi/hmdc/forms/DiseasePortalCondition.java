@@ -1,4 +1,4 @@
-package org.jax.mgi.fewi.forms.hmdc;
+package org.jax.mgi.fewi.hmdc.forms;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +25,7 @@ public class DiseasePortalCondition {
 	
 	@JsonIgnore
 	public List<String> getIdTokens() {
-		input = input.replaceAll("[^\\w^:]+", " ");
+		input = input.replaceAll("[^\\w^:^\\.^_]+", " ");
 		input = input.replaceAll("\\^", " ");
 		input = input.replaceAll("_", " ");
 		input = input.replaceAll("\\s+", " ").trim();

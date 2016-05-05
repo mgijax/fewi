@@ -3,7 +3,6 @@ package org.jax.mgi.fewi.hmdc.visitors;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
 
 import org.jax.mgi.fewi.hmdc.models.GridCluster;
@@ -13,7 +12,6 @@ import org.jax.mgi.fewi.hmdc.models.GridTermHeaderAnnotation;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpGridAnnotationEntry;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpGridEntry;
 import org.jax.mgi.fewi.searchUtil.PrinterUtil;
-import org.jax.mgi.fewi.searchUtil.ResultSetMetaData;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.org.mgi.shr.fe.util.GridMarker;
 

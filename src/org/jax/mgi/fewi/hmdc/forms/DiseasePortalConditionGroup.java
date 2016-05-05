@@ -1,4 +1,4 @@
-package org.jax.mgi.fewi.forms.hmdc;
+package org.jax.mgi.fewi.hmdc.forms;
 
 import java.util.List;
 
