@@ -122,16 +122,10 @@ public class DiseaseController {
 		mav.addObject("linkOut", idLinker.getLink(disease.getLogicalDB(),
 				disease.getPrimaryID(), disease.getPrimaryID() ) );
 
-		// get disease reference count from DiseasePortal logic
-		
-		// TODO Need to revisit this
-		logger.debug("hitting diseasePortal index for diseaseRefCount");
-//		List<SolrVocTerm> dpDiseases = diseasePortalFinder.getDiseases(diseaseID);
-//		if(dpDiseases.size()>0)
-//		{
-//			SolrVocTerm dpDisease = dpDiseases.get(0);
-//			mav.addObject("diseaseRefCount",dpDisease.getDiseaseRefCount());
-//		}
+		// get disease reference count and add to MAV if > 0 to turn on the disease ref ribbon
+		if (disease.getDiseaseReferenceCount() > 0) {
+			mav.addObject("diseaseRefCount", disease.getDiseaseReferenceCount());
+		}
 
 		return mav;
 	}
