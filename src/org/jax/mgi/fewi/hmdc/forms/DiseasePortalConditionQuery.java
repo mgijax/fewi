@@ -49,7 +49,6 @@ public class DiseasePortalConditionQuery {
 		
 		if(field.equals(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_TEXT)) {
 			return new Filter(DiseasePortalFields.TERM_TEXT_HIGHLIGHT, condition.getInput(), 100);
-				
 		} else if(field.equals(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_ID)) {
 			List<Filter> filterList = new ArrayList<Filter>();
 
