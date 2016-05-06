@@ -21,6 +21,18 @@ public class SolrDiseasePortalDiseaseHunter extends SolrHunter<SolrHdpEntityInte
 
 	public SolrDiseasePortalDiseaseHunter() {
 		keyString = DiseasePortalFields.UNIQUE_KEY;
+		
+		// These are added to reduce the amount of data coming back from solr
+		// over the wire and speeds up the query.
+		// All the search fields are not returned
+		returnedFields.add(DiseasePortalFields.TERM_ID);
+		returnedFields.add(DiseasePortalFields.TERM);
+		returnedFields.add(DiseasePortalFields.TERM_TYPE);
+		returnedFields.add(DiseasePortalFields.DISEASE_REF_COUNT);
+		returnedFields.add(DiseasePortalFields.DISEASE_MODEL_COUNTS);
+		returnedFields.add(DiseasePortalFields.TERM_MOUSESYMBOL);
+		returnedFields.add(DiseasePortalFields.TERM_HUMANSYMBOL);
+
 	}
 
 	@Override

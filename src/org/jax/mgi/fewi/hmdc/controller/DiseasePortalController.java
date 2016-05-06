@@ -2,9 +2,7 @@ package org.jax.mgi.fewi.hmdc.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.jax.mgi.fewi.finder.MarkerFinder;
@@ -20,7 +18,6 @@ import org.jax.mgi.fewi.hmdc.solr.SolrHdpMarker;
 import org.jax.mgi.fewi.hmdc.visitors.GridVisitor;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.Operator;
-import org.jax.mgi.fewi.searchUtil.ResultSetMetaData;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;

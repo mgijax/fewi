@@ -20,6 +20,29 @@ public class SolrDiseasePortalGeneHunter extends SolrHunter<SolrHdpEntityInterfa
 
 	public SolrDiseasePortalGeneHunter() {
 		keyString = DiseasePortalFields.UNIQUE_KEY;
+		
+		// These are added to reduce the amount of data coming back from solr
+		// over the wire and speeds up the query.
+		// All the search fields are not returned
+		returnedFields.add(DiseasePortalFields.MARKER_KEY);
+		returnedFields.add(DiseasePortalFields.ORGANISM);
+		returnedFields.add(DiseasePortalFields.GRID_CLUSTER_KEY);
+		returnedFields.add(DiseasePortalFields.HOMOLOGY_CLUSTER_KEY);
+		returnedFields.add(DiseasePortalFields.HOMOLOGENE_ID);
+		returnedFields.add(DiseasePortalFields.HOMOLOGY_SOURCE);
+		returnedFields.add(DiseasePortalFields.MARKER_NAME);
+		returnedFields.add(DiseasePortalFields.MARKER_SYMBOL);
+		returnedFields.add(DiseasePortalFields.MARKER_MGI_ID);
+		returnedFields.add(DiseasePortalFields.MARKER_FEATURE_TYPE);
+		returnedFields.add(DiseasePortalFields.LOCATION_DISPLAY);
+		returnedFields.add(DiseasePortalFields.COORDINATE_DISPLAY);
+		returnedFields.add(DiseasePortalFields.BUILD_IDENTIFIER);
+		returnedFields.add(DiseasePortalFields.MARKER_DISEASE);
+		returnedFields.add(DiseasePortalFields.MOUSE_MARKER_SYSTEM);
+		returnedFields.add(DiseasePortalFields.HUMAN_MARKER_SYSTEM);
+		returnedFields.add(DiseasePortalFields.MARKER_ALL_REF_COUNT);
+		returnedFields.add(DiseasePortalFields.MARKER_DISEASE_REF_COUNT);
+		returnedFields.add(DiseasePortalFields.MARKER_IMSR_COUNT);
 	}
 
 

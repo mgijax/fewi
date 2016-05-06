@@ -21,6 +21,18 @@ public class SolrDiseasePortalGridAnnotationHunter extends SolrHunter<SolrHdpEnt
 
 	public SolrDiseasePortalGridAnnotationHunter() {
 		keyString = DiseasePortalFields.UNIQUE_KEY;
+		
+		// These are added to reduce the amount of data coming back from solr
+		// over the wire and speeds up the query.
+		// All the search fields are not returned
+		returnedFields.add(DiseasePortalFields.UNIQUE_KEY);
+		returnedFields.add(DiseasePortalFields.GRID_KEY);
+		returnedFields.add(DiseasePortalFields.TERM);
+		returnedFields.add(DiseasePortalFields.TERM_HEADER);
+		returnedFields.add(DiseasePortalFields.TERM_TYPE);
+		returnedFields.add(DiseasePortalFields.TERM_ID);
+		returnedFields.add(DiseasePortalFields.TERM_QUALIFIER);
+		
 	}
 
 	@Override
@@ -42,9 +54,10 @@ public class SolrDiseasePortalGridAnnotationHunter extends SolrHunter<SolrHdpEnt
 			gridAnnotationResult.setTermType((String)doc.getFieldValue(DiseasePortalFields.TERM_TYPE));
 			gridAnnotationResult.setTermId((String)doc.getFieldValue(DiseasePortalFields.TERM_ID));
 			gridAnnotationResult.setQualifier((String)doc.getFieldValue(DiseasePortalFields.TERM_QUALIFIER));
+			
 			// TODO come back and add these
-			gridAnnotationResult.setByTermHeader((Integer)doc.getFieldValue(DiseasePortalFields.BY_TERM_HEADER));
-			gridAnnotationResult.setByTermName((Integer)doc.getFieldValue(DiseasePortalFields.BY_TERM_NAME));
+			//gridAnnotationResult.setByTermHeader((Integer)doc.getFieldValue(DiseasePortalFields.BY_TERM_HEADER));
+			//gridAnnotationResult.setByTermName((Integer)doc.getFieldValue(DiseasePortalFields.BY_TERM_NAME));
 
 			sr.addResultObjects(gridAnnotationResult);
 			keys.add(gridAnnotationResult.getUniqueKey());

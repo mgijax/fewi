@@ -25,6 +25,18 @@ public class SolrDiseasePortalGridHunter extends SolrHunter<SolrHdpEntityInterfa
 
 	public SolrDiseasePortalGridHunter() {
 		keyString = DiseasePortalFields.UNIQUE_KEY;
+		
+		
+		// These are added to reduce the amount of data coming back from solr
+		// over the wire and speeds up the query.
+		// All the search fields are not returned
+		returnedFields.add(DiseasePortalFields.ALLELE_PAIRS);
+		returnedFields.add(DiseasePortalFields.GENO_CLUSTER_KEY);
+		returnedFields.add(DiseasePortalFields.GRID_CLUSTER_KEY);
+		returnedFields.add(DiseasePortalFields.GRID_KEY);
+		returnedFields.add(DiseasePortalFields.HOMOLOGY_CLUSTER_KEY);
+		returnedFields.add(DiseasePortalFields.GRID_HUMAN_SYMBOLS);
+		returnedFields.add(DiseasePortalFields.GRID_MOUSE_SYMBOLS);
 
 	}
 
