@@ -1,8 +1,10 @@
 package org.jax.mgi.fewi.finder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import mgi.frontend.datamodel.VocabTerm;
+import mgi.frontend.datamodel.VocabTermID;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -38,6 +40,9 @@ public class VocabularyFinder
 
     @Autowired
     private HibernateObjectGatherer<VocabTerm> termGatherer;
+
+    @Autowired
+    private HibernateObjectGatherer<VocabTermID> termIdGatherer;
 
     @Autowired
     private SolrAnatomyTermHunter anatomyTermHunter;
@@ -77,7 +82,23 @@ public class VocabularyFinder
     public List<VocabTerm> getTermByID(String id) {
     	logger.debug("->getTermByID(" + id + ")");
 
-		return termGatherer.get (VocabTerm.class, id, "primaryId");
+    	// if we match the primary ID for at least one term, go with it.  Otherwise,
+    	// look for terms by secondary IDs.
+
+    	List<VocabTerm> terms = termGatherer.get (VocabTerm.class, id, "primaryId");
+    	if ((terms != null) && (terms.size() > 0)) {
+    		return terms;
+    	}
+    	
+    	List<VocabTermID> termIDs = termIdGatherer.get(VocabTermID.class, id, "accID");
+    	if ((termIDs != null) && (termIDs.size() > 0)) {
+    		terms = new ArrayList<VocabTerm>();
+    		for (VocabTermID termID : termIDs) {
+    			terms.add(getTermByKey(termID.getTermKey().toString()));
+    		}
+    		return terms;
+    	}
+    	return null;
     }
     
 	public VocabTerm getTermByKey(String key) {
