@@ -141,7 +141,6 @@
 					if(i != -1) response.data.gridMPHeaders.splice(i, 1);
 					response.data.gridMPHeaders.sort(naturalService.naturalSortFunction)
 					if(i != -1) response.data.gridMPHeaders.push("normal phenotype");
-
 					response.data.gridOMIMHeaders.sort(naturalService.naturalSortFunction)
 
 					// Push the MP Headers into the headerContent row
@@ -168,10 +167,6 @@
 					}
 					headerContent.push("");
 					vm.results.grid.data.push(headerContent);
-
-					//Object.keys(response.data.gridRows).forEach(function (key) { 
-					//	var value = hash[key]
-					//});
 
 					for(var key in response.data.gridRows) {
 						key = response.data.gridRows[key];

@@ -1,7 +1,6 @@
 package org.jax.mgi.fewi.hmdc.forms;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.jax.mgi.fewi.searchUtil.Filter;

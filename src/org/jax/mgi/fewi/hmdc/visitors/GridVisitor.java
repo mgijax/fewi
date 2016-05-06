@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
+import mgi.frontend.datamodel.sort.SmartAlphaComparator;
+
 import org.jax.mgi.fewi.hmdc.models.GridCluster;
 import org.jax.mgi.fewi.hmdc.models.GridResult;
 import org.jax.mgi.fewi.hmdc.models.GridRow;
@@ -57,7 +59,7 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 	public void Visit(GridResult gridResult) {
 
 		HashMap<Integer, GridRow> rowMap = new HashMap<Integer, GridRow>();
-		TreeMap<String, GridRow> sortedMap = new TreeMap<String, GridRow>();
+		TreeMap<String, GridRow> sortedMap = new TreeMap<String, GridRow>(new SmartAlphaComparator<String>());
 		
 		for(SolrHdpGridEntry res: gridResults.getResultObjects()) {
 			currentGridEntry = res;
@@ -81,6 +83,7 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 		for(GridRow gr: sortedMap.values()) {
 			gridResult.getGridRows().add(gr);
 		}
+		
 		gridResult.setGridHighLights(gridHighLights);
 	}
 
