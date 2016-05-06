@@ -43,6 +43,17 @@ public class DiseasePortalConditionQuery {
 		} else {
 			tokens = condition.getWordTokens();
 			return new Filter(field, Joiner.on(" ").join(tokens), 100);
+			/* The following code would make wildcards
+			 * work with one token and proximity with
+			 * multiple words
+			// If we have one word run it as a word search
+			// Otherwise run it as a proximity search
+			if(tokens.size() == 1) {
+				return new Filter(field, tokens.get(0), Operator.OP_HAS_WORD);
+			} else {
+				return new Filter(field, Joiner.on(" ").join(tokens), 100);
+			}
+			*/
 		}
 	}
 	public Filter genHighlightFilter() {
