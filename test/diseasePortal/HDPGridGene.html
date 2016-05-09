@@ -203,8 +203,6 @@ tr.gray td {background-color:#EEEEEE;}
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">MP:0002652</b> (thin myocardium) in the Phenotypes and Diseases section and hit search. (<i>all automated.</i>)</li>
-                <li>Click on the Grid tab and confirm the mouse marker column DOES contain the marker <b cc:assertResultsContain="gridAllSymbolsByPhenotype(#pheno)">Cacnb2</b>.<br/>
-                	It is annotated to this term via the simple genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:3762359">MGI:3762359</a> (genotype contains a transgenic reporter which gets ignored).</li>
                 <li>Click on the Grid tab and confirm the mouse marker column DOES contain the marker <b cc:assertResultsContain="gridAllSymbolsByPhenotype(#pheno)">Adrbk1</b>.<br/>
                 	It is annotated to this term via the super-simple genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:2654809">MGI:2654809</a> (homozygous, OMG).</li>
                 <li>Click on the Grid tab and confirm the mouse marker column DOES NOT contain the marker <b cc:assertNoResultsContain="gridAllSymbolsByPhenotype(#pheno)">Ccm2l</b>.<br/>
@@ -214,12 +212,7 @@ tr.gray td {background-color:#EEEEEE;}
                 	It is annotated to this term via the super-simple genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:5439509">MGI:5439509</a> (complex: has 3 markers)<br/>
                 	and also the genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:5439507">MGI:5439507</a> (complex: has 2 markers and cannot be simplified).</li>
                 <li>Enter <b concordion:set="#pheno">MP:0004076</b> (abnormal vitelline vascular remodeling) in the Phenotypes and Diseases section and hit search. (<i>automated.</i>)</li>
-                <li>Click on the Grid tab and confirm the mouse marker column DOES contain the marker <b cc:assertResultsContain="gridAllSymbolsByPhenotype(#pheno)">Cacnb2</b>.<br/>
-                	It is annotated to this term via the simple genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:3762359">MGI:3762359</a> (genotype contains a transgenic reporter which gets ignored)<br/>
-                	and also via the simple genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:3762360">MGI:3762360</a> (contains a recombinase allele which gets ignored, and genotype is conditional).</li>
                 <li>Enter <b concordion:set="#pheno">MP:0000269</b> (abnormal heart looping) in the Phenotypes and Diseases section and hit search. (<i>automated.</i>)</li>
-                <li>Click on the Grid tab and confirm the mouse marker column DOES contain the marker <b cc:assertResultsContain="gridAllSymbolsByPhenotype(#pheno)">Cacnb2</b>.<br/>
-                	It is annotated to this term via the simple genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:3762359">MGI:3762359</a> (genotype contains a transgenic reporter which gets ignored).</li>
     		</ol>
     		</li>
 
