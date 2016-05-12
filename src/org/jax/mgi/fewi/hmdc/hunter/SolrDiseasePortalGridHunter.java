@@ -37,7 +37,6 @@ public class SolrDiseasePortalGridHunter extends SolrHunter<SolrHdpEntityInterfa
 		returnedFields.add(DiseasePortalFields.HOMOLOGY_CLUSTER_KEY);
 		returnedFields.add(DiseasePortalFields.GRID_HUMAN_SYMBOLS);
 		returnedFields.add(DiseasePortalFields.GRID_MOUSE_SYMBOLS);
-
 	}
 
 	@Override

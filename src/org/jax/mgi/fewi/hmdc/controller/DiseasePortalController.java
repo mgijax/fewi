@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.TermFinder;
 import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
+import org.jax.mgi.fewi.hmdc.forms.DiseasePortalCondition;
 import org.jax.mgi.fewi.hmdc.forms.DiseasePortalConditionGroup;
 import org.jax.mgi.fewi.hmdc.forms.DiseasePortalConditionQuery;
 import org.jax.mgi.fewi.hmdc.models.GridResult;
@@ -21,6 +24,7 @@ import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
+import org.jax.mgi.shr.jsonmodel.GridMarker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -29,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping(value="/diseasePortal")
@@ -178,4 +183,100 @@ public class DiseasePortalController {
 		}
 	}
 
+	/* Serve up a phenotype or disease popup, from clicking a cell on the HMDC grid.
+	 * Expects two parameters in the request: gridClusterKey and header.  Any phenotype or
+	 * disease terms or IDs can be passed in for highlighting using the (optional)
+	 * term or termId parameters; multiples of each can be submitted.
+	 */
+	@RequestMapping(value="/popup", method=RequestMethod.GET)
+	public ModelAndView getPopup(HttpServletRequest request) {
+		// collect the required parameters and check that they are specified
+		String gridClusterKey = request.getParameter("gridClusterKey");
+		if (gridClusterKey == null) { return errorMav("Missing gridClusterKey parameter"); }
+
+		String header = request.getParameter("header");
+		if (header == null) { return errorMav("Missing header parameter"); }
+
+		// convert the required parameters into a Filter object
+		DiseasePortalConditionGroup queryGroup = new DiseasePortalConditionGroup();
+		queryGroup.setOperator("AND");
+
+		List<DiseasePortalConditionQuery> queries = new ArrayList<DiseasePortalConditionQuery>();
+
+		DiseasePortalConditionQuery clusterQuery = new DiseasePortalConditionQuery();
+		DiseasePortalCondition clusterCondition = new DiseasePortalCondition();
+		clusterCondition.setInput(gridClusterKey);
+		clusterQuery.setField(DiseasePortalFields.GRID_CLUSTER_KEY);
+		clusterQuery.setCondition(clusterCondition);
+		queries.add(clusterQuery);
+
+		DiseasePortalConditionQuery headerQuery = new DiseasePortalConditionQuery();
+		DiseasePortalCondition headerCondition = new DiseasePortalCondition();
+		headerCondition.setInput(header);
+		headerQuery.setField(DiseasePortalFields.TERM_HEADER);
+		headerQuery.setCondition(headerCondition);
+		queries.add(headerQuery);
+		
+		queryGroup.setQueries(queries);
+		Filter mainFilter = genQueryFilter(queryGroup);
+		
+		// run the query to get the set of grid results
+		SearchParams params = new SearchParams();
+		params.setPageSize(10000);
+		params.setFilter(mainFilter);
+		params.setReturnFilterQuery(true);
+		SearchResults<SolrHdpGridEntry> results = hdpFinder.getGridResults(params);
+		
+		// collect the grid results and get their annotations
+		List<String> gridKeys = new ArrayList<String>();
+		List<SolrHdpGridEntry> gridResults = results.getResultObjects();
+		for(SolrHdpGridEntry res: gridResults) {
+			gridKeys.add(res.getGridKey().toString());
+		}
+		
+		// pull out marker data needed for header
+		List<String> markers = null;
+		
+		if (gridResults.size() > 0) {
+			SolrHdpGridEntry first = gridResults.get(0);
+
+			markers = new ArrayList<String>();
+			
+			for (GridMarker marker : first.getGridHumanSymbols()) { markers.add(marker.getSymbol()); }
+			for (GridMarker marker : first.getGridMouseSymbols()) { markers.add(marker.getSymbol()); }
+		}
+		
+		Filter gridFilter = new Filter(DiseasePortalFields.GRID_KEY, gridKeys, Operator.OP_IN);
+		params.setFilter(gridFilter);
+		
+		SearchResults<SolrHdpGridAnnotationEntry> annotationResults = hdpFinder.getGridAnnotationResults(params);
+
+		// begin collecting the mav to return
+		ModelAndView mav = new ModelAndView("hmdc/popup");
+		
+		// add the required parameters
+		mav.addObject("gridClusterKey", gridClusterKey);
+		mav.addObject("headerTerm", header);
+		
+		// add any (optional) terms and term IDs that were specified to use for column highlighting
+		String[] terms = request.getParameterValues("term");
+		String[] termIds = request.getParameterValues("termId");
+		
+		if (terms != null && terms.length > 0) { mav.addObject("highlightTerms", terms); }
+		if (termIds != null && termIds.length > 0) { mav.addObject("highlightTermIds", termIds); }
+
+		if (markers != null) { mav.addObject("markers", markers); }
+
+		mav.addObject("gridKeyCount", gridKeys.size());
+		mav.addObject("annotationCount", annotationResults.getTotalCount());
+		return mav;
+	}
+
+	/* build and return a mav for a page with the given error message
+	 */
+	private ModelAndView errorMav(String msg) {
+		ModelAndView mav = new ModelAndView("error");
+		mav.addObject("errorMsg", msg);
+		return mav;
+	}
 }
