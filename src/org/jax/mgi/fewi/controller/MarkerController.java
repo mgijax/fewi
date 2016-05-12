@@ -275,6 +275,8 @@ public class MarkerController {
 	}
 
 
+	/* return a mav for an error screen with the given message filled in
+	 */
 	private ModelAndView errorMav(String msg) {
 		ModelAndView mav = new ModelAndView("error");
 		mav.addObject("errorMsg", msg);
