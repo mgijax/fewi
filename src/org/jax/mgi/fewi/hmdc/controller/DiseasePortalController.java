@@ -10,9 +10,9 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.TermFinder;
 import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
-import org.jax.mgi.fewi.hmdc.forms.DiseasePortalCondition;
 import org.jax.mgi.fewi.hmdc.forms.DiseasePortalConditionGroup;
 import org.jax.mgi.fewi.hmdc.forms.DiseasePortalConditionQuery;
+import org.jax.mgi.fewi.hmdc.forms.DiseasePortalQueryBuilder;
 import org.jax.mgi.fewi.hmdc.models.GridResult;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpDisease;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpGridAnnotationEntry;
@@ -217,28 +217,12 @@ public class DiseasePortalController {
 		String header = request.getParameter("header");
 		if (header == null) { return errorMav("Missing header parameter"); }
 
-		// convert the required parameters into a Filter object
-		DiseasePortalConditionGroup queryGroup = new DiseasePortalConditionGroup();
-		queryGroup.setOperator("AND");
-
-		List<DiseasePortalConditionQuery> queries = new ArrayList<DiseasePortalConditionQuery>();
-
-		DiseasePortalConditionQuery clusterQuery = new DiseasePortalConditionQuery();
-		DiseasePortalCondition clusterCondition = new DiseasePortalCondition();
-		clusterCondition.setInput(gridClusterKey);
-		clusterQuery.setField(DiseasePortalFields.GRID_CLUSTER_KEY);
-		clusterQuery.setCondition(clusterCondition);
-		queries.add(clusterQuery);
-
-		DiseasePortalConditionQuery headerQuery = new DiseasePortalConditionQuery();
-		DiseasePortalCondition headerCondition = new DiseasePortalCondition();
-		headerCondition.setInput(header);
-		headerQuery.setField(DiseasePortalFields.TERM_HEADER);
-		headerQuery.setCondition(headerCondition);
-		queries.add(headerQuery);
 		
-		queryGroup.setQueries(queries);
-		Filter mainFilter = genQueryFilter(queryGroup);
+		DiseasePortalQueryBuilder builder = new DiseasePortalQueryBuilder("AND");
+		builder.addCondition(DiseasePortalFields.GRID_CLUSTER_KEY, gridClusterKey);
+		builder.addCondition(DiseasePortalFields.TERM_HEADER, header);
+	
+		Filter mainFilter = genQueryFilter(builder.getQueryGroup());
 		
 		// run the query to get the set of grid results
 		SearchParams params = new SearchParams();
