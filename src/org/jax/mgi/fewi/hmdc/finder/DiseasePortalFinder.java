@@ -38,7 +38,7 @@ public class DiseasePortalFinder {
 	
 	public SearchResults<SolrHdpDisease> getDiseases(SearchParams params) {
 		SearchResults<SolrHdpEntityInterface> results = new SearchResults<SolrHdpEntityInterface>();
-		hdpDiseaseHunter.hunt(params, results);
+		hdpDiseaseHunter.hunt(params, results, DiseasePortalFields.TERM_ID);
 		SearchResults<SolrHdpDisease> srVT = new SearchResults<SolrHdpDisease>();
 		srVT.cloneFrom(results,SolrHdpDisease.class);
 		return srVT;
@@ -46,7 +46,7 @@ public class DiseasePortalFinder {
 
 	public SearchResults<SolrHdpMarker> getMarkers(SearchParams params) {
 		SearchResults<SolrHdpEntityInterface> results = new SearchResults<SolrHdpEntityInterface>();
-		hdpGeneHunter.hunt(params, results);
+		hdpGeneHunter.hunt(params, results, DiseasePortalFields.MARKER_KEY);
 		SearchResults<SolrHdpMarker> srM = new SearchResults<SolrHdpMarker>();
 		srM.cloneFrom(results,SolrHdpMarker.class);
 		return srM;
