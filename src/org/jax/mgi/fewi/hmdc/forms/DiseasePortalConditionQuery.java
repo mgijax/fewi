@@ -30,10 +30,6 @@ public class DiseasePortalConditionQuery {
 	public Filter genFilter() {
 		List<String> tokens = null;
 		if(field.equals(DiseasePortalFields.MARKER_ID_SEARCH) || field.equals(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_ID)) {
-			// strip double-quotes
-			if(condition.getInput().contains("\"")) {
-				condition.setInput(condition.getInput().replaceAll("\"", ""));
-			}
 			// strip OMIM: prefix
 			if(condition.getInput().toLowerCase().startsWith("omim:")) {
 				condition.setInput(condition.getInput().replaceAll("(?i)omim:", ""));
@@ -67,10 +63,6 @@ public class DiseasePortalConditionQuery {
 		} else if(field.equals(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_ID)) {
 			List<Filter> filterList = new ArrayList<Filter>();
 
-			// strip double-quotes
-			if(condition.getInput().contains("\"")) {
-				condition.setInput(condition.getInput().replaceAll("\"", ""));
-			}
 			// strip OMIM: prefix
 			if(condition.getInput().toLowerCase().startsWith("omim:")) {
 				condition.setInput(condition.getInput().replaceAll("(?i)omim:", ""));

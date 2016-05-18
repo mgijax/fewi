@@ -147,6 +147,18 @@ td.cell.right.header.last {
 	width: 220px;
 }
 
+td.center.header.greyBar {
+	width: 10px;
+}
+td.center.header.greyBar > div {
+	background-color: #DDDDDD;
+}
+
+td.center.cell.middle.greyBar {
+	background-color: #DDDDDD;
+	width: 10px;
+}
+
 .cell.center.header > div, .cell.right.header > div {
   position: relative;
   top: 1px;
@@ -218,3 +230,4 @@ td.cell.right.header.last {
 	top: 7px;
 	left: 7px;
 }
+

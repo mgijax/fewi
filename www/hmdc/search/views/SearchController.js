@@ -72,14 +72,22 @@
 			console.log(cellData.data);
 		}
 
+		$scope.greyBar = "greyBar";
+
 		$scope.customHTMLHeader = function(value, row, col, formattedValue) {
 			if(value) {
 				var key = Object.keys(value)[0];
-				if(value[key] != -1) {
-					return "<span><mark>" + key + "</mark></span>";
+				if(key) {
+					if(value[key] != -1) {
+						return "<span><mark>" + key + "</mark></span>";
+					} else {
+						return "<span>" + key + "</span>";
+					}
 				} else {
-					return "<span>" + key + "</span>";
+					return "";
 				}
+			} else {
+				return "";
 			}
 		}
 
@@ -155,6 +163,8 @@
 						hash = {};
 					}
 
+					headerContent.push({});
+
 					// Push the OMIM Headers into the headerContent row
 					for(var header in response.data.gridOMIMHeaders) {
 						if(response.data.gridHighLights) {
@@ -201,6 +211,7 @@
 							header = response.data.gridMPHeaders[header];
 							rowContent.push(key.mpHeaderCells[header]);
 						}
+						rowContent.push({normalCount: 0, annotCount: 0, humanAnnotCount: 0});
 						for(var header in response.data.gridOMIMHeaders) {
 							header = response.data.gridOMIMHeaders[header];
 							rowContent.push(key.diseaseCells[header]);
@@ -213,6 +224,8 @@
 					vm.results.grid.totalcolcount = response.data.gridOMIMHeaders.length + response.data.gridMPHeaders.length;
 					vm.results.grid.colcount = vm.results.grid.totalcolcount >= 35 ? 35 : vm.results.grid.totalcolcount;
 					vm.results.grid.totalrowcount = response.data.gridRows.length;
+
+					vm.results.grid.grayBar = response.data.gridMPHeaders.length + 2
 
 					vm.tabs.gridTab.count = response.data.gridRows.length + " x " + vm.results.grid.totalcolcount;
 

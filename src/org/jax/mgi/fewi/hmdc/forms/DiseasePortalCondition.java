@@ -27,6 +27,7 @@ public class DiseasePortalCondition {
 	public List<String> getIdTokens() {
 		input = input.replaceAll("[^\\w^:^\\.]+", " ");
 		input = input.replaceAll("\\^", " ");
+		input = input.replaceAll("\"", " ");
 		input = input.replaceAll("\\s+", " ").trim();
 		return Arrays.asList(input.split(" "));
 	}
