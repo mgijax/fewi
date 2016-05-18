@@ -183,13 +183,33 @@ public class DiseasePortalController {
 		}
 	}
 
-	/* Serve up a phenotype or disease popup, from clicking a cell on the HMDC grid.
+	/* Serve up a phenotype popup, from clicking a phenotype cell on the HMDC grid.
 	 * Expects two parameters in the request: gridClusterKey and header.  Any phenotype or
 	 * disease terms or IDs can be passed in for highlighting using the (optional)
 	 * term or termId parameters; multiples of each can be submitted.
 	 */
-	@RequestMapping(value="/popup", method=RequestMethod.GET)
-	public ModelAndView getPopup(HttpServletRequest request) {
+	@RequestMapping(value="/phenotypePopup", method=RequestMethod.GET)
+	public ModelAndView getPhenotypePopup(HttpServletRequest request) {
+		return this.getPopup(request, true);
+	}
+
+	/* Serve up a disease popup, from clicking a disease cell on the HMDC grid.
+	 * Expects two parameters in the request: gridClusterKey and header.  Any phenotype or
+	 * disease terms or IDs can be passed in for highlighting using the (optional)
+	 * term or termId parameters; multiples of each can be submitted.
+	 */
+	@RequestMapping(value="/diseasePopup", method=RequestMethod.GET)
+	public ModelAndView getDiseasePopup(HttpServletRequest request) {
+		return this.getPopup(request, false);
+	}
+
+	/* Serve up a phenotype or disease popup, from clicking a cell on the HMDC grid.
+	 * Expects two parameters in the request: gridClusterKey and header.  Any phenotype or
+	 * disease terms or IDs can be passed in for highlighting using the (optional)
+	 * term or termId parameters; multiples of each can be submitted.  The 'isPhenotype'
+	 * parameter should be true for phenotype popups and false for disease popups.
+	 */
+	private ModelAndView getPopup(HttpServletRequest request, boolean isPhenotype) {
 		// collect the required parameters and check that they are specified
 		String gridClusterKey = request.getParameter("gridClusterKey");
 		if (gridClusterKey == null) { return errorMav("Missing gridClusterKey parameter"); }
@@ -235,15 +255,17 @@ public class DiseasePortalController {
 		}
 		
 		// pull out marker data needed for header
-		List<String> markers = null;
+		List<String> humanMarkers = null;
+		List<String> mouseMarkers = null;
 		
 		if (gridResults.size() > 0) {
 			SolrHdpGridEntry first = gridResults.get(0);
 
-			markers = new ArrayList<String>();
+			mouseMarkers = new ArrayList<String>();
+			humanMarkers = new ArrayList<String>();
 			
-			for (GridMarker marker : first.getGridHumanSymbols()) { markers.add(marker.getSymbol()); }
-			for (GridMarker marker : first.getGridMouseSymbols()) { markers.add(marker.getSymbol()); }
+			for (GridMarker marker : first.getGridHumanSymbols()) { humanMarkers.add(marker.getSymbol()); }
+			for (GridMarker marker : first.getGridMouseSymbols()) { mouseMarkers.add(marker.getSymbol()); }
 		}
 		
 		Filter gridFilter = new Filter(DiseasePortalFields.GRID_KEY, gridKeys, Operator.OP_IN);
@@ -258,6 +280,12 @@ public class DiseasePortalController {
 		mav.addObject("gridClusterKey", gridClusterKey);
 		mav.addObject("headerTerm", header);
 		
+		if (isPhenotype) {
+			mav.addObject("isPhenotype", 1);
+		} else {
+			mav.addObject("isDisease", 1);
+		}
+		
 		// add any (optional) terms and term IDs that were specified to use for column highlighting
 		String[] terms = request.getParameterValues("term");
 		String[] termIds = request.getParameterValues("termId");
@@ -265,7 +293,8 @@ public class DiseasePortalController {
 		if (terms != null && terms.length > 0) { mav.addObject("highlightTerms", terms); }
 		if (termIds != null && termIds.length > 0) { mav.addObject("highlightTermIds", termIds); }
 
-		if (markers != null) { mav.addObject("markers", markers); }
+		if (mouseMarkers != null && mouseMarkers.size() > 0) { mav.addObject("mouseMarkers", mouseMarkers.toArray(new String[0])); }
+		if (humanMarkers != null && humanMarkers.size() > 0) { mav.addObject("humanMarkers", humanMarkers.toArray(new String[0])); }
 
 		mav.addObject("gridKeyCount", gridKeys.size());
 		mav.addObject("annotationCount", annotationResults.getTotalCount());
@@ -280,3 +309,5 @@ public class DiseasePortalController {
 		return mav;
 	}
 }
+
+	
