@@ -144,6 +144,10 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 				annotation = mpHeaderCells.get(term);
 				annotation.incHumanAnnotCount();
 			}
+			if(annotation != null) {
+				annotation.setHeader(shgae.getTermHeader());
+				annotation.setGridClusterKey(currentGridEntry.getGridClusterKey());
+			}
 		}
 	}
 
