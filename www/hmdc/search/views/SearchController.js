@@ -73,6 +73,7 @@
 		}
 
 		$scope.greyBar = "greyBar";
+		$scope.displayNone = "displayNone";
 
 		$scope.customHTMLHeader = function(value, row, col, formattedValue) {
 			if(value) {
@@ -175,7 +176,7 @@
 						headerContent.push(hash);
 						hash = {};
 					}
-					headerContent.push("");
+					for(var i = 0; i < 7; i++) { headerContent.push([]); }
 					vm.results.grid.data.push(headerContent);
 
 					for(var key in response.data.gridRows) {
@@ -218,11 +219,12 @@
 						}
 						vm.results.grid.data.push(rowContent);
 					}
+					// Push the final footer row
 					vm.results.grid.data.push([]);
 
 					vm.results.grid.rowcount = response.data.gridRows.length >= 18 ? 18 : response.data.gridRows.length;
 					vm.results.grid.totalcolcount = response.data.gridOMIMHeaders.length + response.data.gridMPHeaders.length;
-					vm.results.grid.colcount = vm.results.grid.totalcolcount >= 35 ? 35 : vm.results.grid.totalcolcount;
+					vm.results.grid.colcount = vm.results.grid.totalcolcount >= 40 ? 40 : vm.results.grid.totalcolcount;
 					vm.results.grid.totalrowcount = response.data.gridRows.length;
 
 					vm.results.grid.grayBar = response.data.gridMPHeaders.length + 2

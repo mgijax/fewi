@@ -143,10 +143,6 @@ td.cell.center.footer, td.cell.left.footer {
   border-top: 1px solid #dddddd;
 }
 
-td.cell.right.header.last {
-	width: 220px;
-}
-
 td.center.header.greyBar {
 	width: 10px;
 }
@@ -231,3 +227,10 @@ td.center.cell.middle.greyBar {
 	left: 7px;
 }
 
+td.middle.displayNone, td.footer.displayNone {
+	display: none;
+}
+
+td.displayNone > div {
+	display: none;
+}
