@@ -268,8 +268,15 @@ public class DiseasePortalController {
 			for (GridMarker marker : first.getGridMouseSymbols()) { mouseMarkers.add(marker.getSymbol()); }
 		}
 		
-		Filter gridFilter = new Filter(DiseasePortalFields.GRID_KEY, gridKeys, Operator.OP_IN);
-		params.setFilter(gridFilter);
+		/* For display on the popup, we want only the annotations that contribute to the cell
+		 * identified by the grid cluster key (row) and the header (column).  At this point, we can
+		 * use the individual grid keys rather than the grid cluster key, as the latter is made up
+		 * of the former.
+		 */
+		List<Filter> annotationFilters = new ArrayList<Filter>(); 
+		annotationFilters.add(new Filter(DiseasePortalFields.GRID_KEY, gridKeys, Operator.OP_IN));
+		annotationFilters.add(new Filter(DiseasePortalFields.TERM_HEADER, header));
+		params.setFilter(Filter.and(annotationFilters));
 		
 		SearchResults<SolrHdpGridAnnotationEntry> annotationResults = hdpFinder.getGridAnnotationResults(params);
 
