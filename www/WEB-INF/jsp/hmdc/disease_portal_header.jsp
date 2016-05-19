@@ -11,6 +11,7 @@
 		<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/hmdc/bower_components/ng-dialog/css/ngDialog-theme-default.css" />
 		<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/hmdc/bower_components/ng-cells/dist/0.4.0/ng-cells.css" />
 		<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/css/hmdc/search.css" />
+		<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/css/hmdc/popup.css" />
 
 		<script src="${configBean.FEWI_URL}/assets/hmdc/bower_components/angular/angular.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/bower_components/angular-route/angular-route.js"></script>

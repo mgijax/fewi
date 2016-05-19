@@ -7,6 +7,8 @@ public class GridTermHeaderAnnotation extends AbstractGridModel {
 	private Integer normalCount = 0;
 	private Integer annotCount = 0;
 	private Integer humanAnnotCount = 0;
+	private String header = "";
+	private Integer gridClusterKey = 0;
 	
 	public Integer getNormalCount() {
 		return normalCount;
@@ -35,7 +37,19 @@ public class GridTermHeaderAnnotation extends AbstractGridModel {
 	public void incHumanAnnotCount() {
 		humanAnnotCount += 1;
 	}
-
+	public String getHeader() {
+		return header;
+	}
+	public void setHeader(String header) {
+		this.header = header;
+	}
+	public Integer getGridClusterKey() {
+		return gridClusterKey;
+	}
+	public void setGridClusterKey(Integer gridClusterKey) {
+		this.gridClusterKey = gridClusterKey;
+	}
+	
 	@Override
 	public void Accept(GridVisitorInterface pi) {
 		pi.Visit(this);

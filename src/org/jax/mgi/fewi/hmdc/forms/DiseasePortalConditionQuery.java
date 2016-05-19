@@ -6,6 +6,7 @@ import java.util.List;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
+import org.jax.mgi.shr.fe.query.SolrLocationTranslator;
 
 import com.google.common.base.Joiner;
 
@@ -14,6 +15,12 @@ public class DiseasePortalConditionQuery {
 	private String field;
 	private DiseasePortalCondition condition;
 	
+	public DiseasePortalConditionQuery() {}
+	
+	public DiseasePortalConditionQuery(String field, DiseasePortalCondition condition) {
+		this.field = field;
+		this.condition = condition;
+	}
 	public String getField() {
 		return field;
 	}
@@ -40,6 +47,18 @@ public class DiseasePortalConditionQuery {
 				filterList.add(new Filter(field, token, Operator.OP_EQUAL));
 			}
 			return Filter.or(filterList);
+		} else if(field.equals(DiseasePortalFields.LOCATION)) {
+
+			String locationQuery = SolrLocationTranslator.getQueryValue(condition.getInput());
+			System.out.println("String: " + locationQuery);
+			
+			if(condition.getParameters().contains("mouse")) {
+				return new Filter(DiseasePortalFields.MOUSE_COORDINATE, locationQuery, Operator.OP_HAS_WORD);
+			} else if(condition.getParameters().contains("human")) {
+				return new Filter(DiseasePortalFields.HUMAN_COORDINATE, locationQuery, Operator.OP_HAS_WORD);
+			}
+			return null;
+			
 		} else {
 			tokens = condition.getWordTokens();
 			return new Filter(field, Joiner.on(" ").join(tokens), 100);

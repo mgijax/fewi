@@ -10,6 +10,11 @@ public class DiseasePortalCondition {
 	private String input;
 	private List<String> parameters;
 	
+	public DiseasePortalCondition() {}
+	
+	public DiseasePortalCondition(String input) {
+		this.input = input;
+	}
 	public String getInput() {
 		return input;
 	}

@@ -69,10 +69,23 @@
 		}
 
 		$scope.handleClick = function(event, cellData) {
-			console.log(cellData.data);
+			var url;
+			if(cellData.data && cellData.data["phenoHeader"]) {
+				url = "/diseasePortal/phenotypePopup?gridClusterKey=" + cellData.data["gridClusterKey"] + "&header=" + cellData.data["phenoHeader"];
+			}
+			if(cellData.data && cellData.data["diseaseHeader"]) {
+				url = "/diseasePortal/diseasePopup?gridClusterKey=" + cellData.data["gridClusterKey"] + "&header=" + cellData.data["diseaseHeader"];
+			}
+
+			if(url) {
+				var windowName = "popup_" + cellData.data["gridClusterKey"] + "_" + cellData.data["header"];
+				var child = window.open (url, windowName, 'width=800,height=600,resizable=yes,scrollbars=yes,alwaysRaised=yes');
+				child.focus();
+			}
 		}
 
 		$scope.greyBar = "greyBar";
+		$scope.displayNone = "displayNone";
 
 		$scope.customHTMLHeader = function(value, row, col, formattedValue) {
 			if(value) {
@@ -175,7 +188,7 @@
 						headerContent.push(hash);
 						hash = {};
 					}
-					headerContent.push("");
+					for(var i = 0; i < 7; i++) { headerContent.push([]); }
 					vm.results.grid.data.push(headerContent);
 
 					for(var key in response.data.gridRows) {
@@ -209,20 +222,27 @@
 
 						for(var header in response.data.gridMPHeaders) {
 							header = response.data.gridMPHeaders[header];
+							if(key.mpHeaderCells[header]) {
+								key.mpHeaderCells[header]["phenoHeader"] = header;
+							}
 							rowContent.push(key.mpHeaderCells[header]);
 						}
 						rowContent.push({normalCount: 0, annotCount: 0, humanAnnotCount: 0});
 						for(var header in response.data.gridOMIMHeaders) {
 							header = response.data.gridOMIMHeaders[header];
+							if(key.diseaseCells[header]) {
+								key.diseaseCells[header]["diseaseHeader"] = header;
+							}
 							rowContent.push(key.diseaseCells[header]);
 						}
 						vm.results.grid.data.push(rowContent);
 					}
+					// Push the final footer row
 					vm.results.grid.data.push([]);
 
 					vm.results.grid.rowcount = response.data.gridRows.length >= 18 ? 18 : response.data.gridRows.length;
 					vm.results.grid.totalcolcount = response.data.gridOMIMHeaders.length + response.data.gridMPHeaders.length;
-					vm.results.grid.colcount = vm.results.grid.totalcolcount >= 35 ? 35 : vm.results.grid.totalcolcount;
+					vm.results.grid.colcount = vm.results.grid.totalcolcount >= 40 ? 40 : vm.results.grid.totalcolcount;
 					vm.results.grid.totalrowcount = response.data.gridRows.length;
 
 					vm.results.grid.grayBar = response.data.gridMPHeaders.length + 2

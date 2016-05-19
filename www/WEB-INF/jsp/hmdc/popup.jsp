@@ -5,38 +5,6 @@
 
 <%@ include file="disease_portal_header.jsp" %>
 
-<style>
-#title {
-    border: thin solid black;
-    min-width: 600px;
-    max-width: 600px;
-    background-color: #dfefff;
-    padding: 4px;
-    font-weight: bold;
-    font-size: 125%;
-}
-
-#legend {
-    min-width: 600px;
-    max-width: 600px;
-    margin-top: 4px;
-}
-
-#hdpSystemPopupLegend td {
-    border: thin solid black;
-    padding: 3px;
-    background-color: #dfefff;
-}
-
-span.highlight { background-color: #D6C6E8 }
-
-td.bgsensitive {
-    color: #FF4700;
-    text-align: center;
-    font-weight: bold;
-}
-</style>
-
 <c:if test="${not empty humanMarkers}">
   <c:set var="hmarkers" value='${fn:join(humanMarkers, ", ")}'/>
 </c:if>
@@ -53,14 +21,6 @@ td.bgsensitive {
 	// change window title on page load
     document.title = '${pageTitle}';
 </script>
-
-<style>
-#markerList {
-  font-family: Verdana,Arial,Helvetica;
-  font-size: 12px;
-  padding-bottom:4px;
-}
-</style>
 
 </head>
 

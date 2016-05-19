@@ -33,7 +33,7 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 	// logger for the class
 	private final Logger logger = LoggerFactory.getLogger(BigExcelBatchSummary.class);
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
 	protected void buildExcelDocument(Map<String,Object> model, SXSSFWorkbook workbook,
 			HttpServletRequest request, HttpServletResponse response)

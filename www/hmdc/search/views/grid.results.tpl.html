@@ -3,6 +3,7 @@
 		show-column-names="false"
 		show-row-numbers="false"
 		left-column-number="2"
+		right-column-number="0"
 		center-column-number="vm.results.grid.colcount"
 		row-number="vm.results.grid.rowcount"
 		data="vm.results.grid.data"
@@ -13,6 +14,9 @@
 		<ngc-range top="0" bottom="vm.results.grid.totalrowcount + 1" left="vm.results.grid.grayBar" right="vm.results.grid.grayBar + 1" clazz="greyBar"></ngc-range>
 
 		<ngc-range top="0" bottom="1" left="2" right="9999" custom-html-fn="customHTMLHeader"></ngc-range>
+
+		<ngc-range top="0" bottom="vm.results.grid.totalrowcount + 2" left="vm.results.grid.totalcolcount + 3" right="9999" clazz="displayNone"></ngc-range>
+
 	</div>
 </div>
 
