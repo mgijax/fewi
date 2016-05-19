@@ -26,8 +26,6 @@
 				scope.vm.maxrows = Math.floor(($window.innerHeight - 630) / cellsize);
 				if(scope.vm.maxrows < 3) scope.vm.maxrows = 3;
 
-				console.log(scope.vm.maxrows);
-
 				angular.element($window).bind('resize', function(){
 					// uncomment for only fire when $window.innerWidth change   
 					// if (scope.width !== $window.innerWidth)
@@ -37,8 +35,6 @@
 						if(scope.vm.maxcols < 5) scope.vm.maxcols = 5;
 						scope.vm.maxrows = Math.floor(($window.innerHeight - 630) / cellsize);
 						if(scope.vm.maxrows < 3) scope.vm.maxrows = 3;
-
-						console.log(scope.vm.maxrows);
 
 						scope.$digest();
 					}
