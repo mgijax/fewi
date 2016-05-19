@@ -118,7 +118,7 @@ td.cell.middle.right.first {
 
 /* Header */
 td.cell.center.header, td.cell.right.header {
-  height: 220px;
+  height: 180px;
   width: 30px;
 }
 
@@ -157,8 +157,7 @@ td.center.cell.middle.greyBar {
 
 .cell.center.header > div, .cell.right.header > div {
   position: relative;
-  top: 1px;
-  left: 110px;
+  left: 90px;
   height: 100%;
   -ms-transform:skew(-45deg,0deg);
   -moz-transform:skew(-45deg,0deg);
@@ -233,4 +232,9 @@ td.middle.displayNone, td.footer.displayNone {
 
 td.displayNone > div {
 	display: none;
+}
+
+.scrollable .scrollable-slider {
+	background-color: #aaa;
+	background-image: linear-gradient(to right,#aaa,#bbb);
 }

@@ -13,6 +13,38 @@
 		}})
 		.filter('joinBy', function () { return function (input,delimiter) { return (input || []).join(delimiter || ', '); }; })
 		.filter('handleSubscript', function () { return function (input) { return input.replace(/<([^>]*)>/, "<sup>$1</sup>"); }; })
+		.directive('resize', ['$window', function ($window) {
+			return {
+				link: link,
+				restrict: 'A'
+			};
+
+			function link(scope, element, attrs) {
+				var cellsize = 30;
+				scope.vm.maxcols = Math.floor(($window.innerWidth - 300) / cellsize);
+				if(scope.vm.maxcols < 5) scope.vm.maxcols = 5;
+				scope.vm.maxrows = Math.floor(($window.innerHeight - 630) / cellsize);
+				if(scope.vm.maxrows < 3) scope.vm.maxrows = 3;
+
+				console.log(scope.vm.maxrows);
+
+				angular.element($window).bind('resize', function(){
+					// uncomment for only fire when $window.innerWidth change   
+					// if (scope.width !== $window.innerWidth)
+					{
+						var cellsize = 30;
+						scope.vm.maxcols = Math.floor(($window.innerWidth - 300) / cellsize);
+						if(scope.vm.maxcols < 5) scope.vm.maxcols = 5;
+						scope.vm.maxrows = Math.floor(($window.innerHeight - 630) / cellsize);
+						if(scope.vm.maxrows < 3) scope.vm.maxrows = 3;
+
+						console.log(scope.vm.maxrows);
+
+						scope.$digest();
+					}
+				});
+			}
+		}])
 		.directive('stReset', function() {
 			return {
 				require: '^stTable',
@@ -240,10 +272,11 @@
 					// Push the final footer row
 					vm.results.grid.data.push([]);
 
-					vm.results.grid.rowcount = response.data.gridRows.length >= 18 ? 18 : response.data.gridRows.length;
 					vm.results.grid.totalcolcount = response.data.gridOMIMHeaders.length + response.data.gridMPHeaders.length;
-					vm.results.grid.colcount = vm.results.grid.totalcolcount >= 40 ? 40 : vm.results.grid.totalcolcount;
 					vm.results.grid.totalrowcount = response.data.gridRows.length;
+
+					vm.maxcols = Math.min(vm.maxcols, headerContent.length);
+					vm.maxrows = Math.min(vm.maxrows, vm.results.grid.data.length - 2);
 
 					vm.results.grid.grayBar = response.data.gridMPHeaders.length + 2
 

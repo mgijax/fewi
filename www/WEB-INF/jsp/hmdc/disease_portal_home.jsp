@@ -32,7 +32,7 @@
 				<div ng-include="'/assets/hmdc/search/views/search.tpl.html'"></div>
 			</div>
 
-			<div class="container-fluid searchViewBox" ng-show="vm.results">
+			<div class="container-fluid searchViewBox" ng-show="vm.results" resize>
 				<div ng-include="'/assets/hmdc/search/views/results.tpl.html'"></div>
 			</div>
 

@@ -1,11 +1,11 @@
-<div ng-if="vm.results.grid.rowcount > 0">
+<div ng-if="vm.results.grid.totalrowcount > 0">
 	<div ngc-table
 		show-column-names="false"
 		show-row-numbers="false"
 		left-column-number="2"
-		right-column-number="0"
-		center-column-number="vm.results.grid.colcount"
-		row-number="vm.results.grid.rowcount"
+		right-column-number="1"
+		center-column-number="vm.maxcols"
+		row-number="vm.maxrows"
 		data="vm.results.grid.data"
     >
 
@@ -20,6 +20,6 @@
 	</div>
 </div>
 
-<div ng-if="vm.results.grid.rowcount < 1">
+<div ng-if="vm.results.grid.totalrowcount < 1">
 	No data available for your query.
 </div>
