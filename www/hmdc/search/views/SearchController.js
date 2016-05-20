@@ -460,6 +460,7 @@
 								key: 'parameters[0]',
 								type: 'radio',
 								className: 'inline-field',
+								defaultValue: 'mouse',
 								templateOptions: {
 									label: '',
 									required: true,
