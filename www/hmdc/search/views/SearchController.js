@@ -21,20 +21,20 @@
 
 			function link(scope, element, attrs) {
 				var cellsize = 30;
-				scope.vm.maxcols = Math.floor(($window.innerWidth - 300) / cellsize);
-				if(scope.vm.maxcols < 5) scope.vm.maxcols = 5;
-				scope.vm.maxrows = Math.floor(($window.innerHeight - 630) / cellsize);
-				if(scope.vm.maxrows < 3) scope.vm.maxrows = 3;
+				scope.vm.windowmaxcols = Math.floor(($window.innerWidth - 300) / cellsize);
+				if(scope.vm.windowmaxcols < 5) scope.vm.windowmaxcols = 5;
+				scope.vm.windowmaxrows = Math.floor(($window.innerHeight - 630) / cellsize);
+				if(scope.vm.windowmaxrows < 3) scope.vm.maxrows = 3;
 
 				angular.element($window).bind('resize', function(){
 					// uncomment for only fire when $window.innerWidth change   
 					// if (scope.width !== $window.innerWidth)
 					{
 						var cellsize = 30;
-						scope.vm.maxcols = Math.floor(($window.innerWidth - 300) / cellsize);
-						if(scope.vm.maxcols < 5) scope.vm.maxcols = 5;
-						scope.vm.maxrows = Math.floor(($window.innerHeight - 630) / cellsize);
-						if(scope.vm.maxrows < 3) scope.vm.maxrows = 3;
+						scope.vm.windowmaxcols = Math.floor(($window.innerWidth - 300) / cellsize);
+						if(scope.vm.windowmaxcols < 5) scope.vm.windowmaxcols = 5;
+						scope.vm.windowmaxrows = Math.floor(($window.innerHeight - 630) / cellsize);
+						if(scope.vm.windowmaxrows < 3) scope.vm.windowmaxrows = 3;
 
 						scope.$digest();
 					}
@@ -271,8 +271,8 @@
 					vm.results.grid.totalcolcount = response.data.gridOMIMHeaders.length + response.data.gridMPHeaders.length;
 					vm.results.grid.totalrowcount = response.data.gridRows.length;
 
-					vm.maxcols = Math.min(vm.maxcols, headerContent.length);
-					vm.maxrows = Math.min(vm.maxrows, vm.results.grid.data.length - 2);
+					vm.maxcols = Math.min(vm.windowmaxcols, headerContent.length);
+					vm.maxrows = Math.min(vm.windowmaxrows, vm.results.grid.data.length - 2);
 
 					vm.results.grid.grayBar = response.data.gridMPHeaders.length + 2
 
