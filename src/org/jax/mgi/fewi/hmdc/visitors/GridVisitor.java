@@ -72,11 +72,14 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 			
 			String index = "";
 			for (GridMarker gm: rowMap.get(gridClusterKey).getGridCluster().getHumanSymbols()) {
-			    index += gm.getSymbol().toLowerCase();
+			    index += gm.getSymbol();
 			}
 			for (GridMarker gm: rowMap.get(gridClusterKey).getGridCluster().getMouseSymbols()) {
-			    index += gm.getSymbol().toLowerCase();
+			    index += gm.getSymbol();
 			}
+			
+			index += gridClusterKey;
+
 			sortedMap.put(index, rowMap.get(gridClusterKey));
 		}
 		
