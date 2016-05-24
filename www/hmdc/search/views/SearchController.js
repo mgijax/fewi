@@ -12,7 +12,7 @@
 				return array;
 		}})
 		.filter('joinBy', function () { return function (input,delimiter) { return (input || []).join(delimiter || ', '); }; })
-		.filter('handleSubscript', function () { return function (input) { return input.replace(/<([^>]*)>/, "<sup>$1</sup>"); }; })
+		.filter('handleSubscript', function () { return function (input) { return input.replace(/<([^>]*)>/g, "<sup>$1</sup>"); }; })
 		.directive('resize', ['$window', function ($window) {
 			return {
 				link: link,
@@ -229,10 +229,10 @@
 							var temp = "";
 							if(key.gridCluster.homologyClusterKey) {
 								temp = "<a target=\"_blank\" href=\"/homology/cluster/key/" + key.gridCluster.homologyClusterKey + "\">";
-								temp += h.symbol.replace(/<([^>]*)>/, "<sup>$1</sup>");
+								temp += h.symbol.replace(/<([^>]*)>/g, "<sup>$1</sup>");
 								temp += "</a>";
 							} else {
-								temp = h.symbol.replace(/<([^>]*)>/, "<sup>$1</sup>");
+								temp = h.symbol.replace(/<([^>]*)>/g, "<sup>$1</sup>");
 							}
 							humanSymbolString.push(temp);
 						}
@@ -242,7 +242,7 @@
 						for(var marker in key.gridCluster.mouseSymbols) {
 							var m = key.gridCluster.mouseSymbols[marker];
 							var temp = "<a target=\"_blank\" href=\"/marker/" + m.primaryID + "\">";
-							temp += m.symbol.replace(/<([^>]*)>/, "<sup>$1</sup>");
+							temp += m.symbol.replace(/<([^>]*)>/g, "<sup>$1</sup>");
 							temp += "</a>";
 							markerSymbolString.push(temp);
 						}
