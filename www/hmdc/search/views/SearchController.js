@@ -157,13 +157,13 @@
 				if(value.annotCount < 1) ac = "";
 
 				if(hac && ac) {
-					return "background: linear-gradient(135deg, " + hac + " 50%, rgb(0,0,0) 0%, " + ac + " 50%);";
+					return "cursor: pointer; background: linear-gradient(135deg, " + hac + " 50%, rgb(0,0,0) 0%, " + ac + " 50%);";
 				}
 				if(hac) {
-					return "background: linear-gradient(135deg, " + hac +  " 0%, " + hac + " 0%, " + hac + " 0%);";
+					return "cursor: pointer; background: linear-gradient(135deg, " + hac +  " 0%, " + hac + " 0%, " + hac + " 0%);";
 				}
 				if(ac) {
-					return "background: linear-gradient(135deg, " + ac + " 100%, " + ac + " 0%, " + ac + " 0%);";
+					return "cursor: pointer; background: linear-gradient(135deg, " + ac + " 100%, " + ac + " 0%, " + ac + " 0%);";
 				}
 			}
 		}
@@ -457,7 +457,7 @@
 								}
 							},
 							{
-								key: 'parameters[0]',
+								key: 'radio',
 								type: 'radio',
 								className: 'inline-field',
 								defaultValue: 'mouse',
