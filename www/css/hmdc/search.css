@@ -238,3 +238,7 @@ td.displayNone > div {
 	background-color: #aaa;
 	background-image: linear-gradient(to right,#aaa,#bbb);
 }
+
+mark {
+	background-color: #D6C6E8;
+}
