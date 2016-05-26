@@ -20,24 +20,24 @@
 			};
 
 			function link(scope, element, attrs) {
-				var cellsize = 30;
+				var cellsize = 20;
 				scope.vm.windowmaxcols = Math.floor(($window.innerWidth - 300) / cellsize);
 				if(scope.vm.windowmaxcols < 5) scope.vm.windowmaxcols = 5;
-				scope.vm.windowmaxrows = Math.floor(($window.innerHeight - 630) / cellsize);
-				if(scope.vm.windowmaxrows < 3) scope.vm.maxrows = 3;
+				// Top header up to the bottom of the header line plus 40
+				// Without the wrapping of: Human  Mouse: Disease Connection
+				scope.vm.windowmaxrows = Math.floor(($window.innerHeight - 540) / cellsize);
+				if(scope.vm.windowmaxrows < 5) scope.vm.windowmaxrows = 5;
 
 				angular.element($window).bind('resize', function(){
-					// uncomment for only fire when $window.innerWidth change   
-					// if (scope.width !== $window.innerWidth)
-					{
-						var cellsize = 30;
-						scope.vm.windowmaxcols = Math.floor(($window.innerWidth - 300) / cellsize);
-						if(scope.vm.windowmaxcols < 5) scope.vm.windowmaxcols = 5;
-						scope.vm.windowmaxrows = Math.floor(($window.innerHeight - 630) / cellsize);
-						if(scope.vm.windowmaxrows < 3) scope.vm.windowmaxrows = 3;
+					var cellsize = 20;
+					scope.vm.windowmaxcols = Math.floor(($window.innerWidth - 300) / cellsize);
+					if(scope.vm.windowmaxcols < 5) scope.vm.windowmaxcols = 5;
+					// Top header up to the bottom of the header line plus 40
+					// Without the wrapping of: Human  Mouse: Disease Connection
+					scope.vm.windowmaxrows = Math.floor(($window.innerHeight - 540) / cellsize);
+					if(scope.vm.windowmaxrows < 5) scope.vm.windowmaxrows = 5;
 
-						scope.$digest();
-					}
+					scope.$digest();
 				});
 			}
 		}])
