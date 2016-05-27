@@ -178,7 +178,7 @@ td.center.cell.middle.greyBar {
   transform:skew(45deg,0deg) rotate(315deg);
   position: absolute;
   bottom: 28px; /* 40 cos(45) = 28 with an additional 2px margin*/
-  left: -34px; /*Because it looked good, but there is probably a mathematical link here as well*/
+  left: -36px; /*Because it looked good, but there is probably a mathematical link here as well*/
   display: inline-block;
   width: 90px; /* 80 / cos(45) - 40 cos (45) = 85 where 80 is the height of the cell, 40 the width of the cell and 45 the transform angle*/
   text-align: left;
