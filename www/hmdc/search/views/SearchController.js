@@ -175,6 +175,8 @@
 			console.log("Submit: " + JSON.stringify(vm.model));
 			vm.results = {};
 
+			vm.gridloading = true;
+
 			Search.gridQuery(vm.model).
 				then(function(response) {
 					vm.results.grid = {};
@@ -279,6 +281,7 @@
 					vm.tabs.gridTab.count = response.data.gridRows.length + " x " + vm.results.grid.totalcolcount;
 
 					vm.mustHide = true;
+					vm.gridloading = false;
 				}, function (error) {
 					vm.errorMessage = error;
 			});
