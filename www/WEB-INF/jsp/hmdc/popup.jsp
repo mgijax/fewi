@@ -3,7 +3,7 @@
 
 <%@ page trimDirectiveWhitespaces="true" %>
 
-<%@ include file="disease_portal_header.jsp" %>
+<%@ include file="header.jsp" %>
 
 <c:if test="${not empty humanMarkers}">
   <c:set var="hmarkers" value='${fn:join(humanMarkers, ", ")}'/>
@@ -64,7 +64,7 @@ isDisease: ${isDisease}<br/>
 </div>
 
 
-<%@ include file="/WEB-INF/jsp/hmdc/disease_portal_grid_popup_grid.jsp" %>
+<%@ include file="/WEB-INF/jsp/hmdc/popup_grid.jsp" %>
 
 </body>
 </html>

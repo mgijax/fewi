@@ -1,4 +1,4 @@
-	<!--===================== Body Start: disease_portal_bodystart.jsp ===========================-->
+	<!--===================== Body Start: bodystart.jsp ===========================-->
 	</head>
 	<body id="body">
 		<div id="headerContainer">

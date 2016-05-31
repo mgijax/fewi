@@ -3,12 +3,12 @@
 <%@ page import = "org.jax.mgi.fewi.util.StyleAlternator" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 
-<%@ include file="disease_portal_header.jsp" %>
+<%@ include file="header.jsp" %>
 
 <title>Human - Mouse Disease Connection</title>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
-<%@ include file="disease_portal_bodystart.jsp" %>
+<%@ include file="bodystart.jsp" %>
 
 		<!--===================== Disease Home: disease_portal_home.jsp ===========================-->
 		<div style="display: none;width: 175px;">
