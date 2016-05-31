@@ -120,9 +120,9 @@
 				var key = Object.keys(value)[0];
 				if(key) {
 					if(value[key] != -1) {
-						return "<span><mark>" + key + "</mark></span>";
+						return "<span title=\"" + key + "\"><mark>" + key + "</mark></span>";
 					} else {
-						return "<span>" + key + "</span>";
+						return "<span title=\"" + key + "\">" + key + "</span>";
 					}
 				} else {
 					return "";
