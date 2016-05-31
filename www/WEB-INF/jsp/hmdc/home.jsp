@@ -10,21 +10,11 @@
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 <%@ include file="bodystart.jsp" %>
 
-		<!--===================== Disease Home: disease_portal_home.jsp ===========================-->
-		<div style="display: none;width: 175px;">
-			<form>
-				<div class="form-group">
-					<label>Theme</label>
-					<select class="form-control" ng-model="css" ng-options="boot.url as boot.name for boot in boots"></select>
-				</div>
-			</form>
-		</div>
-
 		<div ng-controller="SearchController">
 
 			<div class="container">
-				<div style="border: 0px;margin-bottom:30px;text-align: center;">
-					<a href="${configBean.FEWI_URL}/diseasePortal" style="font-size:45px;color:black;">Human <img src="${configBean.WEBSHARE_URL}images/hmdc_arrow.png" style='height:42px;'> Mouse: Disease Connection</a>
+				<div style="border: 0px;margin-bottom:10px;text-align: center;">
+					<span style="font-size:30px;color:black;">Human - Mouse: Disease Connection</span>
 				</div>
 			</div>
 
@@ -37,14 +27,15 @@
 			</div>
 
 			<div class="container searchViewBox">
-				<%@ include file="/WEB-INF/jsp/static/home/hmdc/resource_links.jsp" %>
+				<div class="row">
+					<div class="col-sm-6">
+						<%@ include file="/WEB-INF/jsp/static/home/hmdc/resource_links.jsp" %>
+					</div>
+					<div class="col-sm-6">
+						<%@ include file="/WEB-INF/jsp/static/home/hmdc/research_news.jsp" %>
+					</div>
+				</div>
 			</div>
-
-			<div class="container searchViewBox">
-				<%@ include file="/WEB-INF/jsp/static/home/hmdc/research_news.jsp" %>
-			</div>
-
 		</div>
-
 	</body>
 </html>

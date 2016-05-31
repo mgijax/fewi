@@ -25,7 +25,7 @@
 				if(scope.vm.windowmaxcols < 5) scope.vm.windowmaxcols = 5;
 				// Top header up to the bottom of the header line plus 40
 				// Without the wrapping of: Human  Mouse: Disease Connection
-				scope.vm.windowmaxrows = Math.floor(($window.innerHeight - 540) / cellsize);
+				scope.vm.windowmaxrows = Math.floor(($window.innerHeight - 430) / cellsize);
 				if(scope.vm.windowmaxrows < 5) scope.vm.windowmaxrows = 5;
 
 				angular.element($window).bind('resize', function(){
@@ -34,7 +34,7 @@
 					if(scope.vm.windowmaxcols < 5) scope.vm.windowmaxcols = 5;
 					// Top header up to the bottom of the header line plus 40
 					// Without the wrapping of: Human  Mouse: Disease Connection
-					scope.vm.windowmaxrows = Math.floor(($window.innerHeight - 540) / cellsize);
+					scope.vm.windowmaxrows = Math.floor(($window.innerHeight - 430) / cellsize);
 					if(scope.vm.windowmaxrows < 5) scope.vm.windowmaxrows = 5;
 
 					scope.$digest();
@@ -135,10 +135,12 @@
 		$scope.formatCell = function(value, row, col, formattedValue) {
 			if(value && value.normalCount > 0 && value.normalCount == value.annotCount) {
 				if(value.humanAnnotCount > 0) {
-					return "<div class=\"normal normaloffset\">N</div>";
+					return "<div title=\"" + value.title + "\" class=\"normal normaloffset\">N</div>";
 				} else {
-					return "<div class=\"normal\">N</div>";
+					return "<div title=\"" + value.title + "\" class=\"normal\">N</div>";
 				}
+			} else if(value) {
+				return "<div title=\"" + value.title + "\">&nbsp;</div>";
 			}
 		}
 
@@ -224,17 +226,21 @@
 					for(var key in response.data.gridRows) {
 						key = response.data.gridRows[key];
 						var rowContent = [];
+						var rowSymbols = [];
 
 						var humanSymbolString = [];
 						for(var human in key.gridCluster.humanSymbols) {
 							var h = key.gridCluster.humanSymbols[human];
 							var temp = "";
 							if(key.gridCluster.homologyClusterKey) {
-								temp = "<a target=\"_blank\" href=\"/homology/cluster/key/" + key.gridCluster.homologyClusterKey + "\">";
-								temp += h.symbol.replace(/<([^>]*)>/g, "<sup>$1</sup>");
+								temp = "<a target=\"_blank\" href=\"/homology/cluster/key/" + key.gridCluster.homologyClusterKey + "\" title=\"Name: " + h.name + "\">";
+								var symbol = h.symbol.replace(/<([^>]*)>/g, "<sup>$1</sup>");
+								temp += symbol;
+								rowSymbols.push(symbol);
 								temp += "</a>";
 							} else {
 								temp = h.symbol.replace(/<([^>]*)>/g, "<sup>$1</sup>");
+								temp = "<span title=\"Name: " + h.name + "\">" + temp + "</span>";
 							}
 							humanSymbolString.push(temp);
 						}
@@ -243,8 +249,10 @@
 						var markerSymbolString = [];
 						for(var marker in key.gridCluster.mouseSymbols) {
 							var m = key.gridCluster.mouseSymbols[marker];
-							var temp = "<a target=\"_blank\" href=\"/marker/" + m.primaryID + "\">";
-							temp += m.symbol.replace(/<([^>]*)>/g, "<sup>$1</sup>");
+							var temp = "<a target=\"_blank\" href=\"/marker/" + m.primaryID + "\" title=\"Name: " + m.name + "\nFeature Type: " + m.featureType + "\">";
+							var symbol = m.symbol.replace(/<([^>]*)>/g, "<sup>$1</sup>");
+							temp += symbol;
+							rowSymbols.push(symbol);
 							temp += "</a>";
 							markerSymbolString.push(temp);
 						}
@@ -254,6 +262,7 @@
 							header = response.data.gridMPHeaders[header];
 							if(key.mpHeaderCells[header]) {
 								key.mpHeaderCells[header]["phenoHeader"] = header;
+								key.mpHeaderCells[header]["title"] = "Gene(s): " + rowSymbols.join(", ") + "\nPhenotype: " + header + "\nClick to see " + (key.mpHeaderCells[header].annotCount + key.mpHeaderCells[header].humanAnnotCount) + " annotations";
 							}
 							rowContent.push(key.mpHeaderCells[header]);
 						}
@@ -262,6 +271,7 @@
 							header = response.data.gridOMIMHeaders[header];
 							if(key.diseaseCells[header]) {
 								key.diseaseCells[header]["diseaseHeader"] = header;
+								key.diseaseCells[header]["title"] = "Gene(s): " + rowSymbols.join(", ") + "\nDisease: " + header + "\nClick to see " + (key.diseaseCells[header].annotCount + key.diseaseCells[header].humanAnnotCount) + " annotations";
 							}
 							rowContent.push(key.diseaseCells[header]);
 						}
