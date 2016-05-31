@@ -22,3 +22,4 @@ www/WEB-INF/properties/fewi.properties
 www/WEB-INF/web.xml
 www/hmdc/assets/
 *.swp
+server.log
