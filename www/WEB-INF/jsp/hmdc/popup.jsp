@@ -43,12 +43,31 @@
 <style>
 table tr td {
 	padding: 3px;
-	border: thin solid black;
 	text-align: left;
 	vertical-align: middle;
 }
-td.header {
+td.headerTitle {
 	background-color: #dddddd;
+	height: 50px;
+	white-space: nowrap;
+}
+td.header {
+	height: 150px;
+	padding-bottom: 0px;
+	text-align: left;
+	vertical-align: bottom;
+	white-space: nowrap;
+	font-weight: normal;
+}
+div.header {
+	color: black;
+	text-indent: 2px;
+	-webkit-transform: rotate(-45deg);
+	transform: rotate(-45deg);
+	width: 20px;
+}
+td.border {
+	border: thin solid black;
 }
 </style>
 
@@ -67,26 +86,30 @@ td.header {
 	<c:forEach var="rowID" items="${hpoGroup.humanRowIDs}">
 		<c:set var="marker" value="${humanSymbolMap[rowID]}"/>
 		<c:if test="${lastMarker != marker}">
-			<tr>
 			<c:set var="markerHeader" value="Disease(s) Associated with ${marker}"/>
 			<c:if test="${empty showHeaders}">
-				<td colspan="${hpoCount + 1}" class="header">${markerHeader}</td>
+				<tr>
+				<td colspan="${hpoCount + 1}" class="headerTitle border">${markerHeader}</td>
+				</tr>
 			</c:if>
 			<c:if test="${not empty showHeaders}">
+				<tr><td></td>
 				<c:set var="showHeaders" value=""/>
-				<td class="header">${markerHeader}</td>
 				<c:forEach var="hpoHeader" items="${hpoGroup.columns}">
-					<td>${hpoHeader}</td>
+					<td rowspan="2" class="header"><div class="header" title="${hpoHeader}">${hpoHeader}</div></td>
 				</c:forEach>
+				</tr>
+				<tr>
+				<td class="headerTitle border">${markerHeader}</td>
+				</tr>
 			</c:if>
-			</tr>
 			<c:set var="lastMarker" value="${marker}"/>
 		</c:if>
 		<tr>
-			<td>${humanDiseaseMap[rowID]}</td>
+			<td class="border">${humanDiseaseMap[rowID]}</td>
 			<c:forEach var="hpoHeader" items="${hpoGroup.columns}">
 				<c:set var="columnID" value="${columnIDMap[hpoHeader]}" />
-				<td>${countMap[rowID][columnID]}</td>
+				<td class="border">${countMap[rowID][columnID]}</td>
 			</c:forEach>
 		</tr>
 	</c:forEach>
