@@ -10,8 +10,6 @@ public class SolrHdpGridAnnotationEntry implements SolrHdpEntityInterface {
 	private String termHeader;
 	private String termType;
 	private String qualifier;
-//	private Integer byTermName;
-//	private Integer byTermHeader;
 	
 	public String getUniqueKey() {
 		return uniqueKey;
@@ -55,16 +53,4 @@ public class SolrHdpGridAnnotationEntry implements SolrHdpEntityInterface {
 	public void setQualifier(String qualifier) {
 		this.qualifier = qualifier;
 	}
-//	public Integer getByTermName() {
-//		return byTermName;
-//	}
-//	public void setByTermName(Integer byTermName) {
-//		this.byTermName = byTermName;
-//	}
-//	public Integer getByTermHeader() {
-//		return byTermHeader;
-//	}
-//	public void setByTermHeader(Integer byTermHeader) {
-//		this.byTermHeader = byTermHeader;
-//	}
 }

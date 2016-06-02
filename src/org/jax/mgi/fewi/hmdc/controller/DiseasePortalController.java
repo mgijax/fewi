@@ -2,7 +2,11 @@ package org.jax.mgi.fewi.hmdc.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,6 +27,7 @@ import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.util.HmdcAnnotationGroup;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 import org.jax.mgi.shr.jsonmodel.GridMarker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -212,11 +217,38 @@ public class DiseasePortalController {
 		params.setReturnFilterQuery(true);
 		SearchResults<SolrHdpGridEntry> results = hdpFinder.getGridResults(params);
 		
-		// collect the grid results and get their annotations
+		// cache data from the grid to integrate later on with their annotations
+		
+		// list of gridKeys -- multiple per grid cluster key are possible (and likely)
 		List<String> gridKeys = new ArrayList<String>();
+		
+		// includes only mouse gridKeys, so we can tell mouse from human
+		Set<Integer> mouseGridKeys = new HashSet<Integer>();
+		
+		// grid key -> human marker symbol (for human gridKeys)
+		Map<Integer,String> humanSymbols = new HashMap<Integer,String>();
+		
+		// grid key -> homology cluster key (for human gridKeys)
+		Map<Integer,String> homologyClusterKeys = new HashMap<Integer,String>();
+		
+		// grid key -> allele pairs (for mouse gridKeys)
+		Map<Integer,String> allelePairs = new HashMap<Integer,String>();
+		
 		List<SolrHdpGridEntry> gridResults = results.getResultObjects();
 		for(SolrHdpGridEntry res: gridResults) {
-			gridKeys.add(res.getGridKey().toString());
+			Integer gridKey = res.getGridKey();
+			gridKeys.add(gridKey.toString());
+			
+			// mouse gridKeys have a non-null genocluster key; human data are not in genoclusters
+			if (res.getGenoClusterKey() != null) {
+				// is mouse data
+				allelePairs.put(gridKey, res.getAllelePairs());
+				mouseGridKeys.add(gridKey); 
+			} else {
+				// is human data
+				humanSymbols.put(gridKey, res.getMarkerSymbol());
+				homologyClusterKeys.put(gridKey, res.getHomologyClusterKey().toString());
+			}
 		}
 		
 		// pull out marker data needed for header
@@ -244,6 +276,36 @@ public class DiseasePortalController {
 		params.setFilter(Filter.and(annotationFilters));
 		
 		SearchResults<SolrHdpGridAnnotationEntry> annotationResults = hdpFinder.getGridAnnotationResults(params);
+		
+		/* need to split the annotation results up into their categories (one per table displayed):
+		 *	1. mouse genotype/phenotype (MP) annotations
+		 *	2. human marker/phenotype (HPO) annotations
+		 *	3. mouse genotype/OMIM annotations and human marker/OMIM annotations
+		 */
+		HmdcAnnotationGroup mpGroup = new HmdcAnnotationGroup(false);
+		HmdcAnnotationGroup hpoGroup = new HmdcAnnotationGroup(false);
+		HmdcAnnotationGroup omimGroup = new HmdcAnnotationGroup(true);
+
+		for (SolrHdpGridAnnotationEntry result : annotationResults.getResultObjects()) {
+			Integer gridKey = result.getGridKey();
+			String termType = result.getTermType();
+			
+			if ("OMIM".equals(termType)) {
+				if (mouseGridKeys.contains(gridKey)) {
+					// is mouse genotype/disease annotation
+					omimGroup.addMouseAnnotation(allelePairs.get(gridKey), result.getTerm());
+				} else { 
+					// is human marker/disease annotation
+					omimGroup.addHumanAnnotation(humanSymbols.get(gridKey), result.getTerm());
+				}
+			} else if ("Mammalian Phenotype".equals(termType)) {
+				// is mouse genotype/MP annotation
+				mpGroup.addMouseAnnotation(allelePairs.get(gridKey), result.getTerm());
+			} else {
+				// is human marker/HPO annotation (generated via OMIM-HPO mapping)
+				hpoGroup.addHumanAnnotation(humanSymbols.get(gridKey), result.getTerm());
+			}
+		}
 
 		// begin collecting the mav to return
 		ModelAndView mav = new ModelAndView("hmdc/popup");
@@ -254,8 +316,11 @@ public class DiseasePortalController {
 		
 		if (isPhenotype) {
 			mav.addObject("isPhenotype", 1);
+			mav.addObject("mpGroup", mpGroup);
+			mav.addObject("hpoGroup", hpoGroup);
 		} else {
 			mav.addObject("isDisease", 1);
+			mav.addObject("omimGroup", omimGroup);
 		}
 		
 		// add any (optional) terms and term IDs that were specified to use for column highlighting

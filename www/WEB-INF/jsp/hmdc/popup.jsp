@@ -51,6 +51,10 @@ terms: <c:forEach var="term" items="${highlightTerms}">${term}, </c:forEach><br/
 termIds: <c:forEach var="termId" items="${highlightTermIds}">${termId}, </c:forEach><br/>
 isPhenotype: ${isPhenotype}<br/>
 isDisease: ${isDisease}<br/>
+<p/>
+omimGroup: ${omimGroup}<br/>
+mpGroup: ${mpGroup}<br/>
+hpoGroup: ${hpoGroup}<br/>
 
 <!-- Table and Wrapping div -->
 
