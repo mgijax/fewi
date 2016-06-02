@@ -40,7 +40,61 @@
 </div>
 </c:if>
 
-<p/>
+<style>
+table tr td {
+	padding: 3px;
+	border: thin solid black;
+	text-align: left;
+	vertical-align: middle;
+}
+td.header {
+	background-color: #dddddd;
+}
+</style>
+
+<c:if test="${not empty hpoGroup}">
+	<!-- human phenotype table -->
+	<c:set var="lastMarker" value=""/>
+	<c:set var="showHeaders" value="true"/>
+	<c:set var="hpoCount" value="${fn:length(hpoGroup.columns)}"/>
+	<c:set var="countMap" value="${hpoGroup.countMap}"/>
+	<c:set var="humanSymbolMap" value="${hpoGroup.humanSymbolMap}"/>
+	<c:set var="humanDiseaseMap" value="${hpoGroup.humanDiseaseMap}"/>
+	<c:set var="columnIDMap" value="${hpoGroup.columnIDMap}"/>
+
+	<div class="label">Human Phenotypes</div>
+	<table>
+	<c:forEach var="rowID" items="${hpoGroup.humanRowIDs}">
+		<c:set var="marker" value="${humanSymbolMap[rowID]}"/>
+		<c:if test="${lastMarker != marker}">
+			<tr>
+			<c:set var="markerHeader" value="Disease(s) Associated with ${marker}"/>
+			<c:if test="${empty showHeaders}">
+				<td colspan="${hpoCount + 1}" class="header">${markerHeader}</td>
+			</c:if>
+			<c:if test="${not empty showHeaders}">
+				<c:set var="showHeaders" value=""/>
+				<td class="header">${markerHeader}</td>
+				<c:forEach var="hpoHeader" items="${hpoGroup.columns}">
+					<td>${hpoHeader}</td>
+				</c:forEach>
+			</c:if>
+			</tr>
+			<c:set var="lastMarker" value="${marker}"/>
+		</c:if>
+		<tr>
+			<td>${humanDiseaseMap[rowID]}</td>
+			<c:forEach var="hpoHeader" items="${hpoGroup.columns}">
+				<c:set var="columnID" value="${columnIDMap[hpoHeader]}" />
+				<td>${countMap[rowID][columnID]}</td>
+			</c:forEach>
+		</tr>
+	</c:forEach>
+	</table>
+</c:if>
+
+
+<div style="margin-top: 50px">
 Debugging Info:<p/>
 
 gridClusterKey: ${gridClusterKey}<br/>
@@ -55,6 +109,7 @@ isDisease: ${isDisease}<br/>
 omimGroup: ${omimGroup}<br/>
 mpGroup: ${mpGroup}<br/>
 hpoGroup: ${hpoGroup}<br/>
+</div>
 
 <!-- Table and Wrapping div -->
 
@@ -66,9 +121,6 @@ hpoGroup: ${hpoGroup}<br/>
   </a><br/>
 </c:forEach>
 </div>
-
-
-<%@ include file="/WEB-INF/jsp/hmdc/popup_grid.jsp" %>
 
 </body>
 </html>

@@ -1,9 +1,11 @@
 package org.jax.mgi.fewi.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,6 +17,9 @@ public class HmdcAnnotationGroup {
 	//--------------------------//
 	//--- instance variables ---//
 	//--------------------------//
+	
+	// divider between human gene and disease in combination key
+	private String separator = "::::";
 	
 	// true if this group has disease data, false if it has phenotype data
 	private boolean hasDiseaseData = false;	
@@ -74,6 +79,10 @@ public class HmdcAnnotationGroup {
 		return columnsRev.get(columnText);
 	}
 	
+	public Map<String,Integer> getColumnIDMap() {
+		return columnsRev;
+	}
+	
 	/* increment the count of annotations for cell with the given row and column IDs
 	 */
 	public void addAnnotation (int rowID, int columnID) {
@@ -116,11 +125,39 @@ public class HmdcAnnotationGroup {
 		return 0;
 	}
 	
+	/* get a map of counts for all row, column combinations in this group
+	 */
+	public Map<Integer,Map<Integer,Integer>> getCountMap() {
+		Map<Integer,Map<Integer,Integer>> full = new HashMap<Integer,Map<Integer,Integer>>();
+		for (Integer rowID : this.rows.keySet()) {
+			full.put(rowID, new HashMap<Integer,Integer>());
+			for (Integer columnID : this.columns.keySet()) {
+				full.get(rowID).put(columnID, getCount(rowID, columnID));
+			}
+		}
+		return full;
+	}
+	
 	// is this group empty?  (ie- no rows and/or no columns)
 	public boolean isEmpty() {
 		return (rows.size() == 0) || (columns.size() == 0);
 	}
 	
+	private String join (String delimiter, Collection<String> items) {
+		if (items == null) { return ""; }
+		if (delimiter == null) { delimiter = ", "; }
+		
+		StringBuffer sb = new StringBuffer();
+		Iterator<String> it = items.iterator();
+		while (it.hasNext()) {
+			sb.append(it.next());
+			if (it.hasNext()) { 
+				sb.append(delimiter);
+			}
+		}
+		return sb.toString();
+	}
+
 	/* reasonable data to use for debugging output
 	 */
 	public String toString() {
@@ -129,6 +166,8 @@ public class HmdcAnnotationGroup {
 		if (this.isEmpty()) {
 			sb.append("empty");
 		} else {
+			sb.append("columns (" + join(", ", getColumns()) + "), ");
+			sb.append("rows (" + join(", ", rowsRev.keySet()) + "), ");
 			sb.append(mouseRows.size());
 			sb.append(" mouse rows, ");
 			sb.append(rows.size() - mouseRows.size());
@@ -169,6 +208,7 @@ public class HmdcAnnotationGroup {
 		for (Integer mouseID : mouseRows) {
 			headers.add(rows.get(mouseID));
 		}
+		Collections.sort(headers, new SmartAlphaComparator());
 		return headers;
 	}
 	
@@ -192,10 +232,40 @@ public class HmdcAnnotationGroup {
 	//--- human gene/disease-specific methods ---//
 	//-------------------------------------------//
 	
+	/* get the IDs for the rows containing human data, ordered first by human symbol and
+	 * then by disease name
+	 */
+	public List<Integer> getHumanRowIDs() {
+		// list of "symbol disease" strings to sort
+		List<String> toSort = new ArrayList<String>();
+		
+		// maps from "symbol disease" string to row ID
+		Map<String,Integer> idLookup = new HashMap<String,Integer>();
+		
+		for (Integer rowID : rows.keySet()) {
+			if (!mouseRows.contains(rowID)) {
+				String sortValue = rows.get(rowID).replace(separator, " ");
+				toSort.add(sortValue);
+				idLookup.put(sortValue, rowID);
+			}
+		}
+		
+		// smart-alpha sort by gene then by disease
+		Collections.sort(toSort, new SmartAlphaComparator());
+
+		// ordered list of row IDs to return
+		List<Integer> toReturn = new ArrayList<Integer>(toSort.size());
+		
+		for (String sortValue : toSort) {
+			toReturn.add(idLookup.get(sortValue));
+		}
+		return toReturn;
+	}
+	
 	/* get the ID number corresponding to the given human marker/disease pair
 	 */
 	public int getHumanRowID (String humanMarkerSymbol, String columnText) {
-		String comboKey = humanMarkerSymbol + "||||" + columnText;
+		String comboKey = humanMarkerSymbol + separator + columnText;
 		if (!rowsRev.containsKey(comboKey)) {
 			int rowID = rowsRev.size() + 1;
 			rowsRev.put(comboKey, rowID);
@@ -204,10 +274,12 @@ public class HmdcAnnotationGroup {
 		return rowsRev.get(comboKey);
 	}
 
-	/* increment the count of annotations for cell with the given row and column text values
+	/* increment the count of annotations for cell with the given row and column text values.  If
+	 * is an OMIM annotation, disease and annotatedTerm should match.  If is an HPO term, then the
+	 * disease is the source of the HPO annotatedTerm.
 	 */
-	public void addHumanAnnotation (String humanMarkerSymbol, String columnText) {
-		addAnnotation(getHumanRowID(humanMarkerSymbol, columnText), getColumnID(columnText));
+	public void addHumanAnnotation (String humanMarkerSymbol, String disease, String annotatedTerm) {
+		addAnnotation(getHumanRowID(humanMarkerSymbol, disease), getColumnID(annotatedTerm));
 	}
 	
 	/* returns true if there are any human rows, false if not
@@ -231,7 +303,7 @@ public class HmdcAnnotationGroup {
 	public String getHumanSymbol (int rowID) {
 		String comboKey = getHumanRowHeader(rowID);
 		if (comboKey != null) {
-			String[] parts = comboKey.split("||||");
+			String[] parts = comboKey.split(separator);
 			if (parts.length >= 2) {
 				return parts[0];
 			}
@@ -239,17 +311,33 @@ public class HmdcAnnotationGroup {
 		return null;
 	}
 	
+	public Map<Integer,String> getHumanSymbolMap() {
+		Map<Integer,String> out = new HashMap<Integer,String>();
+		for (Integer rowID : rows.keySet()) {
+			out.put(rowID, getHumanSymbol(rowID));
+		}
+		return out;
+	}
+	
 	/* get the disease name for the given human row ID, or null if bad ID
 	 */
 	public String getHumanDisease (int rowID) {
 		String comboKey = getHumanRowHeader(rowID);
 		if (comboKey != null) {
-			String[] parts = comboKey.split("||||");
+			String[] parts = comboKey.split(separator);
 			if (parts.length >= 2) {
 				return parts[1];
 			}
 		}
 		return null;
 	}
-}
 
+	public Map<Integer,String> getHumanDiseaseMap() {
+		Map<Integer,String> out = new HashMap<Integer,String>();
+		for (Integer rowID : rows.keySet()) {
+			out.put(rowID, getHumanDisease(rowID));
+		}
+		return out;
+	}
+	
+}
