@@ -80,13 +80,18 @@ td.border {
 	<c:set var="humanSymbolMap" value="${hpoGroup.humanSymbolMap}"/>
 	<c:set var="humanDiseaseMap" value="${hpoGroup.humanDiseaseMap}"/>
 	<c:set var="columnIDMap" value="${hpoGroup.columnIDMap}"/>
+	<c:set var="diseaseIDMap" value="${hpoGroup.diseaseIDMap}"/>
+	<c:set var="clusterKeyMap" value="${hpoGroup.clusterKeyMap}"/>
 
 	<div class="label">Human Phenotypes</div>
 	<table>
 	<c:forEach var="rowID" items="${hpoGroup.humanRowIDs}">
 		<c:set var="marker" value="${humanSymbolMap[rowID]}"/>
+		<c:set var="diseaseUrl" value="${configBean.FEWI_URL}disease/${diseaseIDMap[rowID]}"/>
+
 		<c:if test="${lastMarker != marker}">
-			<c:set var="markerHeader" value="Disease(s) Associated with ${marker}"/>
+			<c:set var="markerUrl" value="${configBean.FEWI_URL}homology/cluster/key/${clusterKeyMap[rowID]}"/>
+			<c:set var="markerHeader" value="Disease(s) Associated with <a href='${markerUrl}' target='_blank'>${marker}</a>"/>
 			<c:if test="${empty showHeaders}">
 				<tr>
 				<td colspan="${hpoCount + 1}" class="headerTitle border">${markerHeader}</td>
@@ -106,7 +111,7 @@ td.border {
 			<c:set var="lastMarker" value="${marker}"/>
 		</c:if>
 		<tr>
-			<td class="border">${humanDiseaseMap[rowID]}</td>
+			<td class="border"><a href="${diseaseUrl}" target="_blank">${humanDiseaseMap[rowID]}</a></td>
 			<c:forEach var="hpoHeader" items="${hpoGroup.columns}">
 				<c:set var="columnID" value="${columnIDMap[hpoHeader]}" />
 				<td class="border">${countMap[rowID][columnID]}</td>
