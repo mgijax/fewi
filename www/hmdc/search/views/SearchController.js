@@ -170,7 +170,11 @@
 			}
 		}
 
-
+		$scope.popup = function(url) {
+			console.log(url);
+			var child = window.open (url, "popup_window", 'width=800,height=600,resizable=yes,scrollbars=yes,alwaysRaised=yes');
+			child.focus();
+		}
 
 		function onSubmit() {
 			vm.query = vm.model;

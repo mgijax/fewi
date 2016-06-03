@@ -21,7 +21,6 @@
 */
 .searchView {
   background-color: rgba(208, 224, 240, 0.75);
-  padding-top: 5px;
   border: 1px solid #759BC1;
 }
 .searchView .operator-prompt .operator-select {
@@ -45,6 +44,12 @@
 .queryBuilder .row {
 	min-height: 50px;
 }
+
+.queryBuilder .hideRow { 
+	padding-top: 5px;
+   min-height: 33px;
+}   
+
 
 /** Taken from Lumen in order to get tabs to raise up */
 .nav-tabs > li > a {
@@ -252,3 +257,16 @@ td.displayNone > div {
 mark {
 	background-color: #D6C6E8;
 }
+
+.buttonStyle {
+    text-decoration: none;
+    font-size: 10px;
+    color: #025;
+    font-weight: bolder;
+    border: 1px solid #7d95b9;
+    padding: 2px;
+    background-color: #eee;
+    cursor: pointer;
+    white-space: nowrap;
+}
+

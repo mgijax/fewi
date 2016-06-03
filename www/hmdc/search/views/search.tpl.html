@@ -1,14 +1,19 @@
-	<label>Hide the query form: <input type="checkbox" ng-model="vm.mustHide" /></label><br />
-	<div class="row" ng-hide="vm.mustHide">
-		<div class="subTabs col-xs-12">
-			<h3>Search by:</h3>
-		</div>
-	</div>
-
-	<div class="row" ng-hide="vm.mustHide">
-		<div class="col-xs-12">
 			<div class="queryBuilder">
-				<div class="row">
+
+				<div class="row hideRow">
+					<div class="col-xs-12">
+						<span class="buttonStyle" ng-hide="vm.mustHide" ng-click="vm.mustHide = !vm.mustHide">Click to hide search</span>
+						<span class="buttonStyle" ng-show="vm.mustHide" ng-click="vm.mustHide = !vm.mustHide">Click to modify search</span>
+					</div>
+				</div>
+
+				<div class="row searchRow" ng-hide="vm.mustHide">
+					<div class="col-xs-12">
+						<h3>Search by:</h3>
+					</div>
+				</div>
+
+				<div class="row" ng-hide="vm.mustHide">
 					<div class="col-xs-12">
 						<div class="operator-prompt">
 							<div ng-if="vm.model.queries.length <= 1">
@@ -24,7 +29,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="row">
+				<div class="row" ng-hide="vm.mustHide">
 					<div class="col-xs-12">
 						<form ng-submit="vm.onSubmit()" novalidate>
 							<formly-form
@@ -36,7 +41,7 @@
 						</form>
 					</div>
 				</div>
-				<div class="row">
+				<div class="row" ng-hide="vm.mustHide">
 					<div class="col-xs-12">
 						<div class="button-row pull-right">
 							<span class="text-danger" ng-if="vm.form.$pristine === false && vm.form.$invalid">
@@ -54,5 +59,3 @@
 					</div>
 				</div>
 			</div>
-		</div>
-	</div>
