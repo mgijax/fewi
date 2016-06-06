@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.jax.mgi.fewi.finder.MarkerFinder;
@@ -60,11 +61,13 @@ public class DiseasePortalController {
 	}
 
 	@RequestMapping(value="/gridQuery", produces=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody GridResult gridQuery(@RequestBody String jsonInput) throws Exception {
+	public @ResponseBody GridResult gridQuery(@RequestBody String jsonInput, HttpSession session) throws Exception {
 
 		SearchParams params = new SearchParams();
 		params.setPageSize(1000000);
-
+		
+		session.setAttribute("jsonInput", jsonInput);
+		
 		Filter mainFilter = null;
 		Filter highlightFilter = null;
 		try {
@@ -175,8 +178,8 @@ public class DiseasePortalController {
 	 * term or termId parameters; multiples of each can be submitted.
 	 */
 	@RequestMapping(value="/phenotypePopup", method=RequestMethod.GET)
-	public ModelAndView getPhenotypePopup(HttpServletRequest request) {
-		return getPopup(request, true);
+	public ModelAndView getPhenotypePopup(HttpServletRequest request, HttpSession session) {
+		return getPopup(request, session, true);
 	}
 
 	/* Serve up a disease popup, from clicking a disease cell on the HMDC grid.
@@ -185,8 +188,8 @@ public class DiseasePortalController {
 	 * term or termId parameters; multiples of each can be submitted.
 	 */
 	@RequestMapping(value="/diseasePopup", method=RequestMethod.GET)
-	public ModelAndView getDiseasePopup(HttpServletRequest request) {
-		return getPopup(request, false);
+	public ModelAndView getDiseasePopup(HttpServletRequest request, HttpSession session) {
+		return getPopup(request, session, false);
 	}
 
 	/* Serve up a phenotype or disease popup, from clicking a cell on the HMDC grid.
@@ -195,7 +198,7 @@ public class DiseasePortalController {
 	 * term or termId parameters; multiples of each can be submitted.  The 'isPhenotype'
 	 * parameter should be true for phenotype popups and false for disease popups.
 	 */
-	private ModelAndView getPopup(HttpServletRequest request, boolean isPhenotype) {
+	private ModelAndView getPopup(HttpServletRequest request, HttpSession session, boolean isPhenotype) {
 		// collect the required parameters and check that they are specified
 		String gridClusterKey = request.getParameter("gridClusterKey");
 		if (gridClusterKey == null) { return errorMav("Missing gridClusterKey parameter"); }
@@ -204,10 +207,21 @@ public class DiseasePortalController {
 		if (header == null) { return errorMav("Missing header parameter"); }
 
 		
-		DiseasePortalQueryBuilder builder = new DiseasePortalQueryBuilder("AND");
+		DiseasePortalConditionGroup group = null;
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			group = (DiseasePortalConditionGroup)mapper.readValue((String)session.getAttribute("jsonInput"), DiseasePortalConditionGroup.class);
+			//mainFilter = genQueryFilter(group);
+			//highlightFilter = genHighlightFilter(group);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		DiseasePortalQueryBuilder builder = new DiseasePortalQueryBuilder(group);
 		builder.addCondition(DiseasePortalFields.GRID_CLUSTER_KEY, gridClusterKey);
 		builder.addCondition(DiseasePortalFields.TERM_HEADER, header);
-	
+
 		Filter mainFilter = genQueryFilter(builder.getQueryGroup());
 		
 		// run the query to get the set of grid results
@@ -337,6 +351,7 @@ public class DiseasePortalController {
 
 		mav.addObject("gridKeyCount", gridKeys.size());
 		mav.addObject("annotationCount", annotationResults.getTotalCount());
+
 		return mav;
 	}
 
