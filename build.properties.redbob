@@ -25,3 +25,4 @@ jdbcdriver=sharelib/postgresql-9.0-801.jdbc4.jar
 #config.file=fewi.properties.default
 web_xml.file=web.xml.public
 #web_xml.file=web.xml.dev
+
