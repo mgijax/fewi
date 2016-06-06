@@ -14,10 +14,10 @@
 
 			<div class="logo">
 				<div class="links floatleft">
-					<a href="${configBean.FEWI_URL}">MGI Home</a>
+					<a target="_blank" href="${configBean.FEWI_URL}">MGI Home</a>
 				</div>
 				<div class="floatright">
-					<a href="${configBean.FEWI_URL}"><img style="height: 40px;" src="${configBean.WEBSHARE_URL}images/mgi_logo.gif"></a>
+					<a target="_blank" href="${configBean.FEWI_URL}"><img style="height: 40px;" src="${configBean.WEBSHARE_URL}images/mgi_logo.gif"></a>
 				</div>
 			</div>
 		</div>
