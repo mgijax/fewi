@@ -217,17 +217,18 @@ public class DiseasePortalController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		DiseasePortalQueryBuilder builder = new DiseasePortalQueryBuilder(group);
-		builder.addCondition(DiseasePortalFields.GRID_CLUSTER_KEY, gridClusterKey);
-		builder.addCondition(DiseasePortalFields.TERM_HEADER, header);
 
-		Filter mainFilter = genQueryFilter(builder.getQueryGroup());
+		Filter mainFilter = genQueryFilter(group);
+		
+		List<Filter> filterList = new ArrayList<Filter>();
+		filterList.add(mainFilter);
+		filterList.add(new Filter(DiseasePortalFields.TERM_HEADER, header));
+		filterList.add(new Filter(DiseasePortalFields.GRID_CLUSTER_KEY, gridClusterKey));
 		
 		// run the query to get the set of grid results
 		SearchParams params = new SearchParams();
 		params.setPageSize(10000);
-		params.setFilter(mainFilter);
+		params.setFilter(Filter.and(filterList));
 		params.setReturnFilterQuery(true);
 		SearchResults<SolrHdpGridEntry> results = hdpFinder.getGridResults(params);
 		
