@@ -121,7 +121,7 @@ function formatFastaArgs() {
 
 
 <!-- structural table -->
-<table class="detailStructureTable">
+<table id="structuralTable" class="detailStructureTable">
 
   <!-- ROW0 : table of contents -->
   <tr><!-- <%= rightTdStyles.getNext() %> -->
@@ -168,10 +168,10 @@ function formatFastaArgs() {
     <td class="<%=rightTdStyles.getNext() %>">
       ${fixedDivOpen}
       <c:if test="${hasPrimaryPhenoImage}">
-        <table width="100%" border="none">
+        <table width="100%" border="none" >
 	<tr width="100%"><td style='width:70%; vertical-align:top'>
       </c:if>
-      <table style='width: 100%'>
+      <table id="nomenTable" style='width: 100%'>
 	<tr style='width: 100%'>
 	  <td class="rightBorderThinGray label padded right"><font class="label">${symbolLabel}: </font></td>
 	  <td class="padded"><font class="enhance">${symbolSup}</font></td>
@@ -231,7 +231,7 @@ function formatFastaArgs() {
       <a name="${typeCategory}Origin"></a>${typeCategory}<br>origin</td>
     <td class="<%=rightTdStyles.getNext() %>">
       ${fixedDivOpen}
-      <table>
+      <table id="mutationOriginTable">
 	<c:if test="${not empty mutantCellLines}">
 	<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">${mutantCellLineLabel}:</font>&nbsp;</td>
 	<td class="padded" width="*">${mutantCellLines}</td>
@@ -284,7 +284,7 @@ function formatFastaArgs() {
       <a name="${typeCategory}Description"></a>${typeCategory}<br>description</td>
     <td class="<%=rightTdStyles.getNext() %>">
       ${fixedDivOpen}
-      <table>
+      <table id="mutationDescriptionTable">
       <tr>
       <td style="width:70%; vertical-align:top;">
       <table>
@@ -583,7 +583,7 @@ function formatFastaArgs() {
       <a name="recombinase"></a>Recombinase<br>activity</td>
     <td class="<%=rightTdStyles.getNext() %>">
       ${fixedDivOpen}
-      <table>
+      <table id="recombinaseTable">
 	<tr>
 	  <td style="vertical-align:top;" class="rightBorderThinGray padLR" align="right" width="1%" nowrap="nowrap">
 	    <font class="label">Activity:  </font></td>
@@ -688,7 +688,7 @@ function formatFastaArgs() {
       <a name="expression"></a>Expression</td>
     <td class="<%=rightTdStyles.getNext() %>">
       ${fixedDivOpen}
-      <table>
+      <table id="expressionTable">
       <tr><td class="rightBorderThinGray padded" align="right" width="1%" nowrap="nowrap"><font class="label">In Mice Carrying this Mutation: </font></td>
       <td class='padded'><a href="${configBean.FEWI_URL}gxd/allele/${allele.primaryID}" class="MP">${allele.countOfExpressionAssayResults} assay results</a></td>
       </tr></table>
@@ -704,7 +704,7 @@ function formatFastaArgs() {
       <a name="imsr"></a>Find&nbsp;Mice&nbsp;(IMSR)</td>
     <td class="<%=rightTdStyles.getNext() %>">
       ${fixedDivOpen}
-      <table>
+      <table id="imsrTable">
 	<tr><td colspan="2"><span class="small">Mouse strains and cell lines
 	  available from the International Mouse Strain Resource
 	  (<a href="${configBean.IMSRURL}index" class='MP'>IMSR</a>)</td></tr>
@@ -789,7 +789,7 @@ function formatFastaArgs() {
       <a name="references"></a>References</td>
     <td class="<%=rightTdStyles.getNext() %>">
       ${fixedDivOpen}
-      <table>
+      <table id="referenceTable">
       <c:set var="originalRef" value="${allele.originalReference}"/>
       <c:if test="${not empty originalRef}">
 	<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">Original:</font>&nbsp;</td>

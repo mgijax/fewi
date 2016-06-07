@@ -65,7 +65,7 @@ td.top { vertical-align: top; }
   <tr>
     <td class="queryCat1 padded top">Genome location</td>
     <td class="queryParams1 padded top">
-      <table>
+      <table id='locationTable'>
 	<tr>
 	  <td class="padded top">
 	    <dl>
@@ -138,7 +138,7 @@ td.top { vertical-align: top; }
   <tr>
     <td class="queryCat2">Gene Ontology<br/>classifications</td>
     <td class="queryParams2">
-      <table>
+      <table id='ontologyTable'>
 	<tr>
 	  <td class="padded top">
 	    <dl>
