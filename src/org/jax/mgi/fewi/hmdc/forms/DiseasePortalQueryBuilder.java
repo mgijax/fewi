@@ -12,6 +12,11 @@ public class DiseasePortalQueryBuilder {
 		queryGroup.setOperator(groupingConditionOperator);
 		queryGroup.setQueries(queries);
 	}
+	
+	public DiseasePortalQueryBuilder(DiseasePortalConditionGroup queryGroup) {
+		this.queryGroup = queryGroup;
+		queries = queryGroup.getQueries();
+	}
 
 	public void addCondition(String conditionField, String conditionInput) {
 		queries.add(new DiseasePortalConditionQuery(conditionField, new DiseasePortalCondition(conditionInput)));

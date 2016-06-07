@@ -137,7 +137,9 @@
 				if(value.humanAnnotCount > 0) {
 					return "<div title=\"" + value.title + "\" class=\"normal normaloffset\">N</div>";
 				} else {
-					return "<div title=\"" + value.title + "\" class=\"normal\">N</div>";
+					ret = "<div title=\"" + value.title + "\" class=\"normal\">N</div>";
+					formattedValue = ret;
+					return ret;
 				}
 			} else if(value) {
 				return "<div title=\"" + value.title + "\">&nbsp;</div>";
@@ -238,14 +240,13 @@
 							var temp = "";
 							if(key.gridCluster.homologyClusterKey) {
 								temp = "<a target=\"_blank\" href=\"/homology/cluster/key/" + key.gridCluster.homologyClusterKey + "\" title=\"Name: " + h.name + "\">";
-								var symbol = h.symbol.replace(/<([^>]*)>/g, "<sup>$1</sup>");
-								temp += symbol;
-								rowSymbols.push(symbol);
+								temp += h.symbol.replace(/<([^>]*)>/g, "<sup>$1</sup>");
 								temp += "</a>";
 							} else {
 								temp = h.symbol.replace(/<([^>]*)>/g, "<sup>$1</sup>");
 								temp = "<span title=\"Name: " + h.name + "\">" + temp + "</span>";
 							}
+							rowSymbols.push(h.symbol);
 							humanSymbolString.push(temp);
 						}
 						rowContent.push(humanSymbolString.join(", "));
@@ -254,11 +255,10 @@
 						for(var marker in key.gridCluster.mouseSymbols) {
 							var m = key.gridCluster.mouseSymbols[marker];
 							var temp = "<a target=\"_blank\" href=\"/marker/" + m.primaryID + "\" title=\"Name: " + m.name + "\nFeature Type: " + m.featureType + "\">";
-							var symbol = m.symbol.replace(/<([^>]*)>/g, "<sup>$1</sup>");
-							temp += symbol;
-							rowSymbols.push(symbol);
+							temp += m.symbol.replace(/<([^>]*)>/g, "<sup>$1</sup>");
 							temp += "</a>";
 							markerSymbolString.push(temp);
+							rowSymbols.push(m.symbol);
 						}
 						rowContent.push(markerSymbolString.join(", "));
 
