@@ -69,6 +69,16 @@ div.header {
 td.border {
 	border: thin solid black;
 }
+
+td.human100 { background-color: #F7861D; }
+td.human6 { background-color: #F4A041; }
+td.human2 { background-color: #F2BF79; }
+td.human1 { background-color: #FBDBB4; }
+
+td.mouse100 { background-color: #0C2255; }
+td.mouse6 { background-color: #49648B; }
+td.mouse2 { background-color: #879EBA; }
+td.mouse1 { background-color: #C6D6E8; }
 </style>
 
 <c:if test="${not empty hpoGroup}">
@@ -114,7 +124,14 @@ td.border {
 			<td class="border"><a href="${diseaseUrl}" target="_blank">${humanDiseaseMap[rowID]}</a></td>
 			<c:forEach var="hpoHeader" items="${hpoGroup.columns}">
 				<c:set var="columnID" value="${columnIDMap[hpoHeader]}" />
-				<td class="border">${countMap[rowID][columnID]}</td>
+				<c:set var="humanColor" value=""/>
+				<c:choose>
+				<c:when test="${countMap[rowID][columnID] >= 100}"><c:set var="humanColor" value="human100"/></c:when>
+				<c:when test="${countMap[rowID][columnID] >= 6}"><c:set var="humanColor" value="human6"/></c:when>
+				<c:when test="${countMap[rowID][columnID] >= 2}"><c:set var="humanColor" value="human2"/></c:when>
+				<c:when test="${countMap[rowID][columnID] >= 1}"><c:set var="humanColor" value="human1"/></c:when>
+				</c:choose>
+				<td class="border ${humanColor}"></td>
 			</c:forEach>
 		</tr>
 	</c:forEach>
