@@ -12,6 +12,7 @@ public class SolrHdpGridAnnotationEntry implements SolrHdpEntityInterface {
 	private String qualifier;
 	private String sourceTerm;
 	private String sourceId;
+	private Integer byDagTerm;
 	
 	public String getUniqueKey() {
 		return uniqueKey;
@@ -66,5 +67,11 @@ public class SolrHdpGridAnnotationEntry implements SolrHdpEntityInterface {
 	}
 	public void setSourceId(String sourceId) {
 		this.sourceId = sourceId;
+	}
+	public Integer getByDagTerm() {
+		return byDagTerm;
+	}
+	public void setByDagTerm(Integer byDagTerm) {
+		this.byDagTerm = byDagTerm;
 	}
 }

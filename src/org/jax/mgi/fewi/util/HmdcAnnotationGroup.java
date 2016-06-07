@@ -44,6 +44,9 @@ public class HmdcAnnotationGroup {
 	// { row ID : disease ID }
 	private Map<Integer, String> diseaseIDs = new HashMap<Integer, String>();
 	
+	// { header text : sequence num }
+	private Map<String, Integer> headerSequenceNumbers = new HashMap<String, Integer>();
+	
 	//--------------------//
 	//--- constructors ---//
 	//--------------------//
@@ -101,14 +104,24 @@ public class HmdcAnnotationGroup {
 		counts.get(rowID).put(columnID, 1 + counts.get(rowID).get(columnID));
 	}
 
-	/* get a sorted list of the column headers
+	/* get a sorted list of the column headers (sorted in DAG order, so similar structures are grouped)
 	 */
 	public List<String> getColumns() {
-		List<String> headers = new ArrayList<String>();
-		for (String column : columnsRev.keySet()) {
-			headers.add(column);
+		List<Integer> seqNums = new ArrayList<Integer>();
+		Map<Integer,String> seqNumToHeader = new HashMap<Integer,String>();
+		
+		for (String header : headerSequenceNumbers.keySet()) {
+			Integer seqNum = headerSequenceNumbers.get(header);
+			seqNumToHeader.put(seqNum, header);
+			seqNums.add(seqNum);
 		}
-		Collections.sort(headers, new SmartAlphaComparator());
+		
+		Collections.sort(seqNums);
+
+		List<String> headers = new ArrayList<String>();
+		for (Integer seqNum : seqNums) {
+			headers.add(seqNumToHeader.get(seqNum));
+		}
 		return headers;
 	}
 	
@@ -310,16 +323,21 @@ public class HmdcAnnotationGroup {
 		return diseaseIDs;
 	}
 	
+	public void cacheSequenceNum(String annotatedTerm, Integer headerSequenceNum) {
+		headerSequenceNumbers.put(annotatedTerm, headerSequenceNum);
+	}
+
 	/* increment the count of annotations for cell with the given row and column text values.  If
 	 * is an OMIM annotation, disease and annotatedTerm should match.  If is an HPO term, then the
 	 * disease is the source of the HPO annotatedTerm.
 	 */
 	public void addHumanAnnotation (String humanMarkerSymbol, String clusterKey, String disease,
-			String diseaseID, String annotatedTerm) {
+			String diseaseID, String annotatedTerm, Integer headerSequenceNum) {
 		Integer rowID = getHumanRowID(humanMarkerSymbol, disease);
 		addAnnotation(rowID, getColumnID(annotatedTerm));
 		cacheClusterKey(rowID, clusterKey);
 		cacheDiseaseID(rowID, diseaseID);
+		cacheSequenceNum(annotatedTerm, headerSequenceNum);
 	}
 	
 	/* returns true if there are any human rows, false if not

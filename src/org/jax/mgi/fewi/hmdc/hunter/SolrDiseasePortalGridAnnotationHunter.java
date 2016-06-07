@@ -34,6 +34,7 @@ public class SolrDiseasePortalGridAnnotationHunter extends SolrHunter<SolrHdpEnt
 		returnedFields.add(DiseasePortalFields.TERM_QUALIFIER);
 		returnedFields.add(DiseasePortalFields.SOURCE_TERM);
 		returnedFields.add(DiseasePortalFields.SOURCE_TERM_ID);
+		returnedFields.add(DiseasePortalFields.BY_TERM_DAG);
 	}
 
 	@Override
@@ -57,6 +58,7 @@ public class SolrDiseasePortalGridAnnotationHunter extends SolrHunter<SolrHdpEnt
 			gridAnnotationResult.setQualifier((String)doc.getFieldValue(DiseasePortalFields.TERM_QUALIFIER));
 			gridAnnotationResult.setSourceTerm((String)doc.getFieldValue(DiseasePortalFields.SOURCE_TERM));
 			gridAnnotationResult.setSourceId((String)doc.getFieldValue(DiseasePortalFields.SOURCE_TERM_ID));
+			gridAnnotationResult.setByDagTerm((Integer)doc.getFieldValue(DiseasePortalFields.BY_TERM_DAG));
 			
 			// TODO come back and add these
 			//gridAnnotationResult.setByTermHeader((Integer)doc.getFieldValue(DiseasePortalFields.BY_TERM_HEADER));
