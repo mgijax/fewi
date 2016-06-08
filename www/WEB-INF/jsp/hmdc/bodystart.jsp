@@ -3,7 +3,7 @@
 	<body id="body">
 		<div id="headerContainer">
 			<div class="hmdcbox">
-				HM<br>DC
+				<img src="/assets/images/HMDC_logo.jpg" height=40 />
 			</div>	
 			<div class="links floatleft">
 				<a target="_blank" href="${configBean.FEWI_URL}">About</a>
