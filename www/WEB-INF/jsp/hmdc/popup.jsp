@@ -71,6 +71,18 @@ td.mouse1 { background-color: #C6D6E8; }
 tr.highlight:hover { background-color: #FFFFCC; cursor: pointer }
 </style>
 
+<c:if test="${not empty isPhenotype}">
+	<div id="legend">
+	  <table id="hdpSystemPopupLegend">
+	    <tr>
+		  <td>*</td><td>Aspects of the system are reported to show a normal phenotype.</td></tr><tr>
+		  <td class="bgsensitive">!</td><td>Indicates phenotype varies with strain background.</td></tr><tr>
+		  <td></td><td><span class="highlight">Highlighted Columns</span> contain at least one phenotype or disease result matching your search term(s).</td>
+	    </tr>
+	  </table>
+	</div>
+</c:if>
+
 <%@ include file="/WEB-INF/jsp/hmdc/popup_hpo.jsp" %>
 <p/>
 <%@ include file="/WEB-INF/jsp/hmdc/popup_mp.jsp" %>

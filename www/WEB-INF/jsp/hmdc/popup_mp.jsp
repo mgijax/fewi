@@ -15,16 +15,6 @@
 	<c:set var="diseaseIDMap" value="${hpoGroup.diseaseIDMap}"/>
 	<c:set var="clusterKeyMap" value="${hpoGroup.clusterKeyMap}"/>
 
-	<div id="legend">
-	  <table id="hdpSystemPopupLegend">
-	    <tr>
-		  <td>*</td><td>Aspects of the system are reported to show a normal phenotype.</td></tr><tr>
-		  <td class="bgsensitive">!</td><td>Indicates phenotype varies with strain background.</td></tr><tr>
-		  <td></td><td><span class="highlight">Highlighted Columns</span> contain at least one phenotype or disease result matching your search term(s).</td>
-	    </tr>
-	  </table>
-	</div>
-
 	<div class="label">Mouse Phenotypes</div>
 	<table>
 	<c:forEach var="rowID" items="${mpGroup.mouseRowIDs}">
