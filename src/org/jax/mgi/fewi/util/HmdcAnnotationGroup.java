@@ -88,6 +88,8 @@ public class HmdcAnnotationGroup {
 		return columnsRev.get(columnText);
 	}
 	
+	/* get mapping from column text to column ID number
+	 */
 	public Map<String,Integer> getColumnIDMap() {
 		return columnsRev;
 	}
@@ -162,6 +164,8 @@ public class HmdcAnnotationGroup {
 		return (rows.size() == 0) || (columns.size() == 0);
 	}
 	
+	/* (internal) join the strings in 'items' with the given 'delimiter', returning a new String
+	 */
 	private String join (String delimiter, Collection<String> items) {
 		if (items == null) { return ""; }
 		if (delimiter == null) { delimiter = ", "; }
@@ -220,33 +224,47 @@ public class HmdcAnnotationGroup {
 		addAnnotation(getMouseRowID(genotypeText), getColumnID(columnText));
 	}
 
-	/* get the header strings for the mouse rows
-	 */
-	public List<String> getMouseRowHeaders() {
-		List<String> headers = new ArrayList<String>();
-		for (Integer mouseID : mouseRows) {
-			headers.add(rows.get(mouseID));
-		}
-		Collections.sort(headers, new SmartAlphaComparator());
-		return headers;
-	}
-	
-	/* get the row IDs for the mouse rows
-	 */
-	public List<Integer> getMouseRowIDs() {
-		List<Integer> headerIDs = new ArrayList<Integer>();
-		for (String header : getMouseRowHeaders()) {
-			headerIDs.add(rowsRev.get(header));
-		}
-		return headerIDs;
-	}
-
 	/* returns true if there are any mouse rows, false if not
 	 */
 	public boolean hasMouseRows() {
 		return !mouseRows.isEmpty();
 	}
 
+	/* get a mapping from row ID to the mouse allele pairs (useful for JSTL access)
+	 */
+	public Map<Integer,String> getAllelePairMap() {
+		return rows;
+	}
+
+	/* get the IDs for the rows containing mouse data, ordered by allele pairs
+	 */
+	public List<Integer> getMouseRowIDs() {
+		// list of "allele pair" strings to sort
+		List<String> toSort = new ArrayList<String>();
+		
+		// maps from "allele pair" string to row ID
+		Map<String,Integer> idLookup = new HashMap<String,Integer>();
+		
+		for (Integer rowID : rows.keySet()) {
+			if (mouseRows.contains(rowID)) {
+				String sortValue = rows.get(rowID);
+				toSort.add(sortValue);
+				idLookup.put(sortValue, rowID);
+			}
+		}
+		
+		// smart-alpha sort by gene then by disease
+		Collections.sort(toSort, new SmartAlphaComparator());
+
+		// ordered list of row IDs to return
+		List<Integer> toReturn = new ArrayList<Integer>(toSort.size());
+		
+		for (String sortValue : toSort) {
+			toReturn.add(idLookup.get(sortValue));
+		}
+		return toReturn;
+	}
+	
 	//-------------------------------------------//
 	//--- human gene/disease-specific methods ---//
 	//-------------------------------------------//
@@ -293,10 +311,14 @@ public class HmdcAnnotationGroup {
 		return rowsRev.get(comboKey);
 	}
 
+	/* cache the homology cluster key for the given row ID
+	 */
 	private void cacheClusterKey (int rowID, String clusterKey) {
 		clusterKeys.put(rowID, clusterKey);
 	}
 
+	/* retrieve the cluster key that was cached for the given row ID
+	 */
 	public String getClusterKey (int rowID) {
 		if (clusterKeys.containsKey(rowID)) {
 			return clusterKeys.get(rowID);
@@ -304,14 +326,20 @@ public class HmdcAnnotationGroup {
 		return null;
 	}
 
+	/* get a mapping between the integer row ID and the String cluster key (useful for JSTL access)
+	 */
 	public Map<Integer, String> getClusterKeyMap() {
 		return clusterKeys;
 	}
 	
+	/* cache the disease ID for the given row ID
+	 */
 	private void cacheDiseaseID (int rowID, String diseaseID) {
 		diseaseIDs.put(rowID, diseaseID);
 	}
 
+	/* get the disease ID that was cached for the given row ID
+	 */
 	public String getDiseaseID (int rowID) {
 		if (diseaseIDs.containsKey(rowID)) {
 			return diseaseIDs.get(rowID);
@@ -319,10 +347,14 @@ public class HmdcAnnotationGroup {
 		return null;
 	}
 
+	/* get a mapping between the integer row ID and the String disease ID (useful for JSTL access)
+	 */
 	public Map<Integer, String> getDiseaseIDMap() {
 		return diseaseIDs;
 	}
 	
+	/* cache the sequence number to be used in ordering the given annotated term (in table header)
+	 */
 	public void cacheSequenceNum(String annotatedTerm, Integer headerSequenceNum) {
 		headerSequenceNumbers.put(annotatedTerm, headerSequenceNum);
 	}
@@ -369,6 +401,8 @@ public class HmdcAnnotationGroup {
 		return null;
 	}
 	
+	/* get a mapping from row ID to the human marker symbol (useful for JSTL access)
+	 */
 	public Map<Integer,String> getHumanSymbolMap() {
 		Map<Integer,String> out = new HashMap<Integer,String>();
 		for (Integer rowID : rows.keySet()) {
@@ -390,6 +424,8 @@ public class HmdcAnnotationGroup {
 		return null;
 	}
 
+	/* get a mapping from the row ID to the human disease name (useful for JSTL access)
+	 */
 	public Map<Integer,String> getHumanDiseaseMap() {
 		Map<Integer,String> out = new HashMap<Integer,String>();
 		for (Integer rowID : rows.keySet()) {
