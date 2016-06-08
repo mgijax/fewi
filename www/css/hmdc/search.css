@@ -273,3 +273,8 @@ mark {
 .font12 {
 	font-size: 12px;
 }
+
+.mycontent-left {
+	border-right: 1px solid #333;
+	padding: 0px 20px 0px 20px;
+}
