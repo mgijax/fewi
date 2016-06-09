@@ -81,9 +81,10 @@ span.header {
     text-align: left;
     left: -33px;
     bottom: 25px;
-    font-size: 9pt;
+    font-size: 10pt;
     font-weight: bold;
     font-family: Arial, Helvetica;
+    color: #666666;
 }
 td.border {
 	border: thin solid black;
