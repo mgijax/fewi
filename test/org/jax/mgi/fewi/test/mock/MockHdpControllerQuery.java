@@ -22,6 +22,6 @@ public class MockHdpControllerQuery extends AbstractMockHdpQuery {
 	}	
 
 	public GridResult getGrid() throws Exception {
-		return hdpController.gridQuery("");
+		return hdpController.gridQuery("", null);
 	}	
 }

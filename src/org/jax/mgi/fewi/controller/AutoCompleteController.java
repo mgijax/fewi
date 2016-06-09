@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
-import org.jax.mgi.fewi.antlr.BooleanSearch.BooleanSearch;
+import mgi.frontend.datamodel.sort.SmartAlphaComparator;
+
 import org.jax.mgi.fewi.finder.AutocompleteFinder;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.MetaData;
-import org.jax.mgi.fewi.searchUtil.PrettyFilterPrinter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
@@ -410,47 +408,10 @@ public class AutoCompleteController {
 	 * are returned as JSON.
 	 */
 	@RequestMapping("/vocabTerm")
-	public @ResponseBody JsonSummaryResponse<VocabACSummaryRow> vocabAutoComplete(
-			@RequestParam("query") String query) {
+	public @ResponseBody JsonSummaryResponse<VocabACSummaryRow> vocabAutoComplete(@RequestParam("query") String query) {
 
-		SearchResults<VocabACResult> results= getVocabAutoCompleteResults(query);
-		//List<VocabACSummaryRow> summaryRows = new ArrayList<VocabACSummaryRow>();
-//
-//        for (VocabACResult result : results.getResultObjects()) {
-//			if (result != null){
-//				VocabACSummaryRow row = new VocabACSummaryRow(result,query,ACType.GXD);
-//				summaryRows.add(row);
-//			} else {
-//				logger.debug("--> Null Object");
-//			}
-//		}
+		SearchResults<VocabACResult> results = getVocabAutoCompleteResults(query);
 		JsonSummaryResponse<VocabACSummaryRow> jsonResponse = makeJsonResponse(results,query,ACType.GXD);
-		return jsonResponse;
-	}
-
-	//autocomplete for the disease portal phenotypes query
-	@RequestMapping("/diseasePortal/phenotypes")
-	public @ResponseBody JsonSummaryResponse<VocabACSummaryRow> vocabHDPPhenotypesAutoComplete(
-			HttpServletResponse response,
-			@RequestParam("query") String query) {
-
-		// filter specific vocabs for this autocomplete
-		Filter vocabFilter = new Filter(SearchConstants.VOC_VOCAB,Arrays.asList("OMIM","Mammalian Phenotype"),Filter.Operator.OP_IN);
-		SearchResults<VocabACResult> results = getVocabAutoCompleteResults(query,Arrays.asList(vocabFilter));
-		new ArrayList<VocabACSummaryRow>();
-
-//        for (VocabACResult result : results.getResultObjects()) {
-//			if (result != null){
-//				VocabACSummaryRow row = new VocabACSummaryRow(result,query,ACType.DISEASE_PORTAL);
-//				summaryRows.add(row);
-//			} else {
-//				logger.debug("--> Null Object");
-//			}
-//		}
-
-
-		AjaxUtils.prepareAjaxHeaders(response);
-		JsonSummaryResponse<VocabACSummaryRow> jsonResponse = makeJsonResponse(results,query,ACType.DISEASE_PORTAL);
 		return jsonResponse;
 	}
 
@@ -490,6 +451,56 @@ public class AutoCompleteController {
 		return autocompleteFinder.getVocabAutoComplete(params);
 
 	}
+	
+	/*
+	 * This method is used in the HMDC for pheno/disease auto complete
+	 */
+	
+	@RequestMapping("/hmdcTermAC")
+	public @ResponseBody List<String> hmdcAutoComplete(@RequestParam("query") String query) {
+		
+		List<String> words = QueryParser.parseAutoCompleteSearch(query);
+		logger.debug("vocab term query:" + words.toString());
+		
+		
+		SearchParams params = new SearchParams();
+		params.setPageSize(100);
+
+		List<Filter> fList = new ArrayList<Filter>();
+		for (String q : words) {
+			Filter termFilter = new Filter(SearchConstants.VOC_DERIVED_TERMS,q,Filter.Operator.OP_GREEDY_BEGINS);
+			fList.add(termFilter);
+		}
+
+		Filter f = Filter.and(fList);
+
+		params.setFilter(f);
+		
+		// default sorts are "score","termLength","term"
+		List<Sort> sorts = new ArrayList<Sort>();
+
+		sorts.add(new Sort("score",true));
+		sorts.add(new Sort(IndexConstants.VOCABAC_TERM_LENGTH,false));
+		sorts.add(new Sort(IndexConstants.VOCABAC_BY_TERM,false));
+		sorts.add(new Sort(IndexConstants.VOCABAC_BY_ORIGINAL_TERM,false));
+		params.setSorts(sorts);
+
+		SearchResults<VocabACResult> results = autocompleteFinder.getVocabAutoComplete(params);
+		
+		TreeMap<String, String> sortedMap = new TreeMap<String, String>(new SmartAlphaComparator<String>());
+		
+		for(VocabACResult vacr: results.getResultObjects()) {
+			for(String term: vacr.getDerivedTerms()) {
+				sortedMap.put(term, term);
+			}
+		}
+
+		return new ArrayList<String>(sortedMap.values());
+
+	}
+	
+	
+	
 
 	/*
 	 * precompiles the regex pattern matchers and then builds the html formatted responses
@@ -520,119 +531,6 @@ public class AutoCompleteController {
 		jsonResponse.setTotalCount(results.getTotalCount());
 
 		return jsonResponse;
-	}
-
-	/*
-	 *  resolves a list of IDs into their matching terms
-	 *  I.e. you pass in a comma or whitespace separated list of IDs (and terms).
-	 *  	Any token, matching an ID, will be replaced with the term it matches.
-	 */
-	@RequestMapping("/vocabTerm/resolve")
-	public @ResponseBody HashMap<String, String> resolveVocabTermId(@RequestParam("ids") String ids) {
-
-		/*
-		 *  Honestly, I am too lazy to figure out how to get StringUtils.replaceEach() to do case-insensitive matching (which I don't think it does).
-		 *  	So, to satisfy the curators who feel the need to have lowercase MP IDs resolved in "you searched for" text,
-		 *  		which can only come through users (not autocomplete),
-		 *  		I am putting in this hack.
-		 *  	-kstone
-		 */
-		BooleanSearch bs = new BooleanSearch();
-		ids = ids.replaceAll("mp:","MP:");
-		ids = bs.sanitizeInput(ids.replace(",", " "));
-
-		HashMap<String, String> ret = new HashMap<String, String>();
-
-		SearchResults<VocabACResult> results = resolveVocabTermIdQuery(ids);
-
-		if(results==null) {
-			ret.put("ids", ids);
-			return ret;
-		}
-
-		// if there are any hits, map them here
-		Set<String> duplicates = new HashSet<String>();
-		// build parallel lists of search -> replacement strings
-		String[] searchList = new String[results.getTotalCount()];
-		String[] replacementList = new String[results.getTotalCount()];
-		int index = 0;
-		for(VocabACResult result : results.getResultObjects())
-		{
-			String termId = result.getTermId();
-			if(duplicates.contains(termId)) continue;
-			duplicates.add(termId);
-
-			String replacement = result.getOriginalTerm() + " - " + result.getTermId();
-			replacementList[index] = replacement;
-			searchList[index] = result.getTermId();
-			index++;
-		}
-
-		Filter f = bs.buildSolrFilter(SearchConstants.VOC_TERM, ids);
-
-		if(f != null) {
-			PrettyFilterPrinter pfp = new PrettyFilterPrinter();
-			f.Accept(pfp);
-			String out = pfp.generateOutput();
-			logger.info("Modified Query String: " + out);
-			ret.put("ids", StringUtils.replaceEach(out,searchList,replacementList));
-		} else {
-			f = generateTermFilter(ids);
-			PrettyFilterPrinter pfp = new PrettyFilterPrinter();
-			f.Accept(pfp);
-			String out = pfp.generateOutput();
-			logger.info("Modified Query due to Error: " + ids);
-			ret.put("ids", StringUtils.replaceEach(out,searchList,replacementList));
-			ret.put("error", bs.getHtmlErrorString());
-		}
-		return ret;
-	}
-
-	private Filter generateTermFilter(String ids){
-		List<String> idTokens = QueryParser.tokeniseOnWhitespaceAndComma(ids);
-		List<Filter> filters = new ArrayList<Filter>();
-		if(idTokens.size()>0)
-		{
-			List<Filter> idFilters = new ArrayList<Filter>();
-			for(String idToken : idTokens)
-			{
-				idFilters.add(new Filter(SearchConstants.VOC_TERM_ID,idToken,Filter.Operator.OP_EQUAL));
-			}
-			filters.add(Filter.or(idFilters));
-		}
-		if(filters.size() > 0) {
-			return Filter.or(filters);
-		}
-		return null;
-	}
-
-	private SearchResults<VocabACResult> resolveVocabTermIdQuery(String ids) {
-		// filter specific vocabs for this autocomplete
-
-		List<String> idTokens = new ArrayList<String>(Arrays.asList(ids.split("[\\s,]+|\\(|\\)")));
-
-		// Not a construct for the newb.
-		while(idTokens.remove(""));
-
-		List<Filter> filters = new ArrayList<Filter>();
-
-		if(idTokens.size()>0)
-		{
-			List<Filter> idFilters = new ArrayList<Filter>();
-			for(String idToken : idTokens)
-			{
-				idFilters.add(new Filter(SearchConstants.VOC_TERM_ID,idToken,Filter.Operator.OP_EQUAL));
-			}
-			filters.add(Filter.or(idFilters));
-		}
-		if(filters.size()<=0) return null; // do nothing if we have no filters
-
-		SearchParams params = new SearchParams();
-		params.setFilter(Filter.and(filters));
-		params.setPageSize(10000); // set to a high number to ensure we get all the results
-
-		SearchResults<VocabACResult> results = autocompleteFinder.getVocabAutoComplete(params);
-		return results;
 	}
 
 	/*

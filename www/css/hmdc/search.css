@@ -215,8 +215,6 @@ td.center.cell.middle.greyBar {
 
 #headerContainer .hmdcbox {
    float: left;
-   font-size: 14px;
-   border: 1px solid;
 }
 #headerContainer .logo {
    float: right;
@@ -272,4 +270,9 @@ mark {
 
 .font12 {
 	font-size: 12px;
+}
+
+.mycontent-left {
+	border-right: 1px solid #759bc1;
+	padding: 0px 20px 0px 20px;
 }

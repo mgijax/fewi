@@ -29,10 +29,14 @@
 			<div class="container searchViewBox">
 				<div class="row">
 					<div class="col-sm-6">
-						<%@ include file="/WEB-INF/jsp/static/home/hmdc/resource_links.jsp" %>
+						<div class="mycontent-left">
+							<%@ include file="/WEB-INF/jsp/static/home/hmdc/resource_links.jsp" %>
+						</div>
 					</div>
 					<div class="col-sm-6">
-						<%@ include file="/WEB-INF/jsp/static/home/hmdc/research_news.jsp" %>
+						<div class="mycontent-right">
+							<%@ include file="/WEB-INF/jsp/static/home/hmdc/research_news.jsp" %>
+						</div>
 					</div>
 				</div>
 			</div>

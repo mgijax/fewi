@@ -75,7 +75,7 @@
 		});
 
 	// @ngInject
-	function SearchController($rootScope, $scope, $log, Search, $sce, ngDialog, naturalService) {
+	function SearchController($rootScope, $scope, $log, Search, AutoComplete, $sce, ngDialog, naturalService) {
 		var vm = $scope.vm = {};
 
 		vm.onSubmit = onSubmit;
@@ -97,6 +97,7 @@
 		}
 
 		$scope.handleClick = function(event, cellData) {
+			console.log(cellData.data);
 			var url;
 			if(cellData.data && cellData.data["phenoHeader"]) {
 				url = "/diseasePortal/phenotypePopup?gridClusterKey=" + cellData.data["gridClusterKey"] + "&header=" + cellData.data["phenoHeader"];
@@ -438,13 +439,23 @@
 						tsDtext: [
 							{
 								key: 'input',
-								type: 'input',
+								type: 'autocomplete',
 								className: 'inline-field',
 								templateOptions: {
 									label: '',
 									required: true,
 									focus: true,
-									placeholder: 'Examples: hippocamp*, cardiovascular. Use * for wildcard.'
+									placeholder: 'Examples: hippocamp*, cardiovascular. Use * for wildcard.',
+									options: [],
+									onChange: function ($viewValue, $scope) {                        
+										if (typeof $viewValue != 'undefined') {
+											AutoComplete.vocabTerm($viewValue).
+												then(function(response) {
+													console.log(response.data);
+													$scope.templateOptions.options = response.data;
+											});
+										};
+									}
 								}
 							}
 						],

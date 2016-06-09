@@ -117,6 +117,7 @@ public class SearchConstants {
     public static final String VOC_TERM		    = "term";
     public static final String VOC_TERM_ID			= "termId";
     public static final String VOC_TERM_TYPE		= "termType";
+    public static final String VOC_DERIVED_TERMS	= "derivedTerms";
     public static final String VOC_RESTRICTION      = "qualifier";
     public static final String TERM_ID		    = "termID";
     public static final String ANNOTATION_KEY	    = "annotationKey";
