@@ -15,7 +15,7 @@
 	<c:set var="diseaseIDMap" value="${hpoGroup.diseaseIDMap}"/>
 	<c:set var="clusterKeyMap" value="${hpoGroup.clusterKeyMap}"/>
 
-	<div class="label">Mouse Phenotypes</div>
+	<div class="tableLabel">Mouse Phenotypes</div>
 	<table>
 	<c:forEach var="rowID" items="${mpGroup.mouseRowIDs}">
 		<c:set var="allelePair" value="${allelePairMap[rowID]}"/>
