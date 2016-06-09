@@ -24,7 +24,8 @@
 
     formlyConfigProvider.setType({
       name: 'autocomplete',
-      template: '<input type="text" ng-model="model.input" typeahead="item for item in options.templateOptions.options | limitTo:12" class="form-control">',
+      extends: 'input',
+      template: '<input type="text" ng-model="model[options.key]" uib-typeahead="item for item in to.autoComplete($viewValue, to) | limitTo:15" class="form-control">',
       wrapper: ['bootstrapLabel', 'bootstrapHasError'],
     });
 

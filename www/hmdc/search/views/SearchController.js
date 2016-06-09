@@ -75,7 +75,7 @@
 		});
 
 	// @ngInject
-	function SearchController($rootScope, $scope, $log, Search, AutoComplete, $sce, ngDialog, naturalService) {
+	function SearchController($rootScope, $scope, $log, $http, Search, AutoComplete, $sce, ngDialog, naturalService) {
 		var vm = $scope.vm = {};
 
 		vm.onSubmit = onSubmit;
@@ -83,6 +83,8 @@
 		vm.mustHideLegend = true;
 		vm.resetGeneTable = false;
 		vm.resetDiseaseTable = false;
+
+		vm.autoComplete = [];
 
 		$scope.displayHTML = function(html) {
 			return $sce.trustAsHtml(html);
@@ -172,6 +174,14 @@
 				}
 			}
 		}
+
+		$rootScope.getAutoComplete = function(value) {
+			return $http.get('/autocomplete/hmdcTermAC', {
+				params: {
+					query: value
+				}
+			});
+		};
 
 		$scope.popup = function(url) {
 			console.log(url);
@@ -447,15 +457,23 @@
 									focus: true,
 									placeholder: 'Examples: hippocamp*, cardiovascular. Use * for wildcard.',
 									options: [],
-									onChange: function ($viewValue, $scope) {                        
-										if (typeof $viewValue != 'undefined') {
-											AutoComplete.vocabTerm($viewValue).
-												then(function(response) {
-													console.log(response.data);
-													$scope.templateOptions.options = response.data;
+									autoComplete: function(value, to) {
+										console.log("V: " + value);
+										console.log(to.options);
+										if (typeof value != 'undefined') {
+											return $rootScope.getAutoComplete(value).then(function(response) {
+												to.options = response.data;
+												console.log("I: " + to.options);
+												return to.options;
 											});
 										};
-									}
+										console.log("R: " + to.options);
+										//return to.options;
+									},
+//									onChange: function ($viewValue, $scope) {                        
+//										console.log("O: " + $scope.templateOptions.options);
+//										return true;
+//									}
 								}
 							}
 						],
