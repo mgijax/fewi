@@ -1,5 +1,5 @@
-	<tabset>
-		<tab ng-repeat="(key, value) in vm.tabs" heading="{{ value.count != 0 ? value.heading + ' (' + value.count + ')' : value.heading }}" active="value.active">
+	<uib-tabset>
+		<uib-tab ng-repeat="(key, value) in vm.tabs" heading="{{ value.count != 0 ? value.heading + ' (' + value.count + ')' : value.heading }}" active="value.active">
 			<div ng-include src="value.template"></div>
-		</tab>
-	</tabset>
+		</uib-tab>
+	</uib-tabset>

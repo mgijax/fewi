@@ -457,18 +457,22 @@ public class AutoCompleteController {
 	 */
 	
 	@RequestMapping("/hmdcTermAC")
-	public @ResponseBody List<String> hmdcAutoComplete(@RequestParam("query") String query) {
+	public @ResponseBody List<String> hmdcAutoComplete(@RequestParam("query") String query, @RequestParam("pageSize") String pageSize) {
 		
 		List<String> words = QueryParser.parseAutoCompleteSearch(query);
 		logger.debug("vocab term query:" + words.toString());
 		
 		
 		SearchParams params = new SearchParams();
-		params.setPageSize(100);
+		if(pageSize == null || pageSize.equals("")) {
+			params.setPageSize(100);
+		} else {
+			params.setPageSize(Integer.parseInt(pageSize));
+		}
 
 		List<Filter> fList = new ArrayList<Filter>();
 		for (String q : words) {
-			Filter termFilter = new Filter(SearchConstants.VOC_DERIVED_TERMS,q,Filter.Operator.OP_GREEDY_BEGINS);
+			Filter termFilter = new Filter(SearchConstants.VOC_DERIVED_TERMS,q,Filter.Operator.OP_BEGINS);
 			fList.add(termFilter);
 		}
 

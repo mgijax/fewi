@@ -175,10 +175,11 @@
 			}
 		}
 
-		$rootScope.getAutoComplete = function(value) {
+		$rootScope.getAutoComplete = function(value, amount) {
 			return $http.get('/autocomplete/hmdcTermAC', {
 				params: {
-					query: value
+					query: value,
+					pageSize: amount
 				}
 			});
 		};
@@ -458,17 +459,12 @@
 									placeholder: 'Examples: hippocamp*, cardiovascular. Use * for wildcard.',
 									options: [],
 									autoComplete: function(value, to) {
-										console.log("V: " + value);
-										console.log(to.options);
 										if (typeof value != 'undefined') {
-											return $rootScope.getAutoComplete(value).then(function(response) {
+											return $rootScope.getAutoComplete(value, 20).then(function(response) {
 												to.options = response.data;
-												console.log("I: " + to.options);
 												return to.options;
 											});
 										};
-										console.log("R: " + to.options);
-										//return to.options;
 									},
 //									onChange: function ($viewValue, $scope) {                        
 //										console.log("O: " + $scope.templateOptions.options);
