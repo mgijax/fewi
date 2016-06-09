@@ -15,7 +15,6 @@
 	<c:set var="diseaseIDMap" value="${hpoGroup.diseaseIDMap}"/>
 	<c:set var="clusterKeyMap" value="${hpoGroup.clusterKeyMap}"/>
 
-	<div class="label">Human Phenotypes</div>
 	<table>
 	<c:forEach var="rowID" items="${hpoGroup.humanRowIDs}">
 		<c:set var="marker" value="${humanSymbolMap[rowID]}"/>
@@ -30,10 +29,10 @@
 				</tr>
 			</c:if>
 			<c:if test="${not empty showHeaders}">
-				<tr><td></td>
+				<tr><td class="tableLabel">Human Phenotypes</td>
 				<c:set var="showHeaders" value=""/>
 				<c:forEach var="hpoHeader" items="${hpoGroup.columns}">
-					<td rowspan="2" class="header"><div class="header" title="${hpoHeader}">${hpoHeader}</div></td>
+					<td rowspan="2" class="header"><div class="header" title="${hpoHeader}"><span class="header">${hpoHeader}</span></div></td>
 				</c:forEach>
 				</tr>
 				<tr>

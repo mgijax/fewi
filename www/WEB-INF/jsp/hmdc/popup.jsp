@@ -29,6 +29,12 @@
 <div id="title">${pageTitle}</div>
 
 <style>
+td.tableLabel {
+	font-weight: bold;
+	font-size: 110%;
+	text-align:left;
+	vertical-align:middle;
+}
 table tr td {
 	padding: 3px;
 	text-align: left;
@@ -46,13 +52,39 @@ td.header {
 	vertical-align: bottom;
 	white-space: nowrap;
 	font-weight: normal;
+	max-width: 25px;
+	min-width: 25px;
+	width: 25px;
 }
 div.header {
 	color: black;
-	text-indent: 2px;
-	-webkit-transform: rotate(-45deg);
-	transform: rotate(-45deg);
-	width: 20px;
+    text-indent: 2px;
+    width: 27px;
+    min-width: 27px;
+    max-width: 27px;
+    position: relative;
+    height: 100%;
+    transform: skew(-45deg,0deg);
+    -webkit-transform: skew(-45deg,0deg);
+    left: 70px;
+    overflow: hidden;
+    top: 0px;
+    border-left: 1px solid #dddddd;
+    border-right: 1px solid #dddddd;
+    border-top: 1px solid #dddddd;
+}
+span.header {
+	transform: skew(45deg, 0deg) rotate(315deg);
+    display: inline-block;
+    width: 90px;
+    position: absolute;
+    text-align: left;
+    left: -33px;
+    bottom: 25px;
+    font-size: 10pt;
+    font-weight: bold;
+    font-family: Arial, Helvetica;
+    color: #666666;
 }
 td.border {
 	border: thin solid black;
@@ -85,8 +117,6 @@ tr.highlight:hover { background-color: #FFFFCC; cursor: pointer }
 
 <%@ include file="/WEB-INF/jsp/hmdc/popup_hpo.jsp" %>
 <p/>
-<%@ include file="/WEB-INF/jsp/hmdc/popup_mp.jsp" %>
-
 <div style="margin-top: 50px">
 Debugging Info:<p/>
 

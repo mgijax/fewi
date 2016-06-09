@@ -160,6 +160,9 @@ public class DiseasePortalController {
 
 		List<Filter> filterList = new ArrayList<Filter>();
 
+		if (group.getQueries() == null) {
+			return null;
+		}
 		for(DiseasePortalConditionQuery cq: group.getQueries()) {
 			filterList.add(cq.genFilter());
 		}
@@ -207,20 +210,28 @@ public class DiseasePortalController {
 
 		
 		DiseasePortalConditionGroup group = null;
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			group = (DiseasePortalConditionGroup)mapper.readValue((String)session.getAttribute("jsonInput"), DiseasePortalConditionGroup.class);
-			//mainFilter = genQueryFilter(group);
-			//highlightFilter = genHighlightFilter(group);
-
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (session.getAttribute("jsonInput") != null) {
+			try {
+				ObjectMapper mapper = new ObjectMapper();
+				group = (DiseasePortalConditionGroup)mapper.readValue((String)session.getAttribute("jsonInput"), DiseasePortalConditionGroup.class);
+				//mainFilter = genQueryFilter(group);
+				//highlightFilter = genHighlightFilter(group);
+			} catch (Exception e) {
+				// not a fatal error; if the user's session has expired or if JBoss has been restarted,
+				// just skip the additional conditions and at least give them a popup for the gridClusterKey
+				// and the header term (don't restrict by location or by term search)
+			}
+		}
+		if (group == null) {
+			group = new DiseasePortalConditionGroup();
 		}
 
 		Filter mainFilter = genQueryFilter(group);
 		
 		List<Filter> filterList = new ArrayList<Filter>();
-		filterList.add(mainFilter);
+		if (mainFilter != null) {
+			filterList.add(mainFilter);
+		}
 		filterList.add(new Filter(DiseasePortalFields.TERM_HEADER, header));
 		filterList.add(new Filter(DiseasePortalFields.GRID_CLUSTER_KEY, gridClusterKey));
 		
