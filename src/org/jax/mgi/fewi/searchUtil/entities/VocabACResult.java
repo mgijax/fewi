@@ -1,5 +1,7 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
+import java.util.List;
+
 
 /**
  * Represents a result from the Vocab Term autocomplete hunter.
@@ -14,14 +16,14 @@ public class VocabACResult
 	private boolean isSynonym;
 	private String originalTerm;
 	//private String termKey;
+	private List<String> derivedTerms;
 	private String termId;
 	private String rootVocab;
 	private String displayVocab;
 	private int markerCount;
 	private boolean hasExpressionResults;
 
-	public VocabACResult()
-	{}
+	public VocabACResult() {}
 
 	public String getTerm() {
 		return term;
@@ -52,6 +54,14 @@ public class VocabACResult
 
 	public void setOriginalTerm(String originalTerm) {
 		this.originalTerm = originalTerm;
+	}
+
+	public List<String> getDerivedTerms() {
+		return derivedTerms;
+	}
+
+	public void setDerivedTerms(List<String> derivedTerms) {
+		this.derivedTerms = derivedTerms;
 	}
 	
 	public String getRootVocab() {

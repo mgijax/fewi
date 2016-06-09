@@ -17,7 +17,6 @@ import org.jax.mgi.fewi.finder.TermFinder;
 import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.hmdc.forms.DiseasePortalConditionGroup;
 import org.jax.mgi.fewi.hmdc.forms.DiseasePortalConditionQuery;
-import org.jax.mgi.fewi.hmdc.forms.DiseasePortalQueryBuilder;
 import org.jax.mgi.fewi.hmdc.models.GridResult;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpDisease;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpGridAnnotationEntry;
@@ -52,8 +51,8 @@ public class DiseasePortalController {
 	@Autowired
 	private MarkerFinder markerFinder;
 
-	@Autowired
-	private TermFinder termFinder;
+	//@Autowired
+	//private TermFinder termFinder;
 
 	@RequestMapping(method=RequestMethod.GET)
 	public String getQueryForm() {

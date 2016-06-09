@@ -22,6 +22,12 @@
       wrapper: ['horizontalBootstrapHelp', 'bootstrapHasError']
     });
 
+    formlyConfigProvider.setType({
+      name: 'autocomplete',
+      template: '<input type="text" ng-model="model.input" typeahead="item for item in options.templateOptions.options | limitTo:12" class="form-control">',
+      wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+    });
+
     // select
     formlyConfigProvider.setType({
       name: 'horizontalSelect',
