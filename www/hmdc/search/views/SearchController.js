@@ -460,7 +460,7 @@
 									options: [],
 									autoComplete: function(value, to) {
 										if (typeof value != 'undefined') {
-											return $rootScope.getAutoComplete(value, 20).then(function(response) {
+											return $rootScope.getAutoComplete(value, 25).then(function(response) {
 												to.options = response.data;
 												return to.options;
 											});

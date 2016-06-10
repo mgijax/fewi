@@ -464,31 +464,26 @@ public class AutoCompleteController {
 		
 		
 		SearchParams params = new SearchParams();
+		params.setIncludeMetaHighlight(true);
 		if(pageSize == null || pageSize.equals("")) {
 			params.setPageSize(100);
 		} else {
 			params.setPageSize(Integer.parseInt(pageSize));
 		}
 
-		List<Filter> fList = new ArrayList<Filter>();
+		List<Filter> filterList = new ArrayList<Filter>();
 		for (String q : words) {
-			Filter termFilter = new Filter(SearchConstants.VOC_DERIVED_TERMS,q,Filter.Operator.OP_BEGINS);
-			fList.add(termFilter);
+			filterList.add(new Filter(SearchConstants.VOC_DERIVED_TERMS,q,Filter.Operator.OP_BEGINS));
 		}
-
-		Filter f = Filter.and(fList);
-
-		params.setFilter(f);
+		List<Filter> vocabList = new ArrayList<Filter>();
+		vocabList.add(new Filter(SearchConstants.VOC_VOCAB, "OMIM"));
+		vocabList.add(new Filter(SearchConstants.VOC_VOCAB, "Human Phenotype Ontology"));
+		vocabList.add(new Filter(SearchConstants.VOC_VOCAB, "Mammalian Phenotype"));
 		
-		// default sorts are "score","termLength","term"
-		List<Sort> sorts = new ArrayList<Sort>();
+		filterList.add(Filter.or(vocabList));
 
-		sorts.add(new Sort("score",true));
-		sorts.add(new Sort(IndexConstants.VOCABAC_TERM_LENGTH,false));
-		sorts.add(new Sort(IndexConstants.VOCABAC_BY_TERM,false));
-		sorts.add(new Sort(IndexConstants.VOCABAC_BY_ORIGINAL_TERM,false));
-		params.setSorts(sorts);
-
+		params.setFilter(Filter.and(filterList));
+		
 		SearchResults<VocabACResult> results = autocompleteFinder.getVocabAutoComplete(params);
 		
 		TreeMap<String, String> sortedMap = new TreeMap<String, String>(new SmartAlphaComparator<String>());
