@@ -461,19 +461,25 @@ public class AutoCompleteController {
 		
 		List<String> words = QueryParser.parseAutoCompleteSearch(query);
 		logger.debug("vocab term query:" + words.toString());
-		
+		int returnAmount = 25;
+		try {
+			returnAmount = Integer.parseInt(pageSize);
+		} catch (Exception e) {
+			returnAmount = 25;
+		}
 		
 		SearchParams params = new SearchParams();
 		params.setIncludeMetaHighlight(true);
-		if(pageSize == null || pageSize.equals("")) {
-			params.setPageSize(100);
+		
+		if(query.length() < 6) {
+			params.setPageSize((int)(Math.pow(10, query.length())));
 		} else {
-			params.setPageSize(Integer.parseInt(pageSize));
+			params.setPageSize(1000000);
 		}
 
 		List<Filter> filterList = new ArrayList<Filter>();
 		for (String q : words) {
-			filterList.add(new Filter(SearchConstants.VOC_DERIVED_TERMS,q,Filter.Operator.OP_BEGINS));
+			filterList.add(new Filter(SearchConstants.VOC_DERIVED_TERMS,q,Filter.Operator.OP_GREEDY_BEGINS));
 		}
 		List<Filter> vocabList = new ArrayList<Filter>();
 		vocabList.add(new Filter(SearchConstants.VOC_VOCAB, "OMIM"));
@@ -493,8 +499,11 @@ public class AutoCompleteController {
 				sortedMap.put(term, term);
 			}
 		}
-
-		return new ArrayList<String>(sortedMap.values());
+		if(sortedMap.size() > returnAmount) {
+			return new ArrayList<String>(sortedMap.values()).subList(0, returnAmount);
+		} else {
+			return new ArrayList<String>(sortedMap.values());
+		}
 
 	}
 	

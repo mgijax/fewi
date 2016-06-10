@@ -67,6 +67,9 @@ public class SolrVocabACHunter extends SolrHunter<VocabACResult> {
 			resultObject.setTermId((String) doc.getFieldValue(IndexConstants.VOCABAC_TERM_ID));
 			resultObject.setTerm((String) doc.getFieldValue(IndexConstants.VOCABAC_TERM));
 			resultObject.setDerivedTerms((List<String>)rsp.getHighlighting().get(doc.getFieldValue(IndexConstants.UNIQUE_KEY)).get(IndexConstants.VOCABAC_DERIVED_TERMS));
+			
+			resultObject.getDerivedTerms().add((String)doc.getFieldValue(IndexConstants.VOCABAC_TERM));
+			
 			resultObject.setIsSynonym((Boolean) doc.getFieldValue(IndexConstants.VOCABAC_IS_SYNONYM));
 			resultObject.setOriginalTerm((String) doc.getFieldValue(IndexConstants.VOCABAC_ORIGINAL_TERM));
 			resultObject.setRootVocab((String) doc.getFieldValue(IndexConstants.VOCABAC_ROOT_VOCAB));
