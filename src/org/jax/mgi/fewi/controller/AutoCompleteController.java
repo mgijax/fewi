@@ -464,7 +464,7 @@ public class AutoCompleteController {
 	@RequestMapping("/hmdcTermAC")
 	public @ResponseBody List<String> hmdcAutoComplete(@RequestParam("query") String query, @RequestParam("pageSize") String pageSize) {
 		
-		List<String> words = QueryParser.parseAutoCompleteSearch(query);
+		List<String> words = QueryParser.parseAutoCompleteHMDCSearch(query);
 		logger.debug("vocab term query:" + words.toString());
 		int returnAmount = 25;
 		try {
