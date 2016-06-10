@@ -1,5 +1,6 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 

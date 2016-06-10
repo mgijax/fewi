@@ -435,6 +435,11 @@ public class AutoCompleteController {
 		}
 		if(additionalFilters!=null) fList.addAll(additionalFilters);
 
+		Filter noHuman = new Filter(SearchConstants.VOC_VOCAB, "Human Phenotype Ontology");
+		noHuman.setNegate(true);
+		
+		fList.add(noHuman);
+		
 		Filter f = Filter.and(fList);
 
 		params.setFilter(f);
