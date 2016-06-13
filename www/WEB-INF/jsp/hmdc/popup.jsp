@@ -5,18 +5,6 @@
 
 <%@ include file="header.jsp" %>
 
-<c:if test="${not empty humanMarkers}">
-  <c:set var="hmarkers" value='${fn:join(humanMarkers, ", ")}'/>
-</c:if>
-<c:if test="${not empty mouseMarkers}">
-  <c:set var="mmarkers" value='${fn:join(mouseMarkers, ", ")}'/>
-</c:if>
-<c:if test="${not empty isPhenotype}">
-  <c:set var="suffix" value=" abnormalities"/>
-</c:if>
-
-<c:set var="pageTitle" value="Data for ${hmarkers}/${mmarkers} and ${headerTerm}${suffix}"/>
-
 <script>
 	// change window title on page load
     document.title = '${pageTitle}';
@@ -117,6 +105,7 @@ tr.highlight:hover { background-color: #FFFFCC; cursor: pointer }
 
 <%@ include file="/WEB-INF/jsp/hmdc/popup_hpo.jsp" %>
 <p/>
+<%@ include file="/WEB-INF/jsp/hmdc/popup_mp.jsp" %>
 <div style="margin-top: 50px">
 Debugging Info:<p/>
 

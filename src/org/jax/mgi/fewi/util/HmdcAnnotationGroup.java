@@ -38,8 +38,11 @@ public class HmdcAnnotationGroup {
 	// { row ID : { column ID : annotation count } }
 	private Map<Integer,Map<Integer,Integer>> counts = new HashMap<Integer,Map<Integer,Integer>>();
 
+	// { row ID : genoCluster key }
+	private Map<Integer, Integer> genoClusterKeys = new HashMap<Integer, Integer>();
+	
 	// { row ID : homology cluster key }
-	private Map<Integer, String> clusterKeys = new HashMap<Integer, String>();
+	private Map<Integer, String> homologyClusterKeys = new HashMap<Integer, String>();
 	
 	// { row ID : disease ID }
 	private Map<Integer, String> diseaseIDs = new HashMap<Integer, String>();
@@ -220,8 +223,11 @@ public class HmdcAnnotationGroup {
 
 	/* increment the count of annotations for cell with the given row and column text values
 	 */
-	public void addMouseAnnotation (String genotypeText, String columnText) {
-		addAnnotation(getMouseRowID(genotypeText), getColumnID(columnText));
+	public void addMouseAnnotation (String genotypeText, String columnText, Integer seqNum, Integer genoClusterKey) {
+		Integer rowID = getMouseRowID(genotypeText);
+		addAnnotation(rowID, getColumnID(columnText));
+		cacheSequenceNum(columnText, seqNum);
+		cacheGenoClusterKey(rowID, genoClusterKey);
 	}
 
 	/* returns true if there are any mouse rows, false if not
@@ -311,25 +317,46 @@ public class HmdcAnnotationGroup {
 		return rowsRev.get(comboKey);
 	}
 
-	/* cache the homology cluster key for the given row ID
+	/* cache the genoCluster key for the given row ID
 	 */
-	private void cacheClusterKey (int rowID, String clusterKey) {
-		clusterKeys.put(rowID, clusterKey);
+	private void cacheGenoClusterKey (int rowID, int clusterKey) {
+		genoClusterKeys.put(rowID, clusterKey);
 	}
 
-	/* retrieve the cluster key that was cached for the given row ID
+	/* retrieve the genoCluster key that was cached for the given row ID
 	 */
-	public String getClusterKey (int rowID) {
-		if (clusterKeys.containsKey(rowID)) {
-			return clusterKeys.get(rowID);
+	public Integer getGenoClusterKey (int rowID) {
+		if (genoClusterKeys.containsKey(rowID)) {
+			return genoClusterKeys.get(rowID);
 		}
 		return null;
 	}
 
-	/* get a mapping between the integer row ID and the String cluster key (useful for JSTL access)
+	/* get a mapping between the integer row ID and the integer genoCluster key (useful for JSTL access)
 	 */
-	public Map<Integer, String> getClusterKeyMap() {
-		return clusterKeys;
+	public Map<Integer, Integer> getGenoClusterKeyMap() {
+		return genoClusterKeys;
+	}
+	
+	/* cache the homology cluster key for the given row ID
+	 */
+	private void cacheHomologyClusterKey (int rowID, String clusterKey) {
+		homologyClusterKeys.put(rowID, clusterKey);
+	}
+
+	/* retrieve the homology cluster key that was cached for the given row ID
+	 */
+	public String getHomologyClusterKey (int rowID) {
+		if (homologyClusterKeys.containsKey(rowID)) {
+			return homologyClusterKeys.get(rowID);
+		}
+		return null;
+	}
+
+	/* get a mapping between the integer row ID and the String homology cluster key (useful for JSTL access)
+	 */
+	public Map<Integer, String> getHomologyClusterKeyMap() {
+		return homologyClusterKeys;
 	}
 	
 	/* cache the disease ID for the given row ID
@@ -363,11 +390,11 @@ public class HmdcAnnotationGroup {
 	 * is an OMIM annotation, disease and annotatedTerm should match.  If is an HPO term, then the
 	 * disease is the source of the HPO annotatedTerm.
 	 */
-	public void addHumanAnnotation (String humanMarkerSymbol, String clusterKey, String disease,
+	public void addHumanAnnotation (String humanMarkerSymbol, String homologyClusterKey, String disease,
 			String diseaseID, String annotatedTerm, Integer headerSequenceNum) {
 		Integer rowID = getHumanRowID(humanMarkerSymbol, disease);
 		addAnnotation(rowID, getColumnID(annotatedTerm));
-		cacheClusterKey(rowID, clusterKey);
+		cacheHomologyClusterKey(rowID, homologyClusterKey);
 		cacheDiseaseID(rowID, diseaseID);
 		cacheSequenceNum(annotatedTerm, headerSequenceNum);
 	}

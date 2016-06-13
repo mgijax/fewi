@@ -53,7 +53,7 @@
 							<c:set var="sgCells" value="${marker.slimgridCellsMP}"/>
 							<c:set var="sgShowAbbrev" value="true"/>
 							<c:set var="sgTooltipTemplate" value="<count> phenotype(s)"/>
-							<c:set var="sgUrl" value="${configBean.FEWI_URL}diseasePortal/sgCell?genes=<markerID>&phenotypes=<termID>&termHeader=<abbrev>"/>
+							<c:set var="sgUrl" value="${configBean.FEWI_URL}diseasePortal/phenotypePopup?markerID=<markerID>&header=<abbrev>"/>
 
 							<%@ include file="MarkerDetail_slimgrid.jsp" %>
 							<br/>
