@@ -404,7 +404,7 @@
 									{ value: 'miS', name: 'Gene Symbol or ID' },
 									{ value: 'tsDtext', name: 'Phenotype or Disease Name' },
 									{ value: 'location', name: 'Genome Location' },
-									{ value: 'mnS', name: 'Gene name' },
+									{ value: 'mnS', name: 'Gene Name' },
 									{ value: 'tsDid', name: 'Phenotype or Disease ID' },
 									//{ value: 'gene_upload', name: 'Gene File Upload'},
 									//{ value: 'vcd_upload', name: 'VCF file (v4.0 or later)' }
