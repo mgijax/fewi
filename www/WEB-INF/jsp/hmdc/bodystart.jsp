@@ -3,7 +3,8 @@
 	<body id="body">
 		<div id="headerContainer">
 			<div class="hmdcbox">
-				<img src="/assets/images/HMDC_logo.jpg" height=40 />
+				<img ng-show="showImage" ng-click="showImage = !showImage" src="/assets/images/HMDC_logo.jpg" height=40 />
+				<img ng-hide="showImage" ng-click="showImage = !showImage" src="/assets/images/HMDC_logo2.jpg" height=40 />
 			</div>	
 			<div class="links floatleft">
 				<a target="_blank" href="${configBean.FEWI_URL}">About</a>
