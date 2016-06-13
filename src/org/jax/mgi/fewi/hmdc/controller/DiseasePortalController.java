@@ -417,8 +417,13 @@ public class DiseasePortalController {
 				}
 			} else if ("Mammalian Phenotype".equals(termType)) {
 				// is mouse genotype/MP annotation
-				mpGroup.addMouseAnnotation(allelePairs.get(gridKey), result.getTerm(), result.getByDagTerm(),
-					genoClusterKeys.get(gridKey));
+				String term = result.getTerm();
+				Integer seqNum = result.getByDagTerm();
+					
+				// special case where we want to promote the MP header to the leftmost column
+				if (term.equals(header) || term.equals(header + " phenotype")) { seqNum = -1; }
+					
+				mpGroup.addMouseAnnotation(allelePairs.get(gridKey), term, seqNum, genoClusterKeys.get(gridKey));
 			} else {
 				// is human marker/HPO annotation (generated via OMIM-HPO mapping)
 				hpoGroup.addHumanAnnotation(humanSymbols.get(gridKey), homologyClusterKeys.get(gridKey),
