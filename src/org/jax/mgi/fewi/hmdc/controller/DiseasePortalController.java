@@ -50,9 +50,6 @@ public class DiseasePortalController {
 	@Autowired
 	private DiseasePortalFinder hdpFinder;
 
-//	@Autowired
-//	private MarkerFinder markerFinder;
-
 	//@Autowired
 	//private TermFinder termFinder;
 

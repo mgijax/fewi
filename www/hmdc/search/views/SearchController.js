@@ -75,7 +75,7 @@
 		});
 
 	// @ngInject
-	function SearchController($rootScope, $scope, $log, Search, AutoComplete, $sce, ngDialog, naturalService) {
+	function SearchController($rootScope, $scope, $log, $http, Search, AutoComplete, $sce, ngDialog, naturalService) {
 		var vm = $scope.vm = {};
 
 		vm.onSubmit = onSubmit;
@@ -83,6 +83,8 @@
 		vm.mustHideLegend = true;
 		vm.resetGeneTable = false;
 		vm.resetDiseaseTable = false;
+
+		vm.autoComplete = [];
 
 		$scope.displayHTML = function(html) {
 			return $sce.trustAsHtml(html);
@@ -172,6 +174,15 @@
 				}
 			}
 		}
+
+		$rootScope.getAutoComplete = function(value, amount) {
+			return $http.get('/autocomplete/hmdcTermAC', {
+				params: {
+					query: value,
+					pageSize: amount
+				}
+			});
+		};
 
 		$scope.popup = function(url) {
 			console.log(url);
@@ -390,11 +401,11 @@
 								required: true,
 								options: [
 									{ value: '', name: 'Please select a field' },
-									{ value: 'mnS', name: 'Gene (symbol or name)' },
-									{ value: 'miS', name: 'Gene (ID)' },
-									{ value: 'tsDtext', name: 'Phenotype/Disease (name)' },
-									{ value: 'tsDid', name: 'Phenotype/Disease (ID)' },
-									{ value: 'location', name: 'Location (chromosome region)' },
+									{ value: 'miS', name: 'Gene Symbol or ID' },
+									{ value: 'tsDtext', name: 'Phenotype or Disease Name' },
+									{ value: 'location', name: 'Genome Location' },
+									{ value: 'mnS', name: 'Gene Name' },
+									{ value: 'tsDid', name: 'Phenotype or Disease ID' },
 									//{ value: 'gene_upload', name: 'Gene File Upload'},
 									//{ value: 'vcd_upload', name: 'VCF file (v4.0 or later)' }
 								],
@@ -418,7 +429,7 @@
 									label: '',
 									required: true,
 									focus: true,
-									placeholder: 'Examples: Pax*, gremlin. Use * for wildcard.'
+									placeholder: 'Example: paired box'
 								}
 							}
 						],
@@ -431,7 +442,7 @@
 									label: '',
 									required: true,
 									focus: true,
-									placeholder: 'Examples: MGI:105098, MGI:97490, 5080'
+									placeholder: 'Examples: Pax6, PAX1, MGI:88071, 720'
 								}
 							}
 						],
@@ -445,17 +456,20 @@
 									label: '',
 									required: true,
 									focus: true,
-									placeholder: 'Examples: hippocamp*, cardiovascular. Use * for wildcard.',
+									placeholder: 'Example: splenomegaly',
 									options: [],
-									onChange: function ($viewValue, $scope) {                        
-										if (typeof $viewValue != 'undefined') {
-											AutoComplete.vocabTerm($viewValue).
-												then(function(response) {
-													console.log(response.data);
-													$scope.templateOptions.options = response.data;
+									autoComplete: function(value, to) {
+										if (typeof value != 'undefined') {
+											return $rootScope.getAutoComplete(value, 25).then(function(response) {
+												to.options = response.data;
+												return to.options;
 											});
 										};
-									}
+									},
+//									onChange: function ($viewValue, $scope) {                        
+//										console.log("O: " + $scope.templateOptions.options);
+//										return true;
+//									}
 								}
 							}
 						],
@@ -468,7 +482,7 @@
 									label: '',
 									required: true,
 									focus: true,
-									placeholder: 'Examples: HP:0001744, OMIM:222100, MP:0008260'
+									placeholder: 'Examples: HP:0001744, OMIM:222100, MP:0008762'
 								}
 							}
 						],

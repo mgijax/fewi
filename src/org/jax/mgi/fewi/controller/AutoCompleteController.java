@@ -435,6 +435,11 @@ public class AutoCompleteController {
 		}
 		if(additionalFilters!=null) fList.addAll(additionalFilters);
 
+		Filter noHuman = new Filter(SearchConstants.VOC_VOCAB, "Human Phenotype Ontology");
+		noHuman.setNegate(true);
+		
+		fList.add(noHuman);
+		
 		Filter f = Filter.and(fList);
 
 		params.setFilter(f);
@@ -457,34 +462,39 @@ public class AutoCompleteController {
 	 */
 	
 	@RequestMapping("/hmdcTermAC")
-	public @ResponseBody List<String> hmdcAutoComplete(@RequestParam("query") String query) {
+	public @ResponseBody List<String> hmdcAutoComplete(@RequestParam("query") String query, @RequestParam("pageSize") String pageSize) {
 		
-		List<String> words = QueryParser.parseAutoCompleteSearch(query);
+		List<String> words = QueryParser.parseAutoCompleteHMDCSearch(query);
 		logger.debug("vocab term query:" + words.toString());
-		
+		int returnAmount = 25;
+		try {
+			returnAmount = Integer.parseInt(pageSize);
+		} catch (Exception e) {
+			returnAmount = 25;
+		}
 		
 		SearchParams params = new SearchParams();
-		params.setPageSize(100);
-
-		List<Filter> fList = new ArrayList<Filter>();
-		for (String q : words) {
-			Filter termFilter = new Filter(SearchConstants.VOC_DERIVED_TERMS,q,Filter.Operator.OP_GREEDY_BEGINS);
-			fList.add(termFilter);
+		params.setIncludeMetaHighlight(true);
+		
+		if(query.length() < 6) {
+			params.setPageSize((int)(Math.pow(10, query.length())));
+		} else {
+			params.setPageSize(1000000);
 		}
 
-		Filter f = Filter.and(fList);
-
-		params.setFilter(f);
+		List<Filter> filterList = new ArrayList<Filter>();
+		for (String q : words) {
+			filterList.add(new Filter(SearchConstants.VOC_DERIVED_TERMS,q,Filter.Operator.OP_GREEDY_BEGINS));
+		}
+		List<Filter> vocabList = new ArrayList<Filter>();
+		vocabList.add(new Filter(SearchConstants.VOC_VOCAB, "OMIM"));
+		vocabList.add(new Filter(SearchConstants.VOC_VOCAB, "Human Phenotype Ontology"));
+		vocabList.add(new Filter(SearchConstants.VOC_VOCAB, "Mammalian Phenotype"));
 		
-		// default sorts are "score","termLength","term"
-		List<Sort> sorts = new ArrayList<Sort>();
+		filterList.add(Filter.or(vocabList));
 
-		sorts.add(new Sort("score",true));
-		sorts.add(new Sort(IndexConstants.VOCABAC_TERM_LENGTH,false));
-		sorts.add(new Sort(IndexConstants.VOCABAC_BY_TERM,false));
-		sorts.add(new Sort(IndexConstants.VOCABAC_BY_ORIGINAL_TERM,false));
-		params.setSorts(sorts);
-
+		params.setFilter(Filter.and(filterList));
+		
 		SearchResults<VocabACResult> results = autocompleteFinder.getVocabAutoComplete(params);
 		
 		TreeMap<String, String> sortedMap = new TreeMap<String, String>(new SmartAlphaComparator<String>());
@@ -494,8 +504,11 @@ public class AutoCompleteController {
 				sortedMap.put(term, term);
 			}
 		}
-
-		return new ArrayList<String>(sortedMap.values());
+		if(sortedMap.size() > returnAmount) {
+			return new ArrayList<String>(sortedMap.values()).subList(0, returnAmount);
+		} else {
+			return new ArrayList<String>(sortedMap.values());
+		}
 
 	}
 	

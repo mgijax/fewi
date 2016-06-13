@@ -25,95 +25,66 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public class SolrVocabACHunter extends SolrHunter<VocabACResult>
-{
-    /***
-     * The constructor sets up this hunter so that it is specific to sequence
-     * summary pages.  Each item in the constructor sets a value that it has 
-     * inherited from its superclass, and then relies on the superclass to 
-     * perform all of the needed work via the hunt() method.
-     */
-    public SolrVocabACHunter() 
-    {        
-        /*
-         * Setup the property map.  This maps from the properties of the incoming
-         * filter list to the corresponding field names in the Solr implementation.
-         * 
-         */
-    	
-         /* 
-          * synonym: the search field that will appear in autocomplete pick list 
-          * we search both synonyms and terms
-          * */  
-         propertyMap.put(SearchConstants.VOC_TERM, new SolrPropertyMapper(IndexConstants.VOCABAC_TERM));
-         
-         propertyMap.put(SearchConstants.VOC_TERM_ID, new SolrPropertyMapper(IndexConstants.VOCABAC_TERM_ID));
-   
-         propertyMap.put(SearchConstants.VOC_VOCAB, new SolrPropertyMapper(IndexConstants.VOCABAC_VOCAB));
-         
-         propertyMap.put(SearchConstants.VOC_DERIVED_TERMS, new SolrPropertyMapper(IndexConstants.VOCABAC_DERIVED_TERMS));
-        /*
-         * The name of the field we want to iterate through the documents for
-         * and place into the output.  In this case we want to actually get a 
-         * specific field, and return it rather than a list of keys.
-         */  
-        keyString = IndexConstants.VOCABAC_KEY;
-    }
-    
-    /**
-     * packInformation
-     * @param sdl
-     * @return List of keys
-     * This overrides the typical behavior of packInformation method.
-     * For this autocomplete hunter, we don't need highlighting or metadata, but
-     * only need a list of VocabACResult objects.
-     */
-    @Override
-    protected void packInformation(QueryResponse rsp, SearchResults<VocabACResult> sr,
-            SearchParams sp) {
-        
-        // A list of all the primary keys in the document
+public class SolrVocabACHunter extends SolrHunter<VocabACResult> {
+	/***
+	 * The constructor sets up this hunter so that it is specific to sequence
+	 * summary pages.  Each item in the constructor sets a value that it has 
+	 * inherited from its superclass, and then relies on the superclass to 
+	 * perform all of the needed work via the hunt() method.
+	 */
+	public SolrVocabACHunter() {        
 
-        SolrDocumentList sdl = rsp.getResults();
+		propertyMap.put(SearchConstants.VOC_TERM, new SolrPropertyMapper(IndexConstants.VOCABAC_TERM));
+		propertyMap.put(SearchConstants.VOC_TERM_ID, new SolrPropertyMapper(IndexConstants.VOCABAC_TERM_ID));
+		propertyMap.put(SearchConstants.VOC_VOCAB, new SolrPropertyMapper(IndexConstants.VOCABAC_VOCAB));
+		propertyMap.put(SearchConstants.VOC_DERIVED_TERMS, new SolrPropertyMapper(IndexConstants.VOCABAC_DERIVED_TERMS));
 
-        /**
-         * Iterate through the response documents, extracting the information
-         * that was configured at the implementing class level.
-         */
+		highlightPre = "";
+		highlightPost = "";
+		highlightSnippets = 1;
+		highlightFields.add(SearchConstants.VOC_DERIVED_TERMS);
 
-        for (SolrDocument doc : sdl)
-        {
-            
-            //logger.debug(doc.toString());
-            // Set the result object
-            String termId = (String) doc.getFieldValue(IndexConstants.VOCABAC_TERM_ID);
-            String term = (String) doc.getFieldValue(IndexConstants.VOCABAC_TERM);
-            boolean isSynonym = (Boolean) doc.getFieldValue(IndexConstants.VOCABAC_IS_SYNONYM);
-            String originalTerm = (String) doc.getFieldValue(IndexConstants.VOCABAC_ORIGINAL_TERM);
-            String rootVocab = (String) doc.getFieldValue(IndexConstants.VOCABAC_ROOT_VOCAB);
-            // NOTE: not currently using the display vocab
-            //String displayVocab = (String) doc.getFieldValue(IndexConstants.VOCABAC_VOCAB);
-            List<String> derivedTerms = (List<String>)doc.getFieldValue(IndexConstants.VOCABAC_DERIVED_TERMS);
-            int markerCount = (Integer) doc.getFieldValue(IndexConstants.VOCABAC_MARKER_COUNT);
-            int gxdlitMarkerCount = (Integer) doc.getFieldValue(IndexConstants.VOCABAC_GXDLIT_MARKER_COUNT);
-            VocabACResult resultObject = new VocabACResult();
-            resultObject.setTermId(termId);
-            resultObject.setTerm(term);
-            resultObject.setDerivedTerms(derivedTerms);
-            resultObject.setIsSynonym(isSynonym);
-            resultObject.setOriginalTerm(originalTerm);
-            resultObject.setRootVocab(rootVocab);
-            //resultObject.setDisplayVocab(displayVocab);
-            resultObject.setMarkerCount(markerCount);
-            // check if there are any markers with gxd records
-            resultObject.setHasExpressionResults(gxdlitMarkerCount>0);
-            
-            // Add result to SearchResults
-            sr.addResultObjects(resultObject);
-        }
-    }
-    
+		keyString = IndexConstants.VOCABAC_KEY;
+	}
+
+	/**
+	 * packInformation
+	 * @param sdl
+	 * @return List of keys
+	 * This overrides the typical behavior of packInformation method.
+	 * For this autocomplete hunter, we don't need highlighting or metadata, but
+	 * only need a list of VocabACResult objects.
+	 */
+	@Override
+	protected void packInformation(QueryResponse rsp, SearchResults<VocabACResult> sr, SearchParams sp) {
+
+		SolrDocumentList sdl = rsp.getResults();
+
+		for (SolrDocument doc : sdl) {
+			
+			VocabACResult resultObject = new VocabACResult();
+			
+			resultObject.setTermId((String) doc.getFieldValue(IndexConstants.VOCABAC_TERM_ID));
+			resultObject.setTerm((String) doc.getFieldValue(IndexConstants.VOCABAC_TERM));
+			
+			// Highlighting is used on the HMDC for autocomplete.
+			if(rsp.getHighlighting() != null) {
+				resultObject.setDerivedTerms((List<String>)rsp.getHighlighting().get(doc.getFieldValue(IndexConstants.UNIQUE_KEY)).get(IndexConstants.VOCABAC_DERIVED_TERMS));
+				resultObject.getDerivedTerms().add((String)doc.getFieldValue(IndexConstants.VOCABAC_TERM));
+			}
+			
+			resultObject.setIsSynonym((Boolean) doc.getFieldValue(IndexConstants.VOCABAC_IS_SYNONYM));
+			resultObject.setOriginalTerm((String) doc.getFieldValue(IndexConstants.VOCABAC_ORIGINAL_TERM));
+			resultObject.setRootVocab((String) doc.getFieldValue(IndexConstants.VOCABAC_ROOT_VOCAB));
+			//resultObject.setDisplayVocab((String) doc.getFieldValue(IndexConstants.VOCABAC_VOCAB));
+			resultObject.setMarkerCount((Integer) doc.getFieldValue(IndexConstants.VOCABAC_MARKER_COUNT));
+			resultObject.setHasExpressionResults((Integer) doc.getFieldValue(IndexConstants.VOCABAC_GXDLIT_MARKER_COUNT) > 0);
+			sr.addResultObjects(resultObject);
+		}
+	}
+
 	@Value("${solr.vocab_term_ac.url}")
-	public void setSolrUrl(String solrUrl) 
-	{ super.solrUrl = solrUrl; }
+	public void setSolrUrl(String solrUrl) {
+		super.solrUrl = solrUrl;
+	}
 }
