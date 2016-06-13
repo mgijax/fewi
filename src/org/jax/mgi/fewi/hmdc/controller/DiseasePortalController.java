@@ -10,10 +10,11 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.jax.mgi.fewi.finder.MarkerFinder;
-import org.jax.mgi.fewi.finder.TermFinder;
+//import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.hmdc.forms.DiseasePortalConditionGroup;
 import org.jax.mgi.fewi.hmdc.forms.DiseasePortalConditionQuery;
@@ -43,13 +44,14 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(value="/diseasePortal")
 public class DiseasePortalController {
 
+//	private final Logger logger = LoggerFactory.getLogger(DiseasePortalController.class);
 
 	// get the finders used by various methods
 	@Autowired
 	private DiseasePortalFinder hdpFinder;
 
-	@Autowired
-	private MarkerFinder markerFinder;
+//	@Autowired
+//	private MarkerFinder markerFinder;
 
 	//@Autowired
 	//private TermFinder termFinder;
@@ -194,6 +196,76 @@ public class DiseasePortalController {
 		return getPopup(request, session, false);
 	}
 
+	/* join the given list of terms into a single string, separated by the given delimeter
+	 */
+	private String join (String delimiter, List<String> terms) {
+		StringBuffer sb = new StringBuffer();
+		
+		if (terms != null) {
+			boolean isFirst = true;
+			for (String t : terms) {
+				if (!isFirst) { sb.append(delimiter); }
+				sb.append(t);
+				isFirst = false;
+			}
+		}
+		return sb.toString();
+	}
+	
+	/* build and return the page title for the popup, based on the parameters passed in.
+	 * (could be done in the JSP, but it was getting complex, so we may as well do it in Java)
+	 */
+	private String buildPopupTitle(List<String> humanMarkers, List<String> mouseMarkers, String header, boolean isPhenotype,
+			HmdcAnnotationGroup mpGroup, HmdcAnnotationGroup hpoGroup, HmdcAnnotationGroup omimGroup) {
+
+		StringBuffer sb = new StringBuffer();
+		boolean human = (hpoGroup != null) && (!hpoGroup.isEmpty());
+		boolean mouse = (mpGroup != null) && (!mpGroup.isEmpty());
+		
+		// begin with organisms of included markers
+		if (human) {
+			if (mouse) { sb.append("Human and Mouse "); }
+			else { sb.append("Human "); }
+		} else if (mouse) { sb.append("Mouse "); }
+		
+		// MP or OMIM header term
+		if (header != null) { sb.append(header); }
+		
+		// MP terms have "abnormalities" in the title, but not OMIM
+		if (isPhenotype && !header.equalsIgnoreCase("normal phenotype")) { sb.append(" abnormalities for "); }
+		else { sb.append(" for "); }
+		
+		// if both human and mouse markers, separate the organisms with a slash
+		if (humanMarkers != null && humanMarkers.size() > 0) {
+			sb.append(join(", ", humanMarkers));
+			if (mouseMarkers != null && mouseMarkers.size() > 0) {
+				sb.append("/");
+			}
+		}
+		if (mouseMarkers != null && mouseMarkers.size() > 0) {
+			sb.append(join(", ", mouseMarkers));
+		}
+		
+		return sb.toString();
+	}
+
+	/* get the grid cluster key corresponding to a given marker; assumes markerID is a valid MGI 
+	 * marker (primary) ID
+	 */
+	private Integer getGridClusterKey(String markerID) {
+		SearchParams params = new SearchParams();
+		params.setPageSize(100);
+		params.setFilter(new Filter(DiseasePortalFields.MARKER_MGI_ID, markerID));
+
+		SearchResults<SolrHdpMarker> searchResults = hdpFinder.getMarkers(params);
+		List<SolrHdpMarker> results = searchResults.getResultObjects();
+
+		if (results != null && results.size() > 0) {
+			return results.get(0).getGridClusterKey();
+		}
+		return null;
+	}
+
 	/* Serve up a phenotype or disease popup, from clicking a cell on the HMDC grid.
 	 * Expects two parameters in the request: gridClusterKey and header.  Any phenotype or
 	 * disease terms or IDs can be passed in for highlighting using the (optional)
@@ -201,8 +273,24 @@ public class DiseasePortalController {
 	 * parameter should be true for phenotype popups and false for disease popups.
 	 */
 	private ModelAndView getPopup(HttpServletRequest request, HttpSession session, boolean isPhenotype) {
+		// from a marker detail page slimgrid, we'll need to get the marker ID and
+		// convert it to its corresponding gridClusterKey
+		String gridClusterKey = null;
+		String markerID = request.getParameter("markerID");
+		boolean fromMarkerDetail = false;
+		
+		if (markerID != null) {
+			Integer gck = getGridClusterKey(markerID);
+			if (gck != null) {
+				gridClusterKey = gck.toString();
+			}
+			fromMarkerDetail = true;
+		}
+		
 		// collect the required parameters and check that they are specified
-		String gridClusterKey = request.getParameter("gridClusterKey");
+		if (gridClusterKey == null) {
+			gridClusterKey = request.getParameter("gridClusterKey");
+		}
 		if (gridClusterKey == null) { return errorMav("Missing gridClusterKey parameter"); }
 
 		String header = request.getParameter("header");
@@ -210,20 +298,21 @@ public class DiseasePortalController {
 
 		
 		DiseasePortalConditionGroup group = null;
-		if (session.getAttribute("jsonInput") != null) {
-			try {
-				ObjectMapper mapper = new ObjectMapper();
-				group = (DiseasePortalConditionGroup)mapper.readValue((String)session.getAttribute("jsonInput"), DiseasePortalConditionGroup.class);
-				//mainFilter = genQueryFilter(group);
-				//highlightFilter = genHighlightFilter(group);
-			} catch (Exception e) {
-				// not a fatal error; if the user's session has expired or if JBoss has been restarted,
-				// just skip the additional conditions and at least give them a popup for the gridClusterKey
-				// and the header term (don't restrict by location or by term search)
-			}
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			group = (DiseasePortalConditionGroup)mapper.readValue((String)session.getAttribute("jsonInput"), DiseasePortalConditionGroup.class);
+			//mainFilter = genQueryFilter(group);
+			//highlightFilter = genHighlightFilter(group);
+		} catch (Exception e) {
+			// This is a fatal error; if the user's session has expired or if JBoss has been restarted,
+			// pheno group wants to give an error message.
 		}
 		if (group == null) {
-			group = new DiseasePortalConditionGroup();
+			if (fromMarkerDetail) {
+				group = new DiseasePortalConditionGroup();
+			} else {
+				return errorMav("Your session has expired.  Please resubmit your search before visiting a popup.");
+			}
 		}
 
 		Filter mainFilter = genQueryFilter(group);
@@ -256,6 +345,9 @@ public class DiseasePortalController {
 		// grid key -> homology cluster key (for human gridKeys)
 		Map<Integer,String> homologyClusterKeys = new HashMap<Integer,String>();
 		
+		// grid key -> genocluster key (for mouse gridKeys)
+		Map<Integer,Integer> genoClusterKeys = new HashMap<Integer,Integer>();
+		
 		// grid key -> allele pairs (for mouse gridKeys)
 		Map<Integer,String> allelePairs = new HashMap<Integer,String>();
 		
@@ -267,6 +359,7 @@ public class DiseasePortalController {
 			// mouse gridKeys have a non-null genocluster key; human data are not in genoclusters
 			if (res.getGenoClusterKey() != null) {
 				// is mouse data
+				genoClusterKeys.put(gridKey, res.getGenoClusterKey());
 				allelePairs.put(gridKey, res.getAllelePairs());
 				mouseGridKeys.add(gridKey); 
 			} else {
@@ -318,7 +411,8 @@ public class DiseasePortalController {
 			if ("OMIM".equals(termType)) {
 				if (mouseGridKeys.contains(gridKey)) {
 					// is mouse genotype/disease annotation
-					omimGroup.addMouseAnnotation(allelePairs.get(gridKey), result.getTerm());
+					omimGroup.addMouseAnnotation(allelePairs.get(gridKey), result.getTerm(), result.getByDagTerm(),
+						genoClusterKeys.get(gridKey));
 				} else { 
 					// is human marker/disease annotation
 					omimGroup.addHumanAnnotation(humanSymbols.get(gridKey), homologyClusterKeys.get(gridKey),
@@ -326,7 +420,8 @@ public class DiseasePortalController {
 				}
 			} else if ("Mammalian Phenotype".equals(termType)) {
 				// is mouse genotype/MP annotation
-				mpGroup.addMouseAnnotation(allelePairs.get(gridKey), result.getTerm());
+				mpGroup.addMouseAnnotation(allelePairs.get(gridKey), result.getTerm(), result.getByDagTerm(),
+					genoClusterKeys.get(gridKey));
 			} else {
 				// is human marker/HPO annotation (generated via OMIM-HPO mapping)
 				hpoGroup.addHumanAnnotation(humanSymbols.get(gridKey), homologyClusterKeys.get(gridKey),
@@ -340,14 +435,18 @@ public class DiseasePortalController {
 		// add the required parameters
 		mav.addObject("gridClusterKey", gridClusterKey);
 		mav.addObject("headerTerm", header);
+
+		// compose the popup title (could do in JSP, but it was getting complex...)
+		mav.addObject("pageTitle", buildPopupTitle(humanMarkers, mouseMarkers, header, isPhenotype,
+			mpGroup, hpoGroup, omimGroup));
 		
 		if (isPhenotype) {
 			mav.addObject("isPhenotype", 1);
-			mav.addObject("mpGroup", mpGroup);
-			mav.addObject("hpoGroup", hpoGroup);
+			if (!mpGroup.isEmpty()) mav.addObject("mpGroup", mpGroup);
+			if (!hpoGroup.isEmpty()) mav.addObject("hpoGroup", hpoGroup);
 		} else {
 			mav.addObject("isDisease", 1);
-			mav.addObject("omimGroup", omimGroup);
+			if (!omimGroup.isEmpty()) mav.addObject("omimGroup", omimGroup);
 		}
 		
 		// add any (optional) terms and term IDs that were specified to use for column highlighting

@@ -5,46 +5,37 @@
 %>
 <c:if test="${not empty mpGroup}">
 	<!-- mouse phenotype table -->
-	<c:set var="lastAllelePair" value=""/>
 	<c:set var="mpCount" value="${fn:length(mpGroup.columns)}"/>
 	<c:set var="countMap" value="${mpGroup.countMap}"/>
-	<c:set var="allelePairMap" value="${hpoGroup.allelePairMap}"/>
+	<c:set var="allelePairMap" value="${mpGroup.allelePairMap}"/>
 
-	<c:set var="humanDiseaseMap" value="${hpoGroup.humanDiseaseMap}"/>
-	<c:set var="columnIDMap" value="${hpoGroup.columnIDMap}"/>
-	<c:set var="diseaseIDMap" value="${hpoGroup.diseaseIDMap}"/>
-	<c:set var="clusterKeyMap" value="${hpoGroup.clusterKeyMap}"/>
+	<c:set var="columnIDMap" value="${mpGroup.columnIDMap}"/>
+	<c:set var="genoClusterKeyMap" value="${mpGroup.genoClusterKeyMap}"/>
 
-	<div class="tableLabel">Mouse Phenotypes</div>
 	<table>
-	<c:forEach var="rowID" items="${mpGroup.mouseRowIDs}">
-		<c:set var="allelePair" value="${allelePairMap[rowID]}"/>
-		<c:set var="genoclusterUrl" value="${configBean.FEWI_URL}diseasePortal/genoCluster/view/${diseaseIDMap[rowID]}"/>
+	<!-- table header rows : MP headers span two rows; left cell is only one with two rows showing -->
+	<tr><td class="tableLabel">Mouse Phenotypes</td>
+	<c:forEach var="mpHeader" items="${mpGroup.columns}">
+		<td rowspan="2" class="header"><div class="header" title="${mpHeader}"><span class="header">${mpHeader}</span></div></td>
+	</c:forEach>
+	</tr>
+	<tr>
+		<td class="headerTitle border">Mouse Genotype</td>
+	</tr>
 
-		<c:if test="${lastAllelePair != allelePair}">
-			<c:set var="markerUrl" value="${configBean.FEWI_URL}homology/cluster/key/${clusterKeyMap[rowID]}"/>
-			<c:set var="markerHeader" value="Disease(s) Associated with <a href='${markerUrl}' target='_blank'>${allelePair}</a>"/>
-			<tr><td></td>
-			<c:set var="showHeaders" value=""/>
-			<c:forEach var="hpoHeader" items="${mpGroup.columns}">
-				<td rowspan="2" class="header"><div class="header" title="${hpoHeader}">${hpoHeader}</div></td>
-			</c:forEach>
-			</tr>
-			<tr>
-			<td class="headerTitle border">${markerHeader}</td>
-			</tr>
-			<c:set var="lastAllelePair" value="${allelePair}"/>
-		</c:if>
-		<tr>
-			<td class="border"><a href="${diseaseUrl}" target="_blank">${humanDiseaseMap[rowID]}</a></td>
-			<c:forEach var="hpoHeader" items="${mpGroup.columns}">
-				<c:set var="columnID" value="${columnIDMap[hpoHeader]}" />
+	<c:forEach var="rowID" items="${mpGroup.mouseRowIDs}">
+		<c:set var="genoclusterUrl" value="${configBean.FEWI_URL}diseasePortal/genoCluster/view/${genoClusterKeyMap[rowID]}"/>
+
+		<tr class="highlight" title="click row to see phenotype details" onclick="window.open('${genoclusterUrl}'); return true;">
+			<td class="border">${allelePairMap[rowID]}</td>
+			<c:forEach var="mpHeader" items="${mpGroup.columns}">
+				<c:set var="columnID" value="${columnIDMap[mpHeader]}" />
 				<c:set var="mouseColor" value=""/>
 				<c:choose>
-				<c:when test="${countMap[rowID][columnID] >= 100}"><c:set var="mouseColor" value="human100"/></c:when>
-				<c:when test="${countMap[rowID][columnID] >= 6}"><c:set var="mouseColor" value="human6"/></c:when>
-				<c:when test="${countMap[rowID][columnID] >= 2}"><c:set var="mouseColor" value="human2"/></c:when>
-				<c:when test="${countMap[rowID][columnID] >= 1}"><c:set var="mouseColor" value="human1"/></c:when>
+				<c:when test="${countMap[rowID][columnID] >= 100}"><c:set var="mouseColor" value="mouse100"/></c:when>
+				<c:when test="${countMap[rowID][columnID] >= 6}"><c:set var="mouseColor" value="mouse6"/></c:when>
+				<c:when test="${countMap[rowID][columnID] >= 2}"><c:set var="mouseColor" value="mouse2"/></c:when>
+				<c:when test="${countMap[rowID][columnID] >= 1}"><c:set var="mouseColor" value="mouse1"/></c:when>
 				</c:choose>
 				<td class="border ${mouseColor}"></td>
 			</c:forEach>

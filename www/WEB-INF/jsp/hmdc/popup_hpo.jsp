@@ -13,7 +13,7 @@
 	<c:set var="humanDiseaseMap" value="${hpoGroup.humanDiseaseMap}"/>
 	<c:set var="columnIDMap" value="${hpoGroup.columnIDMap}"/>
 	<c:set var="diseaseIDMap" value="${hpoGroup.diseaseIDMap}"/>
-	<c:set var="clusterKeyMap" value="${hpoGroup.clusterKeyMap}"/>
+	<c:set var="homologyClusterKeyMap" value="${hpoGroup.homologyClusterKeyMap}"/>
 
 	<table>
 	<c:forEach var="rowID" items="${hpoGroup.humanRowIDs}">
@@ -21,7 +21,7 @@
 		<c:set var="diseaseUrl" value="${fn:replace(externalUrls.HPO_Disease, '@@@@', diseaseIDMap[rowID])}"/>
 
 		<c:if test="${lastMarker != marker}">
-			<c:set var="markerUrl" value="${configBean.FEWI_URL}homology/cluster/key/${clusterKeyMap[rowID]}"/>
+			<c:set var="markerUrl" value="${configBean.FEWI_URL}homology/cluster/key/${homologyClusterKeyMap[rowID]}"/>
 			<c:set var="markerHeader" value="Disease(s) Associated with <a href='${markerUrl}' target='_blank'>${marker}</a>"/>
 			<c:if test="${empty showHeaders}">
 				<tr>
