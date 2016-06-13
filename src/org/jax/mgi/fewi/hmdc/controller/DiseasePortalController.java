@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.jax.mgi.fewi.finder.MarkerFinder;
-import org.jax.mgi.fewi.finder.TermFinder;
 import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.hmdc.forms.DiseasePortalConditionGroup;
 import org.jax.mgi.fewi.hmdc.forms.DiseasePortalConditionQuery;

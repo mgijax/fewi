@@ -1,8 +1,6 @@
 package org.jax.mgi.fewi.interceptor;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
