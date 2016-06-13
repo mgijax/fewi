@@ -401,11 +401,11 @@
 								required: true,
 								options: [
 									{ value: '', name: 'Please select a field' },
-									{ value: 'mnS', name: 'Gene (symbol or name)' },
-									{ value: 'miS', name: 'Gene (ID)' },
-									{ value: 'tsDtext', name: 'Phenotype/Disease (name)' },
-									{ value: 'tsDid', name: 'Phenotype/Disease (ID)' },
-									{ value: 'location', name: 'Location (chromosome region)' },
+									{ value: 'miS', name: 'Gene Symbol or ID' },
+									{ value: 'tsDtext', name: 'Phenotype or Disease Name' },
+									{ value: 'location', name: 'Genome Location' },
+									{ value: 'mnS', name: 'Gene name' },
+									{ value: 'tsDid', name: 'Phenotype or Disease ID' },
 									//{ value: 'gene_upload', name: 'Gene File Upload'},
 									//{ value: 'vcd_upload', name: 'VCF file (v4.0 or later)' }
 								],
@@ -429,7 +429,7 @@
 									label: '',
 									required: true,
 									focus: true,
-									placeholder: 'Examples: Pax*, gremlin. Use * for wildcard.'
+									placeholder: 'Example: paired box'
 								}
 							}
 						],
@@ -442,7 +442,7 @@
 									label: '',
 									required: true,
 									focus: true,
-									placeholder: 'Examples: MGI:105098, MGI:97490, 5080'
+									placeholder: 'Examples: Pax6, PAX1, MGI:88071, 720'
 								}
 							}
 						],
@@ -456,7 +456,7 @@
 									label: '',
 									required: true,
 									focus: true,
-									placeholder: 'Examples: hippocamp*, cardiovascular. Use * for wildcard.',
+									placeholder: 'Example: splenomegaly',
 									options: [],
 									autoComplete: function(value, to) {
 										if (typeof value != 'undefined') {
@@ -482,7 +482,7 @@
 									label: '',
 									required: true,
 									focus: true,
-									placeholder: 'Examples: HP:0001744, OMIM:222100, MP:0008260'
+									placeholder: 'Examples: HP:0001744, OMIM:222100, MP:0008762'
 								}
 							}
 						],
