@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  angular.module('civic.config')
+  angular.module('hmdc.config')
     .constant('formConfig', {
       options: {
         labelColWidth: 3,

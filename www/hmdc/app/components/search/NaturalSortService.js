@@ -1,7 +1,7 @@
-angular.module("naturalSort", [])
+angular.module("naturalSortService", [])
 
 // The core natural service
-.factory("naturalService", ["$locale", function($locale) {
+.factory("naturalSortService", ["$locale", function($locale) {
 		// the cache prevents re-creating the values every time, at the expense of
 		// storing the results forever. Not recommended for highly changing data
 		// on long-term applications.
@@ -98,7 +98,7 @@ angular.module("naturalSort", [])
 }])
 
 // Attach a function to the rootScope so it can be accessed by "orderBy"
-.run(["$rootScope", "naturalService", function($rootScope, naturalService) {
+.run(["$rootScope", "naturalSortService", function($rootScope, naturalService) {
 	$rootScope.natural = function (field) {
 		return function (object) {
 			return naturalService.naturalValue(object[field]);

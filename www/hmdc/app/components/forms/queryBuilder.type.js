@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  angular.module('civic.search')
+  angular.module('hmdc.search')
     .config(queryBuilderConfig);
 
   // @ngInject

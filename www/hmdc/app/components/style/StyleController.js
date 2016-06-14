@@ -1,6 +1,6 @@
 (function() {
 	'use strict';
-	angular.module('civic.style')
+	angular.module('hmdc.style')
 		.controller('StyleController', StyleController);
 
 	function StyleController($rootScope, $scope, $log, Search, $sce, ngDialog) {

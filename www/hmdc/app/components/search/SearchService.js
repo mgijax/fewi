@@ -1,6 +1,6 @@
 (function() {
 	'use strict';
-	angular.module('civic.services')
+	angular.module('hmdc.services')
 		.factory('Search', SearchService);
 
 	function SearchService($rootScope, $http) {

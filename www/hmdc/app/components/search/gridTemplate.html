@@ -1,4 +1,4 @@
-		<div style="background-color:#F7F7F7; border:2px solid #AAA; width:860px; margin-bottom: 2px;">
+		<div ng-hide="vm.mustHideLegend" style="background-color:#F7F7F7; border:2px solid #AAA; width:860px; margin-bottom: 2px;">
 			<div style="padding:5px 2px;">
 				<table>
 					<tr>
@@ -43,4 +43,32 @@
 
 				</table>
 			</div>
+		</div>
+
+		<div ng-show="vm.mustHideLegend" style="background-color:#F7F7F7; border:2px solid #AAA; width:860px; margin-bottom: 4px;">
+			<div style="padding:5px 2px;">
+				<div><span style="font-weight:bold; padding-right: 15px;">Legend:</span>Terms are annotated to genes in <strong style="background-color:#ffdab3; color:#000;">human</strong>/<strong style="background-color: #49648B; color:#FFF;">mouse</strong>. <a href="#" ng-click="vm.mustHideLegend = !vm.mustHideLegend">show more</a></div>
+			</div>
+		</div>
+
+		<div ng-if="vm.results.grid.totalrowcount > 0">
+			<div ngc-table
+				show-column-names="false" show-row-numbers="false"
+				left-column-number="2" right-column-number="1"
+				center-column-number="vm.maxcols"
+				row-number="vm.maxrows" data="vm.results.grid.data">
+
+				<ngc-range top="1" bottom="vm.results.grid.totalrowcount + 1" left="2" right="9999" style-fn="styleCell" click-fn="handleClick" custom-html-fn="formatCell"></ngc-range>
+				<ngc-range top="0" bottom="vm.results.grid.totalrowcount + 1" left="vm.results.grid.grayBar" right="vm.results.grid.grayBar + 1" clazz="greyBar"></ngc-range>
+				<ngc-range top="0" bottom="1" left="2" right="9999" custom-html-fn="customHTMLHeader"></ngc-range>
+				<ngc-range top="0" bottom="vm.results.grid.totalrowcount + 2" left="vm.results.grid.totalcolcount + 3" right="9999" clazz="displayNone"></ngc-range>
+			</div>
+		</div>
+
+		<div ng-if="vm.results.grid.totalrowcount < 1">
+			No data available for your query.
+		</div>
+
+		<div ng-show="vm.gridloading">
+			<img src="/assets/images/man_wheel.gif" /><img src="/assets/images/mouse_wheel.gif" /><br>Please wait while the grid loads...
 		</div>
