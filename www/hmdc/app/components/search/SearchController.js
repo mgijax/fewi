@@ -265,19 +265,19 @@
 				"count": 0,
 				"heading": "Gene Homologs x Phenotypes/Diseases",
 				"active": true,
-				"template": "app/components/search/gridTemplate.html"
+				"template": "/assets/hmdc/app/components/search/gridTemplate.html"
 			},
 			"geneTab": {
 				"count": 0,
 				"heading": "Genes",
 				"active": false,
-				"template": "app/components/search/geneTemplate.html"
+				"template": "/assets/hmdc/app/components/search/geneTemplate.html"
 			},
 			"diseaseTab": {
 				"count": 0,
 				"heading": "Diseases",
 				"active": false,
-				"template": "app/components/search/diseaseTemplate.html"
+				"template": "/assets/hmdc/app/components/search/diseaseTemplate.html"
 			}
 
 		};
