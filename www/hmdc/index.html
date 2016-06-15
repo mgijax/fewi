@@ -3,11 +3,11 @@
 <html ng-app="HMDCApplication" ng-controller="StyleController">
 	<head>
 		<title>Test</title>
-		<link rel="stylesheet" type="text/css" href="assets/hmdc/bower_components/bootstrap/dist/css/bootstrap.css" />
-		<link rel="stylesheet" type="text/css" href="assets/hmdc/bower_components/bootstrap/spacelab/bootstrap.min.css" />
-		<link rel="stylesheet" type="text/css" href="assets/hmdc/bower_components/ng-dialog/css/ngDialog.min.css" />
-		<link rel="stylesheet" type="text/css" href="assets/hmdc/bower_components/ng-dialog/css/ngDialog-theme-default.css" />
-		<link rel="stylesheet" type="text/css" href="assets/hmdc/bower_components/ng-cells/dist/0.4.0/ng-cells.css" />
+		<link rel="stylesheet" type="text/css" href="app/components/bower_components/bootstrap/dist/css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="app/components/bower_components/bootstrap/spacelab/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="app/components/bower_components/ng-dialog/css/ngDialog.min.css" />
+		<link rel="stylesheet" type="text/css" href="app/components/bower_components/ng-dialog/css/ngDialog-theme-default.css" />
+		<link rel="stylesheet" type="text/css" href="app/components/bower_components/ng-cells/dist/0.4.0/ng-cells.css" />
 		<link rel="stylesheet" type="text/css" href="assets/css/hmdc/search.css" />
 
 		<script src="app/components/bower_components/angular/angular.js"></script>
@@ -67,22 +67,6 @@
 
 					<div class="row" ng-hide="vm.mustHide">
 						<div class="col-xs-12">
-							<div class="operator-prompt">
-								<div ng-if="vm.model.queries.length <= 1">
-									<span class="prompt-text">Match the following condition:</span>
-								</div>
-								<div ng-if="vm.model.queries.length > 1">
-									<span class="prompt-text">Match</span>
-									<div class="operator-select">
-										<formly-form fields="vm.operatorField" model="vm.model"></formly-form>
-									</div>
-									<span class="prompt-text">of the following conditions:</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row" ng-hide="vm.mustHide">
-						<div class="col-xs-12">
 							<form ng-submit="vm.onSubmit()" novalidate>
 								<formly-form
 									model="vm.model"
@@ -93,12 +77,23 @@
 							</form>
 						</div>
 					</div>
+
+					<div ng-if="vm.model.queries.length > 1">
+						<div class="row" ng-hide="vm.mustHide">
+							<div class="col-xs-12">
+								<div class="operator-prompt">
+									<div class="operator-select">
+										<formly-form fields="vm.operatorField" model="vm.model"></formly-form>
+									</div>
+									<span class="prompt-text"> the above conditions together</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
 					<div class="row" ng-hide="vm.mustHide">
 						<div class="col-xs-12">
-							<div class="button-row pull-right">
-								<span class="text-danger" ng-if="vm.form.$pristine === false && vm.form.$invalid">
-									Ensure all fields are specified to submit your search.
-								</span>
+							<div class="button-row pull-left">
 								<button
 									type="submit"
 									class="btn btn-primary submit-button"
@@ -107,6 +102,9 @@
 									ng-bind="vm.buttonLabel">
 									BUTTON LABEL
 								</button>
+								<span class="text-danger" ng-if="vm.form.$pristine === false && vm.form.$invalid">
+									Ensure all fields are specified to submit your search.
+								</span>
 							</div>
 						</div>
 					</div>

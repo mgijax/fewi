@@ -292,8 +292,8 @@
 				templateOptions: {
 					label: '',
 					options: [
-						{ value: 'AND', name: 'all' },
-						{ value: 'OR', name: 'any' }
+						{ value: 'AND', name: 'AND' },
+						{ value: 'OR', name: 'OR' }
 					]
 				}
 			}
