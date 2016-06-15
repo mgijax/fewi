@@ -62,10 +62,7 @@
 
 					<div class="row" ng-hide="vm.mustHide">
 						<div class="col-xs-12">
-							<div class="button-row pull-right">
-								<span class="text-danger" ng-if="vm.form.$pristine === false && vm.form.$invalid">
-									Ensure all fields are specified to submit your search.
-								</span>
+							<div class="button-row pull-left">
 								<button
 									type="submit"
 									class="btn btn-primary submit-button"
@@ -74,6 +71,9 @@
 									ng-bind="vm.buttonLabel">
 									BUTTON LABEL
 								</button>
+								<span class="text-danger" ng-if="vm.form.$pristine === false && vm.form.$invalid">
+									Ensure all fields are specified to submit your search.
+								</span>
 							</div>
 						</div>
 					</div>
