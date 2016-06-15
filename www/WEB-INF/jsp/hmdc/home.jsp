@@ -36,22 +36,6 @@
 
 					<div class="row" ng-hide="vm.mustHide">
 						<div class="col-xs-12">
-							<div class="operator-prompt">
-								<div ng-if="vm.model.queries.length <= 1">
-									<span class="prompt-text">Match the following condition:</span>
-								</div>
-								<div ng-if="vm.model.queries.length > 1">
-									<span class="prompt-text">Match</span>
-									<div class="operator-select">
-										<formly-form fields="vm.operatorField" model="vm.model"></formly-form>
-									</div>
-									<span class="prompt-text">of the following conditions:</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row" ng-hide="vm.mustHide">
-						<div class="col-xs-12">
 							<form ng-submit="vm.onSubmit()" novalidate>
 								<formly-form
 									model="vm.model"
@@ -62,6 +46,20 @@
 							</form>
 						</div>
 					</div>
+
+					<div ng-if="vm.model.queries.length > 1">
+						<div class="row" ng-hide="vm.mustHide">
+							<div class="col-xs-12">
+								<div class="operator-prompt">
+									<div class="operator-select">
+										<formly-form fields="vm.operatorField" model="vm.model"></formly-form>
+									</div>
+									<span class="prompt-text"> the above conditions together</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
 					<div class="row" ng-hide="vm.mustHide">
 						<div class="col-xs-12">
 							<div class="button-row pull-right">
