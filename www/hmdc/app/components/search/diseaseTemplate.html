@@ -15,7 +15,7 @@ Export: <a class="btn" href="/diseasePortal/marker/report.txt?phenotypes=105830&
 	<tbody>
 		<tr ng-repeat="row in displayedCollection">
 			<td><a target="_blank" href="/disease/{{ row.primaryId }}">{{ row.term }}</a></td>
-			<td><a target="_blank" href="/disease/{{ row.primaryId }}">{{ row.primaryId }}</a></td>
+			<td><a target="_blank" href="http://www.omim.org/entry/{{ row.primaryId }}">{{ row.primaryId }}</a></td>
 			<td><a ng-if="row.diseaseModelCount > 0" target="_blank" href="/disease/models/{{ row.primaryId }}">{{ row.diseaseModelCount }}</a></td>
 			<td><div ng-bind-html="row.diseaseMouseMarkers | joinBy:', ' | handleSubscript "></div></td>
 			<td><div ng-bind-html="row.diseaseHumanMarkers | joinBy:', ' | handleSubscript "></div></td>
