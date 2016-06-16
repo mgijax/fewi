@@ -435,8 +435,9 @@ public class DiseasePortalController {
 				} else { 
 					// is human marker/disease annotation
 					omimGroup.addHumanAnnotation(humanSymbols.get(gridKey), homologyClusterKeys.get(gridKey),
-						result.getTerm(), result.getSourceId(), result.getTerm(), result.getByDagTerm());
+						result.getTerm(), result.getTerm(), result.getByDagTerm());
 				}
+				omimGroup.cacheDiseaseID(result.getTerm(), result.getTermId());
 			} else if ("Mammalian Phenotype".equals(termType)) {
 				// is mouse genotype/MP annotation
 				String term = result.getTerm();
@@ -449,7 +450,7 @@ public class DiseasePortalController {
 			} else {
 				// is human marker/HPO annotation (generated via OMIM-HPO mapping)
 				hpoGroup.addHumanAnnotation(humanSymbols.get(gridKey), homologyClusterKeys.get(gridKey),
-					result.getSourceTerm(), result.getSourceId(), result.getTerm(), result.getByDagTerm());
+					result.getSourceTerm(), result.getTerm(), result.getByDagTerm());
 			}
 		}
 

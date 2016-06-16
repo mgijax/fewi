@@ -44,8 +44,8 @@ public class HmdcAnnotationGroup {
 	// { row ID : homology cluster key }
 	private Map<Integer, String> homologyClusterKeys = new HashMap<Integer, String>();
 	
-	// { row ID : disease ID }
-	private Map<Integer, String> diseaseIDs = new HashMap<Integer, String>();
+	// { disease name : disease ID }
+	private Map<String, String> diseaseIDs = new HashMap<String, String>();
 	
 	// { header text : sequence num }
 	private Map<String, Integer> headerSequenceNumbers = new HashMap<String, Integer>();
@@ -403,24 +403,24 @@ public class HmdcAnnotationGroup {
 		return homologyClusterKeys;
 	}
 	
-	/* cache the disease ID for the given row ID
+	/* cache the disease ID for the given disease name
 	 */
-	private void cacheDiseaseID (int rowID, String diseaseID) {
-		diseaseIDs.put(rowID, diseaseID);
+	public void cacheDiseaseID (String disease, String diseaseID) {
+		diseaseIDs.put(disease, diseaseID);
 	}
 
-	/* get the disease ID that was cached for the given row ID
+	/* get the disease ID that was cached for the given disease name
 	 */
-	public String getDiseaseID (int rowID) {
-		if (diseaseIDs.containsKey(rowID)) {
-			return diseaseIDs.get(rowID);
+	public String getDiseaseID (String disease) {
+		if (diseaseIDs.containsKey(disease)) {
+			return diseaseIDs.get(disease);
 		}
 		return null;
 	}
 
-	/* get a mapping between the integer row ID and the String disease ID (useful for JSTL access)
+	/* get a mapping between the disease name and the disease ID (useful for JSTL access)
 	 */
-	public Map<Integer, String> getDiseaseIDMap() {
+	public Map<String, String> getDiseaseIDMap() {
 		return diseaseIDs;
 	}
 	
@@ -435,11 +435,10 @@ public class HmdcAnnotationGroup {
 	 * disease is the source of the HPO annotatedTerm.
 	 */
 	public void addHumanAnnotation (String humanMarkerSymbol, String homologyClusterKey, String disease,
-			String diseaseID, String annotatedTerm, Integer headerSequenceNum) {
+			String annotatedTerm, Integer headerSequenceNum) {
 		Integer rowID = getHumanRowID(humanMarkerSymbol, disease);
 		addAnnotation(rowID, getColumnID(annotatedTerm));
 		cacheHomologyClusterKey(rowID, homologyClusterKey);
-		cacheDiseaseID(rowID, diseaseID);
 		cacheSequenceNum(annotatedTerm, headerSequenceNum);
 	}
 	

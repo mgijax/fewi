@@ -18,7 +18,7 @@
 	<table>
 	<c:forEach var="rowID" items="${hpoGroup.humanRowIDs}">
 		<c:set var="marker" value="${humanSymbolMap[rowID]}"/>
-		<c:set var="diseaseUrl" value="${fn:replace(externalUrls.HPO_Disease, '@@@@', diseaseIDMap[rowID])}"/>
+		<c:set var="diseaseUrl" value="${fn:replace(externalUrls.HPO_Disease, '@@@@', diseaseIDMap[humanDiseaseMap[rowID]])}"/>
 
 		<c:if test="${lastMarker != marker}">
 			<c:set var="markerUrl" value="${configBean.FEWI_URL}homology/cluster/key/${homologyClusterKeyMap[rowID]}"/>

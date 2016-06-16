@@ -9,7 +9,7 @@
 	<c:set var="countMap" value="${omimGroup.countMap}"/>
 	<c:set var="allelePairMap" value="${omimGroup.allelePairMap}"/>
 	<c:set var="humanSymbolMap" value="${omimGroup.humanSymbolMap}"/>
-
+	<c:set var="diseaseIDMap" value="${omimGroup.diseaseIDMap}"/>
 	<c:set var="columnIDMap" value="${omimGroup.columnIDMap}"/>
 	<c:set var="genoClusterKeyMap" value="${omimGroup.genoClusterKeyMap}"/>
 	<c:set var="homologyClusterKeyMap" value="${omimGroup.homologyClusterKeyMap}"/>
@@ -18,7 +18,8 @@
 	<!-- table header rows : disease headers span two rows; left cell is only one with two rows showing -->
 	<tr><td class="tableLabel">Diseases</td>
 	<c:forEach var="omimHeader" items="${omimGroup.columns}">
-		<td rowspan="2" class="header"><div class="header" title="${omimHeader}"><span class="header">${omimHeader}</span></div></td>
+		<c:set var="diseaseUrl" value="${configBean.FEWI_URL}disease/${diseaseIDMap[omimHeader]}"/>
+		<td rowspan="2" class="header"><div class="header" title="${omimHeader}"><a href="${diseaseUrl}" target="_blank"><span class="header">${omimHeader}</span></a></div></td>
 	</c:forEach>
 	</tr>
 	
