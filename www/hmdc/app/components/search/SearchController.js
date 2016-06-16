@@ -1,81 +1,9 @@
 (function() {
 	'use strict';
-	angular.module('civic.search')
-		.controller('SearchController', SearchController)
-		.filter('sortFilter',function(naturalService) {
-			return function(array, predicteObject, reverse) {
-				var neg = "";
-				if(reverse) {
-					neg = "-";
-				}
-				array.sort(naturalService.naturalSort(neg + predicteObject));
-				return array;
-		}})
-		.filter('joinBy', function () { return function (input,delimiter) { return (input || []).join(delimiter || ', '); }; })
-		.filter('handleSubscript', function () { return function (input) { return input.replace(/<([^>]*)>/g, "<sup>$1</sup>"); }; })
-		.directive('resize', ['$window', function ($window) {
-			return {
-				link: link,
-				restrict: 'A'
-			};
+	angular.module('hmdc.search')
+		.controller('SearchController', SearchController);
 
-			function link(scope, element, attrs) {
-				var cellsize = 20;
-				scope.vm.windowmaxcols = Math.floor(($window.innerWidth - 300) / cellsize);
-				if(scope.vm.windowmaxcols < 5) scope.vm.windowmaxcols = 5;
-				// Top header up to the bottom of the header line plus 40
-				// Without the wrapping of: Human  Mouse: Disease Connection
-				scope.vm.windowmaxrows = Math.floor(($window.innerHeight - 430) / cellsize);
-				if(scope.vm.windowmaxrows < 5) scope.vm.windowmaxrows = 5;
-
-				angular.element($window).bind('resize', function(){
-					var cellsize = 20;
-					scope.vm.windowmaxcols = Math.floor(($window.innerWidth - 300) / cellsize);
-					if(scope.vm.windowmaxcols < 5) scope.vm.windowmaxcols = 5;
-					// Top header up to the bottom of the header line plus 40
-					// Without the wrapping of: Human  Mouse: Disease Connection
-					scope.vm.windowmaxrows = Math.floor(($window.innerHeight - 430) / cellsize);
-					if(scope.vm.windowmaxrows < 5) scope.vm.windowmaxrows = 5;
-
-					scope.$digest();
-				});
-			}
-		}])
-		.directive('stReset', function() {
-			return {
-				require: '^stTable',
-				scope: { stReset: "=stReset" },
-				link: function (scope, element, attr, ctrl) {
-                
-					scope.$watch("stReset", function () {
-						  
-						if (scope.stReset) {
-
-							// remove local storage
-							if (attr.stPersist) {
-								localStorage.removeItem(attr.stPersist);
-							}
-
-							// reset table state
-							var tableState = ctrl.tableState();
-							tableState.search = {};
-							if(attr.stReset == "vm.resetDiseaseTable") {
-								tableState.sort = {predicate: "term", reverse: false};
-							} else if(attr.stReset == "vm.resetGeneTable") {
-								tableState.sort = {predicate: "symbol", reverse: false};
-							}
-							ctrl.pipe();
-							// reset scope value
-							scope.stReset = false;
-						}
-
-					});
-				}
-			};
-		});
-
-	// @ngInject
-	function SearchController($rootScope, $scope, $log, $http, Search, AutoComplete, $sce, ngDialog, naturalService) {
+	function SearchController($rootScope, $scope, $log, $http, Search, AutoComplete, $sce, ngDialog, naturalSortService) {
 		var vm = $scope.vm = {};
 
 		vm.onSubmit = onSubmit;
@@ -210,9 +138,9 @@
 					
 					var i = response.data.gridMPHeaders.indexOf("normal phenotype");
 					if(i != -1) response.data.gridMPHeaders.splice(i, 1);
-					response.data.gridMPHeaders.sort(naturalService.naturalSortFunction)
+					response.data.gridMPHeaders.sort(naturalSortService.naturalSortFunction)
 					if(i != -1) response.data.gridMPHeaders.push("normal phenotype");
-					response.data.gridOMIMHeaders.sort(naturalService.naturalSortFunction)
+					response.data.gridOMIMHeaders.sort(naturalSortService.naturalSortFunction)
 
 					// Push the MP Headers into the headerContent row
 					var hash = {};
@@ -337,19 +265,19 @@
 				"count": 0,
 				"heading": "Gene Homologs x Phenotypes/Diseases",
 				"active": true,
-				"template": "/assets/hmdc/search/views/grid.tpl.html"
+				"template": "/assets/hmdc/app/components/search/gridTemplate.html"
 			},
 			"geneTab": {
 				"count": 0,
 				"heading": "Genes",
 				"active": false,
-				"template": "/assets/hmdc/search/views/gene.tpl.html"
+				"template": "/assets/hmdc/app/components/search/geneTemplate.html"
 			},
 			"diseaseTab": {
 				"count": 0,
 				"heading": "Diseases",
 				"active": false,
-				"template": "/assets/hmdc/search/views/disease.tpl.html"
+				"template": "/assets/hmdc/app/components/search/diseaseTemplate.html"
 			}
 
 		};
@@ -364,8 +292,8 @@
 				templateOptions: {
 					label: '',
 					options: [
-						{ value: 'AND', name: 'all' },
-						{ value: 'OR', name: 'any' }
+						{ value: 'AND', name: 'AND' },
+						{ value: 'OR', name: 'OR' }
 					]
 				}
 			}

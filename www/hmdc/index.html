@@ -1,37 +1,42 @@
 <!DOCTYPE html>
 
-<html ng-app="civicClient" ng-controller="StyleController">
+<html ng-app="HMDCApplication" ng-controller="StyleController">
 	<head>
 		<title>Test</title>
-		<link rel="stylesheet" type="text/css" href="/assets/hmdc/bower_components/bootstrap/dist/css/bootstrap.css" />
-		<link rel="stylesheet" ng-href="https://bootswatch.com/spacelab/bootstrap.min.css" />
-		<link rel="stylesheet" type="text/css" href="/assets/hmdc/bower_components/ng-dialog/css/ngDialog.min.css" />
-		<link rel="stylesheet" type="text/css" href="/assets/hmdc/bower_components/ng-dialog/css/ngDialog-theme-default.css" />
-		<link rel="stylesheet" type="text/css" href="/assets/hmdc/bower_components/ng-cells/dist/0.4.0/ng-cells.css" />
-		<link rel="stylesheet" type="text/css" href="/assets/css/hmdc/search.css" />
+		<link rel="stylesheet" type="text/css" href="app/components/bower_components/bootstrap/dist/css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="app/components/bower_components/bootstrap/spacelab/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="app/components/bower_components/ng-dialog/css/ngDialog.min.css" />
+		<link rel="stylesheet" type="text/css" href="app/components/bower_components/ng-dialog/css/ngDialog-theme-default.css" />
+		<link rel="stylesheet" type="text/css" href="app/components/bower_components/ng-cells/dist/0.4.0/ng-cells.css" />
+		<link rel="stylesheet" type="text/css" href="assets/css/hmdc/search.css" />
 
-		<script src="bower_components/angular/angular.js"></script>
-		<script src="bower_components/angular-route/angular-route.js"></script>
-		<script src="bower_components/api-check/dist/api-check.js"></script>
-		<script src="bower_components/angular-formly/dist/formly.js"></script>
-		<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-		<script src="bower_components/angular-resource/angular-resource.js"></script>
-		<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-		<script src="bower_components/angular-smart-table/dist/smart-table.min.js"></script>
-		<script src="bower_components/ng-dialog/js/ngDialog.min.js"></script>
-		<script src="bower_components/ng-cells/dist/0.4.0/ng-cells.min.js"></script>
-		<script src="bower_components/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js"></script>
-		<script src="search/index.js"></script>
-		<script src="search/forms/formConfig.js"></script>
-		<script src="search/forms/fieldWrappers/basicFieldWrappers.js"></script>
-		<script src="search/forms/fieldTypes/basicFieldTypes.js"></script>
-		<script src="search/forms/fieldTypes/multiInput.js"></script>
-		<script src="search/services/SearchService.js"></script>
-		<script src="search/services/AutoCompleteService.js"></script>
-		<script src="search/services/NaturalSort.js"></script>
-		<script src="search/views/StyleController.js"></script>
-		<script src="search/views/SearchController.js"></script>
-		<script src="search/forms/queryBuilder.type.js"></script>
+		<script src="app/components/bower_components/angular/angular.js"></script>
+		<script src="app/components/bower_components/angular-route/angular-route.js"></script>
+		<script src="app/components/bower_components/api-check/dist/api-check.js"></script>
+		<script src="app/components/bower_components/angular-formly/dist/formly.js"></script>
+		<script src="app/components/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+		<script src="app/components/bower_components/angular-resource/angular-resource.js"></script>
+		<script src="app/components/bower_components/angular-sanitize/angular-sanitize.js"></script>
+		<script src="app/components/bower_components/angular-smart-table/dist/smart-table.min.js"></script>
+		<script src="app/components/bower_components/ng-dialog/js/ngDialog.min.js"></script>
+		<script src="app/components/bower_components/ng-cells/dist/0.4.0/ng-cells.min.js"></script>
+		<script src="app/components/bower_components/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js"></script>
+		<script src="app/app.module.js"></script>
+		<script src="app/components/forms/formConfig.js"></script>
+		<script src="app/components/forms/fieldWrappers/basicFieldWrappers.js"></script>
+		<script src="app/components/forms/fieldTypes/basicFieldTypes.js"></script>
+		<script src="app/components/forms/fieldTypes/multiInput.js"></script>
+		<script src="app/components/forms/queryBuilder.type.js"></script>
+		<script src="app/components/search/SearchService.js"></script>
+		<script src="app/components/search/AutoCompleteService.js"></script>
+		<script src="app/components/search/NaturalSortService.js"></script>
+		<script src="app/components/search/SearchController.js"></script>
+		<script src="app/components/search/SearchHandleSubscriptFilter.js"></script>
+		<script src="app/components/search/SearchJoinByFilter.js"></script>
+		<script src="app/components/search/SearchResizeDirective.js"></script>
+		<script src="app/components/search/SearchSortFilter.js"></script>
+		<script src="app/components/search/SearchStResetDirective.js"></script>
+		<script src="app/components/style/StyleController.js"></script>
 		<meta http-equiv="X-UA-Compatible" content="chrome=1">
 	</head>
 	<body id="body">
@@ -45,12 +50,73 @@
 		</div>
 		<div ng-controller="SearchController">
 			<div class="searchView container">
-				<div ng-include="'/assets/hmdc/search/views/search.tpl.html'"></div>
+				<div class="queryBuilder">
+
+					<div class="row hideRow">
+						<div class="col-xs-12">
+							<span class="buttonStyle" ng-hide="vm.mustHide" ng-click="vm.mustHide = !vm.mustHide">Click to hide search</span>
+							<span class="buttonStyle" ng-show="vm.mustHide" ng-click="vm.mustHide = !vm.mustHide">Click to modify search</span>
+						</div>
+					</div>
+
+					<div class="row searchRow" ng-hide="vm.mustHide">
+						<div class="col-xs-12">
+							<h3>Search by:</h3>
+						</div>
+					</div>
+
+					<div class="row" ng-hide="vm.mustHide">
+						<div class="col-xs-12">
+							<form ng-submit="vm.onSubmit()" novalidate>
+								<formly-form
+									model="vm.model"
+									fields="vm.fields"
+									form="vm.form"
+									options="vm.options">
+								</formly-form>
+							</form>
+						</div>
+					</div>
+
+					<div ng-if="vm.model.queries.length > 1">
+						<div class="row" ng-hide="vm.mustHide">
+							<div class="col-xs-12">
+								<div class="operator-prompt">
+									<div class="operator-select">
+										<formly-form fields="vm.operatorField" model="vm.model"></formly-form>
+									</div>
+									<span class="prompt-text"> the above conditions together</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row" ng-hide="vm.mustHide">
+						<div class="col-xs-12">
+							<div class="button-row pull-left">
+								<button
+									type="submit"
+									class="btn btn-primary submit-button"
+									ng-disabled="vm.form.$invalid"
+									ng-click="vm.onSubmit()"
+									ng-bind="vm.buttonLabel">
+									BUTTON LABEL
+								</button>
+								<span class="text-danger" ng-if="vm.form.$pristine === false && vm.form.$invalid">
+									Ensure all fields are specified to submit your search.
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="container-fluid searchViewBox" ng-show="vm.results.diseaseResults" resize>
-				<div ng-include="'/assets/hmdc/search/views/results.tpl.html'"></div>
+				<uib-tabset>
+					<uib-tab ng-repeat="(key, value) in vm.tabs" heading="{{ value.count != 0 ? value.heading + ' (' + value.count + ')' : value.heading }}" active="value.active">
+						<div ng-include src="value.template"></div>
+					</uib-tab>
+				</uib-tabset>
 			</div>
 		</div>
-
 	</body>
 </html>
