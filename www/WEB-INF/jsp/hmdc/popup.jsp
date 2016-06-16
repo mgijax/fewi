@@ -103,25 +103,15 @@ tr.highlight:hover { background-color: #FFFFCC; cursor: pointer }
 	</div>
 </c:if>
 
+<c:if test="${not empty isPhenotype}">
 <%@ include file="/WEB-INF/jsp/hmdc/popup_hpo.jsp" %>
 <p/>
 <%@ include file="/WEB-INF/jsp/hmdc/popup_mp.jsp" %>
-<div style="margin-top: 50px">
-Debugging Info:<p/>
+</c:if>
 
-gridClusterKey: ${gridClusterKey}<br/>
-header: ${headerTerm}<br/>
-gridKey count: ${gridKeyCount}<br/>
-annotation count: ${annotationCount}<br/>
-terms: <c:forEach var="term" items="${highlightTerms}">${term}, </c:forEach><br/>
-termIds: <c:forEach var="termId" items="${highlightTermIds}">${termId}, </c:forEach><br/>
-isPhenotype: ${isPhenotype}<br/>
-isDisease: ${isDisease}<br/>
-<p/>
-omimGroup: ${omimGroup}<br/>
-mpGroup: ${mpGroup}<br/>
-hpoGroup: ${hpoGroup}<br/>
-</div>
+<c:if test="${not empty isDisease}">
+<%@ include file="/WEB-INF/jsp/hmdc/popup_omim.jsp" %>
+</c:if>
 
 <!-- Table and Wrapping div -->
 
