@@ -451,6 +451,7 @@ public class DiseasePortalController {
 				// is human marker/HPO annotation (generated via OMIM-HPO mapping)
 				hpoGroup.addHumanAnnotation(humanSymbols.get(gridKey), homologyClusterKeys.get(gridKey),
 					result.getSourceTerm(), result.getTerm(), result.getByDagTerm());
+				hpoGroup.cacheDiseaseID(result.getSourceTerm(), result.getSourceId());
 			}
 		}
 
