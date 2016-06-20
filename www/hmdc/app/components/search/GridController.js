@@ -108,17 +108,22 @@
 
 					vm.jsonData = response.data;
 
+					var i = vm.jsonData.gridMPHeaders.indexOf("normal phenotype");
+					if(i != -1) vm.jsonData.gridMPHeaders.splice(i, 1);
+					vm.jsonData.gridMPHeaders.sort(naturalSortService.naturalSortFunction)
+					if(i != -1) vm.jsonData.gridMPHeaders.push("normal phenotype");
+
+					vm.jsonData.gridOMIMHeaders.sort(naturalSortService.naturalSortFunction)
+
 					$rootScope.selectedPhenoTypes = [];
 					for (var j = 0; j < vm.jsonData.gridMPHeaders.length; j++) {
 						$rootScope.selectedPhenoTypes.push({id: vm.jsonData.gridMPHeaders[j], label: vm.jsonData.gridMPHeaders[j]});
 					}
-					$rootScope.selectedPhenoTypes.sort(naturalSortService.naturalSortFunction);
 
 					$rootScope.selectedDiseases = [];
 					for (var j = 0; j < vm.jsonData.gridOMIMHeaders.length; j++) {
 						$rootScope.selectedDiseases.push({id: vm.jsonData.gridOMIMHeaders[j], label: vm.jsonData.gridOMIMHeaders[j]});
 					}
-					$rootScope.selectedDiseases.sort(naturalSortService.naturalSortFunction);
 
 					buildGridJson();
 					vm.gridloading = false;
@@ -143,13 +148,6 @@
 			headerContent.push("Mouse Gene");
 			vm.solrQuery = vm.jsonData.filterQuery;
 			
-			var i = vm.jsonData.gridMPHeaders.indexOf("normal phenotype");
-			if(i != -1) vm.jsonData.gridMPHeaders.splice(i, 1);
-			vm.jsonData.gridMPHeaders.sort(naturalSortService.naturalSortFunction)
-			if(i != -1) vm.jsonData.gridMPHeaders.push("normal phenotype");
-
-			vm.jsonData.gridOMIMHeaders.sort(naturalSortService.naturalSortFunction)
-
 			var selectedPhenoTypes = [];
 			for(i = 0; i < $rootScope.selectedPhenoTypesModel.length; i++) {
 				selectedPhenoTypes.push($rootScope.selectedPhenoTypesModel[i].id);
