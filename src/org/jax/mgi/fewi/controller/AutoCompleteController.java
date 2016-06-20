@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
-
-import mgi.frontend.datamodel.sort.SmartAlphaComparator;
 
 import org.jax.mgi.fewi.finder.AutocompleteFinder;
 import org.jax.mgi.fewi.searchUtil.Filter;
@@ -68,23 +66,23 @@ public class AutoCompleteController {
 		logger.debug("driver query:" + words.toString());
 
 		//build SearchParams for driver auto complete query
-	    SearchParams params = new SearchParams();
+		SearchParams params = new SearchParams();
 		params.setPageSize(1000);
-	    Filter f = new Filter();
-	    List<Filter> fList = new ArrayList<Filter>();
+		Filter f = new Filter();
+		List<Filter> fList = new ArrayList<Filter>();
 
-	    for (String q : words) {
+		for (String q : words) {
 			Filter wordFilter = new Filter(SearchConstants.CRE_DRIVER, q.toLowerCase(),
-			    Filter.Operator.OP_GREEDY_BEGINS);
+					Filter.Operator.OP_GREEDY_BEGINS);
 			fList.add(wordFilter);
-	    }
-	    f.setNestedFilters(fList,Filter.JoinClause.FC_AND);
-	    params.setFilter(f);
+		}
+		f.setNestedFilters(fList,Filter.JoinClause.FC_AND);
+		params.setFilter(f);
 
-	    // sorts
-	    List<Sort> sorts = new ArrayList<Sort>();
-	    sorts.add(new Sort(CreFields.DRIVER, false));
-	    params.setSorts(sorts);
+		// sorts
+		List<Sort> sorts = new ArrayList<Sort>();
+		sorts.add(new Sort(CreFields.DRIVER, false));
+		params.setSorts(sorts);
 
 		//return results
 		return autocompleteFinder.getDriverAutoComplete(params);
@@ -127,7 +125,7 @@ public class AutoCompleteController {
 			@RequestParam("query") String query) {
 		// split input on any non-alpha and non-apostrophe characters
 		List<String> words =
-			Arrays.asList(query.trim().split("[^a-zA-Z0-9']+"));
+				Arrays.asList(query.trim().split("[^a-zA-Z0-9']+"));
 		logger.debug("author query:" + words.toString());
 		//build SearchParams for author auto complete query
 		SearchParams params = buildACQuery(SearchConstants.REF_AUTHOR, words, false);
@@ -235,13 +233,13 @@ public class AutoCompleteController {
 	 */
 	@RequestMapping("/emapa")
 	public @ResponseBody SearchResults<EmapaACResult> emapaAutoCompleteRequest(
-		HttpServletResponse response,
-		@RequestParam("query") String query)
-	{
+			HttpServletResponse response,
+			@RequestParam("query") String query)
+			{
 		logger.debug("autoCompleteController.emapaAutoCompleteRequest");
 		AjaxUtils.prepareAjaxHeaders(response);
 		return performEmapaAutoComplete(query);
-	}
+			}
 
 	/*
 	 * This method handles requests for the EMAPA strucure autocomplete
@@ -249,13 +247,13 @@ public class AutoCompleteController {
 	 */
 	@RequestMapping("/gxdEmapa")
 	public @ResponseBody SearchResults<EmapaACResult> gxdEmapaAutoCompleteRequest(
-		HttpServletResponse response,
-		@RequestParam("query") String query)
-	{
+			HttpServletResponse response,
+			@RequestParam("query") String query)
+			{
 		logger.debug("autoCompleteController.gxdEmapaAutoCompleteRequest");
 		AjaxUtils.prepareAjaxHeaders(response);
 		return performGxdEmapaAutoComplete(query);
-	}
+			}
 
 	/*
 	 * Duplicate of the above url for cre compatibility
@@ -282,77 +280,77 @@ public class AutoCompleteController {
 	 * 	it likely won't do what is expected in every case. -kstone
 	 */
 	private SearchResults<EmapaACResult> floatBeginsMatches (String query,
-	    SearchResults<EmapaACResult> searchResults) {
-	    if (query == null) { return searchResults; }
+			SearchResults<EmapaACResult> searchResults) {
+		if (query == null) { return searchResults; }
 
-	    ArrayList<EmapaACResult> begins = new ArrayList<EmapaACResult>();
-	    ArrayList<EmapaACResult> other = new ArrayList<EmapaACResult>();
-	    String queryLower = query.toLowerCase();
+		ArrayList<EmapaACResult> begins = new ArrayList<EmapaACResult>();
+		ArrayList<EmapaACResult> other = new ArrayList<EmapaACResult>();
+		String queryLower = query.toLowerCase();
 
 		for (EmapaACResult result : searchResults.getResultObjects()) {
 			if (result.getStructure().toLowerCase().startsWith(queryLower)) {
-			    begins.add(result);
+				begins.add(result);
 			} else {
 				other.add(result);
 			}
 		}
 
-	    begins.addAll(other);
-	    searchResults.setResultObjects(begins);
-	    return searchResults;
+		begins.addAll(other);
+		searchResults.setResultObjects(begins);
+		return searchResults;
 	}
 
 	/* wrapper for CRE EMAPA autocomplete search
 	 */
 	private SearchResults<EmapaACResult> performEmapaAutoComplete(String query)
 	{
-	    // split input on any non-alpha characters
-	    Collection<String> words =
-		QueryParser.parseAutoCompleteSearch(query);
+		// split input on any non-alpha characters
+		Collection<String> words =
+				QueryParser.parseAutoCompleteSearch(query);
 
-	    logger.debug("structure query:" + words.toString());
+		logger.debug("structure query:" + words.toString());
 
-	    // if no query string, return an empty result set
+		// if no query string, return an empty result set
 
-	    if(words.size() == 0) {
+		if(words.size() == 0) {
 			SearchResults<EmapaACResult> sr = new SearchResults<EmapaACResult>();
 			sr.setTotalCount(0);
 			return sr;
-	    }
+		}
 
-	    // otherwise, do the search and request the top 200 matches
-	    SearchParams params = new SearchParams();
-	    params.setPageSize(200);
+		// otherwise, do the search and request the top 200 matches
+		SearchParams params = new SearchParams();
+		params.setPageSize(200);
 
-	    Filter f = new Filter();
-	    List<Filter> fList = new ArrayList<Filter>();
+		Filter f = new Filter();
+		List<Filter> fList = new ArrayList<Filter>();
 
-	    // build an AND-ed list of tokens for BEGINS searching in fList
+		// build an AND-ed list of tokens for BEGINS searching in fList
 
-	    for (String q : words) {
+		for (String q : words) {
 			Filter wordFilter = new Filter(SearchConstants.STRUCTURE, q,
-			    Filter.Operator.OP_GREEDY_BEGINS);
+					Filter.Operator.OP_GREEDY_BEGINS);
 			fList.add(wordFilter);
-	    }
+		}
 
-	    f.setNestedFilters(fList,Filter.JoinClause.FC_AND);
+		f.setNestedFilters(fList,Filter.JoinClause.FC_AND);
 
-	    params.setFilter(f);
+		params.setFilter(f);
 
-	    // default sorts are "score","autocomplete text"
-	    List<Sort> sorts = new ArrayList<Sort>();
+		// default sorts are "score","autocomplete text"
+		List<Sort> sorts = new ArrayList<Sort>();
 
-	    sorts.add(new Sort("score", true));
-	    sorts.add(new Sort(IndexConstants.STRUCTUREAC_BY_SYNONYM, false));
-	    params.setSorts(sorts);
+		sorts.add(new Sort("score", true));
+		sorts.add(new Sort(IndexConstants.STRUCTUREAC_BY_SYNONYM, false));
+		params.setSorts(sorts);
 
-	    SearchResults<EmapaACResult> results = autocompleteFinder.getEmapaAutoComplete(params);
+		SearchResults<EmapaACResult> results = autocompleteFinder.getEmapaAutoComplete(params);
 
-	    // need a unique list of terms.
-	    results.uniqueifyResultObjects();
+		// need a unique list of terms.
+		results.uniqueifyResultObjects();
 
-	    results = floatBeginsMatches(query, results);
-	    return results;
+		results = floatBeginsMatches(query, results);
+		return results;
 	}
 
 	/* Wrapper for GXD EMAPA autocomplete search.
@@ -360,47 +358,47 @@ public class AutoCompleteController {
 	 */
 	private SearchResults<EmapaACResult> performGxdEmapaAutoComplete(String query)
 	{
-	    // split input on any non-alpha characters
-	    Collection<String> words =
-		QueryParser.parseAutoCompleteSearch(query);
+		// split input on any non-alpha characters
+		Collection<String> words =
+				QueryParser.parseAutoCompleteSearch(query);
 
-	    logger.debug("structure query:" + words.toString());
+		logger.debug("structure query:" + words.toString());
 
-	    // if no query string, return an empty result set
-	    if(words.size() == 0) {
+		// if no query string, return an empty result set
+		if(words.size() == 0) {
 			SearchResults<EmapaACResult> sr = new SearchResults<EmapaACResult>();
 			sr.setTotalCount(0);
 			return sr;
-	    }
+		}
 
-	    // otherwise, do the search and request the top 200 matches
-	    SearchParams params = new SearchParams();
-	    params.setPageSize(200);
+		// otherwise, do the search and request the top 200 matches
+		SearchParams params = new SearchParams();
+		params.setPageSize(200);
 
-	    Filter f = new Filter();
-	    List<Filter> fList = new ArrayList<Filter>();
+		Filter f = new Filter();
+		List<Filter> fList = new ArrayList<Filter>();
 
-	    // build an AND-ed list of tokens for BEGINS searching in fList
-	    for (String q : words) {
+		// build an AND-ed list of tokens for BEGINS searching in fList
+		for (String q : words) {
 			Filter wordFilter = new Filter(SearchConstants.STRUCTURE, q,
-			    Filter.Operator.OP_GREEDY_BEGINS);
+					Filter.Operator.OP_GREEDY_BEGINS);
 			fList.add(wordFilter);
-	    }
-	    f.setNestedFilters(fList,Filter.JoinClause.FC_AND);
-	    params.setFilter(f);
+		}
+		f.setNestedFilters(fList,Filter.JoinClause.FC_AND);
+		params.setFilter(f);
 
-	    // default sorts are "score","autocomplete text"
-	    List<Sort> sorts = new ArrayList<Sort>();
-	    sorts.add(new Sort("score", true));
-	    sorts.add(new Sort(IndexConstants.STRUCTUREAC_BY_SYNONYM, false));
-	    params.setSorts(sorts);
+		// default sorts are "score","autocomplete text"
+		List<Sort> sorts = new ArrayList<Sort>();
+		sorts.add(new Sort("score", true));
+		sorts.add(new Sort(IndexConstants.STRUCTUREAC_BY_SYNONYM, false));
+		params.setSorts(sorts);
 
-	    SearchResults<EmapaACResult> results = autocompleteFinder.getGxdEmapaAutoComplete(params);
-	    // need a unique list of terms.
-	    results.uniqueifyResultObjects();
+		SearchResults<EmapaACResult> results = autocompleteFinder.getGxdEmapaAutoComplete(params);
+		// need a unique list of terms.
+		results.uniqueifyResultObjects();
 
-	    results = floatBeginsMatches(query, results);
-	    return results;
+		results = floatBeginsMatches(query, results);
+		return results;
 	}
 
 	/*
@@ -437,9 +435,9 @@ public class AutoCompleteController {
 
 		Filter noHuman = new Filter(SearchConstants.VOC_VOCAB, "Human Phenotype Ontology");
 		noHuman.setNegate(true);
-		
+
 		fList.add(noHuman);
-		
+
 		Filter f = Filter.and(fList);
 
 		params.setFilter(f);
@@ -456,14 +454,14 @@ public class AutoCompleteController {
 		return autocompleteFinder.getVocabAutoComplete(params);
 
 	}
-	
+
 	/*
 	 * This method is used in the HMDC for pheno/disease auto complete
 	 */
-	
+
 	@RequestMapping("/hmdcTermAC")
 	public @ResponseBody List<String> hmdcAutoComplete(@RequestParam("query") String query, @RequestParam("pageSize") String pageSize) {
-		
+
 		List<String> words = QueryParser.parseAutoCompleteHMDCSearch(query);
 		logger.debug("vocab term query:" + words.toString());
 		int returnAmount = 25;
@@ -472,10 +470,10 @@ public class AutoCompleteController {
 		} catch (Exception e) {
 			returnAmount = 25;
 		}
-		
+
 		SearchParams params = new SearchParams();
 		params.setIncludeMetaHighlight(true);
-		
+
 		if(query.length() < 6) {
 			params.setPageSize((int)(Math.pow(10, query.length())));
 		} else {
@@ -490,30 +488,35 @@ public class AutoCompleteController {
 		vocabList.add(new Filter(SearchConstants.VOC_VOCAB, "OMIM"));
 		vocabList.add(new Filter(SearchConstants.VOC_VOCAB, "Human Phenotype Ontology"));
 		vocabList.add(new Filter(SearchConstants.VOC_VOCAB, "Mammalian Phenotype"));
-		
+
 		filterList.add(Filter.or(vocabList));
 
 		params.setFilter(Filter.and(filterList));
-		
+
+		List<Sort> sorts = new ArrayList<Sort>();
+		sorts.add(new Sort("score", true));
+		params.setSorts(sorts);
+
 		SearchResults<VocabACResult> results = autocompleteFinder.getVocabAutoComplete(params);
-		
-		TreeMap<String, String> sortedMap = new TreeMap<String, String>(new SmartAlphaComparator<String>());
-		
+
+
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+
 		for(VocabACResult vacr: results.getResultObjects()) {
 			for(String term: vacr.getDerivedTerms()) {
-				sortedMap.put(term, term);
+				map.put(term, term);
 			}
 		}
-		if(sortedMap.size() > returnAmount) {
-			return new ArrayList<String>(sortedMap.values()).subList(0, returnAmount);
+		if(map.size() > returnAmount) {
+			return new ArrayList<String>(map.values()).subList(0, returnAmount);
 		} else {
-			return new ArrayList<String>(sortedMap.values());
+			return new ArrayList<String>(map.values());
 		}
 
 	}
-	
-	
-	
+
+
+
 
 	/*
 	 * precompiles the regex pattern matchers and then builds the html formatted responses
@@ -531,7 +534,7 @@ public class AutoCompleteController {
 		}
 
 		// build the html formatted summary objects
-        for (VocabACResult result : results.getResultObjects()) {
+		for (VocabACResult result : results.getResultObjects()) {
 			if (result != null){
 				VocabACSummaryRow row = new VocabACSummaryRow(result,ps,formatType);
 				summaryRows.add(row);
@@ -554,7 +557,7 @@ public class AutoCompleteController {
 	@RequestMapping("/emapaID/resolve")
 	public @ResponseBody List<String> resolveEmapaIdList(
 			@RequestParam("ids") String ids)
-	{
+			{
 		List<String> returnValues = new ArrayList<String>();
 		List<String> idTokens = QueryParser.tokeniseOnWhitespaceAndComma(ids);
 		SearchResults<EmapaACResult> results = resolveEmapaIds(idTokens);
@@ -579,7 +582,7 @@ public class AutoCompleteController {
 		}
 
 		return returnValues;
-	}
+			}
 
 	private SearchResults<EmapaACResult> resolveEmapaIds(List<String> idTokens)
 	{

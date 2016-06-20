@@ -1,7 +1,7 @@
 (function() {
 	'use strict';
 	angular.module('hmdc.services')
-		.factory('Search', SearchService);
+		.service('Search', SearchService);
 
 	function SearchService($rootScope, $http) {
 		var urlBase = '/diseasePortal';

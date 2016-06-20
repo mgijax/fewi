@@ -14,13 +14,15 @@
 		<script src="app/components/bower_components/angular-route/angular-route.js"></script>
 		<script src="app/components/bower_components/api-check/dist/api-check.js"></script>
 		<script src="app/components/bower_components/angular-formly/dist/formly.js"></script>
+		<script src="app/components/bower_components/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js"></script>
+		<script src="app/components/bower_components/angular-bootstrap/ui-bootstrap.js"></script>
 		<script src="app/components/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+		<script src="app/components/bower_components/lodash/lodash.js"></script>
 		<script src="app/components/bower_components/angular-resource/angular-resource.js"></script>
 		<script src="app/components/bower_components/angular-sanitize/angular-sanitize.js"></script>
 		<script src="app/components/bower_components/angular-smart-table/dist/smart-table.min.js"></script>
 		<script src="app/components/bower_components/ng-dialog/js/ngDialog.min.js"></script>
-		<script src="app/components/bower_components/ng-cells/dist/0.4.0/ng-cells.min.js"></script>
-		<script src="app/components/bower_components/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js"></script>
+		<script src="app/components/bower_components/ng-cells/dist/0.4.0/ng-cells.js"></script>
 		<script src="app/app.module.js"></script>
 		<script src="app/components/forms/formConfig.js"></script>
 		<script src="app/components/forms/fieldWrappers/basicFieldWrappers.js"></script>
@@ -30,11 +32,15 @@
 		<script src="app/components/search/SearchService.js"></script>
 		<script src="app/components/search/AutoCompleteService.js"></script>
 		<script src="app/components/search/NaturalSortService.js"></script>
+		<script src="app/components/search/GridController.js"></script>
+		<script src="app/components/search/GeneController.js"></script>
 		<script src="app/components/search/SearchController.js"></script>
+		<script src="app/components/search/DiseaseController.js"></script>
 		<script src="app/components/search/SearchHandleSubscriptFilter.js"></script>
 		<script src="app/components/search/SearchJoinByFilter.js"></script>
 		<script src="app/components/search/SearchResizeDirective.js"></script>
 		<script src="app/components/search/SearchSortFilter.js"></script>
+		<script src="app/components/search/OrderHashByFilter.js"></script>
 		<script src="app/components/search/SearchStResetDirective.js"></script>
 		<script src="app/components/style/StyleController.js"></script>
 		<meta http-equiv="X-UA-Compatible" content="chrome=1">
@@ -54,18 +60,18 @@
 
 					<div class="row hideRow">
 						<div class="col-xs-12">
-							<span class="buttonStyle" ng-hide="vm.mustHide" ng-click="vm.mustHide = !vm.mustHide">Click to hide search</span>
-							<span class="buttonStyle" ng-show="vm.mustHide" ng-click="vm.mustHide = !vm.mustHide">Click to modify search</span>
+							<span class="buttonStyle" ng-hide="hideQueryForm" ng-click="hideQueryForm = !hideQueryForm">Click to hide search</span>
+							<span class="buttonStyle" ng-show="hideQueryForm" ng-click="hideQueryForm = !hideQueryForm">Click to modify search</span>
 						</div>
 					</div>
 
-					<div class="row searchRow" ng-hide="vm.mustHide">
+					<div class="row searchRow" ng-hide="hideQueryForm">
 						<div class="col-xs-12">
 							<h3>Search by:</h3>
 						</div>
 					</div>
 
-					<div class="row" ng-hide="vm.mustHide">
+					<div class="row" ng-hide="hideQueryForm">
 						<div class="col-xs-12">
 							<form ng-submit="vm.onSubmit()" novalidate>
 								<formly-form
@@ -79,7 +85,7 @@
 					</div>
 
 					<div ng-if="vm.model.queries.length > 1">
-						<div class="row" ng-hide="vm.mustHide">
+						<div class="row" ng-hide="hideQueryForm">
 							<div class="col-xs-12">
 								<div class="operator-prompt">
 									<div class="operator-select">
@@ -91,7 +97,7 @@
 						</div>
 					</div>
 
-					<div class="row" ng-hide="vm.mustHide">
+					<div class="row" ng-hide="hideQueryForm">
 						<div class="col-xs-12">
 							<div class="button-row pull-left">
 								<button
@@ -110,10 +116,46 @@
 					</div>
 				</div>
 			</div>
-			<div class="container-fluid searchViewBox" ng-show="vm.results.diseaseResults" resize>
+			<div class="container-fluid searchViewBox" ng-show="displayTabs">
+
+				<div class="btn-group pad30left" uib-dropdown>
+					<button type="button" uib-dropdown-toggle>
+						Pheno Type Filter
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu phenotypefiltermenu">
+						<li ng-repeat="(term, item) in selectedPhenoTypes | orderHashBy:'term'">
+							<label><input type="checkbox" ng-model="item.selected" ng-click="filterChanged()">{{ item.term }}</label>
+						</li>
+					</ul>
+				</div>
+				<div class="btn-group pad30left" uib-dropdown>
+					<button type="button" uib-dropdown-toggle>
+						Disease Filter
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu diseasefiltermenu">
+						<li ng-repeat="(term, item) in selectedDiseases | orderHashBy:'term'">
+							<label><input type="checkbox" ng-model="item.selected" ng-click="filterChanged()">{{ item.term }}</label>
+						</li>
+					</ul>
+				</div>
+
+				<div class="btn-group pad30left" uib-dropdown>
+					<button type="button" uib-dropdown-toggle>
+						Gene Filter
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu genefiltermenu">
+						<li ng-repeat="(term, item) in selectedGenes">
+							<label><input type="checkbox" ng-model="item.selected" ng-click="filterChanged()">{{ item.term }}</label>
+						</li>
+					</ul>
+				</div>
+				<br><br>
 				<uib-tabset>
-					<uib-tab ng-repeat="(key, value) in vm.tabs" heading="{{ value.count != 0 ? value.heading + ' (' + value.count + ')' : value.heading }}" active="value.active">
-						<div ng-include src="value.template"></div>
+					<uib-tab ng-repeat="tab in vm.tabs" heading="{{ tab.count != 0 ? tab.heading + ' (' + tab.count + ')' : tab.heading }}" active="tab.active">
+						<div ng-include src="tab.template"></div>
 					</uib-tab>
 				</uib-tabset>
 			</div>

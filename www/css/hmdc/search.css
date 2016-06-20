@@ -276,3 +276,14 @@ mark {
 	border-right: 1px solid #759bc1;
 	padding: 0px 20px 0px 20px;
 }
+
+.phenotypefiltermenu {
+	min-width: 220px;
+}
+
+.diseasefiltermenu {
+	min-width: 400px;
+}
+.pad30left {
+    padding-left: 30px;
+}

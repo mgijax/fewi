@@ -1,36 +1,38 @@
-Export: <a class="btn" href="/diseasePortal/marker/report.txt?phenotypes=105830&amp;numDCol=100"><img src="http://www.informatics.jax.org/webshare/images/text.png" width="10" height="10">Text File</a> 
+<div ng-controller="DiseaseController">
+	Export: <a class="btn" href="/diseasePortal/marker/report.txt?phenotypes=105830&amp;numDCol=100"><img src="http://www.informatics.jax.org/webshare/images/text.png" width="10" height="10">Text File</a> 
 
-<table class="table table-bordered table-striped" st-reset="vm.resetDiseaseTable" st-table="displayedCollection" st-set-sort="sortFilter" st-safe-src="vm.results.diseaseResults" ng-show="vm.results.diseaseResults.length > 0">
-	<thead>
-		<tr>
-			<th st-ratio="35" st-sort="term" st-skip-natural="true" st-sort-default="true" class="sortable">Disease <i st-sort="term"></i></th>
-			<th st-ratio="5" st-sort="primaryId" st-skip-natural="true" class="sortable">OMIM ID <i st-sort="primaryId"></i></th>
-			<th st-ratio="10" st-sort="diseaseModelCount" st-skip-natural="true" class="sortable">Mouse Models <i st-sort="diseaseModelCount"></i></th>
-			<th st-ratio="30" st-sort="diseaseMouseMarkers" st-skip-natural="true" class="sortable">Associated Genes from Mouse Models <i st-sort="diseaseMouseMarkers"></i></th>
-			<th st-ratio="10" st-sort="diseaseHumanMarkers" st-skip-natural="true" class="sortable">Associated Human Genes (<a href="" ng-click="openDiseaseSource();">Source</a>) <i st-sort="diseaseHumanMarkers"></i></th>
-			<th st-ratio="10" st-sort="diseaseRefCount" st-skip-natural="true" class="sortable">References using <br>Mouse Models <i st-sort="diseaseRefCount"></i></th>
-		</tr>
-	</thead>
-	
-	<tbody>
-		<tr ng-repeat="row in displayedCollection">
-			<td><a target="_blank" href="/disease/{{ row.primaryId }}">{{ row.term }}</a></td>
-			<td><a target="_blank" href="/disease/{{ row.primaryId }}">{{ row.primaryId }}</a></td>
-			<td><a ng-if="row.diseaseModelCount > 0" target="_blank" href="/disease/models/{{ row.primaryId }}">{{ row.diseaseModelCount }}</a></td>
-			<td><div ng-bind-html="row.diseaseMouseMarkers | joinBy:', ' | handleSubscript "></div></td>
-			<td><div ng-bind-html="row.diseaseHumanMarkers | joinBy:', ' | handleSubscript "></div></td>
-			<td><a ng-if="row.diseaseRefCount > 0" target="_blank" href="/reference/disease/{{ row.primaryId }}?typeFilter=Literature">{{ row.diseaseRefCount }}</a></td>
-		</tr>
-	</tbody>
-	<tfoot>
-		<tr>
-			<td colspan="6" class="text-center">
-				<div st-items-by-page="250" st-pagination=""></div>
-			</td>
-		</tr>
-	</tfoot>
-</table>
+	<table class="table table-bordered table-striped" st-reset="vm.resetDiseaseTable" st-table="displayedCollection" st-set-sort="sortFilter" st-safe-src="vm.results" ng-show="vm.results.length > 0">
+		<thead>
+			<tr>
+				<th st-ratio="35" st-sort="term" st-skip-natural="true" st-sort-default="true" class="sortable">Disease <i st-sort="term"></i></th>
+				<th st-ratio="5" st-sort="primaryId" st-skip-natural="true" class="sortable">OMIM ID <i st-sort="primaryId"></i></th>
+				<th st-ratio="10" st-sort="diseaseModelCount" st-skip-natural="true" class="sortable">Mouse Models <i st-sort="diseaseModelCount"></i></th>
+				<th st-ratio="30" st-sort="diseaseMouseMarkers" st-skip-natural="true" class="sortable">Associated Genes from Mouse Models <i st-sort="diseaseMouseMarkers"></i></th>
+				<th st-ratio="10" st-sort="diseaseHumanMarkers" st-skip-natural="true" class="sortable">Associated Human Genes (<a href="" ng-click="openDiseaseSource();">Source</a>) <i st-sort="diseaseHumanMarkers"></i></th>
+				<th st-ratio="10" st-sort="diseaseRefCount" st-skip-natural="true" class="sortable">References using <br>Mouse Models <i st-sort="diseaseRefCount"></i></th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			<tr ng-repeat="row in displayedCollection">
+				<td><a target="_blank" href="/disease/{{ row.primaryId }}">{{ row.term }}</a></td>
+				<td><a target="_blank" href="/disease/{{ row.primaryId }}">{{ row.primaryId }}</a></td>
+				<td><a ng-if="row.diseaseModelCount > 0" target="_blank" href="/disease/models/{{ row.primaryId }}">{{ row.diseaseModelCount }}</a></td>
+				<td><div ng-bind-html="row.diseaseMouseMarkers | joinBy:', ' | handleSubscript "></div></td>
+				<td><div ng-bind-html="row.diseaseHumanMarkers | joinBy:', ' | handleSubscript "></div></td>
+				<td><a ng-if="row.diseaseRefCount > 0" target="_blank" href="/reference/disease/{{ row.primaryId }}?typeFilter=Literature">{{ row.diseaseRefCount }}</a></td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="6" class="text-center">
+					<div st-items-by-page="250" st-pagination=""></div>
+				</td>
+			</tr>
+		</tfoot>
+	</table>
 
-<script type="text/ng-template" id="DiseaseSource">
-	Disease associations for human genes are from the NCBI mim2gene_medgen file and include annotations from OMIM, NCBI curation, Gene Reviews, and Gene Tests.
-</script>
+	<script type="text/ng-template" id="DiseaseSource">
+		Disease associations for human genes are from the NCBI mim2gene_medgen file and include annotations from OMIM, NCBI curation, Gene Reviews, and Gene Tests.
+	</script>
+</div>
