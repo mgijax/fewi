@@ -13,13 +13,13 @@
 		$rootScope.selectedDiseasesModel = [];
 		$rootScope.selectedGenesModel = [];
 
-		$rootScope.selectPhenoTypesCustemText = { buttonDefaultText: 'Filter by Phenotypes' };
-		$rootScope.selectDiseasesCustemText = { buttonDefaultText: 'Filter by Diseases' };
-		$rootScope.selectGenesCustemText = { buttonDefaultText: 'Filter by Genes' };
+		$rootScope.selectPhenoTypesCustemText = { buttonDefaultText: 'Filter by Phenotypes', dynamicButtonTextSuffix: 'phenotype(s) checked' };
+		$rootScope.selectDiseasesCustemText = { buttonDefaultText: 'Filter by Diseases', dynamicButtonTextSuffix: 'disease(s) checked' };
+		$rootScope.selectGenesCustemText = { buttonDefaultText: 'Filter by Genes', dynamicButtonTextSuffix: 'gene(s) checked' };
 
-		$rootScope.selectPhenoTypesSettings = { scrollableHeight: '500px', scrollable: true };
-		$rootScope.selectDiseasesSettings = { scrollableHeight: '500px', scrollable: true, enableSearch: true };
-		$rootScope.selectGenesSettings = { scrollableHeight: '500px', scrollable: true, enableSearch: true };
+		$rootScope.selectPhenoTypesSettings = { buttonClasses: "", scrollableHeight: '500px', scrollable: true };
+		$rootScope.selectDiseasesSettings = { buttonClasses: "", scrollableHeight: '500px', scrollable: true, enableSearch: true };
+		$rootScope.selectGenesSettings = { buttonClasses: "", scrollableHeight: '500px', scrollable: true, enableSearch: true };
 
 		vm.autoComplete = [];
 
