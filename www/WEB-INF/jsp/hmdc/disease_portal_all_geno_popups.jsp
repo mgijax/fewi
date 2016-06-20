@@ -5,11 +5,19 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 
 <%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
+<fewi:simpleseo
+   title="Page title, Sue?"
+   description="Page description TBD"
+   keywords="Keywords TBD, phenotypes, genotypes, genetic background, MP, Mammalian Phenotype, mouse, mice, murine, Mus"
+/>
+
 <%@ include file="/WEB-INF/jsp/google_analytics_pageview.jsp" %>
 
 <%@ include file="/WEB-INF/jsp/phenotype_table_geno_popup_imports.jsp" %>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
+
+<fewi:pagetitle title="Page title, Sue?" userdoc="ALLELE_detail_pheno_summary_help.shtml#see_annot" />
 
 <c:forEach var="genotype" items="${genoCluster.genotypes}" varStatus="genoStatus">
 
@@ -28,56 +36,9 @@
 	<%@ include file="../phenotype_table_geno_popup_header.jsp" %>
 
 	<!-- Header -->
-<!--
-	<div class='genoPopupHeader'>
-<table STYLE="" CELLPADDING="0" CELLSPACING="0">
-
-    <TR STYLE="">
-
-      <TD >
-        <a href="${configBean.HOMEPAGES_URL}" style='margin-left:2px; margin-right:10px;'><img src="http://www.informatics.jax.org/webshare/images/mgi_logo.gif" 
-          alt="Mouse Genome Informatics" border="0" width="100"></a>  
-      </TD>
-
-      <TD class='genotypeType'>
-      </TD>
-
-      <TD>
-        &nbsp;&nbsp;&nbsp;
-      </TD>
-
-      <TD class='comboAndStrain'>
-        <span class="genotypeCombo">
-		<fewi:genotype newWindow="${true}" value="${genotype}" />
-        </span>
-        <br/>
-        <fewi:super value="${genotype.backgroundStrain}" />
-        <c:if test="${genotype.isConditional==1}"><br/><br/>Conditional</c:if>
-        
-        
-        <c:if test="${not empty genotype.cellLines}">
-          <br/>
-          <br/>
-          <span class="cellLines">
-          cell line(s): <fewi:super value="${genotype.cellLines}" />
-          </span>
-        </c:if>  
-      </TD>
-
-      <TD>
-        <%@ include file="/WEB-INF/jsp/phenotype_table_geno_popup_legend.jsp" %>
-      </TD>
-      <TD>
-        <%@ include file="/WEB-INF/jsp/phenotype_table_geno_popup_source.jsp" %>
-      </TD>
-    </TR>
-</table>
-	</div>
--->	
 	<%@ include file="/WEB-INF/jsp/phenotype_table_geno_popup_content.jsp" %>
 	<div style="clear: both;"></div>
 	</div>
     <br/>
 </c:forEach>
-<!--<fooscript type="text/javascript" src="${configBean.WEBSHARE_URL}js/mgi_template01.js"></fooscript>-->
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
