@@ -28,6 +28,7 @@ import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.HmdcAnnotationGroup;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 import org.jax.mgi.shr.jsonmodel.GridMarker;
@@ -41,6 +42,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import mgi.frontend.datamodel.Genotype;
 import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 
 @Controller
@@ -196,6 +198,12 @@ public class DiseasePortalController {
 		return getPopup(request, session, false);
 	}
 
+	/* strip the markup out of the allele combination and leave just the allele symbols
+	 */
+	private String stripAlleleMarkup(String combination) {
+		return combination.replaceAll("\\\\Allele.[^|]*.([^|]*).[^)]*.", "$1");
+	}
+	
     @RequestMapping(value="genoCluster/view/{genoClusterKey:.+}", method = RequestMethod.GET)
     public ModelAndView genoClusterView(@PathVariable("genoClusterKey") String genoClusterKey)
     {
@@ -205,9 +213,25 @@ public class DiseasePortalController {
             return errorMav("No GenoCluster Found");
         }
         HdpGenoCluster genoCluster = genoClusters.get(0);
+        String plainPairs = stripAlleleMarkup(genoCluster.getGenotype().getCombination1()).replaceAll("\n", " ");
+        String superscriptPairs = FormatHelper.superscript(plainPairs);
+        
+        List<String> strainList = new ArrayList<String>();
+        for (Genotype g : genoCluster.getGenotypes()) {
+        	strainList.add(g.getBackgroundStrain());
+        }
+        String strains = null; 
+        if (strainList.size() > 1) {
+        	strains = "(" + join(") or (", strainList) + ")";
+        } else {
+        	strains = strainList.get(0);
+        }
 
         ModelAndView mav = new ModelAndView("hmdc/disease_portal_all_geno_popups");
         mav.addObject("genoCluster",genoCluster);
+        mav.addObject("plainPairs", plainPairs);
+        mav.addObject("superscriptPairs", superscriptPairs);
+        mav.addObject("strains", strains);
     	return mav;
     }
 

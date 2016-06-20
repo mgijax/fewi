@@ -5,10 +5,11 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 
 <%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
+
 <fewi:simpleseo
-   title="Page title, Sue?"
-   description="Page description TBD"
-   keywords="Keywords TBD, phenotypes, genotypes, genetic background, MP, Mammalian Phenotype, mouse, mice, murine, Mus"
+   title="Phenotypes associated with ${plainPairs}"
+   description="View ${plainPairs} either: ${strains}: phenotypes, images, diseases, and references."
+   keywords="${plainPairs}, either ${strains}, mouse, mice, murine, Mus"
 />
 
 <%@ include file="/WEB-INF/jsp/google_analytics_pageview.jsp" %>
@@ -17,7 +18,11 @@
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
-<fewi:pagetitle title="Page title, Sue?" userdoc="ALLELE_detail_pheno_summary_help.shtml#see_annot" />
+<div id="titleBarWrapper" style="max-width: none;">
+   <div name="centeredTitle">
+      <span class="titleBarMainTitle">Phenotypes associated with ${superscriptPairs}</span>
+   </div>
+</div>
 	
 <style>
 .allBorders { border: 1px solid black }
