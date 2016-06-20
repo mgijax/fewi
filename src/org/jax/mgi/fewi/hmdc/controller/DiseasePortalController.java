@@ -34,11 +34,14 @@ import org.jax.mgi.shr.jsonmodel.GridMarker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 
 @Controller
 @RequestMapping(value="/diseasePortal")
@@ -192,6 +195,21 @@ public class DiseasePortalController {
 	public ModelAndView getDiseasePopup(HttpServletRequest request, HttpSession session) {
 		return getPopup(request, session, false);
 	}
+
+    @RequestMapping(value="genoCluster/view/{genoClusterKey:.+}", method = RequestMethod.GET)
+    public ModelAndView genoClusterView(@PathVariable("genoClusterKey") String genoClusterKey)
+    {
+    	List<HdpGenoCluster> genoClusters = hdpFinder.getGenoClusterByKey(genoClusterKey);
+    	// there can be only one...
+        if (genoClusters.size() < 1) { // none found
+            return errorMav("No GenoCluster Found");
+        }
+        HdpGenoCluster genoCluster = genoClusters.get(0);
+
+        ModelAndView mav = new ModelAndView("hmdc/disease_portal_all_geno_popups");
+        mav.addObject("genoCluster",genoCluster);
+    	return mav;
+    }
 
 	/* join the given list of terms into a single string, separated by the given delimeter
 	 */
