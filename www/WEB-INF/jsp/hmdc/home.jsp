@@ -81,28 +81,22 @@
 			</div>
 
 			<div class="container-fluid searchViewBox" ng-show="displayTabs">
-				<div class="btn-group pad30left" uib-dropdown>
-					<button type="button" uib-dropdown-toggle>
-						Pheno Type Filter
-						<span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu phenotypefiltermenu">
-						<li ng-repeat="(term, item) in selectedPhenoTypes | orderHashBy:'term'">
-							<label><input type="checkbox" ng-model="item.selected" ng-click="filterChanged()">{{ item.term }}</label>
-						</li>
-					</ul>
-				</div>
-				<div class="btn-group pad30left" uib-dropdown>
-					<button type="button" uib-dropdown-toggle>
-						Disease Filter
-						<span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu diseasefiltermenu">
-						<li ng-repeat="(term, item) in selectedDiseases | orderHashBy:'term'">
-							<label><input type="checkbox" ng-model="item.selected" ng-click="filterChanged()">{{ item.term }}</label>
-						</li>
-					</ul>
-				</div>
+
+				<div class="btn-group pad30left"
+					ng-dropdown-multiselect=""
+					options="selectedPhenoTypes"
+					selected-model="selectedPhenoTypesModel"
+					translation-texts="selectPhenoTypesCustemText"
+					extra-settings="selectPhenoTypesSettings"
+					events="handleEvents"></div>
+
+				<div class="btn-group pad30left"
+					ng-dropdown-multiselect=""
+					options="selectedDiseases"
+					selected-model="selectedDiseasesModel"
+					translation-texts="selectDiseasesCustemText"
+					extra-settings="selectDiseasesSettings"
+					events="handleEvents"></div>
 
 				<div class="btn-group pad30left" uib-dropdown>
 					<button type="button" uib-dropdown-toggle>
@@ -116,7 +110,6 @@
 					</ul>
 				</div>
 				<br><br>
-
 				<uib-tabset>
 					<uib-tab ng-repeat="tab in vm.tabs" heading="{{ tab.count != 0 ? tab.heading + ' (' + tab.count + ')' : tab.heading }}" active="tab.active">
 						<div ng-include src="tab.template"></div>

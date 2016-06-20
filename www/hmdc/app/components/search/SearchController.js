@@ -9,6 +9,18 @@
 
 		$rootScope.hideQueryForm = false;
 
+		$rootScope.selectedPhenoTypesModel = [];
+		$rootScope.selectedDiseasesModel = [];
+		$rootScope.selectedGenesModel = [];
+
+		$rootScope.selectPhenoTypesCustemText = { buttonDefaultText: 'Filter by Phenotypes', dynamicButtonTextSuffix: 'phenotype(s) checked' };
+		$rootScope.selectDiseasesCustemText = { buttonDefaultText: 'Filter by Diseases', dynamicButtonTextSuffix: 'disease(s) checked' };
+		$rootScope.selectGenesCustemText = { buttonDefaultText: 'Filter by Genes', dynamicButtonTextSuffix: 'gene(s) checked' };
+
+		$rootScope.selectPhenoTypesSettings = { buttonClasses: "", scrollableHeight: '500px', scrollable: true };
+		$rootScope.selectDiseasesSettings = { buttonClasses: "", scrollableHeight: '500px', scrollable: true, enableSearch: true };
+		$rootScope.selectGenesSettings = { buttonClasses: "", scrollableHeight: '500px', scrollable: true, enableSearch: true };
+
 		vm.autoComplete = [];
 
 		$rootScope.displayTabs = false;
@@ -20,6 +32,13 @@
 					pageSize: amount
 				}
 			});
+		};
+
+		$rootScope.handleEvents = {
+			onItemSelect: function() { $rootScope.$emit("FilterChanged"); },
+			onItemDeselect: function() { $rootScope.$emit("FilterChanged"); },
+			onSelectAll: function() { $rootScope.$emit("FilterChanged"); },
+			onUnselectAll: function() { $rootScope.$emit("FilterChanged"); }
 		};
 
 		function onSubmit() {

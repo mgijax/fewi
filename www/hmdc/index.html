@@ -17,7 +17,8 @@
 		<script src="app/components/bower_components/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js"></script>
 		<script src="app/components/bower_components/angular-bootstrap/ui-bootstrap.js"></script>
 		<script src="app/components/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-		<script src="app/components/bower_components/lodash/lodash.js"></script>
+		<script src="app/components/bower_components/angularjs-dropdown-multiselect/dist/angularjs-dropdown-multiselect.min.js"></script>
+		<script src="app/components/bower_components/lodash/dist/lodash.min.js"></script>
 		<script src="app/components/bower_components/angular-resource/angular-resource.js"></script>
 		<script src="app/components/bower_components/angular-sanitize/angular-sanitize.js"></script>
 		<script src="app/components/bower_components/angular-smart-table/dist/smart-table.min.js"></script>
@@ -118,28 +119,21 @@
 			</div>
 			<div class="container-fluid searchViewBox" ng-show="displayTabs">
 
-				<div class="btn-group pad30left" uib-dropdown>
-					<button type="button" uib-dropdown-toggle>
-						Pheno Type Filter
-						<span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu phenotypefiltermenu">
-						<li ng-repeat="(term, item) in selectedPhenoTypes | orderHashBy:'term'">
-							<label><input type="checkbox" ng-model="item.selected" ng-click="filterChanged()">{{ item.term }}</label>
-						</li>
-					</ul>
-				</div>
-				<div class="btn-group pad30left" uib-dropdown>
-					<button type="button" uib-dropdown-toggle>
-						Disease Filter
-						<span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu diseasefiltermenu">
-						<li ng-repeat="(term, item) in selectedDiseases | orderHashBy:'term'">
-							<label><input type="checkbox" ng-model="item.selected" ng-click="filterChanged()">{{ item.term }}</label>
-						</li>
-					</ul>
-				</div>
+				<div class="btn-group pad30left"
+					ng-dropdown-multiselect=""
+					options="selectedPhenoTypes"
+					selected-model="selectedPhenoTypesModel"
+					translation-texts="selectPhenoTypesCustemText"
+					extra-settings="selectPhenoTypesSettings"
+					events="handleEvents"></div>
+
+				<div class="btn-group pad30left"
+					ng-dropdown-multiselect=""
+					options="selectedDiseases"
+					selected-model="selectedDiseasesModel"
+					translation-texts="selectDiseasesCustemText"
+					extra-settings="selectDiseasesSettings"
+					events="handleEvents"></div>
 
 				<div class="btn-group pad30left" uib-dropdown>
 					<button type="button" uib-dropdown-toggle>

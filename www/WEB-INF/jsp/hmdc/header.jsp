@@ -20,7 +20,8 @@
 		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/angular-bootstrap/ui-bootstrap.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/lodash/lodash.js"></script>
+		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/lodash/dist/lodash.js"></script>
+		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/angularjs-dropdown-multiselect/dist/angularjs-dropdown-multiselect.min.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/angular-resource/angular-resource.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/angular-sanitize/angular-sanitize.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/angular-smart-table/dist/smart-table.min.js"></script>
