@@ -17,14 +17,14 @@
           type="button"
           class="btn btn-danger btn-xs"
           ng-click="deleteItem(model[options.key], $index)">
-          <span class="glyphicon">Remove</span>
+          <span>Remove</span>
         </button>
         <button
           type="button"
           class="btn btn-success btn-xs"
           ng-if="$index + 1 === model[options.key].length"
           ng-click="model[options.key].push('')">
-          <span class="glyphicon">Add</span>
+          <span>Add</span>
         </button>
       </div>
     </div>
