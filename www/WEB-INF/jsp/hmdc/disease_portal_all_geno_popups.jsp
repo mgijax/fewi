@@ -4,9 +4,12 @@
 
 <%@ page trimDirectiveWhitespaces="true" %>
 
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 <%@ include file="/WEB-INF/jsp/google_analytics_pageview.jsp" %>
 
 <%@ include file="/WEB-INF/jsp/phenotype_table_geno_popup_imports.jsp" %>
+
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <c:forEach var="genotype" items="${genoCluster.genotypes}" varStatus="genoStatus">
 
@@ -19,8 +22,13 @@
 	<c:set var="hasDiseaseModels" value="${not empty genotype.diseases }"  scope="request"/>
 	<% Genotype genotype = (Genotype)request.getAttribute("genotype"); 
 	  NotesTagConverter ntc = new NotesTagConverter();
+	  StyleAlternator leftTdStyles = new StyleAlternator("detailCat1","detailCat2");
+	  StyleAlternator rightTdStyles = new StyleAlternator("detailData1","detailData2");
 	%>
+	<%@ include file="../phenotype_table_geno_popup_header.jsp" %>
+
 	<!-- Header -->
+<!--
 	<div class='genoPopupHeader'>
 <table STYLE="" CELLPADDING="0" CELLSPACING="0">
 
@@ -65,10 +73,11 @@
     </TR>
 </table>
 	</div>
-	
+-->	
 	<%@ include file="/WEB-INF/jsp/phenotype_table_geno_popup_content.jsp" %>
 	<div style="clear: both;"></div>
 	</div>
     <br/>
 </c:forEach>
-<script type="text/javascript" src="${configBean.WEBSHARE_URL}js/mgi_template01.js"></script>
+<!--<fooscript type="text/javascript" src="${configBean.WEBSHARE_URL}js/mgi_template01.js"></fooscript>-->
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
