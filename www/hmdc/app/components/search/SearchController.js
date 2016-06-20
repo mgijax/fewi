@@ -13,9 +13,13 @@
 		$rootScope.selectedDiseasesModel = [];
 		$rootScope.selectedGenesModel = [];
 
-		$rootScope.selectPhenoTypesCustemText = {buttonDefaultText: 'Filter by Phenotypes'};
-		$rootScope.selectDiseasesCustemText = {buttonDefaultText: 'Filter by Diseases'};
-		$rootScope.selectGenesCustemText = {buttonDefaultText: 'Filter by Genes'};
+		$rootScope.selectPhenoTypesCustemText = { buttonDefaultText: 'Filter by Phenotypes' };
+		$rootScope.selectDiseasesCustemText = { buttonDefaultText: 'Filter by Diseases' };
+		$rootScope.selectGenesCustemText = { buttonDefaultText: 'Filter by Genes' };
+
+		$rootScope.selectPhenoTypesSettings = { scrollableHeight: '500px', scrollable: true };
+		$rootScope.selectDiseasesSettings = { scrollableHeight: '500px', scrollable: true, enableSearch: true };
+		$rootScope.selectGenesSettings = { scrollableHeight: '500px', scrollable: true, enableSearch: true };
 
 		vm.autoComplete = [];
 

@@ -119,9 +119,21 @@
 			</div>
 			<div class="container-fluid searchViewBox" ng-show="displayTabs">
 
-				<div class="btn-group pad30left" ng-dropdown-multiselect="" options="selectedPhenoTypes" selected-model="selectedPhenoTypesModel" translation-texts="selectPhenoTypesCustemText" events="handleEvents"></div>
+				<div class="btn-group pad30left"
+					ng-dropdown-multiselect=""
+					options="selectedPhenoTypes"
+					selected-model="selectedPhenoTypesModel"
+					translation-texts="selectPhenoTypesCustemText"
+					extra-settings="selectPhenoTypesSettings"
+					events="handleEvents"></div>
 
-				<div class="btn-group pad30left" ng-dropdown-multiselect="" options="selectedDiseases" selected-model="selectedDiseasesModel" translation-texts="selectDiseasesCustemText" events="handleEvents"></div>
+				<div class="btn-group pad30left"
+					ng-dropdown-multiselect=""
+					options="selectedDiseases"
+					selected-model="selectedDiseasesModel"
+					translation-texts="selectDiseasesCustemText"
+					extra-settings="selectDiseasesSettings"
+					events="handleEvents"></div>
 
 				<div class="btn-group pad30left" uib-dropdown>
 					<button type="button" uib-dropdown-toggle>
