@@ -4,71 +4,87 @@
 
 <%@ page trimDirectiveWhitespaces="true" %>
 
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
+<fewi:simpleseo
+   title="Page title, Sue?"
+   description="Page description TBD"
+   keywords="Keywords TBD, phenotypes, genotypes, genetic background, MP, Mammalian Phenotype, mouse, mice, murine, Mus"
+/>
+
 <%@ include file="/WEB-INF/jsp/google_analytics_pageview.jsp" %>
 
 <%@ include file="/WEB-INF/jsp/phenotype_table_geno_popup_imports.jsp" %>
 
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
+
+<fewi:pagetitle title="Page title, Sue?" userdoc="ALLELE_detail_pheno_summary_help.shtml#see_annot" />
+	
+<style>
+.allBorders { border: 1px solid black }
+.left { text-align: left }
+.white { background-color: white }
+</style>
+
+<!-- summary table at page top -->
+<table class="summaryHeader">
+<tr>
+  <td class="detailCat2">
+    <span class="label">Summary</span>
+  </td> 
+  <td class="detailData2">
+    ${fn:length(genoCluster.genotypes)} genotype<c:if test="${fn:length(genoCluster.genotypes) > 1}">s</c:if><br/>
+    <div style="max-height: 125px; overflow-y: scroll; overflow-x: hidden; margin-top: 5px; margin-left: 15px; max-width: 95%" id="modelSummaryDiv">
+    <table id="modelSummaryTable" style="width: 100%">
+      <tr>
+		<td class="allBorders label left white">Jump to</td>
+		<td class="allBorders label left white">Allelic Composition</td>
+		<td class="allBorders label left white">Genetic Background</td>
+		<td class="allBorders label left white">Genotype ID</td>
+      </tr>
+      <c:set var="counter" value="0"/>
+      <c:forEach var="genotype" items="${genoCluster.genotypes}">
+		<c:set var="counter" value="${counter + 1}"/>
+        <tr>
+		  <td class="allBorders white">
+	    	<a href="#${genotype.primaryID}" style="text-decoration: none">
+	      	<c:if test="${not empty counter and (counter > 0)}">
+	      	<div class="${genotype.genotypeType}Geno genotypeType" style="margin-left: 7px; text-align: center; padding-bottom: 8px; <c:if test='${counter > 99}'>padding-right: 3px;</c:if>">${genotype.genotypeType}${counter}</div>
+	      	</c:if>
+	   		 </a>
+	  	  </td>
+	 	  <td class="allBorders white"><span class="genotypeCombo"><fewi:genotype value="${genotype}" newWindow="${true}"/></span></td>
+	  	  <td class="allBorders white"><fewi:super value="${genotype.backgroundStrain}"/></td>
+	  	  <td class="allBorders white">${genotype.primaryID}</td>
+		</tr>
+      </c:forEach>
+    </table>
+    </div>
+  </td>
+</tr>
+</table>
+<br/><br/>
+
+<c:set var="counter" value="0"/>
 <c:forEach var="genotype" items="${genoCluster.genotypes}" varStatus="genoStatus">
 
 <div style="overflow:hidden;">
 	<!-- Set all the values that the genoview jsp expects -->
 	<c:set var="genotype" value="${genotype}" scope="request"/>
-	<c:set var="counter" value="${''}"  scope="request"/>
+	<c:set var="counter" value="${counter + 1}"/>
 	<c:set var="mpSystems" value="${genotype.MPSystems }"  scope="request"/>
 	<c:set var="hasImage" value="${genotype.hasPrimaryImage }"  scope="request"/>
 	<c:set var="hasDiseaseModels" value="${not empty genotype.diseases }"  scope="request"/>
 	<% Genotype genotype = (Genotype)request.getAttribute("genotype"); 
 	  NotesTagConverter ntc = new NotesTagConverter();
+	  StyleAlternator leftTdStyles = new StyleAlternator("detailCat1","detailCat2");
+	  StyleAlternator rightTdStyles = new StyleAlternator("detailData1","detailData2");
 	%>
+	<%@ include file="../phenotype_table_geno_popup_header.jsp" %>
+
 	<!-- Header -->
-	<div class='genoPopupHeader'>
-<table STYLE="" CELLPADDING="0" CELLSPACING="0">
-
-    <TR STYLE="">
-
-      <TD >
-        <a href="${configBean.HOMEPAGES_URL}" style='margin-left:2px; margin-right:10px;'><img src="http://www.informatics.jax.org/webshare/images/mgi_logo.gif" 
-          alt="Mouse Genome Informatics" border="0" width="100"></a>  
-      </TD>
-
-      <TD class='genotypeType'>
-      </TD>
-
-      <TD>
-        &nbsp;&nbsp;&nbsp;
-      </TD>
-
-      <TD class='comboAndStrain'>
-        <span class="genotypeCombo">
-		<fewi:genotype newWindow="${true}" value="${genotype}" />
-        </span>
-        <br/>
-        <fewi:super value="${genotype.backgroundStrain}" />
-        <c:if test="${genotype.isConditional==1}"><br/><br/>Conditional</c:if>
-        
-        
-        <c:if test="${not empty genotype.cellLines}">
-          <br/>
-          <br/>
-          <span class="cellLines">
-          cell line(s): <fewi:super value="${genotype.cellLines}" />
-          </span>
-        </c:if>  
-      </TD>
-
-      <TD>
-        <%@ include file="/WEB-INF/jsp/phenotype_table_geno_popup_legend.jsp" %>
-      </TD>
-      <TD>
-        <%@ include file="/WEB-INF/jsp/phenotype_table_geno_popup_source.jsp" %>
-      </TD>
-    </TR>
-</table>
-	</div>
-	
 	<%@ include file="/WEB-INF/jsp/phenotype_table_geno_popup_content.jsp" %>
 	<div style="clear: both;"></div>
 	</div>
     <br/>
 </c:forEach>
-<script type="text/javascript" src="${configBean.WEBSHARE_URL}js/mgi_template01.js"></script>
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

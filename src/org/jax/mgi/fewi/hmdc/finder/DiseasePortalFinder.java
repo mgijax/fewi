@@ -1,5 +1,6 @@
 package org.jax.mgi.fewi.hmdc.finder;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.jax.mgi.fewi.hmdc.hunter.SolrDiseasePortalDiseaseHunter;
@@ -12,11 +13,14 @@ import org.jax.mgi.fewi.hmdc.solr.SolrHdpEntityInterface;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpGridAnnotationEntry;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpGridEntry;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpMarker;
+import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 
 @Repository
 public class DiseasePortalFinder {
@@ -35,6 +39,9 @@ public class DiseasePortalFinder {
 
 	@Autowired
 	private SolrDiseasePortalGridHighlightHunter hdpGridHighlightHunter;
+	
+	@Autowired
+	private HibernateObjectGatherer<HdpGenoCluster> genoCGatherer;
 	
 	public SearchResults<SolrHdpDisease> getDiseases(SearchParams params) {
 		SearchResults<SolrHdpEntityInterface> results = new SearchResults<SolrHdpEntityInterface>();
@@ -74,4 +81,8 @@ public class DiseasePortalFinder {
 		return highlightResults.getResultKeys();
 	}
 
+	// gets genocluster data for link from grid popup
+	public List<HdpGenoCluster> getGenoClusterByKey(String genoClusterKey) {
+		return genoCGatherer.get(HdpGenoCluster.class,Arrays.asList(genoClusterKey));
+	}
 }
