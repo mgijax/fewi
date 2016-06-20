@@ -216,21 +216,43 @@ public class DiseasePortalController {
 			HmdcAnnotationGroup mpGroup, HmdcAnnotationGroup hpoGroup, HmdcAnnotationGroup omimGroup) {
 
 		StringBuffer sb = new StringBuffer();
-		boolean human = (hpoGroup != null) && (!hpoGroup.isEmpty());
-		boolean mouse = (mpGroup != null) && (!mpGroup.isEmpty());
+		boolean human = ((hpoGroup != null) && (!hpoGroup.isEmpty())) ||
+			((omimGroup != null) && omimGroup.hasHumanRows());
+		boolean mouse = ((mpGroup != null) && (!mpGroup.isEmpty())) ||
+			((omimGroup != null) && omimGroup.hasMouseRows());
+		
+		// MP title formats:
+		//   1. Human and Mouse <header> abnormalities for <human genes>/<mouse genes>
+		//   2. Human <header> abnormalities for <human genes>/<mouse genes>
+		//   3. <header> abnormalities for <human genes>/<mouse genes>
+		//	 *. if header is "normal phenotype", skip the word "abnormalities"
+		// OMIM title formats:
+		//	 1. Human Genes and Mouse Models for <header> and <human genes>/<mouse genes>
+		//	 2. Human Genes for <header> and <human genes>/<mouse genes>
+		//	 3. Mouse Models for <header> and <human genes>/<mouse genes>
 		
 		// begin with organisms of included markers
-		if (human) {
-			if (mouse) { sb.append("Human and Mouse "); }
-			else { sb.append("Human "); }
-		} else if (mouse) { sb.append("Mouse "); }
+		if (isPhenotype) {
+			if (human) {
+				if (mouse) { sb.append("Human and Mouse "); }
+				else { sb.append("Human "); }
+			} else if (mouse) { sb.append("Mouse "); }
+		} else {
+			if (human) {
+				if (mouse) { sb.append("Human Genes and Mouse Models for "); }
+				else { sb.append("Human Genes for "); }
+			} else if (mouse) { sb.append("Mouse Models for "); }
+		}
 		
 		// MP or OMIM header term
 		if (header != null) { sb.append(header); }
 		
-		// MP terms have "abnormalities" in the title, but not OMIM
-		if (isPhenotype && !header.equalsIgnoreCase("normal phenotype")) { sb.append(" abnormalities for "); }
-		else { sb.append(" for "); }
+		// most MP terms have "abnormalities" in the title, but not OMIM
+		if (isPhenotype) {
+			if (!header.equalsIgnoreCase("normal phenotype")) { sb.append(" abnormalities for "); }
+			else { sb.append(" for "); }
+		}
+		else { sb.append(" and "); }		// OMIM
 		
 		// if both human and mouse markers, separate the organisms with a slash
 		if (humanMarkers != null && humanMarkers.size() > 0) {
@@ -413,8 +435,9 @@ public class DiseasePortalController {
 				} else { 
 					// is human marker/disease annotation
 					omimGroup.addHumanAnnotation(humanSymbols.get(gridKey), homologyClusterKeys.get(gridKey),
-						result.getTerm(), result.getSourceId(), result.getTerm(), result.getByDagTerm());
+						result.getTerm(), result.getTerm(), result.getByDagTerm());
 				}
+				omimGroup.cacheDiseaseID(result.getTerm(), result.getTermId());
 			} else if ("Mammalian Phenotype".equals(termType)) {
 				// is mouse genotype/MP annotation
 				String term = result.getTerm();
@@ -427,7 +450,8 @@ public class DiseasePortalController {
 			} else {
 				// is human marker/HPO annotation (generated via OMIM-HPO mapping)
 				hpoGroup.addHumanAnnotation(humanSymbols.get(gridKey), homologyClusterKeys.get(gridKey),
-					result.getSourceTerm(), result.getSourceId(), result.getTerm(), result.getByDagTerm());
+					result.getSourceTerm(), result.getTerm(), result.getByDagTerm());
+				hpoGroup.cacheDiseaseID(result.getSourceTerm(), result.getSourceId());
 			}
 		}
 
@@ -438,6 +462,9 @@ public class DiseasePortalController {
 		mav.addObject("gridClusterKey", gridClusterKey);
 		mav.addObject("headerTerm", header);
 
+		// squish the multiple human gene/disease rows down into one row per gene
+		omimGroup.consolidateHumanRows();
+		
 		// compose the popup title (could do in JSP, but it was getting complex...)
 		mav.addObject("pageTitle", buildPopupTitle(humanMarkers, mouseMarkers, header, isPhenotype,
 			mpGroup, hpoGroup, omimGroup));
