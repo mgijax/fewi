@@ -9,6 +9,14 @@
 
 		$rootScope.hideQueryForm = false;
 
+		$rootScope.selectedPhenoTypesModel = [];
+		$rootScope.selectedDiseasesModel = [];
+		$rootScope.selectedGenesModel = [];
+
+		$rootScope.selectPhenoTypesCustemText = {buttonDefaultText: 'Filter by Phenotypes'};
+		$rootScope.selectDiseasesCustemText = {buttonDefaultText: 'Filter by Diseases'};
+		$rootScope.selectGenesCustemText = {buttonDefaultText: 'Filter by Genes'};
+
 		vm.autoComplete = [];
 
 		$rootScope.displayTabs = false;
@@ -20,6 +28,13 @@
 					pageSize: amount
 				}
 			});
+		};
+
+		$rootScope.handleEvents = {
+			onItemSelect: function() { $rootScope.$emit("FilterChanged"); },
+			onItemDeselect: function() { $rootScope.$emit("FilterChanged"); },
+			onSelectAll: function() { $rootScope.$emit("FilterChanged"); },
+			onUnselectAll: function() { $rootScope.$emit("FilterChanged"); }
 		};
 
 		function onSubmit() {
