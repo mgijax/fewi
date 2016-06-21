@@ -92,8 +92,8 @@ public class GxdLitQueryForm {
     	
     	assayTypes.put("ANY", "ANY");
     	assayTypes.put("Immunohistochemistry (section)", "Immunohistochemistry (section)");
-    	assayTypes.put("In situ RNA (section)", "In situ RNA (section)");
     	assayTypes.put("Immunohistochemistry (whole mount)", "Immunohistochemistry (whole mount)");
+    	assayTypes.put("In situ RNA (section)", "In situ RNA (section)");
     	assayTypes.put("In situ RNA (whole mount)", "In situ RNA (whole mount)");
     	assayTypes.put("In situ reporter (knock in)", "In situ reporter (knock in)");
     	assayTypes.put("Northern blot", "Northern blot");

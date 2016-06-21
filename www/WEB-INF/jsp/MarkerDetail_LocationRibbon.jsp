@@ -10,7 +10,7 @@
 
 			<c:set var="showGeneticMap" value="${(not empty marker.preferredCentimorgans) or (not empty marker.preferredCytoband) or (marker.countOfMappingExperiments > 0) or (not empty qtlIDs) or (not empty marker.aliases)}" />
 			
-			<c:set var="geneticMapExtra" value="${not empty linkmapUrl or not empty qtlIDs or marker.countOfMappingExperiments > 0 or not empty marker.aliases or hasMiniMap}" />
+			<c:set var="geneticMapExtra" value="${not empty qtlIDs or marker.countOfMappingExperiments > 0 or not empty marker.aliases or hasMiniMap}" />
 
 			<c:set var="arrowstate" value="hdExpand" />
 			<c:set var="extrastate" value="" />
@@ -150,62 +150,25 @@
 						<li class="${extrastate}">
 							<div class="label">Genetic Map</div>
 							<div class="value">
-								<c:if test="${(not empty marker.preferredCentimorgans) or (not empty marker.preferredCytoband) or (marker.countOfMappingExperiments > 0)}">
-									<c:if test="${not empty marker.preferredCentimorgans}">
-										<c:if test="${marker.preferredCentimorgans.chromosome != 'UN'}">
-											<c:if test="${marker.preferredCentimorgans.cmOffset != -1.0}">
-												<c:set var="linkmapUrl" value="${configBean.WI_URL}searches/linkmap.cgi?chromosome=${marker.preferredCentimorgans.chromosome}&midpoint=${marker.preferredCentimorgans.cmOffset}&cmrange=1.0&dsegments=1&syntenics=0"/>
-											</c:if>
-											Chromosome ${marker.preferredCentimorgans.chromosome},
-											<c:if test="${marker.preferredCentimorgans.cmOffset > 0.0}">
-												<fmt:formatNumber value="${marker.preferredCentimorgans.cmOffset}" minFractionDigits="2" maxFractionDigits="2"/> ${marker.preferredCentimorgans.mapUnits}<c:if test="${not empty marker.preferredCytoband}">, cytoband ${marker.preferredCytoband.cytogeneticOffset}</c:if>
-												<c:if test="${marker.markerType == 'QTL'}">
-													<span style="font-style: italic;font-size: smaller;">(cM position of peak correlated region/marker)</span>
-												</c:if>
-											</c:if>
-											<c:if test="${marker.preferredCentimorgans.cmOffset == -1.0}">
-												<c:if test="${marker.markerType == 'QTL'}">
-													cM position of peak correlated region/marker:
-												</c:if>
-												Syntenic
-											</c:if>
-										</c:if>
-										<c:if test="${marker.preferredCentimorgans.chromosome == 'UN'}">
-											Chromosome Unknown
-										</c:if>
-									</c:if>
-									<c:if test="${(empty marker.preferredCentimorgans) and (not empty marker.preferredCytoband)}">
-										<c:if test="${marker.preferredCytoband.chromosome != 'UN'}">
-											Chromosome ${marker.preferredCytoband.chromosome}<c:if test="${not empty marker.preferredCytoband}">, cytoband ${marker.preferredCytoband.cytogeneticOffset}</c:if><br/>
-										</c:if>
-										<c:if test="${marker.preferredCytoband.chromosome == 'UN'}">
-											Chromosome Unknown<c:if test="${not empty marker.preferredCytoband}">, cytoband ${marker.preferredCytoband.cytogeneticOffset}</c:if><br/>
-										</c:if>
-									</c:if>
-								</c:if>
+							    ${markerDetail.geneticMapLocation}
 							</div>
 						</li>
 					
-						<c:if test="${not empty linkmapUrl}">
+						<c:if test="${hasMinimap}">
 							<li class="extra closed">
 								<div class="value">
-									<a href="${linkmapUrl}">Detailed Genetic Map &#177; 1 cM</a>
-									<c:if test="${hasMinimap}">
-									    <div class="minimapWrap">
-									      <a href="${linkmapUrl}">
-									        <canvas id="minimap"></canvas>
-									      </a>
-									    </div>
-									    <script>
-									    	window.loadMinimap = function(){
-									    		Minimap.draw({
-									    			id: "minimap",
-									    			data: ${minimapInitJson},
-									    			rotate90: true
-									    		});
-									    	}
-									    </script>
-									</c:if>
+								    <div class="minimapWrap">
+								        <canvas id="minimap"></canvas>
+								    </div>
+								    <script>
+								    	window.loadMinimap = function(){
+								    		Minimap.draw({
+								    			id: "minimap",
+								    			data: ${minimapInitJson},
+								    			rotate90: true
+								    		});
+								    	}
+								    </script>
 								</div>
 							</li>
 						</c:if>

@@ -1370,7 +1370,7 @@ public class GXDController {
 				// GXD Lit represents Postnatal (Adult) as A, and Embryonic as E
 				if(age.equalsIgnoreCase(GxdQueryForm.POSTNATAL))
 				{
-					mappedAges.add("A");
+					mappedAges.add("P");
 				}
 				else if(age.equalsIgnoreCase(GxdQueryForm.EMBRYONIC))
 				{
@@ -1378,7 +1378,7 @@ public class GXDController {
 					// loop through all the defaults and exclude the options we don't want
 					for(String mappedAge : gxdLitForm.getAges().keySet())
 					{
-						if(!mappedAge.equals("ANY") && !mappedAge.equals("A"))
+						if(!mappedAge.equals("ANY") && !mappedAge.equals("P"))
 						{
 							mappedAges.add(mappedAge);
 						}

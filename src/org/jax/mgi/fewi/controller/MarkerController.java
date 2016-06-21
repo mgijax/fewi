@@ -41,6 +41,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.hibernate.SessionFactory;
 import org.jax.mgi.fewi.antlr.BooleanSearch.BooleanSearch;
 import org.jax.mgi.fewi.config.ContextLoader;
+import org.jax.mgi.fewi.detail.MarkerDetail;
 import org.jax.mgi.fewi.finder.DbInfoFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.QueryFormOptionFinder;
@@ -456,6 +457,8 @@ public class MarkerController {
 		setupReferencesRibbon(mav, marker);
 
 		finalizeSEO(mav, marker, seoKeywords, seoDataTypes, seoDescription);
+		
+		mav.addObject("markerDetail", new MarkerDetail(marker));
 
 		return mav;
 	}
