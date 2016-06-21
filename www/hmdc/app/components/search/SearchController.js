@@ -38,7 +38,7 @@
 			onItemSelect: function() { $rootScope.$emit("FilterChanged"); },
 			onItemDeselect: function() { $rootScope.$emit("FilterChanged"); },
 			onSelectAll: function() { $rootScope.$emit("FilterChanged"); },
-			onUnselectAll: function() { $rootScope.$emit("FilterChanged"); }
+			onDeselectAll: function() { $rootScope.$emit("FilterChanged"); }
 		};
 
 		function onSubmit() {
