@@ -64,6 +64,7 @@
 				<ngc-range top="0" bottom="1" left="2" right="9999" custom-html-fn="customHTMLHeader"></ngc-range>
 				<ngc-range top="0" bottom="vm.results.totalrowcount + 2" left="vm.results.totalcolcount + 3" right="9999" clazz="vm.displayNone"></ngc-range>
 			</div>
+			{{ gridResultsString }}
 		</div>
 
 		<div ng-if="vm.results.totalrowcount < 1">

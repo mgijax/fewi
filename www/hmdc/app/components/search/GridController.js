@@ -92,10 +92,7 @@
 		$rootScope.$on("FilterChanged", function(event) {
 			if(vm.gridloading) return;
 			vm.gridloading = true;
-			console.log("Filter Changed");
-
-			buildGridJson();
-			$timeout(function () { vm.gridloading = false; }, 1);
+			$timeout(function () { buildGridJson(); vm.gridloading = false; }, 1);
 		});
 
 		$rootScope.$on("CallSearchMethod", function(event, data) {
@@ -116,11 +113,13 @@
 					vm.jsonData.gridOMIMHeaders.sort(naturalSortService.naturalSortFunction)
 
 					$rootScope.selectedPhenoTypes = [];
+					$rootScope.selectedPhenoTypesModel = [];
 					for (var j = 0; j < vm.jsonData.gridMPHeaders.length; j++) {
 						$rootScope.selectedPhenoTypes.push({id: vm.jsonData.gridMPHeaders[j], label: vm.jsonData.gridMPHeaders[j]});
 					}
 
 					$rootScope.selectedDiseases = [];
+					$rootScope.selectedDiseaseModel = [];
 					for (var j = 0; j < vm.jsonData.gridOMIMHeaders.length; j++) {
 						$rootScope.selectedDiseases.push({id: vm.jsonData.gridOMIMHeaders[j], label: vm.jsonData.gridOMIMHeaders[j]});
 					}
@@ -271,6 +270,8 @@
 			newResults.greyBar = vm.MPHeaderCount + 2
 
 			$scope.$parent.$parent.tab.count = vm.jsonData.gridRows.length + " x " + newResults.totalcolcount;
+
+			$rootScope.gridResultsString = "Showing " + newResults.maxrows + " of " + newResults.totalrowcount + " rows scroll down to see more.";
 
 			newResults.data = data;
 
