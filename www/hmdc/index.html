@@ -135,17 +135,14 @@
 					extra-settings="selectDiseasesSettings"
 					events="handleEvents"></div>
 
-				<div class="btn-group pad30left" uib-dropdown>
-					<button type="button" uib-dropdown-toggle>
-						Gene Filter
-						<span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu genefiltermenu">
-						<li ng-repeat="(term, item) in selectedGenes">
-							<label><input type="checkbox" ng-model="item.selected" ng-click="filterChanged()">{{ item.term }}</label>
-						</li>
-					</ul>
-				</div>
+				<div class="btn-group pad30left"
+					ng-dropdown-multiselect=""
+					options="selectedGenes"
+					selected-model="selectedGenesModel"
+					translation-texts="selectGenesCustemText"
+					extra-settings="selectGenesSettings"
+					events="handleEvents"></div>
+
 				<br><br>
 				<uib-tabset>
 					<uib-tab ng-repeat="tab in vm.tabs" heading="{{ tab.count != 0 ? tab.heading + ' (' + tab.count + ')' : tab.heading }}" active="tab.active">
