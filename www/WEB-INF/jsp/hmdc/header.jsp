@@ -42,7 +42,6 @@
 		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/search/DiseaseController.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/search/SearchHandleSubscriptFilter.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/search/SearchJoinByFilter.js"></script>
-		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/search/SearchResizeDirective.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/search/SearchSortFilter.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/search/OrderHashByFilter.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/search/SearchStResetDirective.js"></script>

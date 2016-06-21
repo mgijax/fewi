@@ -2,7 +2,7 @@
 	'use strict';
 	angular.module('hmdc.search').controller('GridController', GridController);
 
-	function GridController($rootScope, $scope, $log, Search, naturalSortService, $timeout) {
+	function GridController($rootScope, $scope, $log, Search, naturalSortService, $timeout, $window) {
 		var vm = $scope.vm = {};
 
 		vm.mustHideLegend = true;
@@ -119,6 +119,18 @@
 
 		});
 
+		function updateWindowSize() {
+			var cellsize = 20;
+			vm.windowmaxcols = Math.floor(($window.innerWidth - 300) / cellsize);
+			console.log(vm.windowmaxcols);
+			if(vm.windowmaxcols < 5) vm.windowmaxcols = 5;
+			// Top header up to the bottom of the header line plus 40
+			// Without the wrapping of: Human  Mouse: Disease Connection
+			vm.windowmaxrows = Math.floor(($window.innerHeight - 470) / cellsize);
+			console.log(vm.windowmaxrows);
+			if(vm.windowmaxrows < 5) vm.windowmaxrows = 5;
+		}
+
 		function buildFilterLists() {
 
 			var i = vm.jsonData.gridMPHeaders.indexOf("normal phenotype");
@@ -197,8 +209,8 @@
 						showRow = true;
 					}
 				}
-            for(var header in vm.jsonData.gridOMIMHeaders) {
-               header = vm.jsonData.gridOMIMHeaders[header];
+				for(var header in vm.jsonData.gridOMIMHeaders) {
+					header = vm.jsonData.gridOMIMHeaders[header];
 					if(key.diseaseCells[header] && selectedGenes.indexOf(index) > -1 && selectedDiseases.indexOf(header) > -1) {
 						showRow = true;
 					}
@@ -358,6 +370,7 @@
 			newResults.totalcolcount = vm.OMIMHeaderCount + vm.MPHeaderCount;
 			newResults.totalrowcount = vm.GeneCount;
 
+			updateWindowSize();
 			newResults.maxcols = Math.min(vm.windowmaxcols, headerContent.length);
 			newResults.maxrows = Math.min(vm.windowmaxrows, data.length - 2);
 
