@@ -106,7 +106,6 @@
 					extra-settings="selectGenesSettings"
 					events="handleEvents"></div>
 
-				<br><br>
 				<uib-tabset>
 					<uib-tab ng-repeat="tab in vm.tabs" heading="{{ tab.count != 0 ? tab.heading + ' (' + tab.count + ')' : tab.heading }}" active="tab.active">
 						<div ng-include src="tab.template"></div>
