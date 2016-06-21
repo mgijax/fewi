@@ -19,7 +19,14 @@ public class HmdcAnnotationGroup {
 	//--------------------------//
 	
 	// divider between human gene and disease in combination key
-	private String separator = "::::";
+	private static String separator = "::::";
+	
+	// special flags that can be attached to individual cells (row ID, column ID)
+	private static String backgroundSensitive = "bg";
+	private static String normal = "normal";
+	
+	// set of flags associated with each cell (optionally; only cells with flags need appear)
+	private Map<Integer,Map<Integer,Set<String>>> flags = new HashMap<Integer,Map<Integer,Set<String>>>();
 	
 	// true if this group has disease data, false if it has phenotype data
 	private boolean hasDiseaseData = false;	
@@ -200,6 +207,28 @@ public class HmdcAnnotationGroup {
 		return full;
 	}
 	
+	/* get a map of flags cached for all row, column combinations in this group (only including the
+	 * specified flag)
+	 */
+	private Map<Integer,Map<Integer,String>> getFlagMap(String flag) {
+		Map<Integer,Map<Integer,String>> full = new HashMap<Integer,Map<Integer,String>>();
+		for (Integer rowID : this.rows.keySet()) {
+			full.put(rowID, new HashMap<Integer,String>());
+			for (Integer columnID : this.columns.keySet()) {
+				String flagFound = null;
+				if (flags.containsKey(rowID)) {
+					if (flags.get(rowID).containsKey(columnID)) {
+						if (flags.get(rowID).get(columnID).contains(flag)) {
+							flagFound = flag;
+						}
+					}
+				}
+				full.get(rowID).put(columnID, flagFound);
+			}
+		}
+		return full;
+	}
+
 	// is this group empty?  (ie- no rows and/or no columns)
 	public boolean isEmpty() {
 		return (rows.size() == 0) || (columns.size() == 0);
@@ -261,11 +290,16 @@ public class HmdcAnnotationGroup {
 
 	/* increment the count of annotations for cell with the given row and column text values
 	 */
-	public void addMouseAnnotation (String genotypeText, String columnText, Integer seqNum, Integer genoClusterKey) {
+	public void addMouseAnnotation (String genotypeText, String columnText, Integer seqNum, Integer genoClusterKey,
+			boolean isNormal, boolean isBackgroundSensitive) {
 		Integer rowID = getMouseRowID(genotypeText);
-		addAnnotation(rowID, getColumnID(columnText));
+		Integer columnID = getColumnID(columnText);
+		addAnnotation(rowID, columnID);
 		cacheSequenceNum(columnText, seqNum);
 		cacheGenoClusterKey(rowID, genoClusterKey);
+		
+		if (isNormal) { setNormalQualifier(rowID, columnID); }
+		if (isBackgroundSensitive) { setBackgroundSensitive(rowID, columnID); }
 	}
 
 	/* returns true if there are any mouse rows, false if not
@@ -510,4 +544,36 @@ public class HmdcAnnotationGroup {
 		return out;
 	}
 	
+	//--- deal with the special flags ---//
+	
+	// attach the specific flag to the given (rowID, columnID) cell
+	private void setFlag (int rowID, int columnID, String flag) {
+		if (!flags.containsKey(rowID)) {
+			flags.put(rowID, new HashMap<Integer,Set<String>>());
+		}
+		if (!flags.get(rowID).containsKey(columnID)) {
+			flags.get(rowID).put(columnID, new HashSet<String>());
+		}
+		flags.get(rowID).get(columnID).add(flag);
+	}
+	
+	// note that the cell at the given row and column has background-sensitive data
+	public void setBackgroundSensitive (int rowID, int columnID) {
+		setFlag(rowID, columnID, backgroundSensitive);
+	}
+	
+	// note that the cell at the given row and column has data with a normal qualifier
+	public void setNormalQualifier (int rowID, int columnID) {
+		setFlag(rowID, columnID, normal);
+	}
+	
+	// get a map of cells with normal flags, returns: { row ID : { column ID : flag }}
+	public Map<Integer,Map<Integer,String>> getNormalMap() {
+		return getFlagMap(normal);
+	}
+
+	// get a map of cells with background-sensitive flags, returns: { row ID : { column ID : flag }}
+	public Map<Integer,Map<Integer,String>> getBackgroundSensitiveMap() {
+		return getFlagMap(backgroundSensitive);
+	}
 }

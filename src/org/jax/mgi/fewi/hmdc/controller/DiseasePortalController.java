@@ -473,7 +473,7 @@ public class DiseasePortalController {
 				if (mouseGridKeys.contains(gridKey)) {
 					// is mouse genotype/disease annotation
 					omimGroup.addMouseAnnotation(allelePairs.get(gridKey), result.getTerm(), result.getByDagTerm(),
-						genoClusterKeys.get(gridKey));
+						genoClusterKeys.get(gridKey), false, false);
 				} else { 
 					// is human marker/disease annotation
 					omimGroup.addHumanAnnotation(humanSymbols.get(gridKey), homologyClusterKeys.get(gridKey),
@@ -488,7 +488,8 @@ public class DiseasePortalController {
 				// special case where we want to promote the MP header to the leftmost column
 				if (term.equals(header) || term.equals(header + " phenotype")) { seqNum = -1; }
 					
-				mpGroup.addMouseAnnotation(allelePairs.get(gridKey), term, seqNum, genoClusterKeys.get(gridKey));
+				mpGroup.addMouseAnnotation(allelePairs.get(gridKey), term, seqNum, genoClusterKeys.get(gridKey),
+					result.isNormalAnnotation(), result.isBackgroundSensitive());
 			} else {
 				// is human marker/HPO annotation (generated via OMIM-HPO mapping)
 				hpoGroup.addHumanAnnotation(humanSymbols.get(gridKey), homologyClusterKeys.get(gridKey),
