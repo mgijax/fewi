@@ -19,8 +19,8 @@
 			<tr ng-repeat="row in displayedCollection">
 				<td>{{ row.organism }}</td>
 				<td><nobr>
-					<a ng-if="row.organism == 'mouse'" target=\"_blank\" href="/marker/{{ row.mgiId }}"><div ng-bind-html="row.symbol | handleSubscript "></div></a>
-					<a ng-if="row.organism == 'human' && row.homologyClusterKey != null" target=\"_blank\" href="/homology/cluster/key/{{ row.homologyClusterKey }}"><div ng-bind-html="row.symbol | handleSubscript "></div></a>
+					<a ng-if="row.organism == 'mouse'" target="_blank" href="/marker/{{ row.mgiId }}"><div ng-bind-html="row.symbol | handleSubscript "></div></a>
+					<a ng-if="row.organism == 'human' && row.homologyClusterKey != null" target="_blank" href="/homology/cluster/key/{{ row.homologyClusterKey }}"><div ng-bind-html="row.symbol | handleSubscript "></div></a>
 					<div ng-if="row.organism == 'human' && row.homologyClusterKey == null" ng-bind-html="row.symbol | handleSubscript "></div>
 				</nobr></td>
 				<td><nobr>{{ row.location }}</nobr></td>
