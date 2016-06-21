@@ -13,7 +13,7 @@
 				if(scope.vm.windowmaxcols < 5) scope.vm.windowmaxcols = 5;
 				// Top header up to the bottom of the header line plus 40
 				// Without the wrapping of: Human  Mouse: Disease Connection
-				scope.vm.windowmaxrows = Math.floor(($window.innerHeight - 430) / cellsize);
+				scope.vm.windowmaxrows = Math.floor(($window.innerHeight - 470) / cellsize);
 				if(scope.vm.windowmaxrows < 5) scope.vm.windowmaxrows = 5;
 
 				angular.element($window).bind('resize', function(){
@@ -22,7 +22,7 @@
 					if(scope.vm.windowmaxcols < 5) scope.vm.windowmaxcols = 5;
 					// Top header up to the bottom of the header line plus 40
 					// Without the wrapping of: Human  Mouse: Disease Connection
-					scope.vm.windowmaxrows = Math.floor(($window.innerHeight - 430) / cellsize);
+					scope.vm.windowmaxrows = Math.floor(($window.innerHeight - 470) / cellsize);
 					if(scope.vm.windowmaxrows < 5) scope.vm.windowmaxrows = 5;
 
 					scope.$digest();

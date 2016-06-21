@@ -287,3 +287,7 @@ mark {
 .pad30left {
     padding-left: 30px;
 }
+
+.pad10bottom {
+	padding-bottom: 10px;
+}

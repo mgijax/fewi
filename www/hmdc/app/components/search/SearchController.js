@@ -6,8 +6,8 @@
 		var vm = $scope.vm = {};
 
 		vm.onSubmit = onSubmit;
+		vm.hideQueryForm = false;
 
-		$rootScope.hideQueryForm = false;
 
 		$rootScope.selectedPhenoTypesModel = [];
 		$rootScope.selectedDiseasesModel = [];
@@ -45,6 +45,7 @@
 			console.log("Submit: " + JSON.stringify(vm.model));
 			$rootScope.displayTabs = true;
 			$rootScope.$emit("CallSearchMethod", vm.model);
+			vm.hideQueryForm = true;
 		}
 
 		vm.tabs = {

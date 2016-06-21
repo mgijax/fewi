@@ -19,8 +19,6 @@
 				then(function(response) {
 					vm.results = response.data;
 					$scope.$parent.$parent.tab.count = vm.results.length;
-
-					$rootScope.hideQueryForm = true;
 					vm.resetGeneTable = true;
 					vm.loading = false;
 				}, function (error) {

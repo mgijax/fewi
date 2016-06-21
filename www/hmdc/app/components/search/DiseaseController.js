@@ -20,8 +20,6 @@
 				then(function(response) {
 					vm.results = response.data;
 					$scope.$parent.$parent.tab.count = vm.results.length;
-
-					$rootScope.hideQueryForm = true;
 					vm.resetDiseaseTable = true;
 					vm.loading = false;
 				}, function (error) {

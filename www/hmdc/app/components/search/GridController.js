@@ -108,13 +108,10 @@
 
 			Search.gridQuery(vm.model).
 				then(function(response) {
-
 					vm.jsonData = response.data;
-
 					buildFilterLists();
 					filterGrid();
 					buildGrid();
-					$rootScope.hideQueryForm = true;
 					vm.gridloading = false;
 				}, function (error) {
 					vm.errorMessage = error;

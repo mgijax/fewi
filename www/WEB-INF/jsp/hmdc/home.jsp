@@ -23,18 +23,18 @@
 
 					<div class="row hideRow">
 						<div class="col-xs-12">
-							<span class="buttonStyle" ng-hide="vm.mustHide" ng-click="vm.mustHide = !vm.mustHide">Click to hide search</span>
-							<span class="buttonStyle" ng-show="vm.mustHide" ng-click="vm.mustHide = !vm.mustHide">Click to modify search</span>
+							<span class="buttonStyle" ng-hide="vm.hideQueryForm" ng-click="vm.hideQueryForm = !vm.hideQueryForm">Click to hide search</span>
+							<span class="buttonStyle" ng-show="vm.hideQueryForm" ng-click="vm.hideQueryForm = !vm.hideQueryForm">Click to modify search</span>
 						</div>
 					</div>
 
-					<div class="row searchRow" ng-hide="vm.mustHide">
+					<div class="row searchRow" ng-hide="vm.hideQueryForm">
 						<div class="col-xs-12">
 							<h3>Search by:</h3>
 						</div>
 					</div>
 
-					<div class="row" ng-hide="vm.mustHide">
+					<div class="row" ng-hide="vm.hideQueryForm">
 						<div class="col-xs-12">
 							<form ng-submit="vm.onSubmit()" novalidate>
 								<formly-form
@@ -48,7 +48,7 @@
 					</div>
 
 					<div ng-if="vm.model.queries.length > 1">
-						<div class="row" ng-hide="vm.mustHide">
+						<div class="row" ng-hide="vm.hideQueryForm">
 							<div class="col-xs-12">
 								<div class="operator-prompt">
 									<div class="operator-select">
@@ -60,7 +60,7 @@
 						</div>
 					</div>
 
-					<div class="row" ng-hide="vm.mustHide">
+					<div class="row" ng-hide="vm.hideQueryForm">
 						<div class="col-xs-12">
 							<div class="button-row pull-left">
 								<button
@@ -82,7 +82,7 @@
 
 			<div class="container-fluid searchViewBox" ng-show="displayTabs">
 
-				<div class="btn-group pad30left"
+				<div class="btn-group pad30left pad10bottom"
 					ng-dropdown-multiselect=""
 					options="selectedPhenoTypes"
 					selected-model="selectedPhenoTypesModel"
@@ -90,7 +90,7 @@
 					extra-settings="selectPhenoTypesSettings"
 					events="handleEvents"></div>
 
-				<div class="btn-group pad30left"
+				<div class="btn-group pad30left pad10bottom"
 					ng-dropdown-multiselect=""
 					options="selectedDiseases"
 					selected-model="selectedDiseasesModel"
@@ -98,7 +98,7 @@
 					extra-settings="selectDiseasesSettings"
 					events="handleEvents"></div>
 
-				<div class="btn-group pad30left"
+				<div class="btn-group pad30left pad10bottom"
 					ng-dropdown-multiselect=""
 					options="selectedGenes"
 					selected-model="selectedGenesModel"
