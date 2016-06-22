@@ -10,6 +10,7 @@
 	<c:set var="allelePairMap" value="${mpGroup.allelePairMap}"/>
 	<c:set var="normalMap" value="${mpGroup.normalMap}"/>
 	<c:set var="backgroundSensitiveMap" value="${mpGroup.backgroundSensitiveMap}"/>
+	<c:set var="conditionalRowIDs" value="${mpGroup.conditionalRowIDs}"/>
 	
 	<c:set var="columnIDMap" value="${mpGroup.columnIDMap}"/>
 	<c:set var="genoClusterKeyMap" value="${mpGroup.genoClusterKeyMap}"/>
@@ -28,8 +29,13 @@
 	<c:forEach var="rowID" items="${mpGroup.mouseRowIDs}">
 		<c:set var="genoclusterUrl" value="${configBean.FEWI_URL}diseasePortal/genoCluster/view/${genoClusterKeyMap[rowID]}"/>
 
+		<c:set var="conditional" value=""/>
+		<c:if test="${conditionalRowIDs[rowID] == 1}">
+			<c:set var="conditional" value="&nbsp;&nbsp;(conditional)"/>
+		</c:if>
+
 		<tr class="highlight" title="click row to see phenotype details" onclick="window.open('${genoclusterUrl}'); return true;">
-			<td class="border">${allelePairMap[rowID]}</td>
+			<td class="border">${allelePairMap[rowID]}${conditional}</td>
 			<c:forEach var="mpHeader" items="${mpGroup.columns}">
 				<c:set var="columnID" value="${columnIDMap[mpHeader]}" />
 

@@ -415,6 +415,9 @@ public class DiseasePortalController {
 		// genocluster key -> sequence num
 		Map<Integer,Integer> genoClusterSeqNum = new HashMap<Integer,Integer>();
 		
+		// set of conditional genocluster keys
+		Set<Integer> conditionalGenoclusters = new HashSet<Integer>();
+		
 		List<SolrHdpGridEntry> gridResults = results.getResultObjects();
 		for(SolrHdpGridEntry res: gridResults) {
 			Integer gridKey = res.getGridKey();
@@ -427,6 +430,9 @@ public class DiseasePortalController {
 				allelePairs.put(gridKey, res.getAllelePairs());
 				mouseGridKeys.add(gridKey); 
 				genoClusterSeqNum.put(res.getGenoClusterKey(), res.getByGenoCluster());
+				if (res.isConditional()) {
+					conditionalGenoclusters.add(res.getGenoClusterKey());
+				}
 			} else {
 				// is human data
 				humanSymbols.put(gridKey, res.getMarkerSymbol());
@@ -477,7 +483,8 @@ public class DiseasePortalController {
 				if (mouseGridKeys.contains(gridKey)) {
 					// is mouse genotype/disease annotation
 					omimGroup.addMouseAnnotation(allelePairs.get(gridKey), result.getTerm(), result.getByDagTerm(),
-						genoClusterKeys.get(gridKey), genoClusterSeqNum.get(genoClusterKeys.get(gridKey)), false, false);
+						genoClusterKeys.get(gridKey), genoClusterSeqNum.get(genoClusterKeys.get(gridKey)), false, false,
+						conditionalGenoclusters.contains(genoClusterKeys.get(gridKey)));
 				} else { 
 					// is human marker/disease annotation
 					omimGroup.addHumanAnnotation(humanSymbols.get(gridKey), homologyClusterKeys.get(gridKey),
@@ -494,7 +501,8 @@ public class DiseasePortalController {
 					
 				mpGroup.addMouseAnnotation(allelePairs.get(gridKey), term, seqNum, genoClusterKeys.get(gridKey),
 					genoClusterSeqNum.get(genoClusterKeys.get(gridKey)),
-					result.isNormalAnnotation(), result.isBackgroundSensitive());
+					result.isNormalAnnotation(), result.isBackgroundSensitive(),
+					conditionalGenoclusters.contains(genoClusterKeys.get(gridKey)));
 			} else {
 				// is human marker/HPO annotation (generated via OMIM-HPO mapping)
 				hpoGroup.addHumanAnnotation(humanSymbols.get(gridKey), homologyClusterKeys.get(gridKey),

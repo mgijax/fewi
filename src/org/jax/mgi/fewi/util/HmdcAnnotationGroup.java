@@ -60,6 +60,9 @@ public class HmdcAnnotationGroup {
 	// { header text : sequence num }
 	private Map<String, Integer> headerSequenceNumbers = new HashMap<String, Integer>();
 	
+	// set of genocluster keys for conditional genotypes
+	private Set<Integer> conditionalGenoclusters = new HashSet<Integer>();
+	
 	//--------------------//
 	//--- constructors ---//
 	//--------------------//
@@ -297,16 +300,38 @@ public class HmdcAnnotationGroup {
 		genoClusterSeqNums.put(genoClusterKey, seqNum);
 	}
 	
+	/* if this is a conditional genocluster, remember it
+	 */
+	private void cacheConditionalFlag(int genoClusterKey, boolean isConditional) {
+		if (isConditional) { conditionalGenoclusters.add(genoClusterKey); }
+	}
+	
+	/* map of row IDs to indicate if they are conditional genoclusters (1) or not (0)
+	 */
+	public Map<Integer,Integer> getConditionalRowIDs() {
+		Map<Integer,Integer> out = new HashMap<Integer,Integer>();
+		for (Integer rowID : genoClusterKeys.keySet()) {
+			Integer genoClusterKey = genoClusterKeys.get(rowID);
+			if (conditionalGenoclusters.contains(genoClusterKey)) {
+				out.put(rowID, 1);
+			} else {
+				out.put(rowID, 0);
+			}
+		}
+		return out;
+	}
+	
 	/* increment the count of annotations for cell with the given row and column text values
 	 */
 	public void addMouseAnnotation (String genotypeText, String columnText, Integer seqNum, Integer genoClusterKey,
-			Integer genoClusterSeqNum, boolean isNormal, boolean isBackgroundSensitive) {
+			Integer genoClusterSeqNum, boolean isNormal, boolean isBackgroundSensitive, boolean isConditional) {
 		Integer rowID = getMouseRowID(genotypeText);
 		Integer columnID = getColumnID(columnText);
 		addAnnotation(rowID, columnID);
 		cacheSequenceNum(columnText, seqNum);
 		cacheGenoClusterKey(rowID, genoClusterKey);
 		cacheGenoClusterSeqNum(genoClusterKey, genoClusterSeqNum);
+		cacheConditionalFlag(genoClusterKey, isConditional);
 		
 		if (isNormal) { setNormalQualifier(rowID, columnID); }
 		if (isBackgroundSensitive) { setBackgroundSensitive(rowID, columnID); }

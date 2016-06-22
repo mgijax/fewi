@@ -15,6 +15,7 @@ public class SolrHdpGridEntry implements SolrHdpEntityInterface {
 	private List<GridMarker> gridHumanSymbols;
 	private List<GridMarker> gridMouseSymbols;
 	private Integer byGenoCluster;
+	private Integer conditional;
 	
 	public Integer getGridKey() {
 		return gridKey;
@@ -69,5 +70,17 @@ public class SolrHdpGridEntry implements SolrHdpEntityInterface {
 	}
 	public void setByGenoCluster(Integer byGenoCluster) {
 		this.byGenoCluster = byGenoCluster;
+	}
+	public Integer getConditional() {
+		return conditional;
+	}
+	public void setConditional(Integer conditional) {
+		this.conditional = conditional;
+	}
+	
+	// convenience methods
+	
+	public boolean isConditional() {
+		return ((conditional != null) && (conditional != 0));
 	}
 }
