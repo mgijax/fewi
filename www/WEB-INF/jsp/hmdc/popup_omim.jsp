@@ -13,6 +13,7 @@
 	<c:set var="columnIDMap" value="${omimGroup.columnIDMap}"/>
 	<c:set var="genoClusterKeyMap" value="${omimGroup.genoClusterKeyMap}"/>
 	<c:set var="homologyClusterKeyMap" value="${omimGroup.homologyClusterKeyMap}"/>
+	<c:set var="conditionalRowIDs" value="${omimGroup.conditionalRowIDs}"/>
 
 	<table>
 	<!-- table header rows : disease headers span two rows; left cell is only one with two rows showing -->
@@ -61,8 +62,13 @@
 	<c:forEach var="rowID" items="${omimGroup.mouseRowIDs}">
 		<c:set var="genoclusterUrl" value="${configBean.FEWI_URL}diseasePortal/genoCluster/view/${genoClusterKeyMap[rowID]}"/>
 
+		<c:set var="conditional" value=""/>
+		<c:if test="${conditionalRowIDs[rowID] == 1}">
+			<c:set var="conditional" value="&nbsp;&nbsp;(conditional)"/>
+		</c:if>
+
 		<tr class="highlight" title="click row to see phenotype details" onclick="window.open('${genoclusterUrl}'); return true;">
-			<td class="border">${allelePairMap[rowID]}</td>
+			<td class="border">${allelePairMap[rowID]}${conditional}</td>
 			<c:forEach var="omimHeader" items="${omimGroup.columns}">
 				<c:set var="columnID" value="${columnIDMap[omimHeader]}" />
 				<c:set var="mouseColor" value=""/>
