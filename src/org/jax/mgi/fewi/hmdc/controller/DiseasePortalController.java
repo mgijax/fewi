@@ -227,7 +227,7 @@ public class DiseasePortalController {
         	strains = strainList.get(0);
         }
 
-        ModelAndView mav = new ModelAndView("hmdc/disease_portal_all_geno_popups");
+        ModelAndView mav = new ModelAndView("hmdc/genocluster_detail");
         mav.addObject("genoCluster",genoCluster);
         mav.addObject("plainPairs", plainPairs);
         mav.addObject("superscriptPairs", superscriptPairs);
