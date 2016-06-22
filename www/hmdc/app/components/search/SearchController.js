@@ -8,6 +8,8 @@
 		vm.onSubmit = onSubmit;
 		vm.hideQueryForm = false;
 
+		vm.showFilterButton = false;
+
 
 		$rootScope.selectedPhenoTypesModel = [];
 		$rootScope.selectedDiseasesModel = [];
@@ -35,11 +37,17 @@
 		};
 
 		$rootScope.handleEvents = {
-			onItemSelect: function() { $rootScope.$emit("FilterChanged"); },
-			onItemDeselect: function() { $rootScope.$emit("FilterChanged"); },
-			onSelectAll: function() { $rootScope.$emit("FilterChanged"); },
-			onDeselectAll: function() { $rootScope.$emit("FilterChanged"); }
+			onItemSelect: function() { vm.showFilterButton = true; },
+			onItemDeselect: function() { vm.showFilterButton = true; },
+			onSelectAll: function() { vm.showFilterButton = true; },
+			onDeselectAll: function() { vm.showFilterButton = true; }
 		};
+
+		vm.applyFilters = function() {
+			console.log("Filters");
+			$rootScope.$emit("FilterChanged");
+			vm.showFilterButton = false;
+		}
 
 		function onSubmit() {
 			console.log("Submit: " + JSON.stringify(vm.model));

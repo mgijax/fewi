@@ -122,12 +122,10 @@
 		function updateWindowSize() {
 			var cellsize = 20;
 			vm.windowmaxcols = Math.floor(($window.innerWidth - 300) / cellsize);
-			console.log(vm.windowmaxcols);
 			if(vm.windowmaxcols < 5) vm.windowmaxcols = 5;
 			// Top header up to the bottom of the header line plus 40
 			// Without the wrapping of: Human  Mouse: Disease Connection
 			vm.windowmaxrows = Math.floor(($window.innerHeight - 470) / cellsize);
-			console.log(vm.windowmaxrows);
 			if(vm.windowmaxrows < 5) vm.windowmaxrows = 5;
 		}
 
