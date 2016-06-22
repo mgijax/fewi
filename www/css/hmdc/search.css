@@ -291,3 +291,7 @@ mark {
 .pad10bottom {
 	padding-bottom: 10px;
 }
+
+.table {
+	margin-bottom: 0px;
+}
