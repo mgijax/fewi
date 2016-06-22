@@ -48,6 +48,9 @@ public class HmdcAnnotationGroup {
 	// { row ID : genoCluster key }
 	private Map<Integer, Integer> genoClusterKeys = new HashMap<Integer, Integer>();
 	
+	// { genoCluster key : seq num }
+	private Map<Integer, Integer> genoClusterSeqNums = new HashMap<Integer, Integer>();
+	
 	// { row ID : homology cluster key }
 	private Map<Integer, String> homologyClusterKeys = new HashMap<Integer, String>();
 	
@@ -288,15 +291,22 @@ public class HmdcAnnotationGroup {
 		return rowsRev.get(genotypeText);
 	}
 
+	/* cache the sequence number for the given genocluster
+	 */
+	private void cacheGenoClusterSeqNum(int genoClusterKey, int seqNum) {
+		genoClusterSeqNums.put(genoClusterKey, seqNum);
+	}
+	
 	/* increment the count of annotations for cell with the given row and column text values
 	 */
 	public void addMouseAnnotation (String genotypeText, String columnText, Integer seqNum, Integer genoClusterKey,
-			boolean isNormal, boolean isBackgroundSensitive) {
+			Integer genoClusterSeqNum, boolean isNormal, boolean isBackgroundSensitive) {
 		Integer rowID = getMouseRowID(genotypeText);
 		Integer columnID = getColumnID(columnText);
 		addAnnotation(rowID, columnID);
 		cacheSequenceNum(columnText, seqNum);
 		cacheGenoClusterKey(rowID, genoClusterKey);
+		cacheGenoClusterSeqNum(genoClusterKey, genoClusterSeqNum);
 		
 		if (isNormal) { setNormalQualifier(rowID, columnID); }
 		if (isBackgroundSensitive) { setBackgroundSensitive(rowID, columnID); }
@@ -323,27 +333,27 @@ public class HmdcAnnotationGroup {
 	/* get the IDs for the rows containing mouse data, ordered by allele pairs
 	 */
 	public List<Integer> getMouseRowIDs() {
-		// list of "allele pair" strings to sort
-		List<String> toSort = new ArrayList<String>();
+		// list of genocluster sequence numbers to sort
+		List<Integer> toSort = new ArrayList<Integer>();
 		
-		// maps from "allele pair" string to row ID
-		Map<String,Integer> idLookup = new HashMap<String,Integer>();
+		// maps from genocluster sequence number to row ID
+		Map<Integer,Integer> idLookup = new HashMap<Integer,Integer>();
 		
 		for (Integer rowID : rows.keySet()) {
 			if (mouseRows.contains(rowID)) {
-				String sortValue = rows.get(rowID);
-				toSort.add(sortValue);
-				idLookup.put(sortValue, rowID);
+				Integer gcKey = getGenoClusterKey(rowID);
+				Integer seqNum = genoClusterSeqNums.get(gcKey);
+				toSort.add(seqNum);
+				idLookup.put(seqNum, rowID);
 			}
 		}
 		
-		// smart-alpha sort by gene then by disease
-		Collections.sort(toSort, new SmartAlphaComparator());
+		Collections.sort(toSort);
 
 		// ordered list of row IDs to return
 		List<Integer> toReturn = new ArrayList<Integer>(toSort.size());
 		
-		for (String sortValue : toSort) {
+		for (Integer sortValue : toSort) {
 			toReturn.add(idLookup.get(sortValue));
 		}
 		return toReturn;

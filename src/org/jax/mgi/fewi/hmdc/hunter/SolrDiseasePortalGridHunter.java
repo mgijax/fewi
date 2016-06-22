@@ -39,6 +39,7 @@ public class SolrDiseasePortalGridHunter extends SolrHunter<SolrHdpEntityInterfa
 		returnedFields.add(DiseasePortalFields.GRID_MOUSE_SYMBOLS);
 		returnedFields.add(DiseasePortalFields.MARKER_SYMBOL);
 		returnedFields.add(DiseasePortalFields.GENO_CLUSTER_KEY);
+		returnedFields.add(DiseasePortalFields.BY_GENOCLUSTER);
 	}
 
 	@Override
@@ -56,6 +57,7 @@ public class SolrDiseasePortalGridHunter extends SolrHunter<SolrHdpEntityInterfa
 			gridResult.setGridClusterKey((Integer) doc.getFieldValue(DiseasePortalFields.GRID_CLUSTER_KEY));
 			gridResult.setGridKey((Integer)doc.getFieldValue(DiseasePortalFields.GRID_KEY));
 			gridResult.setHomologyClusterKey((Integer)doc.getFieldValue(DiseasePortalFields.HOMOLOGY_CLUSTER_KEY));
+			gridResult.setByGenoCluster((Integer) doc.getFieldValue(DiseasePortalFields.BY_GENOCLUSTER));
 
 			@SuppressWarnings("unchecked")
 			List<String> symbols = (List<String>) doc.getFieldValue(DiseasePortalFields.MARKER_SYMBOL);

@@ -412,6 +412,9 @@ public class DiseasePortalController {
 		// grid key -> allele pairs (for mouse gridKeys)
 		Map<Integer,String> allelePairs = new HashMap<Integer,String>();
 		
+		// genocluster key -> sequence num
+		Map<Integer,Integer> genoClusterSeqNum = new HashMap<Integer,Integer>();
+		
 		List<SolrHdpGridEntry> gridResults = results.getResultObjects();
 		for(SolrHdpGridEntry res: gridResults) {
 			Integer gridKey = res.getGridKey();
@@ -423,6 +426,7 @@ public class DiseasePortalController {
 				genoClusterKeys.put(gridKey, res.getGenoClusterKey());
 				allelePairs.put(gridKey, res.getAllelePairs());
 				mouseGridKeys.add(gridKey); 
+				genoClusterSeqNum.put(res.getGenoClusterKey(), res.getByGenoCluster());
 			} else {
 				// is human data
 				humanSymbols.put(gridKey, res.getMarkerSymbol());
@@ -473,7 +477,7 @@ public class DiseasePortalController {
 				if (mouseGridKeys.contains(gridKey)) {
 					// is mouse genotype/disease annotation
 					omimGroup.addMouseAnnotation(allelePairs.get(gridKey), result.getTerm(), result.getByDagTerm(),
-						genoClusterKeys.get(gridKey), false, false);
+						genoClusterKeys.get(gridKey), genoClusterSeqNum.get(genoClusterKeys.get(gridKey)), false, false);
 				} else { 
 					// is human marker/disease annotation
 					omimGroup.addHumanAnnotation(humanSymbols.get(gridKey), homologyClusterKeys.get(gridKey),
@@ -489,6 +493,7 @@ public class DiseasePortalController {
 				if (term.equals(header) || term.equals(header + " phenotype")) { seqNum = -1; }
 					
 				mpGroup.addMouseAnnotation(allelePairs.get(gridKey), term, seqNum, genoClusterKeys.get(gridKey),
+					genoClusterSeqNum.get(genoClusterKeys.get(gridKey)),
 					result.isNormalAnnotation(), result.isBackgroundSensitive());
 			} else {
 				// is human marker/HPO annotation (generated via OMIM-HPO mapping)

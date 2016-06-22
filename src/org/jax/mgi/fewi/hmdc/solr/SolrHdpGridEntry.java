@@ -14,6 +14,7 @@ public class SolrHdpGridEntry implements SolrHdpEntityInterface {
 	private String allelePairs;
 	private List<GridMarker> gridHumanSymbols;
 	private List<GridMarker> gridMouseSymbols;
+	private Integer byGenoCluster;
 	
 	public Integer getGridKey() {
 		return gridKey;
@@ -62,5 +63,11 @@ public class SolrHdpGridEntry implements SolrHdpEntityInterface {
 	}
 	public void setMarkerSymbol(String markerSymbol) {
 		this.markerSymbol = markerSymbol;
+	}
+	public Integer getByGenoCluster() {
+		return byGenoCluster;
+	}
+	public void setByGenoCluster(Integer byGenoCluster) {
+		this.byGenoCluster = byGenoCluster;
 	}
 }
