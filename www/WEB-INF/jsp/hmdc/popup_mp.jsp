@@ -8,7 +8,10 @@
 	<c:set var="mpCount" value="${fn:length(mpGroup.columns)}"/>
 	<c:set var="countMap" value="${mpGroup.countMap}"/>
 	<c:set var="allelePairMap" value="${mpGroup.allelePairMap}"/>
-
+	<c:set var="normalMap" value="${mpGroup.normalMap}"/>
+	<c:set var="backgroundSensitiveMap" value="${mpGroup.backgroundSensitiveMap}"/>
+	<c:set var="conditionalRowIDs" value="${mpGroup.conditionalRowIDs}"/>
+	
 	<c:set var="columnIDMap" value="${mpGroup.columnIDMap}"/>
 	<c:set var="genoClusterKeyMap" value="${mpGroup.genoClusterKeyMap}"/>
 
@@ -26,10 +29,27 @@
 	<c:forEach var="rowID" items="${mpGroup.mouseRowIDs}">
 		<c:set var="genoclusterUrl" value="${configBean.FEWI_URL}diseasePortal/genoCluster/view/${genoClusterKeyMap[rowID]}"/>
 
+		<c:set var="conditional" value=""/>
+		<c:if test="${conditionalRowIDs[rowID] == 1}">
+			<c:set var="conditional" value="&nbsp;&nbsp;(conditional)"/>
+		</c:if>
+
 		<tr class="highlight" title="click row to see phenotype details" onclick="window.open('${genoclusterUrl}'); return true;">
-			<td class="border">${allelePairMap[rowID]}</td>
+			<td class="border">${allelePairMap[rowID]}${conditional}</td>
 			<c:forEach var="mpHeader" items="${mpGroup.columns}">
 				<c:set var="columnID" value="${columnIDMap[mpHeader]}" />
+
+				<c:set var="flag" value=""/>
+				<c:set var="flagClass" value=""/>
+				<c:if test="${not empty normalMap[rowID][columnID]}">
+					<c:set var="flag" value="${flag}*"/>
+					<c:set var="flagClass" value=" normal"/>
+				</c:if>
+				<c:if test="${not empty backgroundSensitiveMap[rowID][columnID]}">
+					<c:set var="flag" value="${flag}!"/>
+					<c:set var="flagClass" value=" bg"/>
+				</c:if>
+
 				<c:set var="mouseColor" value=""/>
 				<c:choose>
 				<c:when test="${countMap[rowID][columnID] >= 100}"><c:set var="mouseColor" value="mouse100"/></c:when>
@@ -37,7 +57,7 @@
 				<c:when test="${countMap[rowID][columnID] >= 2}"><c:set var="mouseColor" value="mouse2"/></c:when>
 				<c:when test="${countMap[rowID][columnID] >= 1}"><c:set var="mouseColor" value="mouse1"/></c:when>
 				</c:choose>
-				<td class="border ${mouseColor}"></td>
+				<td class="border mid ${mouseColor}${flagClass}">${flag}</td>
 			</c:forEach>
 		</tr>
 	</c:forEach>

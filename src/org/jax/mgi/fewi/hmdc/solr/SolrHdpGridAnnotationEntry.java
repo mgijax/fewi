@@ -13,6 +13,7 @@ public class SolrHdpGridAnnotationEntry implements SolrHdpEntityInterface {
 	private String sourceTerm;
 	private String sourceId;
 	private Integer byDagTerm;
+	private String backgroundSensitive;
 	
 	public String getUniqueKey() {
 		return uniqueKey;
@@ -73,5 +74,21 @@ public class SolrHdpGridAnnotationEntry implements SolrHdpEntityInterface {
 	}
 	public void setByDagTerm(Integer byDagTerm) {
 		this.byDagTerm = byDagTerm;
+	}
+	public String getBackgroundSensitive() {
+		return backgroundSensitive;
+	}
+	public void setBackgroundSensitive(String backgroundSensitive) {
+		this.backgroundSensitive = backgroundSensitive;
+	}
+
+	// convenience methods
+
+	public boolean isNormalAnnotation() {
+		return (qualifier != null) && ("normal".equals(qualifier));
+	}
+	
+	public boolean isBackgroundSensitive() {
+		return (backgroundSensitive != null);
 	}
 }

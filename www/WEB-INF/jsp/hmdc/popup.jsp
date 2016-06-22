@@ -44,6 +44,18 @@ td.header {
 	min-width: 25px;
 	width: 25px;
 }
+td.mid {
+	text-align: center;
+	vertical-align: middle;
+}
+td.bg {
+	color: red;
+	font-weight: bold;
+}
+td.normal {
+	color: #333333;
+	font-weight: bold;
+}
 div.header {
 	color: black;
     text-indent: 2px;
