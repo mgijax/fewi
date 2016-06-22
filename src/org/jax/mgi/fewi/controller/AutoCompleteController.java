@@ -499,7 +499,7 @@ public class AutoCompleteController {
 
 		SearchResults<VocabACResult> results = autocompleteFinder.getVocabAutoComplete(params);
 
-
+		// Removes Dups
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 
 		for(VocabACResult vacr: results.getResultObjects()) {
@@ -512,11 +512,18 @@ public class AutoCompleteController {
 		} else {
 			return new ArrayList<String>(map.values());
 		}
-
+		
+//		// Does not remove dups
+//		ArrayList<String> list = new ArrayList<String>();
+//		int count = 0;
+//		for(VocabACResult vacr: results.getResultObjects()) {
+//			for(String term: vacr.getDerivedTerms()) {
+//				if(count++ < returnAmount) list.add(term);
+//				else break;
+//			}
+//		}
+//		return list;
 	}
-
-
-
 
 	/*
 	 * precompiles the regex pattern matchers and then builds the html formatted responses
