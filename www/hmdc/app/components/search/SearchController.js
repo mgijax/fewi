@@ -10,7 +10,6 @@
 
 		vm.showFilterButton = false;
 
-
 		$rootScope.selectedPhenoTypesModel = [];
 		$rootScope.selectedDiseasesModel = [];
 		$rootScope.selectedGenesModel = [];
@@ -50,10 +49,11 @@
 		}
 
 		function onSubmit() {
-			console.log("Submit: " + JSON.stringify(vm.model));
+			console.log("Submit: " + angular.toJson(vm.model));
 			$rootScope.displayTabs = true;
 			$rootScope.$emit("CallSearchMethod", vm.model);
 			vm.hideQueryForm = true;
+			$rootScope.jsonEncodedQuery = encodeURIComponent(angular.toJson(vm.model));
 		}
 
 		vm.tabs = {

@@ -1,5 +1,5 @@
 <div ng-controller="DiseaseController">
-	Export: <a class="btn" href="/diseasePortal/marker/report.txt?phenotypes=105830&amp;numDCol=100"><img src="http://www.informatics.jax.org/webshare/images/text.png" width="10" height="10">Text File</a> 
+	Export: <a href="/diseasePortal/disease/report.txt?jsonEncodedInput={{ jsonEncodedQuery }}"><img src="http://www.informatics.jax.org/webshare/images/text.png" width="12" height="12">Text File</a> 
 
 	<table class="table table-bordered table-striped" st-reset="vm.resetDiseaseTable" st-table="displayedCollection" st-set-sort="sortFilter" st-safe-src="vm.results" ng-show="vm.results.length > 0">
 		<thead>
