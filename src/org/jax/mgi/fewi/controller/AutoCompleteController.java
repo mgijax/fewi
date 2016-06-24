@@ -504,7 +504,7 @@ public class AutoCompleteController {
 
 		for(VocabACResult vacr: results.getResultObjects()) {
 			for(String term: vacr.getDerivedTerms()) {
-				map.put(term, term);
+				map.put(term.toLowerCase(), term);
 			}
 		}
 		if(map.size() > returnAmount) {
