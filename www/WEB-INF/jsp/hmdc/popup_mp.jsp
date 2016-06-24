@@ -14,15 +14,20 @@
 	
 	<c:set var="columnIDMap" value="${mpGroup.columnIDMap}"/>
 	<c:set var="genoClusterKeyMap" value="${mpGroup.genoClusterKeyMap}"/>
+ 
+ <div id="dialog" title="Find Mice">
+  <p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
+</div>
 
 	<table>
 	<!-- table header rows : MP headers span two rows; left cell is only one with two rows showing -->
-	<tr><td class="tableLabel">Mouse Phenotypes</td>
+	<tr><td colspan="2" class="tableLabel">Mouse Phenotypes</td>
 	<c:forEach var="mpHeader" items="${mpGroup.columns}">
 		<td rowspan="2" class="header"><div class="header" title="${mpHeader}"><span class="header">${mpHeader}</span></div></td>
 	</c:forEach>
 	</tr>
 	<tr>
+		<td class="headerTitle border">Availability</td>
 		<td class="headerTitle border">Mouse Genotype</td>
 	</tr>
 
@@ -35,7 +40,12 @@
 		</c:if>
 
 		<tr class="highlight" title="click row to see phenotype details" onclick="window.open('${genoclusterUrl}'); return true;">
-			<td class="border">${allelePairMap[rowID]}${conditional}</td>
+			<td class="border" title="click button to find models">
+				<c:set var="buttonID" value="fm${genoClusterKeyMap[rowID]}"/>
+				<c:set var="gcKey" value="${genoClusterKeyMap[rowID]}"/>
+				<input id="${buttonID}" class="button" value="Find Mice" type="button" onClick='showDialog(event, ${gcKey})'>
+			</td>
+			<td id="${buttonID}a" class="border">${allelePairMap[rowID]}${conditional}</td>
 			<c:forEach var="mpHeader" items="${mpGroup.columns}">
 				<c:set var="columnID" value="${columnIDMap[mpHeader]}" />
 

@@ -440,6 +440,15 @@ public class DiseasePortalController {
 			}
 		}
 		
+		// need to get data for IMSR popup for each genocluster:
+		// { genocluster key : [ [ allele ID, allele symbol, IMSR count, marker ID, marker symbol, IMSR count ], ... ] }
+		
+		List<Integer> gcKeys = new ArrayList<Integer>();
+		for (Integer gcKey : genoClusterSeqNum.keySet()) {
+			gcKeys.add(gcKey);
+		}
+		List<HdpGenoCluster> genoclusters = hdpFinder.getGenoClustersByKeys(gcKeys);
+		
 		// pull out marker data needed for header
 		List<String> humanMarkers = null;
 		List<String> mouseMarkers = null;
@@ -547,6 +556,7 @@ public class DiseasePortalController {
 		mav.addObject("gridKeyCount", gridKeys.size());
 		mav.addObject("annotationCount", annotationResults.getTotalCount());
 
+		mav.addObject("genoclusters", genoclusters);
 		return mav;
 	}
 

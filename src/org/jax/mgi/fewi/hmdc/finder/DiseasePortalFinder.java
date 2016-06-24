@@ -1,5 +1,6 @@
 package org.jax.mgi.fewi.hmdc.finder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -84,5 +85,16 @@ public class DiseasePortalFinder {
 	// gets genocluster data for link from grid popup
 	public List<HdpGenoCluster> getGenoClusterByKey(String genoClusterKey) {
 		return genoCGatherer.get(HdpGenoCluster.class,Arrays.asList(genoClusterKey));
+	}
+
+	// gets genocluster data for multiple genoclusters
+	public List<HdpGenoCluster> getGenoClustersByKeys(List<Integer> genoClusterKeys) {
+		if (genoClusterKeys == null) { return null; }
+		
+		List<String> gcKeys = new ArrayList<String>(genoClusterKeys.size());
+		for (Integer gcKey : genoClusterKeys) {
+			gcKeys.add(Integer.toString(gcKey));
+		}
+		return genoCGatherer.get(HdpGenoCluster.class, gcKeys);
 	}
 }
