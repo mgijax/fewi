@@ -8,18 +8,15 @@
 		vm.onSubmit = onSubmit;
 		vm.hideQueryForm = false;
 
-		vm.showFilterButton = false;
-
-		$rootScope.selectedPhenoTypesModel = [];
-		$rootScope.selectedDiseasesModel = [];
+		$rootScope.selectedPhenoTypesAndDiseasesModel = [];
 		$rootScope.selectedGenesModel = [];
 
-		$rootScope.selectPhenoTypesCustemText = { buttonDefaultText: 'Filter by Phenotypes', dynamicButtonTextSuffix: 'phenotype(s) checked' };
-		$rootScope.selectDiseasesCustemText = { buttonDefaultText: 'Filter by Diseases', dynamicButtonTextSuffix: 'disease(s) checked' };
-		$rootScope.selectGenesCustemText = { buttonDefaultText: 'Filter by Genes', dynamicButtonTextSuffix: 'gene(s) checked' };
+		$rootScope.selectPhenoTypesAndDiseasesCustemText = { buttonDefaultText: 'Filter by Phenotypes/Disease(s)', dynamicButtonTextSuffix: 'Phenotype/Disease(s) checked' };
+		$rootScope.selectGenesCustemText = { buttonDefaultText: 'Filter by Genes', dynamicButtonTextSuffix: 'Gene(s) checked' };
 
-		$rootScope.selectPhenoTypesSettings = { buttonClasses: "", scrollableHeight: '500px', scrollable: true };
-		$rootScope.selectDiseasesSettings = { buttonClasses: "", scrollableHeight: '500px', scrollable: true, enableSearch: true };
+		$rootScope.selectPhenoTypesAndDiseasesSettings = { buttonClasses: "", scrollableHeight: '500px', scrollable: true, enableSearch: true,
+			groupByTextProvider: function(groupValue) { if(groupValue == '1') { return "Phenotype(s)"; } else { return "Disease(s)"; } } };
+
 		$rootScope.selectGenesSettings = { buttonClasses: "", scrollableHeight: '500px', scrollable: true, enableSearch: true };
 
 		vm.autoComplete = [];
@@ -36,16 +33,20 @@
 		};
 
 		$rootScope.handleEvents = {
-			onItemSelect: function() { vm.showFilterButton = true; },
-			onItemDeselect: function() { vm.showFilterButton = true; },
-			onSelectAll: function() { vm.showFilterButton = true; },
-			onDeselectAll: function() { vm.showFilterButton = true; }
+			onItemSelect: function() { },
+			onItemDeselect: function() { },
+			onSelectAll: function() { vm.applyFilters(); },
+			onDeselectAll: function() { vm.applyFilters(); }
 		};
 
 		vm.applyFilters = function() {
-			console.log("Filters");
 			$rootScope.$emit("FilterChanged");
-			vm.showFilterButton = false;
+		}
+
+		vm.removeFilters = function() {
+			$rootScope.$emit("FilterChanged");
+			$rootScope.selectedPhenoTypesAndDiseasesModel = [];
+			$rootScope.selectedGenesModel = [];
 		}
 
 		function onSubmit() {

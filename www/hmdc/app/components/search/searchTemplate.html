@@ -62,34 +62,38 @@
 			</div>
 			<div class="container-fluid searchViewBox" ng-show="displayTabs">
 
-				<div class="btn-group pad30left pad10bottom"
-					ng-dropdown-multiselect=""
-					options="selectedPhenoTypes"
-					selected-model="selectedPhenoTypesModel"
-					translation-texts="selectPhenoTypesCustemText"
-					extra-settings="selectPhenoTypesSettings"
-					events="handleEvents"></div>
+				<div class="row">
+					<div class="col-xs-6 col-xs-offset-6">
+						<div class="btn-group pad30right pad10bottom">
+							<button type="button" ng-click="vm.applyFilters()">
+								Apply Filters
+							</button>
+						</div>
 
-				<div class="btn-group pad30left pad10bottom"
-					ng-dropdown-multiselect=""
-					options="selectedDiseases"
-					selected-model="selectedDiseasesModel"
-					translation-texts="selectDiseasesCustemText"
-					extra-settings="selectDiseasesSettings"
-					events="handleEvents"></div>
+						<div class="btn-group pad10bottom"
+							ng-dropdown-multiselect=""
+							options="selectedGenes"
+							selected-model="selectedGenesModel"
+							translation-texts="selectGenesCustemText"
+							extra-settings="selectGenesSettings"
+							events="handleEvents"></div>
 
-				<div class="btn-group pad30left pad10bottom"
-					ng-dropdown-multiselect=""
-					options="selectedGenes"
-					selected-model="selectedGenesModel"
-					translation-texts="selectGenesCustemText"
-					extra-settings="selectGenesSettings"
-					events="handleEvents"></div>
+						<div class="btn-group pad10bottom"
+							ng-dropdown-multiselect=""
+							options="selectedPhenoTypesAndDiseases"
+							selected-model="selectedPhenoTypesAndDiseasesModel"
+							translation-texts="selectPhenoTypesAndDiseasesCustemText"
+							extra-settings="selectPhenoTypesAndDiseasesSettings"
+							group-by="type"
+							events="handleEvents"></div>
 
-				<div class="btn-group pad30left pad10bottom" ng-show="vm.showFilterButton">
-					<button type="button" ng-click="vm.applyFilters()">
-						Apply Filters
-					</button>
+						<div class="btn-group pad30left pad10bottom">
+							<button type="button" ng-click="vm.removeFilters()">
+								Remove Filters
+							</button>
+						</div>
+
+					</div>
 				</div>
 
 				<uib-tabset>
