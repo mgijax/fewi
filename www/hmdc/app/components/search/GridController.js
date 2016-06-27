@@ -137,18 +137,14 @@
 			if(i != -1) vm.jsonData.gridMPHeaders.push("normal phenotype");
 			vm.jsonData.gridOMIMHeaders.sort(naturalSortService.naturalSortFunction)
 
-			$rootScope.selectedPhenoTypes = [];
-			$rootScope.selectedPhenoTypesModel = [];
+			$rootScope.selectedPhenoTypesAndDiseases = [];
+			$rootScope.selectedPhenoTypesAndDiseasesModel = [];
 			for (var j = 0; j < vm.jsonData.gridMPHeaders.length; j++) {
-				$rootScope.selectedPhenoTypes.push({id: vm.jsonData.gridMPHeaders[j], label: vm.jsonData.gridMPHeaders[j]});
-				$rootScope.selectedPhenoTypesModel.push({id: vm.jsonData.gridMPHeaders[j]});
+				$rootScope.selectedPhenoTypesAndDiseases.push({id: vm.jsonData.gridMPHeaders[j], label: vm.jsonData.gridMPHeaders[j], type: "1"});
 			}
 
-			$rootScope.selectedDiseases = [];
-			$rootScope.selectedDiseasesModel = [];
 			for (var j = 0; j < vm.jsonData.gridOMIMHeaders.length; j++) {
-				$rootScope.selectedDiseases.push({id: vm.jsonData.gridOMIMHeaders[j], label: vm.jsonData.gridOMIMHeaders[j]});
-				$rootScope.selectedDiseasesModel.push({id: vm.jsonData.gridOMIMHeaders[j]});
+				$rootScope.selectedPhenoTypesAndDiseases.push({id: vm.jsonData.gridOMIMHeaders[j], label: vm.jsonData.gridOMIMHeaders[j], type: "2"});
 			}
 
 			$rootScope.selectedGenes = [];
@@ -169,13 +165,10 @@
 				}
 				if(humanSymbolString.length > 0 && markerSymbolString.length > 0) {
 					$rootScope.selectedGenes.push({id: index, label: humanSymbolString.join(", ") + " - " + markerSymbolString.join(", ")});
-					$rootScope.selectedGenesModel.push({id: index});
 				} else if(humanSymbolString.length > 0) {
 					$rootScope.selectedGenes.push({id: index, label: humanSymbolString.join(", ")});
-					$rootScope.selectedGenesModel.push({id: index});
 				} else if(markerSymbolString.length > 0) {
 					$rootScope.selectedGenes.push({id: index, label: markerSymbolString.join(", ")});
-					$rootScope.selectedGenesModel.push({id: index});
 				}
 			}
 		}
@@ -184,14 +177,11 @@
 			vm.displayRows = [];
 			vm.displayCols = [];
 
-			var selectedPhenoTypes = [];
-			for(var i = 0; i < $rootScope.selectedPhenoTypesModel.length; i++) {
-				selectedPhenoTypes.push($rootScope.selectedPhenoTypesModel[i].id);
+			var selectedPhenoTypesAndDiseases = [];
+			for(var i = 0; i < $rootScope.selectedPhenoTypesAndDiseasesModel.length; i++) {
+				selectedPhenoTypesAndDiseases.push($rootScope.selectedPhenoTypesAndDiseasesModel[i].id);
 			}
-			var selectedDiseases = [];
-			for(var i = 0; i < $rootScope.selectedDiseasesModel.length; i++) {
-				selectedDiseases.push($rootScope.selectedDiseasesModel[i].id);
-			}
+
 			var selectedGenes = [];
 			for(var i = 0; i < $rootScope.selectedGenesModel.length; i++) {
 				selectedGenes.push($rootScope.selectedGenesModel[i].id);
@@ -203,13 +193,13 @@
 				var showRow = false;
 				for(var header in vm.jsonData.gridMPHeaders) {
 					header = vm.jsonData.gridMPHeaders[header];
-					if(key.mpHeaderCells[header] && selectedGenes.indexOf(index) > -1 && selectedPhenoTypes.indexOf(header) > -1) {
+					if(key.mpHeaderCells[header] && (selectedGenes.length == 0 || selectedGenes.indexOf(index) > -1) && (selectedPhenoTypesAndDiseases.length == 0 || selectedPhenoTypesAndDiseases.indexOf(header) > -1)) {
 						showRow = true;
 					}
 				}
 				for(var header in vm.jsonData.gridOMIMHeaders) {
 					header = vm.jsonData.gridOMIMHeaders[header];
-					if(key.diseaseCells[header] && selectedGenes.indexOf(index) > -1 && selectedDiseases.indexOf(header) > -1) {
+					if(key.diseaseCells[header] && (selectedGenes.length == 0 || selectedGenes.indexOf(index) > -1) && (selectedPhenoTypesAndDiseases.length == 0 || selectedPhenoTypesAndDiseases.indexOf(header) > -1)) {
 						showRow = true;
 					}
 				}
@@ -224,7 +214,7 @@
 				for(var key in vm.jsonData.gridRows) {
 					var index = key;
 					key = vm.jsonData.gridRows[key];
-					if(key.mpHeaderCells[header] && selectedGenes.indexOf(index) > -1 && selectedPhenoTypes.indexOf(header) > -1) {
+					if(key.mpHeaderCells[header] && (selectedGenes.length == 0 || selectedGenes.indexOf(index) > -1) && (selectedPhenoTypesAndDiseases.length == 0 || selectedPhenoTypesAndDiseases.indexOf(header) > -1)) {
 						showCol = true;
 					}
 				}
@@ -239,7 +229,7 @@
 				for(var key in vm.jsonData.gridRows) {
 					var index = key;
 					key = vm.jsonData.gridRows[key];
-					if(key.diseaseCells[header] && selectedGenes.indexOf(index) > -1 && selectedDiseases.indexOf(header) > -1) {
+					if(key.diseaseCells[header] && (selectedGenes.length == 0 || selectedGenes.indexOf(index) > -1) && (selectedPhenoTypesAndDiseases.length == 0 || selectedPhenoTypesAndDiseases.indexOf(header) > -1)) {
 						showCol = true;
 					}
 				}
