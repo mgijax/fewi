@@ -40,7 +40,7 @@
 		</c:if>
 
 		<tr class="highlight" title="click row to see phenotype details" onclick="window.open('${genoclusterUrl}'); return true;">
-			<td class="border" title="click button to find models">
+			<td class="border" title="click button to find models" onclick="event.cancelBubble=true;">
 				<c:set var="buttonID" value="fm${genoClusterKeyMap[rowID]}"/>
 				<c:set var="gcKey" value="${genoClusterKeyMap[rowID]}"/>
 				<input id="${buttonID}" class="button" value="Find Mice" type="button" onClick='showDialog(event, ${gcKey})'>
