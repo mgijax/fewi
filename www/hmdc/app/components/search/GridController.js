@@ -76,10 +76,10 @@
 			console.log(cellData.data);
 			var url;
 			if(cellData.data && cellData.data["phenoHeader"]) {
-				url = "/diseasePortal/phenotypePopup?gridClusterKey=" + cellData.data["gridClusterKey"] + "&header=" + cellData.data["phenoHeader"];
+				url = "/diseasePortal/phenotypePopup?gridClusterKey=" + cellData.data["gridClusterKey"] + "&header=" + cellData.data["phenoHeader"] + "&jsonEncodedInput=" + $rootScope.jsonEncodedQuery;
 			}
 			if(cellData.data && cellData.data["diseaseHeader"]) {
-				url = "/diseasePortal/diseasePopup?gridClusterKey=" + cellData.data["gridClusterKey"] + "&header=" + cellData.data["diseaseHeader"];
+				url = "/diseasePortal/diseasePopup?gridClusterKey=" + cellData.data["gridClusterKey"] + "&header=" + cellData.data["diseaseHeader"] + "&jsonEncodedInput=" + $rootScope.jsonEncodedQuery;
 			}
 
 			if(url) {
