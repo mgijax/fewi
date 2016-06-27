@@ -91,11 +91,11 @@ td.mid {
 	text-align: center;
 	vertical-align: middle;
 }
-td.bg {
+span.bg {
 	color: red;
 	font-weight: bold;
 }
-td.normal {
+span.normal {
 	color: #333333;
 	font-weight: bold;
 }

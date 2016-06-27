@@ -50,14 +50,11 @@
 				<c:set var="columnID" value="${columnIDMap[mpHeader]}" />
 
 				<c:set var="flag" value=""/>
-				<c:set var="flagClass" value=""/>
 				<c:if test="${not empty normalMap[rowID][columnID]}">
-					<c:set var="flag" value="${flag}*"/>
-					<c:set var="flagClass" value=" normal"/>
+					<c:set var="flag" value="<span class='normal'>*</span>"/>
 				</c:if>
 				<c:if test="${not empty backgroundSensitiveMap[rowID][columnID]}">
-					<c:set var="flag" value="${flag}!"/>
-					<c:set var="flagClass" value=" bg"/>
+					<c:set var="flag" value="${flag}<span class='bg'>!</span>"/>
 				</c:if>
 
 				<c:set var="mouseColor" value=""/>
@@ -67,7 +64,7 @@
 				<c:when test="${countMap[rowID][columnID] >= 2}"><c:set var="mouseColor" value="mouse2"/></c:when>
 				<c:when test="${countMap[rowID][columnID] >= 1}"><c:set var="mouseColor" value="mouse1"/></c:when>
 				</c:choose>
-				<td class="border mid ${mouseColor}${flagClass}">${flag}</td>
+				<td class="border mid ${mouseColor}">${flag}</td>
 			</c:forEach>
 		</tr>
 	</c:forEach>
