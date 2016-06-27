@@ -40,7 +40,6 @@ public class TextHdpDiseaseSummary extends AbstractTextView {
 			writeIfNotNull(d.getDiseaseModelCount());
 			writeIfNotNull(FormatHelper.pipeDelimit(d.getDiseaseMouseMarkers()));
 			writeIfNotNull(FormatHelper.pipeDelimit(d.getDiseaseHumanMarkers()));
-
 			endLine();
 		}
 

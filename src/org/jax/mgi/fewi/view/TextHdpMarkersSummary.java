@@ -45,7 +45,7 @@ public class TextHdpMarkersSummary extends AbstractTextView {
 			writeIfNotNull(m.getCoordinate());
 			writeIfNotNull(m.getCoordinateBuild());
 			writeIfNotNull(FormatHelper.pipeDelimit(m.getDisease()));
-			writeIfNotNull(FormatHelper.pipeDelimit(m.getHumanSystem()));
+			writeIfNotNull(FormatHelper.pipeDelimit(m.getMouseSystem()));
 			endLine();
 		}
 	}
