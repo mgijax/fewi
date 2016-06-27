@@ -17,7 +17,7 @@
 
 	<table>
 	<!-- table header rows : disease headers span two rows; left cell is only one with two rows showing -->
-	<tr><td class="tableLabel">Diseases</td>
+	<tr><td class="tableLabel" <c:if test="${omimGroup.hasMouseRows}">colspan="2"</c:if>>Diseases</td>
 	<c:forEach var="omimHeader" items="${omimGroup.columns}">
 		<c:set var="diseaseUrl" value="${configBean.FEWI_URL}disease/${diseaseIDMap[omimHeader]}"/>
 		<td rowspan="2" class="header"><div class="header" title="${omimHeader}"><a href="${diseaseUrl}" target="_blank"><span class="header">${omimHeader}</span></a></div></td>
@@ -28,14 +28,19 @@
 	<!-- human genes to diseases -->
 
 		<tr>
-			<td class="headerTitle border">Human Gene</td>
+			<c:if test="${omimGroup.hasMouseRows}">
+				<td class="headerTitle border" colspan="2">Human Gene</td>
+			</c:if>
+			<c:if test="${not omimGroup.hasMouseRows}">
+				<td class="headerTitle border">Human Gene</td>
+			</c:if>
 		</tr>
 
 		<c:forEach var="rowID" items="${omimGroup.humanRowIDs}">
 			<c:set var="markerUrl" value="${configBean.FEWI_URL}homology/cluster/key/${homologyClusterKeyMap[rowID]}"/>
 
 			<tr class="highlight" title="click row to see homology details" onclick="window.open('${markerUrl}'); return true;">
-			<td class="border">${humanSymbolMap[rowID]}</td>
+			<td class="border" <c:if test="${omimGroup.hasMouseRows}">colspan="2"</c:if>>${humanSymbolMap[rowID]}</td>
 				<c:forEach var="omimHeader" items="${omimGroup.columns}">
 					<c:set var="columnID" value="${columnIDMap[omimHeader]}" />
 					<c:set var="humanColor" value=""/>
@@ -54,10 +59,16 @@
 	<c:if test="${omimGroup.hasMouseRows}">
 	<!-- mouse genotypes to diseases -->
 	<c:if test="${omimGroup.hasHumanRows}">
-		<tr><td colspan="${omimCount + 1}" class="headerTitle border">Mouse Genotype</td></tr>
+		<tr>
+			<td class="headerTitle border">Availability</td>
+			<td colspan="${omimCount + 1}" class="headerTitle border">Mouse Genotype</td>
+		</tr>
 	</c:if>
 	<c:if test="${not omimGroup.hasHumanRows}">
-		<tr><td class="headerTitle border">Mouse Genotype</td></tr>
+		<tr>
+			<td class="headerTitle border">Availability</td>
+			<td class="headerTitle border">Mouse Genotype</td>
+		</tr>
 	</c:if>
 	<c:forEach var="rowID" items="${omimGroup.mouseRowIDs}">
 		<c:set var="genoclusterUrl" value="${configBean.FEWI_URL}diseasePortal/genoCluster/view/${genoClusterKeyMap[rowID]}"/>
@@ -68,7 +79,12 @@
 		</c:if>
 
 		<tr class="highlight" title="click row to see phenotype details" onclick="window.open('${genoclusterUrl}'); return true;">
-			<td class="border">${allelePairMap[rowID]}${conditional}</td>
+			<td class="border" title="click button to find models" onclick="event.cancelBubble=true;">
+				<c:set var="buttonID" value="fm${genoClusterKeyMap[rowID]}"/>
+				<c:set var="gcKey" value="${genoClusterKeyMap[rowID]}"/>
+				<input id="${buttonID}" class="button" value="Find Mice" type="button" onClick='showDialog(event, ${gcKey})'>
+			</td>
+			<td id="${buttonID}a" class="border">${allelePairMap[rowID]}${conditional}</td>
 			<c:forEach var="omimHeader" items="${omimGroup.columns}">
 				<c:set var="columnID" value="${columnIDMap[omimHeader]}" />
 				<c:set var="mouseColor" value=""/>
