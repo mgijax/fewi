@@ -10,11 +10,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
-
 import org.codehaus.jackson.map.ObjectMapper;
-//import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.hmdc.forms.DiseasePortalConditionGroup;
 import org.jax.mgi.fewi.hmdc.forms.DiseasePortalConditionQuery;
@@ -39,6 +35,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -112,7 +109,7 @@ public class DiseasePortalController {
 
 		SearchParams params = new SearchParams();
 		params.setPageSize(1000000);
-
+		
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			DiseasePortalConditionGroup group = (DiseasePortalConditionGroup)mapper.readValue(jsonInput, DiseasePortalConditionGroup.class);
@@ -131,7 +128,7 @@ public class DiseasePortalController {
 
 		SearchParams params = new SearchParams();
 		params.setPageSize(1000000);
-
+		
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			DiseasePortalConditionGroup group = (DiseasePortalConditionGroup)mapper.readValue(jsonInput, DiseasePortalConditionGroup.class);
@@ -567,6 +564,22 @@ public class DiseasePortalController {
 		mav.addObject("errorMsg", msg);
 		return mav;
 	}
-}
 
-	
+	@RequestMapping(value="/marker/report*")
+	public ModelAndView resultsMarkerSummaryExport(@RequestParam("jsonEncodedInput") String jsonEncodedInput) throws Exception  {
+		if(jsonEncodedInput == null) return errorMav("No Json String");
+		ModelAndView mav = new ModelAndView("hdpMarkersSummaryReport");
+		List<SolrHdpMarker> geneList = geneQuery(jsonEncodedInput);
+		mav.addObject("geneList", geneList);
+		return mav;
+	}
+
+	@RequestMapping(value="/disease/report*")
+	public ModelAndView resultsDiseaseSummaryExport(@RequestParam("jsonEncodedInput") String jsonEncodedInput) throws Exception {
+		if(jsonEncodedInput == null) return errorMav("No Json String");
+		ModelAndView mav = new ModelAndView("hdpDiseaseSummaryReport");
+		List<SolrHdpDisease> diseaseList = diseaseQuery(jsonEncodedInput);
+		mav.addObject("diseaseList", diseaseList);
+		return mav;
+	}
+}
