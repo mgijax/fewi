@@ -99,10 +99,15 @@
 				+ "Click a genotype row to see annotation details and<br/>view publication links for author information.";
 		}
 	}
-	// format the dialog with the new message and reside the popup after a 50ms wait (to let the formatting finish)
-//	$("#dialog").html("<div style='font-size: 90%'>" + msg + "</div>");
+	// format the dialog with the new message and reside the popup after a 50ms wait (to let the formatting finish).
+	// if the box would overflow the window, then allow wrapping.
 	$("#dialog").hide().html("<div style='font-size: 90%'>" + msg + "</div>").fadeIn('fast').width('auto');
-	setTimeout(function() { $(".ui-dialog").width('auto'); }, 50);
+	setTimeout(function() {
+		$(".ui-dialog").width('auto');
+		if ($(".ui-dialog").width() > $(window).width()) {
+			$(".ui-dialog").css('white-space', 'normal');
+		}
+	}, 50);
   };
 </script>
 
