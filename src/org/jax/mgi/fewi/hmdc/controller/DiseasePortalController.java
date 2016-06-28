@@ -257,7 +257,8 @@ public class DiseasePortalController {
 	 * (could be done in the JSP, but it was getting complex, so we may as well do it in Java)
 	 */
 	private String buildPopupTitle(List<String> humanMarkers, List<String> mouseMarkers, String header, boolean isPhenotype,
-			HmdcAnnotationGroup mpGroup, HmdcAnnotationGroup hpoGroup, HmdcAnnotationGroup omimGroup) {
+			HmdcAnnotationGroup mpGroup, HmdcAnnotationGroup hpoGroup, HmdcAnnotationGroup omimGroup,
+			boolean fromMarkerDetail) {
 
 		StringBuffer sb = new StringBuffer();
 		boolean human = ((hpoGroup != null) && (!hpoGroup.isEmpty())) ||
@@ -274,7 +275,15 @@ public class DiseasePortalController {
 		//	 1. Human Genes and Mouse Models for <header> and <human genes>/<mouse genes>
 		//	 2. Human Genes for <header> and <human genes>/<mouse genes>
 		//	 3. Mouse Models for <header> and <human genes>/<mouse genes>
+		// marker detail title format (from MP slimgrid on marker detail):
+		//   1. Phenotype annotations related to <header>
 		
+		if (fromMarkerDetail) {
+			sb.append("Phenotype annotations related to ");
+			sb.append(header);
+			return sb.toString();
+		}
+
 		// begin with organisms of included markers
 		if (isPhenotype) {
 			if (human) {
@@ -554,7 +563,7 @@ public class DiseasePortalController {
 		
 		// compose the popup title (could do in JSP, but it was getting complex...)
 		mav.addObject("pageTitle", buildPopupTitle(humanMarkers, mouseMarkers, header, isPhenotype,
-			mpGroup, hpoGroup, omimGroup));
+			mpGroup, hpoGroup, omimGroup, fromMarkerDetail));
 		
 		if (isPhenotype) {
 			mav.addObject("isPhenotype", 1);
