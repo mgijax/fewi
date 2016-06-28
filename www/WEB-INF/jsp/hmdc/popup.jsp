@@ -84,9 +84,13 @@
 		var gc = genoclusters[gcKey];
 		for (var i = 0; i < gc.length; i++) {
 			var g = gc[i];
-			msg = msg + superscript(g[1]) + " mutation " + alleleImsrLink(g[0], g[2])
-				+ "; any " + superscript(g[4]) + " mutation " + markerImsrLink(g[3], g[5])
-				+ "<br/>";
+			msg = msg + superscript(g[1]) + " mutation " + alleleImsrLink(g[0], g[2]);
+			
+			// if transgene, only show the allele part and omit the redundant marker part
+			if (g[1] != g[4]) {
+				msg = msg + "; any " + superscript(g[4]) + " mutation " + markerImsrLink(g[3], g[5]);
+			}
+			msg = msg + "<br/>";
 
 			if ((g[2] > 0) || (g[5] > 0)) {
 				allZero = false;
