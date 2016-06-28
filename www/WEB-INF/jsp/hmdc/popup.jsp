@@ -3,7 +3,42 @@
 
 <%@ page trimDirectiveWhitespaces="true" %>
 
-<%@ include file="header.jsp" %>
+<c:if test="${not empty fromMarkerDetail}">
+	<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
+	<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/bootstrap/dist/css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/bootstrap/spacelab/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/ng-dialog/css/ngDialog.min.css" />
+	<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/ng-dialog/css/ngDialog-theme-default.css" />
+	<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/ng-cells/dist/0.4.0/ng-cells.css" />
+	<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/css/hmdc/search.css" />
+	<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/css/hmdc/popup.css" />
+	<style>
+	.label {
+    	font-size: 14px;
+    	font-family: Arial,Helvetica;
+    	text-align: right;
+    	color: #000001;
+    	font-weight: bold;
+    	line-height: 1.5em;
+	}
+	table.summaryHeaderData {
+		line-height: 1.5em;
+	}
+	table.summaryHeader {
+		margin-top: 65px;
+		margin-bottom: 5px;
+	}
+	td {
+		font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px;
+	}
+	button, html input[type="button"], input[type="reset"], input[type="submit"] {
+		padding: 1px 6px;
+	}
+	</style>
+</c:if>
+<c:if test="${empty fromMarkerDetail}">
+	<%@ include file="header.jsp" %>
+</c:if>
 
 <script>
 	// change window title on page load
@@ -12,6 +47,12 @@
 
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 <link rel="stylesheet" href="//jqueryui.com/jquery-wp-content/themes/jqueryui.com/style.css">
+
+<style>
+	a {
+		color: blue;
+	}
+</style>
 
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
@@ -84,9 +125,13 @@
 		var gc = genoclusters[gcKey];
 		for (var i = 0; i < gc.length; i++) {
 			var g = gc[i];
-			msg = msg + superscript(g[1]) + " mutation " + alleleImsrLink(g[0], g[2])
-				+ "; any " + superscript(g[4]) + " mutation " + markerImsrLink(g[3], g[5])
-				+ "<br/>";
+			msg = msg + superscript(g[1]) + " mutation " + alleleImsrLink(g[0], g[2]);
+			
+			// if transgene, only show the allele part and omit the redundant marker part
+			if (g[1] != g[4]) {
+				msg = msg + "; any " + superscript(g[4]) + " mutation " + markerImsrLink(g[3], g[5]);
+			}
+			msg = msg + "<br/>";
 
 			if ((g[2] > 0) || (g[5] > 0)) {
 				allZero = false;
@@ -111,9 +156,14 @@
   };
 </script>
 
-</head>
-
-<body style="margin: 8px; min-width: 1px;">
+<c:if test="${not empty fromMarkerDetail}">
+	<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
+	<%@ include file="/WEB-INF/jsp/marker_header.jsp" %>
+</c:if>
+<c:if test="${empty fromMarkerDetail}">
+	</head>
+	<body style="margin: 8px; min-width: 1px;">
+</c:if>
 
 <div id="title">${pageTitle}</div>
 
@@ -205,7 +255,7 @@ td.mouse6 { background-color: #49648B; }
 td.mouse2 { background-color: #879EBA; }
 td.mouse1 { background-color: #C6D6E8; }
 
-tr.highlight:hover { background-color: #FFFFCC; cursor: pointer }
+tr.highlightable:hover { background-color: #FFFFCC; cursor: pointer }
 
 div.ui-dialog {
 	width: auto;
@@ -255,5 +305,10 @@ a.findMice {
 </c:forEach>
 </div>
 
-</body>
-</html>
+<c:if test="${not empty fromMarkerDetail}">
+	<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
+</c:if>
+<c:if test="${empty fromMarkerDetail}">
+	</body>
+	</html>
+</c:if>

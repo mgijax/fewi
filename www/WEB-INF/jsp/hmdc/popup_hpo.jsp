@@ -41,7 +41,7 @@
 			</c:if>
 			<c:set var="lastMarker" value="${marker}"/>
 		</c:if>
-		<tr class="highlight" title="click row to see phenotype details" onclick="window.open('${diseaseUrl}'); return true;">
+		<tr class="highlightable" title="click row to see phenotype details" onclick="window.open('${diseaseUrl}'); return true;">
 			<td class="border">${humanDiseaseMap[rowID]}</td>
 			<c:forEach var="hpoHeader" items="${hpoGroup.columns}">
 				<c:set var="columnID" value="${columnIDMap[hpoHeader]}" />
