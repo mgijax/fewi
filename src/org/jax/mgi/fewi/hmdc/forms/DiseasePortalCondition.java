@@ -19,6 +19,10 @@ public class DiseasePortalCondition {
 		return input;
 	}
 	public void setInput(String input) {
+		// strip OMIM: prefix
+		if(input.toLowerCase().startsWith("omim:")) {
+			input = input.replaceAll("(?i)omim:", "");
+		}
 		this.input = input;
 	}
 	public List<String> getParameters() {
@@ -30,7 +34,7 @@ public class DiseasePortalCondition {
 	
 	@JsonIgnore
 	public List<String> getIdTokens() {
-		input = input.replaceAll("[^\\w^:^\\.]+", " ");
+		input = input.replaceAll("[^\\w^:^\\.\\-]+", " ");
 		input = input.replaceAll("\\^", " ");
 		input = input.replaceAll("\"", " ");
 		input = input.replaceAll("\\s+", " ").trim();
