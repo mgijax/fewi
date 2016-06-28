@@ -35,7 +35,7 @@
 			<c:set var="conditional" value="&nbsp;&nbsp;(conditional)"/>
 		</c:if>
 
-		<tr class="highlight" title="click row to see phenotype details" onclick="window.open('${genoclusterUrl}'); return true;">
+		<tr class="highlightable" title="click row to see phenotype details" onclick="window.open('${genoclusterUrl}'); return true;">
 			<td class="border" title="click button to find models" onclick="event.cancelBubble=true;">
 				<c:set var="buttonID" value="fm${genoClusterKeyMap[rowID]}"/>
 				<c:set var="gcKey" value="${genoClusterKeyMap[rowID]}"/>

@@ -39,7 +39,7 @@
 		<c:forEach var="rowID" items="${omimGroup.humanRowIDs}">
 			<c:set var="markerUrl" value="${configBean.FEWI_URL}homology/cluster/key/${homologyClusterKeyMap[rowID]}"/>
 
-			<tr class="highlight" title="click row to see homology details" onclick="window.open('${markerUrl}'); return true;">
+			<tr class="highlightable" title="click row to see homology details" onclick="window.open('${markerUrl}'); return true;">
 			<td class="border" <c:if test="${omimGroup.hasMouseRows}">colspan="2"</c:if>>${humanSymbolMap[rowID]}</td>
 				<c:forEach var="omimHeader" items="${omimGroup.columns}">
 					<c:set var="columnID" value="${columnIDMap[omimHeader]}" />
@@ -78,7 +78,7 @@
 			<c:set var="conditional" value="&nbsp;&nbsp;(conditional)"/>
 		</c:if>
 
-		<tr class="highlight" title="click row to see phenotype details" onclick="window.open('${genoclusterUrl}'); return true;">
+		<tr class="highlightable" title="click row to see phenotype details" onclick="window.open('${genoclusterUrl}'); return true;">
 			<td class="border" title="click button to find models" onclick="event.cancelBubble=true;">
 				<c:set var="buttonID" value="fm${genoClusterKeyMap[rowID]}"/>
 				<c:set var="gcKey" value="${genoClusterKeyMap[rowID]}"/>
