@@ -181,8 +181,8 @@ public class DiseasePortalController {
 	 * term or termId parameters; multiples of each can be submitted.
 	 */
 	@RequestMapping(value="/phenotypePopup", method=RequestMethod.GET)
-	public ModelAndView getPhenotypePopup(HttpServletRequest request, HttpSession session) {
-		return getPopup(request, session, true);
+	public ModelAndView getPhenotypePopup(HttpServletRequest request, @RequestParam(value = "jsonEncodedInput", required = false) String jsonEncodedInput) {
+		return getPopup(request, jsonEncodedInput, true);
 	}
 
 	/* Serve up a disease popup, from clicking a disease cell on the HMDC grid.
@@ -191,8 +191,8 @@ public class DiseasePortalController {
 	 * term or termId parameters; multiples of each can be submitted.
 	 */
 	@RequestMapping(value="/diseasePopup", method=RequestMethod.GET)
-	public ModelAndView getDiseasePopup(HttpServletRequest request, HttpSession session) {
-		return getPopup(request, session, false);
+	public ModelAndView getDiseasePopup(HttpServletRequest request, @RequestParam(value = "jsonEncodedInput", required = false) String jsonEncodedInput) {
+		return getPopup(request, jsonEncodedInput, false);
 	}
 
 	/* strip the markup out of the allele combination and leave just the allele symbols
@@ -325,12 +325,10 @@ public class DiseasePortalController {
 	}
 
 	/* Serve up a phenotype or disease popup, from clicking a cell on the HMDC grid.
-	 * Expects two parameters in the request: gridClusterKey and header.  Any phenotype or
-	 * disease terms or IDs can be passed in for highlighting using the (optional)
-	 * term or termId parameters; multiples of each can be submitted.  The 'isPhenotype'
-	 * parameter should be true for phenotype popups and false for disease popups.
+	 * Expects two parameters in the request: gridClusterKey and header.  
+	 * The 'isPhenotype' parameter should be true for phenotype popups and false for disease popups.
 	 */
-	private ModelAndView getPopup(HttpServletRequest request, HttpSession session, boolean isPhenotype) {
+	private ModelAndView getPopup(HttpServletRequest request, String jsonEncodedInput, boolean isPhenotype) {
 		// from a marker detail page slimgrid, we'll need to get the marker ID and
 		// convert it to its corresponding gridClusterKey
 		String gridClusterKey = null;
@@ -358,7 +356,7 @@ public class DiseasePortalController {
 		DiseasePortalConditionGroup group = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			group = (DiseasePortalConditionGroup)mapper.readValue((String)session.getAttribute("jsonInput"), DiseasePortalConditionGroup.class);
+			group = (DiseasePortalConditionGroup)mapper.readValue(jsonEncodedInput, DiseasePortalConditionGroup.class);
 			//mainFilter = genQueryFilter(group);
 			//highlightFilter = genHighlightFilter(group);
 		} catch (Exception e) {
