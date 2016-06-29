@@ -83,7 +83,8 @@
 			}
 
 			if(url) {
-				var windowName = "popup_" + cellData.data["gridClusterKey"] + "_" + cellData.data["header"];
+				// append current time in milliseconds to ensure popup uniqueness
+				var windowName = "popup_" + cellData.data["gridClusterKey"] + "_" + cellData.data["header"] + (new Date()).getTime();
 				var child = window.open (url, windowName, 'width=800,height=600,resizable=yes,scrollbars=yes,alwaysRaised=yes');
 				child.focus();
 			}
