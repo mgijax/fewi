@@ -40,11 +40,6 @@
 	<%@ include file="header.jsp" %>
 </c:if>
 
-<script>
-	// change window title on page load
-    document.title = '${pageTitle}';
-</script>
-
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 <link rel="stylesheet" href="//jqueryui.com/jquery-wp-content/themes/jqueryui.com/style.css">
 
@@ -159,13 +154,24 @@
 <c:if test="${not empty fromMarkerDetail}">
 	<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 	<%@ include file="/WEB-INF/jsp/marker_header.jsp" %>
+	<div id="sgTitle">${pageTitle}</div>
+	<script>
+	var pageTitle = '${marker.symbol} ' + '${headerTerm} ' + 'phenotype data';
+	</script>
 </c:if>
 <c:if test="${empty fromMarkerDetail}">
 	</head>
 	<body style="margin: 8px; min-width: 1px;">
+	<div id="title">${pageTitle}</div>
+	<script>
+	var pageTitle = '${pageTitle}';
+	</script>
 </c:if>
 
-<div id="title">${pageTitle}</div>
+<script>
+	// change window title on page load
+    document.title = pageTitle;
+</script>
 
 <style>
 /* turn off odd keyhole-shaped box around Find Mice popup close button */
@@ -307,6 +313,11 @@ a.findMice {
 
 <c:if test="${not empty fromMarkerDetail}">
 	<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
+	<script>
+	// fix alignment in footer
+	$('td[align="center"]').css({'text-align':'center'})
+	$('td[align="right"]').css({'text-align':'right'})
+	</script>
 </c:if>
 <c:if test="${empty fromMarkerDetail}">
 	</body>
