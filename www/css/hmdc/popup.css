@@ -44,3 +44,6 @@ td.bgsensitive {
   padding-bottom:4px;
 }
 
+ul, ol {
+  margin-bottom: 0;
+}

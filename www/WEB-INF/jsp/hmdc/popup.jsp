@@ -315,8 +315,12 @@ a.findMice {
 	<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
 	<script>
 	// fix alignment in footer
-	$('td[align="center"]').css({'text-align':'center'})
-	$('td[align="right"]').css({'text-align':'right'})
+	$('td[align="center"]').css({'text-align':'center'});
+	$('td[align="right"]').css({'text-align':'right'});
+	// fix height of quick search
+	$('#searchToolTextArea').css({'height' : 'auto'});
+	// fix floating tabs in Firefox
+	$("#navRight ul:first").css({"margin-bottom" : 0});
 	</script>
 </c:if>
 <c:if test="${empty fromMarkerDetail}">
