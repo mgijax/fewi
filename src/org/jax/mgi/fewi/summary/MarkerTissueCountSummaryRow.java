@@ -20,7 +20,6 @@ public class MarkerTissueCountSummaryRow {
   // config values
   String fewiUrl   = ContextLoader.getConfigBean().getProperty("FEWI_URL");
   String pywiUrl   = ContextLoader.getConfigBean().getProperty("WI_URL");
-  String javawiUrl = ContextLoader.getConfigBean().getProperty("JAVAWI_URL");
 
 
   //-------------

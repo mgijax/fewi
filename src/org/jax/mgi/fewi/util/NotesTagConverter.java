@@ -71,7 +71,6 @@ public class NotesTagConverter
 			tagConversionList = new ArrayList<TagConversion>();
 			// Base URLs used in creating the replacement string patterns
 			String fewiURL          = ContextLoader.getConfigBean().getProperty("FEWI_URL");
-			//String javawiURL        = ContextLoader.getConfigBean().getProperty("JAVAWI_URL");
 			String pywiURL          = ContextLoader.getConfigBean().getProperty("WI_URL");
 			String mgihomeURL       = ContextLoader.getConfigBean().getProperty("MGIHOME_URL");
 			String ipURL            = ContextLoader.getExternalUrls().getProperty("InterPro");

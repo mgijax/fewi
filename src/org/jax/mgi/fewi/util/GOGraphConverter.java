@@ -28,7 +28,6 @@ public class GOGraphConverter
 
     /* -------------------------------------------------------------------- */
 	public String pythonWI;
-	public String javaWI;
 	public String fewi;
 	public String mgiHome;
 	public String imageUrl;
@@ -37,9 +36,6 @@ public class GOGraphConverter
 	{
 		// base URL for the Python WI (its www directory)
 		pythonWI = ContextLoader.getConfigBean().getProperty("WI_URL");
-	
-		// base URL for the Java WI (including 'servlet', above WIFetch)
-		javaWI = ContextLoader.getConfigBean().getProperty("JAVAWI_URL");
 	
 		// base URL for the Java WI (including 'servlet', above WIFetch)
 		fewi = ContextLoader.getConfigBean().getProperty("FEWI_URL");
