@@ -1,3 +1,8 @@
+<style>
+a.reset-button {
+    background-image: linear-gradient(#6dbf94, #449b6e 50%, #3e8d64);
+}
+</style>
 		<div ng-controller="SearchController">
 			<div class="searchView container">
 				<div class="queryBuilder">
@@ -55,6 +60,9 @@
 								<span class="text-danger" ng-if="vm.form.$pristine === false && vm.form.$invalid">
 									Ensure all fields are specified to submit your search.
 								</span>
+							</div>
+							<div class="pull-right">
+								<a onClick="location.reload()" class="btn btn-sm btn-primary reset-button">Reset</a>
 							</div>
 						</div>
 					</div>
