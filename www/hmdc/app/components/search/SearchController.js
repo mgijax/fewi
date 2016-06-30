@@ -126,11 +126,11 @@
 								required: true,
 								options: [
 									{ value: '', name: 'Please select a field' },
-									{ value: 'miS', name: 'Gene Symbol or ID' },
-									{ value: 'tsDtext', name: 'Phenotype or Disease Name' },
-									{ value: 'location', name: 'Genome Location' },
+									{ value: 'miS', name: 'Gene Symbol(s) or ID(s)' },
 									{ value: 'mnS', name: 'Gene Name' },
-									{ value: 'tsDid', name: 'Phenotype or Disease ID' },
+									{ value: 'tsDtext', name: 'Phenotype or Disease Name' },
+									{ value: 'tsDid', name: 'Phenotype or Disease ID(s)' },
+									{ value: 'location', name: 'Genome Location' },
 									//{ value: 'gene_upload', name: 'Gene File Upload'},
 									//{ value: 'vcd_upload', name: 'VCF file (v4.0 or later)' }
 								],
