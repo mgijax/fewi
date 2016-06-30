@@ -15,7 +15,7 @@
 	<c:set var="homologyClusterKeyMap" value="${omimGroup.homologyClusterKeyMap}"/>
 	<c:set var="conditionalRowIDs" value="${omimGroup.conditionalRowIDs}"/>
 
-	<table>
+	<table class="popupTable">
 	<!-- table header rows : disease headers span two rows; left cell is only one with two rows showing -->
 	<tr><td class="tableLabel" <c:if test="${omimGroup.hasMouseRows}">colspan="2"</c:if>>Diseases</td>
 	<c:forEach var="omimHeader" items="${omimGroup.columns}">

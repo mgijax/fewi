@@ -15,7 +15,7 @@
 	<c:set var="diseaseIDMap" value="${hpoGroup.diseaseIDMap}"/>
 	<c:set var="homologyClusterKeyMap" value="${hpoGroup.homologyClusterKeyMap}"/>
 
-	<table>
+	<table class="popupTable">
 	<c:forEach var="rowID" items="${hpoGroup.humanRowIDs}">
 		<c:set var="marker" value="${humanSymbolMap[rowID]}"/>
 		<c:set var="diseaseUrl" value="${fn:replace(externalUrls.HPO_Disease, '@@@@', diseaseIDMap[humanDiseaseMap[rowID]])}"/>

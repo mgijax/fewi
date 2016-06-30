@@ -15,7 +15,7 @@
 	<c:set var="columnIDMap" value="${mpGroup.columnIDMap}"/>
 	<c:set var="genoClusterKeyMap" value="${mpGroup.genoClusterKeyMap}"/>
  
-	<table>
+	<table class="popupTable">
 	<!-- table header rows : MP headers span two rows; left cell is only one with two rows showing -->
 	<tr><td colspan="2" class="tableLabel">Mouse Phenotypes</td>
 	<c:forEach var="mpHeader" items="${mpGroup.columns}">

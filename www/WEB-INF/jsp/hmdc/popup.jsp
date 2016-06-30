@@ -3,6 +3,11 @@
 
 <%@ page trimDirectiveWhitespaces="true" %>
 
+<%
+  Timer timer = (Timer) request.getAttribute("timer");
+  timer.time("made it to JSP");
+%>
+
 <c:if test="${not empty fromMarkerDetail}">
 	<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 	<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/bootstrap/dist/css/bootstrap.css" />
@@ -26,6 +31,10 @@
 <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
 <script src="${configBean.FEWI_URL}/assets/js/hmdc_popup.js"></script>
+<%
+  timer.time("through initial setup");
+%>
+
 <script>
   <% /* generate javascript object for genocluster data, used to populate Find Mice popups */ %>
   
@@ -40,6 +49,10 @@
   </c:forEach>
   setImsrUrl('${configBean.IMSRURL}');
 </script>
+
+<%
+  timer.time("generated genocluster javascript");
+%>
 
 <c:if test="${not empty fromMarkerDetail}">
 	<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
@@ -61,9 +74,13 @@
 	</script>
 </c:if>
 
+<%
+  timer.time("generated page header");
+%>
+
 <c:if test="${not empty isPhenotype}">
 	<div id="legend">
-	  <table id="hdpSystemPopupLegend">
+	  <table id="hdpSystemPopupLegend" class="popupTable">
 	    <tr><td>*</td><td>Aspects of the system are reported to show a normal phenotype.</td></tr>
 	    <tr><td class="bgsensitive">!</td><td>Indicates phenotype varies with strain background.</td></tr>
 <!--    <tr><td></td><td><span class="highlight">Highlighted Columns</span> contain at least one phenotype or disease result matching your search term(s).</td></tr> -->
@@ -76,6 +93,10 @@
   <p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
 </div>
 
+<%
+  timer.time("generated legend and dialog");
+%>
+
 <c:if test="${not empty isPhenotype}">
 <%@ include file="/WEB-INF/jsp/hmdc/popup_hpo.jsp" %>
 <p/>
@@ -85,6 +106,11 @@
 <c:if test="${not empty isDisease}">
 <%@ include file="/WEB-INF/jsp/hmdc/popup_omim.jsp" %>
 </c:if>
+
+<%
+  timer.time("generated pheno and disease sections");
+%>
+
 
 <!-- Table and Wrapping div -->
 
@@ -114,3 +140,7 @@
 	</body>
 	</html>
 </c:if>
+
+<%
+  timer.time("at end");
+%>
