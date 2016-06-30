@@ -96,6 +96,7 @@
 
 			$timeout(function () {
 				filterGrid();
+				$rootScope.$emit("GridFilterFinished");
 				buildGrid();
 				vm.gridloading = false;
 			}, 1);
@@ -177,6 +178,8 @@
 		function filterGrid() {
 			vm.displayRows = [];
 			vm.displayCols = [];
+			$rootScope.filteredDiseases = [];
+			$rootScope.filteredGenes = [];
 
 			var selectedPhenoTypesAndDiseases = [];
 			for(var i = 0; i < $rootScope.selectedPhenoTypesAndDiseasesModel.length; i++) {
@@ -187,6 +190,7 @@
 			for(var i = 0; i < $rootScope.selectedGenesModel.length; i++) {
 				selectedGenes.push($rootScope.selectedGenesModel[i].id);
 			}
+
 
 			for(var key in vm.jsonData.gridRows) {
 				var index = key;
@@ -205,6 +209,12 @@
 					}
 				}
 				if(showRow) {
+					for(var human in key.gridCluster.humanSymbols) {
+						$rootScope.filteredGenes.push(key.gridCluster.humanSymbols[human].symbol);
+					}
+					for(var marker in key.gridCluster.mouseSymbols) {
+						$rootScope.filteredGenes.push(key.gridCluster.mouseSymbols[marker].symbol);
+					}
 					vm.displayRows.push(index);
 				}
 			}
@@ -232,12 +242,22 @@
 					key = vm.jsonData.gridRows[key];
 					if(key.diseaseCells[header] && (selectedGenes.length == 0 || selectedGenes.indexOf(index) > -1) && (selectedPhenoTypesAndDiseases.length == 0 || selectedPhenoTypesAndDiseases.indexOf(header) > -1)) {
 						showCol = true;
+
+						if(key.diseaseCells[header].terms && key.diseaseCells[header].terms.length > 0) {
+							for(var i = 0; i < key.diseaseCells[header].terms.length; i++) {
+								if($rootScope.filteredDiseases.indexOf(key.diseaseCells[header].terms[i]) < 0) {
+									$rootScope.filteredDiseases.push(key.diseaseCells[header].terms[i]);
+								}
+							}
+						}
+
 					}
 				}
 				if(showCol) {
 					vm.displayCols.push(header);
 				}
 			}
+			//console.log($rootScope.filteredDiseases);
 		}
 
 		function buildGrid() {

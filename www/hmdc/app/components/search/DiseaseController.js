@@ -6,10 +6,28 @@
 		var vm = $scope.vm = {};
 
 		vm.resetDiseaseTable = false;
+		vm.filteredResults = [];
 
 		$scope.openDiseaseSource = function() {
 			ngDialog.open({ template: 'DiseaseSource' });
 		}
+
+		function filterMethod() {
+			var localFilteredResults = [];
+			if($rootScope.filteredDiseases) {
+				for(var key in vm.results) {
+					if($rootScope.filteredDiseases.indexOf(vm.results[key].term) > -1) {
+						localFilteredResults.push(vm.results[key]);
+					}
+				}
+				vm.filteredResults = localFilteredResults;
+			} else {
+				vm.filteredResults = vm.results;
+			}
+			$scope.$parent.$parent.tab.count = vm.filteredResults.length;
+		}
+
+		$rootScope.$on("GridFilterFinished", filterMethod);
 
 		$rootScope.$on("CallSearchMethod", function(event, data) {
 			vm.model = data;
@@ -22,6 +40,7 @@
 					$scope.$parent.$parent.tab.count = vm.results.length;
 					vm.resetDiseaseTable = true;
 					vm.loading = false;
+					filterMethod();
 				}, function (error) {
 					vm.errorMessage = error;
 			});

@@ -1,7 +1,7 @@
 <div ng-controller="GeneController">
 	Export: <a href="/diseasePortal/marker/report.txt?jsonEncodedInput={{ jsonEncodedQuery }}"><img src="http://www.informatics.jax.org/webshare/images/text.png" width="12" height="12">Text File</a> 
 
-	<table class="table table-bordered table-striped" st-reset="vm.resetGeneTable" st-table="displayedCollection" st-set-sort="sortFilter" st-safe-src="vm.results" ng-show="vm.results.length > 0">
+	<table class="table table-bordered table-striped" st-reset="vm.resetGeneTable" st-table="displayedCollection" st-set-sort="sortFilter" st-safe-src="vm.filteredResults" ng-show="vm.filteredResults.length > 0">
 		<thead>
 			<tr>
 				<th st-sort="organism" st-skip-natural="true" class="sortable">Organism <i st-sort="organism"></i></th>
