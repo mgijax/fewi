@@ -258,8 +258,6 @@ public class BatchSummaryRow {
     		for (BatchMarkerMpAnnotation annotation : mpAnnots) {
     			text = annotation.getMpTerm() + " (%s)";
 			url = fewiUrl + String.format("mp/annotations/%s?markerID=%s", annotation.getMpId(), marker.getPrimaryID() );
-//    			url = javawiUrl + String.format("WIFetch?page=mpAnnotSummary&markerKey=%d&id=%s",
-//   					marker.getMarkerKey(), annotation.getMpId());
     			mp.add(String.format(noWrap, String.format(text, String.format(urlPattern, url, "details"))));
 			}
     	}

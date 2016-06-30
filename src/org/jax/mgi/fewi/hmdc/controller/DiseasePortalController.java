@@ -29,6 +29,7 @@ import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.HmdcAnnotationGroup;
 import org.jax.mgi.fewi.util.Timer;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
+import org.jax.mgi.shr.jsonmodel.GridGenocluster;
 import org.jax.mgi.shr.jsonmodel.GridMarker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -439,9 +440,12 @@ public class DiseasePortalController {
 		Set<Integer> conditionalGenoclusters = new HashSet<Integer>();
 		
 		List<SolrHdpGridEntry> gridResults = results.getResultObjects();
+		List<GridGenocluster> genoclusters = new ArrayList<GridGenocluster>(gridResults.size());
+
 		for(SolrHdpGridEntry res: gridResults) {
 			Integer gridKey = res.getGridKey();
 			gridKeys.add(gridKey.toString());
+			genoclusters.add(res.getGridGenocluster());
 			
 			// mouse gridKeys have a non-null genocluster key; human data are not in genoclusters
 			if (res.getGenoClusterKey() != null) {
@@ -461,17 +465,6 @@ public class DiseasePortalController {
 		}
 		
 		timer.time("processed grid results");
-		
-		// need to get data for IMSR popup for each genocluster:
-		// { genocluster key : [ [ allele ID, allele symbol, IMSR count, marker ID, marker symbol, IMSR count ], ... ] }
-		
-		List<Integer> gcKeys = new ArrayList<Integer>();
-		for (Integer gcKey : genoClusterSeqNum.keySet()) {
-			gcKeys.add(gcKey);
-		}
-		List<HdpGenoCluster> genoclusters = hdpFinder.getGenoClustersByKeys(gcKeys);
-		
-		timer.time("got " + genoclusters.size() + " genoclusters");
 		
 		// pull out marker data needed for header
 		List<String> humanMarkers = null;

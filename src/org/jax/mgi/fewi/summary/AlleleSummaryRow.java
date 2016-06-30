@@ -33,7 +33,6 @@ public class AlleleSummaryRow
   String fewiUrl   = ContextLoader.getConfigBean().getProperty("FEWI_URL");
   String webshareUrl = ContextLoader.getConfigBean().getProperty("WEBSHARE_URL");
   String pywiUrl   = ContextLoader.getConfigBean().getProperty("WI_URL");
-  String javawiUrl = ContextLoader.getConfigBean().getProperty("JAVAWI_URL");
 
   public AlleleSummaryRow (Allele allele) {
     this.allele = allele;
