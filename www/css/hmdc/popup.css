@@ -47,3 +47,143 @@ td.bgsensitive {
 ul, ol {
   margin-bottom: 0;
 }
+
+.label {
+   	font-size: 14px;
+   	font-family: Arial,Helvetica;
+   	text-align: right;
+   	color: #000001;
+   	font-weight: bold;
+   	line-height: 1.5em;
+}
+
+table.summaryHeaderData {
+	line-height: 1.5em;
+}
+
+table.summaryHeader {
+	margin-top: 65px;
+	margin-bottom: 5px;
+}
+
+td {
+	font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px;
+}
+
+button, html input[type="button"], input[type="reset"], input[type="submit"] {
+	padding: 1px 6px;
+}
+
+/* turn off odd keyhole-shaped box around Find Mice popup close button */
+.ui-button-icon-only .ui-button-text, .ui-button-icons-only .ui-button-text {
+    padding: 0;
+}
+
+td.tableLabel {
+	font-weight: bold;
+	font-size: 110%;
+	text-align:left;
+	vertical-align:middle;
+}
+
+table tr td {
+	padding: 3px;
+	text-align: left;
+	vertical-align: middle;
+}
+
+td.headerTitle {
+	background-color: #dddddd;
+	height: 50px;
+	white-space: nowrap;
+}
+
+td.header {
+	height: 150px;
+	padding-bottom: 0px;
+	text-align: left;
+	vertical-align: bottom;
+	white-space: nowrap;
+	font-weight: normal;
+	max-width: 25px;
+	min-width: 25px;
+	width: 25px;
+}
+
+td.mid {
+	text-align: center;
+	vertical-align: middle;
+}
+
+span.bg {
+	color: red;
+	font-weight: bold;
+}
+
+span.normal {
+	color: #333333;
+	font-weight: bold;
+}
+
+div.header {
+	color: black;
+    text-indent: 2px;
+    width: 27px;
+    min-width: 27px;
+    max-width: 27px;
+    position: relative;
+    height: 100%;
+    transform: skew(-45deg,0deg);
+    -webkit-transform: skew(-45deg,0deg);
+    left: 70px;
+    overflow: hidden;
+    top: 0px;
+    border-left: 1px solid #dddddd;
+    border-right: 1px solid #dddddd;
+    border-top: 1px solid #dddddd;
+}
+
+span.header {
+	transform: skew(45deg, 0deg) rotate(315deg);
+    display: inline-block;
+    width: 90px;
+    position: absolute;
+    text-align: left;
+    left: -33px;
+    bottom: 25px;
+    font-size: 10pt;
+    font-weight: bold;
+    font-family: Arial, Helvetica;
+    color: #666666;
+}
+
+td.border {
+	border: thin solid black;
+}
+
+
+td.human100 { background-color: #F7861D; }
+td.human6 { background-color: #F4A041; }
+td.human2 { background-color: #F2BF79; }
+td.human1 { background-color: #FBDBB4; }
+
+td.mouse100 { background-color: #0C2255; }
+td.mouse6 { background-color: #49648B; }
+td.mouse2 { background-color: #879EBA; }
+td.mouse1 { background-color: #C6D6E8; }
+
+tr.highlightable:hover { background-color: #FFFFCC; cursor: pointer }
+
+div.ui-dialog {
+	width: auto;
+	white-space: nowrap;
+}
+
+a {
+	color: blue;
+}
+
+a.findMice {
+	color: blue;
+	text-decoration: underline;
+}
