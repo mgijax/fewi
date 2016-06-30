@@ -134,10 +134,16 @@
 	$('#searchToolTextArea').css({'height' : 'auto'});
 	// fix floating tabs in Firefox
 	$("#navRight ul:first").css({"margin-bottom" : 0});
+	// shift column headers downward (override table style)
+	$(".popupHeader").css({'padding-bottom':'0px'})
 	</script>
 </c:if>
 <c:if test="${empty fromMarkerDetail}">
 	</body>
+	<script>
+	// shift column headers downward (override table style)
+	$(".popupHeader").css({'padding-bottom':'0px'})
+	</script>
 	</html>
 </c:if>
 
