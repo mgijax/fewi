@@ -277,11 +277,10 @@ a.findMice {
 <c:if test="${not empty isPhenotype}">
 	<div id="legend">
 	  <table id="hdpSystemPopupLegend">
-	    <tr>
-		  <td>*</td><td>Aspects of the system are reported to show a normal phenotype.</td></tr><tr>
-		  <td class="bgsensitive">!</td><td>Indicates phenotype varies with strain background.</td></tr><tr>
-		  <td></td><td><span class="highlight">Highlighted Columns</span> contain at least one phenotype or disease result matching your search term(s).</td>
-	    </tr>
+	    <tr><td>*</td><td>Aspects of the system are reported to show a normal phenotype.</td></tr>
+	    <tr><td class="bgsensitive">!</td><td>Indicates phenotype varies with strain background.</td></tr>
+<!--    <tr><td></td><td><span class="highlight">Highlighted Columns</span> contain at least one phenotype or disease result matching your search term(s).</td></tr> -->
+		<tr><td></td><td>Darker colors indicate <span title="The blue squares indicate mouse data and get progressively darker with more supporting annotations. The lightest color represents one annotation. 2-5 annotations is represented by a darker shade, 6-99 annotations darker still and more than 100 annotations by the darkest color." style="color: blue; text-decoration: underline">more annotations</span></td></tr>
 	  </table>
 	</div>
 </c:if>
