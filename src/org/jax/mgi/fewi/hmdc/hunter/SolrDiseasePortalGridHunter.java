@@ -14,6 +14,7 @@ import org.jax.mgi.fewi.hunter.SolrHunter;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
+import org.jax.mgi.shr.jsonmodel.GridGenocluster;
 import org.jax.mgi.shr.jsonmodel.GridMarker;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -41,6 +42,7 @@ public class SolrDiseasePortalGridHunter extends SolrHunter<SolrHdpEntityInterfa
 		returnedFields.add(DiseasePortalFields.GENO_CLUSTER_KEY);
 		returnedFields.add(DiseasePortalFields.BY_GENOCLUSTER);
 		returnedFields.add(DiseasePortalFields.IS_CONDITIONAL);
+		returnedFields.add(DiseasePortalFields.IMSR_ALLELES);
 	}
 
 	@Override
@@ -60,6 +62,11 @@ public class SolrDiseasePortalGridHunter extends SolrHunter<SolrHdpEntityInterfa
 			gridResult.setHomologyClusterKey((Integer)doc.getFieldValue(DiseasePortalFields.HOMOLOGY_CLUSTER_KEY));
 			gridResult.setByGenoCluster((Integer) doc.getFieldValue(DiseasePortalFields.BY_GENOCLUSTER));
 			gridResult.setConditional((Integer) doc.getFieldValue(DiseasePortalFields.IS_CONDITIONAL));
+			try {
+				gridResult.setGridGenocluster((GridGenocluster) mapper.readValue((String) doc.getFieldValue(DiseasePortalFields.IMSR_ALLELES), GridGenocluster.class));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 			@SuppressWarnings("unchecked")
 			List<String> symbols = (List<String>) doc.getFieldValue(DiseasePortalFields.MARKER_SYMBOL);

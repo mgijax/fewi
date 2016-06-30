@@ -2,6 +2,7 @@ package org.jax.mgi.fewi.hmdc.solr;
 
 import java.util.List;
 
+import org.jax.mgi.shr.jsonmodel.GridGenocluster;
 import org.jax.mgi.shr.jsonmodel.GridMarker;
 
 public class SolrHdpGridEntry implements SolrHdpEntityInterface {
@@ -16,6 +17,7 @@ public class SolrHdpGridEntry implements SolrHdpEntityInterface {
 	private List<GridMarker> gridMouseSymbols;
 	private Integer byGenoCluster;
 	private Integer conditional;
+	private GridGenocluster gridGenocluster;
 	
 	public Integer getGridKey() {
 		return gridKey;
@@ -76,6 +78,12 @@ public class SolrHdpGridEntry implements SolrHdpEntityInterface {
 	}
 	public void setConditional(Integer conditional) {
 		this.conditional = conditional;
+	}
+	public GridGenocluster getGridGenocluster() {
+		return gridGenocluster;
+	}
+	public void setGridGenocluster(GridGenocluster gridGenocluster) {
+		this.gridGenocluster = gridGenocluster;
 	}
 	
 	// convenience methods

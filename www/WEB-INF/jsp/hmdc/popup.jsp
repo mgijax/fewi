@@ -32,12 +32,10 @@
   // genocluster key : list of [ allele ID, allele symbol, allele IMSR count, marker ID, marker symbol, marker IMSR count ]
   var genoclusters = {};
   <c:forEach var="gc" items="${genoclusters}">
-  	genoclusters["${gc.genoClusterKey}"] = [];
-  	<c:forEach var="allele" items="${gc.genotype.alleles}">
-  	  <c:if test="${allele.isWildType == 0}">
-  	    genoclusters["${gc.genoClusterKey}"].push([ "${allele.primaryID}", "${allele.symbol}", ${allele.imsrStrainCount},
-  	  	  "${allele.marker.primaryID}", "${allele.marker.symbol}", ${allele.imsrCountForMarker} ]);
-  	  </c:if>
+  	genoclusters["${gc.genoclusterKey}"] = [];
+  	<c:forEach var="allele" items="${gc.alleles}">
+  	  genoclusters["${gc.genoclusterKey}"].push([ "${allele.alleleID}", "${allele.alleleSymbol}", ${allele.alleleImsrCount},
+  		"${allele.markerID}", "${allele.markerSymbol}", ${allele.markerImsrCount} ]);
   	</c:forEach>
   </c:forEach>
   setImsrUrl('${configBean.IMSRURL}');
