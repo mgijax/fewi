@@ -20,6 +20,12 @@
 
 		<div class="container searchViewBox">
 			<div class="row">
+				<%@ include file="/WEB-INF/jsp/static/home/hmdc/summary_box.jsp" %>
+			</div>
+		</div>
+
+		<div class="container searchViewBox">
+			<div class="row">
 				<div class="col-sm-6">
 					<div class="mycontent-left">
 						<%@ include file="/WEB-INF/jsp/static/home/hmdc/resource_links.jsp" %>

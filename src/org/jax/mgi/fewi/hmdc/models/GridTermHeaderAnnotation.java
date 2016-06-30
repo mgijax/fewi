@@ -1,5 +1,8 @@
 package org.jax.mgi.fewi.hmdc.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jax.mgi.fewi.hmdc.visitors.GridVisitorInterface;
 
 public class GridTermHeaderAnnotation extends AbstractGridModel {
@@ -7,6 +10,7 @@ public class GridTermHeaderAnnotation extends AbstractGridModel {
 	private Integer normalCount = 0;
 	private Integer annotCount = 0;
 	private Integer humanAnnotCount = 0;
+	private List<String> terms = new ArrayList<String>();
 	private String header = "";
 	private Integer gridClusterKey = 0;
 	
@@ -36,6 +40,12 @@ public class GridTermHeaderAnnotation extends AbstractGridModel {
 	}
 	public void incHumanAnnotCount() {
 		humanAnnotCount += 1;
+	}
+	public List<String> getTerms() {
+		return terms;
+	}
+	public void setTerms(List<String> terms) {
+		this.terms = terms;
 	}
 	public String getHeader() {
 		return header;
