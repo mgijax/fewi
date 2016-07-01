@@ -14,7 +14,7 @@
 
 		function filterMethod() {
 			var localFilteredResults = [];
-			if($rootScope.filteredDiseases) {
+			if($rootScope.filteredDiseases && $rootScope.filteredDiseases.length > 0) {
 				for(var key in vm.results) {
 					if($rootScope.filteredDiseases.indexOf(vm.results[key].term) > -1) {
 						localFilteredResults.push(vm.results[key]);

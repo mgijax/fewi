@@ -13,7 +13,8 @@
 
 		function filterMethod() {
 			var localFilteredResults = [];
-			if($rootScope.filteredGenes) {
+
+			if($rootScope.filteredGenes && $rootScope.filteredGenes.length > 0) {
 				for(var key in vm.results) {
 					if($rootScope.filteredGenes.indexOf(vm.results[key].symbol) > -1) {
 						localFilteredResults.push(vm.results[key]);
