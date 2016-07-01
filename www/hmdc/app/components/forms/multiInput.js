@@ -7,7 +7,7 @@
   function multiInputConfig(formlyConfigProvider) {
     formlyConfigProvider.setType({
       name: 'multiInput',
-      templateUrl: 'search/forms/fieldTypes/multiInput.tpl.html',
+      templateUrl: 'search/forms/multiInput.tpl.html',
       defaultOptions: {
         noFormControl: true,
         wrapper: ['horizontalBootstrapHelp', 'bootstrapHasError'],

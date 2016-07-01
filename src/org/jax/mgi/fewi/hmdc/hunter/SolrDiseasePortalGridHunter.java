@@ -63,7 +63,10 @@ public class SolrDiseasePortalGridHunter extends SolrHunter<SolrHdpEntityInterfa
 			gridResult.setByGenoCluster((Integer) doc.getFieldValue(DiseasePortalFields.BY_GENOCLUSTER));
 			gridResult.setConditional((Integer) doc.getFieldValue(DiseasePortalFields.IS_CONDITIONAL));
 			try {
-				gridResult.setGridGenocluster((GridGenocluster) mapper.readValue((String) doc.getFieldValue(DiseasePortalFields.IMSR_ALLELES), GridGenocluster.class));
+				String gridGenoclusterString = (String)doc.getFieldValue(DiseasePortalFields.IMSR_ALLELES);
+				if(gridGenoclusterString != null) {
+					gridResult.setGridGenocluster((GridGenocluster) mapper.readValue(gridGenoclusterString, GridGenocluster.class));
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

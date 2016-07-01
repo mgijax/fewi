@@ -131,7 +131,7 @@
 									{ value: 'tsDtext', name: 'Phenotype or Disease Name' },
 									{ value: 'tsDid', name: 'Phenotype or Disease ID(s)' },
 									{ value: 'location', name: 'Genome Location' },
-									//{ value: 'gene_upload', name: 'Gene File Upload'},
+									{ value: 'gene_upload', name: 'Gene File Upload'},
 									//{ value: 'vcd_upload', name: 'VCF file (v4.0 or later)' }
 								],
 								onChange: function(value, options, scope) {
@@ -238,11 +238,10 @@
 								}
 							}
 						],
-/*
 						gene_upload: [
 							{
 								key: 'file', // pubmed id
-								type: 'upload',
+								type: 'txtupload',
 								className: 'inline-field',
 								templateOptions: {
 									label: '',
@@ -250,19 +249,52 @@
 								}
 							},
 							{
-								key: 'searchtype',
-								type: 'radio',
-								className: 'inline-field',
+								key: 'parameters[0]',
+								type: 'select',
+								defaultValue: 1,
+								className: 'pull-left pad30left',
 								templateOptions: {
-									label: 'Search for',
+									label: 'Column Number',
 									required: true,
 									options: [
-										{value: 'mouse', name: 'Mouse'},
-										{value: 'human', name: 'Human'},
+										{value: 1, name: '1'}, {value: 2, name: '2'}, {value: 3, name: '3'}, {value: 4, name: '4'}, {value: 5, name: '5'}, {value: 6, name: '6'}, {value: 7, name: '7'}, {value: 8, name: '8'}, {value: 9, name: '9'},
 									]
 								}
-							}
+							},
+							{
+								key: 'parameters[1]',
+								type: 'select',
+								className: 'pull-left pad30left',
+								defaultValue: 'tab',
+								templateOptions: {
+									label: 'Delimiter',
+									required: true,
+									options: [
+										{name: 'Tab \\t', value: 'tab'}, {name: 'SemiColon ;', value: 'colon'}, {name: 'Comma ,', value: 'comma'},
+									]
+								}
+							},
+							{
+								key: 'parameters[2]',
+								type: 'checkbox',
+								className: 'pull-left pad30left',
+								defaultValue: false,
+								templateOptions: {
+									label: 'Ignore Header Row'
+								}
+							},
+							{
+								key: 'sampledata',
+								type: 'readonly',
+								className: 'pull-left pad30left',
+								templateOptions: {
+									label: 'Sample Data:'
+								},
+								hideExpression: '!model.sampledata'
+							},
+
 						],
+/*
 						vcd_upload: [
 							{
 								key: 'name', // pubmed id

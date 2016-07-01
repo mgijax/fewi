@@ -29,6 +29,12 @@
       wrapper: ['bootstrapLabel', 'bootstrapHasError'],
     });
 
+    formlyConfigProvider.setType({
+      name: 'readonly',
+      extends: 'input',
+      template: '<div>{{model[options.key]}}</div>',
+      wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+    });
     // select
     formlyConfigProvider.setType({
       name: 'horizontalSelect',
