@@ -41,5 +41,4 @@
 			</div>
 		</div>
 
-	</body>
-</html>
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
