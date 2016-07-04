@@ -29,9 +29,9 @@
 		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/ng-cells/dist/0.4.0/ng-cells.min.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/app/app.module.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/forms/formConfig.js"></script>
-		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/forms/fieldWrappers/basicFieldWrappers.js"></script>
-		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/forms/fieldTypes/basicFieldTypes.js"></script>
-		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/forms/fieldTypes/multiInput.js"></script>
+		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/forms/basicFieldWrappers.js"></script>
+		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/forms/basicFieldTypes.js"></script>
+		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/forms/multiInput.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/forms/queryBuilder.type.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/search/SearchService.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/search/AutoCompleteService.js"></script>

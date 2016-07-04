@@ -4,7 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DiseasePortalCondition {
 
 	private String input;
@@ -31,7 +33,7 @@ public class DiseasePortalCondition {
 	public void setParameters(List<String> parameters) {
 		this.parameters = parameters;
 	}
-	
+
 	@JsonIgnore
 	public List<String> getIdTokens() {
 		input = input.replaceAll("[^\\w:\\.\\-\\(\\)\\/\\#\\@\\<\\>\\*]+", " ");

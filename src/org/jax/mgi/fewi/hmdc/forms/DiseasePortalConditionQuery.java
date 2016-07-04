@@ -36,11 +36,15 @@ public class DiseasePortalConditionQuery {
 	
 	public Filter genFilter() {
 		List<String> tokens = null;
-		if(field.equals(DiseasePortalFields.MARKER_ID_SEARCH) || field.equals(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_ID)) {
+		if(field.equals(DiseasePortalFields.MARKER_ID_SEARCH) || field.equals(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_ID) || field.equals(DiseasePortalFields.TERM_SEARCH_GENE_UPLOAD)) {
 			tokens = condition.getIdTokens();
 			List<Filter> filterList = new ArrayList<Filter>();
 			for(String token: tokens) {
-				filterList.add(new Filter(field, token, Operator.OP_EQUAL));
+				if(field.equals(DiseasePortalFields.TERM_SEARCH_GENE_UPLOAD)) {
+					filterList.add(new Filter(DiseasePortalFields.MARKER_ID_SEARCH, token, Operator.OP_EQUAL));
+				} else {
+					filterList.add(new Filter(field, token, Operator.OP_EQUAL));
+				}
 			}
 			return Filter.or(filterList);
 		} else if(field.equals(DiseasePortalFields.LOCATION)) {
