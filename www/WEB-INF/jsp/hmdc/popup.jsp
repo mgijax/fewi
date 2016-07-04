@@ -84,7 +84,7 @@
 	    <tr><td>*</td><td>Aspects of the system are reported to show a normal phenotype.</td></tr>
 	    <tr><td class="bgsensitive">!</td><td>Indicates phenotype varies with strain background.</td></tr>
 <!--    <tr><td></td><td><span class="highlight">Highlighted Columns</span> contain at least one phenotype or disease result matching your search term(s).</td></tr> -->
-		<tr><td></td><td>Darker colors indicate <span title="The blue squares indicate mouse data and get progressively darker with more supporting annotations. The lightest color represents one annotation. 2-5 annotations is represented by a darker shade, 6-99 annotations darker still and more than 100 annotations by the darkest color." style="color: blue; text-decoration: underline">more annotations</span></td></tr>
+		<tr><td></td><td>Darker colors indicate <span title="The orange and blue squares indicate human and mouse data, respectively.  Darker colors indicate more supporting annotations.  The lightest color represents one annotation. 2-5 annotations is represented by a darker shade, 6-99 annotations darker still and more than 100 annotations by the darkest color." style="color: blue; text-decoration: underline">more annotations</span></td></tr>
 	  </table>
 	</div>
 </c:if>
@@ -135,7 +135,7 @@
 	// fix floating tabs in Firefox
 	$("#navRight ul:first").css({"margin-bottom" : 0});
 	// shift column headers downward (override table style)
-	$(".popupHeader").css({'padding-bottom':'0px'})
+	$(".popupHeader").css({'padding-bottom':'0px'});
 	</script>
 </c:if>
 <c:if test="${empty fromMarkerDetail}">
