@@ -304,3 +304,8 @@ a.reset-button {
 a.reset-button:hover {
     background-image: linear-gradient(#6dbf94, #449b6e 50%, #3e8d64);
 }
+
+/* formatting for "You Searched For" and filter buttons */
+div.sideBySide { display: flex; width: 100% }
+div.ysf { margin-left: 15px; display: inline-block; width: 50%; margin-bottom: 15px }
+div.filters { display: inline-block }

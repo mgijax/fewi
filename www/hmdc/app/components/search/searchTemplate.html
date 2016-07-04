@@ -65,8 +65,10 @@
 			</div>
 
 			<div class="container-fluid searchViewBox" ng-show="displayTabs">
-				<div class="row">
-					<div class="col-xs-6 col-xs-offset-6">
+				<div class="row sideBySide">
+					<div ng-bind-html="vm.youSearchedFor" class="ysf">
+					</div>
+					<div class="filters">
 						<div class="btn-group pad30right pad10bottom">
 							<button type="button" ng-click="vm.applyFilters()">
 								Apply Filters

@@ -67,9 +67,7 @@ public class SolrDiseasePortalGridHunter extends SolrHunter<SolrHdpEntityInterfa
 				if(gridGenoclusterString != null) {
 					gridResult.setGridGenocluster((GridGenocluster) mapper.readValue(gridGenoclusterString, GridGenocluster.class));
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			} catch (Exception e) {}
 
 			@SuppressWarnings("unchecked")
 			List<String> symbols = (List<String>) doc.getFieldValue(DiseasePortalFields.MARKER_SYMBOL);

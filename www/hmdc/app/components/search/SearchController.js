@@ -49,12 +49,74 @@
 			$rootScope.selectedGenesModel = [];
 		}
 
+		/* update the "You Searched For" text to the left of the filter buttons
+		*/
+		function showYouSearchedFor(model) {
+			if ((model == null) || (model.queries.length == 0)) {
+				vm.youSearchedFor = $sce.trustAsHtml('');	// no parameters, so no YSF message
+			}
+			
+			var ysf = "<b>You Searched For...</b>";			// the You Searched For string we're computing
+			var op = '<b>' + model.operator + '</b> ';		// AND or OR, used to join query clauses
+
+			for (var i in model.queries) {
+				var query = model.queries[i];
+				var field = query['field'];
+				var isHuman = (query['condition']['parameters'].indexOf('human') >= 0);
+				var input = query['condition']['input'];
+				
+				ysf += '<br/>';								// line break between query clauses
+				if (i != 0) {								// second and later lines begin with operator
+					ysf += op;
+				}
+				
+				// custom message for each field type
+				if (field == 'miS') {
+					ysf += 'Genes Matching <b>' + input + '</b>';
+
+				} else if (field == 'mnS') {
+					ysf += 'Genes Matching <b>"' + input + '"</b>';
+
+				} else if (field == 'tsDid') {
+					ysf += 'Phenotypes or Diseases Matching <b>' + input + '</b>';
+
+				} else if (field == 'tsDtext') {
+					ysf += 'Phenotypes or Diseases Matching <b>"' + input + '"</b>';
+
+				} else if (field == 'location') {
+					if (isHuman) {
+						ysf += 'Human ';
+					} else {
+						ysf += 'Mouse ';
+					}
+					ysf += 'loci overlapping interval: <b>' + input + '</b>';
+
+				} else if (field == 'gene_upload') {
+					var parameters = query['condition']['parameters'];
+					var column = parameters[0];
+					var delimiter = parameters[1];
+					var skipHeader = parameters[2];
+
+					ysf += 'Genes matching file <b>TBD</b> column ' + column + ' ' + delimiter + ' delimited ';
+					if (skipHeader) {
+						ysf += ' (Ignore Header Row)';
+					}
+
+				} else {
+					// should not happen, but left for debugging purposes
+					ysf += field + ' <b>' + input + '</b>';
+				}
+			}
+			vm.youSearchedFor = $sce.trustAsHtml(ysf);
+		}
+		
 		function onSubmit() {
 			console.log("Submit: " + angular.toJson(vm.model));
 			$rootScope.displayTabs = true;
 			$rootScope.$emit("CallSearchMethod", vm.model);
 			vm.hideQueryForm = true;
 			$rootScope.jsonEncodedQuery = encodeURIComponent(angular.toJson(vm.model));
+			showYouSearchedFor(vm.model);
 		}
 
 		vm.tabs = {
