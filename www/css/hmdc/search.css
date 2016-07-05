@@ -309,3 +309,7 @@ a.reset-button:hover {
 div.sideBySide { display: flex; width: 100% }
 div.ysf { margin-left: 15px; display: inline-block; width: 50%; margin-bottom: 15px }
 div.filters { display: inline-block }
+
+/* column header classes for grid */
+span.hgHeader { background-color: #FBDBB4; font-weight: bold; white-space: nowrap }
+span.mgHeader { background-color: #C6D6E8; font-weight: bold; white-space: nowrap }

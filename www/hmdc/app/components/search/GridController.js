@@ -270,8 +270,8 @@
 			vm.GeneCount = 0;
 
 			var headerContent = [];
-			headerContent.push("Human Gene");
-			headerContent.push("Mouse Gene");
+			headerContent.push("<span class='hgHeader'>Human Gene</span>");
+			headerContent.push("<span class='mgHeader'>Mouse Gene</span>");
 			vm.solrQuery = vm.jsonData.filterQuery;
 			
 			// Push the MP Headers into the headerContent row
