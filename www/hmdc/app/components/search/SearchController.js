@@ -68,7 +68,7 @@
 				vm.youSearchedFor = $sce.trustAsHtml('');	// no parameters, so no YSF message
 			}
 			
-			var ysf = "<b>You Searched For...</b>";			// the You Searched For string we're computing
+			var ysf = "<b>You searched for...</b>";			// the You Searched For string we're computing
 			var op = '<b>' + model.operator + '</b> ';		// AND or OR, used to join query clauses
 
 			for (var i in model.queries) {
@@ -84,16 +84,16 @@
 				
 				// custom message for each field type
 				if (field == 'miS') {
-					ysf += 'Genes Matching <b>' + input + '</b>';
+					ysf += 'Gene Symbols or IDs matching <b>' + input + '</b>';
 
 				} else if (field == 'mnS') {
-					ysf += 'Genes Matching <b>"' + input + '"</b>';
+					ysf += 'Genes matching <b>"' + input + '"</b>';
 
 				} else if (field == 'tsDid') {
-					ysf += 'Phenotypes or Diseases Matching <b>' + input + '</b>';
+					ysf += 'Phenotype or Disease IDs matching <b>' + input + '</b>';
 
 				} else if (field == 'tsDtext') {
-					ysf += 'Phenotypes or Diseases Matching <b>"' + input + '"</b>';
+					ysf += 'Phenotypes or Diseases matching <b>"' + input + '"</b>';
 
 				} else if (field == 'location') {
 					if (isHuman) {
