@@ -73,9 +73,6 @@
 .superscript { vertical-align: super; font-size: 90%}
 </style>
 
-<script>
-</script>
-
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 
@@ -87,7 +84,7 @@
 
 <!-- structural table -->
 <table class="detailStructureTable">
-
+<c:set var="hpoUrl" value="${fn:replace(externalUrls.HPO_Disease, '@@@@', disease.primaryID)}"/>
 
   <!-- ROW1 : Human Disease -->
   <tr >
@@ -97,6 +94,9 @@
     <td class="<%=rightTdStyles.getNext() %>">
       <span class="enhance">${disease.disease}</span><br/>
       <span class="label">${disease.logicalDB} ID:</span> ${linkOut}
+      <c:if test="${disease.hpoTermCount > 0}">
+	      <br/><span class="label">Human Phenotype Ontology</span> <a href="${hpoUrl}" target="_blank">associations</a>
+      </c:if>
     </td>
   </tr>
 
