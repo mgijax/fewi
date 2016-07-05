@@ -49,6 +49,18 @@
 			$rootScope.selectedGenesModel = [];
 		}
 
+  		// find a string beginning with the given string 'c' that doesn't appear in string 's'
+  		function findTag(c, s) {
+	        if (s.indexOf(c) < 0) { return c; }
+	        return findTag(c + c[0], s);
+  		};
+
+		// convert MGI superscript notation <...> to HTML superscript tags
+		function superscript(s) {
+			var openTag = findTag('{', s);
+			return s.split('<').join(openTag).split('>').join('</sup>').split(openTag).join('<sup>');
+		};
+
 		/* update the "You Searched For" text to the left of the filter buttons
 		*/
 		function showYouSearchedFor(model) {
@@ -63,7 +75,7 @@
 				var query = model.queries[i];
 				var field = query['field'];
 				var isHuman = (query['condition']['parameters'].indexOf('human') >= 0);
-				var input = query['condition']['input'];
+				var input = superscript(query['condition']['input']);
 				
 				ysf += '<br/>';								// line break between query clauses
 				if (i != 0) {								// second and later lines begin with operator
