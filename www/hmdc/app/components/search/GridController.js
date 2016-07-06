@@ -199,7 +199,6 @@
 				selectedGenes.push($rootScope.selectedGenesModel[i].id);
 			}
 
-
 			for(var key in vm.jsonData.gridRows) {
 				var index = key;
 				key = vm.jsonData.gridRows[key];
@@ -265,7 +264,12 @@
 					vm.displayCols.push(header);
 				}
 			}
-			//console.log($rootScope.filteredDiseases);
+			
+			// if no user-selected filter values, we don't need to filter the Genes and Diseases tabs
+			if ((selectedPhenoTypesAndDiseases.length == 0) && (selectedGenes.length == 0)) {
+				$rootScope.filteredDiseases = [];
+				$rootScope.filteredGenes = [];
+			}
 		}
 
 		function buildGrid() {
