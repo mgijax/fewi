@@ -30,7 +30,6 @@
 		$rootScope.$on("GridFilterFinished", filterMethod);
 
 		vm.removeFilters = function() {
-			console.log("DiseaseController.removeFilters()");
 			$rootScope.selectedPhenoTypesAndDiseasesModel = [];
 			$rootScope.selectedGenesModel = [];
 			$rootScope.$emit("FilterChanged");

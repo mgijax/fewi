@@ -104,7 +104,6 @@
 		});
 
 		vm.removeFilters = function() {
-			console.log("GridController.removeFilters()");
 			$rootScope.selectedPhenoTypesAndDiseasesModel = [];
 			$rootScope.selectedGenesModel = [];
 			$rootScope.$emit("FilterChanged");
