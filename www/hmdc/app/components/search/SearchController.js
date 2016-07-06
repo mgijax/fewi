@@ -44,9 +44,9 @@
 		}
 
 		vm.removeFilters = function() {
-			$rootScope.$emit("FilterChanged");
 			$rootScope.selectedPhenoTypesAndDiseasesModel = [];
 			$rootScope.selectedGenesModel = [];
+			$rootScope.$emit("FilterChanged");
 		}
 
   		// find a string beginning with the given string 'c' that doesn't appear in string 's'

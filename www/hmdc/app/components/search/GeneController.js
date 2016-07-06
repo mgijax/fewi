@@ -29,6 +29,13 @@
 
 		$rootScope.$on("GridFilterFinished", filterMethod);
 
+		vm.removeFilters = function() {
+			console.log("GeneController.removeFilters()");
+			$rootScope.selectedPhenoTypesAndDiseasesModel = [];
+			$rootScope.selectedGenesModel = [];
+			$rootScope.$emit("FilterChanged");
+		}
+
 		$rootScope.$on("CallSearchMethod", function(event, data) {
 			vm.model = data;
 			vm.loading = true;
@@ -39,6 +46,7 @@
 					vm.resetGeneTable = true;
 					vm.loading = false;
 					filterMethod();
+					vm.removeFilters();
 				}, function (error) {
 					vm.errorMessage = error;
 			});

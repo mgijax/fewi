@@ -103,6 +103,13 @@
 
 		});
 
+		vm.removeFilters = function() {
+			console.log("GridController.removeFilters()");
+			$rootScope.selectedPhenoTypesAndDiseasesModel = [];
+			$rootScope.selectedGenesModel = [];
+			$rootScope.$emit("FilterChanged");
+		}
+
 		$rootScope.$on("CallSearchMethod", function(event, data) {
 			vm.model = data;
 
@@ -115,6 +122,7 @@
 					filterGrid();
 					buildGrid();
 					vm.gridloading = false;
+					vm.removeFilters();
 				}, function (error) {
 					vm.errorMessage = error;
 			});
