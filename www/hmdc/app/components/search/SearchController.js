@@ -108,10 +108,12 @@
 					var column = parameters[0];
 					var delimiter = parameters[1];
 					var skipHeader = parameters[2];
+					var file = query['condition']['file'];
+					var filename = file['name'];
 
-					ysf += 'Genes matching file <b>TBD</b> column ' + column + ' ' + delimiter + ' delimited ';
+					ysf += 'Genes matching file <b>' + filename + '</b> column ' + column + ' ' + delimiter + ' delimited ';
 					if (skipHeader) {
-						ysf += ' (Ignore Header Row)';
+						ysf += ' (ignore header row)';
 					}
 
 				} else {
