@@ -3,12 +3,11 @@
 	<body id="body">
 		<div id="headerContainer">
 			<div class="hmdcbox">
-				<img ng-show="showImage" ng-click="showImage = !showImage" src="/assets/images/HMDC_logo.jpg" height=40 />
-				<img ng-hide="showImage" ng-click="showImage = !showImage" src="/assets/images/HMDC_logo2.jpg" height=40 />
+				<a href="${configBean.FEWI_URL}diseasePortal"><img src="/assets/images/HMDC_logo.jpg" height=40 /></a>
 			</div>	
 			<div class="links floatleft">
-				<a target="_blank" href="${configBean.FEWI_URL}">About</a>
-				<a target="_blank" href="${configBean.FEWI_URL}">Help</a>
+				<a target="_blank" href="${configBean.MGIHOME_URL}projects/aboutHMDC.shtml">About</a>
+				<a target="_blank" href="${configBean.USERHELP_URL}HMDC_examples.shtml">Help</a>
 				<a target="_blank" href="http://www.findmice.org/index.jsp">Find Mice(IMSR)</a>
 				<a target="_blank" href="/mgihome/support/mgi_inbox.shtml">Contact Us</a>
 			</div>
