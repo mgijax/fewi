@@ -20,7 +20,7 @@
 	<tr><td class="tableLabel" <c:if test="${omimGroup.hasMouseRows}">colspan="2"</c:if>>Diseases</td>
 	<c:forEach var="omimHeader" items="${omimGroup.columns}">
 		<c:set var="diseaseUrl" value="${configBean.FEWI_URL}disease/${diseaseIDMap[omimHeader]}"/>
-		<td rowspan="2" class="popupHeader"><div class="header" title="${omimHeader}"><a href="${diseaseUrl}" target="_blank"><span class="header">${omimHeader}</span></a></div></td>
+		<td rowspan="2" class="popupHeader"><div class="header" title="${omimHeader} -- click to see disease details"><a href="${diseaseUrl}" target="_blank"><span class="header">${omimHeader}</span></a></div></td>
 	</c:forEach>
 	</tr>
 	

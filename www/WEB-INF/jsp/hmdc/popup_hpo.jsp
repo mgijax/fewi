@@ -32,7 +32,7 @@
 				<tr><td class="tableLabel">Human Phenotypes</td>
 				<c:set var="showHeaders" value=""/>
 				<c:forEach var="hpoHeader" items="${hpoGroup.columns}">
-					<td rowspan="2" class="popupHeader"><div class="header" title="${hpoHeader} -- click to see disease details"><span class="header">${hpoHeader}</span></div></td>
+					<td rowspan="2" class="popupHeader"><div class="header" title="${hpoHeader}"><span class="header">${hpoHeader}</span></div></td>
 				</c:forEach>
 				</tr>
 				<tr>
