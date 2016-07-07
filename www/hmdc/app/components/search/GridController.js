@@ -2,7 +2,7 @@
 	'use strict';
 	angular.module('hmdc.search').controller('GridController', GridController);
 
-	function GridController($rootScope, $scope, $log, Search, naturalSortService, $timeout, $window) {
+	function GridController($rootScope, $scope, $log, Search, naturalSortService, $timeout, $window, $sce) {
 		var vm = $scope.vm = {};
 
 		vm.mustHideLegend = true;
@@ -411,7 +411,13 @@
 
 			$scope.$parent.$parent.tab.count = newResults.totalrowcount + " x " + newResults.totalcolcount;
 
-			$rootScope.gridResultsString = "Showing " + newResults.maxrows + " of " + newResults.totalrowcount + " rows scroll down to see more.";
+			if (newResults.maxrows < newResults.totalrowcount) {
+				$rootScope.gridResultsString = $sce.trustAsHtml("Showing " + newResults.maxrows + " of " + newResults.totalrowcount + " rows; scroll down to see more. "
+					+ "<img id='sizeHelpImage' src='/assets/images/help_icon_16.png' style='margin-top: -5px; margin-left: 3px; cursor: pointer;'"
+					+ " title='To see more rows at a time, use a larger browser window or zoom out and re-run your search.'>");
+			} else {
+				$rootScope.gridResultsString = $sce.trustAsHtml("Showing " + newResults.maxrows + " of " + newResults.totalrowcount + " rows.");
+			}
 
 			newResults.data = data;
 
