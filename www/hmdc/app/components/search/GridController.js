@@ -122,10 +122,23 @@
 					buildGrid();
 					vm.gridloading = false;
 					vm.removeFilters();
+					$rootScope.$emit("ClearFilterText");
 				}, function (error) {
 					vm.errorMessage = error;
 			});
 
+		});
+		
+		$rootScope.$on("ClearFilterText", function(event, data) {
+			var myFilters = jQuery('[ng-model=searchFilter]');
+			var i = 0;
+			while (i < myFilters.length) {
+				var myFilter = myFilters[i];
+				/* after we clear the value, need to fire an event to bring back the options below */
+				myFilter.value = '';
+				myFilter.dispatchEvent(new Event("change"));
+				i++;
+			}
 		});
 
 		function updateWindowSize() {

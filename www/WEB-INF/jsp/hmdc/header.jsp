@@ -4,6 +4,11 @@
 <html ng-app="HMDCApplication" ng-controller="StyleController">
 	<head>
 
+		<script type="text/javascript" src="${configBean.WEBSHARE_URL}js/jquery-1.10.2.min.js"></script>
+		<script>
+		<!-- put jQuery in no-conflicts mode, so no dispute of the $ sign -->
+		$.noConflict();
+		</script>
 		<!-- import jquery UI specifically for this page -->
 		<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/bootstrap/dist/css/bootstrap.css" />
 		<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/bootstrap/spacelab/bootstrap.min.css" />
