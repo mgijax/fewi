@@ -21,6 +21,10 @@
 					}
 				}
 				vm.filteredResults = localFilteredResults;
+			} else if ($rootScope.filteredGenes && $rootScope.filteredGenes.length > 0) {
+				// If we get here, the user filtered by genes with no diseases, which means we should
+				// show no diseases rather than the (default) full set.
+				vm.filteredResults = localFilteredResults;
 			} else {
 				vm.filteredResults = vm.results;
 			}
