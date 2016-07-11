@@ -143,12 +143,23 @@
 
 		function updateWindowSize() {
 			var cellsize = 20;
+			
+			// minimum of 5 columns shown
 			vm.windowmaxcols = Math.floor(($window.innerWidth - 300) / cellsize);
 			if(vm.windowmaxcols < 5) vm.windowmaxcols = 5;
+
+			// if "You Searched For" div is tall, need to figure in the extra beyond the filter buttons
+			var ysfOverflow = 0;
+			var ysfList = jQuery('.ysf');
+			var buttonList = jQuery('.btn-group');
+			if ((ysfList.length > 0) && (buttonList.length > 0)) {
+				ysfOverflow = Math.max(0, ysfList[0].getBoundingClientRect().height - buttonList[0].getBoundingClientRect().height);
+			}
+			
 			// Top header up to the bottom of the header line plus 40
 			// Without the wrapping of: Human  Mouse: Disease Connection
-			vm.windowmaxrows = Math.floor(($window.innerHeight - 470) / cellsize);
-			if(vm.windowmaxrows < 5) vm.windowmaxrows = 5;
+			vm.windowmaxrows = Math.floor(($window.innerHeight - 470 - ysfOverflow) / cellsize);
+			if(vm.windowmaxrows < 15) vm.windowmaxrows = 15;
 		}
 
 		function buildFilterLists() {
