@@ -47,6 +47,7 @@
 			$rootScope.selectedPhenoTypesAndDiseasesModel = [];
 			$rootScope.selectedGenesModel = [];
 			$rootScope.$emit("FilterChanged");
+			$rootScope.$emit("ClearFilterText");
 		}
 
   		// find a string beginning with the given string 'c' that doesn't appear in string 's'
