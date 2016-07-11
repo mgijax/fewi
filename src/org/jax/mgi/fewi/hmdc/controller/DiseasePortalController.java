@@ -27,7 +27,6 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.HmdcAnnotationGroup;
-import org.jax.mgi.fewi.util.Timer;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 import org.jax.mgi.shr.jsonmodel.GridGenocluster;
 import org.jax.mgi.shr.jsonmodel.GridMarker;
@@ -350,8 +349,6 @@ public class DiseasePortalController {
 		String markerID = request.getParameter("markerID");
 		boolean fromMarkerDetail = false;
 		
-		Timer timer = new Timer(logger, "getPopup");
-
 		if (markerID != null) {
 			Integer gck = getGridClusterKey(markerID);
 			if (gck != null) {
@@ -359,8 +356,6 @@ public class DiseasePortalController {
 			}
 			fromMarkerDetail = true;
 		}
-		
-		timer.time("got gridClusterKey");
 		
 		// collect the required parameters and check that they are specified
 		if (gridClusterKey == null) {
@@ -371,8 +366,6 @@ public class DiseasePortalController {
 		String header = request.getParameter("header");
 		if (header == null) { return errorMav("Missing header parameter"); }
 
-		timer.time("verified parameters");
-		
 		DiseasePortalConditionGroup group = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();
@@ -391,8 +384,6 @@ public class DiseasePortalController {
 			}
 		}
 		
-		timer.time("processed JSON input");
-
 		Filter mainFilter = genQueryFilter(group);
 		
 		List<Filter> filterList = new ArrayList<Filter>();
@@ -402,16 +393,12 @@ public class DiseasePortalController {
 		filterList.add(new Filter(DiseasePortalFields.TERM_HEADER, header));
 		filterList.add(new Filter(DiseasePortalFields.GRID_CLUSTER_KEY, gridClusterKey));
 		
-		timer.time("produced filters");
-		
 		// run the query to get the set of grid results
 		SearchParams params = new SearchParams();
 		params.setPageSize(10000);
 		params.setFilter(Filter.and(filterList));
 		params.setReturnFilterQuery(true);
 		SearchResults<SolrHdpGridEntry> results = hdpFinder.getGridResults(params);
-		
-		timer.time("got " + results.getTotalCount() + " grid results");
 		
 		// cache data from the grid to integrate later on with their annotations
 		
@@ -464,8 +451,6 @@ public class DiseasePortalController {
 			}
 		}
 		
-		timer.time("processed grid results");
-		
 		// pull out marker data needed for header
 		List<String> humanMarkers = null;
 		List<String> mouseMarkers = null;
@@ -480,8 +465,6 @@ public class DiseasePortalController {
 			for (GridMarker marker : first.getGridMouseSymbols()) { mouseMarkers.add(marker.getSymbol()); }
 		}
 		
-		timer.time("found human and mouse symbols");
-		
 		/* For display on the popup, we want only the annotations that contribute to the cell
 		 * identified by the grid cluster key (row) and the header (column).  At this point, we can
 		 * use the individual grid keys rather than the grid cluster key, as the latter is made up
@@ -493,8 +476,6 @@ public class DiseasePortalController {
 		params.setFilter(Filter.and(annotationFilters));
 		
 		SearchResults<SolrHdpGridAnnotationEntry> annotationResults = hdpFinder.getGridAnnotationResults(params);
-		
-		timer.time("got " + annotationResults.getTotalCount() + " annotation results");
 		
 		/* need to split the annotation results up into their categories (one per table displayed):
 		 *	1. mouse genotype/phenotype (MP) annotations
@@ -541,8 +522,6 @@ public class DiseasePortalController {
 			}
 		}
 		
-		timer.time("split annotations into groups");
-
 		// begin collecting the mav to return
 		ModelAndView mav = new ModelAndView("hmdc/popup");
 		
@@ -552,7 +531,6 @@ public class DiseasePortalController {
 
 		// squish the multiple human gene/disease rows down into one row per gene
 		omimGroup.consolidateHumanRows();
-		timer.time("consolidated human rows in OMIM group");
 		
 		// compose the popup title (could do in JSP, but it was getting complex...)
 		mav.addObject("pageTitle", buildPopupTitle(humanMarkers, mouseMarkers, header, isPhenotype,
@@ -581,26 +559,20 @@ public class DiseasePortalController {
 		mav.addObject("annotationCount", annotationResults.getTotalCount());
 		mav.addObject("genoclusters", genoclusters);
 
-		timer.time("put basic data in mav");
-		
 		if (fromMarkerDetail) {
 			mav.addObject("fromMarkerDetail", 1);
 			
 			try {
-				timer.time("looking for markers");
 				SearchResults<Marker> markerResults = markerFinder.getMarkerByID(markerID);
 				List<Marker> markers = markerResults.getResultObjects();
 				if ((markers != null) && (markers.size() > 0)) {
-					timer.time("found " + markers.size() + " markers");
 					mav.addObject("marker", markers.get(0));
 				}
-				timer.time("found " + markers.size() + " markers for " + markerID);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return errorMav("Cannot find gene identified by " + markerID);
 			}
 		}
-		mav.addObject("timer", timer);
 		return mav;
 	}
 
