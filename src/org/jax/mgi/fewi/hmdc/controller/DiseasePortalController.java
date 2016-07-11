@@ -101,7 +101,12 @@ public class DiseasePortalController {
 		
 		SearchResults<SolrHdpGridAnnotationEntry> annotationResults = hdpFinder.getGridAnnotationResults(params);
 		
-		params.setFilter(highlightFilter);
+		List<Filter> gridKeyAwareHighlights = new ArrayList<Filter>();
+		gridKeyAwareHighlights.add(highlightFilter);
+		gridKeyAwareHighlights.add(new Filter(DiseasePortalFields.GRID_KEY, gridKeys, Operator.OP_IN));
+		params.setFilter(Filter.and(gridKeyAwareHighlights));
+
+		//params.setFilter(highlightFilter);
 		List<String> highLights = hdpFinder.getGridHighlights(params);
 		
 		GridVisitor gv = new GridVisitor(results, annotationResults, highLights);
