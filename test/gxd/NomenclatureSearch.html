@@ -273,7 +273,7 @@
 				<li>open the GXD query form</li>
 				<li>Type <b concordion:set="#query">not</b> in the nomenclature field and press the search button</li>
 				<li>verify that only the genes
-				    <table cc:verifyRowsUnordered="#result : getGeneSymbolsByNomen(#query)">
+				    <table cc:verifySupersetOf="#result : getGeneSymbolsByNomen(#query)">
 				        <tr><th concordion:assertEquals="#result">Expected Result Set</th></tr>
 				        <tr><td>Noto</td></tr>
 				        <tr><td>Akp3</td></tr>
