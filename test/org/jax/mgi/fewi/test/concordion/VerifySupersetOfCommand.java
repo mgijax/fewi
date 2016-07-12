@@ -22,7 +22,7 @@ import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 
 /**
- * Verify that the results returned is a subset of the list provided
+ * Verify that the results returned is a superset of the list provided
  * It only fails if 0 results are returned or if a result is returned that does not exist in the expected result set.
  * 
  * @author kstone
@@ -30,7 +30,7 @@ import org.concordion.internal.util.Check;
  */
 public class VerifySupersetOfCommand extends AbstractCommand {
 
-    private Announcer<VerifyRowsListener> listeners = Announcer.to(VerifyRowsListener.class);
+    private final Announcer<VerifyRowsListener> listeners = Announcer.to(VerifyRowsListener.class);
 
     public VerifySupersetOfCommand()
     {
