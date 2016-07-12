@@ -101,13 +101,16 @@ public class DiseasePortalController {
 		
 		SearchResults<SolrHdpGridAnnotationEntry> annotationResults = hdpFinder.getGridAnnotationResults(params);
 		
-		List<Filter> gridKeyAwareHighlights = new ArrayList<Filter>();
-		gridKeyAwareHighlights.add(highlightFilter);
-		gridKeyAwareHighlights.add(new Filter(DiseasePortalFields.GRID_KEY, gridKeys, Operator.OP_IN));
-		params.setFilter(Filter.and(gridKeyAwareHighlights));
+		List<String> highLights = null;
 
-		//params.setFilter(highlightFilter);
-		List<String> highLights = hdpFinder.getGridHighlights(params);
+		// only highlight terms if we had a phenotype or disease condition in the search
+		if (highlightFilter.hasNestedFilters()) {
+			List<Filter> gridKeyAwareHighlights = new ArrayList<Filter>();
+			gridKeyAwareHighlights.add(highlightFilter);
+			gridKeyAwareHighlights.add(new Filter(DiseasePortalFields.GRID_KEY, gridKeys, Operator.OP_IN));
+			params.setFilter(Filter.and(gridKeyAwareHighlights));
+			highLights = hdpFinder.getGridHighlights(params);
+		}
 		
 		GridVisitor gv = new GridVisitor(results, annotationResults, highLights);
 
@@ -372,11 +375,11 @@ public class DiseasePortalController {
 		if (header == null) { return errorMav("Missing header parameter"); }
 
 		DiseasePortalConditionGroup group = null;
+		Filter highlightFilter = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			group = (DiseasePortalConditionGroup)mapper.readValue(jsonEncodedInput, DiseasePortalConditionGroup.class);
-			//mainFilter = genQueryFilter(group);
-			//highlightFilter = genHighlightFilter(group);
+			highlightFilter = genHighlightFilter(group);
 		} catch (Exception e) {
 			// This is a fatal error; if the user's session has expired or if JBoss has been restarted,
 			// pheno group wants to give an error message.
@@ -482,6 +485,25 @@ public class DiseasePortalController {
 		
 		SearchResults<SolrHdpGridAnnotationEntry> annotationResults = hdpFinder.getGridAnnotationResults(params);
 		
+		/* pick up the highlights
+		 */
+		annotationFilters.add(highlightFilter);
+		params.setFilter(Filter.and(annotationFilters));
+		params.setPageSize(1000000);
+		List<String> highLightedDocumentIDList = hdpFinder.getHighlightedDocumentIDs(params);
+
+		Set<String> highlightedDocumentIDs = new HashSet<String>();
+		if (highLightedDocumentIDList != null) {
+			highlightedDocumentIDs.addAll(highLightedDocumentIDList);
+		}
+		
+		Map<String,Integer> highlightedTerms = new HashMap<String,Integer>();
+		for (SolrHdpGridAnnotationEntry result : annotationResults.getResultObjects()) {
+			if (highlightedDocumentIDs.contains(result.getUniqueKey())) {
+				highlightedTerms.put(result.getTerm(),1);
+			}
+		}
+
 		/* need to split the annotation results up into their categories (one per table displayed):
 		 *	1. mouse genotype/phenotype (MP) annotations
 		 *	2. human marker/phenotype (HPO) annotations
@@ -545,6 +567,7 @@ public class DiseasePortalController {
 			mav.addObject("isPhenotype", 1);
 			if (!mpGroup.isEmpty()) mav.addObject("mpGroup", mpGroup);
 			if (!hpoGroup.isEmpty()) mav.addObject("hpoGroup", hpoGroup);
+			if (highlightedTerms.size() > 0) mav.addObject("highlights", highlightedTerms);
 		} else {
 			mav.addObject("isDisease", 1);
 			if (!omimGroup.isEmpty()) mav.addObject("omimGroup", omimGroup);

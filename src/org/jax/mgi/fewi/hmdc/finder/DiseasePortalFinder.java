@@ -3,6 +3,7 @@ package org.jax.mgi.fewi.hmdc.finder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.jax.mgi.fewi.hmdc.hunter.SolrDiseasePortalDiseaseHunter;
 import org.jax.mgi.fewi.hmdc.hunter.SolrDiseasePortalGeneHunter;
@@ -79,6 +80,15 @@ public class DiseasePortalFinder {
 	public List<String> getGridHighlights(SearchParams params) {
 		SearchResults<SolrHdpEntityInterface> highlightResults = new SearchResults<SolrHdpEntityInterface>();
 		hdpGridHighlightHunter.hunt(params, highlightResults, DiseasePortalFields.TERM_HEADER);
+		return highlightResults.getResultKeys();
+	}
+
+	/* request highlights for the search results and get the list of document IDs for documents that
+	 * had highlights returned. 
+	 */
+	public List<String> getHighlightedDocumentIDs(SearchParams params) {
+		SearchResults<SolrHdpEntityInterface> highlightResults = new SearchResults<SolrHdpEntityInterface>();
+		hdpGridHighlightHunter.hunt(params, highlightResults, DiseasePortalFields.TERM);
 		return highlightResults.getResultKeys();
 	}
 
