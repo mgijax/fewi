@@ -485,24 +485,28 @@ public class DiseasePortalController {
 		
 		SearchResults<SolrHdpGridAnnotationEntry> annotationResults = hdpFinder.getGridAnnotationResults(params);
 		
-		/* pick up the highlights
+		/* pick up the highlights, if we had a pheno/disease search condition
 		 */
-		annotationFilters.add(highlightFilter);
-		params.setFilter(Filter.and(annotationFilters));
-		params.setPageSize(1000000);
-		List<String> highLightedDocumentIDList = hdpFinder.getHighlightedDocumentIDs(params);
-
-		Set<String> highlightedDocumentIDs = new HashSet<String>();
-		if (highLightedDocumentIDList != null) {
-			highlightedDocumentIDs.addAll(highLightedDocumentIDList);
-		}
-		
 		Map<String,Integer> highlightedTerms = new HashMap<String,Integer>();
-		for (SolrHdpGridAnnotationEntry result : annotationResults.getResultObjects()) {
-			if (highlightedDocumentIDs.contains(result.getUniqueKey())) {
-				highlightedTerms.put(result.getTerm(),1);
+
+		if (highlightFilter.hasNestedFilters()) {
+			annotationFilters.add(highlightFilter);
+			params.setFilter(Filter.and(annotationFilters));
+			params.setPageSize(1000000);
+			List<String> highLightedDocumentIDList = hdpFinder.getHighlightedDocumentIDs(params);
+
+			Set<String> highlightedDocumentIDs = new HashSet<String>();
+			if (highLightedDocumentIDList != null) {
+				highlightedDocumentIDs.addAll(highLightedDocumentIDList);
+			}
+		
+			for (SolrHdpGridAnnotationEntry result : annotationResults.getResultObjects()) {
+				if (highlightedDocumentIDs.contains(result.getUniqueKey())) {
+					highlightedTerms.put(result.getTerm(),1);
+				}
 			}
 		}
+
 
 		/* need to split the annotation results up into their categories (one per table displayed):
 		 *	1. mouse genotype/phenotype (MP) annotations
