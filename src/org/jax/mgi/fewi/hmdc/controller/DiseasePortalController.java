@@ -489,7 +489,7 @@ public class DiseasePortalController {
 		 */
 		Map<String,Integer> highlightedTerms = new HashMap<String,Integer>();
 
-		if (highlightFilter.hasNestedFilters()) {
+		if ((highlightFilter != null) && highlightFilter.hasNestedFilters()) {
 			annotationFilters.add(highlightFilter);
 			params.setFilter(Filter.and(annotationFilters));
 			params.setPageSize(1000000);
