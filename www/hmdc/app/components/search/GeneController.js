@@ -21,6 +21,10 @@
 					}
 				}
 				vm.filteredResults = localFilteredResults;
+			} else if (($rootScope.selectedGenesModel !== undefined) && (($rootScope.selectedGenesModel.length > 0) || 
+					($rootScope.selectedPhenoTypesAndDiseasesModel !== undefined) && ($rootScope.selectedPhenoTypesAndDiseasesModel.length > 0))) {
+				// user chose filter combination that left us with no genes on the grid
+				vm.filteredResults = localFilteredResults;
 			} else {
 				vm.filteredResults = vm.results;
 			}

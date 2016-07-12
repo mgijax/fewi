@@ -112,7 +112,7 @@
 					var file = query['condition']['file'];
 					var filename = file['name'];
 
-					ysf += 'Genes matching file <b>' + filename + '</b> column ' + column + ' ' + delimiter + ' delimited ';
+					ysf += 'Gene Symbols or IDs matching file <b>' + filename + '</b> column ' + column + ' ' + delimiter + ' delimited ';
 					if (skipHeader) {
 						ysf += ' (ignore header row)';
 					}
@@ -152,7 +152,7 @@
 
 			var geneList = [];
 			if(scope.model.fileData && scope.model.fileData.length > 0) {
-				var lines = scope.model.fileData.split(/\r\n|\n/);
+				var lines = scope.model.fileData.split(/\r\n|\r|\n/);
 				var i = 0;
 				if(scope.model.parameters[2]) {
 					i = 1;
