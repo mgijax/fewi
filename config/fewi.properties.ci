@@ -13,8 +13,8 @@
 
 #----- solr server urls -----#
 
-solr.server1.url=http://scrumdog.informatics.jax.org:8992/solr/
-solr.server2.url=http://bhmgisnpdb01lt.jax.org:18983/solr/
+solr.server1.url=http://scrumdog.informatics.jax.org:8992/solr
+solr.server2.url=http://bhmgisnpdb01lt.jax.org:18983/solr
 
 
 #-------------------------------------------------------------------------------
