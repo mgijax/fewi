@@ -52,8 +52,8 @@
 
   		// find a string beginning with the given string 'c' that doesn't appear in string 's'
   		function findTag(c, s) {
-	        if (s.indexOf(c) < 0) { return c; }
-	        return findTag(c + c[0], s);
+			if (s.indexOf(c) < 0) { return c; }
+			return findTag(c + c[0], s);
   		};
 
 		// convert MGI superscript notation <...> to HTML superscript tags
@@ -126,12 +126,74 @@
 		}
 		
 		function onSubmit() {
-			console.log("Submit: " + angular.toJson(vm.model));
+			vm.queryModel = {};
+			angular.copy(vm.model, vm.queryModel);
+			
+			// Remove file data before sending model to the server
+			for (var i in vm.queryModel.queries) {
+				var query = vm.queryModel.queries[i];
+				var field = query['field']; 
+				if (field == 'gene_upload') {
+					var condition = query['condition'];
+					delete(condition['file']);
+					delete(condition['fileData']);
+					delete(condition['sampledata']);
+				}
+			}
+
 			$rootScope.displayTabs = true;
-			$rootScope.$emit("CallSearchMethod", vm.model);
+			$rootScope.$emit("CallSearchMethod", vm.queryModel);
 			vm.hideQueryForm = true;
-			$rootScope.jsonEncodedQuery = encodeURIComponent(angular.toJson(vm.model));
+			$rootScope.jsonEncodedQuery = encodeURIComponent(angular.toJson(vm.queryModel));
 			showYouSearchedFor(vm.model);
+		}
+
+		$rootScope.parseUploadFile = function(scope) {
+
+			var geneList = [];
+			if(scope.model.fileData && scope.model.fileData.length > 0) {
+				var lines = scope.model.fileData.split(/\r\n|\n/);
+				var i = 0;
+				if(scope.model.parameters[2]) {
+					i = 1;
+				}
+				for(; i < lines.length; i++) {
+					var line = lines[i];
+
+					if(line && line.length > 0) {
+
+						var columns = [];
+						if(scope.model.parameters[1] == "colon") {
+							columns = line.split(/;/);
+						} else if(scope.model.parameters[1] == "tab") {
+							columns = line.split(/\t/);
+						} else if(scope.model.parameters[1] == "comma") {
+							columns = line.split(/,/);
+						} else {
+							columns = line.split(/\t/);
+						}
+
+						if(columns.length >= scope.model.parameters[0]) {
+							var data = columns[scope.model.parameters[0] - 1];
+							if(data && data.length > 0) {
+								geneList.push(data);
+							}
+						}
+					}
+				}
+				scope.model.input = geneList.join(", ");
+				//array.slice(start,end)
+				if(geneList.length > 0) {
+					var geneCount = geneList.length;
+					var geneMin = Math.min(geneCount, 3);
+					scope.model.sampledata = "Showing " + geneMin + " of " + geneCount + " loaded gene(s): " + geneList.slice(0,3).join(", ");
+				} else {
+					scope.model.sampledata = "No Data Found";
+				}
+			} else {
+				scope.model.sampledata = "No Data Found";
+			}
+
 		}
 
 		vm.tabs = {
@@ -267,11 +329,7 @@
 												return to.options;
 											});
 										};
-									},
-//									onChange: function ($viewValue, $scope) {                        
-//										console.log("O: " + $scope.templateOptions.options);
-//										return true;
-//									}
+									}
 								}
 							}
 						],
@@ -322,7 +380,11 @@
 								className: 'inline-field',
 								templateOptions: {
 									label: '',
-									required: true
+									required: true,
+									onChange: function ($viewValue, model, $scope) {
+										$rootScope.parseUploadFile($scope);
+										return true;
+									}
 								}
 							},
 							{
@@ -335,7 +397,11 @@
 									required: true,
 									options: [
 										{value: 1, name: '1'}, {value: 2, name: '2'}, {value: 3, name: '3'}, {value: 4, name: '4'}, {value: 5, name: '5'}, {value: 6, name: '6'}, {value: 7, name: '7'}, {value: 8, name: '8'}, {value: 9, name: '9'},
-									]
+									],
+									onChange: function ($viewValue, model, $scope) {
+										$rootScope.parseUploadFile($scope);
+										return true;
+									}
 								}
 							},
 							{
@@ -348,7 +414,11 @@
 									required: true,
 									options: [
 										{name: 'Tab \\t', value: 'tab'}, {name: 'SemiColon ;', value: 'colon'}, {name: 'Comma ,', value: 'comma'},
-									]
+									],
+									onChange: function ($viewValue, model, $scope) {
+										$rootScope.parseUploadFile($scope);
+										return true;
+									}
 								}
 							},
 							{
@@ -357,7 +427,11 @@
 								className: 'pull-left pad30left',
 								defaultValue: false,
 								templateOptions: {
-									label: 'Ignore Header Row'
+									label: 'Ignore Header Row',
+									onChange: function ($viewValue, model, $scope) {
+										$rootScope.parseUploadFile($scope);
+										return true;
+									}
 								}
 							},
 							{
@@ -368,8 +442,7 @@
 									label: 'Sample Data:'
 								},
 								hideExpression: '!model.sampledata'
-							},
-
+							}
 						],
 /*
 						vcd_upload: [
