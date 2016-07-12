@@ -63,14 +63,6 @@
 		<property name="suppressClose" value="true"/>
 	</bean>
 	
-	<bean id="dataSourceSnp" class="org.springframework.jdbc.datasource.SingleConnectionDataSource" destroy-method="destroy">
-		<property name="driverClassName" value="org.postgresql.Driver"/>
-		<property name="url" value="jdbc:postgresql://mgi-testdb4.jax.org:5432/pub_stable"/>
-		<property name="username" value="mgd_public"/>
-		<property name="password" value="mgdpub"/>
-		<property name="suppressClose" value="true"/>
-	</bean>
-
 	<!-- Hibernate SessionFactory -->
 	<bean id="sessionFactory" 
 		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
@@ -103,36 +95,10 @@
 		</property>
 	</bean>
 	
-	<bean id="sessionFactorySnp" 
-		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
-		p:dataSource-ref="dataSourceSnp">
-		<property name="hibernateProperties">
-			<props>
-				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
-				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
-				<prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
-				<prop key="hibernate.use_sql_comments">${hibernate.use_sql_comments}</prop>
-				<prop key="hibernate.type">${hibernate.type}</prop>
-				<prop key="hibernate.generate_statistics">${hibernate.generate_statistics}</prop>
-			</props>
-		</property>
-		<property name="packagesToScan">
-			<list>
-				<value>mgi.frontend.datamodel.snp</value>
-			</list>
-		</property>
-	</bean>
-
 	<bean id="transactionManager" 
 		class="org.springframework.orm.hibernate4.HibernateTransactionManager"
 		p:sessionFactory-ref="sessionFactory"/>
 
-	<bean id="transactionManagerSnp" 
-		class="org.springframework.orm.hibernate4.HibernateTransactionManager"
-		p:sessionFactory-ref="sessionFactorySnp">
-		<qualifier value="transactionManagerSnp"/>
-	</bean>
-	
 	<!-- 
 	In a non-container environment (such as a test case) we need
 	to wire up the servlet context and inject it to the contextloader
