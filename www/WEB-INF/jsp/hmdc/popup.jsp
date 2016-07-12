@@ -65,9 +65,15 @@
 <c:if test="${not empty isPhenotype}">
 	<div id="legend">
 	  <table id="hdpSystemPopupLegend" class="popupTable">
-	    <tr><td>*</td><td>Aspects of the system are reported to show a normal phenotype.</td></tr>
-	    <tr><td class="bgsensitive">!</td><td>Indicates phenotype varies with strain background.</td></tr>
-        <tr><td></td><td><span class="highlight">Highlighted Columns</span> contain at least one phenotype or disease result matching your search term(s).</td></tr>
+	  	<c:if test="${not empty normalFlag}">
+		    <tr><td>*</td><td>Aspects of the system are reported to show a normal phenotype.</td></tr>
+	    </c:if>
+	    <c:if test="${not empty bSensitiveFlag}">
+		    <tr><td class="bgsensitive">!</td><td>Indicates phenotype varies with strain background.</td></tr>
+	    </c:if>
+	    <c:if test="${not empty highlights}">
+	        <tr><td></td><td><span class="highlight">Highlighted Columns</span> contain at least one phenotype or disease result matching your search term(s).</td></tr>
+        </c:if>
 		<tr><td></td><td>Darker colors indicate <span title="The orange and blue squares indicate human and mouse data, respectively.  Darker colors indicate more supporting annotations.  The lightest color represents one annotation. 2-5 annotations is represented by a darker shade, 6-99 annotations darker still and more than 100 annotations by the darkest color." style="color: blue; text-decoration: underline">more annotations</span></td></tr>
 	  </table>
 	</div>

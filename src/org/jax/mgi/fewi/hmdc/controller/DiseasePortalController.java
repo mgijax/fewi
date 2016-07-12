@@ -507,7 +507,11 @@ public class DiseasePortalController {
 			}
 		}
 
-
+		/* need to track these to see which rows to show in the legend on the pheno popup
+		 */
+		boolean anyBackgroundSensitive = false;
+		boolean anyNormalQualifiers = false;
+		
 		/* need to split the annotation results up into their categories (one per table displayed):
 		 *	1. mouse genotype/phenotype (MP) annotations
 		 *	2. human marker/phenotype (HPO) annotations
@@ -520,6 +524,19 @@ public class DiseasePortalController {
 		for (SolrHdpGridAnnotationEntry result : annotationResults.getResultObjects()) {
 			Integer gridKey = result.getGridKey();
 			String termType = result.getTermType();
+			
+			if (!anyBackgroundSensitive) {
+				String bSensitive = result.getBackgroundSensitive();
+				if (bSensitive != null && bSensitive.length() > 0) {
+					anyBackgroundSensitive = true;
+				}
+			}
+			if (!anyNormalQualifiers) {
+				String qualifier = result.getQualifier();
+				if (qualifier != null && qualifier.equalsIgnoreCase("normal")) {
+					anyNormalQualifiers = true;
+				}
+			}
 			
 			if ("OMIM".equals(termType)) {
 				if (mouseGridKeys.contains(gridKey)) {
@@ -577,13 +594,6 @@ public class DiseasePortalController {
 			if (!omimGroup.isEmpty()) mav.addObject("omimGroup", omimGroup);
 		}
 		
-		// add any (optional) terms and term IDs that were specified to use for column highlighting
-		String[] terms = request.getParameterValues("term");
-		String[] termIds = request.getParameterValues("termId");
-		
-		if (terms != null && terms.length > 0) { mav.addObject("highlightTerms", terms); }
-		if (termIds != null && termIds.length > 0) { mav.addObject("highlightTermIds", termIds); }
-
 		if (mouseMarkers != null && mouseMarkers.size() > 0) { mav.addObject("mouseMarkers", mouseMarkers.toArray(new String[0])); }
 		if (humanMarkers != null && humanMarkers.size() > 0) { mav.addObject("humanMarkers", humanMarkers.toArray(new String[0])); }
 
@@ -591,6 +601,9 @@ public class DiseasePortalController {
 		mav.addObject("annotationCount", annotationResults.getTotalCount());
 		mav.addObject("genoclusters", genoclusters);
 
+		if (anyBackgroundSensitive) { mav.addObject("bSensitiveFlag", 1); }
+		if (anyNormalQualifiers) { mav.addObject("normalFlag", 1); }
+		
 		if (fromMarkerDetail) {
 			mav.addObject("fromMarkerDetail", 1);
 			
