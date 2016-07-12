@@ -112,7 +112,7 @@
 					var file = query['condition']['file'];
 					var filename = file['name'];
 
-					ysf += 'Genes matching file <b>' + filename + '</b> column ' + column + ' ' + delimiter + ' delimited ';
+					ysf += 'Gene Symbols or IDs matching file <b>' + filename + '</b> column ' + column + ' ' + delimiter + ' delimited ';
 					if (skipHeader) {
 						ysf += ' (ignore header row)';
 					}
