@@ -1,5 +1,10 @@
 <div ng-controller="DiseaseController">
-	Export: <a href="/diseasePortal/disease/report.txt?jsonEncodedInput={{ jsonEncodedQuery }}"><img src="http://www.informatics.jax.org/webshare/images/text.png" width="12" height="12">Text File</a> 
+	<div ng-show="vm.filteredResults.length > 0">
+		Export: <a href="/diseasePortal/disease/report.txt?jsonEncodedInput={{ jsonEncodedQuery }}"><img src="http://www.informatics.jax.org/webshare/images/text.png" width="12" height="12">Text File</a> 
+	</div>
+	<div ng-hide="vm.filteredResults.length > 0">
+		No Matching Diseases
+	</div>
 
 	<table class="table table-bordered table-striped" st-reset="vm.resetDiseaseTable" st-table="displayedCollection" st-set-sort="sortFilter" st-safe-src="vm.filteredResults" ng-show="vm.filteredResults.length > 0">
 		<thead>

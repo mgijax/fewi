@@ -1,5 +1,10 @@
 <div ng-controller="GeneController">
+	<div ng-show="vm.filteredResults.length > 0">
 	Export: <a href="/diseasePortal/marker/report.txt?jsonEncodedInput={{ jsonEncodedQuery }}"><img src="http://www.informatics.jax.org/webshare/images/text.png" width="12" height="12">Text File</a> 
+	</div>
+	<div ng-hide="vm.filteredResults.length > 0">
+		No Matching Genes
+	</div>
 
 	<table class="table table-bordered table-striped" st-reset="vm.resetGeneTable" st-table="displayedCollection" st-set-sort="sortFilter" st-safe-src="vm.filteredResults" ng-show="vm.filteredResults.length > 0">
 		<thead>
