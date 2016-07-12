@@ -21,9 +21,9 @@
 					}
 				}
 				vm.filteredResults = localFilteredResults;
-			} else if ($rootScope.filteredGenes && $rootScope.filteredGenes.length > 0) {
-				// If we get here, the user filtered by genes with no diseases, which means we should
-				// show no diseases rather than the (default) full set.
+			} else if (($rootScope.selectedGenesModel !== undefined) && (($rootScope.selectedGenesModel.length > 0) || 
+					($rootScope.selectedPhenoTypesAndDiseasesModel !== undefined) && ($rootScope.selectedPhenoTypesAndDiseasesModel.length > 0))) {
+				// user chose filter combination that left us with no diseases on the grid
 				vm.filteredResults = localFilteredResults;
 			} else {
 				vm.filteredResults = vm.results;
