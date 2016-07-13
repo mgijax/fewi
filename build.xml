@@ -94,6 +94,8 @@
 	<!-- Compile tests -->
 	<target name="compile-test" depends="unittest,jsunittest,index-test">
 		<copy file="./www/WEB-INF/properties/applicationContext-ci.xml" todir="./www/WEB-INF/classes" overwrite="true" />
+		<copy file="./www/WEB-INF/properties/common.fewi.properties" todir="./www/WEB-INF/classes" overwrite="true" />
+		<copy file="./www/WEB-INF/properties/common.solr.properties" todir="./www/WEB-INF/classes" overwrite="true" />
 		<copy file="./www/WEB-INF/properties/fewi.properties" todir="./www/WEB-INF/classes" overwrite="true" />
 		<copy file="./www/WEB-INF/properties/GlobalConfig.properties" todir="./www/WEB-INF/classes" overwrite="true" />
 		<copy file="./www/WEB-INF/properties/externalUrls.properties" todir="./www/WEB-INF/classes" overwrite="true" />
