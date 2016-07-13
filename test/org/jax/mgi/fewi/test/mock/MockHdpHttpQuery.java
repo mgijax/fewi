@@ -17,7 +17,7 @@ public class MockHdpHttpQuery extends AbstractMockHdpQuery
     public MockHdpHttpQuery(MockRequest mr) {
     	this.mr=mr;
     }
-	
+/*	
 	public MockHttpServletRequest generateRequest()
 	{
 		MockHttpServletRequest request = new MockHttpServletRequest();
@@ -41,7 +41,6 @@ public class MockHdpHttpQuery extends AbstractMockHdpQuery
 		return request;
 	}
 
-
 	@SuppressWarnings("unchecked")
 	public List<String> getDiseaseColumnIds() throws Exception
 	{
@@ -63,7 +62,7 @@ public class MockHdpHttpQuery extends AbstractMockHdpQuery
     	
     	return (List<String>) mr.handleRequest(request).get("mpHeaders");
 	}
-	
+*/
 
 
 

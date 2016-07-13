@@ -1,6 +1,12 @@
 package org.jax.mgi.fewi.test.base;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jax.mgi.fewi.hmdc.controller.DiseasePortalController;
+import org.jax.mgi.fewi.hmdc.solr.SolrHdpMarker;
+import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.test.mock.MockHdpControllerQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /*
@@ -154,15 +160,16 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	}
     	return null;
     }
-    
+*/ 
     // ------------------ genes queries --------------------
     public List<String> getSymbolsByGene(String genes) throws Exception
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setGenes(genes);
+    	mq.setOperator(MockHdpControllerQuery.AND);
+    	mq.addMarkerSymbolIdClause(genes);
     	return getGeneSymbols(mq);
     }
-    
+/*    
     // ------------------ location queries --------------------
     public List<String> getSymbolsByMouseLocation(String locations) throws Exception
     {
@@ -508,20 +515,18 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     // ###############################################
     // --------------private helper methods ----------
     // ###############################################
-    
+*/ 
     private List<String> getGeneSymbols(MockHdpControllerQuery mq) throws Exception
     {
-		SearchResults<SolrHdpMarker> markers = mq.getGenes();
-		    	
 		List<String> symbols = new ArrayList<String>();
-    	for(SolrHdpMarker m : markers.getResultObjects())
+    	for(SolrHdpMarker m : mq.getGenes())
     	{
     		symbols.add(m.getSymbol());
     	}
     	
     	return symbols;
     }
-    
+/*    
     private List<String> getGridSymbols(MockHdpHttpQuery mq, boolean includeHuman,boolean includeMouse) throws Exception
     {
     	List<String> symbols = new ArrayList<String>();

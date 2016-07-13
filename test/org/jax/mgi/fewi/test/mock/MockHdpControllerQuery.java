@@ -14,14 +14,14 @@ public class MockHdpControllerQuery extends AbstractMockHdpQuery {
 	}
 
 	public List<SolrHdpMarker> getGenes() throws Exception {
-		return hdpController.geneQuery("");
+		return hdpController.geneQuery(getParametersAsJson());
 	}	
 
 	public List<SolrHdpDisease> getDiseases() throws Exception {
-		return hdpController.diseaseQuery("");
+		return hdpController.diseaseQuery(getParametersAsJson());
 	}	
 
 	public GridResult getGrid() throws Exception {
-		return hdpController.gridQuery("", null);
+		return hdpController.gridQuery(getParametersAsJson(), null);
 	}	
 }
