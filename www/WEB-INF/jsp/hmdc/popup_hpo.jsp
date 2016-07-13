@@ -32,7 +32,13 @@
 				<tr><td class="tableLabel">Human Phenotypes</td>
 				<c:set var="showHeaders" value=""/>
 				<c:forEach var="hpoHeader" items="${hpoGroup.columns}">
-					<td rowspan="2" class="popupHeader"><div class="header" title="${hpoHeader}"><span class="header">${hpoHeader}</span></div></td>
+					<c:set var="markStart" value=""/>
+					<c:set var="markEnd" value=""/>
+					<c:if test="${not empty highlights[hpoHeader]}">
+						<c:set var="markStart" value="<mark>"/>
+						<c:set var="markEnd" value="</mark>"/>
+					</c:if>
+					<td rowspan="2" class="popupHeader"><div class="header" title="${hpoHeader}"><span class="header">${markStart}${hpoHeader}${markEnd}</span></div></td>
 				</c:forEach>
 				</tr>
 				<tr>

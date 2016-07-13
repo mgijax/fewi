@@ -19,7 +19,13 @@
 	<!-- table header rows : MP headers span two rows; left cell is only one with two rows showing -->
 	<tr><td colspan="2" class="tableLabel">Mouse Phenotypes</td>
 	<c:forEach var="mpHeader" items="${mpGroup.columns}">
-		<td rowspan="2" class="popupHeader"><div class="header" title="${mpHeader}"><span class="header">${mpHeader}</span></div></td>
+		<c:set var="markStart" value=""/>
+		<c:set var="markEnd" value=""/>
+		<c:if test="${not empty highlights[mpHeader]}">
+			<c:set var="markStart" value="<mark>"/>
+			<c:set var="markEnd" value="</mark>"/>
+		</c:if>
+		<td rowspan="2" class="popupHeader"><div class="header" title="${mpHeader}"><span class="header">${markStart}${mpHeader}${markEnd}</span></div></td>
 	</c:forEach>
 	</tr>
 	<tr>

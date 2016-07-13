@@ -3,11 +3,6 @@
 
 <%@ page trimDirectiveWhitespaces="true" %>
 
-<%
-  Timer timer = (Timer) request.getAttribute("timer");
-  timer.time("made it to JSP");
-%>
-
 <c:if test="${not empty fromMarkerDetail}">
 	<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 	<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/bootstrap/dist/css/bootstrap.css" />
@@ -31,9 +26,6 @@
 <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
 <script src="${configBean.FEWI_URL}/assets/js/hmdc_popup.js"></script>
-<%
-  timer.time("through initial setup");
-%>
 
 <script>
   <% /* generate javascript object for genocluster data, used to populate Find Mice popups */ %>
@@ -49,10 +41,6 @@
   </c:forEach>
   setImsrUrl('${configBean.IMSRURL}');
 </script>
-
-<%
-  timer.time("generated genocluster javascript");
-%>
 
 <c:if test="${not empty fromMarkerDetail}">
 	<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
@@ -74,16 +62,18 @@
 	</script>
 </c:if>
 
-<%
-  timer.time("generated page header");
-%>
-
 <c:if test="${not empty isPhenotype}">
 	<div id="legend">
 	  <table id="hdpSystemPopupLegend" class="popupTable">
-	    <tr><td>*</td><td>Aspects of the system are reported to show a normal phenotype.</td></tr>
-	    <tr><td class="bgsensitive">!</td><td>Indicates phenotype varies with strain background.</td></tr>
-<!--    <tr><td></td><td><span class="highlight">Highlighted Columns</span> contain at least one phenotype or disease result matching your search term(s).</td></tr> -->
+	  	<c:if test="${not empty normalFlag}">
+		    <tr><td>*</td><td>Aspects of the system are reported to show a normal phenotype.</td></tr>
+	    </c:if>
+	    <c:if test="${not empty bSensitiveFlag}">
+		    <tr><td class="bgsensitive">!</td><td>Indicates phenotype varies with strain background.</td></tr>
+	    </c:if>
+	    <c:if test="${not empty highlights}">
+	        <tr><td></td><td><span class="highlight">Highlighted Columns</span> contain at least one phenotype or disease result matching your search term(s).</td></tr>
+        </c:if>
 		<tr><td></td><td>Darker colors indicate <span title="The orange and blue squares indicate human and mouse data, respectively.  Darker colors indicate more supporting annotations.  The lightest color represents one annotation. 2-5 annotations is represented by a darker shade, 6-99 annotations darker still and more than 100 annotations by the darkest color." style="color: blue; text-decoration: underline">more annotations</span></td></tr>
 	  </table>
 	</div>
@@ -92,10 +82,6 @@
  <div id="dialog" title="Find Mice" style="display: none">
   <p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
 </div>
-
-<%
-  timer.time("generated legend and dialog");
-%>
 
 <c:if test="${not empty isPhenotype}">
 <%@ include file="/WEB-INF/jsp/hmdc/popup_hpo.jsp" %>
@@ -106,11 +92,6 @@
 <c:if test="${not empty isDisease}">
 <%@ include file="/WEB-INF/jsp/hmdc/popup_omim.jsp" %>
 </c:if>
-
-<%
-  timer.time("generated pheno and disease sections");
-%>
-
 
 <!-- Table and Wrapping div -->
 
@@ -146,7 +127,3 @@
 	</script>
 	</html>
 </c:if>
-
-<%
-  timer.time("at end");
-%>

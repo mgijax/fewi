@@ -284,16 +284,13 @@ mark {
 .diseasefiltermenu {
 	min-width: 400px;
 }
-.pad10left {
-    padding-left: 10px;
-}
-.pad10right {
-    padding-right: 10px;
-}
+.pad10left { padding-left: 10px; }
+.pad10right { padding-right: 10px; }
+.pad10bottom { padding-bottom: 10px; }
 
-.pad10bottom {
-	padding-bottom: 10px;
-}
+.pad30left { padding-left: 30px; }
+.pad30right { padding-right: 30px; }
+.pad30bottom { padding-bottom: 30px; }
 
 .table {
 	margin-bottom: 0px;

@@ -14,67 +14,22 @@
 				el.on("change", function(changeEvent) {
 					var file = changeEvent.target.files[0];
 
-					scope.model.sampledata = "";
-					scope.model.input = "";
-
 					if (file) {
 						var fileProp = {};
-						for (var properties in file) {
-							if (!angular.isFunction(file[properties])) {
-								fileProp[properties] = file[properties];
-							}
-						}
-						scope.fc.$setViewValue(fileProp);
-					} else {
-						scope.fc.$setViewValue(undefined);
-					}
-
-					if(file) {
 						var reader = new FileReader();
 						reader.onload = function(e) {
-							var geneList = [];
-
-							var lines = e.target.result.split(/\r\n|\n/);
-							var i = 0;
-							if(scope.model.parameters[2]) {
-								i = 1;
-							}
-							for(; i < lines.length; i++) {
-								var line = lines[i];
-
-								if(line && line.length > 0) {
-
-									var columns = [];
-									if(scope.model.parameters[1] == "colon") {
-										columns = line.split(/;/);
-									} else if(scope.model.parameters[1] == "tab") {
-										columns = line.split(/\t/);
-									} else if(scope.model.parameters[1] == "comma") {
-										columns = line.split(/,/);
-									} else {
-										columns = line.split(/\t/);
-									}
-
-									if(columns.length >= scope.model.parameters[0]) {
-										var data = columns[scope.model.parameters[0] - 1];
-										if(data && data.length > 0) {
-											geneList.push(data);
-										}
-									}
+							scope.model.fileData = e.target.result;
+							for (var properties in file) {
+								if (!angular.isFunction(file[properties])) {
+									fileProp[properties] = file[properties];
 								}
 							}
-							scope.model.input = geneList.join(", ");
-							//array.slice(start,end)
-							if(geneList.length > 0) {
-								scope.model.sampledata = "Showing 3 of "+ geneList.length + " loaded gene(s): " + geneList.slice(0,3).join(", ");
-							} else {
-								scope.model.sampledata = "No Data Found";
-							}
-
-						}; 
+							scope.fc.$setViewValue(fileProp);
+						}
 						reader.readAsText(file);
 					} else {
-						scope.model.sampledata = "No Data Found";
+						scope.model.fileData = "";
+						scope.fc.$setViewValue(undefined);
 					}
 
 				});
