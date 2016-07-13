@@ -177,23 +177,23 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	mq.addMarkerNameClause(genes);
     	return getGeneSymbols(mq);
     }
-/*    
+
     // ------------------ location queries --------------------
     public List<String> getSymbolsByMouseLocation(String locations) throws Exception
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setMouseLocations(locations);
+    	mq.addLocation(locations, "mouse");
     	return getGeneSymbols(mq);
     }
     
     public List<String> getSymbolsByHumanLocation(String locations) throws Exception
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setHumanLocations(locations);
+    	mq.addLocation(locations, "human");
     	return getGeneSymbols(mq);
     }
     
-    
+/*        
     // ------------- Grid related functions -----------
     public Integer gridCountByPhenotype(String phenotypes) throws Exception
     {

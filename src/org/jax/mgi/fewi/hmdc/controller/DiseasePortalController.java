@@ -181,7 +181,7 @@ public class DiseasePortalController {
 			filterList.add(cq.genFilter());
 		}
 
-		if(group.getOperator().equals("AND")) {
+		if("AND".equals(group.getOperator())) {
 			return Filter.and(filterList);
 		} else {
 			return Filter.or(filterList);
