@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jax.mgi.fewi.hmdc.controller.DiseasePortalController;
+import org.jax.mgi.fewi.hmdc.solr.SolrHdpDisease;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpMarker;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.test.mock.MockHdpControllerQuery;
@@ -20,21 +21,19 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     @Autowired
     private DiseasePortalController hdpController;
     
-    /*
     public List<String> getSymbolsByDisease(String diseaseID) throws Exception
     {
     	return getSymbolsByPhenotype(diseaseID);
     }
     
-
     public List<String> getSymbolsByPhenotype(String mpID) throws Exception
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setPhenotypes(mpID);
+    	mq.addTermIdClause(mpID);
     	return getGeneSymbols(mq);
     }
 
-
+/*
     public Integer getGeneCountByDisease(String diseaseID) throws Exception
     {	
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
@@ -42,34 +41,60 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	SearchResults<SolrHdpMarker> markers = mq.getGenes();
     	return markers.getTotalCount();
     }
+*/
     
     public List<String> getTermsByDisease(String disease) throws Exception
     {	
     	List<String> termNames = new ArrayList<String>();
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setPhenotypes(disease);
-    	SearchResults<SolrHdpDisease> sr = mq.getDiseases();
-    	for(SolrHdpDisease term : sr.getResultObjects())
+    	mq.addTermClause(disease);
+    	for(SolrHdpDisease term : mq.getDiseases())
     	{
     		termNames.add(term.getTerm());
     	}
     	
     	return termNames;
     }
+    
     public List<String> getTermIdsByDisease(String disease) throws Exception
     {	
     	List<String> termIds = new ArrayList<String>();
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setPhenotypes(disease);
-    	SearchResults<SolrHdpDisease> sr = mq.getDiseases();
-    	for(SolrHdpDisease term : sr.getResultObjects())
+    	mq.addTermClause(disease);
+    	for(SolrHdpDisease term : mq.getDiseases())
     	{
     		termIds.add(term.getPrimaryId());
     	}
     	
     	return termIds;
     }
+
+    public List<String> getTermsByDiseaseId(String diseaseId) throws Exception
+    {	
+    	List<String> termNames = new ArrayList<String>();
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermIdClause(diseaseId);
+    	for(SolrHdpDisease term : mq.getDiseases())
+    	{
+    		termNames.add(term.getTerm());
+    	}
+    	
+    	return termNames;
+    }
     
+    public List<String> getTermIdsByDiseaseId(String diseaseId) throws Exception
+    {	
+    	List<String> termIds = new ArrayList<String>();
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermIdClause(diseaseId);
+    	for(SolrHdpDisease term : mq.getDiseases())
+    	{
+    		termIds.add(term.getPrimaryId());
+    	}
+    	
+    	return termIds;
+    }
+/*    
     public Integer getDiseaseCountByDisease(String diseaseID) throws Exception
     {	
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
@@ -77,34 +102,28 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	SearchResults<SolrHdpDisease> terms = mq.getDiseases();
     	return terms.getTotalCount();
     }
+*/
 
     public List<String> getTermsByPhenotype(String phenotype) throws Exception
     {	
-    	List<String> termNames = new ArrayList<String>();
-    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setPhenotypes(phenotype);
-    	SearchResults<SolrHdpDisease> sr = mq.getPhenotypes();
-    	for(SolrHdpDisease term : sr.getResultObjects())
-    	{
-    		termNames.add(term.getTerm());
-    	}
-    	
-    	return termNames;
-    }
-    public List<String> getTermIdsByPhenotype(String phenotype) throws Exception
-    {	
-    	List<String> termIds = new ArrayList<String>();
-    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setPhenotypes(phenotype);
-    	SearchResults<SolrHdpDisease> sr = mq.getPhenotypes();
-    	for(SolrHdpDisease term : sr.getResultObjects())
-    	{
-    		termIds.add(term.getPrimaryId());
-    	}
-    	
-    	return termIds;
+    	return getTermsByDisease(phenotype);
     }
 
+    public List<String> getTermIdsByPhenotype(String phenotype) throws Exception
+    {	
+    	return getTermIdsByDiseaseId(phenotype);
+    }
+
+    public List<String> getTermsByPhenotypeId(String phenotypeId) throws Exception
+    {	
+    	return getTermsByDiseaseId(phenotypeId);
+    }
+
+    public List<String> getTermIdsByPhenotypeId(String phenotypeId) throws Exception
+    {	
+    	return getTermIdsByDiseaseId(phenotypeId);
+    }
+/*
     public Integer getGeneCountByPhenotype(String phenotype) throws Exception
     //klf added on 7/30/2013 modifying from getGeneCountByDisease above
     {	

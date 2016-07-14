@@ -93,7 +93,7 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Verify that "Diabetes Mellitus, Noninsulin-Dependent; NIDDM", OMIM <b cc:assertResultsContain="getTermIdsByDisease(#disease)">125853</b> is returned.</li>
                 <li>Query for <b concordion:set="#pheno">MP:0010957</b> (by ID) (abnormal aerobic respiration - same term as above).<br/>
                 (One genotype that should be associated is MGI:5294956 containing Ctf1&lt;tm1Msd&gt;.)</li>
-                <li>Verify that "Diabetes Mellitus, Noninsulin-Dependent; NIDDM", OMIM <b cc:assertResultsContain="getTermIdsByPhenotype(#pheno)">125853</b> is returned.</li>
+                <li>Verify that "Diabetes Mellitus, Noninsulin-Dependent; NIDDM", OMIM <b cc:assertResultsContain="getTermIdsByPhenotypeId(#pheno)">125853</b> is returned.</li>
     		</ol>
     		</li>
 
@@ -102,7 +102,7 @@ tr.gray td {background-color:#EEEEEE;}
     		<ol>
                 <li>Query for <b concordion:set="#pheno">MP:0009583</b> (by ID) (increased keratinocyte proliferation - same term as above).<br/>
                 (One genotype that should be associated is MGI:3842833 containing Tg(KRT14-cre)8Brn, Tg(KRT5-Akt1*)Jmpa, and Trp53&lt;tm1Brn&gt;.)</li>
-                <li>Verify that "Squamous Cell Carcinoma, Head and Neck; HNSCC", OMIM <b cc:assertNoResultsContain="getTermIdsByPhenotype(#pheno)">275355</b> is returned.</li>
+                <li>Verify that "Squamous Cell Carcinoma, Head and Neck; HNSCC", OMIM <b cc:assertNoResultsContain="getTermIdsByPhenotypeId(#pheno)">275355</b> is returned.</li>
     		</ol>
     		</li>
 
@@ -120,8 +120,8 @@ tr.gray td {background-color:#EEEEEE;}
     		(Note: diseases excluded by one genotype relationship may be returned by another, so getting the right test case is tricky.)
     		<ol>
                 <li>Query for abnormal cochlear OHC efferent innervation pattern <b concordion:set="#pheno">MP:0004632</b>.</li>
-                <li>Verify that Achondroplasia; ACH, OMIM <b  cc:assertNoResultsContain="getTermIdsByPhenotype(#pheno)">100800</b> is not returned. (See genotype MGI:3800222 involving Fgfr3&lt;tm1Dor&gt;.)</li>
-                <li>Verify that Hypochondroplasia; HCH, OMIM <b  cc:assertNoResultsContain="getTermIdsByPhenotype(#pheno)">146000</b> is not returned. (See genotype MGI:3589422 involving Fgfr3&lt;tm1Dor&gt;.)</li>
+                <li>Verify that Achondroplasia; ACH, OMIM <b  cc:assertNoResultsContain="getTermIdsByPhenotypeId(#pheno)">100800</b> is not returned. (See genotype MGI:3800222 involving Fgfr3&lt;tm1Dor&gt;.)</li>
+                <li>Verify that Hypochondroplasia; HCH, OMIM <b  cc:assertNoResultsContain="getTermIdsByPhenotypeId(#pheno)">146000</b> is not returned. (See genotype MGI:3589422 involving Fgfr3&lt;tm1Dor&gt;.)</li>
     		</ol>
     		</li>
 
@@ -130,7 +130,7 @@ tr.gray td {background-color:#EEEEEE;}
     		(Note: diseases excluded by one genotype relationship may be returned by another, so getting the right test case is tricky.)
     		<ol>
                 <li>Query for cardiovascular system phenotype <b concordion:set="#pheno">MP:0005385</b>.</li>
-                <li>Verify that Vitamin E, Familial Isolated Deficiency Of; VED, OMIM <b cc:assertResultsContain="getTermIdsByPhenotype(#pheno)">277460</b> is returned. (See genotype MGI:2174791.)</li>
+                <li>Verify that Vitamin E, Familial Isolated Deficiency Of; VED, OMIM <b cc:assertResultsContain="getTermIdsByPhenotypeId(#pheno)">277460</b> is returned. (See genotype MGI:2174791.)</li>
     		</ol>
     		</li>
     		<li>All genes are returned when searching with just a stop word (sto58).
