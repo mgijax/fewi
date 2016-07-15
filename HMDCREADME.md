@@ -1,7 +1,7 @@
 # HMDC Documentation
 
 ## JSP
-### [home.jsp](www/WEB-INF/jsp/hmdc/home.jsp):
+### [home.jsp](www/WEB-INF/jsp/hmdc/home.jsp)
   This is the main file that is used for the HMDC home page. This page includes all the standard header and footer. 
 
 ## Controllers
@@ -124,7 +124,7 @@ This file is used to display the HMDC grid. It makes use of angular ng-cells mod
 ## Scope
 
 ### Root Scope 
-This surrounds the entire page on the html tag in the [header.jsp](www/hmdc/app/components/search/header.jsp) page via the ng-app="HMDCApplication"
+This surrounds the entire page on the html tag in the [header.jsp](www/WEB-INF/jsp/hmdc/header.jsp) page via the ng-app="HMDCApplication"
 
 ### Search Controller Scope
 This is based on the Search Controller which surronds the [searchTemplate.html](www/hmdc/app/components/search/searchTemplate.html). ```<div ng-controller="SearchController">```
