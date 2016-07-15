@@ -1,15 +1,15 @@
 # HMDC Documentation
 
 ## JSP
-### [www/WEB-INF/jsp/hmdc/home.jsp]:
+### [home.jsp](www/WEB-INF/jsp/hmdc/home.jsp):
   This is the main file that is used for the HMDC home page. This page includes all the standard header and footer. 
 
 ## Controllers
-### [www/hmdc/app/components/search/DiseaseController.js](www/hmdc/app/components/search/DiseaseController.js):
+### [DiseaseController](www/hmdc/app/components/search/DiseaseController.js):
 This controller handles the filtering for the disease table, as well as using the Search Service to do the data query for the table. This controller also handles the popup for the "Source" link on the smart table.
-### [www/hmdc/app/components/search/GeneController.js](www/hmdc/app/components/search/GeneController.js):
+### [GeneController](www/hmdc/app/components/search/GeneController.js):
 This controller handles the filtering for the disease table, as well as using the Search Service to do the data query for the table. This controller also handles the popup for the "Source" link on the smart table.
-### [www/hmdc/app/components/search/GridController.js](www/hmdc/app/components/search/GridController.js):
+### [GridController](www/hmdc/app/components/search/GridController.js):
 This controller handles the following:
 
   1. Popups
@@ -21,7 +21,7 @@ This controller handles the following:
   7. Filters / Builds the grid.
   8. Changes the JSON String coming from Fewi into the format needed for the ng-cells grid
 
-### [www/hmdc/app/components/search/SearchController.js](www/hmdc/app/components/search/SearchController.js)
+### [SearchController](www/hmdc/app/components/search/SearchController.js)
 This controller handles the following:
 
   1. Setting up the filter settings options
@@ -33,34 +33,34 @@ This controller handles the following:
   7. Definition of the query form
 
 ## Services
-### www/hmdc/app/components/search/AutoCompleteService.js
+### [AutoCompleteService](www/hmdc/app/components/search/AutoCompleteService.js)
 This service provides a method for getting the REST endpoint for the autocomplete controller, for HMDC. This method takes the data in the query form in order to process the search to solr.
-### www/hmdc/app/components/search/SearchService.js
+### [SearchService](www/hmdc/app/components/search/SearchService.js)
 This service provides three methods used for doing Ajax calls to the server for each of the three tabs. All of them take the formData from the query form and pass that data to the server for processing.
-### www/hmdc/app/components/search/NaturalSortService.js
+### [NaturalSortService](www/hmdc/app/components/search/NaturalSortService.js)
 This service provides a method that can be used to "natural sort" the list that is passed to it. This might be better known as Smart Alpha sorting.
 
 ## Directives
-### www/hmdc/app/components/search/SearchStResetDirective.js
+### [SearchStResetDirective](www/hmdc/app/components/search/SearchStResetDirective.js)
 This directive is used to add to the different tables in order to get the "reset" functionality for when the table data changes.
 
 ## Filters
-### www/hmdc/app/components/search/OrderHashByFilter.js
+### [OrderHashByFilter]( www/hmdc/app/components/search/OrderHashByFilter.js)
 This filter is used on different columns in the smart tables to orber by that field of data by chaining it by a |
-### www/hmdc/app/components/search/SearchHandleSubscriptFilter.js
+### [SearchHandleSubscriptFilter](www/hmdc/app/components/search/SearchHandleSubscriptFilter.js)
 This filter is used to handle sub scripting on different fields, by adding to the field via a |
-### www/hmdc/app/components/search/SearchSortFilter.js
+### [SearchSortFilter](www/hmdc/app/components/search/SearchSortFilter.js)
 This filter is used to sort the columns of the smart tables by the header of the column. When clicking on the column heading the sort will reverse
 
 
 ## Templates - HTML
-### www/hmdc/app/components/search/searchTemplate.html
+### [searchTemplate.html](www/hmdc/app/components/search/searchTemplate.html)
 This file is used to display the search query form, and all the tabs that are driven by the model in the search controller.
-### www/hmdc/app/components/search/diseaseTemplate.html
+### [diseaseTemplate.html](www/hmdc/app/components/search/diseaseTemplate.html)
 This file is used to display the disease table. It makes use of angular Smart Table
-### www/hmdc/app/components/search/geneTemplate.html
+### [geneTemplate.html](www/hmdc/app/components/search/geneTemplate.html)
 This file is used to display the gene table. It makes use of angular Smart Table
-### www/hmdc/app/components/search/gridTemplate.html
+### [gridTemplate.html](www/hmdc/app/components/search/gridTemplate.html)
 This file is used to display the HMDC grid. It makes use of angular ng-cells module.
 
 
