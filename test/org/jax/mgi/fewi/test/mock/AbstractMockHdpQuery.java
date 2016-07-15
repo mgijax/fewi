@@ -54,12 +54,12 @@ public class AbstractMockHdpQuery implements MockQuery
     }
     
     public void addTermIdClause(String termId) {
-    	addCondition(new DiseasePortalConditionQuery(DiseasePortalFields.TERM_ID_SEARCH,
+    	addCondition(new DiseasePortalConditionQuery(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_ID,
     		new DiseasePortalCondition(termId)));
     }
     
     public void addTermClause(String term) {
-    	addCondition(new DiseasePortalConditionQuery(DiseasePortalFields.TERM_SEARCH,
+    	addCondition(new DiseasePortalConditionQuery(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_TEXT,
     		new DiseasePortalCondition(term)));
     }
     
