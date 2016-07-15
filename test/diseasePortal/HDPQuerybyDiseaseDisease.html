@@ -204,7 +204,7 @@ tr.gray td {background-color:#EEEEEE;}
     		<ol>
                 <li>Query by Acne, Adult<b concordion:set="#disease">604324</b></li>
                 <li>Should return ONLY one disease:
-                <table cc:verifyRowsUnordered="#termId : getTermIdsByDisease(#disease)">
+                <table cc:verifyRowsUnordered="#termId : getTermIdsByDiseaseId(#disease)">
                 	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
                 	<tr><td>604324</td><td>Acne, Adult</td></tr>
                 	</table>

@@ -3,6 +3,7 @@ package org.jax.mgi.fewi.test.base;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.hmdc.controller.DiseasePortalController;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpDisease;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpMarker;
@@ -33,15 +34,13 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	return getGeneSymbols(mq);
     }
 
-/*
     public Integer getGeneCountByDisease(String diseaseID) throws Exception
     {	
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setPhenotypes(diseaseID);
-    	SearchResults<SolrHdpMarker> markers = mq.getGenes();
-    	return markers.getTotalCount();
+    	mq.addTermIdClause(diseaseID);
+    	List<SolrHdpMarker> markers = mq.getGenes();
+    	return markers.size();
     }
-*/
     
     public List<String> getTermsByDisease(String disease) throws Exception
     {	
@@ -94,15 +93,14 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	
     	return termIds;
     }
-/*    
+
     public Integer getDiseaseCountByDisease(String diseaseID) throws Exception
     {	
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setPhenotypes(diseaseID);
-    	SearchResults<SolrHdpDisease> terms = mq.getDiseases();
-    	return terms.getTotalCount();
+    	mq.addTermIdClause(diseaseID);
+    	List<SolrHdpDisease> terms = mq.getDiseases();
+    	return terms.size();
     }
-*/
 
     public List<String> getTermsByPhenotype(String phenotype) throws Exception
     {	
@@ -132,7 +130,7 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	SearchResults<SolrHdpMarker> markers = mq.getGenes();
     	return markers.getTotalCount();
     }
-    
+*/  
     // returns <br/> delimited string
     public String getMarkerDiseaseByPhenotypeSymbol(String phenotype,String symbol) throws Exception
     {
@@ -141,14 +139,16 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	SolrHdpMarker m = getMarkerByPhenotypeSymbol(phenotype,symbol);
     	if(m!=null)
     	{
-			for(String disease : m.getDisease())
-			{
-				diseases.add(disease);
+    		if (m.getDisease() != null) {
+    			for(String disease : m.getDisease())
+				{
+					diseases.add(disease);
+				}
 			}
     	}
     	return StringUtils.join(diseases,"\n");
     }
-    
+
  // returns , delimited string
     public String getMarkerSystemByPhenotypeSymbol(String phenotype,String symbol) throws Exception
     {
@@ -157,20 +157,21 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	SolrHdpMarker m = getMarkerByPhenotypeSymbol(phenotype,symbol);
     	if(m!=null)
     	{
-			for(String system : m.getSystem())
-			{
-				systems.add(system);
-			}
+    		if (m.getMouseSystem() != null) {
+    			for(String system : m.getMouseSystem())
+    			{
+    				systems.add(system);
+    			}
+    		}
     	}
     	return StringUtils.join(systems,", ");
     }
-    
+
     public SolrHdpMarker getMarkerByPhenotypeSymbol(String phenotype,String symbol) throws Exception
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setPhenotypes(phenotype);
-    	SearchResults<SolrHdpMarker> markers = mq.getGenes();
-    	for(SolrHdpMarker m : markers.getResultObjects())
+    	mq.addTermClause(phenotype);
+    	for(SolrHdpMarker m : mq.getGenes())
     	{
     		if(m.getSymbol().equals(symbol))
     		{
@@ -179,7 +180,7 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	}
     	return null;
     }
-*/ 
+
     // ------------------ genes queries --------------------
     public List<String> getSymbolsByGene(String genes) throws Exception
     {
