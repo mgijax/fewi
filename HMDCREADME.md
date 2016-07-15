@@ -5,11 +5,11 @@
   This is the main file that is used for the HMDC home page. This page includes all the standard header and footer. 
 
 ## Controllers
-### [DiseaseController](www/hmdc/app/components/search/DiseaseController.js):
+### [DiseaseController](www/hmdc/app/components/search/DiseaseController.js)
 This controller handles the filtering for the disease table, as well as using the Search Service to do the data query for the table. This controller also handles the popup for the "Source" link on the smart table.
-### [GeneController](www/hmdc/app/components/search/GeneController.js):
+### [GeneController](www/hmdc/app/components/search/GeneController.js)
 This controller handles the filtering for the disease table, as well as using the Search Service to do the data query for the table. This controller also handles the popup for the "Source" link on the smart table.
-### [GridController](www/hmdc/app/components/search/GridController.js):
+### [GridController](www/hmdc/app/components/search/GridController.js)
 This controller handles the following:
 
   1. Popups
@@ -63,6 +63,78 @@ This file is used to display the gene table. It makes use of angular Smart Table
 ### [gridTemplate.html](www/hmdc/app/components/search/gridTemplate.html)
 This file is used to display the HMDC grid. It makes use of angular ng-cells module.
 
+## Flow Control
 
+### What happens when the search button is clicked?
 
+#### Search Controller
+  1. vm.onSubmit() on Search Controller is run
+  2. Clears the loaded file data from the model before sending it on.
+  3. Emits the CallSearchMethod Event which goes to all three controllers (Grid, Gene, Disease)
+  4. Hides the query form
+  5. Generates "You Searched for" string
+
+#### Grid Controller
+  1. Sets the grid loading to true
+  2. Runs the Ajax search method
+  3. Builds Filter Lists in the root scope
+  4. Filters the grid via the built lists
+  5. Builds the grid
+  6. Sets the grid loading to false
+  7. Removes any pervious filters
+  8. Emit ClearFilterText
+
+#### Gene Controller
+  1. Sets the gene loading to true
+  2. Runs the Ajax search method
+  3. Runs the filter method 
+  4. Removes any filters from the original filter set
+  5. Sets the gene loading to false
+
+#### Disease Controller
+  1. Sets the disease loading to true
+  2. Runs the Ajax search method
+  3. Sets the result count based on the data coming back form the server
+  4. Runs the filter method
+  5. Removed any filters from the original filter set
+  6. Sets the disease loading to false
+  
+### What happens when "Apply Filters" is clicked?
+
+#### Search Controller
+  1. vm.applyFilters on the Search Controller is run
+  2. Emit FilterChanged Event to the Grid controllers
+
+#### Grid Controller
+  1. Catch FilterChanged Event
+  2. Sets grid loading to true
+  3. Filters the grid based on the current filter set
+  4. Emits GridFilterFinished event
+  5. Builds the grid based the data that is left from the filter
+  6. Sets grid loading to false
+
+#### Disease Controller
+  1. Catch GridFilterFinished event
+  2. Runs Filter Method with new filter values
+
+#### Gene Controller
+  1. Catch GridFilterFinished event
+  2. Runs Filter Method with new filter values
+
+## Scope
+
+### Root Scope 
+This surrounds the entire page on the html tag in the [header.jsp](www/hmdc/app/components/search/header.jsp) page via the ng-app="HMDCApplication"
+
+### Search Controller Scope
+This is based on the Search Controller which surronds the [searchTemplate.html](www/hmdc/app/components/search/searchTemplate.html). ```<div ng-controller="SearchController">```
+
+### Grid Controller Scope
+This is based on the [gridTemplate.html](www/hmdc/app/components/search/gridTemplate.html) which is included from inside the [searchTemplate.html](www/hmdc/app/components/search/searchTemplate.html).
+
+### Gene Controller Scope
+This is based on the [geneTemplate.html](www/hmdc/app/components/search/geneTemplate.html) which is included from inside the [searchTemplate.html](www/hmdc/app/components/search/searchTemplate.html).
+
+### Disease Controller Scope
+This is based on the [diseaseTemplate.html](www/hmdc/app/components/search/diseaseTemplate.html) which is included from inside the [searchTemplate.html](www/hmdc/app/components/search/searchTemplate.html).
 
