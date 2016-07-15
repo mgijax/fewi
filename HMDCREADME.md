@@ -1,15 +1,15 @@
 # HMDC Documentation
 
 ## JSP
-### www/WEB-INF/jsp/hmdc/home.jsp:
+### [www/WEB-INF/jsp/hmdc/home.jsp]:
   This is the main file that is used for the HMDC home page. This page includes all the standard header and footer. 
 
 ## Controllers
-### www/hmdc/app/components/search/DiseaseController.js
+### [www/hmdc/app/components/search/DiseaseController.js](www/hmdc/app/components/search/DiseaseController.js):
 This controller handles the filtering for the disease table, as well as using the Search Service to do the data query for the table. This controller also handles the popup for the "Source" link on the smart table.
-### www/hmdc/app/components/search/GeneController.js
+### [www/hmdc/app/components/search/GeneController.js](www/hmdc/app/components/search/GeneController.js):
 This controller handles the filtering for the disease table, as well as using the Search Service to do the data query for the table. This controller also handles the popup for the "Source" link on the smart table.
-### www/hmdc/app/components/search/GridController.js
+### [www/hmdc/app/components/search/GridController.js](www/hmdc/app/components/search/GridController.js):
 This controller handles the following:
 
   1. Popups
@@ -21,7 +21,7 @@ This controller handles the following:
   7. Filters / Builds the grid.
   8. Changes the JSON String coming from Fewi into the format needed for the ng-cells grid
 
-### www/hmdc/app/components/search/SearchController.js
+### [www/hmdc/app/components/search/SearchController.js](www/hmdc/app/components/search/SearchController.js)
 This controller handles the following:
 
   1. Setting up the filter settings options
