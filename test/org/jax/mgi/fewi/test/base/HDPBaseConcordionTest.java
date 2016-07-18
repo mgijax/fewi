@@ -285,19 +285,19 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	mq.addTermIdClause(phenotypes);
     	return getGridSymbols(mq,false,true);
     }
+    public List<String> gridDiseasesByPhenotype(String phenotypes) throws Exception
+    {
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermIdClause(phenotypes);
+    	return getGridDiseases(mq);
+    }
+    public List<String> gridDiseasesByGene(String genes) throws Exception
+    {
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addMarkerSymbolIdClause(genes);
+    	return getGridDiseases(mq);
+    }
 /*
-    public List<String> gridDiseaseIdsByPhenotype(String phenotypes) throws Exception
-    {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotypes);
-    	return mq.getDiseaseColumnIds();
-    }
-    public List<String> gridDiseaseIdsByGene(String genes) throws Exception
-    {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setGenes(genes);
-    	return mq.getDiseaseColumnIds();
-    }
     
     public List<String> gridMpHeadersByPhenotype(String phenotypes) throws Exception
     {
@@ -327,15 +327,24 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	
     	return mq.getMpHeaderColumns();
     }
-    
+*/    
     // returns "" or "check" if there is a hit for the query + geneSymbol + diseaseId combination
     public String gridCheckForDiseaseByPhenotype(String phenotype,String geneSymbol,String diseaseId) throws Exception
     {
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(phenotype);
+    	mq.setOperator(MockHdpControllerQuery.AND);
+    	mq.addMarkerSymbolIdClause(geneSymbol);
+    	mq.addMarkerSymbolIdClause(genes);
+    	mq.addTermIdClause(diseaseId);
+    	return getGridDiseases(mq);
+
     	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
     	mq.setGenes(geneSymbol);
     	mq.setPhenotypes(phenotype);
     	return gridCheckForDisease(mq,geneSymbol,diseaseId);
     }
+/*
     // returns "" or "check" if there is a hit for the query + geneSymbol + diseaseId combination
     public String gridCheckForDiseaseByGene(String genes,String geneSymbol,String diseaseId) throws Exception
     {
@@ -587,6 +596,16 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     		}
     	}
     	return symbols;
+    }
+
+    private List<String> getGridDiseases(MockHdpControllerQuery mq) throws Exception
+    {
+    	return mq.getGrid().getGridOMIMHeaders();
+    }
+
+    private List<String> getGridPhenotypes(MockHdpControllerQuery mq) throws Exception
+    {
+    	return mq.getGrid().getGridMPHeaders();
     }
 /*        
     // returns "" or "check" if there is a hit for the query + geneSymbol + diseaseCluster combination
