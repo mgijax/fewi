@@ -155,7 +155,7 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     {
     	List<String> diseases = new ArrayList<String>();
     	
-    	SolrHdpMarker m = getMarkerByPhenotypeSymbol(phenotype,symbol);
+    	SolrHdpMarker m = getMarkerByPhenotypeIdSymbol(phenotype,symbol);
     	if(m!=null)
     	{
     		if (m.getDisease() != null) {
@@ -190,6 +190,20 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
     	mq.addTermClause(phenotype);
+    	for(SolrHdpMarker m : mq.getGenes())
+    	{
+    		if(m.getSymbol().equals(symbol))
+    		{
+    			return m;
+    		}
+    	}
+    	return null;
+    }
+
+    public SolrHdpMarker getMarkerByPhenotypeIdSymbol(String phenotypeId,String symbol) throws Exception
+    {
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermIdClause(phenotypeId);
     	for(SolrHdpMarker m : mq.getGenes())
     	{
     		if(m.getSymbol().equals(symbol))
@@ -597,13 +611,11 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     		if (includeHuman && (gc.getHumanSymbols() != null)) {
     			for (GridMarker hm : gc.getHumanSymbols()) {
     				symbols.add(hm.getSymbol());
-    				System.out.println("Found human marker: " + hm.getSymbol());
     			}
     		} 
     		if (includeMouse && (gc.getMouseSymbols() != null)) {
     			for (GridMarker mm : gc.getMouseSymbols()) {
     				symbols.add(mm.getSymbol());
-    				System.out.println("Found mouse marker: " + mm.getSymbol());
     			}
     		}
     	}
