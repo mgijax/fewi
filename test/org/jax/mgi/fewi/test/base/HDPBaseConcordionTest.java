@@ -5,10 +5,14 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.hmdc.controller.DiseasePortalController;
+import org.jax.mgi.fewi.hmdc.models.GridCluster;
+import org.jax.mgi.fewi.hmdc.models.GridResult;
+import org.jax.mgi.fewi.hmdc.models.GridRow;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpDisease;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpMarker;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.test.mock.MockHdpControllerQuery;
+import org.jax.mgi.shr.jsonmodel.GridMarker;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /*
@@ -213,66 +217,75 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	return getGeneSymbols(mq);
     }
     
-/*        
     // ------------- Grid related functions -----------
     public Integer gridCountByPhenotype(String phenotypes) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotypes);
-    	
-    	return mq.getGridClusters().size();
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(phenotypes);
+    	return mq.getGrid().getGridRows().size();
     }
     public Integer gridDiseaseCountByPhenotype(String phenotypes) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotypes);
-    	
-    	return mq.getDiseaseColumnIds().size();
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(phenotypes);
+    	return mq.getGrid().getGridOMIMHeaders().size();
     }
     
     public List<String> gridAllSymbolsByGene(String genes) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setGenes(genes);
-    	
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addMarkerSymbolIdClause(genes);
     	return getGridSymbols(mq,true,true);
     }
     public List<String> gridHumanSymbolsByGene(String genes) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setGenes(genes);
-    	
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addMarkerSymbolIdClause(genes);
     	return getGridSymbols(mq,true,false);
     }
     public List<String> gridMouseSymbolsByGene(String genes) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setGenes(genes);
-    	
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addMarkerSymbolIdClause(genes);
     	return getGridSymbols(mq,false,true);
     }
     public List<String> gridAllSymbolsByPhenotype(String phenotypes) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotypes);
-    	
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(phenotypes);
     	return getGridSymbols(mq,true,true);
     }
     public List<String> gridHumanSymbolsByPhenotype(String phenotypes) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotypes);
-    	
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(phenotypes);
     	return getGridSymbols(mq,true,false);
     }
     public List<String> gridMouseSymbolsByPhenotype(String phenotypes) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotypes);
-    	
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(phenotypes);
     	return getGridSymbols(mq,false,true);
     }
-
+    public List<String> gridAllSymbolsByPhenotypeId(String phenotypes) throws Exception
+    {
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermIdClause(phenotypes);
+    	return getGridSymbols(mq,true,true);
+    }
+    public List<String> gridHumanSymbolsByPhenotypeId(String phenotypes) throws Exception
+    {
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermIdClause(phenotypes);
+    	return getGridSymbols(mq,true,false);
+    }
+    public List<String> gridMouseSymbolsByPhenotypeId(String phenotypes) throws Exception
+    {
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermIdClause(phenotypes);
+    	return getGridSymbols(mq,false,true);
+    }
+/*
     public List<String> gridDiseaseIdsByPhenotype(String phenotypes) throws Exception
     {
     	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
@@ -554,27 +567,28 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	
     	return symbols;
     }
-/*    
-    private List<String> getGridSymbols(MockHdpHttpQuery mq, boolean includeHuman,boolean includeMouse) throws Exception
+
+    private List<String> getGridSymbols(MockHdpControllerQuery mq, boolean includeHuman, boolean includeMouse) throws Exception
     {
     	List<String> symbols = new ArrayList<String>();
-    	for(HdpGridClusterSummaryRow cluster : mq.getGridClusters())
-    	{
-    		if(includeHuman)
-    		{
-    			symbols.addAll(cluster.getHumanSymbols());
-    		}
-    		if(includeMouse)
-    		{
-    			for(SolrHdpGene m : cluster.getMouseMarkers())
-    			{
-    				symbols.add(m.getSymbol());
+    	for (GridRow gr : mq.getGrid().getGridRows()) {
+    		GridCluster gc = gr.getGridCluster();
+    		if (includeHuman && (gc.getHumanSymbols() != null)) {
+    			for (GridMarker hm : gc.getHumanSymbols()) {
+    				symbols.add(hm.getSymbol());
+    				System.out.println("Found human marker: " + hm.getSymbol());
+    			}
+    		} 
+    		if (includeMouse && (gc.getMouseSymbols() != null)) {
+    			for (GridMarker mm : gc.getMouseSymbols()) {
+    				symbols.add(mm.getSymbol());
+    				System.out.println("Found mouse marker: " + mm.getSymbol());
     			}
     		}
     	}
     	return symbols;
     }
-    
+/*        
     // returns "" or "check" if there is a hit for the query + geneSymbol + diseaseCluster combination
     private String gridCheckForDisease(MockHdpHttpQuery mq,String geneSymbol,String diseaseCluster) throws Exception
     {

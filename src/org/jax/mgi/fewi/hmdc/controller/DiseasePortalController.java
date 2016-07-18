@@ -71,7 +71,7 @@ public class DiseasePortalController {
 		SearchParams params = new SearchParams();
 		params.setPageSize(1000000);
 		
-		session.setAttribute("jsonInput", jsonInput);
+		if (session != null) { session.setAttribute("jsonInput", jsonInput); }
 		
 		Filter mainFilter = null;
 		Filter highlightFilter = null;
