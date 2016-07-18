@@ -29,11 +29,23 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     @Autowired
     private DiseasePortalController hdpController;
     
+    public List<String> getSymbolsByDiseaseTerm(String disease) throws Exception
+    {
+    	return getSymbolsByPhenotypeTerm(disease);
+    }
+    
     public List<String> getSymbolsByDisease(String diseaseID) throws Exception
     {
     	return getSymbolsByPhenotype(diseaseID);
     }
     
+    public List<String> getSymbolsByPhenotypeTerm(String mpTerm) throws Exception
+    {
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(mpTerm);
+    	return getGeneSymbols(mq);
+    }
+
     public List<String> getSymbolsByPhenotype(String mpID) throws Exception
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
@@ -116,7 +128,7 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
 
     public List<String> getTermIdsByPhenotype(String phenotype) throws Exception
     {	
-    	return getTermIdsByDiseaseId(phenotype);
+    	return getTermIdsByDisease(phenotype);
     }
 
     public List<String> getTermsByPhenotypeId(String phenotypeId) throws Exception
