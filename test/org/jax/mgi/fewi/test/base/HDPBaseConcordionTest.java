@@ -363,7 +363,6 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	mq.addTermIdClause(phenotype);
     	mq.setOperator(MockHdpControllerQuery.AND);
     	mq.addMarkerSymbolIdClause(geneSymbol);
-    	mq.addMarkerSymbolIdClause(geneSymbol);
     	mq.addTermIdClause(diseaseId);
     	return gridCheckForDisease(mq,geneSymbol,diseaseId);
     }
@@ -372,6 +371,7 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
     	mq.addMarkerSymbolIdClause(genes);
+    	mq.addTermIdClause(diseaseId);
     	List<String> headers = mq.getGrid().getGridOMIMHeaders();
     	if (headers.size() > 0) {
     		return "check";
@@ -638,8 +638,10 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	GridResult gr = mq.getGrid();
     	List<String> diseaseHeaders = gr.getGridOMIMHeaders();
 
+    	System.out.println("symbol: " + geneSymbol + ", disease: " + diseaseCluster);
     	// if no disease column, no hit
-    	if ((diseaseHeaders != null) && !diseaseHeaders.contains(diseaseCluster)) {
+    	if (diseaseHeaders == null) {
+    		System.out.println("  -- No diseaseHeaders");
     		return "";
     	}
 
@@ -649,10 +651,12 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     		for (String key : dc.keySet()) {
     			GridTermHeaderAnnotation gtha = dc.get(key);
     			if (gtha.getAnnotCount() == gtha.getNormalCount()) {
+    				System.out.println("  -- " + gtha.getHeader() + ": normal annotations");
     				return "N";
     			}
     		}
     	}
+		System.out.println("  -- check");
     	return "check";
     }
 /*
