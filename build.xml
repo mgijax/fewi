@@ -146,6 +146,21 @@
 						</batchtest>
 					</junit>
 				</target>
+	<!-- run just HMDC tests -->
+		<target name="hmdc-test" depends="compile-test">
+				<junit fork="yes" forkmode="once" failureproperty="junit.failure">
+					<jvmarg value="-Dconcordion.output.dir=${testoutput.dir}"/>
+					<classpath>
+						<path refid="tests.path" />
+					</classpath>
+					<formatter type="xml" usefile="true" />
+					<batchtest todir="${testoutput.dir}">
+						<fileset dir="${compile.dir}" includes="diseasePortal/*Test.class">
+						</fileset>
+					</batchtest>
+				</junit>
+			</target>
+	
 	<!-- run just allele tests -->
 		<target name="allele-test" depends="compile-test">
 				<junit fork="yes" forkmode="once" failureproperty="junit.failure">
