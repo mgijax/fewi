@@ -184,7 +184,7 @@ tr.gray td {background-color:#EEEEEE;}
 
     		<li>Verify the correct OMIM terms are displayed 
     		<ol>
-                <li>Query for <b concordion:set="#disease">hutchinson-gilford</b>.</li>
+                <li>Query for <b concordion:set="#disease">176670</b>.</li>
                 <li>The following diseases should appear in the gene result set  due to text matches (not complete results):
                 	<table concordion:execute="#mDiseases = getMarkerDiseaseByPhenotypeSymbol(#disease,#symbol)">
                 	<tr><th>Organism</th><th concordion:set="#symbol">Marker Symbol</th><th cc:assertEquals="#mDiseases">Disease</th></tr>
@@ -239,19 +239,20 @@ tr.gray td {background-color:#EEEEEE;}
             
     		<li>Verify the correct MP Header terms are displayed
     		<ol>
-                <li>Query for <b concordion:set="#disease">lipodystrophy, familial</b>.</li>
+                <li>Query for <b concordion:set="#disease">Endometrial Cancer</b>.</li>
                 <li>Only the following MP header terms should appear in the gene result set (other returned genes not included here):
                 	<table concordion:execute="#mSystems=getMarkerSystemByPhenotypeSymbol(#disease,#symbol)">
                 	<tr><th>Organism</th><th concordion:set="#symbol">Marker Symbol</th><th cc:assertEquals="#mSystems">Abnormal Phenotypes</th></tr>
                 	<tr>
                 		<td>mouse</td>
-                		<td>Lmna</td>
+                		<td>Trp53</td>
                 		<td>adipose tissue,
 						behavior/neurological,
 						cardiovascular system,
 						cellular,
 						craniofacial,
 						digestive/alimentary system,
+						embryo,
 						endocrine/exocrine glands,
 						growth/size/body,
 						hearing/vestibular/ear,
@@ -263,6 +264,7 @@ tr.gray td {background-color:#EEEEEE;}
 						liver/biliary system,
 						mortality/aging,
 						muscle,
+						neoplasm,
 						nervous system,
 						pigmentation,
 						renal/urinary system,
@@ -273,11 +275,12 @@ tr.gray td {background-color:#EEEEEE;}
 					</tr>
                 	<tr>
                 		<td>mouse</td>
-                		<td>Pparg</td>
+                		<td>Pten</td>
                 		<td>adipose tissue,
 						behavior/neurological,
 						cardiovascular system,
 						cellular,
+						digestive/alimentary system,
 						embryo,
 						endocrine/exocrine glands,
 						growth/size/body,
@@ -285,13 +288,18 @@ tr.gray td {background-color:#EEEEEE;}
 						homeostasis/metabolism,
 						immune system,
 						integument,
+						limbs/digits/tail,
 						liver/biliary system,
 						mortality/aging,
 						muscle,
 						neoplasm,
+						nervous system,
+						pigmentation,
 						renal/urinary system,
 						reproductive system,
+						respiratory system,
 						skeleton,
+						taste/olfaction,
 						vision/eye</td></tr>
                 	</table>
                 </li>
