@@ -105,6 +105,7 @@ tr.gray td {background-color:#EEEEEE;}
                 	<tr><td>260570</td><td>Pelger-Huet-Like Anomaly and Episodic Fever with Abdominal Pain</td><td>contained in name</td></tr>
                 	</table>
                 </li>
+                
                 <li>Query for <b concordion:set="#disease">syndrome</b>.</li>
                 <li>At least the following diseases should appear in the result set (along with many others):
                 	<table cc:verifySupersetOf="#termId : getTermIdsByDisease(#disease)">
@@ -128,7 +129,8 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
 
-    		<li>Querying with a partial word <b>followed by</b> the wildcard symbol returns all diseases containing that partial word in a name or synonym.
+<!--  COMMENTING OUT WILD CARD TEST - not valid in 6.05
+     		<li>Querying with a partial word <b>followed by</b> the wildcard symbol returns all diseases containing that partial word in a name or synonym.
     		<ol>
                 <li>Query by <b concordion:set="#disease">Achroma*</b></li>
                 <li>Query should ONLY return the following diseases: 
@@ -142,7 +144,9 @@ tr.gray td {background-color:#EEEEEE;}
                 	</table></li>
     		</ol>
     		</li>
+-->
 
+<!--  COMMENTING OUT WILD CARD TEST - not valid in 6.05
     		<li>Querying with a partial word <b>preceded by</b> the wildcard symbol returns all diseases containing that partial word in a name or synonym (same results as above).<ol>
                 <li>Query by <b concordion:set="#disease">*chromatopsia</b></li>
                 <li>Query should ONLY return the following diseases: 
@@ -156,15 +160,16 @@ tr.gray td {background-color:#EEEEEE;}
                 	</table></li>
     		</ol>
     		</li>
+-->
 
-    		<li>Querying with multiple words returns all diseases matching any of the words in the input string.
+    		<li>Querying with multiple words returns all diseases matching all words in the query string (proximity match in Solr)
     		<ol>
-                <li>Query by <b concordion:set="#disease">Acrocephalopolydactylous SLE</b>, should OR the two tokens and match any disease that has one of the tokens.</li>
-                <li>Query should return at least the following diseases  (and one other due to matches on an MP term that returns additional diseases): 
+                <li>Query by <b concordion:set="#disease">Cancer Lung</b>, match any disease that has both of the tokens; any order; do not need to be adjacent.</li>
+                <li>Query should return at the following diseases by match to the disease term: 
                 	<table cc:verifySupersetOf="#termId : getTermIdsByDisease(#disease)">
                 	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
-                	<tr><td>200995</td><td>Acrocephalopolydactylous Dysplasia</td></tr>
-                	<tr><td>152700</td><td>Systemic Lupus Erythematosus; SLE</td></tr>
+                	<tr><td>211980</td><td>Lung Cancer</td></tr>
+                	<tr><td>182280</td><td>Small Cell Cancer of the Lung</td></tr>
                 	</table></li>
     		</ol>
     		</li>
