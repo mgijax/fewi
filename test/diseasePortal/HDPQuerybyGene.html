@@ -352,7 +352,7 @@
             <li>User can query by marker names
     		<ol>
     			<li>Queryies by the following <i>names</i> should bring back the appropriate marker
-    			<table concordion:execute="#symbols = getSymbolsByGene(#geneId)">
+    			<table concordion:execute="#symbols = getSymbolsByGeneNameOrSynonym(#geneId)">
                 	<tr><th concordion:set="#geneId">Marker Name</th>
                 	<th cc:assertResultsContain="#symbols">Marker Symbol</th><th>Marker Organism</th></tr>
                 	<tr><td>"tenascin R"</td><td>TNR</td><td>human</td></tr>
@@ -361,7 +361,7 @@
                 </li>
                 <li>Queries by the following <i>names</i> of a mouse/human marker's ortholog should return that mouse/human marker
                <table
-								concordion:execute="#symbols = getSymbolsByGene(#geneId)">
+								concordion:execute="#symbols = getSymbolsByGeneNameOrSynonym(#geneId)">
 								<tr>
 									<th concordion:set="#geneId">Ortholog Name</th>
 									<th cc:assertResultsContain="#symbols">Marker Symbol</th>
@@ -449,7 +449,7 @@
     		<li>User can query by marker synonyms
     		<ol>
     			<li>Queryies by the following <i>synonyms</i> should bring back the appropriate marker
-    			<table concordion:execute="#symbols = getSymbolsByGene(#geneId)">
+    			<table concordion:execute="#symbols = getSymbolsByGeneNameOrSynonym(#geneId)">
                 	<tr><th concordion:set="#geneId">Marker Synonym</th>
                 	<th cc:assertResultsContain="#symbols">Marker Symbol</th><th>Marker Organism</th></tr>
                 	<tr><td>A2MD</td><td>A2M</td><td>human</td></tr>
@@ -457,7 +457,7 @@
                 </table>
                 </li>
     			<li>Queries by the following <i>synonyms</i> of a mouse/human marker's ortholog should return that mouse/human marker
-               <table concordion:execute="#symbols = getSymbolsByGene(#geneId)">
+               <table concordion:execute="#symbols = getSymbolsByGeneNameOrSynonym(#geneId)">
                 	<tr><th concordion:set="#geneId">Ortholog Synonym</th>
                 	<th cc:assertResultsContain="#symbols">Marker Symbol</th><th>Marker Organism</th>
                 	<th>Ortholog Symbol</th><th>Ortholog Organism</th></tr>

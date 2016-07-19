@@ -139,7 +139,7 @@ tr.gray td {background-color:#EEEEEE;}
 			<ol>
 				<li>Open the HDP query form</li>
 				<li>For each MP term below, verify the system header, listed gene, and display of "N":
-				<table concordion:execute="#check = gridCheckForMpHeaderByPhenotype(#pheno,#row,#column)">
+				<table concordion:execute="#check = gridCheckForMpHeaderByPhenotypeId(#pheno,#row,#column)">
 					<tr><th concordion:set="#pheno">MP term</th>
 						<th concordion:set="#column">system</th>
 						<th concordion:set="#row">gene</th>
@@ -204,14 +204,14 @@ tr.gray td {background-color:#EEEEEE;}
                 </li> 
                 <li>Verify checkmarks for BOTH columns for <b concordion:set="#symbol">Gpnmb</b> have checks 
                 	(via genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3773274">MGI:3773274</a>).
-                	<b concordion:set="#system">vision/eye</b> has a <b concordion:assertEquals="gridCheckForMpHeaderByPhenotype(#pheno,#symbol,#system)">check</b> 
-                	and <b concordion:set="#system">pigmentation</b> has a <b concordion:assertEquals="gridCheckForMpHeaderByPhenotype(#pheno,#symbol,#system)">check</b>.
+                	<b concordion:set="#system">vision/eye</b> has a <b concordion:assertEquals="gridCheckForMpHeaderByPhenotypeId(#pheno,#symbol,#system)">check</b> 
+                	and <b concordion:set="#system">pigmentation</b> has a <b concordion:assertEquals="gridCheckForMpHeaderByPhenotypeId(#pheno,#symbol,#system)">check</b>.
               		</li>
                 <li>Verify checkmark for <b>vision/eye</b> for <b concordion:set="#symbol">Tyrp1</b> 
                 	(via genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3773275">MGI:3773275</a>).<br/>
                 		(Note also: The mouse marker Tyrp1 has human homolog TYRP1 which is directly annotated to the disease 'Albinism, Oculocutaneous, Type III; OCA3'. )
-                	<br/>For <b concordion:set="#system">vision/eye</b> there is a <b concordion:assertEquals="gridCheckForMpHeaderByPhenotype(#pheno,#symbol,#system)">check</b>.
-                	For <b concordion:set="#system">pigmentation</b> there is <span style="background-color:#FFFF00;">NO</span> <b cc:assertNotEquals="gridCheckForMpHeaderByPhenotype(#pheno,#symbol,#system)">check</b></li>
+                	<br/>For <b concordion:set="#system">vision/eye</b> there is a <b concordion:assertEquals="gridCheckForMpHeaderByPhenotypeId(#pheno,#symbol,#system)">check</b>.
+                	For <b concordion:set="#system">pigmentation</b> there is <span style="background-color:#FFFF00;">NO</span> <b cc:assertNotEquals="gridCheckForMpHeaderByPhenotypeId(#pheno,#symbol,#system)">check</b></li>
                 <li>Clear the query form.</li>
                 <li>Enter <b concordion:set="#pheno">MP:0000664</b> (small prostate gland anterior lobe), in the Phenotypes and Diseases section and hit search.</li>
                 <li>Click on the Grid tab and confirm AT LEAST the following phenotype header columns are displayed (data from <a href="http://www.informatics.jax.org/allele/key/1628">Ahr&lt;tm1Bra&gt;</a> which has 4 homozygous genotypes.):
@@ -322,8 +322,8 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Confirm the phenotype header columns have checks for the appropriate marker:
                 	<table>
                 	<tr><th>MP Header</th><th>Symbol</th><th>Checkmark?</th></tr>
-                	<tr><td concordion:set="#system">pigmentation</td><td concordion:set="#symbol">Gpnmb</td><td concordion:assertEquals="gridCheckForMpHeaderByPhenotype(#pheno,#symbol,#system)">check</td></tr>
-                	<tr><td concordion:set="#system">vision/eye</td><td concordion:set="#symbol">Gpnmb</td><td concordion:assertEquals="gridCheckForMpHeaderByPhenotype(#pheno,#symbol,#system)">check</td></tr>
+                	<tr><td concordion:set="#system">pigmentation</td><td concordion:set="#symbol">Gpnmb</td><td concordion:assertEquals="gridCheckForMpHeaderByPhenotypeId(#pheno,#symbol,#system)">check</td></tr>
+                	<tr><td concordion:set="#system">vision/eye</td><td concordion:set="#symbol">Gpnmb</td><td concordion:assertEquals="gridCheckForMpHeaderByPhenotypeId(#pheno,#symbol,#system)">check</td></tr>
                 	</table>                
                 </li>
                 <li>Clear the form.</li>
@@ -494,7 +494,7 @@ tr.gray td {background-color:#EEEEEE;}
  			<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">MP:0004521</b> (abnormal cochlear hair cell) in the Phenotypes and Diseases section and hit search</li>
-				<li>Verify that marker <b concordion:set="#row">Actb</b> and MP header <b concordion:set="#system">hearing/vestibular/ear</b> has a <b concordion:assertEquals="gridCheckForMpHeaderByPhenotype(#pheno,#row,#system)">check</b>.<br/>
+				<li>Verify that marker <b concordion:set="#row">Actb</b> and MP header <b concordion:set="#system">hearing/vestibular/ear</b> has a <b concordion:assertEquals="gridCheckForMpHeaderByPhenotypeId(#pheno,#row,#system)">check</b>.<br/>
 					(Both "normal" and abnormal annotations exist for the "simple" genotype <a href="http://scrumdog.informatics.jax.org/allele/genoview/MGI:4882050">MGI:4882050</a>.)
 				</li>
 			</ol>
@@ -504,10 +504,10 @@ tr.gray td {background-color:#EEEEEE;}
             <ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">MP:0004521</b> (abnormal cochlear hair cell) in the Phenotypes and Diseases section and hit search.</li>
-                <li>Confirm that, for <b  concordion:set="#row">Actb</b>, the column <b concordion:set="#system">hearing/vestibular/ear</b> has a <b concordion:assertEquals="gridCheckForMpHeaderByPhenotype(#pheno,#row,#system)">check</b><br/>
-                	and the column <b concordion:set="#system">nervous system</b> has a <b concordion:assertEquals="gridCheckForMpHeaderByPhenotype(#pheno,#row,#system)">check</b>.<br/>
+                <li>Confirm that, for <b  concordion:set="#row">Actb</b>, the column <b concordion:set="#system">hearing/vestibular/ear</b> has a <b concordion:assertEquals="gridCheckForMpHeaderByPhenotypeId(#pheno,#row,#system)">check</b><br/>
+                	and the column <b concordion:set="#system">nervous system</b> has a <b concordion:assertEquals="gridCheckForMpHeaderByPhenotypeId(#pheno,#row,#system)">check</b>.<br/>
                 	(Both systems have annotations for the same genotypes annotated to the queried term MP:0004521.) </li>
-               <li>Confirm that, for Actb, the column <b concordion:set="#system">mortality/aging</b> has NO <b cc:assertNotEquals="gridCheckForMpHeaderByPhenotype(#pheno,#row,#system)">check</b>. <br/>
+               <li>Confirm that, for Actb, the column <b concordion:set="#system">mortality/aging</b> has NO <b cc:assertNotEquals="gridCheckForMpHeaderByPhenotypeId(#pheno,#row,#system)">check</b>. <br/>
                		(This system has no terms annotated to the same genotypes as the queried term MP:0004521.)</li>
 			</ol>    		
     		</li>

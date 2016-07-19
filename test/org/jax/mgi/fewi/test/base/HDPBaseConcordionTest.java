@@ -1,12 +1,23 @@
 package org.jax.mgi.fewi.test.base;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.hmdc.controller.DiseasePortalController;
+import org.jax.mgi.fewi.hmdc.models.GridCluster;
+import org.jax.mgi.fewi.hmdc.models.GridResult;
+import org.jax.mgi.fewi.hmdc.models.GridRow;
+import org.jax.mgi.fewi.hmdc.models.GridTermHeaderAnnotation;
+import org.jax.mgi.fewi.hmdc.solr.SolrHdpDisease;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpMarker;
+import org.jax.mgi.fewi.matrix.GridDataCell;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.test.mock.MockHdpControllerQuery;
+import org.jax.mgi.shr.jsonmodel.GridMarker;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /*
@@ -20,84 +31,83 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     @Autowired
     private DiseasePortalController hdpController;
     
-    /*
+    public List<String> getSymbolsByDiseaseTerm(String disease) throws Exception
+    {
+    	return getSymbolsByPhenotypeTerm(disease);
+    }
+    
     public List<String> getSymbolsByDisease(String diseaseID) throws Exception
     {
     	return getSymbolsByPhenotype(diseaseID);
     }
     
+    public List<String> getSymbolsByPhenotypeTerm(String mpTerm) throws Exception
+    {
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(mpTerm);
+    	return getGeneSymbols(mq);
+    }
 
     public List<String> getSymbolsByPhenotype(String mpID) throws Exception
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setPhenotypes(mpID);
+    	mq.addTermIdClause(mpID);
     	return getGeneSymbols(mq);
     }
-
 
     public Integer getGeneCountByDisease(String diseaseID) throws Exception
     {	
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setPhenotypes(diseaseID);
-    	SearchResults<SolrHdpMarker> markers = mq.getGenes();
-    	return markers.getTotalCount();
+    	mq.addTermIdClause(diseaseID);
+    	List<SolrHdpMarker> markers = mq.getGenes();
+    	return markers.size();
     }
     
     public List<String> getTermsByDisease(String disease) throws Exception
     {	
     	List<String> termNames = new ArrayList<String>();
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setPhenotypes(disease);
-    	SearchResults<SolrHdpDisease> sr = mq.getDiseases();
-    	for(SolrHdpDisease term : sr.getResultObjects())
+    	mq.addTermClause(disease);
+    	for(SolrHdpDisease term : mq.getDiseases())
     	{
     		termNames.add(term.getTerm());
     	}
     	
     	return termNames;
     }
+    
     public List<String> getTermIdsByDisease(String disease) throws Exception
     {	
     	List<String> termIds = new ArrayList<String>();
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setPhenotypes(disease);
-    	SearchResults<SolrHdpDisease> sr = mq.getDiseases();
-    	for(SolrHdpDisease term : sr.getResultObjects())
+    	mq.addTermClause(disease);
+    	for(SolrHdpDisease term : mq.getDiseases())
     	{
     		termIds.add(term.getPrimaryId());
     	}
     	
     	return termIds;
     }
-    
-    public Integer getDiseaseCountByDisease(String diseaseID) throws Exception
-    {	
-    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setPhenotypes(diseaseID);
-    	SearchResults<SolrHdpDisease> terms = mq.getDiseases();
-    	return terms.getTotalCount();
-    }
 
-    public List<String> getTermsByPhenotype(String phenotype) throws Exception
+    public List<String> getTermsByDiseaseId(String diseaseId) throws Exception
     {	
     	List<String> termNames = new ArrayList<String>();
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setPhenotypes(phenotype);
-    	SearchResults<SolrHdpDisease> sr = mq.getPhenotypes();
-    	for(SolrHdpDisease term : sr.getResultObjects())
+    	mq.addTermIdClause(diseaseId);
+    	for(SolrHdpDisease term : mq.getDiseases())
     	{
     		termNames.add(term.getTerm());
     	}
     	
     	return termNames;
     }
-    public List<String> getTermIdsByPhenotype(String phenotype) throws Exception
+    
+    public List<String> getTermIdsByDiseaseId(String diseaseId) throws Exception
     {	
     	List<String> termIds = new ArrayList<String>();
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setPhenotypes(phenotype);
-    	SearchResults<SolrHdpDisease> sr = mq.getPhenotypes();
-    	for(SolrHdpDisease term : sr.getResultObjects())
+    	mq.addTermIdClause(diseaseId);
+    	for(SolrHdpDisease term : mq.getDiseases())
     	{
     		termIds.add(term.getPrimaryId());
     	}
@@ -105,6 +115,34 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	return termIds;
     }
 
+    public Integer getDiseaseCountByDisease(String diseaseID) throws Exception
+    {	
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermIdClause(diseaseID);
+    	List<SolrHdpDisease> terms = mq.getDiseases();
+    	return terms.size();
+    }
+
+    public List<String> getTermsByPhenotype(String phenotype) throws Exception
+    {	
+    	return getTermsByDisease(phenotype);
+    }
+
+    public List<String> getTermIdsByPhenotype(String phenotype) throws Exception
+    {	
+    	return getTermIdsByDisease(phenotype);
+    }
+
+    public List<String> getTermsByPhenotypeId(String phenotypeId) throws Exception
+    {	
+    	return getTermsByDiseaseId(phenotypeId);
+    }
+
+    public List<String> getTermIdsByPhenotypeId(String phenotypeId) throws Exception
+    {	
+    	return getTermIdsByDiseaseId(phenotypeId);
+    }
+/*
     public Integer getGeneCountByPhenotype(String phenotype) throws Exception
     //klf added on 7/30/2013 modifying from getGeneCountByDisease above
     {	
@@ -113,23 +151,25 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	SearchResults<SolrHdpMarker> markers = mq.getGenes();
     	return markers.getTotalCount();
     }
-    
+*/  
     // returns <br/> delimited string
     public String getMarkerDiseaseByPhenotypeSymbol(String phenotype,String symbol) throws Exception
     {
     	List<String> diseases = new ArrayList<String>();
     	
-    	SolrHdpMarker m = getMarkerByPhenotypeSymbol(phenotype,symbol);
+    	SolrHdpMarker m = getMarkerByPhenotypeIdSymbol(phenotype,symbol);
     	if(m!=null)
     	{
-			for(String disease : m.getDisease())
-			{
-				diseases.add(disease);
+    		if (m.getDisease() != null) {
+    			for(String disease : m.getDisease())
+				{
+					diseases.add(disease);
+				}
 			}
     	}
     	return StringUtils.join(diseases,"\n");
     }
-    
+
  // returns , delimited string
     public String getMarkerSystemByPhenotypeSymbol(String phenotype,String symbol) throws Exception
     {
@@ -138,20 +178,21 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	SolrHdpMarker m = getMarkerByPhenotypeSymbol(phenotype,symbol);
     	if(m!=null)
     	{
-			for(String system : m.getSystem())
-			{
-				systems.add(system);
-			}
+    		if (m.getMouseSystem() != null) {
+    			for(String system : m.getMouseSystem())
+    			{
+    				systems.add(system);
+    			}
+    		}
     	}
     	return StringUtils.join(systems,", ");
     }
-    
+
     public SolrHdpMarker getMarkerByPhenotypeSymbol(String phenotype,String symbol) throws Exception
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setPhenotypes(phenotype);
-    	SearchResults<SolrHdpMarker> markers = mq.getGenes();
-    	for(SolrHdpMarker m : markers.getResultObjects())
+    	mq.addTermClause(phenotype);
+    	for(SolrHdpMarker m : mq.getGenes())
     	{
     		if(m.getSymbol().equals(symbol))
     		{
@@ -160,7 +201,21 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	}
     	return null;
     }
-*/ 
+
+    public SolrHdpMarker getMarkerByPhenotypeIdSymbol(String phenotypeId,String symbol) throws Exception
+    {
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermIdClause(phenotypeId);
+    	for(SolrHdpMarker m : mq.getGenes())
+    	{
+    		if(m.getSymbol().equals(symbol))
+    		{
+    			return m;
+    		}
+    	}
+    	return null;
+    }
+
     // ------------------ genes queries --------------------
     public List<String> getSymbolsByGene(String genes) throws Exception
     {
@@ -169,162 +224,208 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	mq.addMarkerSymbolIdClause(genes);
     	return getGeneSymbols(mq);
     }
-/*    
+
+    public List<String> getSymbolsByGeneNameOrSynonym(String genes) throws Exception
+    {
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.setOperator(MockHdpControllerQuery.AND);
+    	mq.addMarkerNameClause(genes);
+    	return getGeneSymbols(mq);
+    }
+
     // ------------------ location queries --------------------
     public List<String> getSymbolsByMouseLocation(String locations) throws Exception
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setMouseLocations(locations);
+    	mq.addLocation(locations, "mouse");
     	return getGeneSymbols(mq);
     }
     
     public List<String> getSymbolsByHumanLocation(String locations) throws Exception
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setHumanLocations(locations);
+    	mq.addLocation(locations, "human");
     	return getGeneSymbols(mq);
     }
-    
     
     // ------------- Grid related functions -----------
     public Integer gridCountByPhenotype(String phenotypes) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotypes);
-    	
-    	return mq.getGridClusters().size();
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(phenotypes);
+    	return mq.getGrid().getGridRows().size();
     }
     public Integer gridDiseaseCountByPhenotype(String phenotypes) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotypes);
-    	
-    	return mq.getDiseaseColumnIds().size();
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(phenotypes);
+    	return mq.getGrid().getGridOMIMHeaders().size();
+    }
+    public List<String> gridDiseaseIdsByPhenotype(String phenotypes) throws Exception
+    {
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(phenotypes);
+    	List<String> diseases = mq.getGrid().getGridOMIMHeaders();
+    	Collections.sort(diseases);
+    	return diseases;
     }
     
     public List<String> gridAllSymbolsByGene(String genes) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setGenes(genes);
-    	
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addMarkerSymbolIdClause(genes);
     	return getGridSymbols(mq,true,true);
     }
     public List<String> gridHumanSymbolsByGene(String genes) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setGenes(genes);
-    	
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addMarkerSymbolIdClause(genes);
     	return getGridSymbols(mq,true,false);
     }
     public List<String> gridMouseSymbolsByGene(String genes) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setGenes(genes);
-    	
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addMarkerSymbolIdClause(genes);
     	return getGridSymbols(mq,false,true);
     }
     public List<String> gridAllSymbolsByPhenotype(String phenotypes) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotypes);
-    	
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(phenotypes);
     	return getGridSymbols(mq,true,true);
     }
     public List<String> gridHumanSymbolsByPhenotype(String phenotypes) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotypes);
-    	
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(phenotypes);
     	return getGridSymbols(mq,true,false);
     }
     public List<String> gridMouseSymbolsByPhenotype(String phenotypes) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotypes);
-    	
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(phenotypes);
     	return getGridSymbols(mq,false,true);
     }
-
-    public List<String> gridDiseaseIdsByPhenotype(String phenotypes) throws Exception
+    public List<String> gridAllSymbolsByPhenotypeId(String phenotypes) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotypes);
-    	return mq.getDiseaseColumnIds();
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermIdClause(phenotypes);
+    	return getGridSymbols(mq,true,true);
     }
-    public List<String> gridDiseaseIdsByGene(String genes) throws Exception
+    public List<String> gridHumanSymbolsByPhenotypeId(String phenotypes) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setGenes(genes);
-    	return mq.getDiseaseColumnIds();
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermIdClause(phenotypes);
+    	return getGridSymbols(mq,true,false);
     }
-    
+    public List<String> gridMouseSymbolsByPhenotypeId(String phenotypes) throws Exception
+    {
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermIdClause(phenotypes);
+    	return getGridSymbols(mq,false,true);
+    }
+    public List<String> gridDiseasesByPhenotype(String phenotypes) throws Exception
+    {
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermIdClause(phenotypes);
+    	List<String> diseases = getGridDiseases(mq);
+    	Collections.sort(diseases);
+    	return diseases;
+    }
+    public List<String> gridDiseasesByGene(String genes) throws Exception
+    {
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addMarkerSymbolIdClause(genes);
+    	List<String> diseases = getGridDiseases(mq);
+    	Collections.sort(diseases);
+    	return diseases;
+    }
     public List<String> gridMpHeadersByPhenotype(String phenotypes) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotypes);
-    	return mq.getMpHeaderColumns();
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermIdClause(phenotypes);
+    	List<String> headers = mq.getGrid().getGridMPHeaders();
+    	Collections.sort(headers);
+    	return headers;
     }
+
     public List<String> gridMpHeadersByGene(String genes) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setGenes(genes);
-    	return mq.getMpHeaderColumns();
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addMarkerSymbolIdClause(genes);
+    	List<String> headers = mq.getGrid().getGridMPHeaders();
+    	Collections.sort(headers);
+    	return headers;
     }
+
     public String gridLastMpHeaderByGene(String genes) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setGenes(genes);
-    	
-    	List<String> headerCols = mq.getMpHeaderColumns();
-    	if(headerCols.size() < 1) return "";
-    	return headerCols.get(headerCols.size()-1);
+    	List<String> headers = gridMpHeadersByGene(genes);
+    	if(headers.size() < 1) return "";
+    	return headers.get(headers.size()-1);
     }
+
     public List<String> gridMpHeadersByLocation(String locations) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setMouseLocations(locations);
-    	
-    	return mq.getMpHeaderColumns();
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addLocation(locations, "mouse");
+    	List<String> headers = mq.getGrid().getGridMPHeaders();
+    	Collections.sort(headers);
+    	return headers;
     }
-    
+
     // returns "" or "check" if there is a hit for the query + geneSymbol + diseaseId combination
     public String gridCheckForDiseaseByPhenotype(String phenotype,String geneSymbol,String diseaseId) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setGenes(geneSymbol);
-    	mq.setPhenotypes(phenotype);
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermIdClause(phenotype);
+    	mq.setOperator(MockHdpControllerQuery.AND);
+    	mq.addMarkerSymbolIdClause(geneSymbol);
+    	mq.addTermIdClause(diseaseId);
     	return gridCheckForDisease(mq,geneSymbol,diseaseId);
     }
     // returns "" or "check" if there is a hit for the query + geneSymbol + diseaseId combination
     public String gridCheckForDiseaseByGene(String genes,String geneSymbol,String diseaseId) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setGenes(genes);
-    	return gridCheckForDisease(mq,geneSymbol,diseaseId);
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addMarkerSymbolIdClause(genes);
+    	mq.addTermIdClause(diseaseId);
+    	List<String> headers = mq.getGrid().getGridOMIMHeaders();
+    	if (headers.size() > 0) {
+    		return "check";
+    	}
+    	return "";
     }
-    
+    // returns "" or "check" if there is a hit for the query + geneSymbol + mpHeader combination
+    public String gridCheckForMpHeaderByPhenotypeId(String phenotypeId,String geneSymbol,String mpHeader) throws Exception
+    {
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermIdClause(phenotypeId);
+    	mq.addMarkerSymbolIdClause(geneSymbol);
+    	return gridCheckForMpHeader(mq,geneSymbol,mpHeader);
+    }
     // returns "" or "check" if there is a hit for the query + geneSymbol + mpHeader combination
     public String gridCheckForMpHeaderByPhenotype(String phenotype,String geneSymbol,String mpHeader) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotype);
-    	mq.setGenes(geneSymbol);
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(phenotype);
+    	mq.addMarkerSymbolIdClause(geneSymbol);
     	return gridCheckForMpHeader(mq,geneSymbol,mpHeader);
     }
     public String gridCheckForMpHeaderByGene(String genes,String geneSymbol,String mpHeader) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setGenes(genes);
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addMarkerSymbolIdClause(geneSymbol);
     	return gridCheckForMpHeader(mq,geneSymbol,mpHeader);
     }
-    
     public List<String> gridMpHeadersWithChecksByPhenotype(String phenotypes, String geneSymbol) throws Exception
     {
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotypes);
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermIdClause(phenotypes);
     	return gridMpHeadersWithChecks(mq,geneSymbol);
     }
     		
+/*
     // ------------- Grid POPUP related functions -----------
     public Integer systemGridPopupGenoCountByGene(String genes,String markerRow,String systemCol) throws Exception
     {
@@ -526,120 +627,130 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	
     	return symbols;
     }
-/*    
-    private List<String> getGridSymbols(MockHdpHttpQuery mq, boolean includeHuman,boolean includeMouse) throws Exception
+
+    private List<String> getGridSymbols(MockHdpControllerQuery mq, boolean includeHuman, boolean includeMouse) throws Exception
     {
     	List<String> symbols = new ArrayList<String>();
-    	for(HdpGridClusterSummaryRow cluster : mq.getGridClusters())
-    	{
-    		if(includeHuman)
-    		{
-    			symbols.addAll(cluster.getHumanSymbols());
-    		}
-    		if(includeMouse)
-    		{
-    			for(SolrHdpGene m : cluster.getMouseMarkers())
-    			{
-    				symbols.add(m.getSymbol());
+    	for (GridRow gr : mq.getGrid().getGridRows()) {
+    		GridCluster gc = gr.getGridCluster();
+    		if (includeHuman && (gc.getHumanSymbols() != null)) {
+    			for (GridMarker hm : gc.getHumanSymbols()) {
+    				symbols.add(hm.getSymbol());
+    			}
+    		} 
+    		if (includeMouse && (gc.getMouseSymbols() != null)) {
+    			for (GridMarker mm : gc.getMouseSymbols()) {
+    				symbols.add(mm.getSymbol());
     			}
     		}
     	}
     	return symbols;
     }
-    
+
+    private List<String> getGridDiseases(MockHdpControllerQuery mq) throws Exception
+    {
+    	return mq.getGrid().getGridOMIMHeaders();
+    }
+
+    public List<String> getGridPhenotypes(MockHdpControllerQuery mq) throws Exception
+    {
+    	return mq.getGrid().getGridMPHeaders();
+    }
+
     // returns "" or "check" if there is a hit for the query + geneSymbol + diseaseCluster combination
-    private String gridCheckForDisease(MockHdpHttpQuery mq,String geneSymbol,String diseaseCluster) throws Exception
+    private String gridCheckForDisease(MockHdpControllerQuery mq,String geneSymbol,String diseaseCluster) throws Exception
     {
-    	for(HdpGridClusterSummaryRow cluster : mq.getGridClusters())
-    	{
-    		List<String> markers = new ArrayList<String>();
-    		for(SolrHdpGene m : cluster.getMouseMarkers())
-    		{
-    			markers.add(m.getSymbol());
-    		}
-    		markers.addAll(cluster.getHumanSymbols());
-    		for(String marker : markers)
-    		{
-    			if(marker.equals(geneSymbol))
-    			{
-    				for(GridCell cell : cluster.getDiseaseCells())
-    				{
-    					if(diseaseCluster.equals(cell.getTerm()))
-    					{
-    						if(cell.getHasPopup())
-    						{
-    							return cell.getIsNormal() ? "N" : "check";
-    						}
-    						return ""; 
-    					}
-    				}
-		    		return "";
+    	GridResult gr = mq.getGrid();
+    	List<String> diseaseHeaders = gr.getGridOMIMHeaders();
+
+    	// if no disease column, no hit
+    	if (diseaseHeaders == null) {
+    		return "";
+    	}
+
+    	// if marker doesn't appear, no hit
+    	for (GridRow row : gr.getGridRows()) {
+    		Map<String,GridTermHeaderAnnotation> dc = row.getDiseaseCells();
+    		for (String key : dc.keySet()) {
+    			GridTermHeaderAnnotation gtha = dc.get(key);
+    			if (gtha.getAnnotCount() == gtha.getNormalCount()) {
+    				return "N";
+    			} else {
+    				return "check";
     			}
     		}
     	}
     	return "";
     }
+
     // returns "" or "check" if there is a hit for the query + geneSymbol + mpHeader combination
-    private String gridCheckForMpHeader(MockHdpHttpQuery mq,String geneSymbol,String mpHeader) throws Exception
+    private String gridCheckForMpHeader(MockHdpControllerQuery mq,String geneSymbol,String mpHeader) throws Exception
     {
-    	for(HdpGridClusterSummaryRow cluster : mq.getGridClusters())
-    	{
-    		List<String> markers = new ArrayList<String>();
-    		for(SolrHdpGene m : cluster.getMouseMarkers())
-    		{
-    			markers.add(m.getSymbol());
+    	for (GridRow gr: mq.getGrid().getGridRows()) {
+    		boolean foundMarker = false;
+    		
+    		GridCluster gc = gr.getGridCluster();
+    		if (gc.getMouseSymbols() != null) {
+    			for (GridMarker mm : gc.getMouseSymbols()) {
+    				foundMarker = foundMarker || geneSymbol.equals(mm.getSymbol());
+    			}
     		}
-    		markers.addAll(cluster.getHumanSymbols());
-    		for(String marker : markers)
-    		{
-    			if(marker.equals(geneSymbol))
-    			{
-    				for(GridCell cell : cluster.getMpHeaderCells())
-    				{
-    					if(mpHeader.equalsIgnoreCase(cell.getTerm()))
-    					{
-    						if(cell.getHasPopup())
-    						{
-    							return cell.getIsNormal() ? "N" : "check";
-    						}
-    						return ""; 
-    					}
+    		if (!foundMarker && (gc.getHumanSymbols() != null)) {
+    			for (GridMarker hm : gc.getHumanSymbols()) {
+    				foundMarker = foundMarker || geneSymbol.equals(hm.getSymbol());
+    			}
+    		}
+    		
+    		if (foundMarker) {
+    			HashMap<String, GridTermHeaderAnnotation> cells = gr.getMpHeaderCells();
+    			if (cells.containsKey(mpHeader)) {
+    				GridTermHeaderAnnotation gtha = cells.get(mpHeader);
+    				if (gtha.getNormalCount() == gtha.getAnnotCount()) {
+    					return "N";
+    				} else {
+    					return "check";
     				}
-		    		return "";
     			}
     		}
     	}
     	return "";
     }
-    
+
     // returns all headers that have checks for the gene row
-    private List<String> gridMpHeadersWithChecks(MockHdpHttpQuery mq,String geneSymbol) throws Exception
+    private List<String> gridMpHeadersWithChecks(MockHdpControllerQuery mq, String geneSymbol) throws Exception
     {
     	List<String> mpHeadersWithChecks = new ArrayList<String>();
-    	for(HdpGridClusterSummaryRow cluster : mq.getGridClusters())
-    	{
-    		List<String> markers = new ArrayList<String>();
-    		for(SolrHdpGene m : cluster.getMouseMarkers())
-    		{
-    			markers.add(m.getSymbol());
+    	
+    	for (GridRow gr: mq.getGrid().getGridRows()) {
+    		boolean foundMarker = false;
+    		
+    		GridCluster gc = gr.getGridCluster();
+    		if (gc.getMouseSymbols() != null) {
+    			for (GridMarker mm : gc.getMouseSymbols()) {
+    				foundMarker = foundMarker || geneSymbol.equals(mm.getSymbol());
+    			}
     		}
-    		markers.addAll(cluster.getHumanSymbols());
-    		for(String marker : markers)
-    		{
-    			if(marker.equals(geneSymbol))
-    			{
-    				for(GridCell cell : cluster.getMpHeaderCells())
-    				{
-    					if(cell.getHasPopup() && !cell.getIsNormal()) mpHeadersWithChecks.add(cell.getTerm());
+    		if (!foundMarker && (gc.getHumanSymbols() != null)) {
+    			for (GridMarker hm : gc.getHumanSymbols()) {
+    				foundMarker = foundMarker || geneSymbol.equals(hm.getSymbol());
+    			}
+    		}
+    		
+    		if (foundMarker) {
+    			HashMap<String, GridTermHeaderAnnotation> cells = gr.getMpHeaderCells();
+    			for (String mpHeader : cells.keySet()) {
+    				GridTermHeaderAnnotation gtha = cells.get(mpHeader);
+    				if (gtha.getNormalCount() != gtha.getAnnotCount()) {
+    					mpHeadersWithChecks.add(mpHeader);
     				}
-    				return mpHeadersWithChecks;
     			}
     		}
     	}
+    	Collections.sort(mpHeadersWithChecks);
     	return mpHeadersWithChecks;
     }
     
-    
+ /*       
     private String popupMpGridCheckFor(MockHdpHttpQuery mq,String geneSymbol,String header,String genotype,String termId) throws Exception
     {
     	List<HdpGenoByHeaderPopupRow> popupRows = mq.getSystemPopupRows(geneSymbol,header);

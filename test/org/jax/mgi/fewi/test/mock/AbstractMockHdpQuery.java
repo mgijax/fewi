@@ -54,12 +54,12 @@ public class AbstractMockHdpQuery implements MockQuery
     }
     
     public void addTermIdClause(String termId) {
-    	addCondition(new DiseasePortalConditionQuery(DiseasePortalFields.TERM_ID_SEARCH,
+    	addCondition(new DiseasePortalConditionQuery(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_ID,
     		new DiseasePortalCondition(termId)));
     }
     
     public void addTermClause(String term) {
-    	addCondition(new DiseasePortalConditionQuery(DiseasePortalFields.TERM_SEARCH,
+    	addCondition(new DiseasePortalConditionQuery(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_TEXT,
     		new DiseasePortalCondition(term)));
     }
     
@@ -68,7 +68,7 @@ public class AbstractMockHdpQuery implements MockQuery
     	List<String> parameters = new ArrayList<String>();
     	parameters.add(organism);
     	location.setParameters(parameters);
-    	addCondition(new DiseasePortalConditionQuery(DiseasePortalFields.TERM_SEARCH, location));
+    	addCondition(new DiseasePortalConditionQuery(DiseasePortalFields.LOCATION, location));
     }
     
     private void addCondition(DiseasePortalConditionQuery clause) {
@@ -82,6 +82,7 @@ public class AbstractMockHdpQuery implements MockQuery
     
     protected String getParametersAsJson() throws JsonGenerationException, JsonMappingException, IOException {
     	ObjectMapper mapper = new ObjectMapper();
+    	System.out.println(mapper.writeValueAsString(cg));
     	return mapper.writeValueAsString(cg);
     }
 }

@@ -71,7 +71,7 @@ public class DiseasePortalController {
 		SearchParams params = new SearchParams();
 		params.setPageSize(1000000);
 		
-		session.setAttribute("jsonInput", jsonInput);
+		if (session != null) { session.setAttribute("jsonInput", jsonInput); }
 		
 		Filter mainFilter = null;
 		Filter highlightFilter = null;
@@ -181,7 +181,7 @@ public class DiseasePortalController {
 			filterList.add(cq.genFilter());
 		}
 
-		if(group.getOperator().equals("AND")) {
+		if("AND".equals(group.getOperator())) {
 			return Filter.and(filterList);
 		} else {
 			return Filter.or(filterList);

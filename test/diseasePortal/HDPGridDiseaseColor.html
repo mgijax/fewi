@@ -78,7 +78,7 @@ tr.gray td {background-color:#EEEEEE;}
 			<ol>
 				<li>Open the HDP query form</li>
 				<li>For each Disease term below, verify the cell color is correct:
-				<table concordion:execute="#check = gridCheckForMpHeaderByPhenotype(#pheno,#row,#column)">
+				<table concordion:execute="#check = gridCheckForMpHeaderByPhenotype(#disease,#row,#column)">
 					<tr><th concordion:set="#disease">Disease term</th>
 						<th concordion:set="#column">system</th>
 						<th concordion:set="#row">gene</th>

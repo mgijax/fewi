@@ -247,9 +247,9 @@ tr.gray td {background-color:#EEEEEE;}
 			<ol>
     		    <li>Query for <b concordion:set="#disease">Netherton Syndrome; NETH</b> 256500</li>
     		    <li>Verify that <b cc:assertResultsContain="getTermIdsByDisease(#disease)">256500</b> (Netherton Syndrome; NETH) is returned.</li>
-                <li>Verify that <b cc:assertResultsContain="getSymbolsByDisease(#disease)">Dsg4</b> is returned.</li>
-                <li>Verify that <b cc:assertResultsContain="getSymbolsByDisease(#disease)">Spink5</b> is returned.</li> 
-                <li>Verify that <b cc:assertResultsContain="getSymbolsByDisease(#disease)">SPINK5</b> is returned.</li>   
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByDiseaseTerm(#disease)">Dsg4</b> is returned.</li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByDiseaseTerm(#disease)">Spink5</b> is returned.</li> 
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByDiseaseTerm(#disease)">SPINK5</b> is returned.</li>   
     		</ol>
     		</li>
 

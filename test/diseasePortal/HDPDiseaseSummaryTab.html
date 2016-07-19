@@ -258,8 +258,8 @@ order by AA.accID
                 <li>Verify that columns are displayed with the following headers and data:
                 	<table>
                 	<tr><th>Column label</th><th>Data displayed</th></tr>
-                	<tr><td>Disease</td><td><b  cc:assertResultsContain="getTermsByDisease(#disease)">Achondroplasia; ACH</b></td></tr>
-                	<tr><td>OMIM ID</td><td><b cc:assertResultsContain="getTermIdsByDisease(#disease)">100800</b></td></tr>
+                	<tr><td>Disease</td><td><b  cc:assertResultsContain="getTermsByDiseaseId(#disease)">Achondroplasia; ACH</b></td></tr>
+                	<tr><td>OMIM ID</td><td><b cc:assertResultsContain="getTermIdsByDiseaseId(#disease)">100800</b></td></tr>
                 	<tr><td>Mouse Models</td><td><b concordion:manual="true">12</b> <em>(MANUAL CHECK: klf 8/13/13)</em></td></tr>
                 	<tr><td>Associated Mouse Markers</td><td><b cc:assertResultsContain="getSymbolsByDisease(#disease)">Acan</b>, 
                 					<b cc:assertResultsContain="getSymbolsByDisease(#disease)">Fgfr3</b>, 
@@ -278,8 +278,8 @@ order by AA.accID
                 <li>Verify that columns are displayed with the following headers and data:
                 	<table>
                 	<tr><th>Column label</th><th>Data displayed</th></tr>
-                	<tr><td>Disease</td><td><b  cc:assertResultsContain="getTermsByDisease(#disease)">Breast-Ovarian Cancer, Familial, Susceptibility to, 1; BROVCA1</b></td></tr>
-                	<tr><td>OMIM ID</td><td><b cc:assertResultsContain="getTermIdsByDisease(#disease)">604370</b></td></tr>
+                	<tr><td>Disease</td><td><b  cc:assertResultsContain="getTermsByDiseaseId(#disease)">Breast-Ovarian Cancer, Familial, Susceptibility to, 1; BROVCA1</b></td></tr>
+                	<tr><td>OMIM ID</td><td><b cc:assertResultsContain="getTermIdsByDiseaseId(#disease)">604370</b></td></tr>
                 	<tr><td>Mouse Models</td><td><b concordion:manual="true">3</b> <em>(MANUAL CHECK: klf 8/13/13)</em></td></tr>
                 	<!-- <tr><td>Associated Mouse Markers</td><td><b cc:assertResultsContain="getSymbolsByDisease(#disease)">Brca1</b> <em> (NOTE: associated by Allele-OMIM annotation)</em>, 
                 					<b cc:assertResultsContain="getSymbolsByDisease(#disease)">Trp53</b> <em>(NOTE: associated by Allele-OMIM annotation)</em>, 
@@ -299,13 +299,13 @@ order by AA.accID
                 <li>Verify that columns are displayed with the following headers and data:
                 	<table>
                 	<tr><th>Column label</th><th>Data displayed</th></tr>
-                	<tr><td>Disease (1)</td><td><b cc:assertResultsContain="getTermsByPhenotype(#pheno)">Migraine, Familial Hemiplegic, 1; FHM1</b> (via genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3037958">MGI:3037958</a>)</td></tr>
-                	<tr><td>OMIM ID</td><td><b cc:assertResultsContain="getTermIdsByPhenotype(#pheno)">141500</b> <em>(Now use this as query term to verify markers: <span concordion:set="#disease">141500</span>)</em></td></tr>
+                	<tr><td>Disease (1)</td><td><b cc:assertResultsContain="getTermsByPhenotypeId(#pheno)">Migraine, Familial Hemiplegic, 1; FHM1</b> (via genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3037958">MGI:3037958</a>)</td></tr>
+                	<tr><td>OMIM ID</td><td><b cc:assertResultsContain="getTermIdsByPhenotypeId(#pheno)">141500</b> <em>(Now use this as query term to verify markers: <span concordion:set="#disease">141500</span>)</em></td></tr>
                 	<tr><td>Mouse Models</td><td><b concordion:manual="true">5</b> <em>(MANUAL CHECK: klf 8/13/13)</em></td></tr>
                 	<tr><td>Associated Mouse Markers</td><td><b cc:assertResultsContain="getSymbolsByDisease(#disease)">Cacna1a</b></td></tr>
                 	<tr><td>Associated Human Markers</td><td><b cc:assertResultsContain="getSymbolsByDisease(#disease)">CACNA1A</b></td></tr>
-                	<tr><td>Disease (2)</td><td><b cc:assertResultsContain="getTermsByPhenotype(#pheno)">Deafness, Autosomal Dominant 25; DFNA25</b> (via genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3804682">MGI:3804682</a>)</td></tr>
-                	<tr><td>OMIM ID</td><td><b cc:assertResultsContain="getTermIdsByPhenotype(#pheno)">605583</b> <em>(Now use this as query term to verify markers: <span concordion:set="#disease">605583</span>)</em></td></tr>
+                	<tr><td>Disease (2)</td><td><b cc:assertResultsContain="getTermsByPhenotypeId(#pheno)">Deafness, Autosomal Dominant 25; DFNA25</b> (via genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3804682">MGI:3804682</a>)</td></tr>
+                	<tr><td>OMIM ID</td><td><b cc:assertResultsContain="getTermIdsByPhenotypeId(#pheno)">605583</b> <em>(Now use this as query term to verify markers: <span concordion:set="#disease">605583</span>)</em></td></tr>
                 	<tr><td>Mouse Models</td><td><b concordion:manual="true">2</b> <em>(MANUAL CHECK: klf 8/13/13)</em></td></tr>
                 	<tr><td>Associated Mouse Markers</td><td><b cc:assertResultsContain="getSymbolsByDisease(#disease)">Slc17a8</b>, 
                 					<b cc:assertResultsContain="getSymbolsByDisease(#disease)">Trpv4</b></td></tr>
@@ -321,15 +321,15 @@ order by AA.accID
                 <li>Verify that columns are displayed with the following headers and data:
                 	<table>
                 	<tr><th>Column label</th><th>Data displayed</th></tr>
-                	<tr><td>Disease</td><td><b cc:assertResultsContain="getTermsByPhenotype(#pheno)">Netherton Syndrome; NETH</b> (via genotype ...)</td></tr>
-                	<tr><td>OMIM ID</td><td><b cc:assertResultsContain="getTermIdsByPhenotype(#pheno)">256500</b> <em>(Now use this as query term to verify markers: <span concordion:set="#disease">256500</span>)</em></td></tr>
+                	<tr><td>Disease</td><td><b cc:assertResultsContain="getTermsByPhenotypeId(#pheno)">Netherton Syndrome; NETH</b> (via genotype ...)</td></tr>
+                	<tr><td>OMIM ID</td><td><b cc:assertResultsContain="getTermIdsByPhenotypeId(#pheno)">256500</b> <em>(Now use this as query term to verify markers: <span concordion:set="#disease">256500</span>)</em></td></tr>
                 	<tr><td>Mouse Models</td><td><b concordion:manual="true">7</b> <em>(MANUAL CHECK: klf 8/13/13)</em></td></tr>
                 	<tr><td>Associated Mouse Markers</td><td><b cc:assertResultsContain="getSymbolsByDisease(#disease)">Spink5</b>, 
                 					<b cc:assertResultsContain="getSymbolsByDisease(#disease)">Dsg4</b>, <br/>
                 					Do not display: <b cc:assertNoResultsContain="getSymbolsByDisease(#disease)">F2rl1</b> - <em>this marker excluded because in a complex genotype.</em></td></tr>
                 	<tr><td>Associated Human Markers</td><td><b cc:assertResultsContain="getSymbolsByDisease(#disease)">SPINK5</b></td></tr>
-                	<tr><td>Disease</td><td><b cc:assertResultsContain="getTermsByPhenotype(#pheno)">Atrichia with Papular Lesions; APL</b> (via genotype ...)</td></tr>
-                	<tr><td>OMIM ID</td><td><b cc:assertResultsContain="getTermIdsByPhenotype(#pheno)">209500</b> <em>(Now use this as query term to verify markers: <span concordion:set="#disease">209500</span>)</em></td></tr>
+                	<tr><td>Disease</td><td><b cc:assertResultsContain="getTermsByPhenotypeId(#pheno)">Atrichia with Papular Lesions; APL</b> (via genotype ...)</td></tr>
+                	<tr><td>OMIM ID</td><td><b cc:assertResultsContain="getTermIdsByPhenotypeId(#pheno)">209500</b> <em>(Now use this as query term to verify markers: <span concordion:set="#disease">209500</span>)</em></td></tr>
                 	<tr><td>Mouse Models</td><td><b concordion:manual="true">3</b> <em>(MANUAL CHECK: klf 8/13/13)</em></td></tr>
                 	<tr><td>Associated Mouse Markers</td><td><b cc:assertResultsContain="getSymbolsByDisease(#disease)">Hr</b>, 
                 	<b cc:assertResultsContain="getSymbolsByDisease(#disease)">Tg(K6ODCtr)55Tgo</b>.</td></tr>
