@@ -48,10 +48,7 @@ tr.gray td {background-color:#EEEEEE;}
 
 <div id="maintitle">
     <h1>HDP: Querying by Disease, Disease output</h1>
-    <ul>
-        <li>User story 17, E2: Query by disease, debugging display of diseases</li>
-        <li>User story 58, E2: Stop words for Disease/Pheno query</li>
-    </ul>
+    
 </div>
 
 <div id="acceptance">
@@ -61,9 +58,7 @@ tr.gray td {background-color:#EEEEEE;}
 		<li>Wild cards no longer recognized</li>
 		<li>Query strings with multiple tokens are treated as a proximity search in Solr; all tokens entered must match a term</li>
 		<li>Double quotes are no longer recognized - they are ignored.</li>
-		<li>diseases tab shows matching diseases (debugging output)(sto17)</li>
-		<li>genes displayed on gene summary tab(sto17)</li>
-		<li>Stop words get ignored and display all data when used by themselves(sto58)</li>
+		<li>Stop words get ignored and display no data when used by themselves</li>
 	</ul>
 </div>
 
@@ -177,7 +172,7 @@ tr.gray td {background-color:#EEEEEE;}
     		<ol>
                 <li>Query by OMIM ID <b concordion:set="#disease">105830</b></li>
                 <li>Should return disease associated to this id PLUS other diseases that are associated to the mouse genoclusters returned; no longer include diseases associated to human genes returned (change in 6.05):
-                <table cc:verifyRowsUnordered="#termId : getTermIdsByDisease(#disease)">
+                <table cc:verifySupersetOf="#termId : getTermIdsByDisease(#disease)">
                 	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
                 	<tr><td>105830</td><td>Angelman Syndrome; AS</td></tr>
                 	<tr><td>176270</td><td>Prader-Willi Syndrome; PWS</td></tr>
@@ -323,7 +318,7 @@ tr.gray td {background-color:#EEEEEE;}
     			<li>Verify that <b concordion:assertEquals="getDiseaseCountByDisease(#disease)">14</b> disease terms are returned. Change in 6.05 reduces the number of diseases returned.  Diseases previously returned because of being associated to human genes returned (indirect associations) are no longer present.  This search previously returned 30 diseases.</li>
     			</ol>
     			
-    		<li>No diseases are returned when searching with just a stop word.
+    		<li>No diseases are returned when searching with just a stop word (change in 6.05)
     		<p concordion:manual="true">jlewis 7/19/2016</p>
     		<ol>
                 <li>Query for <b concordion:set="#disease">disease</b></li>
@@ -331,7 +326,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		
-    		<li>Correct diseases are returned when searching with a stop word and a disease term(sto58).
+    		<li>Correct diseases are returned when searching with a stop word and a disease term.
     		<p concordion:manual="true">jlewis 7/19/2016</p>
     		<ol>
                 <li>Query for <b concordion:set="#disease">parkinson syndrome</b></li>
