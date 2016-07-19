@@ -55,9 +55,12 @@ tr.gray td {background-color:#EEEEEE;}
 </div>
 
 <div id="acceptance">
-    <h2>Acceptance Criteria</h2>
+    <h2>Acceptance Criteria (update per 6.05)</h2>
 	<ul>
-		<li>user can enter OMIM ids, terms, synonyms(sto17)</li>
+		<li>user can enter OMIM ids, terms, synonyms; OMIM IDs may be entered with or without OMIM: prefix.</li>
+		<li>Wild cards no longer recognized</li>
+		<li>Query strings with multiple tokens are treated as a proximity search in Solr; all tokens entered must match a term</li>
+		<li>Double quotes are no longer recognized - they are ignored</li>
 		<li>diseases tab shows matching diseases (debugging output)(sto17)</li>
 		<li>genes displayed on gene summary tab(sto17)</li>
 		<li>Stop words get ignored and display all data when used by themselves(sto58)</li>
@@ -174,32 +177,26 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
 
-    		<li>Querying with an ID returns all diseases matching the ID. <span class="hilite">Note: are we supporting a wildcard (partial matching) on IDs??</span>
+    		<li>Querying with an ID returns all diseases matching the ID.
     		<ol>
                 <li>Query by OMIM ID <b concordion:set="#disease">105830</b></li>
-                <li>Should return disease associated to this id PLUS other diseases that are associated to the mouse genoclusters and human genes annoated to this id (change in 5.21):
+                <li>Should return disease associated to this id PLUS other diseases that are associated to the mouse genoclusters returned; no longer include diseases associated to human genes returned (change in 6.05):
                 <table cc:verifyRowsUnordered="#termId : getTermsByDisease(#disease)">
                 	<tr><th concordion:assertEquals="#termId">Disease Name</th></tr>
                 	<tr><td>Angelman Syndrome; AS</td></tr>
-                	<tr><td>Autism, Susceptibility to, X-Linked 3; AUTSX3</td></tr>
-                	<tr><td>Encephalopathy, Neonatal Severe, Due to Mecp2 Mutations</td></tr>
-                	<tr><td>Epileptic Encephalopathy, Early Infantile, 2; EIEE2</td></tr>
-                	<tr><td>Lubs X-Linked Mental Retardation Syndrome; MRXSL</td></tr>
-                	<tr><td>Mental Retardation, X-Linked, Syndromic 13; MRXS13</td></tr>
                 	<tr><td>Prader-Willi Syndrome; PWS</td></tr>
-                	<tr><td>Rett Syndrome; RTT</td></tr>
                 	</table>
                 </li>
     		</ol>
     		</li>
 
-    		<li>Querying with quotation marks returns all diseases exactly matching the string enclosed in the quotation marks.
+    		<li>Querying with quotation marks returns the same diseases returned with quotation marks
     		<ol>
-                <li>Query by <b concordion:set="#disease">"Parkinson Disease 11, Autosomal Dominant, Susceptibility To; PARK11"</b> in double quotes.</li>
-                <li>Should return ONLY one disease:
+                <li>Query by <b concordion:set="#disease">"Cancer Lung"</b> in double quotes.</li>
+                <li>Should return at least the following disease:
                 <table cc:verifyRowsUnordered="#termId : getTermsByDisease(#disease)">
                 	<tr><th concordion:assertEquals="#termId">Disease Name</th></tr>
-                	<tr><td>Parkinson Disease 11, Autosomal Dominant, Susceptibility To; PARK11</td></tr>
+                	<tr><td>Lung Cancer</td></tr>
                 	</table>
                 </li>
     		</ol>
@@ -207,7 +204,7 @@ tr.gray td {background-color:#EEEEEE;}
     		
     		<li>Querying for a disease with no models still brings back the disease.
     		<ol>
-                <li>Query by Acne, Adult<b concordion:set="#disease">604324</b></li>
+                <li>Query by Acne, Adult <b concordion:set="#disease">604324</b></li>
                 <li>Should return ONLY one disease:
                 <table cc:verifyRowsUnordered="#termId : getTermIdsByDiseaseId(#disease)">
                 	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
@@ -215,6 +212,18 @@ tr.gray td {background-color:#EEEEEE;}
                 	</table>
                 </li>
                 <li>Count of genes returned should be <b concordion:assertEquals="getGeneCountByDisease(#disease)">0</b></li>
+    		</ol>
+    		</li>
+    		
+    		<li>Querying for a disease with the OMIM: prefix 
+    		<ol>
+                <li>Query by Systemic Lupus Erythematosus; SLE <b concordion:set="#disease">OMIM:152700</b></li>
+                <li>Should return this disease:
+                <table cc:verifyRowsUnordered="#termId : getTermIdsByDiseaseId(#disease)">
+                	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
+                	<tr><td>152700</td><td>Systemic Lupus Erythematosus; SLE</td></tr>
+                	</table>
+                </li>
     		</ol>
     		</li>
 
