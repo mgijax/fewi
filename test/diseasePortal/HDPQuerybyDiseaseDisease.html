@@ -105,10 +105,10 @@ tr.gray td {background-color:#EEEEEE;}
                 </li>
                 
                 <li>Query for <b concordion:set="#disease">syndrome</b>.</li>
-                <li>There is special word handling in the HMDC.  The following words are removed from the query: syndrome, type, phenotype, abnormal, system, disease.  If any of these are queried by themselves no results are returned.
+                <li>There is special word handling in the HMDC.  The following words are removed from the query: syndrome, type, phenotype, abnormal, system, disease.  If any of these are queried by themselves no results are returned.</li>
                 	
-                	<li>Count of terms returned should be <b concordion:assertEquals="getDiseaseCountByDisease(#disease)">0</b></li>
-                </li>
+                <li>Count of terms returned should be <b concordion:assertEquals="getDiseaseCountByDisease(#disease)">0</b></li>
+              
                 
                  <li>Query for <b concordion:set="#disease">parkinson</b>.</li>
                 <li>At least the following diseases should appear in the result set (along with many others):
@@ -313,10 +313,10 @@ tr.gray td {background-color:#EEEEEE;}
 				<tr><td>309120</td><td>SPERMATOGENIC FAILURE, X-LINKED, 2; SPGFX2 </td></tr>
     		</table>
     		</li>
-    			<ol>
+    		<ol>
     			<li>Query for OMIM gene records: <b concordion:set="#disease">+141900 +141800 +142830 #300194 #300100 #300676 #300699 #301835 %300605 %300660 %300614 %300619 %300612 300602 301800 301840 303650 309120</b></li>
     			<li>Verify that <b concordion:assertEquals="getDiseaseCountByDisease(#disease)">14</b> disease terms are returned. Change in 6.05 reduces the number of diseases returned.  Diseases previously returned because of being associated to human genes returned (indirect associations) are no longer present.  This search previously returned 30 diseases.</li>
-    			</ol>
+    		</ol>
     			
     		<li>No diseases are returned when searching with just a stop word (change in 6.05)
     		<p concordion:manual="true">jlewis 7/19/2016</p>
