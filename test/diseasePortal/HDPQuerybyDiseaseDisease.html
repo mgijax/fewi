@@ -170,7 +170,7 @@ tr.gray td {background-color:#EEEEEE;}
 
     		<li>Querying with an ID returns disease matching the ID plus other diseases associated to the mouse genocluster returned.
     		<ol>
-                <li>Query by OMIM ID <b concordion:set="#disease">105830</b></li>
+                <li>Query by OMIM ID <b concordion:set="#disease">Angelman Syndrome; AS</b></li>
                 <li>Should return disease associated to this id PLUS other diseases that are associated to the mouse genoclusters returned; no longer include diseases associated to human genes returned (change in 6.05):
                 <table cc:verifySupersetOf="#termId : getTermIdsByDisease(#disease)">
                 	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
