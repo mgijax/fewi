@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!--===================== Template Head: disease_portal_header.jsp ===========================-->
+<!--===================== Template Head: header.jsp ===========================-->
 
 <html ng-app="HMDCApplication" ng-controller="StyleController">
 	<head>

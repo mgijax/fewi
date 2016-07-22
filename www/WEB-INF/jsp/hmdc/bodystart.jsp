@@ -8,7 +8,7 @@
 			<div class="links floatleft">
 				<a target="_blank" href="${configBean.MGIHOME_URL}projects/aboutHMDC.shtml">About</a>
 				<a target="_blank" href="${configBean.USERHELP_URL}disease_connection_help.shtml">Help</a>
-				<a target="_blank" href="http://www.findmice.org/index.jsp">Find Mice(IMSR)</a>
+				<a target="_blank" href="http://www.findmice.org/index.jsp">Find Mice (IMSR)</a>
 				<a target="_blank" href="/mgihome/support/mgi_inbox.shtml">Contact Us</a>
 			</div>
 

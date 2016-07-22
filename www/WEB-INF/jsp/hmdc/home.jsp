@@ -11,7 +11,7 @@
 <%@ include file="bodystart.jsp" %>
 
 		<div class="container">
-			<div style="border: 0px;margin-bottom:10px;text-align: center;">
+			<div style="border: 0px;margin-bottom:10px;text-align: center;padding-top: 1px;">
 				<span style="font-size:30px;color:black;">Human - Mouse: Disease Connection</span>
 			</div>
 		</div>
