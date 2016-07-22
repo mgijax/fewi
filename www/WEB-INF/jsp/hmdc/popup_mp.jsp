@@ -25,7 +25,7 @@
 			<c:set var="markStart" value="<mark>"/>
 			<c:set var="markEnd" value="</mark>"/>
 		</c:if>
-		<td rowspan="2" class="popupHeader"><div class="header" title="${mpHeader}"><span class="header">${markStart}${mpHeader}${markEnd}</span></div></td>
+		<td rowspan="2" class="popupHeader"><div title="${mpHeader}"><span>${markStart}${mpHeader}${markEnd}</span></div></td>
 	</c:forEach>
 	</tr>
 	<tr>
