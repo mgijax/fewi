@@ -28,4 +28,5 @@
 			<li><a target="_blank" href="http://www.matchmakerexchange.org/">Matchmaker Exchange:</a> Genomic discovery through the exchange of phenotypic and genotypic profiles</li>
 			<li><a target="_blank" href="http://human-phenotype-ontology.github.io/">Human Phenotype Ontology</a> (HPO) home: HPO provides a standardized vocabulary of phenotypic abnormalities encountered in human disease</li>
 			<li>Human Phenotype Ontology <a target="_blank" href="http://compbio.charite.de/jenkins/job/hpo.annotations/lastStableBuild/">annotation download</a>: Latest version of the HPO annotation file (phenotype_annotation.tab) used as the source of human disease to phenotype relationships</li>
+			<li><a target="_blank" href="href="http://exac.broadinstitute.org/">ExAC Browser</a> Beta: Exome Aggregation Consortium browser of human exome sequencing data from a wide variety of large-scale sequencing projects</li>
 		</ul>
