@@ -370,13 +370,26 @@ tr.gray td {background-color:#EEEEEE;}
                 	<table concordion:verifyRows="#systems : gridMpHeadersByPhenotype(#pheno)">
                 	<tr><th concordion:assertEquals="#systems">MP Header</th><th>Notes for tester</th></tr>
 					<tr><td>adipose tissue</td><td>annotated to same genotype (<a href="http://www.informatics.jax.org/allele/genoview/MGI:3665480">MGI:3665480</a>) as disease</td></tr>
+					<tr><td>behavior/neurological</td><td>HPO annotations</td></tr>
 					<tr><td>cardiovascular system</td><td>annotated to same genotype as disease</td></tr>
 					<tr><td>cellular</td><td>annotated to same genotypes  (above and <a href="http://www.informatics.jax.org/allele/genoview/MGI:3525190">MGI:3525190</a>) as disease</td></tr>
+					<tr><td>craniofacial</td><td>HPO annotations</td></tr>
+					<tr><td>digestive/alimentary system</td><td>HPO annotations</td></tr>
+					<tr><td>endocrine/exocrine glands</td><td>HPO annotations</td></tr>
 					<tr><td>growth/size/body</td><td>annotated to same genotype as disease</td></tr>
 					<tr><td>homeostasis/metabolism</td><td>annotated to same genotype as disease</td></tr>
 					<tr><td>immune system</td><td>annotated to additional genotype (<a href="http://www.informatics.jax.org/allele/genoview/MGI:3665481">MGI:3665481</a>) in same "compressed genotype cluster"</td></tr>
+					<tr><td>integument</td><td>HPO annotations</td></tr>
+					<tr><td>limbs/digits/tail</td><td>HPO annotations</td></tr>
 					<tr><td>mortality/aging</td><td>annotated to additional genotype (<a href="http://www.informatics.jax.org/allele/genoview/MGI:2383958">MGI:2383958</a>) in same "compressed genotype cluster"</td></tr>
+					<tr><td>muscle</td><td>HPO annotations</td></tr>
 					<tr><td>neoplasm</td><td>annotated to additional genotypes (both the above) in same "compressed genotype cluster"</td></tr>
+					<tr><td>nervous system</td><td>HPO annotations</td></tr>
+					<tr><td>renal/urinary system</td><td>HPO annotations</td></tr>
+					<tr><td>reproductive system</td><td>HPO annotations</td></tr>
+					<tr><td>respiratory system</td><td>HPO annotations</td></tr>
+					<tr><td>skeleton</td><td>HPO annotations</td></tr>
+					<tr><td>vision/eye</td><td>HPO annotations</td></tr>
                 	</table>
                 </li>
 			</ol>
@@ -410,7 +423,8 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		
-    		<li>Test that the Grid tab displays one column per MP header, sorted alphabetically EXCEPT that "normal phenotype" comes last AND &quot;no phenotypic analysis&quot; is suppressed.
+<!--   WILD CARDS not recognized in 6.05 
+ 		<li>Test that the Grid tab displays one column per MP header, sorted alphabetically EXCEPT that "normal phenotype" comes last AND &quot;no phenotypic analysis&quot; is suppressed.
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">*</b> (wildcard) in the Phenotype/Disease section and hit search.</li>
@@ -457,6 +471,7 @@ tr.gray td {background-color:#EEEEEE;}
 				</li>
     		</ol>
     		</li>
+ --> 
     		
     		<li>A user cannot query for "no phenotypic analysis", MP:0003012 (sto105)
 			<i>(automated)</i>
