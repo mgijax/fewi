@@ -360,7 +360,7 @@ public class DiseasePortalController {
 		String gridClusterKey = null;
 		String markerID = request.getParameter("markerID");
 		boolean fromMarkerDetail = false;
-		
+		System.out.println("isPhenotype: " + isPhenotype);
 		if (markerID != null) {
 			Integer gck = getGridClusterKey(markerID);
 			if (gck != null) {
@@ -398,11 +398,10 @@ public class DiseasePortalController {
 			// pheno group wants to give an error message.
 		}
 
-		
-		if (group == null && !fromMarkerDetail) {
-			return errorMav("Your session has expired.  Please resubmit your search before visiting a popup.");
-		} else {
+		if(group == null && fromMarkerDetail) {
 			group = new DiseasePortalConditionGroup();
+		} else if(group == null) {
+			return errorMav("Your session has expired.  Please resubmit your search before visiting a popup.");
 		}
 		
 		Filter mainFilter = genQueryFilter(group);
