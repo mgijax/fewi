@@ -350,7 +350,7 @@ public class DiseasePortalController {
 	 * The 'isPhenotype' parameter should be true for phenotype popups and false for disease popups.
 	 */
 	@RequestMapping(value="/popup", method=RequestMethod.GET)
-	private ModelAndView popup(HttpServletRequest request, HttpSession session, @RequestParam(value = "isPhenotype") boolean isPhenotype, @RequestParam(value = "queryToken") String queryToken) throws Exception {
+	private ModelAndView popup(HttpServletRequest request, HttpSession session, @RequestParam(value = "isPhenotype") boolean isPhenotype, @RequestParam(value = "queryToken", required=false) String queryToken) throws Exception {
 	//public ModelAndView popup(HttpServletRequest request) {
 		// from a marker detail page slimgrid, we'll need to get the marker ID and
 		// convert it to its corresponding gridClusterKey
