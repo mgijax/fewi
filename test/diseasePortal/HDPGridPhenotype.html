@@ -327,15 +327,16 @@ tr.gray td {background-color:#EEEEEE;}
                 	</table>                
                 </li>
                 <li>Clear the form.</li>
-                <li>Enter <b concordion:set="#pheno">203290</b> for "Albinism, Oculocutaneous, Type III; OCA3" in the Phenotypes and Diseases section and hit search.</li>
+                <li>Enter <b concordion:set="#pheno">614546</b> for "Efavirenz, Poor Metabolism of" in the Phenotypes and Diseases section and hit search.</li>
                 <li>Click on the Grid tab and confirm <b concordion:assertEmpty="#systems">NO phenotype headers</b> are displayed. (The disease is associated only with a human gene. That gene has an ortholog which has MP annotations, but no genotypes can be in common.)</li>
-                <li>Confirm the disease column for <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Albinism, Oculocutaneous</b>, is still displayed.</li>
+                <li>Confirm the disease column for <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Efavirenz, Poor Metabolism of</b>, is still displayed.</li>
                 <li>Clear the form.</li>
                 <li>Enter <b concordion:set="#pheno">271900</b> (Canavan Disease) in the Phenotypes and Diseases section and hit search. 
 					<i>(automated)</i></li>
                 <li>(Note: this disease is annotated to <a href="http://www.informatics.jax.org/allele/genoview/MGI:3639891">MGI:3639891</a> for Sod2&lt;tm1Cje&gt; which has 4 additional hm genotypes in the "compressed genotype cluster"<br/>
                 	and <a href="http://www.informatics.jax.org/allele/genoview/MGI:3027206">MGI:3027206</a> for Aspa&lt;nur7&gt;<br/>
-                	and <a href="http://www.informatics.jax.org/allele/genoview/MGI:3038607">MGI:3038607</a> for Aspa&lt;tm1Mata&gt;.)</li>
+                	and <a href="http://www.informatics.jax.org/allele/genoview/MGI:3038607">MGI:3038607</a> for Aspa&lt;tm1Mata&gt;.)<br/>
+                	and to HPO annotations via ASPA/Canavan Disease. (starting in 6.05)</li>
                 <li>Click on the Grid tab and confirm the following MP header terms are displayed:
                 	<p concordion:manual="true">klf 9/26/2013</p>
                 	<table concordion:verifyRows="#systems : gridMpHeadersByPhenotype(#pheno)">
@@ -344,7 +345,9 @@ tr.gray td {background-color:#EEEEEE;}
 					<tr><td>behavior/neurological</td><td>annotated to same genotype as disease</td></tr>
 					<tr><td>cardiovascular system</td><td>annotated to same genotype as disease</td></tr>
 					<tr><td>cellular</td><td>annotated to additional genotype in same "compressed genotype cluster"</td></tr>
+					<tr><td>craniofacial</td><td>HPO annotations</td></tr>
 					<tr><td>growth/size/body</td><td>annotated to same genotype as disease</td></tr>
+					<tr><td>hearing/vestibular/ear</td><td>HPO annotations</td></tr>
 					<tr><td>hematopoietic system</td><td>annotated to additional genotype in same "compressed genotype cluster"</td></tr>
 					<tr><td>homeostasis/metabolism</td><td>annotated to additional genotype in same "compressed genotype cluster"</td></tr>
 					<tr><td>integument</td><td>annotated to same genotype as disease</td></tr>
