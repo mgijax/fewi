@@ -11,6 +11,7 @@ public class GridResult extends AbstractGridModel {
 	private List<String> gridHighLights;
 	private List<GridRow> gridRows;
 	private String filterQuery;
+	private String queryToken;
 
 	public List<String> getGridMPHeaders() {
 		return gridMPHeaders;
@@ -41,6 +42,12 @@ public class GridResult extends AbstractGridModel {
 	}
 	public void setFilterQuery(String filterQuery) {
 		this.filterQuery = filterQuery;
+	}
+	public String getQueryToken() {
+		return queryToken;
+	}
+	public void setQueryToken(String queryToken) {
+		this.queryToken = queryToken;
 	}
 	
 	@Override

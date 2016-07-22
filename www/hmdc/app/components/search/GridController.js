@@ -75,12 +75,19 @@
 		$scope.handleClick = function(event, cellData) {
 			console.log(cellData.data);
 			var url;
-			if(cellData.data && cellData.data["phenoHeader"]) {
-				url = "/diseasePortal/phenotypePopup?gridClusterKey=" + cellData.data["gridClusterKey"] + "&header=" + cellData.data["phenoHeader"] + "&jsonEncodedInput=" + $rootScope.jsonEncodedQuery;
+
+			if(cellData.data) {
+				url = "/diseasePortal/popup?gridClusterKey=" + cellData.data["gridClusterKey"];
+				if(cellData.data && cellData.data["phenoHeader"]) {
+					url += "&header=" + cellData.data["phenoHeader"];
+					url += "&isPhenotype=true";
+				}
+				if(cellData.data && cellData.data["diseaseHeader"]) {
+					url += "&header=" + cellData.data["diseaseHeader"];
+					url += "&isPhenotype=false";
+				}
 			}
-			if(cellData.data && cellData.data["diseaseHeader"]) {
-				url = "/diseasePortal/diseasePopup?gridClusterKey=" + cellData.data["gridClusterKey"] + "&header=" + cellData.data["diseaseHeader"] + "&jsonEncodedInput=" + $rootScope.jsonEncodedQuery;
-			}
+			url += "&queryToken=" + vm.queryToken;
 
 			if(url) {
 				// append current time in milliseconds to ensure popup uniqueness
@@ -121,6 +128,7 @@
 					filterGrid();
 					buildGrid();
 					vm.gridloading = false;
+					vm.queryToken = vm.jsonData.queryToken;
 					vm.removeFilters();
 					$rootScope.$emit("ClearFilterText");
 				}, function (error) {

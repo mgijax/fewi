@@ -4,12 +4,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
@@ -59,7 +62,7 @@ public class DiseasePortalController {
 
 	@Autowired
 	private MarkerFinder markerFinder;
-
+	
 	@RequestMapping(method=RequestMethod.GET)
 	public String getQueryForm() {
 		return "hmdc/home";
@@ -70,8 +73,22 @@ public class DiseasePortalController {
 
 		SearchParams params = new SearchParams();
 		params.setPageSize(1000000);
+
+		String queryToken = "";
 		
-		if (session != null) { session.setAttribute("jsonInput", jsonInput); }
+		LinkedHashMap<String, String> queryHistoryMap = (LinkedHashMap<String, String>) session.getAttribute("queryHistoryMap");
+		if(queryHistoryMap == null) {
+			queryHistoryMap = new LinkedHashMap<String, String>() {
+				protected boolean removeEldestEntry(Map.Entry eldest){
+				    return size() > 10;
+				}
+			};
+			session.setAttribute("queryHistoryMap", queryHistoryMap);
+		}
+		queryToken = UUID.randomUUID().toString();
+		queryHistoryMap.put(queryToken, jsonInput);
+		
+		logger.info("Query History Map: " + queryHistoryMap.size());
 		
 		Filter mainFilter = null;
 		Filter highlightFilter = null;
@@ -114,7 +131,9 @@ public class DiseasePortalController {
 		
 		GridVisitor gv = new GridVisitor(results, annotationResults, highLights);
 
-		return gv.getGridResult();
+		GridResult gridResult = gv.getGridResult();
+		gridResult.setQueryToken(queryToken);
+		return gridResult;
 	}
 
 	@RequestMapping(value="/geneQuery")
@@ -188,26 +207,6 @@ public class DiseasePortalController {
 		}
 	}
 
-	/* Serve up a phenotype popup, from clicking a phenotype cell on the HMDC grid.
-	 * Expects two parameters in the request: gridClusterKey and header.  Any phenotype or
-	 * disease terms or IDs can be passed in for highlighting using the (optional)
-	 * term or termId parameters; multiples of each can be submitted.
-	 */
-	@RequestMapping(value="/phenotypePopup", method=RequestMethod.GET)
-	public ModelAndView getPhenotypePopup(HttpServletRequest request, @RequestParam(value = "jsonEncodedInput", required = false) String jsonEncodedInput) {
-		return getPopup(request, jsonEncodedInput, true);
-	}
-
-	/* Serve up a disease popup, from clicking a disease cell on the HMDC grid.
-	 * Expects two parameters in the request: gridClusterKey and header.  Any phenotype or
-	 * disease terms or IDs can be passed in for highlighting using the (optional)
-	 * term or termId parameters; multiples of each can be submitted.
-	 */
-	@RequestMapping(value="/diseasePopup", method=RequestMethod.GET)
-	public ModelAndView getDiseasePopup(HttpServletRequest request, @RequestParam(value = "jsonEncodedInput", required = false) String jsonEncodedInput) {
-		return getPopup(request, jsonEncodedInput, false);
-	}
-
 	/* strip the markup out of the allele combination and leave just the allele symbols
 	 */
 	private String stripAlleleMarkup(String combination) {
@@ -264,9 +263,8 @@ public class DiseasePortalController {
 	/* build and return the page title for the popup, based on the parameters passed in.
 	 * (could be done in the JSP, but it was getting complex, so we may as well do it in Java)
 	 */
-	private String buildPopupTitle(List<String> humanMarkers, List<String> mouseMarkers, String header, boolean isPhenotype,
-			HmdcAnnotationGroup mpGroup, HmdcAnnotationGroup hpoGroup, HmdcAnnotationGroup omimGroup,
-			boolean fromMarkerDetail) {
+	private String buildPopupTitle(List<String> humanMarkers, List<String> mouseMarkers, String header, boolean isPhenotype, HmdcAnnotationGroup mpGroup,
+			HmdcAnnotationGroup hpoGroup, HmdcAnnotationGroup omimGroup, boolean fromMarkerDetail) {
 
 		StringBuffer sb = new StringBuffer();
 		boolean human = ((hpoGroup != null) && (!hpoGroup.isEmpty())) ||
@@ -346,13 +344,19 @@ public class DiseasePortalController {
 		return null;
 	}
 
+
 	/* Serve up a phenotype or disease popup, from clicking a cell on the HMDC grid.
 	 * Expects two parameters in the request: gridClusterKey and header.  
 	 * The 'isPhenotype' parameter should be true for phenotype popups and false for disease popups.
 	 */
-	private ModelAndView getPopup(HttpServletRequest request, String jsonEncodedInput, boolean isPhenotype) {
+	@RequestMapping(value="/popup", method=RequestMethod.GET)
+	private ModelAndView popup(HttpServletRequest request, HttpSession session, @RequestParam(value = "isPhenotype") boolean isPhenotype, @RequestParam(value = "queryToken") String queryToken) throws Exception {
+	//public ModelAndView popup(HttpServletRequest request) {
 		// from a marker detail page slimgrid, we'll need to get the marker ID and
 		// convert it to its corresponding gridClusterKey
+		//String queryToken = "";
+		//boolean isPhenotype = false;
+		
 		String gridClusterKey = null;
 		String markerID = request.getParameter("markerID");
 		boolean fromMarkerDetail = false;
@@ -364,7 +368,7 @@ public class DiseasePortalController {
 			}
 			fromMarkerDetail = true;
 		}
-		
+
 		// collect the required parameters and check that they are specified
 		if (gridClusterKey == null) {
 			gridClusterKey = request.getParameter("gridClusterKey");
@@ -378,18 +382,27 @@ public class DiseasePortalController {
 		Filter highlightFilter = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			group = (DiseasePortalConditionGroup)mapper.readValue(jsonEncodedInput, DiseasePortalConditionGroup.class);
-			highlightFilter = genHighlightFilter(group);
+			String previousJsonQuery = null;
+			if(queryToken != null && queryToken.length() > 0) {
+				LinkedHashMap<String, String> queryHistoryMap = (LinkedHashMap<String, String>) session.getAttribute("queryHistoryMap");
+				if(queryHistoryMap != null) {
+					previousJsonQuery = queryHistoryMap.get(queryToken);
+				}
+			}
+			if(previousJsonQuery != null) {
+				group = (DiseasePortalConditionGroup)mapper.readValue(previousJsonQuery, DiseasePortalConditionGroup.class);
+				highlightFilter = genHighlightFilter(group);
+			}
 		} catch (Exception e) {
 			// This is a fatal error; if the user's session has expired or if JBoss has been restarted,
 			// pheno group wants to give an error message.
 		}
-		if (group == null) {
-			if (fromMarkerDetail) {
-				group = new DiseasePortalConditionGroup();
-			} else {
-				return errorMav("Your session has expired.  Please resubmit your search before visiting a popup.");
-			}
+
+		
+		if (group == null && !fromMarkerDetail) {
+			return errorMav("Your session has expired.  Please resubmit your search before visiting a popup.");
+		} else {
+			group = new DiseasePortalConditionGroup();
 		}
 		
 		Filter mainFilter = genQueryFilter(group);
@@ -581,8 +594,7 @@ public class DiseasePortalController {
 		omimGroup.consolidateHumanRows();
 		
 		// compose the popup title (could do in JSP, but it was getting complex...)
-		mav.addObject("pageTitle", buildPopupTitle(humanMarkers, mouseMarkers, header, isPhenotype,
-			mpGroup, hpoGroup, omimGroup, fromMarkerDetail));
+		mav.addObject("pageTitle", buildPopupTitle(humanMarkers, mouseMarkers, header, isPhenotype, mpGroup, hpoGroup, omimGroup, fromMarkerDetail));
 		
 		if (isPhenotype) {
 			mav.addObject("isPhenotype", 1);
