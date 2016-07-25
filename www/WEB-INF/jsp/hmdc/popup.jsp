@@ -73,7 +73,7 @@
 	    <c:if test="${not empty highlights}">
 	        <tr><td></td><td><span class="highlight">Highlighted Columns</span> contain at least one phenotype or disease result matching your search term(s).</td></tr>
         </c:if>
-		<tr><td></td><td>Darker colors indicate <span title="The orange and blue squares indicate human and mouse data, respectively.  Darker colors indicate more supporting annotations.  The lightest color represents one annotation. 2-5 annotations is represented by a darker shade, 6-99 annotations darker still and more than 100 annotations by the darkest color.">more annotations</span></td></tr>
+		<tr><td></td><td>Darker colors indicate <span title="The orange and blue squares indicate human and mouse data, respectively.  Darker colors indicate more supporting annotations.  The lightest color represents one annotation. 2-5 annotations is represented by a darker shade, 6-99 annotations darker still and more than 100 annotations by the darkest color." style="color: #3399f3; text-decoration: none;">more annotations</span></td></tr>
 	  </table>
 	</div>
 </c:if>
