@@ -184,12 +184,3 @@ div.ui-dialog {
 	width: auto;
 	white-space: nowrap;
 }
-
-a {
-	color: blue;
-}
-
-a.findMice {
-	color: blue;
-	text-decoration: underline;
-}
