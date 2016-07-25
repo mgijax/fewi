@@ -16,10 +16,9 @@
 	<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/css/hmdc/popup.css" />
 </c:if>
 <c:if test="${empty fromMarkerDetail}">
-	<%@ include file="header.jsp" %>
 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 	<link rel="stylesheet" href="//jqueryui.com/jquery-wp-content/themes/jqueryui.com/style.css">
-	<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/css/hmdc/popup.css" />
+	<%@ include file="header.jsp" %>
 </c:if>
 
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
@@ -74,7 +73,7 @@
 	    <c:if test="${not empty highlights}">
 	        <tr><td></td><td><span class="highlight">Highlighted Columns</span> contain at least one phenotype or disease result matching your search term(s).</td></tr>
         </c:if>
-		<tr><td></td><td>Darker colors indicate <span title="The orange and blue squares indicate human and mouse data, respectively.  Darker colors indicate more supporting annotations.  The lightest color represents one annotation. 2-5 annotations is represented by a darker shade, 6-99 annotations darker still and more than 100 annotations by the darkest color." style="color: blue; text-decoration: underline">more annotations</span></td></tr>
+		<tr><td></td><td>Darker colors indicate <span title="The orange and blue squares indicate human and mouse data, respectively.  Darker colors indicate more supporting annotations.  The lightest color represents one annotation. 2-5 annotations is represented by a darker shade, 6-99 annotations darker still and more than 100 annotations by the darkest color.">more annotations</span></td></tr>
 	  </table>
 	</div>
 </c:if>
