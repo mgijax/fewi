@@ -2,7 +2,14 @@
 
 ## JSP
 ### [home.jsp](www/WEB-INF/jsp/hmdc/home.jsp)
-  This is the main file that is used for the HMDC home page. This page includes all the standard header and footer. 
+This is the main file that is used for the HMDC home page. This page includes all the standard header and footer. 
+
+## CSS
+### [search.css](www/css/hmdc/search.css)
+This is the main style sheet for the page. Most all styles can be found in here.
+
+### [popup.css](www/css/hmdc/popup.css)
+This style sheet controls the styles in the popup windows from the hmdc
 
 ## Controllers
 ### [DiseaseController](www/hmdc/app/components/search/DiseaseController.js)
@@ -124,7 +131,7 @@ This file is used to display the HMDC grid. It makes use of angular ng-cells mod
 ## Scope
 
 ### Root Scope 
-This surrounds the entire page on the html tag in the [header.jsp](www/WEB-INF/jsp/hmdc/header.jsp) page via the ```<html ng-app="HMDCApplication">``` The [app.module.js](www/hmdc/app/app.module.js) defines the application and the modules that its uses.
+This surrounds the entire page on the html tag in the [header.jsp](www/WEB-INF/jsp/hmdc/header.jsp) page via the ```<html ng-app="HMDCApplication">``` The [app.module.js](www/hmdc/app/app.module.js) defines the application and the modules that its uses. Check out this scope diagram: [![Scope Diagram](www/images/scope.png "Title")](www/images/scope.png)
 
 ### Search Controller Scope
 This is based on the Search Controller which surronds the [searchTemplate.html](www/hmdc/app/components/search/searchTemplate.html). ```<div ng-controller="SearchController">```
