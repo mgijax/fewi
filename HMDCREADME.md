@@ -108,6 +108,8 @@ This file is used to display the HMDC grid. It makes use of angular ng-cells mod
   
 ### What happens when "Apply Filters" is clicked?
 
+[<img src="www/images/doc/filters.jpg" width="600px">](www/images/doc/filters.jpg)
+
 #### Search Controller
   1. vm.applyFilters on the Search Controller is run
   2. Emit FilterChanged Event to the Grid controllers
