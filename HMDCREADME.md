@@ -9,13 +9,13 @@ This is the main file that is used for the HMDC home page. This page includes al
 This is the main style sheet for the page. Most all styles can be found in here.
 
 ### [popup.css](www/css/hmdc/popup.css)
-This style sheet controls the styles in the popup windows from the hmdc
+This style sheet controls the styles in the popup windows from the hmdc. This is also included on the main page of the HMDC.
 
 ## Controllers
 ### [DiseaseController](www/hmdc/app/components/search/DiseaseController.js)
 This controller handles the filtering for the disease table, as well as using the Search Service to do the data query for the table. This controller also handles the popup for the "Source" link on the smart table.
 ### [GeneController](www/hmdc/app/components/search/GeneController.js)
-This controller handles the filtering for the disease table, as well as using the Search Service to do the data query for the table. This controller also handles the popup for the "Source" link on the smart table.
+This controller handles the filtering for the gene table, as well as using the Search Service to do the data query for the table. This controller also handles the popup for the "Source" link on the smart table.
 ### [GridController](www/hmdc/app/components/search/GridController.js)
 This controller handles the following:
 
@@ -52,8 +52,9 @@ This service provides a method that can be used to "natural sort" the list that 
 This directive is used to add to the different tables in order to get the "reset" functionality for when the table data changes.
 
 ## Filters
+Filters are used to remove results from the query. Filters do not go back to the server with parameters. Filters filter out what is not selecte and keep what is selected. Also the filter list are not facet queries but rather lists from the original query.
 ### [OrderHashByFilter]( www/hmdc/app/components/search/OrderHashByFilter.js)
-This filter is used on different columns in the smart tables to orber by that field of data by chaining it by a |
+This filter is used on different columns in the smart tables to order by that field of data by chaining it by a |
 ### [SearchHandleSubscriptFilter](www/hmdc/app/components/search/SearchHandleSubscriptFilter.js)
 This filter is used to handle sub scripting on different fields, by adding to the field via a |
 ### [SearchSortFilter](www/hmdc/app/components/search/SearchSortFilter.js)
@@ -88,8 +89,8 @@ This file is used to display the HMDC grid. It makes use of angular ng-cells mod
   4. Filters the grid via the built lists
   5. Builds the grid
   6. Sets the grid loading to false
-  7. Removes any pervious filters
-  8. Emit ClearFilterText
+  7. Removes any previous filters
+  8. Emit ClearFilterText (which clears the filter lists see picture below)
 
 #### Gene Controller
   1. Sets the gene loading to true
@@ -101,7 +102,7 @@ This file is used to display the HMDC grid. It makes use of angular ng-cells mod
 #### Disease Controller
   1. Sets the disease loading to true
   2. Runs the Ajax search method
-  3. Sets the result count based on the data coming back form the server
+  3. Sets the result count based on the data coming back from the server
   4. Runs the filter method
   5. Removed any filters from the original filter set
   6. Sets the disease loading to false
@@ -109,6 +110,8 @@ This file is used to display the HMDC grid. It makes use of angular ng-cells mod
 ### What happens when "Apply Filters" is clicked?
 
 [<img src="www/images/doc/filters.jpg" width="600px">](www/images/doc/filters.jpg)
+
+The image shows what happens with the Gene filter specifically but the same process happens for the disease filter also.
 
 #### Search Controller
   1. vm.applyFilters on the Search Controller is run
@@ -149,3 +152,5 @@ This is based on the [geneTemplate.html](www/hmdc/app/components/search/geneTemp
 ### Disease Controller Scope
 This is based on the [diseaseTemplate.html](www/hmdc/app/components/search/diseaseTemplate.html) which is included from inside the [searchTemplate.html](www/hmdc/app/components/search/searchTemplate.html).
 
+### vm.*
+This is used in each of the controllers for their local model to interact with and have access to the data in the html templates and the javascript. Sometimes this can be shared, if a lower (down the tree) scope does not override it, see picture from above.
