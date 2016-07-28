@@ -131,7 +131,7 @@ This file is used to display the HMDC grid. It makes use of angular ng-cells mod
 ## Scope
 
 ### Root Scope 
-This surrounds the entire page on the html tag in the [header.jsp](www/WEB-INF/jsp/hmdc/header.jsp) page via the ```<html ng-app="HMDCApplication">``` The [app.module.js](www/hmdc/app/app.module.js) defines the application and the modules that its uses. Check out this scope diagram: [![Scope Diagram](www/images/scope.png "Title")](www/images/scope.png)
+This surrounds the entire page on the html tag in the [header.jsp](www/WEB-INF/jsp/hmdc/header.jsp) page via the ```<html ng-app="HMDCApplication">``` The [app.module.js](www/hmdc/app/app.module.js) defines the application and the modules that its uses. Check out this scope diagram: [![Scope Diagram](www/images/doc/scope.png "Title")](www/images/doc/scope.png)
 
 ### Search Controller Scope
 This is based on the Search Controller which surronds the [searchTemplate.html](www/hmdc/app/components/search/searchTemplate.html). ```<div ng-controller="SearchController">```
