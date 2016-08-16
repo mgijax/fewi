@@ -281,7 +281,9 @@ function deselectAllSeqs() {
 	    	    </c:choose>
 
 			<c:forEach var="disease" items="${diseases}" varStatus="stat">
-				<a href="${configBean.FEWI_URL}disease/${disease.termID}">${disease.term}</a><br/>
+				<c:if test="${disease.qualifier != 'NOT'}">
+					<a href="${configBean.FEWI_URL}disease/${disease.termID}">${disease.term}</a><br/>
+				</c:if>
 			</c:forEach>
 	    </td>
 		

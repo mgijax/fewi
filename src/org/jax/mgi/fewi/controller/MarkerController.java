@@ -761,8 +761,10 @@ public class MarkerController {
 		// DiseaseId -> Annotation
 		HashMap<String, Annotation> MouseOMIMAnnotations = new HashMap<String, Annotation>();
 		for(Annotation a: marker.getOMIMAnnotations()) {
-			sortedDiseaseMapByTerm.put(a.getTerm(), a.getTermID());
-			MouseOMIMAnnotations.put(a.getTermID(), a);
+			if (!"NOT".equals(a.getQualifier())) {
+				sortedDiseaseMapByTerm.put(a.getTerm(), a.getTermID());
+				MouseOMIMAnnotations.put(a.getTermID(), a);
+			}
 		}
 
 		// Symbol -> {DiseaseId -> Annoation}
@@ -792,7 +794,7 @@ public class MarkerController {
 		
 		for(String diseaseTerm: sortedDiseaseMapByTerm.keySet()) {
 			String diseaseId = sortedDiseaseMapByTerm.get(diseaseTerm);
-			if(MouseOMIMAnnotations.containsKey(diseaseId) && HumanOMIMAnnotations.containsKey(diseaseId)) {
+			if(MouseOMIMAnnotations.containsKey(diseaseId) && !"NOT".equals(MouseOMIMAnnotations.get(diseaseId).getQualifier()) && HumanOMIMAnnotations.containsKey(diseaseId)) {
 				both.add(diseaseTerm);
 				bothDiseaseCount++;
 			} else if(MouseOMIMAnnotations.containsKey(diseaseId)) {
