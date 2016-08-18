@@ -154,12 +154,16 @@ public class GOSummaryRow {
 					}
 					int pixels = 10 * length;
 					if (length > 10) {
-						pixels = 6 * length;
+						pixels = (int) Math.round(6.5 * length);
 					}
 					link = tooltipTemplate
 							.replace("<LINK>", link)
 							.replace("<WIDTH>", "" + pixels)
-							.replace("<TOOLTIP>", tooltip.replace("\n", "<br/>"));
+							.replace("<TOOLTIP>", tooltip
+									.replace("<", "&&&&&")
+									.replace(">", "</sup>")
+									.replace("&&&&&", "<sup>")
+									.replace("\n", "<br/>"));
 				}
 
 				if (first) {
