@@ -15,12 +15,12 @@
 				</ul>
 			</li>
 			<li>
-				<a target="_blank" href="ftp://ftp.informatics.jax.org/pub/reports/MGI_OMIM.rpt">Associations of Human and Mouse Genes with OMIM Diseases</a>
+				<a target="_blank" href="http://www.informatics.jax.org/downloads/reports/MGI_OMIM.rpt">Associations of Human and Mouse Genes with OMIM Diseases</a>
 				<ul>
 					<li class="font12">Tab-delimited: OMIM Disease ID, OMIM Disease Name, HomoloGene ID, Common Organism Name, NCBI Taxon ID, Symbol, EntrezGene ID, Mouse MGI ID</li>
 				</ul>
 			</li>
-			<li>All downloads for <a target="_blank" href="ftp://ftp.informatics.jax.org/pub/reports/index.html#pheno">Alleles and Phenotypes</a></li>
+			<li>All downloads for <a target="_blank" href="http://www.informatics.jax.org/downloads/reports/index.html#pheno">Alleles and Phenotypes</a></li>
 		</ul>
 
 		Useful Links:
