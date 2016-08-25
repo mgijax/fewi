@@ -190,7 +190,7 @@ td.top { vertical-align: top; }
 		  </span>
         </dd>
       </dl>
-      <span class="vocabLink">Browse <a href="${configBean.FTP_URL}MGI_InterProDomains.rpt">InterPro protein domains</a>
+      <span class="vocabLink">Browse <a href="${configBean.PUB_REPORTS_URL}MGI_InterProDomains.rpt">InterPro protein domains</a>
       </span>
     </td>
   </tr>

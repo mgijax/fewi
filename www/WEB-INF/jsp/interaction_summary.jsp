@@ -143,7 +143,7 @@ circle {
 <div style="float: left; width: 1245px;">
 	<div style="margin-top: 30px; float: left;">
 		<span class="filterButton" id="showGraphHelpDiv" style="margin-right: 10px;">Graph Help</span>
-		<span class="filterButton" style="margin-right: 10px;"><a target="_blank" href="${configBean.FTP_BASE_URL}feature_relationships_downloads" title="Download the full data set from the MGI ftp site">Download Data</a></span>
+		<span class="filterButton" style="margin-right: 10px;"><a target="_blank" href="${configBean.FTP_URL}feature_relationships_downloads" title="Download the full data set from the MGI ftp site">Download Data</a></span>
 		<a id="toBatchQuery" target="_blank" class="filterButton" onClick="javascript: batchWeb.submit();" style="display:none" title="Forward the genome features from the table to the Batch Query form"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> Batch Query</a>
 		<span style="margin-right: 10px"></span>
 		<a id="toMouseMine" target="_blank" class="filterButton" onClick="javascript: mouseMineWeb.submit();" style="display:none" title="Forward the genome features from the table to MouseMine"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> MouseMine</a>
