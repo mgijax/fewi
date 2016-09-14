@@ -270,7 +270,7 @@
     		<li>Verify that allele subtypes are displayed in the category column after the generated type (if there are subtypes)
  			<p concordion:manual="true">passed - jeffc 03/10/2014</p> (sto24)
     		<ol>
-    			<li>Do a nomenclature query for <a href="http://cardolan.informatics.jax.org/allele/summary?nomen=grhpr">Grhpr</a></li>
+    			<li>Do a nomenclature query for <a href="http://scrumdog.informatics.jax.org/allele/summary?nomen=grhpr">Grhpr</a></li>
     			<li>Verify that allele <b>Grhpr&lt;Gt(OST383093)Lex&gt;</b> has only <b>Gene trapped</b> in the Category column. <i>It has no subtypes or transmission status display.</i></li>
     			<li>Verify that allele <b>Grhpr&lt;tm1(KOMP)Vlcg&gt;</b> has only <b>Targeted</b> 
     				followed by <b>(Null/knockout, Reporter)</b>  
@@ -713,7 +713,7 @@
     		<li>Searching by chromosome returns the correct alleles now we have moved it to the FeWI (sto38)
  			<p concordion:manual="true">passed -jeffc 03-10-2014</p>
     		<table>
-	    		<tr><th>Chromosome</th><th>Python Result<br/><a href="http://cardolan.informatics.jax.org/searches/allele_form.shtml">query form</a></th><th>FEWI Result<br/><a href="http://cardolan.informatics.jax.org/allele/">query form</a></th></tr>
+	    		<tr><th>Chromosome</th><th>Python Result<br/><a href="http://scrumdog.informatics.jax.org/searches/allele_form.shtml">query form</a></th><th>FEWI Result<br/><a href="http://cardolan.informatics.jax.org/allele/">query form</a></th></tr>
 	    		<tr><td>18</td><td>11089 </td><td>11100</td></tr>
 	    		<tr><td>19</td><td>11653 </td><td>11671</td></tr>
 	    		<tr><td>Y</td><td>150 </td><td>150</td></tr>
@@ -728,7 +728,7 @@
     		<li>Seaching with cm Position returns the correct alleles. cM values may be separated by a space or a dash. (revised for sto81)
  			<p concordion:manual="true">passed. -jeffc 03-10-2014</p>
     		<table>
-	    		<tr><th>Chromosome</th><th>cM</th><th>Python Result<br/><a href="http://cardolan.informatics.jax.org/searches/allele_form.shtml">query form</a></th><th>FEWI Result<br/><a href="http://cardolan.informatics.jax.org/allele/">query form</a></th></tr>
+	    		<tr><th>Chromosome</th><th>cM</th><th>Python Result<br/><a href="http://scrumdog.informatics.jax.org/searches/allele_form.shtml">query form</a></th><th>FEWI Result<br/><a href="http://cardolan.informatics.jax.org/allele/">query form</a></th></tr>
 	    		<tr><td>19</td><td>50 - 75</td><td>507</td><td>507</td></tr>
 	    		<tr><td>X</td><td>30-50</td><td>2770</td><td>2770</td></tr>
     		</table>
@@ -1253,7 +1253,7 @@
 			<li>Searching by phenotype can match text in an allele's "General" note. (sto114)
 			<p concordion:manual="true">passed - jeffc 03-10-2014</p>
 				<ul>
-					<li>Do a phenotype/disease query for <a href="http://cardolan.informatics.jax.org/allele/summary?phenotype=S74469"><b>S74469</b></a></li>
+					<li>Do a phenotype/disease query for <a href="http://scrumdog.informatics.jax.org/allele/summary?phenotype=S74469"><b>S74469</b></a></li>
 					<li>Verify that <b>A&lt;iy&gt;</b> is returned. (<i>Has general note "Genbank ID for this mutation: S74469"</i>)</li>
 				</ul>
 			</li>

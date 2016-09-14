@@ -200,9 +200,9 @@ tr.gray td {background-color:#EEEEEE;}
 				<li>In the row for the homology class containing <b>AIRE, Aire</b>, for the column <b>Autoimmune Diseases</b>:
 				<ul>
 					<li>Verify the blue color representing <b>8</b> (not 9) mouse annotations appears.(sto117))</li>
-					<li>(Note: <a href="http://cardolan.informatics.jax.org/diseasePortal/genoCluster/view/5644">this genotype cluster</a> has both MP terms in several distinct genotypes; 
-                	<a href="http://cardolan.informatics.jax.org/diseasePortal/genoCluster/view/29974">this genotype cluster</a> has just one of the terms in one genotype. <br/>
-                	<a href="http://cardolan.informatics.jax.org/allele/MGI:2182940">One more genotype</a> of Aire is annotated once to the disease, but not to the queried phenotypes, so it is excluded.)</li>
+					<li>(Note: <a href="http://scrumdog.informatics.jax.org/diseasePortal/genoCluster/view/5644">this genotype cluster</a> has both MP terms in several distinct genotypes; 
+                	<a href="http://scrumdog.informatics.jax.org/diseasePortal/genoCluster/view/29974">this genotype cluster</a> has just one of the terms in one genotype. <br/>
+                	<a href="http://scrumdog.informatics.jax.org/allele/MGI:2182940">One more genotype</a> of Aire is annotated once to the disease, but not to the queried phenotypes, so it is excluded.)</li>
 				</ul>
 				</li>
     		</ol>
@@ -226,7 +226,7 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Click on the Grid tab and confirm the disease column <b cc:assertResultsContain="gridDiseasesByPhenotype(#pheno)">Beta-Thalassemia</b> exists.</li>
                 <li>Confirm that mouse marker <b concordion:set="#row">Klf1</b> is associated with <b concordion:set="#column">Beta-Thalassemia</b> 
                 	and has a <b concordion:assertEquals="gridCheckForDiseaseByPhenotype(#pheno,#row,#column)">check</b>
-                	(via 'super-simple' or 'OMG' genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:2181627">MGI:2181627</a>).<br/><br/></li>
+                	(via 'super-simple' or 'OMG' genotype <a href="http://scrumdog.informatics.jax.org/allele/genoview/MGI:2181627">MGI:2181627</a>).<br/><br/></li>
                 	
                 <li>Enter <b concordion:set="#pheno">MP:0003841</b> (abnormal lambdoidal suture morphology) in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and confirm the disease columns <b cc:assertResultsContain="gridDiseasesByPhenotype(#pheno)">Hutchinson-Gilford Progeria Syndrome; HGPS</b> 
@@ -396,7 +396,7 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Also verify that the row with TYRP1/<b concordion:set="#symbol">Tyrp1</b> human/mouse markers has no 
                		<span class="hide" concordion:set="#diseaseId">Albinism, Oculocutaneous</span>
                 	<b concordion:assertEmpty="gridCheckForDiseaseByPhenotype(#pheno,#symbol,#diseaseId)">check</b> under this disease.
-                	(The mouse marker Tyrp1 is annotated to 'iris atrophy' via the genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:3773275">MGI:3773275</a>,
+                	(The mouse marker Tyrp1 is annotated to 'iris atrophy' via the genotype <a href="http://scrumdog.informatics.jax.org/allele/genoview/MGI:3773275">MGI:3773275</a>,
                 		and human marker TYRP1 is directly annotated to the disease 'Albinism, Oculocutaneous, Type III; OCA3')</li>
     		</ol>
     		</li>
