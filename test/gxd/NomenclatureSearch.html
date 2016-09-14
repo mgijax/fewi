@@ -186,8 +186,8 @@
 			<ol>
 				<li>open the GXD query form</li>
 				<li>type <b concordion:set="#query">Hx</b> in the nomenclature field</li>
-				<li>verify that <b>only <span concordion:assertEquals="getGeneCountByNomen(#query)">2</span> genes, Shh and Hpx, are returned</b> (HX is a synonym of shh and Hpx)
-					<table cc:verifyRowsUnordered="#result : getGeneSymbolsByNomen(#query)">
+				<li>verify that Shh and Hpx, are returned</b> (HX is a synonym of shh and Hpx)
+					<table cc:verifySupersetOf="#result : getGeneSymbolsByNomen(#query)">
 						<tr><th concordion:assertEquals="#result">Expected Result Set</th></tr>
 					    <tr><td>Shh</td></tr>
 					    <tr><td>Hpx</td></tr>
