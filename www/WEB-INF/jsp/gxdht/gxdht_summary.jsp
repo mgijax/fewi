@@ -30,7 +30,6 @@
 	<div id="breadbox">
 		<div id="contentcolumn">
 			<div class="innertube">
-		            <jsp:include page="gxd_summary_filters.jsp"></jsp:include><br>
 				<div id="filterSummary" class="filters">
 					<span class="label">Filtered by:</span>
 					&nbsp;<span id="defaultText">No filters selected.</span>
@@ -49,7 +48,7 @@
 
 
     <div class="facetFilter">
-	<div id="facetDialog">
+	<div id="facetDialog" class="hide">
 	    <div class="hd">Filter</div>
 	    <div class="bd">
 		<form:form method="GET" action="${configBean.FEWI_URL}gxd">
@@ -151,11 +150,9 @@
 </div>
 
 <div id="structLegendPopupPanel" class="visHidden facetFilter">
-  <jsp:include page="gxd_legend_popup.jsp"></jsp:include>
 </div>
 
 <div id="geneLegendPopupPanel" style="visibility: hidden;" class="facetFilter">
-  <jsp:include page="gxd_legend_popup.jsp"></jsp:include>
 </div>
 
 

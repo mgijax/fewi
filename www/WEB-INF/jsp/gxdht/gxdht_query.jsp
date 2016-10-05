@@ -91,20 +91,17 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 </div>
 <br clear="all" />
 <div class="summaryControl" style="display:none;">
+<div class="hide">
 <div id="resultbar" class="goldbar">Results</div>
-<!--	<%@ include file="/WEB-INF/jsp/gxdht/gxdht_summary.jsp" %> -->
+	<%@ include file="/WEB-INF/jsp/gxdht/gxdht_summary.jsp" %>
 
+</div>
 </div>
 
 <script type="text/javascript">
     var fewiurl = "${configBean.FEWI_URL}";
     var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>
-
-<!-- <%@ include file="/WEB-INF/jsp/gxdht/gxdht_summary_js.jsp" %> -->
-<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxdht_query.js"></script>
-<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxdht_summary.js"></script>
-<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxdht_summary_filters.js"></script>
 
 <script type="text/javascript">
 <c:if test="${not empty queryString}">

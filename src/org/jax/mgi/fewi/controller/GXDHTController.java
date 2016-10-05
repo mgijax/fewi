@@ -44,7 +44,11 @@ public class GXDHTController {
 
 		ModelAndView mav = new ModelAndView("gxdht/gxdht_query");
 		mav.addObject("sort", new Paginator());
-		mav.addObject("queryForm", new GxdHtQueryForm());
+		
+		GxdHtQueryForm qf = new GxdHtQueryForm();
+		qf.setTextScopeDefault();
+
+		mav.addObject("queryForm", qf);
 		return mav;
 	}
 

@@ -23,7 +23,8 @@ public class GxdHtQueryForm {
     private String structure = "";
     private String structureID = "";
     private String text = "";
-    private String textScope = "";
+    private List<String> textScope = new ArrayList<String>();
+    private Map<String,String> textScopeOptions = new LinkedHashMap<String,String>();
 
 	private Map<Integer, String> theilerStages = new LinkedHashMap<Integer, String>();
 	public static Integer ANY_STAGE = 0;
@@ -45,12 +46,18 @@ public class GxdHtQueryForm {
 		// set default values
 		age.add(ANY_AGE);
 		theilerStage.add(ANY_STAGE);
+
+		textScopeOptions.put("Title", "In Title");
+		textScopeOptions.put("Description", "In Description");
 	}
 	
     //--------------------//
     // accessors
     //--------------------//
 
+	public Map<String,String> getTextScopeOptions() {
+		return textScopeOptions;
+	}
 
 	public List<Integer> getTheilerStage() {
 		return theilerStage;
@@ -108,11 +115,14 @@ public class GxdHtQueryForm {
         this.text = text;
     }
 
-    public String getTextScope() {
+    public List<String> getTextScope() {
         return textScope;
     }
-    public void setTextScope(String textScope) {
+    public void setTextScope(List<String> textScope) {
         this.textScope = textScope;
+    }
+    public void setTextScopeDefault() {
+    	this.textScope.addAll(this.textScopeOptions.keySet());
     }
 
 	public List<String> getVariable() {

@@ -130,7 +130,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 
 	<tr class="stripe1">
 		<td class="cat1Gxd">Sex</td>
-		<td>Coming in US97...</td>
+		<td>Coming in US93...</td>
 	</tr>
 
  	<tr class="stripe2">
@@ -143,7 +143,10 @@ span.smallGrey { font-size: 75%; color: #999999; }
 	</tr>
 	<tr class="stripe2">
 		<td class="cat2Gxd">Text</td>
-		<td>Coming in US90...</td>
+		<td>
+			<form:input id="text" path="text" class="formWidth" style="width:270px;"></form:input><br/>
+      		<fewi:checkboxOptions items="${queryForm.textScopeOptions}" name="textScope" values="${queryForm.textScope}" divider="&nbsp;&nbsp;" />
+		</td>
 	</tr>
 	<tr class="buttonRow">
 		<td colspan="3" align="left">
