@@ -338,7 +338,13 @@ public class Filter {
             StringBuffer valueStrings = new StringBuffer();
             Iterator<String> valueIter = values.iterator();
 
+            // handle first iteration up front, so we can include commas in the 'while'
+            if (valueIter.hasNext()) {
+              valueStrings.append(valueIter.next());
+            }
+
             while (valueIter.hasNext()) {
+              valueStrings.append(",");
               valueStrings.append(valueIter.next());
             }
 
