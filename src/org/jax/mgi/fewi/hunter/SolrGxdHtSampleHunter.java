@@ -1,12 +1,15 @@
 package org.jax.mgi.fewi.hunter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.commons.lang.StringUtils;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -22,6 +25,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class SolrGxdHtSampleHunter extends SolrHunter<GxdHtSample> {
 
+	// mapping from experiment key to count of matching experiments
+	private Map<String, Integer> experimentKeys = null;
+	
     /***
      * The constructor sets up this hunter so that it is specific to finding
      * data for samples for high-throughput expression experiments
@@ -78,13 +84,13 @@ public class SolrGxdHtSampleHunter extends SolrHunter<GxdHtSample> {
 			GxdHtSample sample = new GxdHtSample();
 			sample.setAge((String) doc.getFieldValue(GxdHtFields.AGE));
 			sample.setByDefault((Integer) doc.getFieldValue(GxdHtFields.BY_DEFAULT));
-			sample.setExperimentKey((Integer) doc.getFieldValue(GxdHtFields.EXPERIMENT_KEY));
+			sample.setExperimentKey(Integer.parseInt((String) doc.getFieldValue(GxdHtFields.EXPERIMENT_KEY)));
 			sample.setGeneticBackground((String) doc.getFieldValue(GxdHtFields.GENETIC_BACKGROUND));
 			sample.setMutantAlleles((String) doc.getFieldValue(GxdHtFields.MUTANT_ALLELES));
 			sample.setName((String) doc.getFieldValue(GxdHtFields.NAME));
 			sample.setNote((String) doc.getFieldValue(GxdHtFields.NOTE));
 			sample.setOrganism((String) doc.getFieldValue(GxdHtFields.ORGANISM));
-			sample.setSampleKey((Integer) doc.getFieldValue(GxdHtFields.SAMPLE_KEY));
+			sample.setSampleKey(Integer.parseInt((String) doc.getFieldValue(GxdHtFields.SAMPLE_KEY)));
 			sample.setSex((String) doc.getFieldValue(GxdHtFields.SEX));
 			sample.setStructureID((String) doc.getFieldValue(GxdHtFields.STRUCTURE_ID));
 			sample.setStructureTerm((String) doc.getFieldValue(GxdHtFields.STRUCTURE_TERM));
@@ -94,6 +100,39 @@ public class SolrGxdHtSampleHunter extends SolrHunter<GxdHtSample> {
 		this.packFacetData(rsp, sr);
 	}
 
+	/* build and return a map of experiment keys and their matching sample counts
+	 */
+	public Map<String, Integer> getExperimentMap(SearchParams params) {
+		this.experimentKeys = new HashMap<String, Integer>();
+		
+		/* We need to use the set of search parameters to query Solr and collect the experiment keys
+		 * as facets.  The count of matching samples for each is the count for each facet.  We do not
+		 * need to return any sample records for this search, only the facets.
+		 */
+		
+		// preserve hunter's previous state
+		String previousFacetString = this.facetString;
+		Integer previousFacetLimit = this.factetNumberDefault;
+		Integer resultLimit = this.resultsDefault;
+		
+		// update for this particular facet search
+		this.facetString = SearchConstants.GXDHT_EXPERIMENT_KEY;
+		this.resultsDefault = 0;
+		this.factetNumberDefault = -1;		// no limit
+		
+		// do the search and process the results
+		SearchResults<GxdHtSample> searchResults = new SearchResults<GxdHtSample>();
+		this.hunt(params, searchResults);
+		
+		// restore hunter's previous state
+		this.facetString = previousFacetString;
+		this.factetNumberDefault = previousFacetLimit;
+		this.resultsDefault = resultLimit;
+		
+		return this.experimentKeys;
+	}
+	
+		
 	/*
 	 * gather any facet-related data from 'rsp' and package it into 'sr'
 	 */
@@ -103,10 +142,11 @@ public class SolrGxdHtSampleHunter extends SolrHunter<GxdHtSample> {
 		}
 
 		logger.debug("this.facetString = " + this.facetString);
-		List<String> facet = new ArrayList<String>();
+		List<String> facet = new ArrayList<String>();			// traditional value-only facet
 
 		for (Count c : rsp.getFacetField(this.facetString).getValues()) {
 			facet.add(c.getName());
+			this.experimentKeys.put(c.getName(), (int) c.getCount());		// value + count facet
 		}
 
 		logger.debug("facets -> "+StringUtils.join(facet,", "));

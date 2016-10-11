@@ -69,7 +69,7 @@ public class SolrGxdHtExperimentHunter extends SolrHunter<GxdHtExperiment> {
 			experiment.setArrayExpressID((String) doc.getFieldValue(GxdHtFields.ARRAYEXPRESS_ID));
 			experiment.setByDefault((Integer) doc.getFieldValue(GxdHtFields.BY_DEFAULT));
 			experiment.setDescription((String) doc.getFieldValue(GxdHtFields.DESCRIPTION));
-			experiment.setExperimentKey((Integer) doc.getFieldValue(GxdHtFields.EXPERIMENT_KEY));
+			experiment.setExperimentKey(Integer.parseInt((String) doc.getFieldValue(GxdHtFields.EXPERIMENT_KEY)));
 			experiment.setGeoID((String) doc.getFieldValue(GxdHtFields.GEO_ID));
 			experiment.setMethod((String) doc.getFieldValue(GxdHtFields.METHOD));
 			experiment.setNote((String) doc.getFieldValue(GxdHtFields.NOTE));

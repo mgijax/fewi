@@ -1,11 +1,24 @@
 package org.jax.mgi.fewi.controller;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jax.mgi.fewi.finder.GxdHtFinder;
 import org.jax.mgi.fewi.forms.GxdHtQueryForm;
+import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
+import org.jax.mgi.fewi.searchUtil.SearchConstants;
+import org.jax.mgi.fewi.searchUtil.SearchParams;
+import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.searchUtil.Sort;
+import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.searchUtil.entities.GxdHtExperiment;
+import org.jax.mgi.fewi.summary.JsonSummaryResponse;
+import org.jax.mgi.shr.fe.indexconstants.GxdHtFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +27,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 /*
@@ -58,13 +72,43 @@ public class GXDHTController {
 		logger.debug("->gxdHtSummary started");
 		logger.debug("queryString: " + request.getQueryString());
 
-		ModelAndView mav = new ModelAndView("gxdht/gxdht_summary");
+		ModelAndView mav = new ModelAndView("gxdht/gxdht_query");
 		mav.addObject("queryString", request.getQueryString());
 		mav.addObject("queryForm", queryForm);
 
 		return mav;
 	}
 
+	@RequestMapping("/json")
+	public @ResponseBody JsonSummaryResponse<GxdHtExperiment> experimentsJson(HttpServletRequest request, @ModelAttribute GxdHtQueryForm query, @ModelAttribute Paginator page) {
+
+		logger.debug("->experimentsJson started");
+
+		// perform query, and pull out the requested objects
+		SearchResults<GxdHtExperiment> searchResults = getSummaryResults(request, query, page);
+		List<GxdHtExperiment> experimentList = searchResults.getResultObjects();
+
+		// create/load the list of SummaryRow wrapper objects
+		List<GxdHtExperiment> summaryRows = new ArrayList<GxdHtExperiment> ();
+		Iterator<GxdHtExperiment> it = experimentList.iterator();
+		while (it.hasNext()) {
+			GxdHtExperiment experiment = it.next();
+			if (experiment == null) {
+				logger.debug("--> Null Object");
+			} else {
+				summaryRows.add(experiment);
+			}
+		}
+
+		// The JSON return object will be serialized to a JSON response.
+		// Client-side JavaScript expects this object
+		JsonSummaryResponse<GxdHtExperiment> jsonResponse = new JsonSummaryResponse<GxdHtExperiment>();
+
+		// place data into JSON response, and return
+		jsonResponse.setSummaryRows(summaryRows);
+		jsonResponse.setTotalCount(searchResults.getTotalCount());
+		return jsonResponse;
+	}
 /*
  * note -- should also do lookup by structure ID
  * 
@@ -110,36 +154,6 @@ public class GXDHTController {
 */
 	
 /*
-	@RequestMapping("/json")
-	public @ResponseBody JsonSummaryResponse<GxdHtSummaryRow> seqSummaryJson(HttpServletRequest request, @ModelAttribute GxdHtQueryForm query, @ModelAttribute Paginator page) {
-
-		logger.debug("->JsonSummaryResponse started");
-
-		// perform query, and pull out the requested objects
-		SearchResults<Marker> searchResults = getSummaryResults(request, query, page);
-		List<Marker> gxdHtList = searchResults.getResultObjects();
-
-		// create/load the list of SummaryRow wrapper objects
-		List<GxdHtSummaryRow> summaryRows = new ArrayList<GxdHtSummaryRow> ();
-		Iterator<Marker> it = gxdHtList.iterator();
-		while (it.hasNext()) {
-			Marker gxdHt = it.next();
-			if (gxdHt == null) {
-				logger.debug("--> Null Object");
-			} else {
-				summaryRows.add(new GxdHtSummaryRow(gxdHt));
-			}
-		}
-
-		// The JSON return object will be serialized to a JSON response.
-		// Client-side JavaScript expects this object
-		JsonSummaryResponse<GxdHtSummaryRow> jsonResponse = new JsonSummaryResponse<GxdHtSummaryRow>();
-
-		// place data into JSON response, and return
-		jsonResponse.setSummaryRows(summaryRows);
-		jsonResponse.setTotalCount(searchResults.getTotalCount());
-		return jsonResponse;
-	}
 */
 
 	/*
@@ -188,18 +202,21 @@ public class GXDHTController {
 	 * This is a convenience method to handle packing the SearchParams object
 	 * and return the SearchResults from the finder.
 	 */
-/*
-	private SearchResults<Marker> getSummaryResults( HttpServletRequest request, @ModelAttribute GxdHtQueryForm query, @ModelAttribute Paginator page){
+	private SearchResults<GxdHtExperiment> getSummaryResults( HttpServletRequest request, @ModelAttribute GxdHtQueryForm query, @ModelAttribute Paginator page){
 
 		SearchParams params = new SearchParams();
 		params.setPaginator(page);
 		params.setSorts(genSorts(request));
 		params.setFilter(genFilters(query));
+		
+		// need to alter this...  should search samples, get distinct experiment IDs and count of matching
+		// samples for each, get experiments, set matching sample count for each experiment, return list
+		// of experiments
 
 		// perform query, return SearchResults 
-		return gxdHtFinder.getGxdHts(params);
+		return gxdHtFinder.getExperiments(params);
 	}
-*/
+
 	/*
 	 * This is a convenience method to parse the facet response from the 
 	 * SearchResults object, inspect it for error conditions, and return a 
@@ -226,10 +243,8 @@ public class GXDHTController {
 	}
 */
 	
-/*
 	// generate the sorts
 	private List<Sort> genSorts(HttpServletRequest request) {
-
 		logger.debug("->genSorts started");
 
 		List<Sort> sorts = new ArrayList<Sort>();
@@ -237,7 +252,7 @@ public class GXDHTController {
 		// retrieve requested sort order; set default if not supplied
 		String sortRequested = request.getParameter("sort");
 		if (sortRequested == null) {
-			sortRequested = SortConstants.GXDHT_SORT;
+			sortRequested = SortConstants.BY_DEFAULT;
 		}
 
 		String dirRequested  = request.getParameter("dir");
@@ -252,30 +267,39 @@ public class GXDHTController {
 		logger.debug ("sort: " + sort.toString());
 		return sorts;
 	}
-*/
 	
-/*
 	// generate the filters
 	private Filter genFilters(GxdHtQueryForm query){
-
 		logger.debug("->genFilters started");
 		logger.debug("QueryForm -> " + query);
-
 
 		// start filter list to add filters to
 		List<Filter> filterList = new ArrayList<Filter>();
 
-		String param1 = query.getParam1();
-		String param2 = query.getParam2();
-
-		//
-		if ((param1 != null) && (!"".equals(param1))) {
-			filterList.add(new Filter (SearchConstants.GXDHT_ID, param1, Filter.Operator.OP_EQUAL));
-		}
-
-		//
-		if ((param2 != null) && (!"".equals(param2))) {
-			filterList.add(new Filter (SearchConstants.GXDHT_ID, param2, Filter.Operator.OP_EQUAL));
+		// text search of title, description, or combined titleDescription field
+		String textSearch = query.getText().trim();
+		if ((textSearch != null) && (textSearch.length() > 0)) {
+			List<String> textSearchScope = query.getTextScope();
+			boolean searchTitle = textSearchScope.contains("Title");
+			boolean searchDescription = textSearchScope.contains("Description");
+			
+			String textField = null;	// which text field to search
+			
+			if (searchTitle && searchDescription) {
+				textField = SearchConstants.GXDHT_TITLE_DESCRIPTION;
+			} else if (searchTitle) {
+				textField = SearchConstants.GXDHT_TITLE;
+			} else if (searchDescription) {
+				textField = SearchConstants.GXDHT_DESCRIPTION;
+			}
+			
+			if (textField != null) {
+				List<Filter> textFilters = new ArrayList<Filter>();
+				for (String token : textSearch.split("[^A-Za-z0-9\\*]")) {
+					textFilters.add(new Filter(textField, token.trim(), Filter.Operator.OP_EQUAL_WILDCARD_ALLOWED));
+				}
+				filterList.add(Filter.and(textFilters));
+			}
 		}
 
 		// if we have filters, collapse them into a single filter
@@ -287,5 +311,4 @@ public class GXDHTController {
 
 		return containerFilter;
 	}
-*/ 
 }

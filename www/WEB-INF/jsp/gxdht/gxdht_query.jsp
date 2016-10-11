@@ -90,13 +90,13 @@ body.yui-skin-sam div#outerGxd {position:relative;}
     </div>
 </div>
 <br clear="all" />
-<div class="summaryControl" style="display:none;">
-<div class="hide">
-<div id="resultbar" class="goldbar">Results</div>
+<div class="summaryControl">
+	<div id="resultbar" class="goldbar">Results</div>
 	<%@ include file="/WEB-INF/jsp/gxdht/gxdht_summary.jsp" %>
+</div>
 
-</div>
-</div>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxdht/gxdht_query.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxdht/gxdht_summary.js"></script>
 
 <script type="text/javascript">
     var fewiurl = "${configBean.FEWI_URL}";
@@ -106,6 +106,7 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 <script type="text/javascript">
 <c:if test="${not empty queryString}">
 var querystring = "${queryString}";
+gs_search();
 </c:if>
 </script>
 

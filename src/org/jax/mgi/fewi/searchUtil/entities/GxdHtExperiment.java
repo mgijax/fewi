@@ -20,6 +20,7 @@ public class GxdHtExperiment
 	private String description;
 	private String note;
 	private Integer byDefault;
+	private Integer matchingSampleCount = 0;
 
 	public Integer getExperimentKey() {
 		return experimentKey;
@@ -86,6 +87,12 @@ public class GxdHtExperiment
 	}
 	public void setByDefault(Integer byDefault) {
 		this.byDefault = byDefault;
+	}
+	public Integer getMatchingSampleCount() {
+		return matchingSampleCount;
+	}
+	public void setMatchingSampleCount(Integer matchingSampleCount) {
+		this.matchingSampleCount = matchingSampleCount;
 	}
 	@Override
 	public String toString() {

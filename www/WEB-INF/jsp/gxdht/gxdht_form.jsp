@@ -105,7 +105,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 </style>
 
 <div id="standard-qf">
-<form:form commandName="queryForm" class="gxdQf">
+<form:form commandName="queryForm" class="gxdQf" method="GET" action="${configBean.FEWI_URL}gxdht/summary">
 <!-- query form table -->
 <table class="pad5 borderedTable" width="100%">
 	<tr class="buttonRow">
