@@ -296,7 +296,11 @@ public class GXDHTController {
 			if (textField != null) {
 				List<Filter> textFilters = new ArrayList<Filter>();
 				for (String token : textSearch.split("[^A-Za-z0-9\\*]")) {
-					textFilters.add(new Filter(textField, token.trim(), Filter.Operator.OP_EQUAL_WILDCARD_ALLOWED));
+					String wcToken = token.trim();
+					if (!wcToken.endsWith("*")) {
+						wcToken += "*";
+					}
+					textFilters.add(new Filter(textField, wcToken, Filter.Operator.OP_EQUAL_WILDCARD_ALLOWED));
 				}
 				filterList.add(Filter.and(textFilters));
 			}
