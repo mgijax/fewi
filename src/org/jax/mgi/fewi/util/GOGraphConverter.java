@@ -121,11 +121,6 @@ public class GOGraphConverter
 		    } else if ("Reference".equals (tagType)) {
 			rep = fewi + "reference/" + id;
 	
-		    // SVG image for GO annotations for a marker
-		    } else if ("GOMarkerSVG".equals (tagType)) {
-			rep = pythonWI + 
-			    	"searches/GOgraphSvg.cgi?type=marker&id=" + id;
-	
 		    // PNG image for a marker's GO annotations
 		    } else if ("GOMarkerImage".equals (tagType)) {
 			rep = imageUrl + "marker/" + id.replace(':', '_') + ".png";
