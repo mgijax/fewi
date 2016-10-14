@@ -51,7 +51,7 @@
 
     <div id="rightcolumn">
         <div class="innertube">
-	    <div id="paginationTop">&nbsp;</div>
+	    <div id="paginationTop" class="paginator">&nbsp;</div>
 		</div>
     </div>
 
@@ -60,4 +60,4 @@
 
 	<div id="resultSummary"></div>
 
-	<div id="paginationBottom">&nbsp;</div>
+	<div id="paginationBottom" class="paginator">&nbsp;</div>

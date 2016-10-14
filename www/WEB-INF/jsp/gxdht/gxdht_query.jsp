@@ -97,6 +97,7 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxdht/gxdht_query.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxdht/gxdht_summary.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/external/jquery.paging.min.js"></script>
 
 <script type="text/javascript">
     var fewiurl = "${configBean.FEWI_URL}";
