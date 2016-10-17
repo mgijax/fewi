@@ -51,7 +51,11 @@
 
     <div id="rightcolumn">
         <div class="innertube">
-	    <div id="paginationTop" class="paginator">&nbsp;</div>
+	    <div id="paginationTop">
+	    	<div id="pageControls" class="paginator"></div>
+	    	<div id="pageLength"></div>
+	    	<div id="pageReport"></div>
+	    </div>
 		</div>
     </div>
 

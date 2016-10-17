@@ -79,10 +79,12 @@ public class GXDHTController {
 		return mav;
 	}
 
-	@RequestMapping("/json")
-	public @ResponseBody JsonSummaryResponse<GxdHtExperiment> experimentsJson(HttpServletRequest request, @ModelAttribute GxdHtQueryForm query, @ModelAttribute Paginator page) {
+//	@RequestMapping("/json")
+	@RequestMapping("/table")
+	public ModelAndView experimentsTable (HttpServletRequest request, @ModelAttribute GxdHtQueryForm query, @ModelAttribute Paginator page) {
+//	public @ResponseBody JsonSummaryResponse<GxdHtExperiment> experimentsJson(HttpServletRequest request, @ModelAttribute GxdHtQueryForm query, @ModelAttribute Paginator page) {
 
-		logger.debug("->experimentsJson started");
+		logger.debug("->experimentsTable started");
 
 		// perform query, and pull out the requested objects
 		SearchResults<GxdHtExperiment> searchResults = getSummaryResults(request, query, page);
@@ -99,7 +101,13 @@ public class GXDHTController {
 				summaryRows.add(experiment);
 			}
 		}
+		
+		ModelAndView mav = new ModelAndView("gxdht/gxdht_summary_table");
+		mav.addObject("experiments", summaryRows);
+		mav.addObject("count", summaryRows.size());
+		return mav;
 
+/*
 		// The JSON return object will be serialized to a JSON response.
 		// Client-side JavaScript expects this object
 		JsonSummaryResponse<GxdHtExperiment> jsonResponse = new JsonSummaryResponse<GxdHtExperiment>();
@@ -108,6 +116,7 @@ public class GXDHTController {
 		jsonResponse.setSummaryRows(summaryRows);
 		jsonResponse.setTotalCount(searchResults.getTotalCount());
 		return jsonResponse;
+*/
 	}
 /*
  * note -- should also do lookup by structure ID

@@ -37,6 +37,28 @@ var updateResultsDiv = function() {
 	$("#resultSummary").html("<img src='" + fewiurl + "assets/images/loading.gif' height='24' width='24'> Searching...");
 	log("added searching message");
 	$.ajax({
+		url: fewiurl + "gxdht/table?" + querystring,	// can take state as param and append here for pagination
+		datatype : "html",
+		success: function(data) {
+			log("successful response");
+
+			// need to pull the initial integer count off the front of the data
+			var lines = data.split('\n');
+			var count = parseInt(lines[0]);
+
+			// remove first line, then merge back into single string
+			lines.splice(0,1);
+			var newtext = '<br/>First ' + count + ' experiment ID(s):<p/>';
+			newtext = newtext + lines.join('\n');
+
+			$("#resultSummary").html(newtext);
+			log("updated div on page");
+			updatePaginator(count, null, updatePaginationParameters);
+			log("updated paginator");
+		}
+	});
+
+/*	$.ajax({
 		url: fewiurl + "gxdht/json?" + querystring,	// can take state as param and append here for pagination
 		datatype : "json",
 		success: function(jsonData) {
@@ -57,6 +79,7 @@ var updateResultsDiv = function() {
 			log("updated paginator");
 		}
 	});
+*/
 };
 
 // update the paginator; assume we will replace the contents of any HTML
