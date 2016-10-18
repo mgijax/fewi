@@ -53,6 +53,25 @@ var updateResultsDiv = function() {
 
 			$("#resultSummary").html(newtext);
 			log("updated div on page");
+			
+			for (var i = 0; i < count; i++) {
+				var sw = "#row" + i + "samplesWrapper";
+				var vw = "#row" + i + "variablesWrapper";
+				var tw = "#row" + i + "typeWrapper";
+				var mw = "#row" + i + "methodWrapper";
+				var sp = "#row" + i + "spacer";
+				
+				if ((sw != null) && (vw != null) && (tw != null) && (mw != null) && (sp != null)) {
+					var height = Math.max($(sw).height(), $(vw).height(), $(tw).height(), $(mw).height());
+					$(sw).height(height);
+					$(vw).height(height);
+					$(tw).height(height);
+					$(mw).height(height);
+					$(sp).height(height);
+				}
+			}
+			log("updated heights");
+			
 			updatePaginator(count, null, updatePaginationParameters);
 			log("updated paginator");
 		}

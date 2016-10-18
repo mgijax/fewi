@@ -1,9 +1,7 @@
 <%@ page import = "org.jax.mgi.fewi.util.FormatHelper" %>
 <%@ page import = "mgi.frontend.datamodel.*" %>
-<%@ page import = "org.jax.mgi.fewi.util.StyleAlternator" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<% StyleAlternator stripe  = (StyleAlternator)request.getAttribute("stripe"); %>
 <%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>Microarray and RNA-Seq Expression Experiment Search</title>
