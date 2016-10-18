@@ -28,11 +28,11 @@ var updatePaginationParameters = function(page, rowsPerPage) {
 	} else {
 		querystring = querystring.replace(/results=[0-9]+/, 'results=' + rowsPerPage);
 	}
-	updateResultsDiv();
+	updateResultsDiv(startIndex, rowsPerPage);
 };
 
 // update the results div
-var updateResultsDiv = function() {
+var updateResultsDiv = function(startIndex, rowsPerPage) {
 	log("entered updateResultsDiv()");
 	$("#resultSummary").html("<img src='" + fewiurl + "assets/images/loading.gif' height='24' width='24'> Searching...");
 	log("added searching message");
@@ -45,10 +45,15 @@ var updateResultsDiv = function() {
 			// need to pull the initial integer count off the front of the data
 			var lines = data.split('\n');
 			var count = parseInt(lines[0]);
+			var totalCount = parseInt(lines[1]);
+			
+			if (count < rowsPerPage) { rowsPerPage = count; }
+			var start = startIndex + 1;
+			var end = startIndex + rowsPerPage;
 
-			// remove first line, then merge back into single string
-			lines.splice(0,1);
-			var newtext = '<br/>First ' + count + ' experiment ID(s):<p/>';
+			// remove first two lines, then merge back into single string
+			lines.splice(0,2);
+			var newtext = '<br/>Showing ' + start + '-' + end + ' (' + count + ') of ' + totalCount + ' experiment(s):<p/>';
 			newtext = newtext + lines.join('\n');
 
 			$("#resultSummary").html(newtext);
@@ -72,7 +77,7 @@ var updateResultsDiv = function() {
 			}
 			log("updated heights");
 			
-			updatePaginator(count, null, updatePaginationParameters);
+			updatePaginator(totalCount, null, updatePaginationParameters);
 			log("updated paginator");
 		}
 	});

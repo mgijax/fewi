@@ -105,6 +105,7 @@ public class GXDHTController {
 		ModelAndView mav = new ModelAndView("gxdht/gxdht_summary_table");
 		mav.addObject("experiments", summaryRows);
 		mav.addObject("count", summaryRows.size());
+		mav.addObject("totalCount", searchResults.getTotalCount());
 		return mav;
 
 /*

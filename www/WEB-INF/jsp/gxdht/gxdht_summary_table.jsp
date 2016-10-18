@@ -10,7 +10,7 @@
 <%@ page import = "java.util.List" %>
 
 <%@ page trimDirectiveWhitespaces="true" %>
-<fewi:count count="${count}" />
+<fewi:count count="${count}" /> <fewi:count count="${totalCount}" />
 <div id="injectedResults">
   <c:forEach var="exp" items="${experiments}" varStatus="status">
     <div id="row${status.index}" class="experimentWrapper ${dataClass.next}">
