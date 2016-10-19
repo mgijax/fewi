@@ -33,6 +33,18 @@ var updatePaginationParameters = function(page, rowsPerPage) {
 
 // update the results div
 var updateResultsDiv = function(startIndex, rowsPerPage) {
+	var xPos = window.scrollX;		// remember page position, so we can return to it
+	var yPos = window.scrollY;
+	
+	var top = $('#paginationTop').position().top;
+	var bottom = $('#paginationBottom').position().top;
+	
+	// if we've scrolled closer to the bottom pagination than the top, assume the user clicked the bottom set and
+	// go back to the top
+	if (Math.abs(top - yPos) > Math.abs(bottom - yPos)) {
+		yPos = $('#resultbar').position().top;
+	}
+	
 	log("entered updateResultsDiv()");
 	$("#resultSummary").html("<img src='" + fewiurl + "assets/images/loading.gif' height='24' width='24'> Searching...");
 	log("added searching message");
@@ -86,6 +98,8 @@ var updateResultsDiv = function(startIndex, rowsPerPage) {
 			updatePageReport(start, end, totalCount, "experiment");
 			updatePaginator(totalCount, null, updatePaginationParameters);
 			log("updated paginator");
+			
+			window.scrollTo(xPos, yPos);
 		}
 	});
 };

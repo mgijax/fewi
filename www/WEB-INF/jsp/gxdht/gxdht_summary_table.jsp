@@ -57,7 +57,7 @@
 	    <div id="row${status.index}methodWrapper" class="detailCellLast">
 	      <div id="row${status.index}methodHeader" class="detailHeading ${headingClass.current}">Method</div>
 	      <div id="row${status.index}method" class="method">${exp.method}
-	      	<c:if test="${not empty exp.note}"><p/>${exp.note}</c:if>
+	      	<c:if test="${not empty exp.note}"><p/>Note: ${exp.note}</c:if>
 	      </div>
 	    </div>
 	  </div>

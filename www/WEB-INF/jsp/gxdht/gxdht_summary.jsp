@@ -2,7 +2,7 @@
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/gxd/gxd_summary.css" />
 
 <style>
-div.headerShade1 { background-color: #EBCA6D; }
+div.headerShade1 { background-color: #F0F0F0; }
 div.dataShade1 { background-color: white; }
 div.headerShade2 { background-color: #E2AC00; }
 div.dataShade2 { background-color: #F0F0F0; }
