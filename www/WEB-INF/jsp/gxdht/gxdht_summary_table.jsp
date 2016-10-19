@@ -26,7 +26,7 @@
 	    <div id="row${status.index}samplesWrapper" class="detailCell">
 	      <div id="row${status.index}samplesHeader" class="detailHeading ${headingClass.next}">Samples</div>
 	      <div id="row${status.index}samples" class="samples">
-	  	  	${exp.sampleCount} samples&nbsp;&nbsp;
+	  	  	<a id="row${status.index}sampleCount" href="javascript:alert('Coming in US95...')">${exp.sampleCount}</a> samples&nbsp;&nbsp;
 	  	  	<a id="row${status.index}button" class="filterButton" href="javascript:alert('Coming in US95...')">View</a>
 	  	  	<br/>
 	  	  	${exp.matchingSampleCount} match the search criteria

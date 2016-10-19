@@ -47,14 +47,20 @@ var updateResultsDiv = function(startIndex, rowsPerPage) {
 			var count = parseInt(lines[0]);
 			var totalCount = parseInt(lines[1]);
 			
+			if ((count == 0) || (totalCount == 0)) {
+				$("#resultSummary").html("No experiments meet your search criteria.");
+				updatePageReport(null, null, null, "experiment");
+				updatePaginator(totalCount, null, updatePaginationParameters);
+				return;
+			}
+			
 			if (count < rowsPerPage) { rowsPerPage = count; }
 			var start = startIndex + 1;
 			var end = startIndex + rowsPerPage;
 
 			// remove first two lines, then merge back into single string
 			lines.splice(0,2);
-			var newtext = '<br/>Showing ' + start + '-' + end + ' (' + count + ') of ' + totalCount + ' experiment(s):<p/>';
-			newtext = newtext + lines.join('\n');
+			var newtext = lines.join('\n');
 
 			$("#resultSummary").html(newtext);
 			log("updated div on page");
@@ -77,33 +83,31 @@ var updateResultsDiv = function(startIndex, rowsPerPage) {
 			}
 			log("updated heights");
 			
+			updatePageReport(start, end, totalCount, "experiment");
 			updatePaginator(totalCount, null, updatePaginationParameters);
 			log("updated paginator");
 		}
 	});
+};
 
-/*	$.ajax({
-		url: fewiurl + "gxdht/json?" + querystring,	// can take state as param and append here for pagination
-		datatype : "json",
-		success: function(jsonData) {
-			// convert the data from JSON to Javascript objects
-			log("successful response");
+// update divs with the pageReport class to show a message about which items are displayed currently
+var updatePageReport = function(start, end, totalCount, item) {
+	if ((start == null) || (end == null) || (totalCount == null) || (item == null)) {
+		$(".pageReport").html("");
+		return;
+	}
 
-			var newtext = "Found " + jsonData['totalCount'] + " experiments with matching samples";
-			newtext = newtext + '<br/>First ' + jsonData['summaryRows'].length + ' experiment ID(s):';
-			
-			for (i in jsonData['summaryRows']) {
-				var expt = jsonData['summaryRows'][i];
-				newtext = newtext + '<br/>' + expt['arrayExpressID'];
-			}
-			
-			$("#resultSummary").html(newtext);
-			log("updated div on page");
-			updatePaginator(parseInt(jsonData['totalCount']), null, updatePaginationParameters);
-			log("updated paginator");
-		}
-	});
-*/
+	var message = "Showing ";
+	if (start == 0) {
+		message = message + item + "s 0 of " + totalCount;
+	} else if (start == end) {
+		message = message + item + " " + start + " of " + totalCount;
+	} else if (start < end) {
+		message = message + item + "s " + start + " - " + end + " of " + totalCount;
+	} else {
+		message = "Searching...";
+	}
+	$(".pageReport").html(message);
 };
 
 // update the paginator; assume we will replace the contents of any HTML
@@ -112,6 +116,11 @@ var updateResultsDiv = function(startIndex, rowsPerPage) {
 var updatePaginator = function(totalCount, pageLimit, callback) {
 	if (instantiatedPaginator) { return; }
 	instantiatedPaginator = true;
+	
+	if (totalCount == 0) {
+		$(".paginator").html("");
+		return;
+	}
 	
 	log('instantiating paginator with ' + totalCount + ' rows');
 	if (totalCount == null) {

@@ -26,6 +26,7 @@ div.spacer { width: 4px; float: left; }
 div.descriptionWrapper { width: 100%; border: 1px solid gray; overflow: auto; }
 div.descriptionTitle { width: 125px; padding-top: 10px; padding-left: 4px; float: left; text-align: left; }
 div.description { margin-left: 130px; text-align: left; padding-right: 4px; }
+#paginationBottom { float: right; margin-right: 20px; text-align: right; }
 </style>
 
 <div id="summary">
@@ -54,11 +55,11 @@ div.description { margin-left: 130px; text-align: left; padding-right: 4px; }
 
     <div id="rightcolumn">
         <div class="innertube">
-	    <div id="paginationTop">
-	    	<div id="pageControls" class="paginator"></div>
-	    	<div id="pageLength"></div>
-	    	<div id="pageReport"></div>
-	    </div>
+	      <div id="paginationTop">
+	    	<div id="pageControlsTop" class="paginator"></div>
+	    	<div id="pageLengthTop" class="pageLength"></div>
+	    	<div id="pageReportTop" class="pageReport"></div>
+	      </div>
 		</div>
     </div>
 
@@ -67,4 +68,8 @@ div.description { margin-left: 130px; text-align: left; padding-right: 4px; }
 
 	<div id="resultSummary"></div>
 
-	<div id="paginationBottom" class="paginator">&nbsp;</div>
+	<div id="paginationBottom">
+		<div id="pageControlsBottom" class="paginator"></div>
+		<div id="pageLengthBottom" class="pageLength"></div>
+		<div id="pageReportBottom" class="pageReport"></div>
+	</div>

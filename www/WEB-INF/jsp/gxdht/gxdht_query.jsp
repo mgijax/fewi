@@ -4,7 +4,7 @@
     pageEncoding="ISO-8859-1"%>
 <%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
-<title>Microarray and RNA-Seq Expression Experiment Search</title>
+<title>Microarray and RNA-Seq Expression Experiment ${pageType}</title>
 <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
@@ -77,7 +77,7 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 <!-- header bar -->
 <div id="titleBarWrapperGxd" userdoc="EXPRESSION_help.shtml">
 	<a href="${configBean.HOMEPAGES_URL}expression.shtml"><img class="gxdLogo" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="75"></a>
-	<span class="titleBarMainTitleGxd" style='display:inline-block; margin-top: 20px;'>Microarray and RNA-Seq Expression Experiment Search</span>
+	<span class="titleBarMainTitleGxd" style='display:inline-block; margin-top: 20px;'>Microarray and RNA-Seq Expression Experiment ${pageType}</span>
 </div>
 
 
