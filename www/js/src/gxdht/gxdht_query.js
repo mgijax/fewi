@@ -60,6 +60,10 @@ var gq_tsTooltips = {
 var gq_reset = function(e) {
 	e.preventDefault();
 
+	// Sex ribbon
+	$('input:radio[name=sex]').prop('checked', false);
+	$('input:radio[name=sex][value=""]').prop('checked', true);
+	
 	// Mutant ribbon
 	$('#mutatedIn').val('');
 	
