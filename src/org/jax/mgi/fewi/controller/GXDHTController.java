@@ -330,6 +330,12 @@ public class GXDHTController {
 			filterList.add(new Filter(SearchConstants.GXDHT_METHOD, method, Filter.Operator.OP_EQUAL));
 		}
 		
+		// search by sex
+		String sex = query.getSex();
+		if ((sex != null) && (sex.length() > 0)) {
+			filterList.add(new Filter(SearchConstants.GXDHT_SEX, sex, Filter.Operator.OP_EQUAL));
+		}
+		
 		// if we have filters, collapse them into a single filter
 		Filter containerFilter = new Filter();
 		if (filterList.size() > 0){

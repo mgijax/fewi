@@ -24,6 +24,7 @@ public class GxdHtQueryForm {
     private String structureID = "";
     private String text = "";
     private List<String> textScope = new ArrayList<String>();
+    private Map<String,String> sexOptions = new LinkedHashMap<String,String>();
     private Map<String,String> textScopeOptions = new LinkedHashMap<String,String>();
     private Map<String,String> methodOptions = new LinkedHashMap<String,String>();
 	private Map<Integer, String> theilerStages = new LinkedHashMap<Integer, String>();
@@ -47,6 +48,11 @@ public class GxdHtQueryForm {
 		age.add(ANY_AGE);
 		theilerStage.add(ANY_STAGE);
 
+		sexOptions.put("Female", "Female");
+		sexOptions.put("Male", "Male");
+		sexOptions.put("Pooled", "Pooled");
+		sexOptions.put("", "All");
+
 		textScopeOptions.put("Title", "In Title");
 		textScopeOptions.put("Description", "In Description");
 		
@@ -58,6 +64,10 @@ public class GxdHtQueryForm {
     //--------------------//
     // accessors
     //--------------------//
+
+	public Map<String,String> getSexOptions() {
+		return sexOptions;
+	}
 
 	public Map<String,String> getMethodOptions() {
 		return methodOptions;

@@ -6,6 +6,12 @@
 		method = request.getParameter("method");
 	}
 	request.setAttribute("method", method);
+
+	String sex = "";
+	if (request.getParameter("sex") != null) {
+		sex = request.getParameter("sex");
+	}
+	request.setAttribute("sex", sex);
 %>
 <style>
 #locations
@@ -137,7 +143,9 @@ span.smallGrey { font-size: 75%; color: #999999; }
 
 	<tr class="stripe1">
 		<td class="cat1Gxd">Sex</td>
-		<td>Coming in US93...</td>
+		<td>
+			<fewi:radio name="sex" idPrefix="sex" items="${queryForm.sexOptions}" value="${sex}" />
+		</td>
 	</tr>
 
  	<tr class="stripe2">
