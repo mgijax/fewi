@@ -335,6 +335,8 @@ public class GXDHTController {
 		if (filterList.size() > 0){
 			containerFilter.setFilterJoinClause(Filter.JoinClause.FC_AND);
 			containerFilter.setNestedFilters(filterList);
+		} else {
+			containerFilter = Filter.range(SearchConstants.GXDHT_EXPERIMENT_KEY, "*", "*");
 		}
 
 		return containerFilter;
