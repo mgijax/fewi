@@ -56,5 +56,20 @@ var gq_tsTooltips = {
 
 /*** functions ***/
 
+// reset the fields on the query form
+var gq_reset = function(e) {
+	e.preventDefault();
+
+	// Mutant ribbon
+	$('#mutatedIn').val('');
+	
+	// Method ribbon
+	$('input:radio[name=method]').prop('checked', false);
+	$('input:radio[name=method][value=""]').prop('checked', true);
+	
+	// Text ribbon
+	$('input:text[name=text]').val('');
+	$('input:checkbox[name=textScope]').prop('checked', true);
+};
 
 log("loaded gxdht_query.js");
