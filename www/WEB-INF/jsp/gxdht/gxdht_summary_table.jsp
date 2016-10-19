@@ -15,8 +15,8 @@
   <c:forEach var="exp" items="${experiments}" varStatus="status">
     <div id="row${status.index}" class="experimentWrapper ${dataClass.next}">
 	  <div id="row${status.index}ids" class="idWrapper ${headingClass.next}">
-		<div id="idLabels" class="idLabels">ArrayExpress:<br/>Geo:</div>
-		<div id="ids" class="ids">${exp.arrayExpressID}<br/>${exp.geoID}</div>
+		<div id="idLabels" class="idLabels">ArrayExpress:<c:if test="${not empty exp.geoID}"><br/>GEO:</c:if></div>
+		<div id="ids" class="ids">${exp.arrayExpressID}<c:if test="${not empty exp.geoID}"><br/>${exp.geoID}</c:if></div>
 		<div id="title" class="title">${exp.title}</div>
 	  </div>
 	  <div id="row${status.index}header" class="header">
@@ -52,10 +52,12 @@
 	      <div id="row${status.index}method" class="method">${exp.method}</div>
 	    </div>
 	  </div>
+	  <c:if test="${not empty exp.description}">
 	  <div id="row${status.index}descriptionWrapper" class="descriptionWrapper ${headingClass.current}">
 	      <div id="row${status.index}descriptionTitle" class="descriptionTitle">Description</div>
 	      <div id="row${status.index}description" class="description">${exp.description}</div>
 	  </div>
+	  </c:if>
     </div> 
   </c:forEach>
 </div>
