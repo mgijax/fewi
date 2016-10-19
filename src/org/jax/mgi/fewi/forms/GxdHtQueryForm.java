@@ -25,7 +25,7 @@ public class GxdHtQueryForm {
     private String text = "";
     private List<String> textScope = new ArrayList<String>();
     private Map<String,String> textScopeOptions = new LinkedHashMap<String,String>();
-
+    private Map<String,String> methodOptions = new LinkedHashMap<String,String>();
 	private Map<Integer, String> theilerStages = new LinkedHashMap<Integer, String>();
 	public static Integer ANY_STAGE = 0;
 
@@ -49,11 +49,19 @@ public class GxdHtQueryForm {
 
 		textScopeOptions.put("Title", "In Title");
 		textScopeOptions.put("Description", "In Description");
+		
+		methodOptions.put("transcription profiling by array", "transcription profiling by array");
+		methodOptions.put("RNA-seq", "RNA-seq");
+		methodOptions.put("", "All");
 	}
 	
     //--------------------//
     // accessors
     //--------------------//
+
+	public Map<String,String> getMethodOptions() {
+		return methodOptions;
+	}
 
 	public Map<String,String> getTextScopeOptions() {
 		return textScopeOptions;

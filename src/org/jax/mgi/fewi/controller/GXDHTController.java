@@ -318,6 +318,12 @@ public class GXDHTController {
 			}
 		}
 
+		// search by method
+		String method = query.getMethod();
+		if ((method != null) && (method.length() > 0)) {
+			filterList.add(new Filter(SearchConstants.GXDHT_METHOD, method, Filter.Operator.OP_EQUAL));
+		}
+		
 		// if we have filters, collapse them into a single filter
 		Filter containerFilter = new Filter();
 		if (filterList.size() > 0){

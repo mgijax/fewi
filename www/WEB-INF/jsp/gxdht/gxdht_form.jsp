@@ -1,5 +1,12 @@
 <!-- jquery library (for the ageStage tab widget) -->
 
+<%
+	String method = "";
+	if (request.getParameter("method") != null) {
+		method = request.getParameter("method");
+	}
+	request.setAttribute("method", method);
+%>
 <style>
 #locations
 {
@@ -139,7 +146,9 @@ span.smallGrey { font-size: 75%; color: #999999; }
 	</tr>
 	<tr class="stripe1">
 		<td class="cat1Gxd">Method</td>
-		<td>Coming in US92...</td>
+		<td>
+			<fewi:radio name="method" idPrefix="method" divider="<br/>" items="${queryForm.methodOptions}" value="${method}" />
+		</td>
 	</tr>
 	<tr class="stripe2">
 		<td class="cat2Gxd">Text</td>
