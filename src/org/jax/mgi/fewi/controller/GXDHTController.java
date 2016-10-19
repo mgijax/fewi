@@ -318,6 +318,12 @@ public class GXDHTController {
 			}
 		}
 
+		// search by mutated-in (gene symbol / ID / synonym)
+		String mutatedIn = query.getMutatedIn();
+		if ((mutatedIn != null) && (mutatedIn.length() > 0)) {
+			filterList.add(new Filter(SearchConstants.GXDHT_MUTATED_GENE, mutatedIn, Filter.Operator.OP_EQUAL));
+		}
+		
 		// search by method
 		String method = query.getMethod();
 		if ((method != null) && (method.length() > 0)) {

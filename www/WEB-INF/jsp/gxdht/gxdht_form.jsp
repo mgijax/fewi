@@ -142,7 +142,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 
  	<tr class="stripe2">
 		<td class="cat2Gxd">Mutant</td>
-		<td>Coming in US94...</td>
+		<td>Samples mutated in <form:input id="mutatedIn" path="mutatedIn" class="formWidth" style="width:135px;"></form:input></td>
 	</tr>
 	<tr class="stripe1">
 		<td class="cat1Gxd">Method</td>
