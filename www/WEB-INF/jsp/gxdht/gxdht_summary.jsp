@@ -10,10 +10,10 @@ div.experimentWrapper { border: 1px solid gray; border-collapse: collapse; margi
 div.idWrapper { border: 1px solid gray; width: 100%; overflow: auto; }
 div.idLabels { width: 100px; text-align: right; float: left; font-weight: bold; }
 div.ids { width: 125px; padding-left: 4px; float: left; text-align: left; }
-div.title { margin-left: 235px; text-align: left; font-weight: bold; }
+div.title { margin-left: 235px; text-align: left; font-weight: bold; border-right: 1px solid gray; }
 div.detailWrapper { border: 1px solid gray; width:100%; overflow: auto; }
 div.detailCell { float: left; text-align: left; border-right: 1px solid gray; }
-div.detailCellLast { text-align: left; padding: 0px 0px 0px 0px; }
+div.detailCellLast { text-align: left; padding: 0px 0px 0px 0px; border-right: 1px solid gray; }
 div.detailHeading { text-align: left; padding: 0px 4px 0px 4px; }
 div.samples { text-align: left; padding: 4px 4px 0px 4px; }
 div.variables { text-align: left; padding: 4px 4px 0px 4px; }
@@ -22,9 +22,9 @@ ul.variables li { padding-top: 0px; margin-left: 18px; }
 div.type { text-align: left; padding: 4px 4px 0px 4px; }
 div.method { text-align: left; padding: 4px 4px 0px 4px; }
 div.spacer { width: 4px; float: left; }
-div.descriptionWrapper { width: 100%; border: 1px solid gray; overflow: auto; }
+div.descriptionWrapper { width: 100%; border-right: 1px solid gray; border-left: 1px solid gray; border-bottom: 1px solid gray; overflow: auto; }
 div.descriptionTitle { width: 125px; padding-top: 10px; padding-left: 4px; float: left; text-align: left; }
-div.description { margin-left: 130px; text-align: left; padding-right: 4px; }
+div.description { margin-left: 130px; text-align: left; padding-right: 4px; border-right: 1px solid gray; }
 #paginationBottom { float: right; margin-right: 20px; text-align: right; }
 a { text-decoration: none; }
 </style>

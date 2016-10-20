@@ -84,6 +84,7 @@ var updateResultsDiv = function(startIndex, rowsPerPage) {
 				var mw = "#row" + i + "methodWrapper";
 				var sp = "#row" + i + "spacer";
 				
+				// synchronize heights of experiment info columns to match the tallest, ensuring uniform right border height
 				if ((sw != null) && (vw != null) && (tw != null) && (mw != null) && (sp != null)) {
 					var height = Math.max($(sw).height(), $(vw).height(), $(tw).height(), $(mw).height());
 					$(sw).height(height);
@@ -91,6 +92,14 @@ var updateResultsDiv = function(startIndex, rowsPerPage) {
 					$(tw).height(height);
 					$(mw).height(height);
 					$(sp).height(height);
+				}
+				
+				// adjust height of title div to ensure right border is tall enough
+				var iw = '#row' + i + 'idWrapper';
+				var ew = '#row' + i + 'title';
+				
+				if ($(iw).height() > $(ew).height()) {
+					$(ew).height($(iw).height());
 				}
 			}
 			log("updated heights");

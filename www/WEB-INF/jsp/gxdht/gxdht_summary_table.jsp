@@ -20,11 +20,11 @@
   	</c:if>
 
     <div id="row${status.index}" class="experimentWrapper ${dataClass.next}">
-	  <div id="row${status.index}ids" class="idWrapper ${headingClass.next}">
-		<div id="idLabels" class="idLabels">ArrayExpress:<c:if test="${not empty geoLink}"><br/>GEO:</c:if></div>
-		<div id="ids" class="ids"><a href="${aeLink}" target="_blank">${exp.arrayExpressID}</a>
+	  <div id="row${status.index}idWrapper" class="idWrapper ${headingClass.next}">
+		<div id="row${status.index}idLabels" class="idLabels">ArrayExpress:<c:if test="${not empty geoLink}"><br/>GEO:</c:if></div>
+		<div id="row${status.index}ids" class="ids"><a href="${aeLink}" target="_blank">${exp.arrayExpressID}</a>
 			<c:if test="${not empty geoLink}"><br/><a href="${geoLink}" target="_blank">${exp.geoID}</a></c:if></div>
-		<div id="title" class="title">${exp.title}</div>
+		<div id="row${status.index}title" class="title">${exp.title}</div>
 	  </div>
 	  <div id="row${status.index}detailWrapper" class="detailWrapper">
 	    <div id="row${status.index}samplesWrapper" class="detailCell">
