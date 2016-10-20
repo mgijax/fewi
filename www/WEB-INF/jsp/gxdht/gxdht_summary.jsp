@@ -26,6 +26,7 @@ div.descriptionWrapper { width: 100%; border: 1px solid gray; overflow: auto; }
 div.descriptionTitle { width: 125px; padding-top: 10px; padding-left: 4px; float: left; text-align: left; }
 div.description { margin-left: 130px; text-align: left; padding-right: 4px; }
 #paginationBottom { float: right; margin-right: 20px; text-align: right; }
+a { text-decoration: none; }
 </style>
 
 <div id="summary">
