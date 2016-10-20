@@ -11,6 +11,7 @@
 /*** functions ***/
 
 var instantiatedPaginator = false;
+var fewiUrl = null;
 
 // update the pagination info in the querystring
 var updatePaginationParameters = function(page, rowsPerPage) {
@@ -101,6 +102,8 @@ var updateResultsDiv = function(startIndex, rowsPerPage) {
 				if ($(iw).height() > $(ew).height()) {
 					$(ew).height($(iw).height());
 				}
+				
+				$('#row' + i + 'sampleCount').addClass('blue');
 			}
 			log("updated heights");
 			
@@ -197,6 +200,20 @@ var gs_search = function() {
 	}
 };
 
+// open a sample popup window
+var gs_samplePopup = function(experimentID) {
+	if (fewiUrl == null) {
+		alert("Need to call gs_setFewiUrl to initialize gxdht_summary.js module");
+		return;
+	}
+    var helpUrl = fewiUrl + 'gxdht/samples/' + experimentID;
+    window.open(helpUrl,'sampleWindow-' + experimentID,'width=1000,height=400,resizable=yes,scrollbars=yes,alwaysRaised=yes');
+};
+
+// initialize this module by passing in the FEWI URL (so the gs_samplePopup function will work)
+var gs_setFewiUrl = function(url) {
+	fewiUrl = url;
+};
 
 /*** to execute on being loaded ***/
 

@@ -23,6 +23,8 @@ public class GxdHtQueryForm {
     private String structure = "";
     private String structureID = "";
     private String text = "";
+    private String arrayExpressID = "";
+    private String experimentKey = "";
     private List<String> textScope = new ArrayList<String>();
     private Map<String,String> sexOptions = new LinkedHashMap<String,String>();
     private Map<String,String> textScopeOptions = new LinkedHashMap<String,String>();
@@ -150,7 +152,23 @@ public class GxdHtQueryForm {
 		this.variable = variable;
 	}
 
-    @Override
+    public String getArrayExpressID() {
+		return arrayExpressID;
+	}
+
+	public void setArrayExpressID(String arrayExpressID) {
+		this.arrayExpressID = arrayExpressID;
+	}
+
+	public String getExperimentKey() {
+		return experimentKey;
+	}
+
+	public void setExperimentKey(String experimentKey) {
+		this.experimentKey = experimentKey;
+	}
+
+	@Override
 	public String toString() {
 		return "GxdHtQueryForm [age=" + age + ", theilerStage=" + theilerStage + ", method=" + method + ", mutatedIn="
 				+ mutatedIn + ", sex=" + sex + ", structure=" + structure + ", structureID=" + structureID + ", text="

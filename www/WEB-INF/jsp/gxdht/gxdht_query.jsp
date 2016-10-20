@@ -103,6 +103,7 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 </script>
 
 <script type="text/javascript">
+gs_setFewiUrl("${configBean.FEWI_URL}");
 $(".gxdQf").on("reset",gq_reset);
 <c:if test="${not empty queryString}">
 var querystring = "${queryString}";

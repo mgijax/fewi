@@ -17,6 +17,7 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.GxdHtExperiment;
+import org.jax.mgi.fewi.searchUtil.entities.GxdHtSample;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.shr.fe.indexconstants.GxdHtFields;
 import org.slf4j.Logger;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /*
  * This controller maps all /gxdht/ uri's
@@ -50,6 +52,7 @@ public class GXDHTController {
 
 	//--- public methods ---//
 
+	// retrieves the query form
 	@RequestMapping(method=RequestMethod.GET)
 	public ModelAndView getQueryForm(HttpServletResponse response) {
 
@@ -67,6 +70,7 @@ public class GXDHTController {
 		return mav;
 	}
 
+	// summary page for results from a query form submission
 	@RequestMapping("/summary")
 	public ModelAndView gxdHtSummary(HttpServletRequest request, @ModelAttribute GxdHtQueryForm queryForm) {
 
@@ -77,6 +81,66 @@ public class GXDHTController {
 		mav.addObject("queryString", request.getQueryString());
 		mav.addObject("queryForm", queryForm);
 		mav.addObject("pageType", "Summary");
+
+		return mav;
+	}
+
+	// popup for samples, given an ArrayExpress experiment ID
+	@RequestMapping(value="/samples/{experimentID:.+}", method = RequestMethod.GET)
+	public ModelAndView gxdHtSamples(@PathVariable("experimentID") String experimentID) {
+		logger.debug("->gxdHtSamples started (ID " + experimentID + ")");
+
+		GxdHtQueryForm query = new GxdHtQueryForm();
+		query.setArrayExpressID(experimentID);
+		
+		// retrieve the experiment -- needed both for display of experiment info and to get the
+		// experiment key that we can use to retrieve the samples
+		
+		SearchParams params = new SearchParams();
+		params.setFilter(genFilters(query));
+		SearchResults<GxdHtExperiment> searchResults = gxdHtFinder.getExperiments(params);
+		List<GxdHtExperiment> experimentList = searchResults.getResultObjects();
+		
+		String error = null;
+		GxdHtExperiment experiment = null;
+		List<GxdHtSample> samples = null;
+		boolean anyNonMouse = false;
+		
+		if (experimentList == null) {
+			error = "Cannot find experiment for ID " + experimentID;
+		} else if (experimentList.size() == 0) {
+			error = "Cannot find experiment for ID " + experimentID;
+		} else if (experimentList.size() > 1) {
+			error = "Multiple experiments found for ID " + experimentID;
+		} else {
+			// retrieve samples for the experiment 
+			experiment = experimentList.get(0);
+			
+			GxdHtQueryForm sampleQF = new GxdHtQueryForm();
+			sampleQF.setExperimentKey(experiment.getExperimentKey().toString());
+
+			SearchParams sampleParams = new SearchParams();
+			sampleParams.setFilter(genFilters(sampleQF));
+			sampleParams.setPageSize(9999999);
+			
+			SearchResults<GxdHtSample> sampleResults = gxdHtFinder.getSamples(sampleParams);
+			samples = sampleResults.getResultObjects();
+			
+			for (GxdHtSample sample : samples) {
+				String organism = sample.getOrganism();
+				if ((organism == null) || !organism.contains("mouse")) {
+					anyNonMouse = true;
+					break;
+				}
+			}
+		}
+
+		ModelAndView mav = new ModelAndView("gxdht/gxdht_samples");
+		mav.addObject("experimentID", experimentID);
+		if (error != null) { mav.addObject("error", error); }
+		if (experiment != null) { mav.addObject("experiment", experiment); }
+		if (samples != null) { mav.addObject("samples", samples); }
+		if (anyNonMouse) { mav.addObject("showOrganism", true); }
 
 		return mav;
 	}
@@ -334,6 +398,18 @@ public class GXDHTController {
 		String sex = query.getSex();
 		if ((sex != null) && (sex.length() > 0)) {
 			filterList.add(new Filter(SearchConstants.GXDHT_SEX, sex, Filter.Operator.OP_EQUAL));
+		}
+		
+		// search by ArrayExpress ID
+		String arrayExpressID = query.getArrayExpressID();
+		if ((arrayExpressID != null) && (arrayExpressID.length() > 0)) {
+			filterList.add(new Filter(SearchConstants.GXDHT_EXPERIMENT_ID, arrayExpressID, Filter.Operator.OP_EQUAL));
+		}
+		
+		// search by experiment key
+		String experimentKey = query.getExperimentKey();
+		if ((experimentKey != null) && (experimentKey.length() > 0)) {
+			filterList.add(new Filter(SearchConstants.GXDHT_EXPERIMENT_KEY, experimentKey, Filter.Operator.OP_EQUAL));
 		}
 		
 		// if we have filters, collapse them into a single filter
