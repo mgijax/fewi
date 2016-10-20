@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -53,6 +54,7 @@ public class GxdHtExperiment
 		this.sampleCount = sampleCount;
 	}
 	public List<String> getExperimentalVariables() {
+		Collections.sort(experimentalVariables);
 		return experimentalVariables;
 	}
 	public void setExperimentalVariables(List<String> experimentalVariables) {
