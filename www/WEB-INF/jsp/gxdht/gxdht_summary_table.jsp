@@ -26,9 +26,6 @@
 			<c:if test="${not empty geoLink}"><br/><a href="${geoLink}" target="_blank">${exp.geoID}</a></c:if></div>
 		<div id="title" class="title">${exp.title}</div>
 	  </div>
-	  <div id="row${status.index}header" class="header">
-	  	Experiment Information
-	  </div>
 	  <div id="row${status.index}detailWrapper" class="detailWrapper">
 	    <div id="row${status.index}samplesWrapper" class="detailCell">
 	      <div id="row${status.index}samplesHeader" class="detailHeading ${headingClass.next}">Samples</div>

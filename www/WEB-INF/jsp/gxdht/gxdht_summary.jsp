@@ -6,12 +6,11 @@ div.headerShade1 { background-color: #F0F0F0; }
 div.dataShade1 { background-color: white; }
 div.headerShade2 { background-color: #E2AC00; }
 div.dataShade2 { background-color: #F0F0F0; }
-div.experimentWrapper { border: 1px solid gray; border-collapse: collapse; margin-bottom: 5px; }
+div.experimentWrapper { border: 1px solid gray; border-collapse: collapse; margin-bottom: 8px; }
 div.idWrapper { border: 1px solid gray; width: 100%; overflow: auto; }
 div.idLabels { width: 100px; text-align: right; float: left; font-weight: bold; }
 div.ids { width: 125px; padding-left: 4px; float: left; text-align: left; }
 div.title { margin-left: 235px; text-align: left; font-weight: bold; }
-div.header { text-align: center; width: 100%; border: 1px solid gray; }
 div.detailWrapper { border: 1px solid gray; width:100%; overflow: auto; }
 div.detailCell { float: left; text-align: left; border-right: 1px solid gray; }
 div.detailCellLast { text-align: left; padding: 0px 0px 0px 0px; }
