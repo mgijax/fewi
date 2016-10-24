@@ -14,16 +14,16 @@ div.title { margin-left: 235px; text-align: left; font-weight: bold; border-righ
 div.detailWrapper { border: 1px solid gray; width:100%; overflow: auto; }
 div.detailCell { float: left; text-align: left; border-right: 1px solid gray; }
 div.detailCellLast { text-align: left; padding: 0px 0px 0px 0px; border-right: 1px solid gray; }
-div.detailHeading { text-align: left; padding: 0px 4px 0px 4px; }
+div.detailHeading { text-align: left; padding: 0px 4px 0px 4px; font-weight: bold; }
 div.samples { text-align: left; padding: 4px 4px 0px 4px; }
 div.variables { text-align: left; padding: 4px 4px 0px 4px; }
-ul.variables { padding-top: 0px; padding: 4px 0px 0px 4px; }
-ul.variables li { padding-top: 0px; margin-left: 18px; }
+ul.variables { padding-top: 0px; }
+ul.variables li { padding-top: 0px; margin-left: 0px; list-style-type: none; }
 div.type { text-align: left; padding: 4px 4px 0px 4px; }
 div.method { text-align: left; padding: 4px 4px 0px 4px; }
 div.spacer { width: 4px; float: left; }
 div.descriptionWrapper { width: 100%; border-right: 1px solid gray; border-left: 1px solid gray; border-bottom: 1px solid gray; overflow: auto; }
-div.descriptionTitle { width: 125px; padding-top: 10px; padding-left: 4px; float: left; text-align: left; }
+div.descriptionTitle { width: 125px; padding-top: 10px; padding-left: 4px; float: left; text-align: left; font-weight: bold; }
 div.description { margin-left: 130px; text-align: left; padding-right: 4px; border-right: 1px solid gray; }
 #paginationBottom { float: right; margin-right: 20px; text-align: right; }
 a { text-decoration: none; }

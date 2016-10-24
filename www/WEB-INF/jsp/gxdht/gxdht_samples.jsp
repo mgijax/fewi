@@ -19,6 +19,7 @@ div.title { margin-left: 235px; text-align: left; font-weight: bold; border-righ
 table { width: 100%; border-spacing: 0px; border-collapse: collapse; }
 th { background-color: #E2AC00; text-align: left; vertical-align: top; border: 1px solid gray; padding: 2px; }
 td { background-color: #F0F0F0; text-align: left; vertical-align: top; border: 1px solid gray; padding: 2px; }
+a { text-decoration: none; }
 </style>
 
 <c:set var="aeLink" value="${fn:replace(externalUrls.ArrayExpressExperiment, '@@@@', experiment.arrayExpressID)}" />
