@@ -61,10 +61,10 @@ a { text-decoration: none; }
   	  	      <c:if test="${not empty showOrganism}"><td>${sample.organism}</td></c:if>
   	          <td>${sample.age}</td>
   	          <td><c:if test="${not empty sample.theilerStage}">TS${sample.theilerStage}:</c:if> ${sample.structureTerm}</td>
-  	          <td>${sample.geneticBackground}</td>
-  	          <td>${sample.mutantAlleles}</td>
+  	          <td><fewi:super value="${sample.geneticBackground}" /></td>
+  	          <td><fewi:allelePairs value="${sample.mutantAlleles}" noLink="true" /></td>
   	          <td>${sample.sex}</td>
-  	          <td>${sample.note}</td>
+  	          <td><fewi:super value="${sample.note}" /></td>
   	        </tr>
   	      </c:forEach>
   	    </table>
