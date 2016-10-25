@@ -11,6 +11,8 @@ import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.searchUtil.Sort;
+import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.GxdHtExperiment;
 import org.jax.mgi.fewi.searchUtil.entities.GxdHtSample;
 import org.jax.mgi.shr.fe.indexconstants.GxdHtFields;
@@ -84,6 +86,11 @@ public class GxdHtFinder {
 
 		// result object to be returned
 		SearchResults<GxdHtSample> searchResults = new SearchResults<GxdHtSample>();
+
+		// enforce the default sort
+		List<Sort> sorts = new ArrayList<Sort>();
+		sorts.add(Sort.asc(SortConstants.BY_DEFAULT));
+		searchParams.setSorts(sorts);
 
 		// ask the hunter to identify which objects to return
 		gxdHtSampleHunter.hunt(searchParams, searchResults);
