@@ -181,6 +181,7 @@ public class SearchConstants {
 
 	// GXD high-throughput expression data
 	public static final String GXDHT_EXPERIMENT_KEY = "experimentKey";
+	public static final String GXDHT_SAMPLE_KEY = "sampleKey";
 	public static final String GXDHT_EXPERIMENT_ID = "experimentID";
 	public static final String GXDHT_STRUCTURE_SEARCH = "structureSearch";
 	public static final String GXDHT_SEX = "sex";

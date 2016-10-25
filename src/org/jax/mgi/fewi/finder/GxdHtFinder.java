@@ -3,6 +3,7 @@ package org.jax.mgi.fewi.finder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.jax.mgi.fewi.hunter.SolrGxdHtExperimentHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdHtSampleHunter;
@@ -89,5 +90,11 @@ public class GxdHtFinder {
 		logger.debug("->hunter found " + searchResults.getResultObjects().size() + " samples");
 
 		return searchResults;
+	}
+	
+	public Set<String> getMatchingSampleKeys(SearchParams searchParams) {
+		logger.debug("->getMatchingSampleKeys");
+		
+		return gxdHtSampleHunter.getSampleKeys(searchParams);
 	}
 }

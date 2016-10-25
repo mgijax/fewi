@@ -3,6 +3,7 @@ package org.jax.mgi.fewi.controller;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -87,7 +88,7 @@ public class GXDHTController {
 
 	// popup for samples, given an ArrayExpress experiment ID
 	@RequestMapping(value="/samples/{experimentID:.+}", method = RequestMethod.GET)
-	public ModelAndView gxdHtSamples(@PathVariable("experimentID") String experimentID) {
+	public ModelAndView gxdHtSamples(@PathVariable("experimentID") String experimentID, @ModelAttribute GxdHtQueryForm queryForm) {
 		logger.debug("->gxdHtSamples started (ID " + experimentID + ")");
 
 		GxdHtQueryForm query = new GxdHtQueryForm();
@@ -100,7 +101,7 @@ public class GXDHTController {
 		params.setFilter(genFilters(query));
 		SearchResults<GxdHtExperiment> searchResults = gxdHtFinder.getExperiments(params);
 		List<GxdHtExperiment> experimentList = searchResults.getResultObjects();
-		
+
 		String error = null;
 		GxdHtExperiment experiment = null;
 		List<GxdHtSample> samples = null;
@@ -133,6 +134,26 @@ public class GXDHTController {
 					break;
 				}
 			}
+		}
+
+		// if we found any samples, get the matching ones and float them to the top
+		if ((samples != null) && (samples.size() > 0)) {
+			SearchParams sampleParams = new SearchParams();
+			sampleParams.setFilter(genFilters(queryForm));
+			Set<String> matchingSampleKeys = gxdHtFinder.getMatchingSampleKeys(sampleParams);
+
+			List<GxdHtSample> matches = new ArrayList<GxdHtSample>();
+			List<GxdHtSample> nonMatches = new ArrayList<GxdHtSample>();
+			
+			for (GxdHtSample sample : samples) {
+				if (matchingSampleKeys.contains(sample.getSampleKey().toString())) {
+					matches.add(sample);
+				} else {
+					nonMatches.add(sample);
+				}
+			}
+			matches.addAll(nonMatches);
+			samples = matches;
 		}
 
 		ModelAndView mav = new ModelAndView("gxdht/gxdht_samples");

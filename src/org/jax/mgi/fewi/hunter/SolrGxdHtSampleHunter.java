@@ -2,8 +2,10 @@ package org.jax.mgi.fewi.hunter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
@@ -27,6 +29,12 @@ public class SolrGxdHtSampleHunter extends SolrHunter<GxdHtSample> {
 
 	// mapping from experiment key to count of matching experiments
 	private Map<String, Integer> experimentKeys = null;
+	
+	// set of sample keys that match the search criteria
+	private Set<String> sampleKeys = null;
+	
+	private boolean gatherExperimentKeys = false;	// true to populate experimentKeys
+	private boolean gatherSampleKeys = false;		// true to populate sampleKeys
 	
     /***
      * The constructor sets up this hunter so that it is specific to finding
@@ -100,6 +108,39 @@ public class SolrGxdHtSampleHunter extends SolrHunter<GxdHtSample> {
 		this.packFacetData(rsp, sr);
 	}
 
+	/* build and return a Set of sample keys that match the search parameters
+	 */
+	public Set<String> getSampleKeys(SearchParams params) {
+		this.sampleKeys = new HashSet<String>();
+		
+		/* We need to use the set of search parameters to query Solr and collect the sample keys
+		 * as facets (to avoid having to return whole documents).
+		 */
+		this.gatherSampleKeys = true;
+		
+		// preserve hunter's previous state
+		String previousFacetString = this.facetString;
+		Integer previousFacetLimit = this.factetNumberDefault;
+		Integer resultLimit = this.resultsDefault;
+		
+		// update for this particular facet search
+		this.facetString = SearchConstants.GXDHT_SAMPLE_KEY;
+		this.resultsDefault = 0;
+		this.factetNumberDefault = -1;		// no limit
+		
+		// do the search and process the results
+		SearchResults<GxdHtSample> searchResults = new SearchResults<GxdHtSample>();
+		this.hunt(params, searchResults);
+		
+		// restore hunter's previous state
+		this.facetString = previousFacetString;
+		this.factetNumberDefault = previousFacetLimit;
+		this.resultsDefault = resultLimit;
+		
+		this.gatherSampleKeys = false;
+		return this.sampleKeys;
+	}
+	
 	/* build and return a map of experiment keys and their matching sample counts
 	 */
 	public Map<String, Integer> getExperimentMap(SearchParams params) {
@@ -109,6 +150,7 @@ public class SolrGxdHtSampleHunter extends SolrHunter<GxdHtSample> {
 		 * as facets.  The count of matching samples for each is the count for each facet.  We do not
 		 * need to return any sample records for this search, only the facets.
 		 */
+		this.gatherExperimentKeys = true;
 		
 		// preserve hunter's previous state
 		String previousFacetString = this.facetString;
@@ -129,6 +171,7 @@ public class SolrGxdHtSampleHunter extends SolrHunter<GxdHtSample> {
 		this.factetNumberDefault = previousFacetLimit;
 		this.resultsDefault = resultLimit;
 		
+		this.gatherExperimentKeys = false;
 		return this.experimentKeys;
 	}
 	
@@ -146,7 +189,12 @@ public class SolrGxdHtSampleHunter extends SolrHunter<GxdHtSample> {
 
 		for (Count c : rsp.getFacetField(this.facetString).getValues()) {
 			facet.add(c.getName());
-			this.experimentKeys.put(c.getName(), (int) c.getCount());		// value + count facet
+
+			if (this.gatherExperimentKeys) {
+				this.experimentKeys.put(c.getName(), (int) c.getCount());		// value + count facet
+			} else if (this.gatherSampleKeys) {
+				this.sampleKeys.add(c.getName());
+			}
 		}
 
 		logger.debug("facets -> "+StringUtils.join(facet,", "));

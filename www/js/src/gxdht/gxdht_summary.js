@@ -206,8 +206,8 @@ var gs_samplePopup = function(experimentID) {
 		alert("Need to call gs_setFewiUrl to initialize gxdht_summary.js module");
 		return;
 	}
-    var helpUrl = fewiUrl + 'gxdht/samples/' + experimentID;
-    window.open(helpUrl,'sampleWindow-' + experimentID,'width=1000,height=400,resizable=yes,scrollbars=yes,alwaysRaised=yes');
+    var sampleUrl = fewiUrl + 'gxdht/samples/' + experimentID + '?' + querystring;
+    window.open(sampleUrl,'sampleWindow-' + experimentID,'width=1000,height=400,resizable=yes,scrollbars=yes,alwaysRaised=yes');
 };
 
 // initialize this module by passing in the FEWI URL (so the gs_samplePopup function will work)
