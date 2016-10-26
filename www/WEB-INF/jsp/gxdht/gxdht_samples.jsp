@@ -19,6 +19,7 @@ div.title { margin-left: 235px; text-align: left; font-weight: bold; border-righ
 table { width: 100%; border-spacing: 0px; border-collapse: collapse; }
 th { background-color: #E2AC00; text-align: left; vertical-align: top; border: 1px solid gray; padding: 2px; }
 td { background-color: #F0F0F0; text-align: left; vertical-align: top; border: 1px solid gray; padding: 2px; }
+td.center { text-align: center; }
 a { text-decoration: none; }
 </style>
 
@@ -59,11 +60,16 @@ a { text-decoration: none; }
   	        <tr>
   	          <td>${sample.name}</td>
   	  	      <c:if test="${not empty showOrganism}"><td>${sample.organism}</td></c:if>
-  	          <td>${sample.age}</td>
-  	          <td><c:if test="${not empty sample.theilerStage}">TS${sample.theilerStage}:</c:if> ${sample.structureTerm}</td>
-  	          <td><fewi:super value="${sample.geneticBackground}" /></td>
-  	          <td><fewi:allelePairs value="${sample.mutantAlleles}" noLink="true" /></td>
-  	          <td>${sample.sex}</td>
+  	  	      <c:if test="${sample.isMouse}">
+  	          	<td>${sample.age}</td>
+  	          	<td><c:if test="${not empty sample.theilerStage}">TS${sample.theilerStage}:</c:if> ${sample.structureTerm}</td>
+  	          	<td><fewi:super value="${sample.geneticBackground}" /></td>
+  	          	<td><fewi:allelePairs value="${sample.mutantAlleles}" noLink="true" /></td>
+  	          	<td>${sample.sex}</td>
+  	          </c:if>
+  	  	      <c:if test="${not sample.isMouse}">
+				<td colspan="5" class="center">Non-mouse sample; no data stored</td>
+  	          </c:if>
   	          <td><fewi:super value="${sample.note}" /></td>
   	        </tr>
   	      </c:forEach>
