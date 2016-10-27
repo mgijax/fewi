@@ -61,7 +61,7 @@
 	  <c:if test="${not empty exp.description}">
 	  <div id="row${status.index}descriptionWrapper" class="descriptionWrapper ${headingClass.current}">
 	      <div id="row${status.index}descriptionTitle" class="descriptionTitle">Description</div>
-	      <div id="row${status.index}description" class="description">${exp.description}</div>
+	      <div id="row${status.index}description" class="description"><fewi:httpToLink value="${exp.description}"/></div>
 	  </div>
 	  </c:if>
     </div> 
