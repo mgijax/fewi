@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.test.base;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -230,17 +231,33 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     }
 
     // ------------------ location queries --------------------
+    /*
+     * Multiple locations can be comma separated
+     */
     public List<String> getSymbolsByMouseLocation(String locations) throws Exception
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.addLocation(locations, "mouse");
+    	mq.setOperator("OR");
+    	List<String> locationTokens = Arrays.asList(locations.split(","));
+    	for(String location : locationTokens) {
+
+        	mq.addLocation(location, "mouse");
+    	}
     	return getGeneSymbols(mq);
     }
     
+    /*
+     * Multiple locations can be comma separated
+     */
     public List<String> getSymbolsByHumanLocation(String locations) throws Exception
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.addLocation(locations, "human");
+    	mq.setOperator("OR");
+    	List<String> locationTokens = Arrays.asList(locations.split(","));
+    	for(String location : locationTokens) {
+
+        	mq.addLocation(location, "human");
+    	}
     	return getGeneSymbols(mq);
     }
     

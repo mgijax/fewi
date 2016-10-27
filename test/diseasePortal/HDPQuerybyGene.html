@@ -472,12 +472,12 @@
 				</li>
 	    		</ol>
     		</li>
-    		<li>User should not be able to bring back genes of marker types 'BAC/YAC end' or 'DNA Segment', unless they have data.
+    		<li>User should not be able to bring back genes of marker types 'BAC/YAC end' or 'DNA Segment'.
     		<ol>
     			<li>Query by 'BAC/YAC end' <b concordion:set="#geneId">316G10SP6</b> should not return gene <b cc:assertNoResultsContain="getSymbolsByGene(#geneId)">316G10SP6</b></li>
     			<li>Query by 'DNA Segment' <b concordion:set="#geneId">D1Mit1001</b> should not return gene <b cc:assertNoResultsContain="getSymbolsByGene(#geneId)">D1Mit1001</b></li>
-    			<li>Query by 'DNA Segment' <b concordion:set="#geneId">D17Aus9</b> <i>should</i> return gene <b cc:assertResultsContain="getSymbolsByGene(#geneId)">D17Aus9</b>,
-    				because it has phenotype data in this genotype <a href="http://scrumdog.informatics.jax.org/allele/genoview/">MGI:3719867</a></li>
+    			<li>Query by 'DNA Segment' <b concordion:set="#geneId">D17Aus9</b> should not return gene <b cc:assertNoResultsContain="getSymbolsByGene(#geneId)">D17Aus9</b>,
+    				even though it has phenotype data in this genotype <a href="http://scrumdog.informatics.jax.org/allele/genoview/">MGI:3719867</a></li>
 	    		</ol>
     		</li>
 		</ol>

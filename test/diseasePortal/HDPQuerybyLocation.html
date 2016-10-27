@@ -174,7 +174,7 @@
     		</li>
     		<li>multiple coordinates can be entered at once
     		<ol>
-    			<li>Query for mouse locations <b concordion:set="#mouseLoc">Chr11:105967945,ChrX:164188420,Chr4:40143081 Chr13:24831517</b></li>
+    			<li>Query for mouse locations <b concordion:set="#mouseLoc">Chr11:105967945,ChrX:164188420,Chr4:40143081,Chr13:24831517</b></li>
                 <li>Verify that following genes are returned:
                 <table cc:verifySupersetOf="#symbol : getSymbolsByMouseLocation(#mouseLoc)">
                 	<tr><th concordion:assertEquals="#symbol">Gene symbol</th><th>Actual Region</th></tr>
