@@ -61,6 +61,9 @@ var gq_tsTooltips = {
 var gq_reset = function(e) {
 	e.preventDefault();
 
+	// structure ribbon
+	$('input:text[name=structure]').val('');
+	
 	// Sex ribbon
 	$('input:radio[name=sex]').prop('checked', false);
 	$('input:radio[name=sex][value=""]').prop('checked', true);
