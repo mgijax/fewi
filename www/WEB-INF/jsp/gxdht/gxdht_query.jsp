@@ -6,6 +6,7 @@
 
 <title>Microarray and RNA-Seq Expression Experiment ${pageType}</title>
 <meta http-equiv="X-UA-Compatible" content="chrome=1">
+<link rel="stylesheet" type="text/css" href="${configBean.WEBSHARE_URL}css/jquery-ui-1.10.2.custom.min.css" />
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
@@ -45,6 +46,16 @@ td.yui-dt-col-assayID div.yui-dt-liner span {font-size: 75%;}
 	color:#005;
 	border:2px solid #005;
 }
+
+.ui-autocomplete {
+	max-height: 250px;
+	overflow-y: auto;
+	/* prevent horizontal scrollbar */
+	overflow-x: hidden;
+	font-size:90%;
+}
+.ui-menu .ui-menu-item a { padding: 0px; line-height: 1; }
+ul.ui-autocomplete { padding: 0px; }
 </style>
 <!--[if IE]>
 <style>

@@ -433,6 +433,12 @@ public class GXDHTController {
 			filterList.add(new Filter(SearchConstants.GXDHT_EXPERIMENT_KEY, experimentKey, Filter.Operator.OP_EQUAL));
 		}
 		
+		// search by structure
+		String structure = query.getStructure();
+		if ((structure != null) && (structure.length() > 0)) {
+			filterList.add(new Filter(SearchConstants.GXDHT_STRUCTURE_SEARCH, structure.replaceAll(" ", "+"), Filter.Operator.OP_EQUAL));
+		}
+		
 		// if we have filters, collapse them into a single filter
 		Filter containerFilter = new Filter();
 		if (filterList.size() > 0){

@@ -13,6 +13,7 @@ public class EmapaACResult implements UniqueableObject
 	private String queryText;
 	private boolean isStrictSynonym;
 	private boolean hasCre=false;
+	private boolean hasGxdHT=false;
 	private String startStage;
 	private String endStage;
 	private String accID;
@@ -67,6 +68,12 @@ public class EmapaACResult implements UniqueableObject
 	{
 		this.isStrictSynonym=isStrictSynonym;
 	}
+	public boolean getHasGxdHT() {
+		return hasGxdHT;
+	}
+	public void setHasGxdHT(boolean hasGxdHT) {
+		this.hasGxdHT = hasGxdHT; 
+	} 
 	public boolean getHasCre()
 	{
 		return hasCre;

@@ -172,7 +172,7 @@ public class GxdHtQueryForm {
 	public String toString() {
 		return "GxdHtQueryForm [age=" + age + ", theilerStage=" + theilerStage + ", method=" + method + ", mutatedIn="
 				+ mutatedIn + ", sex=" + sex + ", structure=" + structure + ", structureID=" + structureID + ", text="
-				+ text + ", textScope=" + textScope + ", theilerStages=" + theilerStages + ", ages=" + ages + "]";
+				+ text + ", textScope=" + textScope + "]";
 	}
 
     //--- private methods ---//

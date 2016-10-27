@@ -21,6 +21,7 @@ function log(msg) {
 /*** module-level variables ***/
 
 var gq_qfVisible = false;		// is the form visible? (true = yes, false = no)
+var gq_disableColor = "#CCC";	// color to use for disabled structures
 
 //GXD tooltips for Theiler Stage
 var gq_tsTooltips = {
@@ -75,5 +76,45 @@ var gq_reset = function(e) {
 	$('input:text[name=text]').val('');
 	$('input:checkbox[name=textScope]').prop('checked', true);
 };
+
+//var gq_structureUrl = fewiUrl + "autocomplete/structure?query=";	// URL for structure autocomplete
+// wire in the structure autocomplete (liberally copied from recombinase_form.js)
+$(function() {
+    var structureAC = $( "#structureAC" ).autocomplete({
+	source: function( request, response ) {
+		$.ajax({
+			url: fewiUrl + "autocomplete/structure?query=" + request.term,
+			dataType: "json",
+			success: function( data ) {
+				response($.map(data["resultObjects"], function( item ) {
+					return {label: item.synonym, hasGxdHT: item.hasGxdHT,
+						isStrictSynonym: item.isStrictSynonym,
+						original: item.structure};
+				}));
+			}
+		});
+	},
+	minLength: 1
+    }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+	var value = item.label;
+	if (item.isStrictSynonym)
+	{
+		var synonymColor = item.hasCre ? "#222" : gq_disableColor;
+		value += "<span style=\"color:"+synonymColor+"; font-size:0.9em; font-style:normal;\">[<span style=\"font-size:0.8em;\">syn. of</span> "+item.original+"]</span> ";
+	}
+	if (item.hasGxdHT)
+	{
+		return $('<li></li>')
+			.data("item.autocomplete",item)
+			.append("<a>" + value + "</a>")
+			.appendTo(ul);
+	}
+	// adding the item this way makes it disabled
+	return $('<li class="ui-menu-item disabled" style="color:#CCC;"></li>')
+		.data("item.autocomplete", item)
+		.append('<span>'+value+'</span>')
+		.appendTo(ul);
+    };
+});
 
 log("loaded gxdht_query.js");

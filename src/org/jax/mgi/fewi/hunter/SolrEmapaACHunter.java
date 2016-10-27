@@ -71,25 +71,20 @@ public class SolrEmapaACHunter extends SolrHunter<EmapaACResult>
         {
 
             // Set the result object
-            String structure = (String) doc.getFieldValue(
-		IndexConstants.STRUCTUREAC_STRUCTURE);
-            String synonym = (String) doc.getFieldValue(
-		IndexConstants.STRUCTUREAC_SYNONYM);
-            boolean isStrictSynonym = (Boolean) doc.getFieldValue(
-		IndexConstants.STRUCTUREAC_IS_STRICT_SYNONYM);
-            boolean hasCre = (Boolean) doc.getFieldValue(
-		IndexConstants.STRUCTUREAC_HAS_CRE);
-	    String startStage = (String) doc.getFieldValue(
-		IndexConstants.GXD_START_STAGE);
-	    String endStage = (String) doc.getFieldValue(
-		IndexConstants.GXD_END_STAGE);
-	    String accID = (String) doc.getFieldValue(IndexConstants.ACC_ID);
+            String structure = (String) doc.getFieldValue(IndexConstants.STRUCTUREAC_STRUCTURE);
+            String synonym = (String) doc.getFieldValue(IndexConstants.STRUCTUREAC_SYNONYM);
+            boolean isStrictSynonym = (Boolean) doc.getFieldValue(IndexConstants.STRUCTUREAC_IS_STRICT_SYNONYM);
+            boolean hasCre = (Boolean) doc.getFieldValue(IndexConstants.STRUCTUREAC_HAS_CRE);
+            boolean hasGxdHT = (Boolean) doc.getFieldValue(IndexConstants.STRUCTUREAC_HAS_GXDHT);
+            String startStage = (String) doc.getFieldValue(IndexConstants.GXD_START_STAGE);
+            String endStage = (String) doc.getFieldValue(IndexConstants.GXD_END_STAGE);
+            String accID = (String) doc.getFieldValue(IndexConstants.ACC_ID);
 
-            EmapaACResult resultObject = new EmapaACResult (structure,
-		synonym, isStrictSynonym, hasCre);
-	    resultObject.setStartStage(startStage);
-	    resultObject.setEndStage(endStage);
-	    resultObject.setAccID(accID);
+            EmapaACResult resultObject = new EmapaACResult (structure, synonym, isStrictSynonym, hasCre);
+            resultObject.setStartStage(startStage);
+            resultObject.setEndStage(endStage);
+            resultObject.setAccID(accID);
+            resultObject.setHasGxdHT(hasGxdHT);
 
             // Add result to SearchResults
             sr.addResultObjects(resultObject);

@@ -133,7 +133,10 @@ span.smallGrey { font-size: 75%; color: #999999; }
 
 	<tr class="stripe1">
 		<td class="cat1Gxd">Anatomical<br/>structure</td>
-		<td>Coming in US96...</td>
+		<td><input type="text" size="40" name="structure" id="structureAC"
+			placeholder="any anatomical structure"
+			value="<c:out value="${queryForm.structure}"/>" />
+		</td>
 	</tr>
 
  	<tr class="stripe2">
