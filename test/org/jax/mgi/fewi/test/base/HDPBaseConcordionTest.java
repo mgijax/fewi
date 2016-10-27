@@ -140,16 +140,16 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     {	
     	return getTermIdsByDiseaseId(phenotypeId);
     }
-/*
-    public Integer getGeneCountByPhenotype(String phenotype) throws Exception
+
+    public Integer getGeneCountByPhenotypeId(String phenotype) throws Exception
     //klf added on 7/30/2013 modifying from getGeneCountByDisease above
     {	
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setPhenotypes(phenotype);
-    	SearchResults<SolrHdpMarker> markers = mq.getGenes();
-    	return markers.getTotalCount();
+    	mq.addTermIdClause(phenotype);
+    	List<SolrHdpMarker> markers = mq.getGenes();
+    	return markers.size();
     }
-*/  
+  
     // returns <br/> delimited string
     public String getMarkerDiseaseByPhenotypeSymbol(String phenotype,String symbol) throws Exception
     {

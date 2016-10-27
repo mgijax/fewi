@@ -205,13 +205,13 @@ tr.gray td {background-color:#EEEEEE;}
 
     		<li>Test "alternate ID" for MP term. Both Alertnate MP ID and Fyler ID (these are human synonym IDs).
     			<ol>
-    			<li>Open The Disease Portal query form and search for <b concordion:execute="#count = getGeneCountByPhenotype(#TEXT)">MP:0000283</b></li>
+    			<li>Open The Disease Portal query form and search for <b concordion:execute="#count = getGeneCountByPhenotypeId(#TEXT)">MP:0000283</b></li>
             	<li> Verify it returns the same count of genes as <b concordion:set="#phenoId">MP:0000284</b> (the primary ID) does, 
-            		which is <b cc:assertEquals="getGeneCountByPhenotype(#phenoId)"><b concordion:echo="#count"></b></b> genes. 
+            		which is <b cc:assertEquals="getGeneCountByPhenotypeId(#phenoId)"><b concordion:echo="#count"></b></b> genes. 
            		</li>
-    			<li>Open The Disease Portal query form and search for <b concordion:execute="#count = getGeneCountByPhenotype(#TEXT)">Fyler:0700</b></li>
+    			<li>Open The Disease Portal query form and search for <b concordion:execute="#count = getGeneCountByPhenotypeId(#TEXT)">Fyler:0700</b></li>
             	<li> Verify it returns the same count of genes as <b concordion:set="#phenoId">MP:0011665</b> (the primary ID) does, 
-            		which is <b cc:assertEquals="getGeneCountByPhenotype(#phenoId)"><b concordion:echo="#count"></b></b> genes. 
+            		which is <b cc:assertEquals="getGeneCountByPhenotypeId(#phenoId)"><b concordion:echo="#count"></b></b> genes. 
            		</li>
     			</ol>
     		</li>
