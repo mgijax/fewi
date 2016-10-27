@@ -94,13 +94,9 @@ tr.gray td {background-color:#EEEEEE;}
                 	<tr><td>OMIM:605552</td><td>Abdominal Obesity-Metabolic Syndrome</td><td>contained in name</td></tr>
                 	<tr><td>OMIM:265050</td><td>3mc Syndrome 2; 3MC2</td><td>synonym:  Oculo-Skeletal-Abdominal Syndrome</td></tr>
                 	<tr><td>OMIM:100070</td><td>Aortic Aneurysm, Familial Abdominal, 1; AAA1</td><td>contained in name</td></tr>
-                	<tr><td>OMIM:609782</td><td>Aortic Aneurysm, Familial Abdominal, 2; AAA2</td><td>contained in name</td></tr>
-                	<tr><td>OMIM:611891</td><td>Aortic Aneurysm, Familial Abdominal, 3; AAA3</td><td>contained in name</td></tr>
-                	<tr><td>OMIM:614375</td><td>Aortic Aneurysm, Familial Abdominal, 4; AAA4</td><td>contained in name</td></tr>
                 	<tr><td>OMIM:226100</td><td>Endocardial Fibroelastosis and Coarctation of Abdominal Aorta</td><td>contained in name</td></tr>
                 	<tr><td>OMIM:182212</td><td>Shprintzen-Goldberg Craniosynostosis Syndrome; SGS</td><td>synonym: Craniosynostosis with Arachnodactyly and Abdominal Hernias</td></tr>
                 	<tr><td>OMIM:100100</td><td>Abdominal Muscles, Absence of, with Urinary Tract Abnormality and Cryptorchidism</td><td>contained in name</td></tr>
-                	<tr><td>OMIM:260570</td><td>Pelger-Huet-Like Anomaly and Episodic Fever with Abdominal Pain</td><td>contained in name</td></tr>
                 	</table>
                 </li>
                 
@@ -115,7 +111,6 @@ tr.gray td {background-color:#EEEEEE;}
                 	<table cc:verifySupersetOf="#termId : getTermIdsByDisease(#disease)">
                 	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th><th>Why it should have matched</th></tr>
                 	<tr><td>OMIM:556500</td><td>Parkinson Disease, Mitochondrial</td><td>contained in name</td></tr>
-                	<tr><td>OMIM:614203</td><td>Parkinson Disease 17; PARK17</td><td>contained in name</td></tr>
                 	<tr><td>OMIM:194200</td><td>Wolff-Parkinson-White Syndrome</td><td>contained in name</td></tr>
                 	<tr><td>OMIM:606693</td><td>Kufor-Rakeb Syndrome; KRS</td><td>has synonym "Parkinson Disease 9, Autosomal Recessive; PARK9"</td></tr>
                 	</table>
@@ -196,7 +191,7 @@ tr.gray td {background-color:#EEEEEE;}
     		
     		<li>Querying for a disease with no models still brings back the disease.
     		<ol>
-                <li>Query by Acne, Adult <b concordion:set="#disease">604324</b></li>
+                <li>Query by Acne, Adult <b concordion:set="#disease">OMIM:604324</b></li>
                 <li>Should return ONLY one disease:
                 <table cc:verifyRowsUnordered="#termId : getTermIdsByDiseaseId(#disease)">
                 	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
@@ -314,7 +309,9 @@ tr.gray td {background-color:#EEEEEE;}
     		</table>
     		</li>
     		<ol>
-    			<li>Query for OMIM gene records: <b concordion:set="#disease">+141900 +141800 +142830 #300194 #300100 #300676 #300699 #301835 %300605 %300660 %300614 %300619 %300612 300602 301800 301840 303650 309120</b></li>
+    			<li>
+    			  <h3 style="background-color: lightblue;">TODO (kevin): FIX after we get OMIM ID numbers working again</h3>
+    			  Query for OMIM gene records: <b concordion:set="#disease">+141900,+141800,+142830,#300194,#300100,#300676,#300699,#301835,%300605,%300660,%300614,%300619,%300612,300602,301800,301840,303650,309120</b></li>
     			<li>Verify that <b concordion:assertEquals="getDiseaseCountByDisease(#disease)">14</b> disease terms are returned. Change in 6.05 reduces the number of diseases returned.  Diseases previously returned because of being associated to human genes returned (indirect associations) are no longer present.  This search previously returned 30 diseases.</li>
     		</ol>
     			

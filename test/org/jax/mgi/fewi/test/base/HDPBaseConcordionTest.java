@@ -114,10 +114,17 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	return termIds;
     }
 
+    /*
+     * separate multiples by comma
+     */
     public Integer getDiseaseCountByDisease(String diseaseID) throws Exception
     {	
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.addTermIdClause(diseaseID);
+    	mq.setOperator("OR");
+    	List<String> idTokens = Arrays.asList(diseaseID.split(","));
+    	for(String id : idTokens) {
+    	  mq.addTermIdClause(id);
+    	}
     	List<SolrHdpDisease> terms = mq.getDiseases();
     	return terms.size();
     }
