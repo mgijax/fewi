@@ -16,7 +16,7 @@
 			</div>
 		</div>
 
-		<div ng-include="'/assets/hmdc/app/components/search/searchTemplate.html'"></div>
+		<div ng-include="'${configBean.FEWI_URL}/assets/hmdc/app/components/search/searchTemplate.html'"></div>
 
 		<div class="container searchViewBox">
 			<div class="row">

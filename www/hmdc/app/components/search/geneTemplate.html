@@ -1,6 +1,6 @@
 <div ng-controller="GeneController">
 	<div ng-show="vm.filteredResults.length > 0">
-	Export: <a href="/diseasePortal/marker/report.txt?jsonEncodedInput={{ jsonEncodedQuery }}"><img src="http://www.informatics.jax.org/webshare/images/text.png" width="12" height="12">Text File</a> 
+	Export: <a href="{{FEWI_URL}}diseasePortal/marker/report.txt?jsonEncodedInput={{ jsonEncodedQuery }}"><img src="{{WEBSHARE_URL}}images/text.png" width="12" height="12">Text File</a> 
 	</div>
 	<div ng-hide="vm.filteredResults.length > 0">
 		No Matching Genes
@@ -24,8 +24,8 @@
 			<tr ng-repeat="row in displayedCollection">
 				<td>{{ row.organism }}</td>
 				<td><nobr>
-					<a ng-if="row.organism == 'mouse'" target="_blank" href="/marker/{{ row.mgiId }}"><div ng-bind-html="row.symbol | handleSubscript "></div></a>
-					<a ng-if="row.organism == 'human' && row.homologyClusterKey != null" target="_blank" href="/homology/cluster/key/{{ row.homologyClusterKey }}"><div ng-bind-html="row.symbol | handleSubscript "></div></a>
+					<a ng-if="row.organism == 'mouse'" target="_blank" href="{{FEWI_URL}}marker/{{ row.mgiId }}"><div ng-bind-html="row.symbol | handleSubscript "></div></a>
+					<a ng-if="row.organism == 'human' && row.homologyClusterKey != null" target="_blank" href="{{FEWI_URL}}homology/cluster/key/{{ row.homologyClusterKey }}"><div ng-bind-html="row.symbol | handleSubscript "></div></a>
 					<div ng-if="row.organism == 'human' && row.homologyClusterKey == null" ng-bind-html="row.symbol | handleSubscript "></div>
 				</nobr></td>
 				<td><nobr>{{ row.location }}</nobr></td>
@@ -37,10 +37,10 @@
 				<td><div ng-bind-html="row.mouseSystem | joinBy:', '"></div></td>
 				<td>
 					<div ng-if="row.allRefCount > 0">
-						<nobr>All Mouse: <a target="_blank" href="/reference/marker/{{ row.mgiId }}?typeFilter=Literature">{{ row.allRefCount }}</a></nobr>
+						<nobr>All Mouse: <a target="_blank" href="{{FEWI_URL}}reference/marker/{{ row.mgiId }}?typeFilter=Literature">{{ row.allRefCount }}</a></nobr>
 					</div>
 					<div ng-if="row.diseaseRefCount > 0">
-						<nobr>Disease Relevant: <a target="_blank" href="/reference/diseaseRelevantMarker/{{ row.mgiId }}?typeFilter=Literature">{{ row.diseaseRefCount }}</a></nobr>
+						<nobr>Disease Relevant: <a target="_blank" href="{{FEWI_URL}}reference/diseaseRelevantMarker/{{ row.mgiId }}?typeFilter=Literature">{{ row.diseaseRefCount }}</a></nobr>
 					</div>
 				</td>
 				<td><a ng-if="row.imsrCount > 0" target="_blank" href="http://www.findmice.org/summary?states=ES+Cell&states=embryo&states=live&states=ovaries&states=sperm&gaccid={{ row.mgiId }}"><div ng-bind-html="row.imsrCount"></div></a></td>
