@@ -268,6 +268,15 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	return diseases;
     }
     
+    public List<String> gridDiseaseIdsByPhenotypeId(String phenotypes) throws Exception
+    {
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermIdClause(phenotypes);
+    	List<String> diseases = mq.getGrid().getGridOMIMHeaders();
+    	Collections.sort(diseases);
+    	return diseases;
+    }
+    
     public List<String> gridAllSymbolsByGene(String genes) throws Exception
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
@@ -391,7 +400,6 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
     	mq.addTermIdClause(phenotypeId);
-    	mq.addMarkerSymbolIdClause(geneSymbol);
     	return gridCheckForMpHeader(mq,geneSymbol,mpHeader);
     }
     // returns "" or "check" if there is a hit for the query + geneSymbol + mpHeader combination
@@ -399,7 +407,6 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
     	mq.addTermClause(phenotype);
-    	mq.addMarkerSymbolIdClause(geneSymbol);
     	return gridCheckForMpHeader(mq,geneSymbol,mpHeader);
     }
     public String gridCheckForMpHeaderByGene(String genes,String geneSymbol,String mpHeader) throws Exception
