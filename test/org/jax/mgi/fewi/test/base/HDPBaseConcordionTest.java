@@ -218,7 +218,6 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     public List<String> getSymbolsByGene(String genes) throws Exception
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setOperator(MockHdpControllerQuery.AND);
     	mq.addMarkerSymbolIdClause(genes);
     	return getGeneSymbols(mq);
     }
@@ -226,7 +225,6 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     public List<String> getSymbolsByGeneNameOrSynonym(String genes) throws Exception
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
-    	mq.setOperator(MockHdpControllerQuery.AND);
     	mq.addMarkerNameClause(genes);
     	return getGeneSymbols(mq);
     }
