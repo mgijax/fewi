@@ -14,8 +14,6 @@ import org.jax.mgi.fewi.hmdc.models.GridRow;
 import org.jax.mgi.fewi.hmdc.models.GridTermHeaderAnnotation;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpDisease;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpMarker;
-import org.jax.mgi.fewi.matrix.GridDataCell;
-import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.test.mock.MockHdpControllerQuery;
 import org.jax.mgi.shr.jsonmodel.GridMarker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -379,9 +377,6 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
     	mq.addTermIdClause(phenotype);
-    	mq.setOperator(MockHdpControllerQuery.AND);
-    	mq.addMarkerSymbolIdClause(geneSymbol);
-    	mq.addTermIdClause(diseaseId);
     	return gridCheckForDisease(mq,geneSymbol,diseaseId);
     }
     // returns "" or "check" if there is a hit for the query + geneSymbol + diseaseId combination
@@ -389,12 +384,7 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
     	mq.addMarkerSymbolIdClause(genes);
-    	mq.addTermIdClause(diseaseId);
-    	List<String> headers = mq.getGrid().getGridOMIMHeaders();
-    	if (headers.size() > 0) {
-    		return "check";
-    	}
-    	return "";
+    	return gridCheckForDisease(mq,geneSymbol,diseaseId);
     }
     // returns "" or "check" if there is a hit for the query + geneSymbol + mpHeader combination
     public String gridCheckForMpHeaderByPhenotypeId(String phenotypeId,String geneSymbol,String mpHeader) throws Exception

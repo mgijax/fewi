@@ -6,6 +6,7 @@ import org.jax.mgi.fewi.hmdc.controller.DiseasePortalController;
 import org.jax.mgi.fewi.hmdc.models.GridResult;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpDisease;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpMarker;
+import org.springframework.mock.web.MockHttpSession;
 
 public class MockHdpControllerQuery extends AbstractMockHdpQuery {
 
@@ -22,6 +23,7 @@ public class MockHdpControllerQuery extends AbstractMockHdpQuery {
 	}	
 
 	public GridResult getGrid() throws Exception {
-		return hdpController.gridQuery(getParametersAsJson(), null);
+		MockHttpSession session = new MockHttpSession();
+		return hdpController.gridQuery(getParametersAsJson(), session);
 	}	
 }
