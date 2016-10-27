@@ -266,7 +266,7 @@ tr.gray td {background-color:#EEEEEE;}
     		<ol>
     			<li>Open the HDP query form.</li>
     			<li>Enter <b concordion:set="#pheno">OMIM:306955</b> (Heterotaxy, Visceral, 1, X-Linked; HTX1) in the Phenotypes and Diseases section and hit search.</li>
-    			<li>Verify the gene <b cc:assertResultsContain="gridMouseSymbolsByPhenotype(#pheno)">Zic3</b> is displayed.<br/>
+    			<li>Verify the gene <b cc:assertResultsContain="gridMouseSymbolsByPhenotypeId(#pheno)">Zic3</b> is displayed.<br/>
     				(Note: the only genotypes associated with this disease are super-simple (OMG) and are for alleles Zic3&lt;Bn&gt; and Zic3&lt;tm1Bca&gt;. 
     				Data associated with genotypes of any other alleles should be excluded due to this story.)</li>
     			<li>Verify ONLY the following MP headers are returned:
@@ -404,7 +404,9 @@ tr.gray td {background-color:#EEEEEE;}
 			<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#genes">Actb</b> in the Genes section and hit search</li>
-                <li>Click on the Grid tab and confirm the disease column 
+                <li>
+                  <h3 style="background-color: lightblue;">TODO (kevin): Will be broken until we get slim headers working</h3>
+                Click on the Grid tab and confirm the disease column 
                 	<b cc:assertResultsContain="gridDiseasesByGene(#genes)">Alzheimer Disease</b> is displayed.</li>
                 <li>Verify that the row for human/mouse markers ACTB/<b concordion:set="#symbol">Actb</b> does NOT have a 
                 	<span class="hide" concordion:set="#diseaseId">Alzheimer Disease</span>
