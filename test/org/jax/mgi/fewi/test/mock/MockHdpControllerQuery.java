@@ -49,10 +49,14 @@ public class MockHdpControllerQuery extends AbstractMockHdpQuery {
 		HttpServletRequest request = this.generateGridPopupRequest(session, geneSymbol, systemCol);
 		ModelAndView mav = hdpController.popup(request, session, true, request.getParameter("queryToken"));
 		
+		if (mav.getModel().get("mpGroup")==null) {
+			throw new Exception("Could not find popup cell for "+geneSymbol+" x "+systemCol);
+		}
+		
 		return new HmdcPopupTestApi(mav);
 	}
 	
-public HmdcPopupTestApi getDiseasePopup(String geneSymbol, String diseaseCol) throws Exception {
+	public HmdcPopupTestApi getDiseasePopup(String geneSymbol, String diseaseCol) throws Exception {
 		
 		// make session to hold queryToken
 		MockHttpSession session = new MockHttpSession();

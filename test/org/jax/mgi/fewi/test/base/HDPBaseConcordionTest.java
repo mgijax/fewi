@@ -480,8 +480,9 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	
     	// get the popup API
     	HmdcPopupTestApi popupApi = mq.getPhenoPopup(markerRow,systemCol);
+    	List<String> terms = popupApi.getPhenoTerms();
     	
-    	return new ArrayList<String>();
+    	return terms;
     }
     // return whether or not a cell in the MP popup has a check
     public String systemGridPopupCheckByGene(String genes,String markerRow,String systemCol,String genotypeRow,String mpCol) throws Exception
@@ -490,8 +491,9 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
     	mq.addMarkerSymbolIdClause(genes);
     	
-    	//return this.popupMpGridCheckFor(mq,markerRow,systemCol,genotypeRow,mpCol);
-    	return "";
+    	HmdcPopupTestApi popupApi = mq.getPhenoPopup(markerRow,systemCol);
+        
+    	return popupApi.getPhenoGridCheck(genotypeRow, mpCol);
     }
     public Integer systemGridPopupGenoCountByPheno(String phenotype,String markerRow,String systemCol) throws Exception
     {
@@ -529,8 +531,11 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	mq.setOperator("OR");
     	mq.addTermIdClause(phenotype);
     	
-//    	return mq.getSystemPopupTerms(markerRow,systemCol);
-    	return new ArrayList<String>();
+    	// get the popup API
+    	HmdcPopupTestApi popupApi = mq.getPhenoPopup(markerRow,systemCol);
+    	List<String> terms = popupApi.getPhenoTerms();
+    	
+    	return terms;
     }
     // return whether or not a cell in the MP popup has a check
     public String systemGridPopupCheckByPheno(String phenotype,String markerRow,String systemCol,String genotypeRow,String mpCol) throws Exception
@@ -541,8 +546,9 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	mq.setOperator("OR");
     	mq.addTermIdClause(phenotype);
     	
-//    	return this.popupMpGridCheckFor(mq,markerRow,systemCol,genotypeRow,mpCol);
-    	return "";
+    	HmdcPopupTestApi popupApi = mq.getPhenoPopup(markerRow,systemCol);
+        
+    	return popupApi.getPhenoGridCheck(genotypeRow, mpCol);
     }
     
     // return whether or not a cell in the Disease popup has a check
@@ -552,7 +558,7 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
     	mq.addMarkerSymbolIdClause(genes);
     	
-    	HmdcPopupTestApi popupApi = mq.getDiseasePopup(markerRow,diseaseCol);
+    	HmdcPopupTestApi popupApi = mq.getDiseasePopup(markerRow,diseaseHeader);
     
     	return popupApi.getDiseaseGridCheck(genotypeRow, diseaseCol);
     }
@@ -565,7 +571,7 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	mq.setOperator("OR");
     	mq.addTermIdClause(phenotype);
     	
-    	HmdcPopupTestApi popupApi = mq.getDiseasePopup(markerRow,diseaseCol);
+    	HmdcPopupTestApi popupApi = mq.getDiseasePopup(markerRow,diseaseHeader);
     
     	return popupApi.getDiseaseGridCheck(genotypeRow, diseaseCol);
     }

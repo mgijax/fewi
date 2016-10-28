@@ -35,6 +35,42 @@ public class HmdcPopupTestApi {
 		return genotypeDisplays;
 	}
 	
+	public List<String> getPhenoTerms() {
+		
+		HmdcAnnotationGroup mpGroup = (HmdcAnnotationGroup) mav.getModel().get("mpGroup");
+
+		return 	mpGroup.getColumns();
+	}
+	
+	public String getPhenoGridCheck(String genoRow, String phenoCol) {
+		String check = "";
+		
+		HmdcAnnotationGroup mpGroup = (HmdcAnnotationGroup) mav.getModel().get("mpGroup");
+		Map<Integer, String> allelePairMap = mpGroup.getAllelePairMap();
+		Map<String, Integer> columnIDMap = mpGroup.getColumnIDMap();
+		Map<Integer, Map<Integer, Integer>> countMap = mpGroup.getCountMap();
+		
+		// find row
+		Integer foundRowID = null;
+		for (Integer rowID : mpGroup.getMouseRowIDs()) {
+			String genotypeDisplay = allelePairMap.get(rowID);
+			genotypeDisplay = this.formatGenotypeDisplay(genotypeDisplay);
+			
+			if (genotypeDisplay.equals(genoRow)) {
+				foundRowID = rowID;
+			}
+		}
+		
+		Integer foundColumnID = columnIDMap.get(phenoCol);
+		
+		Integer count = countMap.get(foundRowID).get(foundColumnID);
+		if (count > 0) {
+			check = "check";
+		}
+		
+		return check;
+	}
+	
 	public List<String> getDiseaseGenotypeClusterStrings() {
 		List<String> genotypeDisplays = new ArrayList<String>();
 		
