@@ -15,6 +15,7 @@ import org.jax.mgi.fewi.hmdc.models.GridRow;
 import org.jax.mgi.fewi.hmdc.models.GridTermHeaderAnnotation;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpDisease;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpMarker;
+import org.jax.mgi.fewi.test.mock.HmdcPopupTestApi;
 import org.jax.mgi.fewi.test.mock.MockHdpControllerQuery;
 import org.jax.mgi.shr.jsonmodel.GridMarker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -444,198 +445,212 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	return gridMpHeadersWithChecks(mq,geneSymbol);
     }
     		
-/*
+
     // ------------- Grid POPUP related functions -----------
     public Integer systemGridPopupGenoCountByGene(String genes,String markerRow,String systemCol) throws Exception
     {
     	// set the form
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setGenes(genes);
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addMarkerSymbolIdClause(genes);
     	
-    	// get the grid cluster key
-    	List<HdpGenoCluster> genoClusters = mq.getSystemPopupGenoClusters(markerRow,systemCol);
-    	return genoClusters.size();
+    	// get the popup API
+    	HmdcPopupTestApi popupApi = mq.getPhenoPopup(markerRow,systemCol);
+    	List<String> genoDisplays = popupApi.getPhenoGenotypeClusterStrings();
+    	
+    	return genoDisplays.size();
     }
     public List<String> systemGridPopupGenoClustersByGene(String genes,String markerRow,String systemCol) throws Exception
     {
     	// set the form
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setGenes(genes);
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addMarkerSymbolIdClause(genes);
     	
-    	// get the grid cluster key
-    	List<HdpGenoCluster> genoClusters = mq.getSystemPopupGenoClusters(markerRow,systemCol);
-    	List<String> genoDisplays = new ArrayList<String>();
-    	NotesTagConverter ntc = new NotesTagConverter();
-    	
-    	for(HdpGenoCluster genoCluster : genoClusters)
-    	{
-    		String genoDisplay = ntc.convertNotes(genoCluster.getGenotype().getCombination1(),'|',true,true);
-    		genoDisplays.add(genoDisplay.trim());
-    	}
+    	// get the popup API
+    	HmdcPopupTestApi popupApi = mq.getPhenoPopup(markerRow,systemCol);
+    	List<String> genoDisplays = popupApi.getPhenoGenotypeClusterStrings();
     	
     	return genoDisplays;
     }
+    
     public List<String> systemGridPopupTermsByGene(String genes,String markerRow,String systemCol) throws Exception
     {
     	// set the form
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setGenes(genes);
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addMarkerSymbolIdClause(genes);
     	
-    	return mq.getSystemPopupTerms(markerRow,systemCol);
+    	// get the popup API
+    	HmdcPopupTestApi popupApi = mq.getPhenoPopup(markerRow,systemCol);
+    	
+    	return new ArrayList<String>();
     }
     // return whether or not a cell in the MP popup has a check
     public String systemGridPopupCheckByGene(String genes,String markerRow,String systemCol,String genotypeRow,String mpCol) throws Exception
     {
     	// set the form
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setGenes(genes);
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addMarkerSymbolIdClause(genes);
     	
-    	return this.popupMpGridCheckFor(mq,markerRow,systemCol,genotypeRow,mpCol);
+    	//return this.popupMpGridCheckFor(mq,markerRow,systemCol,genotypeRow,mpCol);
+    	return "";
     }
     public Integer systemGridPopupGenoCountByPheno(String phenotype,String markerRow,String systemCol) throws Exception
     {
     	// set the form
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotype);
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(phenotype);
+    	mq.setOperator("OR");
+    	mq.addTermIdClause(phenotype);
     	
-    	// get the grid cluster key
-    	List<HdpGenoCluster> genoClusters = mq.getSystemPopupGenoClusters(markerRow,systemCol);
-    	return genoClusters.size();
+    	// get the popup API
+    	HmdcPopupTestApi popupApi = mq.getPhenoPopup(markerRow,systemCol);
+    	List<String> genoDisplays = popupApi.getPhenoGenotypeClusterStrings();
+    	
+    	return genoDisplays.size();
     }
     public List<String> systemGridPopupGenoClustersByPheno(String phenotype,String markerRow,String systemCol) throws Exception
     {
     	// set the form
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotype);
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(phenotype);
+    	mq.setOperator("OR");
+    	mq.addTermIdClause(phenotype);
     	
-    	// get the grid cluster key
-    	List<HdpGenoCluster> genoClusters = mq.getSystemPopupGenoClusters(markerRow,systemCol);
-    	List<String> genoDisplays = new ArrayList<String>();
-    	NotesTagConverter ntc = new NotesTagConverter();
-    	
-    	for(HdpGenoCluster genoCluster : genoClusters)
-    	{
-    		String genoDisplay = ntc.convertNotes(genoCluster.getGenotype().getCombination1(),'|',true,true);
-    		genoDisplays.add(genoDisplay.trim());
-    	}
+    	// get the popup API
+    	HmdcPopupTestApi popupApi = mq.getPhenoPopup(markerRow,systemCol);
+    	List<String> genoDisplays = popupApi.getPhenoGenotypeClusterStrings();
     	
     	return genoDisplays;
     }
     public List<String> systemGridPopupTermsByPheno(String phenotype,String markerRow,String systemCol) throws Exception
     {
     	// set the form
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotype);
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(phenotype);
+    	mq.setOperator("OR");
+    	mq.addTermIdClause(phenotype);
     	
-    	return mq.getSystemPopupTerms(markerRow,systemCol);
+//    	return mq.getSystemPopupTerms(markerRow,systemCol);
+    	return new ArrayList<String>();
     }
     // return whether or not a cell in the MP popup has a check
     public String systemGridPopupCheckByPheno(String phenotype,String markerRow,String systemCol,String genotypeRow,String mpCol) throws Exception
     {
     	// set the form
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotype);
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(phenotype);
+    	mq.setOperator("OR");
+    	mq.addTermIdClause(phenotype);
     	
-    	return this.popupMpGridCheckFor(mq,markerRow,systemCol,genotypeRow,mpCol);
+//    	return this.popupMpGridCheckFor(mq,markerRow,systemCol,genotypeRow,mpCol);
+    	return "";
     }
     
     // return whether or not a cell in the Disease popup has a check
     public String diseaseGridPopupCheckByGene(String genes,String markerRow,String diseaseHeader,String genotypeRow,String diseaseCol) throws Exception
     {
     	// set the form
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setGenes(genes);
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addMarkerSymbolIdClause(genes);
     	
-    	return this.popupDiseaseGridCheckFor(mq,markerRow,diseaseHeader,genotypeRow,diseaseCol);
+    	HmdcPopupTestApi popupApi = mq.getDiseasePopup(markerRow,diseaseCol);
+    
+    	return popupApi.getDiseaseGridCheck(genotypeRow, diseaseCol);
     }
     // return whether or not a cell in the Disease popup has a check
     public String diseaseGridPopupCheckByPhenotype(String phenotype,String markerRow,String diseaseHeader,String genotypeRow,String diseaseCol) throws Exception
     {
     	// set the form
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotype);
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(phenotype);
+    	mq.setOperator("OR");
+    	mq.addTermIdClause(phenotype);
     	
-    	return this.popupDiseaseGridCheckFor(mq,markerRow,diseaseHeader,genotypeRow,diseaseCol);
+    	HmdcPopupTestApi popupApi = mq.getDiseasePopup(markerRow,diseaseCol);
+    
+    	return popupApi.getDiseaseGridCheck(genotypeRow, diseaseCol);
     }
     // return whether or not a cell in the Disease popup has a check
     public String diseaseGridPopupHumanCheckByGene(String genes,String markerRow,String diseaseHeader,String humanPopupRow,String diseaseCol) throws Exception
     {
     	// set the form
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setGenes(genes);
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addMarkerSymbolIdClause(genes);
     	
-    	return this.popupDiseaseHumanGridCheckFor(mq,markerRow,diseaseHeader,humanPopupRow,diseaseCol);
+//    	return this.popupDiseaseHumanGridCheckFor(mq,markerRow,diseaseHeader,humanPopupRow,diseaseCol);
+    	return "";
     }
     // return whether or not a cell in the Disease popup has a check
     public String diseaseGridPopupHumanCheckByPhenotype(String phenotype,String markerRow,String diseaseHeader,String humanPopupRow,String diseaseCol) throws Exception
     {
     	// set the form
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotype);
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(phenotype);
+    	mq.setOperator("OR");
+    	mq.addTermIdClause(phenotype);
     	
-    	return this.popupDiseaseHumanGridCheckFor(mq,markerRow,diseaseHeader,humanPopupRow,diseaseCol);
+//    	return this.popupDiseaseHumanGridCheckFor(mq,markerRow,diseaseHeader,humanPopupRow,diseaseCol);
+    	return "";
     }
     public Integer diseaseGridPopupGenoCountByPheno(String phenotype,String markerRow,String diseaseCol) throws Exception
     {
     	// set the form
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotype);
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(phenotype);
+    	mq.setOperator("OR");
+    	mq.addTermIdClause(phenotype);
     	
-    	// get the grid cluster key
-    	List<HdpGenoCluster> genoClusters = mq.getDiseasePopupGenoClusters(markerRow,diseaseCol);
-    	return genoClusters.size();
+    	// get the popup API
+    	HmdcPopupTestApi popupApi = mq.getDiseasePopup(markerRow,diseaseCol);
+    	List<String> genoDisplays = popupApi.getDiseaseGenotypeClusterStrings();
+    	
+    	return genoDisplays.size();
     }
     public Integer diseaseGridPopupGenoCountByGene(String genes,String markerRow,String diseaseCol) throws Exception
     {
     	// set the form
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setGenes(genes);
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addMarkerSymbolIdClause(genes);
     	
-    	// get the grid cluster key
-    	List<HdpGenoCluster> genoClusters = mq.getDiseasePopupGenoClusters(markerRow,diseaseCol);
-    	return genoClusters.size();
+    	// get the popup API
+    	HmdcPopupTestApi popupApi = mq.getDiseasePopup(markerRow,diseaseCol);
+    	List<String> genoDisplays = popupApi.getDiseaseGenotypeClusterStrings();
+    	
+    	return genoDisplays.size();
     }
     public List<String> diseaseGridPopupGenoClustersByPheno(String phenotype,String markerRow,String diseaseCol) throws Exception
     {
     	// set the form
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotype);
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(phenotype);
+    	mq.setOperator("OR");
+    	mq.addTermIdClause(phenotype);
     	
-    	// get the grid cluster key
-    	List<HdpGenoCluster> genoClusters = mq.getDiseasePopupGenoClusters(markerRow,diseaseCol);
-    	List<String> genoDisplays = new ArrayList<String>();
-    	NotesTagConverter ntc = new NotesTagConverter();
-    	
-    	for(HdpGenoCluster genoCluster : genoClusters)
-    	{
-    		String genoDisplay = ntc.convertNotes(genoCluster.getGenotype().getCombination1(),'|',true,true);
-    		genoDisplays.add(genoDisplay);
-    	}
+    	// get the popup API
+    	HmdcPopupTestApi popupApi = mq.getDiseasePopup(markerRow,diseaseCol);
+    	List<String> genoDisplays = popupApi.getDiseaseGenotypeClusterStrings();
     	
     	return genoDisplays;
     }
     public List<String> diseaseGridPopupHumanMarkersByPheno(String phenotype,String markerRow,String diseaseCol) throws Exception
     {
     	// set the form
-    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
-    	mq.setPhenotypes(phenotype);
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermClause(phenotype);
+    	mq.setOperator("OR");
+    	mq.addTermIdClause(phenotype);
     	
-    	// get the grid cluster key
-    	List<SolrHdpMarker> humanMarkers = mq.getDiseasePopupHumanMarkers(markerRow,diseaseCol);
-    	List<String> markerSymbols = new ArrayList<String>();
+    	// get the popup API
+    	HmdcPopupTestApi popupApi = mq.getDiseasePopup(markerRow,diseaseCol);
+    	List<String> humanMarkers = popupApi.getDiseaseHumanMarkers();
     	
-    	for(SolrHdpMarker marker : humanMarkers)
-    	{
-    		markerSymbols.add(marker.getSymbol());
-    	}
-    	
-    	return markerSymbols;
+    	return humanMarkers;
     }
     
     // ###############################################
     // --------------private helper methods ----------
     // ###############################################
-*/ 
+     
+     
     private List<String> getGeneSymbols(MockHdpControllerQuery mq) throws Exception
     {
 		List<String> symbols = new ArrayList<String>();
