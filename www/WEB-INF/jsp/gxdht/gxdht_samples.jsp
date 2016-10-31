@@ -60,14 +60,14 @@ a { text-decoration: none; }
   	        <tr>
   	          <td>${sample.name}</td>
   	  	      <c:if test="${not empty showOrganism}"><td>${sample.organism}</td></c:if>
-  	  	      <c:if test="${sample.isMouse}">
+  	  	      <c:if test="${sample.relevancy == 'Yes'}">
   	          	<td>${sample.age}</td>
   	          	<td><c:if test="${not empty sample.theilerStage}">TS${sample.theilerStage}:</c:if> ${sample.structureTerm}</td>
   	          	<td><fewi:super value="${sample.geneticBackground}" /></td>
   	          	<td><fewi:allelePairs value="${sample.mutantAlleles}" noLink="true" /></td>
   	          	<td>${sample.sex}</td>
   	          </c:if>
-  	  	      <c:if test="${not sample.isMouse}">
+  	  	      <c:if test="${sample.relevancy != 'Yes'}">
 				<td colspan="5" class="center">Non-mouse sample; no data stored</td>
   	          </c:if>
   	          <td><fewi:super value="${sample.note}" /></td>

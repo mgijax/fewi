@@ -20,20 +20,16 @@ public class GxdHtSample
 	private String organism;
 	private String mutantAlleles;
 	private String geneticBackground;
+	private String relevancy;
 	private String note;
 	private Integer byDefault;
 
-	// convenience method for identifying mouse samples; if the organism begins with either "mouse" or "Mus"
-	// then we consider it to be a mouse sample.
-	public boolean getIsMouse() {
-		if (organism != null) {
-			if (organism.startsWith("mouse") || organism.startsWith("Mus ")) {
-				return true;
-			}
-		}
-		return false;
+	public String getRelevancy() {
+		return relevancy;
 	}
-	
+	public void setRelevancy(String relevancy) {
+		this.relevancy = relevancy;
+	}
 	public Integer getSampleKey() {
 		return sampleKey;
 	}

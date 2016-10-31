@@ -191,6 +191,7 @@ public class SearchConstants {
 	public static final String GXDHT_DESCRIPTION = "description";
 	public static final String GXDHT_TITLE_DESCRIPTION = "titleDescription";
 	public static final String GXDHT_EXPERIMENTAL_VARIABLE = "experimentalVariable";
+	public static final String GXDHT_RELEVANCY = "relevancy";
 	
 	// Homology constants
 	public static final String HOMOLOGY_ID            = "homologyID";

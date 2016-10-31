@@ -58,6 +58,7 @@ public class SolrGxdHtSampleHunter extends SolrHunter<GxdHtSample> {
         propertyMap.put(SearchConstants.REF_ID, new SolrPropertyMapper(GxdHtFields.REFERENCE_ID));
         propertyMap.put(SearchConstants.GXD_AGE_MIN, new SolrPropertyMapper(GxdHtFields.AGE_MIN));
         propertyMap.put(SearchConstants.GXD_AGE_MAX, new SolrPropertyMapper(GxdHtFields.AGE_MAX));
+        propertyMap.put(SearchConstants.GXDHT_RELEVANCY, new SolrPropertyMapper(GxdHtFields.RELEVANCY));
 
         /* set up the sorting map */
         sortMap.put(SortConstants.BY_DEFAULT, new SolrSortMapper(GxdHtFields.BY_DEFAULT));
@@ -103,6 +104,7 @@ public class SolrGxdHtSampleHunter extends SolrHunter<GxdHtSample> {
 			sample.setStructureID((String) doc.getFieldValue(GxdHtFields.STRUCTURE_ID));
 			sample.setStructureTerm((String) doc.getFieldValue(GxdHtFields.STRUCTURE_TERM));
 			sample.setTheilerStage((Integer) doc.getFieldValue(GxdHtFields.THEILER_STAGE));
+			sample.setRelevancy((String) doc.getFieldValue(GxdHtFields.RELEVANCY));
 			sr.addResultObjects(sample);
 		}
 		this.packFacetData(rsp, sr);
