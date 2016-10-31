@@ -13,6 +13,10 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import mgi.frontend.datamodel.Genotype;
+import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.hdp.HdpGenoCluster;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
@@ -45,10 +49,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
-import mgi.frontend.datamodel.Genotype;
-import mgi.frontend.datamodel.Marker;
-import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 
 @Controller
 @RequestMapping(value="/diseasePortal")
@@ -94,7 +94,7 @@ public class DiseasePortalController {
 		Filter highlightFilter = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			DiseasePortalConditionGroup group = (DiseasePortalConditionGroup)mapper.readValue(jsonInput, DiseasePortalConditionGroup.class);
+			DiseasePortalConditionGroup group = mapper.readValue(jsonInput, DiseasePortalConditionGroup.class);
 			mainFilter = genQueryFilter(group);
 			highlightFilter = genHighlightFilter(group);
 			
@@ -144,7 +144,7 @@ public class DiseasePortalController {
 		
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			DiseasePortalConditionGroup group = (DiseasePortalConditionGroup)mapper.readValue(jsonInput, DiseasePortalConditionGroup.class);
+			DiseasePortalConditionGroup group = mapper.readValue(jsonInput, DiseasePortalConditionGroup.class);
 			params.setFilter(genQueryFilter(group));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -163,7 +163,7 @@ public class DiseasePortalController {
 		
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			DiseasePortalConditionGroup group = (DiseasePortalConditionGroup)mapper.readValue(jsonInput, DiseasePortalConditionGroup.class);
+			DiseasePortalConditionGroup group = mapper.readValue(jsonInput, DiseasePortalConditionGroup.class);
 			params.setFilter(genQueryFilter(group));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -350,7 +350,7 @@ public class DiseasePortalController {
 	 * The 'isPhenotype' parameter should be true for phenotype popups and false for disease popups.
 	 */
 	@RequestMapping(value="/popup", method=RequestMethod.GET)
-	private ModelAndView popup(HttpServletRequest request, HttpSession session, @RequestParam(value = "isPhenotype") boolean isPhenotype, @RequestParam(value = "queryToken", required=false) String queryToken) throws Exception {
+	public ModelAndView popup(HttpServletRequest request, HttpSession session, @RequestParam(value = "isPhenotype") boolean isPhenotype, @RequestParam(value = "queryToken", required=false) String queryToken) throws Exception {
 	//public ModelAndView popup(HttpServletRequest request) {
 		// from a marker detail page slimgrid, we'll need to get the marker ID and
 		// convert it to its corresponding gridClusterKey
@@ -390,7 +390,7 @@ public class DiseasePortalController {
 				}
 			}
 			if(previousJsonQuery != null) {
-				group = (DiseasePortalConditionGroup)mapper.readValue(previousJsonQuery, DiseasePortalConditionGroup.class);
+				group = mapper.readValue(previousJsonQuery, DiseasePortalConditionGroup.class);
 				highlightFilter = genHighlightFilter(group);
 			}
 		} catch (Exception e) {
