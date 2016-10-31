@@ -417,27 +417,6 @@ tr.gray td {background-color:#EEEEEE;}
                 	</table>
                 </li>
 
-                <li>Enter <b concordion:set="#gene">Tg(APPswe,PSEN1dE9)85Dbo</b> in the Genes section and hit search</li>
-                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Tg(APPswe,PSEN1dE9)85Dbo</b> row and <b concordion:set="#column">homeostasis/metabolism</b> column. <br/>
-                (Note: 4 different hemizygous genotypes result in one "compressed" genotype here.)</li>
-                <li>Confirm that <b>1</b> genotype row is displayed for <b cc:assertValueAppearsOnlyOnce="systemGridPopupGenoClustersByGene(#gene,#row,#column)">Tg(APPswe,PSEN1dE9)85Dbo/0</b>.</li>
-                <li>Confirm that the pop-up column headers contain at least the following 3 terms:
-                	<table cc:verifySupersetOf="#terms : systemGridPopupTermsByGene(#gene,#row,#column)">
-                	<tr><th concordion:assertEquals="#terms">Term</th></tr>
-					<tr><td>amyloidosis</td></tr>
-                	<tr><td>cerebral amyloid angiopathy</td></tr>
-                	<tr><td>amyloid beta deposits</td></tr>
-                	</table>
-                </li>
-                <li>Confirm that the pop-up contains ONLY the data in the following table:
-                	<table concordion:execute="#cell = systemGridPopupCheckByGene(#gene,#row,#column,#genotypeRow,#termId)">
-                	<tr><th concordion:set="#genotypeRow">genotype</th><th concordion:set="#termId">term ID</th><th>term</th><th concordion:assertEquals="#cell">checkmark?</th></tr>
-                	<tr><td>Tg(APPswe,PSEN1dE9)85Dbo/0</td><td>MP:0000604</td><td>amyloidosis</td><td>check</td></tr>
-                	<tr><td>Tg(APPswe,PSEN1dE9)85Dbo/0</td><td>MP:0004254</td><td>cerebral amyloid angiopathy</td><td>check</td></tr>
-                	<tr><td>Tg(APPswe,PSEN1dE9)85Dbo/0</td><td>MP:0003329</td><td>amyloid beta deposits</td><td>check</td></tr>
-                	</table>
-                </li>
-
              </ol>
     		 </li>   
 
