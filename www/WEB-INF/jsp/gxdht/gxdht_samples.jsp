@@ -68,7 +68,7 @@ a { text-decoration: none; }
   	          	<td>${sample.sex}</td>
   	          </c:if>
   	  	      <c:if test="${sample.relevancy != 'Yes'}">
-				<td colspan="5" class="center">Non-mouse sample; no data stored</td>
+				<td colspan="5" class="center">${sample.relevancy}</td>
   	          </c:if>
   	          <td><fewi:super value="${sample.note}" /></td>
   	        </tr>
