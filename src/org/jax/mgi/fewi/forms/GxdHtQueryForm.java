@@ -70,6 +70,21 @@ public class GxdHtQueryForm {
 	public Map<String,String> getSexOptions() {
 		return sexOptions;
 	}
+	public Map<Integer, String> getTheilerStages() {
+		return theilerStages;
+	}
+
+	public void setTheilerStages(Map<Integer, String> theilerStages) {
+		this.theilerStages = theilerStages;
+	}
+
+	public Map<String, String> getAges() {
+		return ages;
+	}
+
+	public void setAges(Map<String, String> ages) {
+		this.ages = ages;
+	}
 
 	public Map<String,String> getMethodOptions() {
 		return methodOptions;
@@ -85,12 +100,26 @@ public class GxdHtQueryForm {
 	public void setTheilerStage(List<Integer> theilerStage) {
 		this.theilerStage = theilerStage;
 	}
+	public void setTheilerStage(Integer theilerStage) {
+		if (theilerStage != null) {
+			List<Integer> stages = new ArrayList<Integer>();
+			stages.add(theilerStage);
+			this.theilerStage = stages;
+		}
+	}
 
 	public List<String> getAge() {
 		return age;
 	}
 	public void setAge(List<String> age) {
 		this.age = age;
+	}
+	public void setAge(String age) {
+		if ((age != null) && (age.length() > 0)) {
+			List<String> t = new ArrayList<String>();
+			t.add(age);
+			this.age = t;
+		}
 	}
 
     public String getStructure() {

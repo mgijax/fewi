@@ -64,6 +64,11 @@ var gq_reset = function(e) {
 	// structure ribbon
 	$('input:text[name=structure]').val('');
 	
+	// age/stage ribbon
+	document.getElementById('theilerStage').selectedIndex = 0
+	document.getElementById('age').selectedIndex = 0
+	selectAge();
+	
 	// Sex ribbon
 	$('input:radio[name=sex]').prop('checked', false);
 	$('input:radio[name=sex][value=""]').prop('checked', true);
@@ -80,7 +85,6 @@ var gq_reset = function(e) {
 	$('input:checkbox[name=textScope]').prop('checked', true);
 };
 
-//var gq_structureUrl = fewiUrl + "autocomplete/structure?query=";	// URL for structure autocomplete
 // wire in the structure autocomplete (liberally copied from recombinase_form.js)
 $(function() {
     var structureAC = $( "#structureAC" ).autocomplete({
@@ -119,5 +123,35 @@ $(function() {
 		.appendTo(ul);
     };
 });
+
+// general purpose function for changing tabs
+function changeTab(tabElement,parentId)
+{
+    var eSelector = '#'+parentId;
+     // remove the active-tab and place it on current object;
+    $(eSelector+' .active-tab').removeClass("active-tab").
+		addClass("inactive-tab");
+    $(tabElement).removeClass("inactive-tab")
+		.addClass("active-tab");
+
+    // remove active content
+    $(eSelector+' .active-content').removeClass("active-content")
+        .addClass("inactive-content");
+
+    // use tab index to find matching content and set it to active
+    var tab_index = $(tabElement).index();
+    $(eSelector+' .inactive-content').eq(tab_index).removeClass("inactive-content")
+        .addClass("active-content");
+}
+//Script to set up and control the ageStage tab widget (using jquery)
+var ageStageID = "ageStage";
+function selectTheilerStage()
+{ changeTab($('#'+ageStageID+' .tab-nav')[0],ageStageID); }
+function selectAge()
+{ changeTab($('#'+ageStageID+' .tab-nav')[1],ageStageID); }
+function ageStageChange(e)
+{ if(!$(this).hasClass("active-tab")) changeTab(this,ageStageID); }
+// Init the event listener for clicking tabs
+$('#'+ageStageID+' .tab-nav').click(ageStageChange);
 
 log("loaded gxdht_query.js");

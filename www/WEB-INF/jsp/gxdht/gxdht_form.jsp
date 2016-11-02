@@ -141,7 +141,27 @@ span.smallGrey { font-size: 75%; color: #999999; }
 
  	<tr class="stripe2">
 		<td class="cat2Gxd">Developmental<br/>stage</td>
-		<td>Coming in US97...</td>
+		<td>
+		    <div id="ageStage">
+				<div class="tab-header">
+					<div class="tab-nav active-tab" id="stagesTab">Use Theiler Stages</div>
+					<div class="tab-nav inactive-tab" id="agesTab">Use Ages (dpc)</div>
+				</div>
+				<div id="ageStageDiv" class="tab-content">
+					<div class="active-content">
+						<a href="${configBean.FEWI_URL}glossary/theiler" target="_blank"><img style="margin-bottom:82px;" id="" src="${configBean.WEBSHARE_URL}images/help_icon.png" /></a>
+						<form:select multiple="true" path="theilerStage" size="7" items="${queryForm.theilerStages}">
+							<form:options items="${theilerStages}" />
+	        	        </form:select>
+					</div>
+					<div class="inactive-content">
+						<form:select multiple="true" path="age" size="7" items="${queryForm.ages}">
+							<form:options items="${ages}" />
+	            		</form:select>
+					</div>
+				</div>
+        	</div>
+		</td>
 	</tr>
 
 	<tr class="stripe1">

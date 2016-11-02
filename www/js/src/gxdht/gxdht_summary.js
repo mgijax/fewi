@@ -32,8 +32,58 @@ var updatePaginationParameters = function(page, rowsPerPage) {
 	updateResultsDiv(startIndex, rowsPerPage);
 };
 
+// get the set of input parameters as a mapping from fieldname to value(s)
+var getParameterMap = function() {
+	if ((typeof querystring == 'undefined') || (querystring == null) || (querystring == '')) { return {}; }
+	
+	var map = {}
+	var pairs = querystring.split('&');
+	for (var i = 0; i < pairs.length; i++) {
+		var pair = pairs[i].split('=');
+		if (pair.length == 2) {
+			var value = pair[1];
+			if (value.length > 0) {
+				var name = pair[0];
+				if (map.hasOwnProperty(name)) {
+					map[name].push(value);
+				} else {
+					map[name] = [ value ];
+				}
+			}
+		}
+	}
+	return map;
+};
+
+// scroll the select list with the given ID (include #) until it has the first selected option on top
+var scrollToSelected = function(id) {
+	var $s = $(id);
+	if ($s != null) {
+		var optionSelected = $s.find("[selected=selected]");
+		if (optionSelected != null) {
+			$s.scrollTop($s.scrollTop() + (optionSelected.offset().top - $s.offset().top));
+		}
+	}
+};
+
+// update whether stage or age tab is selected, based on query parameters
+var updateAgeStageTab = function() {
+	var parameters = getParameterMap();
+	if (parameters.hasOwnProperty('theilerStage') && (parameters['theilerStage'].indexOf('0') == -1)) {
+		selectTheilerStage();
+		scrollToSelected("#theilerStage");
+	} else if (parameters.hasOwnProperty('age') && (parameters['age'].indexOf('ANY') == -1)) {
+		selectAge();
+		scrollToSelected("#age");
+	} else {
+		selectAge();
+	}
+};
+
 // update the results div
 var updateResultsDiv = function(startIndex, rowsPerPage) {
+	updateAgeStageTab();
+	
 	var xPos = window.scrollX;		// remember page position, so we can return to it
 	var yPos = window.scrollY;
 	
@@ -217,4 +267,5 @@ var gs_setFewiUrl = function(url) {
 
 /*** to execute on being loaded ***/
 
+updateAgeStageTab();
 log("loaded gxdht_summary.js");

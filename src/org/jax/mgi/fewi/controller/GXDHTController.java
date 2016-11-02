@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -78,6 +79,13 @@ public class GXDHTController {
 		logger.debug("->gxdHtSummary started");
 		logger.debug("queryString: " + request.getQueryString());
 
+		// if both age and stage are submitted, prefer stage and remove consideration of age
+		if ((queryForm.getTheilerStage() != null) && (!queryForm.getTheilerStage().contains(GxdHtQueryForm.ANY_STAGE))) {
+			if ((queryForm.getAge() != null) && (!queryForm.getAge().contains(GxdHtQueryForm.ANY_AGE))) {
+				queryForm.setAge(GxdHtQueryForm.ANY_AGE);
+			}
+		}
+		
 		ModelAndView mav = new ModelAndView("gxdht/gxdht_query");
 		mav.addObject("queryString", request.getQueryString());
 		mav.addObject("queryForm", queryForm);
@@ -437,6 +445,67 @@ public class GXDHTController {
 		String structure = query.getStructure();
 		if ((structure != null) && (structure.length() > 0)) {
 			filterList.add(new Filter(SearchConstants.GXDHT_STRUCTURE_SEARCH, structure.replaceAll(" ", "+"), Filter.Operator.OP_EQUAL));
+		}
+		
+		// search by stage (if available) or fall back on age (if no stage)
+		List<Integer> stages = query.getTheilerStage();
+		List<String> ages = query.getAge();
+		if ((stages != null) && (stages.size() > 0) && (!stages.contains(GxdHtQueryForm.ANY_STAGE))) {
+			List<Filter> stageFilters = new ArrayList<Filter>();
+			for(Integer stage : stages)
+			{
+				Filter stageF = new Filter(SearchConstants.GXD_THEILER_STAGE, stage, Filter.Operator.OP_HAS_WORD);
+				stageFilters.add(stageF);
+
+			}
+			filterList.add(Filter.or(stageFilters));		// add the theiler stage search filter 
+		}
+		// search by age
+		else if ((ages != null) && (ages.size() > 0) && (!ages.contains(GxdHtQueryForm.ANY_AGE))) {
+			// also do nothing if both postnatal and embryonic are selected, because it is equivalent to ANY
+			if (!(ages.contains(GxdHtQueryForm.EMBRYONIC) && ages.contains(GxdHtQueryForm.POSTNATAL)))
+			{
+				List<Filter> ageFilters = new ArrayList<Filter>();
+				//postnatal means TS 28 (and TS 27)
+				if (ages.contains(GxdHtQueryForm.POSTNATAL))
+				{
+					// same as TS 28 (and TS 27)
+					ageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE,28,Filter.Operator.OP_HAS_WORD));
+					ageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE,27,Filter.Operator.OP_HAS_WORD));
+				}
+				//embryonic means TS 1-26
+				// if they selected embryonic, none of the age selections matter
+				if (ages.contains(GxdHtQueryForm.EMBRYONIC))
+				{
+					// Same as TS 1-26 or NOT (TS 28 or TS 27)
+					ageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE,28,Filter.Operator.OP_NOT_EQUAL));
+					ageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE,27,Filter.Operator.OP_NOT_EQUAL));
+				}
+				else
+				{
+					// iterate the legit age queries
+					for(String age : ages)
+					{
+						if(!age.equalsIgnoreCase(GxdHtQueryForm.EMBRYONIC)
+								&& !age.equalsIgnoreCase(GxdHtQueryForm.POSTNATAL))
+						{
+							try{
+								Filter ageMinFilter = new Filter(SearchConstants.GXD_AGE_MIN,age,Filter.Operator.OP_LESS_OR_EQUAL);
+								Filter ageMaxFilter = new Filter(SearchConstants.GXD_AGE_MAX,age,Filter.Operator.OP_GREATER_OR_EQUAL);
+								// AND the min and max query to make a range query;
+								ageFilters.add(Filter.and(Arrays.asList(ageMinFilter,ageMaxFilter)));
+							}
+							catch (NumberFormatException ne)
+							{
+								logger.info("an invalid age was passed to the form");
+								logger.info(ne.getMessage());
+								// ignore this. It just means someone manually entered an invalid url
+							}
+						}
+					}
+				}
+				filterList.add(Filter.or(ageFilters));
+			}
 		}
 		
 		// if we have filters, collapse them into a single filter
