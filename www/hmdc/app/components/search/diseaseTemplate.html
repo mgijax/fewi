@@ -10,7 +10,7 @@
 		<thead>
 			<tr>
 				<th st-ratio="35" st-sort="term" st-skip-natural="true" st-sort-default="true" class="sortable">Disease <i st-sort="term"></i></th>
-				<th st-ratio="5" st-sort="primaryId" st-skip-natural="true" class="sortable">OMIM ID <i st-sort="primaryId"></i></th>
+				<th st-ratio="5" st-sort="primaryId" st-skip-natural="true" class="sortable">DO ID <i st-sort="primaryId"></i></th>
 				<th st-ratio="10" st-sort="diseaseModelCount" st-skip-natural="true" class="sortable">Mouse Models <i st-sort="diseaseModelCount"></i></th>
 				<th st-ratio="30" st-sort="diseaseMouseMarkers" st-skip-natural="true" class="sortable">Associated Genes from Mouse Models <i st-sort="diseaseMouseMarkers"></i></th>
 				<th st-ratio="10" st-sort="diseaseHumanMarkers" st-skip-natural="true" class="sortable">Associated Human Genes (<a href="" ng-click="openDiseaseSource();">Source</a>) <i st-sort="diseaseHumanMarkers"></i></th>
@@ -21,7 +21,7 @@
 		<tbody>
 			<tr ng-repeat="row in displayedCollection">
 				<td><a target="_blank" href="{{FEWI_URL}}disease/{{ row.primaryId }}">{{ row.term }}</a></td>
-				<td><a target="_blank" href="http://www.omim.org/entry/{{ row.primaryId }}">{{ row.primaryId }}</a></td>
+				<td><a target="_blank" href="#">{{ row.primaryId }}</a></td>
 				<td><a ng-if="row.diseaseModelCount > 0" target="_blank" href="{{FEWI_URL}}disease/models/{{ row.primaryId }}">{{ row.diseaseModelCount }}</a></td>
 				<td><div ng-bind-html="row.diseaseMouseMarkers | joinBy:', ' | handleSubscript "></div></td>
 				<td><div ng-bind-html="row.diseaseHumanMarkers | joinBy:', ' | handleSubscript "></div></td>

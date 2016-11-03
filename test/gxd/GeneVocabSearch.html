@@ -452,11 +452,11 @@ and not exists(select 1 from voc_marker_cache vm2 where
             </li>
             <li>Selecting an OMIM term returns only those genes which have at least one positive annotation and expression data, and does not return genes having only a NOT annotation
             <ol>
-                <li>Select the term '<b>Achondroplasia; ACH</b>' (<b concordion:set="#query">100800</b>) </li>
+                <li>Select the term '<b>Achondroplasia; ACH</b>' (<b concordion:set="#query">OMIM:100800</b>) </li>
                 <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Npr2</b> should be returned (has only positive annotations).</li>
                 <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Fgfr3</b> should be returned (has positive and NOT annotations).</li>
                 
-                <li>Select the term '<b>Asthma, Susceptibility to</b>' (<b concordion:set="#query">600807</b>) </li>
+                <li>Select the term '<b>Asthma, Susceptibility to</b>' (<b concordion:set="#query">OMIM:600807</b>) </li>
                 <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Runx3</b> should be returned (has only positive annotations).</li>
                 <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Adam33</b> should not be returned (has only NOT annotations).</li>
                 <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Alox5</b> should be returned (is ortholog of associated Human gene but has no mouse annotations itself).  As part of the 5.21 release the GXD QF will search for GXD results for mouse homologs of human genes annotated to an OMIM term.</li>
