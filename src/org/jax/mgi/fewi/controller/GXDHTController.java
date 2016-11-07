@@ -477,9 +477,7 @@ public class GXDHTController {
 				// if they selected embryonic, none of the age selections matter
 				if (ages.contains(GxdHtQueryForm.EMBRYONIC))
 				{
-					// Same as TS 1-26 or NOT (TS 28 or TS 27)
-					ageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE,28,Filter.Operator.OP_NOT_EQUAL));
-					ageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE,27,Filter.Operator.OP_NOT_EQUAL));
+					ageFilters.add(Filter.range(SearchConstants.GXD_THEILER_STAGE, "1", "26"));
 				}
 				else
 				{

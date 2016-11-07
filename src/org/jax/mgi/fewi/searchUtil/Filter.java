@@ -271,7 +271,7 @@ public class Filter {
 	}
 	
 	/**
-	 * Create a new Filter using the NOT IN operator.
+	 * Create a new Filter using the RANGE operator.
 	 */
 	public static Filter range(String property, String value1, String value2) {
 		List<String> values = new ArrayList<String>();
