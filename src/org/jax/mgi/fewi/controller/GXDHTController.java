@@ -178,10 +178,8 @@ public class GXDHTController {
 		return mav;
 	}
 
-//	@RequestMapping("/json")
 	@RequestMapping("/table")
 	public ModelAndView experimentsTable (HttpServletRequest request, @ModelAttribute GxdHtQueryForm query, @ModelAttribute Paginator page) {
-//	public @ResponseBody JsonSummaryResponse<GxdHtExperiment> experimentsJson(HttpServletRequest request, @ModelAttribute GxdHtQueryForm query, @ModelAttribute Paginator page) {
 
 		logger.debug("->experimentsTable started");
 
@@ -206,17 +204,6 @@ public class GXDHTController {
 		mav.addObject("count", summaryRows.size());
 		mav.addObject("totalCount", searchResults.getTotalCount());
 		return mav;
-
-/*
-		// The JSON return object will be serialized to a JSON response.
-		// Client-side JavaScript expects this object
-		JsonSummaryResponse<GxdHtExperiment> jsonResponse = new JsonSummaryResponse<GxdHtExperiment>();
-
-		// place data into JSON response, and return
-		jsonResponse.setSummaryRows(summaryRows);
-		jsonResponse.setTotalCount(searchResults.getTotalCount());
-		return jsonResponse;
-*/
 	}
 /*
  * note -- should also do lookup by structure ID
@@ -318,10 +305,6 @@ public class GXDHTController {
 		params.setSorts(genSorts(request));
 		params.setFilter(genFilters(query));
 		
-		// need to alter this...  should search samples, get distinct experiment IDs and count of matching
-		// samples for each, get experiments, set matching sample count for each experiment, return list
-		// of experiments
-
 		// perform query, return SearchResults 
 		return gxdHtFinder.getExperiments(params);
 	}
