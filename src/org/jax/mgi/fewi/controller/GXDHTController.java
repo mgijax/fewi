@@ -146,6 +146,10 @@ public class GXDHTController {
 
 		// if we found any samples, get the matching ones and float them to the top
 		if ((samples != null) && (samples.size() > 0)) {
+			// add the experiment key to the set of parameters from the experiment search, to ensure
+			// we're only bringing back samples for the desired experiment
+			queryForm.setExperimentKey(experiment.getExperimentKey().toString());
+
 			SearchParams sampleParams = new SearchParams();
 			sampleParams.setFilter(genFilters(queryForm));
 			Set<String> matchingSampleKeys = gxdHtFinder.getMatchingSampleKeys(sampleParams);
