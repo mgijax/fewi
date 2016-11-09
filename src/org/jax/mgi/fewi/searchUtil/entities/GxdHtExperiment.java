@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import org.jax.mgi.fewi.util.FormatHelper;
+
 /* Is: a high-throughput expression experiment
  * Notes: is populated using data from the gxdHtExperiment Solr index
  */
@@ -71,6 +73,9 @@ public class GxdHtExperiment
 	}
 	public void setMethod(String method) {
 		this.method = method;
+	}
+	public String getLinkedDescription() {
+		return FormatHelper.makeUrlsIntoLinks(description, true, null);
 	}
 	public String getDescription() {
 		return description;

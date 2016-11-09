@@ -24,7 +24,10 @@
 		<div id="row${status.index}idLabels" class="idLabels">ArrayExpress:<c:if test="${not empty geoLink}"><br/>GEO:</c:if></div>
 		<div id="row${status.index}ids" class="ids"><a href="${aeLink}" target="_blank">${exp.arrayExpressID}</a>
 			<c:if test="${not empty geoLink}"><br/><a href="${geoLink}" target="_blank">${exp.geoID}</a></c:if></div>
-		<div id="row${status.index}title" class="title">${exp.title}</div>
+		<div id="row${status.index}title" class="title">
+	      	<c:if test="${highlightTitle}"><fewi:highlight value='${exp.title}' searchString="${textSearch}" highlightClass="yellow"/></c:if>
+	      	<c:if test="${empty highlightTitle}">${exp.title}</c:if>
+		</div>
 	  </div>
 	  <div id="row${status.index}detailWrapper" class="detailWrapper">
 	    <div id="row${status.index}samplesWrapper" class="detailCell">
@@ -61,7 +64,10 @@
 	  <c:if test="${not empty exp.description}">
 	  <div id="row${status.index}descriptionWrapper" class="descriptionWrapper ${headingClass.current}">
 	      <div id="row${status.index}descriptionTitle" class="descriptionTitle">Description</div>
-	      <div id="row${status.index}description" class="description"><fewi:httpToLink value="${exp.description}"/></div>
+	      <div id="row${status.index}description" class="description">
+	      	<c:if test="${highlightDescription}"><fewi:highlight value='${exp.linkedDescription}' searchString="${textSearch}" highlightClass="yellow"/></c:if>
+	      	<c:if test="${empty highlightDescription}">${exp.linkedDescription}</c:if>
+	      </div>
 	  </div>
 	  </c:if>
     </div> 

@@ -203,6 +203,12 @@ public class GXDHTController {
 		mav.addObject("experiments", summaryRows);
 		mav.addObject("count", summaryRows.size());
 		mav.addObject("totalCount", searchResults.getTotalCount());
+		
+		if (query.searchDescription() || query.searchTitle()) {
+			mav.addObject("textSearch", query.getText());
+			if (query.searchDescription()) { mav.addObject("highlightDescription", true); }
+			if (query.searchTitle()) { mav.addObject("highlightTitle", true); }
+		}
 		return mav;
 	}
 /*

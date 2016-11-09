@@ -662,5 +662,22 @@ public class FormatHelper {
 		width = Math.max(width, s.length() - prevPos);
 		return width;
 	}
+	
+	/* Look for any URLs in the input string 's' and convert them to be links.  If 'targetNewWindow' is true,
+	 * set the link target to be '_blank' for a new window.  If cssClass is non-null, then apply the specified
+	 * CSS class to the link.
+	 */
+	public static String makeUrlsIntoLinks(String s, boolean targetNewWindow, String cssClass) {
+		if ((s == null) || (s.indexOf("http") == -1)) { return s; }
+		
+		String target = "";
+		String css = "";
+		
+		if (targetNewWindow) { target = " target='_blank'"; }
+		if ((cssClass != null) && (cssClass.length() > 0)) { css = " class='" + cssClass + "'"; }
+		
+		String template = "<a href='$1'" + target + css + ">$1</a>";
+		return s.replaceAll("(https?://[^ )]+)", template);
+	}
 } // end of class FormatHelper
 

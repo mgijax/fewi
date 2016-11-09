@@ -164,6 +164,21 @@ public class GxdHtQueryForm {
         this.text = text;
     }
 
+    // convenience method to see if we need to do a text search against title 
+    public boolean searchTitle() {
+    	if ((text != null) && (text.length() > 0) && (textScope != null)) {
+    		return textScope.contains("Title");
+    	}
+    	return false;
+    }
+    // convenience method to see if we need to do a text search against description
+    public boolean searchDescription() {
+    	if ((text != null) && (text.length() > 0) && (textScope != null)) {
+    		return textScope.contains("Description");
+    	}
+    	return false;
+    }
+
     public List<String> getTextScope() {
         return textScope;
     }

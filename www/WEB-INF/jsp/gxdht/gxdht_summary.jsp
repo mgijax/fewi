@@ -28,6 +28,7 @@ div.description { margin-left: 130px; text-align: left; padding-right: 4px; bord
 #paginationBottom { float: right; margin-right: 20px; text-align: right; }
 a { text-decoration: none; }
 .blue { color: blue; }
+.yellow { background-color: yellow; }
 </style>
 
 <div id="summary">
