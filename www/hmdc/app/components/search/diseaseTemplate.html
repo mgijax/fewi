@@ -6,7 +6,7 @@
 		No Matching Diseases
 	</div>
 
-	<table class="table table-bordered table-striped" st-reset="vm.resetDiseaseTable" st-table="displayedCollection" st-set-sort="sortFilter" st-safe-src="vm.filteredResults" ng-show="vm.filteredResults.length > 0">
+	<table id="diseaseTable" class="table table-bordered table-striped" st-reset="vm.resetDiseaseTable" st-table="displayedCollection" st-set-sort="sortFilter" st-safe-src="vm.filteredResults" ng-show="vm.filteredResults.length > 0">
 		<thead>
 			<tr>
 				<th st-ratio="35" st-sort="term" st-skip-natural="true" st-sort-default="true" class="sortable">Disease <i st-sort="term"></i></th>
