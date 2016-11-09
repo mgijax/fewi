@@ -26,6 +26,7 @@ div.descriptionWrapper { width: 100%; border-right: 1px solid gray; border-left:
 div.descriptionTitle { width: 125px; padding-top: 10px; padding-left: 4px; float: left; text-align: left; font-weight: bold; }
 div.description { margin-left: 130px; text-align: left; padding-right: 4px; border-right: 1px solid gray; }
 #paginationBottom { float: right; margin-right: 20px; text-align: right; }
+#querySummary { width: 500px; }
 a { text-decoration: none; }
 .blue { color: blue; }
 .yellow { background-color: yellow; }

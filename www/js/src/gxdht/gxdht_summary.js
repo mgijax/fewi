@@ -13,6 +13,74 @@
 var instantiatedPaginator = false;
 var fewiUrl = null;
 
+var decode = function(s) {
+	return s.replace(/\+/g, ' ');
+};
+
+// translate the float ages to have a prefixed 'E'
+var translateAges = function(ageList) {
+	var translated = [];
+	for (var i = 0; i < ageList.length; i++) {
+		if (ageList[i].match(/[0-9]+\.?[0-9]*/) != null) {
+			translated.push('E' + ageList[i]);
+		} else {
+			translated.push(ageList[i]);
+		}
+	}
+	return translated;
+};
+
+// update the You Searched For text (in the searchSummary div)
+var updateYouSearchedFor = function() {
+	if (querystring == null) { return; }
+	
+	var ysf = "<b>You Searched For:</b><br/>";
+	var params = getParameterMap();
+	
+	if (params.hasOwnProperty('structure')) {
+		ysf = ysf + '<b>Assayed</b> in <b>' + decode(params['structure'][0]) + '</b>';
+		ysf = ysf + ' <span class="smallGrey">includes synonyms &amp; substructures</span><br/>';
+	} else {
+		ysf = ysf + '<b>Assayed</b> in <b>any structures</b><br/>';
+	}
+	if (params.hasOwnProperty('theilerStage') && (JSON.stringify(params['theilerStage']) != JSON.stringify(['0']))) {
+		ysf = ysf + 'at developmental stage(s): <b>(TS:' + params['theilerStage'].join(')</b> or <b>(TS:') + ')</b><br/>';
+	} else if (params.hasOwnProperty('age') && (JSON.stringify(params['age']) != JSON.stringify(['ANY']))) {
+		var ages = translateAges(params['age']);
+		ysf = ysf + 'at age(s): <b>(' + ages.join(')</b> or <b>(') + ')</b><br/>';
+	} else {
+		ysf = ysf + 'at developmental stage(s): <b>Any</b><br/>';
+	}
+	if (params.hasOwnProperty('sex') && (params['sex'][0] != 'All')) {
+		ysf = ysf + 'Sex: <b>' + params['sex'][0] + '</b><br/>';
+	}
+	if (params.hasOwnProperty('mutatedIn')) {
+		ysf = ysf + 'Samples <b>mutated in ' + decode(params['mutatedIn'][0]) + '</b> ';
+		ysf = ysf + ' <span class="smallGrey">current symbol, synonyms, gene id</span><br/>';
+	}
+	if (params.hasOwnProperty('method')) {
+		ysf = ysf + 'Assayed by <b>(' + decode(params['method'][0]) + ')</b><br/>';
+	}
+	if (params.hasOwnProperty('text')) {
+		ysf = ysf + 'Text ';
+		if (params.hasOwnProperty('textScope')) {
+			ysf = ysf + 'in ';
+			if (params['textScope'].indexOf('Title') >= 0) {
+				ysf = ysf + 'Title';
+			}
+			if (params['textScope'].indexOf('Description') >= 0) {
+				if (ysf.endsWith('Title')) {
+					ysf = ysf + ' or Description';
+				} else {
+					ysf = ysf + 'Description';
+				}
+			}
+			ysf = ysf + ': <b>' + decode(params['text'][0]) + '</b><br/>';
+		}
+	}
+	$('#searchSummary').html(ysf);
+};
+
 // update the pagination info in the querystring
 var updatePaginationParameters = function(page, rowsPerPage) {
 	if (querystring == null) { return; }
@@ -114,6 +182,7 @@ var updateResultsDiv = function(startIndex, rowsPerPage) {
 				$("#resultSummary").html("No experiments meet your search criteria.");
 				updatePageReport(null, null, null, "experiment");
 				updatePaginator(totalCount, null, updatePaginationParameters);
+				updateYouSearchedFor();
 				return;
 			}
 			
@@ -159,7 +228,7 @@ var updateResultsDiv = function(startIndex, rowsPerPage) {
 			
 			updatePageReport(start, end, totalCount, "experiment");
 			updatePaginator(totalCount, null, updatePaginationParameters);
-			log("updated paginator");
+			updateYouSearchedFor();
 			
 			window.scrollTo(xPos, yPos);
 		}
