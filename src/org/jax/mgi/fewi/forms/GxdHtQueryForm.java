@@ -19,6 +19,7 @@ public class GxdHtQueryForm {
 	private List<String> variable = new ArrayList<String>();
 	private String method = "";
 	private String mutatedIn = "";
+    private String relevancy = "";
     private String sex = "";
     private String structure = "";
     private String structureID = "";
@@ -210,6 +211,14 @@ public class GxdHtQueryForm {
 
 	public void setExperimentKey(String experimentKey) {
 		this.experimentKey = experimentKey;
+	}
+
+	public String getRelevancy() {
+		return relevancy;
+	}
+
+	public void setRelevancy(String relevancy) {
+		this.relevancy = relevancy;
 	}
 
 	@Override

@@ -149,6 +149,9 @@ public class GXDHTController {
 			// add the experiment key to the set of parameters from the experiment search, to ensure
 			// we're only bringing back samples for the desired experiment
 			queryForm.setExperimentKey(experiment.getExperimentKey().toString());
+			
+			// also, we only want to float relevant samples to the top (relevancy = 'Yes')
+			queryForm.setRelevancy("Yes");
 
 			SearchParams sampleParams = new SearchParams();
 			sampleParams.setFilter(genFilters(queryForm));
@@ -160,6 +163,7 @@ public class GXDHTController {
 			for (GxdHtSample sample : samples) {
 				if (matchingSampleKeys.contains(sample.getSampleKey().toString())) {
 					matches.add(sample);
+					sample.setMatchesSearch(true);
 				} else {
 					nonMatches.add(sample);
 				}
@@ -432,6 +436,12 @@ public class GXDHTController {
 		String experimentKey = query.getExperimentKey();
 		if ((experimentKey != null) && (experimentKey.length() > 0)) {
 			filterList.add(new Filter(SearchConstants.GXDHT_EXPERIMENT_KEY, experimentKey, Filter.Operator.OP_EQUAL));
+		}
+		
+		// search for relevancy
+		String relevancy = query.getRelevancy();
+		if ((relevancy != null) && (relevancy.length() > 0)) {
+			filterList.add(new Filter(SearchConstants.GXDHT_RELEVANCY, relevancy, Filter.Operator.OP_EQUAL));
 		}
 		
 		// search by structure

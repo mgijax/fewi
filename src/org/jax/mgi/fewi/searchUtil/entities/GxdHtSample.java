@@ -23,7 +23,14 @@ public class GxdHtSample
 	private String relevancy;
 	private String note;
 	private Integer byDefault;
+	private boolean matchesSearch = false;
 
+	public boolean getMatchesSearch() {
+		return matchesSearch;
+	}
+	public void setMatchesSearch(boolean matchesSearch) {
+		this.matchesSearch = matchesSearch;
+	}
 	public String getRelevancy() {
 		return relevancy;
 	}
