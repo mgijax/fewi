@@ -80,8 +80,8 @@ tr.gray td {background-color:#EEEEEE;}
 		<ol>
     		<li>Querying with the full name of a disease returns an exact match for the disease.
 			<ol>
-    		    <li>Query for &quot;Netherton Syndrome; NETH&quot; <b concordion:set="#disease">Netherton Syndrome; NETH</b></li>
-                <li>Verify that <b cc:assertResultsContain="getTermsByDisease(#disease)">Netherton Syndrome; NETH</b> is returned.</li>
+    		    <li>Query for <b concordion:set="#disease">netherton syndrome</b></li>
+                <li>Verify that <b cc:assertResultsContain="getTermsByDisease(#disease)">Netherton syndrome</b> is returned.</li>
     		</ol>
     		</li>
 
@@ -90,13 +90,9 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Query for <b concordion:set="#disease">abdominal</b>.</li>
                 <li>At least the following diseases should appear in the result set (and many others due to matches on MP terms that return additional diseases).
                 	<table cc:verifySupersetOf="#termId : getTermIdsByDisease(#disease)">
-                	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th><th>Why it should have matched</th></tr>
-                	<tr><td>OMIM:605552</td><td>Abdominal Obesity-Metabolic Syndrome</td><td>contained in name</td></tr>
-                	<tr><td>OMIM:265050</td><td>3mc Syndrome 2; 3MC2</td><td>synonym:  Oculo-Skeletal-Abdominal Syndrome</td></tr>
-                	<tr><td>OMIM:100070</td><td>Aortic Aneurysm, Familial Abdominal, 1; AAA1</td><td>contained in name</td></tr>
-                	<tr><td>OMIM:226100</td><td>Endocardial Fibroelastosis and Coarctation of Abdominal Aorta</td><td>contained in name</td></tr>
-                	<tr><td>OMIM:182212</td><td>Shprintzen-Goldberg Craniosynostosis Syndrome; SGS</td><td>synonym: Craniosynostosis with Arachnodactyly and Abdominal Hernias</td></tr>
-                	<tr><td>OMIM:100100</td><td>Abdominal Muscles, Absence of, with Urinary Tract Abnormality and Cryptorchidism</td><td>contained in name</td></tr>
+                	<tr><th concordion:assertEquals="#termId">DO ID</th><th>Disease Name</th><th>Why it should have matched</th></tr>
+                	<tr><td>DOID:0060611</td><td>abdominal obesity-metabolic syndrome</td><td>contained in name</td></tr>
+                	<tr><td>DOID:5041</td><td>esophageal cancer</td><td>synonym: malignant tumor of abdominal esophagus</td></tr>
                 	</table>
                 </li>
                 
@@ -109,68 +105,34 @@ tr.gray td {background-color:#EEEEEE;}
                  <li>Query for <b concordion:set="#disease">parkinson</b>.</li>
                 <li>At least the following diseases should appear in the result set (along with many others):
                 	<table cc:verifySupersetOf="#termId : getTermIdsByDisease(#disease)">
-                	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th><th>Why it should have matched</th></tr>
-                	<tr><td>OMIM:556500</td><td>Parkinson Disease, Mitochondrial</td><td>contained in name</td></tr>
-                	<tr><td>OMIM:194200</td><td>Wolff-Parkinson-White Syndrome</td><td>contained in name</td></tr>
-                	<tr><td>OMIM:606693</td><td>Kufor-Rakeb Syndrome; KRS</td><td>has synonym "Parkinson Disease 9, Autosomal Recessive; PARK9"</td></tr>
+                	<tr><th concordion:assertEquals="#termId">DO ID</th><th>Disease Name</th><th>Why it should have matched</th></tr>
+                	<tr><td>DOID:384</td><td>Wolff-Parkinson-White syndrome</td><td>contained in name</td></tr>
+                	<tr><td>DOID:0060556</td><td>Kufor-Rakeb syndrome</td><td>has synonym "autosomal recessive Parkinson disease 9"</td></tr>
                 	</table>
                 </li>
     		</ol>
     		</li>
-
-<!--  COMMENTING OUT WILD CARD TEST - not valid in 6.05
-     		<li>Querying with a partial word <b>followed by</b> the wildcard symbol returns all diseases containing that partial word in a name or synonym.
-    		<ol>
-                <li>Query by <b concordion:set="#disease">Achroma*</b></li>
-                <li>Query should ONLY return the following diseases: 
-                	<table cc:verifyRowsUnordered="#termId : getTermIdsByDisease(#disease)">
-                	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th><th>Why it should have matched</th></tr>
-                	<tr><td>216900</td><td>Achromatopsia 2; ACHM2</td><td>contained in name</td></tr>
-                	<tr><td>262300</td><td>Achromatopsia 3; ACHM3</td><td>contained in name</td></tr>
-                	<tr><td>613856</td><td>Achromatopsia 4; ACHM4</td><td>contained in name</td></tr>
-                	<tr><td>616517</td><td>Achromatopsia 7; ACHM7</td><td>contained in name</td></tr>
-                	<tr><td>248200</td><td>Stargardt Disease 1; STGD1</td><td>associated to human gene that has annotation to one of the above diseases (change in 5.21)</td></tr>
-                	</table></li>
-    		</ol>
-    		</li>
--->
-
-<!--  COMMENTING OUT WILD CARD TEST - not valid in 6.05
-    		<li>Querying with a partial word <b>preceded by</b> the wildcard symbol returns all diseases containing that partial word in a name or synonym (same results as above).<ol>
-                <li>Query by <b concordion:set="#disease">*chromatopsia</b></li>
-                <li>Query should ONLY return the following diseases: 
-                	<table cc:verifyRowsUnordered="#termId : getTermIdsByDisease(#disease)">
-                	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th><th>Why it should have matched</th></tr>
-                	<tr><td>216900</td><td>Achromatopsia 2; ACHM2</td><td>contained in name</td></tr>
-                	<tr><td>262300</td><td>Achromatopsia 3; ACHM3</td><td>contained in name</td></tr>
-                	<tr><td>613856</td><td>Achromatopsia 4; ACHM4</td><td>contained in name</td></tr>
-                	<tr><td>616517</td><td>Achromatopsia 7; ACHM7</td><td>contained in name</td></tr>
-                	<tr><td>248200</td><td>Stargardt Disease 1; STGD1</td><td>associated to human gene that has annotation to one of the above diseases (change in 5.21)</td></tr>
-                	</table></li>
-    		</ol>
-    		</li>
--->
 
     		<li>Querying with multiple words returns all diseases matching all words in the query string (proximity match in Solr)
     		<ol>
                 <li>Query by <b concordion:set="#disease">Cancer Lung</b>, match any disease that has both of the tokens; any order; do not need to be adjacent.</li>
                 <li>Query should return at the following diseases by match to the disease term: 
                 	<table cc:verifySupersetOf="#termId : getTermIdsByDisease(#disease)">
-                	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
-                	<tr><td>OMIM:211980</td><td>Lung Cancer</td></tr>
-                	<tr><td>OMIM:182280</td><td>Small Cell Cancer of the Lung</td></tr>
+                	<tr><th concordion:assertEquals="#termId">DO ID</th><th>Disease Name</th><th>Why</th></tr>
+                	<tr><td>DOID:1324</td><td>lung cancer</td><td>contained in name</td></tr>
+                	<tr><td>DOID:3905</td><td>lung carcinoma</td><td>synonym: "cancer of lung"</td></tr>
                 	</table></li>
     		</ol>
     		</li>
 
-    		<li>Querying with an ID returns disease matching the ID plus other diseases associated to the mouse genocluster returned.
+    		<li>Querying with a disease ID returns disease matching the ID plus other diseases associated to the mouse genocluster returned.
     		<ol>
-                <li>Query by OMIM ID <b concordion:set="#disease">Angelman Syndrome; AS</b></li>
+                <li>Query by <b concordion:set="#disease">DOID:1932</b> (Angelman syndrome)</li>
                 <li>Should return disease associated to this id PLUS other diseases that are associated to the mouse genoclusters returned; no longer include diseases associated to human genes returned (change in 6.05):
-                <table cc:verifySupersetOf="#termId : getTermIdsByDisease(#disease)">
-                	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
-                	<tr><td>OMIM:105830</td><td>Angelman Syndrome; AS</td></tr>
-                	<tr><td>OMIM:176270</td><td>Prader-Willi Syndrome; PWS</td></tr>
+                <table cc:verifySupersetOf="#termId : getTermIdsByDiseaseId(#disease)">
+                	<tr><th concordion:assertEquals="#termId">DO ID</th><th>Disease Name</th></tr>
+                	<tr><td>DOID:1932</td><td>Angelman syndrome</td></tr>
+                	<tr><td>DOID:11983</td><td>Prader-Willi syndrome</td></tr>
                 	</table>
                 </li>
     		</ol>
@@ -181,9 +143,9 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Query by <b concordion:set="#disease">"Cancer Lung"</b> in double quotes.</li>
                 <li>Should return at least the following diseases:
                 <table cc:verifySupersetOf="#termId : getTermIdsByDisease(#disease)">
-                	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
-                	<tr><td>OMIM:211980</td><td>Lung Cancer</td></tr>
-                	<tr><td>OMIM:182280</td><td>Small Cell Cancer of the Lung</td></tr>
+                	<tr><th concordion:assertEquals="#termId">DO ID</th><th>Disease Name</th><th>Why</th></tr>
+                	<tr><td>DOID:1324</td><td>lung cancer</td><td>contained in name</td></tr>
+                	<tr><td>DOID:3905</td><td>lung carcinoma</td><td>synonym: "cancer of lung"</td></tr>
                 	</table>
                 </li>
     		</ol>
@@ -191,11 +153,11 @@ tr.gray td {background-color:#EEEEEE;}
     		
     		<li>Querying for a disease with no models still brings back the disease.
     		<ol>
-                <li>Query by Acne, Adult <b concordion:set="#disease">OMIM:604324</b></li>
+                <li>Query by acne <b concordion:set="#disease">DOID:6543</b></li>
                 <li>Should return ONLY one disease:
                 <table cc:verifyRowsUnordered="#termId : getTermIdsByDiseaseId(#disease)">
-                	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
-                	<tr><td>OMIM:604324</td><td>Acne, Adult</td></tr>
+                	<tr><th concordion:assertEquals="#termId">DO ID</th><th>Disease Name</th></tr>
+                	<tr><td>DOID:6543</td><td>acne</td></tr>
                 	</table>
                 </li>
                 <li>Count of genes returned should be <b concordion:assertEquals="getGeneCountByDisease(#disease)">0</b></li>
@@ -204,11 +166,11 @@ tr.gray td {background-color:#EEEEEE;}
     		
     		<li>Querying for a disease with the OMIM: prefix 
     		<ol>
-                <li>Query by Systemic Lupus Erythematosus; SLE <b concordion:set="#disease">OMIM:152700</b></li>
+                <li>Query by systemic lupus erythematosus <b concordion:set="#disease">DOID:9074</b></li>
                 <li>Should return this disease:
                 <table cc:verifySupersetOf="#termId : getTermIdsByDiseaseId(#disease)">
-                	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
-                	<tr><td>OMIM:152700</td><td>Systemic Lupus Erythematosus; SLE</td></tr>
+                	<tr><th concordion:assertEquals="#termId">DO ID</th><th>Disease Name</th></tr>
+                	<tr><td>DOID:9074</td><td>systemic lupus erythematosus</td></tr>
                 	</table>
                 </li>
     		</ol>
@@ -285,34 +247,20 @@ tr.gray td {background-color:#EEEEEE;}
     			</ol>
     		</li>
     		
-    		<li>Querying for other types of OMIM records (prefixed with plus, pound sign, percent sign, or no prefix) returns results.
-    		<table>
-	    		<tr><th>OMIM ID</th><th>OMIM term (gene symbol)</th></tr>
-				<tr><td>+141900</td><td>HEMOGLOBIN--BETA LOCUS; HBB </td></tr>
-				<tr><td>+141800</td><td>HEMOGLOBIN--ALPHA LOCUS 1; HBA1 </td></tr>
-				<tr><td>+142830</td><td>MAJOR HISTOCOMPATIBILITY COMPLEX, CLASS I, B; HLA-B </td></tr>
-				<tr><td>#300194</td><td>AMME COMPLEX </td></tr>
-				<tr><td>#300100</td><td>ADRENOLEUKODYSTROPHY; ALD </td></tr>
-				<tr><td>#300676</td><td>MENTAL RETARDATION, X-LINKED, SYNDROMIC 14; MRXS14 </td></tr>
-				<tr><td>#300699</td><td>MENTAL RETARDATION, X-LINKED, SYNDROMIC, WU TYPE; MRXSW </td></tr>
-				<tr><td>#301835</td><td>ARTS SYNDROME; ARTS </td></tr>
-				<tr><td>%300605</td><td>RETINITIS PIGMENTOSA 34; RP34 </td></tr>
-				<tr><td>%300660</td><td>LEUKOENCEPHALOPATHY WITH METAPHYSEAL CHONDRODYSPLASIA; LKMCD </td></tr>
-				<tr><td>%300614</td><td>DEAFNESS, X-LINKED 5; DFNX5 </td></tr>
-				<tr><td>%300619</td><td>CATARACT, ATAXIA, SHORT STATURE, AND MENTAL RETARDATION </td></tr>
-				<tr><td>%300612</td><td>BROOKS-WISNIEWSKI-BROWN SYNDROME </td></tr>
-				<tr><td>300602</td><td>CLARK-BARAITSER SYNDROME </td></tr>
-				<tr><td>301800</td><td>ANUS, IMPERFORATE </td></tr>
-				<tr><td>301840</td><td>SPINOCEREBELLAR ATAXIA, X-LINKED 4 </td></tr>
-				<tr><td>303650</td><td>COLONIC ATRESIA </td></tr>
-				<tr><td>309120</td><td>SPERMATOGENIC FAILURE, X-LINKED, 2; SPGFX2 </td></tr>
-    		</table>
-    		</li>
     		<ol>
     			<li>
-    			  <h3 style="background-color: lightblue;">TODO (kevin): FIX after we get OMIM ID numbers working again</h3>
-    			  Query for OMIM gene records: <b concordion:set="#disease">+141900,+141800,+142830,#300194,#300100,#300676,#300699,#301835,%300605,%300660,%300614,%300619,%300612,300602,301800,301840,303650,309120</b></li>
-    			<li>Verify that <b concordion:assertEquals="getDiseaseCountByDisease(#disease)">14</b> disease terms are returned. Change in 6.05 reduces the number of diseases returned.  Diseases previously returned because of being associated to human genes returned (indirect associations) are no longer present.  This search previously returned 30 diseases.</li>
+    			  Querying for other types of OMIM records (prefixed with plus, pound sign, percent sign, asterisk) returns results.
+    			</li>
+    			<li>Verify that querying by an OMIM disease ID <b>300676</b> (syndromic X-linked intellectual disability) 
+    				can be done with any of the typical OMIM special prefixes (in case of user copy-paste error)
+    			   <table concordion:execute="#count = getDiseaseCountByDisease(#disease)">
+    			     <tr><th concordion:set="#disease">Queried ID</th><th cc:assertEquals="#count">Gene count</th></tr>
+    			     <tr><td>#300676</td><td>1</td></tr>
+    			     <tr><td>%300676</td><td>1</td></tr>
+    			     <tr><td>+300676</td><td>1</td></tr>
+    			     <tr><td>*300676</td><td>1</td></tr>
+    			   </table>
+    			</li>
     		</ol>
     			
     		<li>No diseases are returned when searching with just a stop word (change in 6.05)
