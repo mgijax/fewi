@@ -485,7 +485,7 @@ public class AutoCompleteController {
 			filterList.add(new Filter(SearchConstants.VOC_DERIVED_TERMS,q,Filter.Operator.OP_GREEDY_BEGINS));
 		}
 		List<Filter> vocabList = new ArrayList<Filter>();
-		vocabList.add(new Filter(SearchConstants.VOC_VOCAB, "OMIM"));
+		vocabList.add(new Filter(SearchConstants.VOC_VOCAB, "Disease Ontology"));
 		vocabList.add(new Filter(SearchConstants.VOC_VOCAB, "Human Phenotype Ontology"));
 		vocabList.add(new Filter(SearchConstants.VOC_VOCAB, "Mammalian Phenotype"));
 
