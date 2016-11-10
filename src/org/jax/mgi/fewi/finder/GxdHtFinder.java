@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jax.mgi.fewi.forms.GxdHtQueryForm;
 import org.jax.mgi.fewi.hunter.SolrGxdHtExperimentHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdHtSampleHunter;
 import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
@@ -39,11 +41,22 @@ public class GxdHtFinder {
 	private SolrGxdHtExperimentHunter gxdHtExperimentHunter;
 
 	//--- public methods ---//
-	public SearchResults<GxdHtExperiment> getExperiments(SearchParams searchParams) {
+	public SearchResults<GxdHtExperiment> getExperiments(SearchParams searchParams, GxdHtQueryForm query) {
 		logger.debug("->getExperiments");
 
 		// first, we need to search the samples and get the set of matching experiment keys (plus
-		// the count of matching samples for each)
+		// the count of matching samples for each).  If any sample-specific fields were submitted,
+		// we only want to consider relevant samples.
+		
+		if ((query.getAge() != null) || (query.getMutatedIn() != null) || (query.getSex() != null) ||
+			(query.getStructure() != null) || (query.getTheilerStage() != null) ||
+			(query.getStructureID() != null)) {
+				List<Filter> filters = new ArrayList<Filter>();
+				filters.add(searchParams.getFilter());
+				filters.add(new Filter(SearchConstants.GXDHT_RELEVANCY, "Yes", Filter.Operator.OP_EQUAL));
+				searchParams.setFilter(Filter.and(filters));
+		}
+		
 		Map<String, Integer> experimentKeyMap = gxdHtSampleHunter.getExperimentMap(searchParams);
 		logger.debug("  -> got map, size " + experimentKeyMap.size());
 		

@@ -107,7 +107,7 @@ public class GXDHTController {
 		
 		SearchParams params = new SearchParams();
 		params.setFilter(genFilters(query));
-		SearchResults<GxdHtExperiment> searchResults = gxdHtFinder.getExperiments(params);
+		SearchResults<GxdHtExperiment> searchResults = gxdHtFinder.getExperiments(params, query);
 		List<GxdHtExperiment> experimentList = searchResults.getResultObjects();
 
 		String error = null;
@@ -316,7 +316,7 @@ public class GXDHTController {
 		params.setFilter(genFilters(query));
 		
 		// perform query, return SearchResults 
-		return gxdHtFinder.getExperiments(params);
+		return gxdHtFinder.getExperiments(params, query);
 	}
 
 	/*
