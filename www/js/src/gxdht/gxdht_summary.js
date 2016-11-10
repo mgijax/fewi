@@ -34,7 +34,7 @@ var translateAges = function(ageList) {
 var updateYouSearchedFor = function() {
 	if (querystring == null) { return; }
 	
-	var ysf = "<b>You Searched For:</b><br/>";
+	var ysf = "<b>You searched for:</b><br/>";
 	var params = getParameterMap();
 	
 	if (params.hasOwnProperty('structure')) {
