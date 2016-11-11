@@ -129,6 +129,24 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	List<SolrHdpDisease> terms = mq.getDiseases();
     	return terms.size();
     }
+    
+    public List<String> getOMIMIdsForDiseaseId(String diseaseId) throws Exception
+    {
+    	List<String> omimIds = new ArrayList<String>();
+    	
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermIdClause(diseaseId);
+    	
+    	List<SolrHdpDisease> diseases = mq.getDiseases();
+    	
+    	for (SolrHdpDisease disease : diseases) {
+    		if (disease.getPrimaryId().equalsIgnoreCase(diseaseId)) {
+    			omimIds = disease.getOmimIds();
+    		}
+    	}
+    	
+    	return omimIds;
+    }
 
     public List<String> getTermsByPhenotype(String phenotype) throws Exception
     {	

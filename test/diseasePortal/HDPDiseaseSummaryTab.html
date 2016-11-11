@@ -339,6 +339,28 @@ order by AA.accID
  			</ol>
     		</li>
 		
+		
+			<li>Disease summary displays OMIM ID(s) for each disease (DO) term
+ 			<ol>
+                <li>Query for "progeria", <b concordion:set="#diseaseId">DOID:3911</b>.</li>
+                <li>Verify that the following OMIM ID(s) are displayed for this disease
+                	<table cc:verifyRowsUnordered="#omimId : getOMIMIdsForDiseaseId(#diseaseId)">
+                	<tr><th cc:assertEquals="#omimId">OMIM ID</th><th>Disease Name</th></tr>
+                	<tr><td>OMIM:176670</td><td>HUTCHINSON-GILFORD PROGERIA SYNDROME; HGPS</td></tr>
+                	</table>
+                </li>
+                
+                <li>Query for "breast cancer", <b concordion:set="#diseaseId">DOID:1612</b>.</li>
+                <li>Verify that the following OMIM ID(s) are displayed for this disease
+                	<table cc:verifyRowsUnordered="#omimId : getOMIMIdsForDiseaseId(#diseaseId)">
+                	<tr><th cc:assertEquals="#omimId">OMIM ID</th><th>Disease Name</th></tr>
+                	<tr><td>OMIM:114480</td><td>BREAST CANCER</td></tr>
+                	<tr><td>OMIM:600048</td><td>BREAST CANCER, 11-22 TRANSLOCATION-ASSOCIATED; BRCATA</td></tr>
+                	<tr><td>OMIM:605365</td><td>BREAST CANCER 3; BRCA3</td></tr>
+                	</table>
+                </li>
+ 			</ol>
+    		</li>
 		</ol>
 	</div>
 </div>
