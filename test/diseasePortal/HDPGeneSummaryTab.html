@@ -182,56 +182,36 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>  -->
 
-    		<li>Verify the correct OMIM terms are displayed 
+    		<li>Verify the correct Disease terms are displayed 
     		<ol>
-                <li>Query for <b concordion:set="#disease">OMIM:176670</b>.</li>
+                <li>Query for <b concordion:set="#disease">DOID:3911</b> (progeria).</li>
                 <li>The following diseases should appear in the gene result set  due to text matches (not complete results):
                 	<table concordion:execute="#mDiseases = getMarkerDiseaseByPhenotypeSymbol(#disease,#symbol)">
                 	<tr><th>Organism</th><th concordion:set="#symbol">Marker Symbol</th><th cc:assertEquals="#mDiseases">Disease</th></tr>
-                	<tr><td>mouse</td><td>Lmna</td><td>Achalasia, Familial Esophageal<br/>
-                		Cardiomyopathy, Dilated, 1A; CMD1A<br/>
-						Charcot-Marie-Tooth Disease, Axonal, Type 2B1; CMT2B1<br/>
-						Emery-Dreifuss Muscular Dystrophy 2, Autosomal Dominant; EDMD2<br/>
-						Hutchinson-Gilford Progeria Syndrome; HGPS<br/>
-						Muscular Dystrophy, Congenital, Lmna-Related</td></tr>
+                	<tr><td>mouse</td><td>Lmna</td><td>achalasia<br/>
+						Charcot-Marie-Tooth disease type 2B1<br/>
+						congenital muscular dystrophy<br/>
+                		dilated cardiomyopathy 1A<br/>
+						Emery-Dreifuss muscular dystrophy<br/>
+						progeria
+					</td></tr>
                 	</table>
                 </li>
                 
-                <li>Query for <b concordion:set="#disease">OMIM:114480</b>.</li>
+                <li>Query for <b concordion:set="#disease">DOID:1612</b> (breast cancer).</li>
                 <li>Only the following diseases should appear in the gene result set(not complete results):
                 	<table concordion:execute="#mDiseases = getMarkerDiseaseByPhenotypeSymbol(#disease,#symbol)">
                 	<tr><th>Organism</th><th concordion:set="#symbol">Marker Symbol</th><th cc:assertEquals="#mDiseases">Disease</th></tr>
-                	<tr><td>human</td><td>BRCA2</td><td>Breast Cancer<br/>
-						Breast-Ovarian Cancer, Familial, Susceptibility to, 2; BROVCA2<br/>
-						Fanconi Anemia, Complementation Group D1; FANCD1<br/>
-						Glioma Susceptibility 3; GLM3<br/>
-						Medulloblastoma; MDB<br/>
-						Pancreatic Cancer, Susceptibility to, 2<br/>
-						Prostate Cancer<br/>
-						Tracheoesophageal Fistula with or without Esophageal Atresia<br/>
-						Wilms Tumor 1; WT1</td></tr>
-                	<tr><td>human</td><td>KRAS</td><td>Bladder Cancer<br/>
-						Breast Cancer<br/>
-						Cardiofaciocutaneous Syndrome 2; CFC2<br/>
-						Gastric Cancer, Hereditary Diffuse; HDGC<br/>
-						Leukemia, Acute Myeloid; AML<br/>
-						Lung Cancer<br/>
-						Noonan Syndrome 3; NS3<br/>
-						Pancreatic Cancer<br/>
-						Schimmelpenning-Feuerstein-Mims Syndrome; SFM</td></tr>
-                	<tr><td>human</td><td>NQO2</td><td>Breast Cancer</td></tr>
-                	<tr><td>human</td><td>TP53</td><td>Adrenocortical Carcinoma, Hereditary; ADCC<br/>
-						Basal Cell Carcinoma, Susceptibility to, 7; BCC7<br/>
-						Breast Cancer<br/>
-						Colorectal Cancer; CRC<br/>
-						Glioma Susceptibility 1; GLM1<br/>
-						Hepatocellular Carcinoma<br/>
-						Li-Fraumeni Syndrome 1; LFS1<br/>
-						Nasopharyngeal Carcinoma<br/>
-						Osteogenic Sarcoma<br/>
-						Pancreatic Cancer<br/>
-						Papilloma of Choroid Plexus; CPP</td></tr>
-                	<tr><td>human</td><td>TSG101</td><td>Breast Cancer</td></tr>
+                	<tr><td>human</td><td>BRCA2</td><td>
+						breast cancer<br/>
+						Fanconi's anemia<br/>
+						hereditary breast ovarian cancer<br/>
+						malignant glioma<br/>
+						medulloblastoma<br/>
+						nephroblastoma<br/>
+						pancreatic cancer<br/>
+						prostate cancer
+						</td></tr>
                 	</table>
                 </li>
             </ol>
