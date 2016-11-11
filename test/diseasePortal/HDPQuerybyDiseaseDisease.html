@@ -176,30 +176,6 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		
-    		<li>Querying for diseases in the "Exclude" file returns no results (first several rows of that file are shown below).
-    		<table>
-    			<tr><th>OMIM ID</th> <th>OMIM Term Name</th></tr>
-				<tr><td>OMIM:306995</td>	<td>Homosexuality; HMS1</td></tr>
-				<tr><td>OMIM:210750</td>	<td>Blond Hair</td></tr>
-				<tr><td>OMIM:139450</td>	<td>"Hair, Curly"</td></tr>
-				<tr><td>OMIM:113750</td>	<td>Hair Color 1; HCL1</td></tr>
-				<tr><td>OMIM:266300</td>	<td>Hair Color 2; HCL2</td></tr>
-				<tr><td>OMIM:601800</td>	<td>Hair Color 3; HCL3</td></tr>
-				<tr><td>OMIM:227240</td>	<td>Eye Color 1; EYCL1</td></tr>
-				<tr><td>OMIM:227220</td>	<td>Eye Color 3; EYCL3</td></tr>
-				<tr><td>OMIM:314920</td>	<td>Xp24</td></tr>
-				<tr><td>OMIM:314940</td>	<td>Xp37</td></tr>
-				<tr><td>OMIM:314960</td>	<td>Xp40</td></tr>
-				<tr><td>OMIM:192200</td>	<td>Varicose Veins</td></tr>
-				<tr><td>OMIM:110300</td>	<td>ABO BLOOD GROUP</td></tr>
-				<tr><td>OMIM:502000</td>	<td>Aging</td></tr>
-    		</table>
-    		<ol>
-    			<li>Query for  terms listed above: <b concordion:set="#disease">306995, 210750, 139450, 113750, 266300, 601800, 227240, 227220, 314920, 314940, 314960, 192200, 110300, 502000</b>.</li>
-                <li>Count of terms returned should be <b concordion:assertEquals="getDiseaseCountByDisease(#disease)">0</b></li>
-    		</ol>
-    		</li>
-    		
     		<li>Querying for items which are OMIM "gene" records (prefixed with an asterisk at OMIM) returns no results (some examples shown below).
     		<table>
 	    		<tr><th>OMIM ID</th><th>OMIM term (gene symbol)</th></tr>
