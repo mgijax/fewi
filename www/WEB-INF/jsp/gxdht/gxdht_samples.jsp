@@ -11,6 +11,8 @@ div.experimentWrapper { border: 1px solid gray; border-collapse: collapse; margi
 div.headerShade2 { background-color: #E2AC00; }
 .dataShade1 { background-color: #FFFFFF; }
 .dataShade2 { background-color: #F0F0F0; }
+.dataShade1m { background-color: #FDF0F0; }
+.dataShade2m { background-color: #FCE0E0; }
 div.idWrapper { border: 1px solid gray; width: 100%; overflow: auto; }
 div.idLabels { width: 100px; text-align: right; float: left; font-weight: bold; }
 div.ids { width: 125px; padding-left: 4px; float: left; text-align: left; }
@@ -57,7 +59,11 @@ a { text-decoration: none; }
   	  	    <th>Note</th>
   	      </tr>
   	      <c:forEach var="sample" items="${samples}" varStatus="status">
-  	        <tr>
+  	      	<c:set var="match" value=""/>
+  	      	<c:if test="${highlightSamples and sample.matchesSearch}">
+  	      		<c:set var="match" value="match"/>
+  	      	</c:if>
+  	        <tr class="${match}">
   	          <td>${sample.name}</td>
   	  	      <c:if test="${not empty showOrganism}"><td>${sample.organism}</td></c:if>
   	  	      <c:if test="${sample.relevancy == 'Yes'}">
@@ -86,5 +92,7 @@ a { text-decoration: none; }
 </c:if>
 <script>
 $('table tr:odd td').addClass('dataShade1');
+$('.match:odd td').addClass('dataShade2m').removeClass('dataShade1');
+$('.match:even td').addClass('dataShade1m').removeClass('dataShade1');
 </script>
 </body></html>

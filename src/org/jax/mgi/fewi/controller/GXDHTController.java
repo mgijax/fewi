@@ -100,6 +100,33 @@ public class GXDHTController {
 		return mav;
 	}
 
+	// determine if we searched by any sample-specific fields (not experiment-level fields); if
+	// so, then we will need to float the matching samples to the top and do highlighting
+	public boolean searchedBySampleFields(GxdHtQueryForm queryForm) {
+		if ((queryForm.getAge() != null) && (queryForm.getAge().size() > 0)) {
+			for (String age : queryForm.getAge()) {
+				if (!age.equals(queryForm.ANY_AGE)) {
+					return true;
+				}
+			}
+		}
+		if ((queryForm.getMutatedIn() != null) && (queryForm.getMutatedIn().length() > 0)) {
+			return true;
+		} if ((queryForm.getSex() != null) && (queryForm.getSex().length() > 0)) {
+			return true;
+		} else if ((queryForm.getStructure() != null) && (queryForm.getStructure().length() > 0)) {
+			return true;
+		} else if ((queryForm.getStructureID() != null) && (queryForm.getStructureID().length() > 0)) {
+			return true;
+		} else if ((queryForm.getTheilerStage() != null) && (queryForm.getTheilerStage().size() > 0)) {
+			for (Integer ts : queryForm.getTheilerStage()) {
+				if (ts != queryForm.ANY_STAGE) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 	// popup for samples, given an ArrayExpress experiment ID
 	@RequestMapping(value="/samples/{experimentID:.+}", method = RequestMethod.GET)
 	public ModelAndView gxdHtSamples(@PathVariable("experimentID") String experimentID, @ModelAttribute GxdHtQueryForm queryForm) {
@@ -150,8 +177,10 @@ public class GXDHTController {
 			}
 		}
 
+		boolean highlightSamples = searchedBySampleFields(queryForm);
+		
 		// if we found any samples, get the matching ones and float them to the top
-		if ((samples != null) && (samples.size() > 0)) {
+		if (highlightSamples && (samples != null) && (samples.size() > 0)) {
 			// add the experiment key to the set of parameters from the experiment search, to ensure
 			// we're only bringing back samples for the desired experiment
 			queryForm.setExperimentKey(experiment.getExperimentKey().toString());
@@ -184,6 +213,7 @@ public class GXDHTController {
 		if (experiment != null) { mav.addObject("experiment", experiment); }
 		if (samples != null) { mav.addObject("samples", samples); }
 		if (anyNonMouse) { mav.addObject("showOrganism", true); }
+		mav.addObject("highlightSamples", highlightSamples);
 
 		return mav;
 	}
@@ -253,6 +283,8 @@ public class GXDHTController {
 
 		logger.debug("->experimentsTable started");
 
+		boolean highlightSamples = searchedBySampleFields(query);
+
 		// perform query, and pull out the requested objects
 		SearchResults<GxdHtExperiment> searchResults = getSummaryResults(request, query, page);
 		List<GxdHtExperiment> experimentList = searchResults.getResultObjects();
@@ -273,6 +305,7 @@ public class GXDHTController {
 		mav.addObject("experiments", summaryRows);
 		mav.addObject("count", summaryRows.size());
 		mav.addObject("totalCount", searchResults.getTotalCount());
+		mav.addObject("highlightSamples", highlightSamples);
 		
 		if (query.searchDescription() || query.searchTitle()) {
 			mav.addObject("textSearch", query.getText());

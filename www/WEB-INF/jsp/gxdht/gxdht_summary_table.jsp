@@ -35,8 +35,9 @@
 	      <div id="row${status.index}samples" class="samples">
 	  	  	<a id="row${status.index}sampleCount" onClick="gs_samplePopup('${exp.arrayExpressID}')">${exp.sampleCount}</a> samples&nbsp;&nbsp;
 	  	  	<a id="row${status.index}button" class="filterButton" onClick="gs_samplePopup('${exp.arrayExpressID}')">View</a>
-	  	  	<br/>
-	  	  	${exp.matchingSampleCount} match the search criteria
+	  	  	<c:if test="${highlightSamples}"><br/>
+	  	  		${exp.matchingSampleCount} match the search criteria
+	  	  	</c:if>
 	  	  </div>
 	    </div>
 	    <div id="row${status.index}variablesWrapper" class="detailCell">
