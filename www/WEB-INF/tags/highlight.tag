@@ -32,34 +32,37 @@
 		}
 
 		String toDo = value;
-		while ((toDo != null) && (toDo.length() > 0)) {
-			Matcher m = htmlTagPattern.matcher(toDo);
-			String toHighlight = null;
-			String htmlTag = null;
+		for (Pattern p : wordPatterns) {
+			sb = new StringBuffer();
 			
-			// is an HTML tag embedded in what we have left to process?
-			if (m.find()) {
-				toHighlight = toDo.substring(0, m.start());
-				toDo = toDo.substring(m.end());
-				htmlTag = m.group();
-			} else {
-				toHighlight = toDo;
-				toDo = null;
-			}
+			while ((toDo != null) && (toDo.length() > 0)) {
+				Matcher m = htmlTagPattern.matcher(toDo);
+				String toHighlight = null;
+				String htmlTag = null;
 			
-			if (toHighlight != null) {
-				for (Pattern p : wordPatterns) {
+				// is an HTML tag embedded in what we have left to process?
+				if (m.find()) {
+					toHighlight = toDo.substring(0, m.start());
+					toDo = toDo.substring(m.end());
+					htmlTag = m.group();
+				} else {
+					toHighlight = toDo;
+					toDo = null;
+				}
+			
+				if (toHighlight != null) {
 					Matcher w = p.matcher(toHighlight);
 					toHighlight = w.replaceAll("<span class='" + highlightClass + "'>$1</span>");
+					sb.append(toHighlight);
 				}
-				sb.append(toHighlight);
+				if (htmlTag != null) {
+					sb.append(htmlTag);
+				}
 			}
-			if (htmlTag != null) {
-				sb.append(htmlTag);
-			}
+			toDo = sb.toString();
 		}
 	}
-	
+
 	if ((sb.length() == 0) && (value != null)) {
 		sb.append(value);
 	}
