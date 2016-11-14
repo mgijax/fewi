@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -78,6 +79,11 @@ public class GXDHTController {
 
 		logger.debug("->gxdHtSummary started");
 		logger.debug("queryString: " + request.getQueryString());
+
+		String errorString = validateParameters(queryForm);
+		if (errorString != null) {
+			return errorMav(errorString);
+		}
 
 		// if both age and stage are submitted, prefer stage and remove consideration of age
 		if ((queryForm.getTheilerStage() != null) && (!queryForm.getTheilerStage().contains(GxdHtQueryForm.ANY_STAGE))) {
@@ -182,6 +188,66 @@ public class GXDHTController {
 		return mav;
 	}
 
+	/* returns non-null error string if any query form parameters fail validation
+	 */
+	public String validateParameters(GxdHtQueryForm query) {
+		String structure = query.getStructure();
+		if ((structure != null) && (structure.length() > 0) && !structure.matches(".*[A-Za-z0-9].*")) {
+			return "Structure field must contain at least one letter or number; you specified: " + structure;
+		}
+
+		String text = query.getText();
+		if ((text != null) && (text.length() > 0) && !text.matches(".*[A-Za-z0-9].*")) {
+			return "Text field must contain at least one letter or number; you specified: " + text;
+		}
+		
+		List<String> textScopes = query.getTextScope();
+		if (textScopes != null) {
+			Map<String,String> validScopes = query.getTextScopeOptions();
+			for (String scope : textScopes) {
+				if (!validScopes.containsKey(scope)) {
+					return "Invalid selection for Text scope: " + scope;
+				}
+			}
+		}
+
+		List<Integer> stageList = query.getTheilerStage();
+		if (stageList != null) {
+			Map<Integer,String> stages = query.getTheilerStages();
+			for (Integer stage : stageList) {
+				if (!stages.containsKey(stage)) {
+					return "Invalid selection for Theiler Stage: " + stage;
+				}
+			}
+		}
+		
+		List<String> ages = query.getAge();
+		if (ages != null) {
+			Map<String,String> validAges = query.getAges();
+			for (String age : ages) {
+				if (!validAges.containsKey(age)) {
+					return "Invalid selection for Age: " + age;
+				}
+			}
+		}
+		
+		String sex = query.getSex();
+		if ((sex != null) && (sex.length() > 0) && !query.getSexOptions().containsKey(sex)) {
+				return "Invalid selection for Sex: " + sex;
+		}
+		
+		String mutant = query.getMutatedIn();
+		if ((mutant != null) && (mutant.length() > 0) && !mutant.matches(".*[A-Za-z0-9].*")) {
+			return "Mutant field must contain at least one letter or number; you specified: " + mutant;
+		}
+		
+		String method = query.getMethod();
+		if ((method != null) && !query.getMethodOptions().containsKey(method)) {
+			return "Invalid selection for Method: " + method;
+		}
+		return null;
+	}
+	
 	@RequestMapping("/table")
 	public ModelAndView experimentsTable (HttpServletRequest request, @ModelAttribute GxdHtQueryForm query, @ModelAttribute Paginator page) {
 
@@ -345,6 +411,14 @@ public class GXDHTController {
 	}
 */
 	
+	/* return a mav for an error screen with the given message filled in
+	 */
+	private ModelAndView errorMav(String msg) {
+		ModelAndView mav = new ModelAndView("error");
+		mav.addObject("errorMsg", msg);
+		return mav;
+	}
+
 	// generate the sorts
 	private List<Sort> genSorts(HttpServletRequest request) {
 		logger.debug("->genSorts started");
