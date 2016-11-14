@@ -258,8 +258,8 @@ order by AA.accID
                 <li>Verify that columns are displayed with the following headers and data:
                 	<table>
                 	<tr><th>Column label</th><th>Data displayed</th></tr>
-                	<tr><td>Disease</td><td><b  cc:assertResultsContain="getTermsByDiseaseId(#disease)">Achondroplasia; ACH</b></td></tr>
-                	<tr><td>OMIM ID</td><td><b cc:assertResultsContain="getTermIdsByDiseaseId(#disease)">OMIM:100800</b></td></tr>
+                	<tr><td>Disease</td><td><b  cc:assertResultsContain="getTermsByDiseaseId(#disease)">achondroplasia</b></td></tr>
+                	<tr><td>DO ID</td><td><b cc:assertResultsContain="getTermIdsByDiseaseId(#disease)">DOID:4480</b></td></tr>
                 	<tr><td>Mouse Models</td><td><b concordion:manual="true">12</b> <em>(MANUAL CHECK: klf 8/13/13)</em></td></tr>
                 	<tr><td>Associated Mouse Markers</td><td><b cc:assertResultsContain="getSymbolsByDisease(#disease)">Acan</b>, 
                 					<b cc:assertResultsContain="getSymbolsByDisease(#disease)">Fgfr3</b>, 
