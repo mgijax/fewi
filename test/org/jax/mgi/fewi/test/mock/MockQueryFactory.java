@@ -47,10 +47,6 @@ public class MockQueryFactory
 	{
 		return new MockHdpControllerQuery(controller);
 	}
-	public MockHdpHttpQuery diseasePortalHttp() throws Exception
-	{
-		return new MockHdpHttpQuery(mr);
-	}
 	
 	/*
 	 * GO Mock Queries

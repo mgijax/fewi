@@ -51,6 +51,14 @@
 		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/search/OrderHashByFilter.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/search/SearchStResetDirective.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/app/components/style/StyleController.js"></script>
+		
+		<script>
+		  // constants for angular
+		  (function(){
+			  angular.module('hmdc.config').constant('FEWI_URL', "${configBean.FEWI_URL}");
+			  angular.module('hmdc.config').constant('WEBSHARE_URL', "${configBean.WEBSHARE_URL}");
+		  })();
+		</script>
 
 		<meta http-equiv="X-UA-Compatible" content="chrome=1">
 

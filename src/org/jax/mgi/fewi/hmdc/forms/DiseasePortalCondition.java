@@ -22,9 +22,13 @@ public class DiseasePortalCondition {
 	}
 	public void setInput(String input) {
 		// strip OMIM: prefix
-		if(input.toLowerCase().startsWith("omim:")) {
-			input = input.replaceAll("(?i)omim:", "");
-		}
+		// HACK (kstone):
+		// temporarily disabled until we sort out how to
+		// query both OMIM: and number format when source
+		// data is now OMIM: format
+//		if(input.toLowerCase().startsWith("omim:")) {
+//			input = input.replaceAll("(?i)omim:", "");
+//		}
 		this.input = input;
 	}
 	public List<String> getParameters() {

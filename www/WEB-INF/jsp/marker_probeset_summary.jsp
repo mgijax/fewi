@@ -96,7 +96,7 @@ th.box { border-top:thin solid grey;border-left:thin solid grey;border-right:thi
 	      <tr><th class="box">MGI microarray annotation files</th></tr>
 
 	<c:forEach var="report" items="${reportsOrdered}">
-	<tr><td class="box"><a href="${configBean.FTP_URL}${reports[report]}">${report}</a></td></tr>
+	<tr><td class="box"><a href="${configBean.PUB_REPORTS_URL}${reports[report]}">${report}</a></td></tr>
 	</c:forEach>
       </table>
     </td>

@@ -3,7 +3,7 @@
 	angular.module('hmdc.search').config(queryBuilderConfig);
 
 	// @ngInject
-	function queryBuilderConfig(formlyConfigProvider) {
+	function queryBuilderConfig(formlyConfigProvider, FEWI_URL) {
 		var unique = 1;
 
 		formlyConfigProvider.setType({
@@ -73,7 +73,7 @@
 
 		formlyConfigProvider.setType({
 			name: 'queryRow',
-			templateUrl: '/assets/hmdc/app/components/forms/queryBuilder.type.tpl.html',
+			templateUrl: FEWI_URL + 'assets/hmdc/app/components/forms/queryBuilder.type.tpl.html',
 			controller: /* @ngInject */ function($scope) {
 				$scope.formOptions = {formState: $scope.formState};
 				$scope.addNew = addNew;

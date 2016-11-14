@@ -398,7 +398,7 @@ function formatFastaArgs() {
 		      <c:if test="${not empty molecularRefs}">(<i>${molecularRefs}</i>)</c:if>
 		      <c:if test="${not empty allele.incidentalMutations}">
 			    Additional
-			    <a href="${configBean.FTP_BASE_URL}datasets/incidental_muts/${allele.incidentalMutation.filename}">incidental mutations </a>
+			    <a href="${configBean.FTP_URL}datasets/incidental_muts/${allele.incidentalMutation.filename}">incidental mutations </a>
 			    were detected in sequencing for the causative mutation,
 			    ${symbolSup}, and may be present in stocks carrying  this mutation.
 			  </c:if>
@@ -412,7 +412,7 @@ function formatFastaArgs() {
 				<span id='mutationDescription'><font class='small'>${description} <c:if test="${not empty molecularRefs}">(<i>${molecularRefs}</i>)</c:if>
 		    	<c:if test="${not empty allele.incidentalMutations}">
 			    Additional
-			    <a href="${configBean.FTP_BASE_URL}datasets/incidental_muts/${allele.incidentalMutation.filename}">incidental mutations </a>
+			    <a href="${configBean.FTP_URL}datasets/incidental_muts/${allele.incidentalMutation.filename}">incidental mutations </a>
 			    were detected in sequencing for the causative mutation,
 			    ${symbolSup}, and may be present in stocks carrying  this mutation.
 		    	</c:if>

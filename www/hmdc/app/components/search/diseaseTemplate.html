@@ -1,6 +1,6 @@
 <div ng-controller="DiseaseController">
 	<div ng-show="vm.filteredResults.length > 0">
-		Export: <a href="/diseasePortal/disease/report.txt?jsonEncodedInput={{ jsonEncodedQuery }}"><img src="http://www.informatics.jax.org/webshare/images/text.png" width="12" height="12">Text File</a> 
+		Export: <a href="{{FEWI_URL}}diseasePortal/disease/report.txt?jsonEncodedInput={{ jsonEncodedQuery }}"><img src="{{WEBSHARE_URL}}images/text.png" width="12" height="12">Text File</a> 
 	</div>
 	<div ng-hide="vm.filteredResults.length > 0">
 		No Matching Diseases
@@ -20,12 +20,12 @@
 		
 		<tbody>
 			<tr ng-repeat="row in displayedCollection">
-				<td><a target="_blank" href="/disease/{{ row.primaryId }}">{{ row.term }}</a></td>
+				<td><a target="_blank" href="{{FEWI_URL}}disease/{{ row.primaryId }}">{{ row.term }}</a></td>
 				<td><a target="_blank" href="http://www.omim.org/entry/{{ row.primaryId }}">{{ row.primaryId }}</a></td>
-				<td><a ng-if="row.diseaseModelCount > 0" target="_blank" href="/disease/models/{{ row.primaryId }}">{{ row.diseaseModelCount }}</a></td>
+				<td><a ng-if="row.diseaseModelCount > 0" target="_blank" href="{{FEWI_URL}}disease/models/{{ row.primaryId }}">{{ row.diseaseModelCount }}</a></td>
 				<td><div ng-bind-html="row.diseaseMouseMarkers | joinBy:', ' | handleSubscript "></div></td>
 				<td><div ng-bind-html="row.diseaseHumanMarkers | joinBy:', ' | handleSubscript "></div></td>
-				<td><a ng-if="row.diseaseRefCount > 0" target="_blank" href="/reference/disease/{{ row.primaryId }}?typeFilter=Literature">{{ row.diseaseRefCount }}</a></td>
+				<td><a ng-if="row.diseaseRefCount > 0" target="_blank" href="{{FEWI_URL}}reference/disease/{{ row.primaryId }}?typeFilter=Literature">{{ row.diseaseRefCount }}</a></td>
 			</tr>
 		</tbody>
 		<tfoot>

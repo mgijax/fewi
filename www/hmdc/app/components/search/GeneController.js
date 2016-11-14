@@ -2,8 +2,10 @@
 	'use strict';
 	angular.module('hmdc.search').controller('GeneController', GeneController);
 
-	function GeneController($rootScope, $scope, $log, Search, ngDialog) {
+	function GeneController($rootScope, $scope, $log, Search, ngDialog, FEWI_URL, WEBSHARE_URL) {
 		var vm = $scope.vm = {};
+		$scope.FEWI_URL = FEWI_URL;
+		$scope.WEBSHARE_URL = WEBSHARE_URL;
 
 		vm.resetGeneTable = false;
 

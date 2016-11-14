@@ -2,7 +2,7 @@
 	'use strict';
 	angular.module('hmdc.search').controller('SearchController', SearchController);
 
-	function SearchController($rootScope, $scope, $log, $http, AutoComplete, $sce) {
+	function SearchController($rootScope, $scope, $log, $http, AutoComplete, $sce, FEWI_URL) {
 		var vm = $scope.vm = {};
 
 		vm.onSubmit = onSubmit;
@@ -24,7 +24,7 @@
 		$rootScope.displayTabs = false;
 
 		$rootScope.getAutoComplete = function(value, amount) {
-			return $http.get('/autocomplete/hmdcTermAC', {
+			return $http.get(FEWI_URL+'autocomplete/hmdcTermAC', {
 				params: {
 					query: value,
 					pageSize: amount
@@ -214,19 +214,19 @@
 				"count": 0,
 				"heading": "Gene Homologs x Phenotypes/Diseases",
 				"active": true,
-				"template": "/assets/hmdc/app/components/search/gridTemplate.html"
+				"template": FEWI_URL+"assets/hmdc/app/components/search/gridTemplate.html"
 			},
 			"geneTab": {
 				"count": 0,
 				"heading": "Genes",
 				"active": false,
-				"template": "/assets/hmdc/app/components/search/geneTemplate.html"
+				"template": FEWI_URL+"assets/hmdc/app/components/search/geneTemplate.html"
 			},
 			"diseaseTab": {
 				"count": 0,
 				"heading": "Diseases",
 				"active": false,
-				"template": "/assets/hmdc/app/components/search/diseaseTemplate.html"
+				"template": FEWI_URL+"assets/hmdc/app/components/search/diseaseTemplate.html"
 			}
 
 		};

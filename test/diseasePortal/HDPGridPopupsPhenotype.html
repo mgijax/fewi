@@ -282,10 +282,10 @@ tr.gray td {background-color:#EEEEEE;}
                 </li>
                 <li>Confirm that the pop-up contains the following table and no other genotypes or MP terms:
                 	<table concordion:execute="#cell = systemGridPopupCheckByPheno(#pheno,#row,#column,#genotypeRow,#termId)">
-                	<tr><th concordion:set="#genotypeRow">genotype</th><th concordion:set="#termId">term ID</th><th>term</th><th concordion:assertEquals="#cell">checkmark?</th></tr>
-                	<tr><td>Gpnmb&lt;R150X&gt;/Gpnmb&lt;R150X&gt;</td><td>MP:0001322</td><td>abnormal iris morphology</td><td>yes</td></tr>
-                	<tr><td>Gpnmb&lt;R150X&gt;/Gpnmb&lt;R150X&gt;</td><td>MP:0005102</td><td>abnormal iris pigmentation</td><td>yes</td></tr>
-                	<tr><td>Gpnmb&lt;R150X&gt;/Gpnmb&lt;R150X&gt;</td><td>MP:0006228</td><td>iris atrophy</td><td>yes</td></tr>
+                	<tr><th concordion:set="#genotypeRow">genotype</th><th>term ID</th><th concordion:set="#termId">term</th><th concordion:assertEquals="#cell">checkmark?</th></tr>
+                	<tr><td>Gpnmb&lt;R150X&gt;/Gpnmb&lt;R150X&gt;</td><td>MP:0001322</td><td>abnormal iris morphology</td><td>check</td></tr>
+                	<tr><td>Gpnmb&lt;R150X&gt;/Gpnmb&lt;R150X&gt;</td><td>MP:0005102</td><td>abnormal iris pigmentation</td><td>check</td></tr>
+                	<tr><td>Gpnmb&lt;R150X&gt;/Gpnmb&lt;R150X&gt;</td><td>MP:0006228</td><td>iris atrophy</td><td>check</td></tr>
                 	</table>
                 </li>
                 <li>Click the checkmark at the intersection of the <b concordion:set="#row">Tyrp1</b> row and <b concordion:set="#column">vision/eye</b> column.<br/>
@@ -303,9 +303,9 @@ tr.gray td {background-color:#EEEEEE;}
                 </li>
                 <li>Confirm that the pop-up contains ONLY the data in the following table (there are other genotype and MP term combinations which should not be returned) (sto185):
                 	<table concordion:execute="#cell = systemGridPopupCheckByPheno(#pheno,#row,#column,#genotypeRow,#termId)">
-                	<tr><th concordion:set="#genotypeRow">genotype</th><th concordion:set="#termId">term ID</th><th>term</th><th concordion:assertEquals="#cell">checkmark?</th></tr>
-                	<tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b&gt;</td><td>MP:0001322</td><td>abnormal iris morphology</td><td>yes</td></tr>
-                	<tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b&gt;</td><td>MP:0006228</td><td>iris atrophy</td><td>yes</td></tr>
+                	<tr><th concordion:set="#genotypeRow">genotype</th><th>term ID</th><th concordion:set="#termId">term</th><th concordion:assertEquals="#cell">checkmark?</th></tr>
+                	<tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b&gt;</td><td>MP:0001322</td><td>abnormal iris morphology</td><td>check</td></tr>
+                	<tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b&gt;</td><td>MP:0006228</td><td>iris atrophy</td><td>check</td></tr>
                 	<!-- <tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b&gt;</td><td>MP:0005172</td><td>decreased eye pigmentation</td><td>no</td></tr>
                 	<tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b-11PU&gt;</td><td>MP:0005172</td><td>decreased eye pigmentation</td><td>yes</td></tr>
                 	<tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b-11PU&gt;</td><td>MP:0006228</td><td>iris atrophy</td><td>no</td></tr>
@@ -337,10 +337,10 @@ tr.gray td {background-color:#EEEEEE;}
                 </li>
                 <li>Confirm that the pop-up contains at least the data in the following table (there are other genotype and MP term combinations):
                 	<table concordion:execute="#cell = systemGridPopupCheckByPheno(#pheno,#row,#column,#genotypeRow,#termId)">
-                	<tr><th concordion:set="#genotypeRow">genotype</th><th concordion:set="#termId">term ID</th><th>term</th><th concordion:assertEquals="#cell">checkmark?</th></tr>
-                	<tr><td>Ace2&lt;tm1Cof&gt;/Y</td><td>MP:0005333</td><td>decreased heart rate</td><td>yes</td></tr>
-                	<tr><td>Ace2&lt;tm1Cof&gt;/Y</td><td>MP:0000231</td><td>hypertension</td><td>yes</td></tr>
-                	<tr><td>Ace2&lt;tm1Cof&gt;/Y</td><td>MP:0006144</td><td>increased systemic arterial systolic blood pressure</td><td>yes</td></tr>
+                	<tr><th concordion:set="#genotypeRow">genotype</th><th>term ID</th><th concordion:set="#termId">term</th><th concordion:assertEquals="#cell">checkmark?</th></tr>
+                	<tr><td>Ace2&lt;tm1Cof&gt;/Y</td><td>MP:0005333</td><td>decreased heart rate</td><td>check</td></tr>
+                	<tr><td>Ace2&lt;tm1Cof&gt;/Y</td><td>MP:0000231</td><td>hypertension</td><td>check</td></tr>
+                	<tr><td>Ace2&lt;tm1Cof&gt;/Y</td><td>MP:0006144</td><td>increased systemic arterial systolic blood pressure</td><td>check</td></tr>
                 	</table>
                 </li>
                 <li>Enter <b concordion:set="#pheno">MP:0003084</b> (abnormal skeletal muscle fiber morphology) in the Phenotypes and Diseases section and hit search</li>
@@ -404,37 +404,16 @@ tr.gray td {background-color:#EEEEEE;}
                 </li>
                 <li>Confirm that the pop-up contains at least the data in the following table (there are other genotype and MP term combinations):
                 	<table concordion:execute="#cell = systemGridPopupCheckByPheno(#pheno,#row,#column,#genotypeRow,#termId)">
-                	<tr><th concordion:set="#genotypeRow">genotype</th><th>term</th><th concordion:set="#termId">term ID</th><th concordion:assertEquals="#cell">checkmark?</th></tr>
-                	<tr><td>Dmd&lt;mdx&gt;/Dmd&lt;mdx&gt;</td><td>dilated sarcoplasmic reticulum</td><td>MP:0004089</td><td>yes</td></tr>
-                	<tr><td>Dmd&lt;mdx&gt;/Y</td><td>dilated sarcoplasmic reticulum</td><td>MP:0004089</td><td>yes</td></tr>
-                	<tr><td>Dmd&lt;mdx&gt;/?</td><td>dilated sarcoplasmic reticulum</td><td>MP:0004089</td><td>no</td></tr>
-                	<tr><td>Dmd&lt;mdx&gt;/Dmd&lt;mdx&gt;</td><td>abnormal skeletal muscle morphology</td><td>MP:0000759</td><td>yes</td></tr>
-                	<tr><td>Dmd&lt;mdx&gt;/Y</td><td>abnormal skeletal muscle morphology</td><td>MP:0000759</td><td>no</td></tr>
-                	<tr><td>Dmd&lt;mdx&gt;/?</td><td>abnormal skeletal muscle morphology</td><td>MP:0000759</td><td>yes</td></tr>
-                	<tr><td>Dmd&lt;mdx&gt;/Dmd&lt;mdx&gt;</td><td>skeletal muscle endomysial fibrosis</td><td>MP:0009420</td><td>yes</td></tr>
-                	<tr><td>Dmd&lt;mdx&gt;/Y</td><td>skeletal muscle endomysial fibrosis</td><td>MP:0009420</td><td>yes</td></tr>
-                	<tr><td>Dmd&lt;mdx&gt;/?</td><td>skeletal muscle endomysial fibrosis</td><td>MP:0009420</td><td>no</td></tr>
-                	</table>
-                </li>
-
-                <li>Enter <b concordion:set="#gene">Tg(APPswe,PSEN1dE9)85Dbo</b> in the Genes section and hit search</li>
-                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Tg(APPswe,PSEN1dE9)85Dbo</b> row and <b concordion:set="#column">homeostasis/metabolism</b> column. <br/>
-                (Note: 4 different hemizygous genotypes result in one "compressed" genotype here.)</li>
-                <li>Confirm that <b>1</b> genotype row is displayed for <b cc:assertValueAppearsOnlyOnce="systemGridPopupGenoClustersByGene(#gene,#row,#column)">Tg(APPswe,PSEN1dE9)85Dbo/0</b>.</li>
-                <li>Confirm that the pop-up column headers contain at least the following 3 terms:
-                	<table cc:verifySupersetOf="#terms : systemGridPopupTermsByGene(#gene,#row,#column)">
-                	<tr><th concordion:assertEquals="#terms">Term</th></tr>
-					<tr><td>amyloidosis</td></tr>
-                	<tr><td>cerebral amyloid angiopathy</td></tr>
-                	<tr><td>amyloid beta deposits</td></tr>
-                	</table>
-                </li>
-                <li>Confirm that the pop-up contains ONLY the data in the following table:
-                	<table concordion:execute="#cell = systemGridPopupCheckByGene(#gene,#row,#column,#genotypeRow,#termId)">
-                	<tr><th concordion:set="#genotypeRow">genotype</th><th concordion:set="#termId">term ID</th><th>term</th><th concordion:assertEquals="#cell">checkmark?</th></tr>
-                	<tr><td>Tg(APPswe,PSEN1dE9)85Dbo/0</td><td>MP:0000604</td><td>amyloidosis</td><td>yes</td></tr>
-                	<tr><td>Tg(APPswe,PSEN1dE9)85Dbo/0</td><td>MP:0004254</td><td>cerebral amyloid angiopathy</td><td>yes</td></tr>
-                	<tr><td>Tg(APPswe,PSEN1dE9)85Dbo/0</td><td>MP:0003329</td><td>amyloid beta deposits</td><td>yes</td></tr>
+                	<tr><th concordion:set="#genotypeRow">genotype</th><th concordion:set="#termId">term</th><th>term ID</th><th concordion:assertEquals="#cell">checkmark?</th></tr>
+                	<tr><td>Dmd&lt;mdx&gt;/Dmd&lt;mdx&gt;</td><td>dilated sarcoplasmic reticulum</td><td>MP:0004089</td><td>check</td></tr>
+                	<tr><td>Dmd&lt;mdx&gt;/Y</td><td>dilated sarcoplasmic reticulum</td><td>MP:0004089</td><td>check</td></tr>
+                	<tr><td>Dmd&lt;mdx&gt;/?</td><td>dilated sarcoplasmic reticulum</td><td>MP:0004089</td><td></td></tr>
+                	<tr><td>Dmd&lt;mdx&gt;/Dmd&lt;mdx&gt;</td><td>abnormal skeletal muscle morphology</td><td>MP:0000759</td><td>check</td></tr>
+                	<tr><td>Dmd&lt;mdx&gt;/Y</td><td>abnormal skeletal muscle morphology</td><td>MP:0000759</td><td></td></tr>
+                	<tr><td>Dmd&lt;mdx&gt;/?</td><td>abnormal skeletal muscle morphology</td><td>MP:0000759</td><td>check</td></tr>
+                	<tr><td>Dmd&lt;mdx&gt;/Dmd&lt;mdx&gt;</td><td>skeletal muscle endomysial fibrosis</td><td>MP:0009420</td><td>check</td></tr>
+                	<tr><td>Dmd&lt;mdx&gt;/Y</td><td>skeletal muscle endomysial fibrosis</td><td>MP:0009420</td><td>check</td></tr>
+                	<tr><td>Dmd&lt;mdx&gt;/?</td><td>skeletal muscle endomysial fibrosis</td><td>MP:0009420</td><td></td></tr>
                 	</table>
                 </li>
 
@@ -465,14 +444,14 @@ tr.gray td {background-color:#EEEEEE;}
                 	 <i>cannot automate yet</i>
                 	<table>
                 	<tr><th>genotype</th><th>type</th><th>term ID</th><th>term</th><th>checkmark?</th></tr>
-                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>CHIMERIC</td><td>MP:0009237</td><td>kinked sperm flagellum</td><td>yes</td></tr>
-                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>MOUSE LINE</td><td>MP:0009237</td><td>kinked sperm flagellum</td><td>no</td></tr>
-                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>CHIMERIC</td><td>MP:0004179</td><td>transmission ratio distortion</td><td>no</td></tr>
-                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>MOUSE LINE</td><td>MP:0004179</td><td>transmission ratio distortion</td><td>yes</td></tr>
-                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>CHIMERIC</td><td>MP:0001925</td><td>male infertility</td><td>no</td></tr>
-                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>MOUSE LINE</td><td>MP:0001925</td><td>male infertility</td><td>yes</td></tr>
-                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>CHIMERIC</td><td>MP:0002675</td><td>asthenozoospermia</td><td>yes</td></tr>
-                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>MOUSE LINE</td><td>MP:0002675</td><td>asthenozoospermia</td><td>no</td></tr>
+                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>CHIMERIC</td><td>MP:0009237</td><td>kinked sperm flagellum</td><td>check</td></tr>
+                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>MOUSE LINE</td><td>MP:0009237</td><td>kinked sperm flagellum</td><td></td></tr>
+                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>CHIMERIC</td><td>MP:0004179</td><td>transmission ratio distortion</td><td></td></tr>
+                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>MOUSE LINE</td><td>MP:0004179</td><td>transmission ratio distortion</td><td>check</td></tr>
+                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>CHIMERIC</td><td>MP:0001925</td><td>male infertility</td><td></td></tr>
+                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>MOUSE LINE</td><td>MP:0001925</td><td>male infertility</td><td>check</td></tr>
+                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>CHIMERIC</td><td>MP:0002675</td><td>asthenozoospermia</td><td>check</td></tr>
+                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>MOUSE LINE</td><td>MP:0002675</td><td>asthenozoospermia</td><td></td></tr>
                 	</table>
                 </li>
     		</ol>
@@ -500,8 +479,8 @@ http://www.informatics.jax.org/allele/key/9617 - DIFF MP TERMS BUT ANNOT ROLL UP
                 </li>
                 <li>Confirm that the pop-up contains ONLY the data in the following table:
                 	<table concordion:execute="#cell = systemGridPopupCheckByGene(#gene,#row,#column,#genotypeRow,#termId)">
-                	<tr><th concordion:set="#genotypeRow">genotype</th><th concordion:set="#termId">term ID</th><th>term</th><th concordion:assertEquals="#cell">checkmark?</th></tr>
-                	<tr><td>Gad1&lt;tm1Rpa&gt;/Gad1&lt;tm1Rpa&gt;</td><td>MP:0002169</td><td>no abnormal phenotype detected</td><td>yes</td></tr>                	
+                	<tr><th concordion:set="#genotypeRow">genotype</th><th>term ID</th><th concordion:set="#termId">term</th><th concordion:assertEquals="#cell">checkmark?</th></tr>
+                	<tr><td>Gad1&lt;tm1Rpa&gt;/Gad1&lt;tm1Rpa&gt;</td><td>MP:0002169</td><td>no abnormal phenotype detected</td><td>check</td></tr>                	
                 	</table>
                 </li>
                 <li>Click the checkmark at the intersection of the <b concordion:set="#row">Gad1</b> row and <b concordion:set="#column">nervous system</b> column. </li>
@@ -516,11 +495,11 @@ http://www.informatics.jax.org/allele/key/9617 - DIFF MP TERMS BUT ANNOT ROLL UP
                 </li>
                 <li>Confirm that the pop-up contains ONLY the data in the following table:
                 	<table concordion:execute="#cell = systemGridPopupCheckByGene(#gene,#row,#column,#genotypeRow,#termId)">
-                	<tr><th concordion:set="#genotypeRow">genotype</th><th concordion:set="#termId">term ID</th><th>term</th><th concordion:assertEquals="#cell">checkmark?</th></tr>
-                	<tr><td>Gad1&lt;tm1Rpa&gt;/Gad1&lt;tm1Rpa&gt;</td><td>MP:0004101</td><td>abnormal brain interneuron morphology</td><td>yes</td></tr>                	
-                	<tr><td>Gad1&lt;tm1Rpa&gt;/Gad1&lt;tm1Rpa&gt;</td><td>MP:0000805</td><td>abnormal visual cortex morphology</td><td>yes</td></tr>                	
-                	<tr><td>Gad1&lt;tm1Rpa&gt;/Gad1&lt;+&gt;</td><td>MP:0004101</td><td>abnormal brain interneuron morphology</td><td>yes</td></tr>                	
-                	<tr><td>Gad1&lt;tm1Rpa&gt;/Gad1&lt;+&gt;</td><td>MP:0000805</td><td>abnormal visual cortex morphology</td><td>no</td></tr>                	
+                	<tr><th concordion:set="#genotypeRow">genotype</th><th>term ID</th><th concordion:set="#termId">term</th><th concordion:assertEquals="#cell">checkmark?</th></tr>
+                	<tr><td>Gad1&lt;tm1Rpa&gt;/Gad1&lt;tm1Rpa&gt;</td><td>MP:0004101</td><td>abnormal brain interneuron morphology</td><td>check</td></tr>                	
+                	<tr><td>Gad1&lt;tm1Rpa&gt;/Gad1&lt;tm1Rpa&gt;</td><td>MP:0000805</td><td>abnormal visual cortex morphology</td><td>check</td></tr>                	
+                	<tr><td>Gad1&lt;tm1Rpa&gt;/Gad1&lt;+&gt;</td><td>MP:0004101</td><td>abnormal brain interneuron morphology</td><td>check</td></tr>                	
+                	<tr><td>Gad1&lt;tm1Rpa&gt;/Gad1&lt;+&gt;</td><td>MP:0000805</td><td>abnormal visual cortex morphology</td><td></td></tr>                	
                 	</table>
                 </li>
     		</ol>

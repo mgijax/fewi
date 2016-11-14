@@ -2,8 +2,9 @@
 	'use strict';
 	angular.module('hmdc.search').controller('GridController', GridController);
 
-	function GridController($rootScope, $scope, $log, Search, naturalSortService, $timeout, $window, $sce) {
+	function GridController($rootScope, $scope, $log, Search, naturalSortService, $timeout, $window, $sce, FEWI_URL) {
 		var vm = $scope.vm = {};
+		$scope.FEWI_URL = FEWI_URL;
 
 		vm.mustHideLegend = true;
 
@@ -77,7 +78,7 @@
 			var url;
 
 			if(cellData.data) {
-				url = "/diseasePortal/popup?gridClusterKey=" + cellData.data["gridClusterKey"];
+				url = FEWI_URL+"diseasePortal/popup?gridClusterKey=" + cellData.data["gridClusterKey"];
 				if(cellData.data && cellData.data["phenoHeader"]) {
 					url += "&header=" + cellData.data["phenoHeader"];
 					url += "&isPhenotype=true";
@@ -420,7 +421,7 @@
 
 			if (newResults.maxrows < newResults.totalrowcount) {
 				$rootScope.gridResultsString = $sce.trustAsHtml("Showing " + newResults.maxrows + " of " + newResults.totalrowcount + " rows; scroll down to see more. "
-					+ "<img id='sizeHelpImage' src='/assets/images/help_icon_16.png' style='margin-top: -5px; margin-left: 3px; cursor: pointer;'"
+					+ "<img id='sizeHelpImage' src='"+FEWI_URL+"assets/images/help_icon_16.png' style='margin-top: -5px; margin-left: 3px; cursor: pointer;'"
 					+ " title='To see more rows at a time, use a larger browser window or zoom out and re-run your search.'>");
 			} else {
 				$rootScope.gridResultsString = $sce.trustAsHtml("Showing " + newResults.maxrows + " of " + newResults.totalrowcount + " rows.");

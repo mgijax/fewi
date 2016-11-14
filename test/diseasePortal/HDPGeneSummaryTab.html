@@ -184,7 +184,7 @@ tr.gray td {background-color:#EEEEEE;}
 
     		<li>Verify the correct OMIM terms are displayed 
     		<ol>
-                <li>Query for <b concordion:set="#disease">176670</b>.</li>
+                <li>Query for <b concordion:set="#disease">OMIM:176670</b>.</li>
                 <li>The following diseases should appear in the gene result set  due to text matches (not complete results):
                 	<table concordion:execute="#mDiseases = getMarkerDiseaseByPhenotypeSymbol(#disease,#symbol)">
                 	<tr><th>Organism</th><th concordion:set="#symbol">Marker Symbol</th><th cc:assertEquals="#mDiseases">Disease</th></tr>
@@ -197,7 +197,7 @@ tr.gray td {background-color:#EEEEEE;}
                 	</table>
                 </li>
                 
-                <li>Query for <b concordion:set="#disease">114480</b>.</li>
+                <li>Query for <b concordion:set="#disease">OMIM:114480</b>.</li>
                 <li>Only the following diseases should appear in the gene result set(not complete results):
                 	<table concordion:execute="#mDiseases = getMarkerDiseaseByPhenotypeSymbol(#disease,#symbol)">
                 	<tr><th>Organism</th><th concordion:set="#symbol">Marker Symbol</th><th cc:assertEquals="#mDiseases">Disease</th></tr>

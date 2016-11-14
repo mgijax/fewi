@@ -359,6 +359,7 @@
               	<antcall target="dev-copy-js"/>
               </target>
           	  <fileset dir="www/js/src" includes="**/*"/>
+		  	<fileset dir="www/hmdc" includes="**/*"/>
           </when>
 		  <when>
               <target>
@@ -401,6 +402,7 @@
 		<copy todir="${deploy.dir}/${war.file}" >
 			<fileset dir="www" >
 				<include name="js/**"/>
+				<include name="hmdc/**"/>
 				<exclude name="js/src/**"/>
 				<exclude name="js/tests/**"/>
 			</fileset>

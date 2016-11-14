@@ -91,16 +91,12 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>At least the following diseases should appear in the result set (and many others due to matches on MP terms that return additional diseases).
                 	<table cc:verifySupersetOf="#termId : getTermIdsByDisease(#disease)">
                 	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th><th>Why it should have matched</th></tr>
-                	<tr><td>605552</td><td>Abdominal Obesity-Metabolic Syndrome</td><td>contained in name</td></tr>
-                	<tr><td>265050</td><td>3mc Syndrome 2; 3MC2</td><td>synonym:  Oculo-Skeletal-Abdominal Syndrome</td></tr>
-                	<tr><td>100070</td><td>Aortic Aneurysm, Familial Abdominal, 1; AAA1</td><td>contained in name</td></tr>
-                	<tr><td>609782</td><td>Aortic Aneurysm, Familial Abdominal, 2; AAA2</td><td>contained in name</td></tr>
-                	<tr><td>611891</td><td>Aortic Aneurysm, Familial Abdominal, 3; AAA3</td><td>contained in name</td></tr>
-                	<tr><td>614375</td><td>Aortic Aneurysm, Familial Abdominal, 4; AAA4</td><td>contained in name</td></tr>
-                	<tr><td>226100</td><td>Endocardial Fibroelastosis and Coarctation of Abdominal Aorta</td><td>contained in name</td></tr>
-                	<tr><td>182212</td><td>Shprintzen-Goldberg Craniosynostosis Syndrome; SGS</td><td>synonym: Craniosynostosis with Arachnodactyly and Abdominal Hernias</td></tr>
-                	<tr><td>100100</td><td>Abdominal Muscles, Absence of, with Urinary Tract Abnormality and Cryptorchidism</td><td>contained in name</td></tr>
-                	<tr><td>260570</td><td>Pelger-Huet-Like Anomaly and Episodic Fever with Abdominal Pain</td><td>contained in name</td></tr>
+                	<tr><td>OMIM:605552</td><td>Abdominal Obesity-Metabolic Syndrome</td><td>contained in name</td></tr>
+                	<tr><td>OMIM:265050</td><td>3mc Syndrome 2; 3MC2</td><td>synonym:  Oculo-Skeletal-Abdominal Syndrome</td></tr>
+                	<tr><td>OMIM:100070</td><td>Aortic Aneurysm, Familial Abdominal, 1; AAA1</td><td>contained in name</td></tr>
+                	<tr><td>OMIM:226100</td><td>Endocardial Fibroelastosis and Coarctation of Abdominal Aorta</td><td>contained in name</td></tr>
+                	<tr><td>OMIM:182212</td><td>Shprintzen-Goldberg Craniosynostosis Syndrome; SGS</td><td>synonym: Craniosynostosis with Arachnodactyly and Abdominal Hernias</td></tr>
+                	<tr><td>OMIM:100100</td><td>Abdominal Muscles, Absence of, with Urinary Tract Abnormality and Cryptorchidism</td><td>contained in name</td></tr>
                 	</table>
                 </li>
                 
@@ -114,10 +110,9 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>At least the following diseases should appear in the result set (along with many others):
                 	<table cc:verifySupersetOf="#termId : getTermIdsByDisease(#disease)">
                 	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th><th>Why it should have matched</th></tr>
-                	<tr><td>556500</td><td>Parkinson Disease, Mitochondrial</td><td>contained in name</td></tr>
-                	<tr><td>614203</td><td>Parkinson Disease 17; PARK17</td><td>contained in name</td></tr>
-                	<tr><td>194200</td><td>Wolff-Parkinson-White Syndrome</td><td>contained in name</td></tr>
-                	<tr><td>606693</td><td>Kufor-Rakeb Syndrome; KRS</td><td>has synonym "Parkinson Disease 9, Autosomal Recessive; PARK9"</td></tr>
+                	<tr><td>OMIM:556500</td><td>Parkinson Disease, Mitochondrial</td><td>contained in name</td></tr>
+                	<tr><td>OMIM:194200</td><td>Wolff-Parkinson-White Syndrome</td><td>contained in name</td></tr>
+                	<tr><td>OMIM:606693</td><td>Kufor-Rakeb Syndrome; KRS</td><td>has synonym "Parkinson Disease 9, Autosomal Recessive; PARK9"</td></tr>
                 	</table>
                 </li>
     		</ol>
@@ -162,8 +157,8 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Query should return at the following diseases by match to the disease term: 
                 	<table cc:verifySupersetOf="#termId : getTermIdsByDisease(#disease)">
                 	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
-                	<tr><td>211980</td><td>Lung Cancer</td></tr>
-                	<tr><td>182280</td><td>Small Cell Cancer of the Lung</td></tr>
+                	<tr><td>OMIM:211980</td><td>Lung Cancer</td></tr>
+                	<tr><td>OMIM:182280</td><td>Small Cell Cancer of the Lung</td></tr>
                 	</table></li>
     		</ol>
     		</li>
@@ -174,8 +169,8 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Should return disease associated to this id PLUS other diseases that are associated to the mouse genoclusters returned; no longer include diseases associated to human genes returned (change in 6.05):
                 <table cc:verifySupersetOf="#termId : getTermIdsByDisease(#disease)">
                 	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
-                	<tr><td>105830</td><td>Angelman Syndrome; AS</td></tr>
-                	<tr><td>176270</td><td>Prader-Willi Syndrome; PWS</td></tr>
+                	<tr><td>OMIM:105830</td><td>Angelman Syndrome; AS</td></tr>
+                	<tr><td>OMIM:176270</td><td>Prader-Willi Syndrome; PWS</td></tr>
                 	</table>
                 </li>
     		</ol>
@@ -187,8 +182,8 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Should return at least the following diseases:
                 <table cc:verifySupersetOf="#termId : getTermIdsByDisease(#disease)">
                 	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
-                	<tr><td>211980</td><td>Lung Cancer</td></tr>
-                	<tr><td>182280</td><td>Small Cell Cancer of the Lung</td></tr>
+                	<tr><td>OMIM:211980</td><td>Lung Cancer</td></tr>
+                	<tr><td>OMIM:182280</td><td>Small Cell Cancer of the Lung</td></tr>
                 	</table>
                 </li>
     		</ol>
@@ -196,11 +191,11 @@ tr.gray td {background-color:#EEEEEE;}
     		
     		<li>Querying for a disease with no models still brings back the disease.
     		<ol>
-                <li>Query by Acne, Adult <b concordion:set="#disease">604324</b></li>
+                <li>Query by Acne, Adult <b concordion:set="#disease">OMIM:604324</b></li>
                 <li>Should return ONLY one disease:
                 <table cc:verifyRowsUnordered="#termId : getTermIdsByDiseaseId(#disease)">
                 	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
-                	<tr><td>604324</td><td>Acne, Adult</td></tr>
+                	<tr><td>OMIM:604324</td><td>Acne, Adult</td></tr>
                 	</table>
                 </li>
                 <li>Count of genes returned should be <b concordion:assertEquals="getGeneCountByDisease(#disease)">0</b></li>
@@ -213,7 +208,7 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Should return this disease:
                 <table cc:verifySupersetOf="#termId : getTermIdsByDiseaseId(#disease)">
                 	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
-                	<tr><td>152700</td><td>Systemic Lupus Erythematosus; SLE</td></tr>
+                	<tr><td>OMIM:152700</td><td>Systemic Lupus Erythematosus; SLE</td></tr>
                 	</table>
                 </li>
     		</ol>
@@ -222,20 +217,20 @@ tr.gray td {background-color:#EEEEEE;}
     		<li>Querying for diseases in the "Exclude" file returns no results (first several rows of that file are shown below).
     		<table>
     			<tr><th>OMIM ID</th> <th>OMIM Term Name</th></tr>
-				<tr><td>306995</td>	<td>Homosexuality; HMS1</td></tr>
-				<tr><td>210750</td>	<td>Blond Hair</td></tr>
-				<tr><td>139450</td>	<td>"Hair, Curly"</td></tr>
-				<tr><td>113750</td>	<td>Hair Color 1; HCL1</td></tr>
-				<tr><td>266300</td>	<td>Hair Color 2; HCL2</td></tr>
-				<tr><td>601800</td>	<td>Hair Color 3; HCL3</td></tr>
-				<tr><td>227240</td>	<td>Eye Color 1; EYCL1</td></tr>
-				<tr><td>227220</td>	<td>Eye Color 3; EYCL3</td></tr>
-				<tr><td>314920</td>	<td>Xp24</td></tr>
-				<tr><td>314940</td>	<td>Xp37</td></tr>
-				<tr><td>314960</td>	<td>Xp40</td></tr>
-				<tr><td>192200</td>	<td>Varicose Veins</td></tr>
-				<tr><td>110300</td>	<td>ABO BLOOD GROUP</td></tr>
-				<tr><td>502000</td>	<td>Aging</td></tr>
+				<tr><td>OMIM:306995</td>	<td>Homosexuality; HMS1</td></tr>
+				<tr><td>OMIM:210750</td>	<td>Blond Hair</td></tr>
+				<tr><td>OMIM:139450</td>	<td>"Hair, Curly"</td></tr>
+				<tr><td>OMIM:113750</td>	<td>Hair Color 1; HCL1</td></tr>
+				<tr><td>OMIM:266300</td>	<td>Hair Color 2; HCL2</td></tr>
+				<tr><td>OMIM:601800</td>	<td>Hair Color 3; HCL3</td></tr>
+				<tr><td>OMIM:227240</td>	<td>Eye Color 1; EYCL1</td></tr>
+				<tr><td>OMIM:227220</td>	<td>Eye Color 3; EYCL3</td></tr>
+				<tr><td>OMIM:314920</td>	<td>Xp24</td></tr>
+				<tr><td>OMIM:314940</td>	<td>Xp37</td></tr>
+				<tr><td>OMIM:314960</td>	<td>Xp40</td></tr>
+				<tr><td>OMIM:192200</td>	<td>Varicose Veins</td></tr>
+				<tr><td>OMIM:110300</td>	<td>ABO BLOOD GROUP</td></tr>
+				<tr><td>OMIM:502000</td>	<td>Aging</td></tr>
     		</table>
     		<ol>
     			<li>Query for  terms listed above: <b concordion:set="#disease">306995, 210750, 139450, 113750, 266300, 601800, 227240, 227220, 314920, 314940, 314960, 192200, 110300, 502000</b>.</li>
@@ -246,43 +241,43 @@ tr.gray td {background-color:#EEEEEE;}
     		<li>Querying for items which are OMIM "gene" records (prefixed with an asterisk at OMIM) returns no results (some examples shown below).
     		<table>
 	    		<tr><th>OMIM ID</th><th>OMIM term (gene symbol)</th></tr>
-				<tr><td>300131</td><td>PLASTIN 3; PLS3 </td></tr>
-				<tr><td>300170</td><td>OFD1 GENE; OFD1 </td></tr>
-				<tr><td>300193</td><td>HIGH MOBILITY GROUP BOX 3; HMGB3 </td></tr>
-				<tr><td>300177</td><td>MELANOMA ANTIGEN, FAMILY A, 12; MAGEA12 </td></tr>
-				<tr><td>300176</td><td>MELANOMA ANTIGEN, FAMILY A, 6; MAGEA6 </td></tr>
-				<tr><td>300185</td><td>A-KINASE ANCHOR PROTEIN 4; AKAP4 </td></tr>
-				<tr><td>300111</td><td>LIM DOMAIN ONLY 6; LMO6 </td></tr>
-				<tr><td>300138</td><td>CHLORIDE INTRACELLULAR CHANNEL 2; CLIC2 </td></tr>
-				<tr><td>300112</td><td>PROTEOLIPID PROTEIN 2; PLP2 </td></tr>
-				<tr><td>300127</td><td>OLIGOPHRENIN 1; OPHN1 </td></tr>
-				<tr><td>300110</td><td>CALCIUM CHANNEL, VOLTAGE-DEPENDENT, ALPHA-1F SUBUNIT; CACNA1F </td></tr>
-				<tr><td>300118</td><td>RHO GTPase-ACTIVATING PROTEIN 6; ARHGAP6 </td></tr>
-				<tr><td>300192</td><td>SARCOMA, SYNOVIAL, X BREAKPOINT 2; SSX2 </td></tr>
-				<tr><td>300634</td><td>PDZ DOMAIN-CONTAINING 4; PDZD4 </td></tr>
-				<tr><td>300687</td><td>ERCC6-LIKE; ERCC6L </td></tr>
-				<tr><td>300647</td><td>FAMILY WITH SEQUENCE SIMILARITY 123, MEMBER B; FAM123B </td></tr>
-				<tr><td>300631</td><td>TRANSMEMBRANE PROTEIN 27; TMEM27 </td></tr>
-				<tr><td>300658</td><td>NDP GENE; NDP </td></tr>
-				<tr><td>300680</td><td>PREGNANCY-UPREGULATED, NONUBIQUITOUS, CAM KINASE; PNCK </td></tr>
-				<tr><td>303631</td><td>COLLAGEN, TYPE IV, ALPHA-6; COL4A6 </td></tr>
-				<tr><td>303630</td><td>COLLAGEN, TYPE IV, ALPHA-5; COL4A5 </td></tr>
-				<tr><td>300628</td><td>FERM DOMAIN-CONTAINING PROTEIN 7; FRMD7 </td></tr>
-				<tr><td>300620</td><td>V-SET AND IMMUNOGLOBULIN DOMAINS-CONTAINING PROTEIN 1; VSIG1 </td></tr>
-				<tr><td>300637</td><td>G ANTIGEN 12I; GAGE12I </td></tr>
-				<tr><td>300644</td><td>GALACTOSIDASE, ALPHA; GLA </td></tr>
-				<tr><td>300646</td><td>ZINC FINGER DHHC DOMAIN-CONTAINING PROTEIN 9; ZDHHC9 </td></tr>
-				<tr><td>300677</td><td>CHROMOSOME X OPEN READING FRAME 15; CXORF15 </td></tr>
-				<tr><td>300663</td><td>AUTOPHAGY 4, S CEREVISIAE, HOMOLOG OF, A; ATG4A </td></tr>
-				<tr><td>301780</td><td>ARYLSULFATASE C, ISOZYME F; ARSC2 </td></tr>
-				<tr><td>301770</td><td>ARRESTIN 3, RETINAL; ARR3 </td></tr>
-				<tr><td>305990</td><td>GLYCINE RECEPTOR, ALPHA-2 SUBUNIT; GLRA2 </td></tr>
-				<tr><td>305915</td><td>GLUTAMATE RECEPTOR, IONOTROPIC, AMPA 3; GRIA3 </td></tr>
-				<tr><td>300698</td><td>TRANSMEMBRANE PROTEIN 47; TMEM47 </td></tr>
-				<tr><td>300678</td><td>DUAL-SPECIFICITY PHOSPHATASE 21; DUSP21 </td></tr>
-				<tr><td>300632</td><td>PDZ DOMAIN-CONTAINING 11; PDZD11 </td></tr>
-				<tr><td>300684</td><td>X KELL BLOOD GROUP PRECURSOR-RELATED, X-LINKED; XKRX </td></tr>
-				<tr><td>300682</td><td>MICRO RNA 424; MIRN424 </td></tr>
+				<tr><td>OMIM:300131</td><td>PLASTIN 3; PLS3 </td></tr>
+				<tr><td>OMIM:300170</td><td>OFD1 GENE; OFD1 </td></tr>
+				<tr><td>OMIM:300193</td><td>HIGH MOBILITY GROUP BOX 3; HMGB3 </td></tr>
+				<tr><td>OMIM:300177</td><td>MELANOMA ANTIGEN, FAMILY A, 12; MAGEA12 </td></tr>
+				<tr><td>OMIM:300176</td><td>MELANOMA ANTIGEN, FAMILY A, 6; MAGEA6 </td></tr>
+				<tr><td>OMIM:300185</td><td>A-KINASE ANCHOR PROTEIN 4; AKAP4 </td></tr>
+				<tr><td>OMIM:300111</td><td>LIM DOMAIN ONLY 6; LMO6 </td></tr>
+				<tr><td>OMIM:300138</td><td>CHLORIDE INTRACELLULAR CHANNEL 2; CLIC2 </td></tr>
+				<tr><td>OMIM:300112</td><td>PROTEOLIPID PROTEIN 2; PLP2 </td></tr>
+				<tr><td>OMIM:300127</td><td>OLIGOPHRENIN 1; OPHN1 </td></tr>
+				<tr><td>OMIM:300110</td><td>CALCIUM CHANNEL, VOLTAGE-DEPENDENT, ALPHA-1F SUBUNIT; CACNA1F </td></tr>
+				<tr><td>OMIM:300118</td><td>RHO GTPase-ACTIVATING PROTEIN 6; ARHGAP6 </td></tr>
+				<tr><td>OMIM:300192</td><td>SARCOMA, SYNOVIAL, X BREAKPOINT 2; SSX2 </td></tr>
+				<tr><td>OMIM:300634</td><td>PDZ DOMAIN-CONTAINING 4; PDZD4 </td></tr>
+				<tr><td>OMIM:300687</td><td>ERCC6-LIKE; ERCC6L </td></tr>
+				<tr><td>OMIM:300647</td><td>FAMILY WITH SEQUENCE SIMILARITY 123, MEMBER B; FAM123B </td></tr>
+				<tr><td>OMIM:300631</td><td>TRANSMEMBRANE PROTEIN 27; TMEM27 </td></tr>
+				<tr><td>OMIM:300658</td><td>NDP GENE; NDP </td></tr>
+				<tr><td>OMIM:300680</td><td>PREGNANCY-UPREGULATED, NONUBIQUITOUS, CAM KINASE; PNCK </td></tr>
+				<tr><td>OMIM:303631</td><td>COLLAGEN, TYPE IV, ALPHA-6; COL4A6 </td></tr>
+				<tr><td>OMIM:303630</td><td>COLLAGEN, TYPE IV, ALPHA-5; COL4A5 </td></tr>
+				<tr><td>OMIM:300628</td><td>FERM DOMAIN-CONTAINING PROTEIN 7; FRMD7 </td></tr>
+				<tr><td>OMIM:300620</td><td>V-SET AND IMMUNOGLOBULIN DOMAINS-CONTAINING PROTEIN 1; VSIG1 </td></tr>
+				<tr><td>OMIM:300637</td><td>G ANTIGEN 12I; GAGE12I </td></tr>
+				<tr><td>OMIM:300644</td><td>GALACTOSIDASE, ALPHA; GLA </td></tr>
+				<tr><td>OMIM:300646</td><td>ZINC FINGER DHHC DOMAIN-CONTAINING PROTEIN 9; ZDHHC9 </td></tr>
+				<tr><td>OMIM:300677</td><td>CHROMOSOME X OPEN READING FRAME 15; CXORF15 </td></tr>
+				<tr><td>OMIM:300663</td><td>AUTOPHAGY 4, S CEREVISIAE, HOMOLOG OF, A; ATG4A </td></tr>
+				<tr><td>OMIM:301780</td><td>ARYLSULFATASE C, ISOZYME F; ARSC2 </td></tr>
+				<tr><td>OMIM:301770</td><td>ARRESTIN 3, RETINAL; ARR3 </td></tr>
+				<tr><td>OMIM:305990</td><td>GLYCINE RECEPTOR, ALPHA-2 SUBUNIT; GLRA2 </td></tr>
+				<tr><td>OMIM:305915</td><td>GLUTAMATE RECEPTOR, IONOTROPIC, AMPA 3; GRIA3 </td></tr>
+				<tr><td>OMIM:300698</td><td>TRANSMEMBRANE PROTEIN 47; TMEM47 </td></tr>
+				<tr><td>OMIM:300678</td><td>DUAL-SPECIFICITY PHOSPHATASE 21; DUSP21 </td></tr>
+				<tr><td>OMIM:300632</td><td>PDZ DOMAIN-CONTAINING 11; PDZD11 </td></tr>
+				<tr><td>OMIM:300684</td><td>X KELL BLOOD GROUP PRECURSOR-RELATED, X-LINKED; XKRX </td></tr>
+				<tr><td>OMIM:300682</td><td>MICRO RNA 424; MIRN424 </td></tr>
     		</table>
     			<ol>
     			<li>Query for OMIM gene records: <b concordion:set="#disease">300131 300170 300193 300177 300176 300185 300111 300138 300112 300127 300110 300118 300192 300634 300687 300647 300631 300658 300680 303631 303630 300628 300620 300637 300644 300646 300677 300663 301780 301770 305990 305915</b></li>
@@ -314,7 +309,9 @@ tr.gray td {background-color:#EEEEEE;}
     		</table>
     		</li>
     		<ol>
-    			<li>Query for OMIM gene records: <b concordion:set="#disease">+141900 +141800 +142830 #300194 #300100 #300676 #300699 #301835 %300605 %300660 %300614 %300619 %300612 300602 301800 301840 303650 309120</b></li>
+    			<li>
+    			  <h3 style="background-color: lightblue;">TODO (kevin): FIX after we get OMIM ID numbers working again</h3>
+    			  Query for OMIM gene records: <b concordion:set="#disease">+141900,+141800,+142830,#300194,#300100,#300676,#300699,#301835,%300605,%300660,%300614,%300619,%300612,300602,301800,301840,303650,309120</b></li>
     			<li>Verify that <b concordion:assertEquals="getDiseaseCountByDisease(#disease)">14</b> disease terms are returned. Change in 6.05 reduces the number of diseases returned.  Diseases previously returned because of being associated to human genes returned (indirect associations) are no longer present.  This search previously returned 30 diseases.</li>
     		</ol>
     			

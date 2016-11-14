@@ -3,8 +3,8 @@
 	angular.module('hmdc.services')
 		.service('Search', SearchService);
 
-	function SearchService($rootScope, $http) {
-		var urlBase = '/diseasePortal';
+	function SearchService($rootScope, $http, FEWI_URL) {
+		var urlBase = FEWI_URL+'diseasePortal';
 
 		return {
 			diseaseQuery: function(formData) {
