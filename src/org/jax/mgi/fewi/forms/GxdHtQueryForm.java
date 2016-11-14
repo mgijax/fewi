@@ -37,7 +37,6 @@ public class GxdHtQueryForm {
 	public final static String ANY_AGE = "ANY";
 	public final static String EMBRYONIC = "Embryonic";
 	public final static String POSTNATAL = "Postnatal";
-	public final static String ANY_DETECTED = "either";
 
     //--------------------//
     // constructors
