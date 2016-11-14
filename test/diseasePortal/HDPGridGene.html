@@ -115,7 +115,7 @@ tr.gray td {background-color:#EEEEEE;}
     		<li>The grid returns both mouse and human gene when you display a disease associated to a human gene
     		<ol>
                 <li>Open the HDP query form</li>
-                <li>Enter <b concordion:set="#pheno">OMIM:166700</b> for (Buschke-Ollendorff Syndrome; BOS) in the Phenotypes and Diseases section and hit search</li>
+                <li>Enter <b concordion:set="#pheno">DOID:4253</b> for (melorheostosis) in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and confirm the human marker column contains marker <b cc:assertResultsContain="gridHumanSymbolsByPhenotypeId(#pheno)">LEMD3</b> 
                 	and the Mouse marker column contains marker <b cc:assertResultsContain="gridMouseSymbolsByPhenotypeId(#pheno)">Lemd3</b>
                 	(The mouse marker is not associated to this disease but is part of the cluster)</li>
@@ -125,18 +125,16 @@ tr.gray td {background-color:#EEEEEE;}
  			<li>The grid returns both mouse and human gene when you display a disease associated to a mouse gene
     		<ol>
                 <li>Open the HDP query form</li>
-                <li>Enter <b concordion:set="#pheno">OMIM:116860</b> for (Cerebral Cavernous Malformations; CCM) in the Phenotypes and Diseases section and hit search</li>
+                <li>Enter <b concordion:set="#pheno">DOID:11198</b> for (DiGeorge syndrome) in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and confirm the human marker column contains markers 
 	                <table cc:verifySupersetOf="#symbol : gridHumanSymbolsByPhenotypeId(#pheno)">
 	                	<tr><th concordion:assertEquals="#symbol">Symbol</th></tr>
-	                	<tr><td>KRIT1</td></tr>
-	                	<tr><td>CCM2</td></tr>
+	                	<tr><td>HOXA3</td></tr>
 	                </table> 
                 and the Mouse marker column contains markers 
                 	<table cc:verifySupersetOf="#symbol : gridMouseSymbolsByPhenotypeId(#pheno)">
 	                	<tr><th concordion:assertEquals="#symbol">Symbol</th></tr>
-	                	<tr><td>Krit1</td></tr>
-	                	<tr><td>Ccm2</td></tr>
+	                	<tr><td>Hoxa3</td></tr>
 	                </table>
                 (The human markers are not associated to this disease but are part of the cluster)</li>
     		</ol>
