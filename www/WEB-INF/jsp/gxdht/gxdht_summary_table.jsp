@@ -3,15 +3,14 @@
 <%@ page import = "org.jax.mgi.fewi.util.StyleAlternator" %>
 <%
 	StyleAlternator headingClass = new StyleAlternator("headerShade2", "headerShade1");
-	StyleAlternator dataClass = new StyleAlternator("dataShade1", "dataShade1");		// all white for now
 	request.setAttribute("headingClass", headingClass);
-	request.setAttribute("dataClass", dataClass);
 %>
 <%@ page import = "java.util.List" %>
 
 <%@ page trimDirectiveWhitespaces="true" %>
 <fewi:count count="${count}" /> <fewi:count count="${totalCount}" />
 <div id="injectedResults">
+  <c:set var="linkOut" value="<img src='${configBean.FEWI_URL}assets/images/link_out.png'>" />
   <c:forEach var="exp" items="${experiments}" varStatus="status">
   	<c:set var="aeLink" value="${fn:replace(externalUrls.ArrayExpressExperiment, '@@@@', exp.arrayExpressID)}" />
   	<c:set var="geoLink" value="" />
@@ -19,19 +18,19 @@
 	  	<c:set var="geoLink" value="${fn:replace(externalUrls.GEOSeries, '@@@@', exp.geoID)}" />
   	</c:if>
 
-    <div id="row${status.index}" class="experimentWrapper ${dataClass.next}">
-	  <div id="row${status.index}idWrapper" class="idWrapper ${headingClass.next}">
-		<div id="row${status.index}idLabels" class="idLabels">ArrayExpress:<c:if test="${not empty geoLink}"><br/>GEO:</c:if></div>
-		<div id="row${status.index}ids" class="ids"><a href="${aeLink}" target="_blank">${exp.arrayExpressID}</a>
-			<c:if test="${not empty geoLink}"><br/><a href="${geoLink}" target="_blank">${exp.geoID}</a></c:if></div>
+    <div id="row${status.index}" class="experimentWrapper dataShade1}">
+	  <div id="row${status.index}titleWrapper" class="idWrapper headerShade2">
+	  	<div id="row${status.index}titleLabel" class="titleLabel">Title</div>
 		<div id="row${status.index}title" class="title">
 	      	<c:if test="${highlightTitle}"><fewi:highlight value='${exp.title}' searchString="${textSearch}" highlightClass="yellow"/></c:if>
 	      	<c:if test="${empty highlightTitle}">${exp.title}</c:if>
 		</div>
 	  </div>
+	  
 	  <div id="row${status.index}detailWrapper" class="detailWrapper">
+	    <div id="row${status.index}detailLabel" class="detailTitle headerShade3">Details</div>
 	    <div id="row${status.index}samplesWrapper" class="detailCell">
-	      <div id="row${status.index}samplesHeader" class="detailHeading ${headingClass.next}">Samples</div>
+	      <div id="row${status.index}samplesHeader" class="detailHeading headerShade1">Samples</div>
 	      <div id="row${status.index}samples" class="samples">
 	  	  	<a id="row${status.index}sampleCount" onClick="gs_samplePopup('${exp.arrayExpressID}')">${exp.sampleCount}</a> samples&nbsp;&nbsp;
 	  	  	<a id="row${status.index}button" class="filterButton" onClick="gs_samplePopup('${exp.arrayExpressID}')">View</a>
@@ -41,7 +40,7 @@
 	  	  </div>
 	    </div>
 	    <div id="row${status.index}variablesWrapper" class="detailCell">
-	      <div id="row${status.index}variablesHeader" class="detailHeading ${headingClass.current}">Experimental variables</div>
+	      <div id="row${status.index}variablesHeader" class="detailHeading headerShade1">Experimental variables</div>
 	      <div id="row${status.index}variables" class="variables">
 	  	  	<ul class="variables">
 	  	  	<c:forEach var="ev" items="${exp.experimentalVariables}">
@@ -51,24 +50,35 @@
 	  	  </div>
 	    </div>
 	    <div id="row${status.index}typeWrapper" class="detailCell">
-	      <div id="row${status.index}typeHeader" class="detailHeading ${headingClass.current}">Study type</div>
+	      <div id="row${status.index}typeHeader" class="detailHeading headerShade1">Study type</div>
 	      <div id="row${status.index}type" class="type">${exp.studyType}</div>
 	    </div>
-	    <div id="row${status.index}spacer" class="spacer">&nbsp;</div>
-	    <div id="row${status.index}methodWrapper" class="detailCellLast">
-	      <div id="row${status.index}methodHeader" class="detailHeading ${headingClass.current}">Method</div>
+	    <div id="row${status.index}methodWrapper" class="detailCell">
+	      <div id="row${status.index}methodHeader" class="detailHeading headerShade1">Method</div>
 	      <div id="row${status.index}method" class="method">${exp.method}
-	      	<c:if test="${not empty exp.note}"><p/>Note: ${exp.note}</c:if>
 	      </div>
+	    </div>
+	    <div id="row${status.index}spacer" class="spacer">&nbsp;</div>
+	    <div id="row${status.index}linkWrapper" class="detailCellLast">
+	      <div id="row${status.index}linkHeader" class="detailHeading headerShade1">View experiment at</div>
+		  <div id="row${status.index}ids" class="ids">ArrayExpress: <a href="${aeLink}" target="_blank">${exp.arrayExpressID}</a> ${linkOut}
+			<c:if test="${not empty geoLink}"><br/>GEO: <a href="${geoLink}" target="_blank">${exp.geoID}</a> ${linkOut}</c:if>
+		  </div>
 	    </div>
 	  </div>
 	  <c:if test="${not empty exp.description}">
-	  <div id="row${status.index}descriptionWrapper" class="descriptionWrapper ${headingClass.current}">
-	      <div id="row${status.index}descriptionTitle" class="descriptionTitle">Description</div>
-	      <div id="row${status.index}description" class="description">
-	      	<c:if test="${highlightDescription}"><fewi:highlight value='${exp.linkedDescription}' searchString="${textSearch}" highlightClass="yellow"/></c:if>
-	      	<c:if test="${empty highlightDescription}">${exp.linkedDescription}</c:if>
-	      </div>
+	  <div id="row${status.index}descriptionWrapper" class="descriptionWrapper headerShade1">
+	    <div id="row${status.index}descriptionTitle" class="descriptionTitle headerShade2">Description</div>
+	    <div id="row${status.index}description" class="description">
+	    	<c:if test="${highlightDescription}"><fewi:highlight value='${exp.linkedDescription}' searchString="${textSearch}" highlightClass="yellow"/></c:if>
+	    	<c:if test="${empty highlightDescription}">${exp.linkedDescription}</c:if>
+	    </div>
+	  </div>
+	  </c:if>
+	  <c:if test="${not empty exp.note}">
+	  <div id="row${status.index}noteWrapper" class="noteWrapper detailShade1">
+	    <div id="row${status.index}noteTitle" class="noteTitle headerShade3">Note</div>
+	    <div id="row${status.index}note" class="note">${exp.note}</div>
 	  </div>
 	  </c:if>
     </div> 

@@ -148,6 +148,20 @@ var updateAgeStageTab = function() {
 	}
 };
 
+// look up the HTML elements identified by the given 'ids' and set the height of each to the
+// maximum height across them all.  minPx is optional and specifies minimum height.
+var standardizeHeights = function(ids, minPx) {
+	var maxHeight = 0;
+	if (minPx != null) { maxHeight = minPx; }
+	
+	for (var i = 0; i < ids.length; i++) {
+		maxHeight = Math.max(maxHeight, $('#' + ids[i]).height());
+	}
+	for (var i = 0; i < ids.length; i++) {
+		$('#' + ids[i]).height(maxHeight);
+	}
+};
+
 // update the results div
 var updateResultsDiv = function(startIndex, rowsPerPage) {
 	updateAgeStageTab();
@@ -198,29 +212,13 @@ var updateResultsDiv = function(startIndex, rowsPerPage) {
 			log("updated div on page");
 			
 			for (var i = 0; i < count; i++) {
-				var sw = "#row" + i + "samplesWrapper";
-				var vw = "#row" + i + "variablesWrapper";
-				var tw = "#row" + i + "typeWrapper";
-				var mw = "#row" + i + "methodWrapper";
-				var sp = "#row" + i + "spacer";
+				standardizeHeights([ 'row' + i + 'detailLabel', 'row' + i + 'samplesWrapper', 
+					'row' + i + 'variablesWrapper', 'row' + i + 'typeWrapper', 'row' + i + 'methodWrapper',
+					'row' + i + 'spacer', 'row' + i + 'linkWrapper' ], 50);
 				
-				// synchronize heights of experiment info columns to match the tallest, ensuring uniform right border height
-				if ((sw != null) && (vw != null) && (tw != null) && (mw != null) && (sp != null)) {
-					var height = Math.max($(sw).height(), $(vw).height(), $(tw).height(), $(mw).height());
-					$(sw).height(height);
-					$(vw).height(height);
-					$(tw).height(height);
-					$(mw).height(height);
-					$(sp).height(height);
-				}
-				
-				// adjust height of title div to ensure right border is tall enough
-				var iw = '#row' + i + 'idWrapper';
-				var ew = '#row' + i + 'title';
-				
-				if ($(iw).height() > $(ew).height()) {
-					$(ew).height($(iw).height());
-				}
+				standardizeHeights([ 'row' + i + 'title', 'row' + i + 'titleLabel']);
+				standardizeHeights([ 'row' + i + 'description', 'row' + i + 'descriptionTitle' ]);
+				standardizeHeights([ 'row' + i + 'note', 'row' + i + 'noteTitle' ]);
 				
 				$('#row' + i + 'sampleCount').addClass('blue');
 			}
