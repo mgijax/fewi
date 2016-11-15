@@ -124,6 +124,26 @@ $(function() {
     };
 });
 
+var showQF = function(callback) {
+	$('#standard-qf').slideDown('slow', callback);
+	$('#toggleLink').html('Click to hide search');
+	$('#toggleImg').removeClass('qfExpand').addClass('qfCollapse');
+};
+
+var hideQF = function(callback) {
+	$('#standard-qf').slideUp('slow', callback);
+	$('#toggleLink').html('Click to modify search');
+	$('#toggleImg').removeClass('qfCollapse').addClass('qfExpand');
+};
+
+var toggleQueryForm = function(callback) {
+	if ($('#standard-qf').css('display') == 'none') {
+		showQF();
+	} else {
+		hideQF();
+	}
+};
+
 // general purpose function for changing tabs
 function changeTab(tabElement,parentId)
 {

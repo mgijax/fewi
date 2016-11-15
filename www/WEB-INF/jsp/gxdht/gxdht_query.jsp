@@ -30,11 +30,12 @@
 
 table.noborder, table.noborder td , table.noborder th { border: none; }
 
+#standard-qf { padding-top: 5px; }
 
 body.yui-skin-sam .yui-panel .hd,
 body.yui-skin-sam .yui-ac-hd { background:none; background-color:#025; color:#fff; font-weight: bold;}
 body.yui-skin-sam .yui-ac-hd {padding: 5px;}
-body.yui-skin-sam div#outerGxd {overflow:visible;}
+body.yui-skin-sam div#outerGxd {overflow:visible; padding-top: 5px; padding-bottom: 5px; }
 
 .yui-dt table {width: 100%;}
 
@@ -93,13 +94,13 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 
 
 <div id="outerGxd">
-    <div id="toggleQF" class="summaryControl" style="display:none"><span id="toggleImg" class="qfExpand" style="margin-right:15px; margin-top:0px;"></span><span id="toggleLink" class="filterButton">Click to modify search</span></div>
+    <div id="toggleQF" class="summaryControl" style="display:none"><span id="toggleImg" class="qfExpand" style="margin-right:15px; margin-top:0px;" onClick="toggleQueryForm()"></span><span id="toggleLink" class="filterButton" onClick="toggleQueryForm()">Click to modify search</span></div>
     <div id="qwrap">
     	<%@ include file="/WEB-INF/jsp/gxdht/gxdht_form.jsp" %>
     </div>
 </div>
 <br clear="all" />
-<div class="summaryControl">
+<div id="summaryControl" class="summaryControl" style="display: none">
 	<div id="resultbar" class="goldbar">Results</div>
 	<%@ include file="/WEB-INF/jsp/gxdht/gxdht_summary.jsp" %>
 </div>
@@ -117,8 +118,12 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 gs_setFewiUrl("${configBean.FEWI_URL}");
 $(".gxdQf").on("reset",gq_reset);
 <c:if test="${not empty queryString}">
-var querystring = "${queryString}";
-gs_search();
+  var querystring = "${queryString}";
+  var pageType = "${pageType}";
+  $('#toggleQF').css({'display' : 'inline'});
+  $('#summaryControl').css({'display' : 'inline'});
+  hideQF();
+  gs_search();
 </c:if>
 </script>
 
