@@ -165,7 +165,7 @@
 			if(i != -1) vm.jsonData.gridMPHeaders.splice(i, 1);
 			vm.jsonData.gridMPHeaders.sort(naturalSortService.naturalSortFunction)
 			if(i != -1) vm.jsonData.gridMPHeaders.push("normal phenotype");
-			vm.jsonData.gridOMIMHeaders.sort(naturalSortService.naturalSortFunction)
+			vm.jsonData.gridDiseaseHeaders.sort(naturalSortService.naturalSortFunction)
 
 			$rootScope.selectedPhenoTypesAndDiseases = [];
 			$rootScope.selectedPhenoTypesAndDiseasesModel = [];
@@ -173,8 +173,8 @@
 				$rootScope.selectedPhenoTypesAndDiseases.push({id: vm.jsonData.gridMPHeaders[j], label: vm.jsonData.gridMPHeaders[j], type: "1"});
 			}
 
-			for (var j = 0; j < vm.jsonData.gridOMIMHeaders.length; j++) {
-				$rootScope.selectedPhenoTypesAndDiseases.push({id: vm.jsonData.gridOMIMHeaders[j], label: vm.jsonData.gridOMIMHeaders[j], type: "2"});
+			for (var j = 0; j < vm.jsonData.gridDiseaseHeaders.length; j++) {
+				$rootScope.selectedPhenoTypesAndDiseases.push({id: vm.jsonData.gridDiseaseHeaders[j], label: vm.jsonData.gridDiseaseHeaders[j], type: "2"});
 			}
 
 			$rootScope.selectedGenes = [];
@@ -229,8 +229,8 @@
 						showRow = true;
 					}
 				}
-				for(var header in vm.jsonData.gridOMIMHeaders) {
-					header = vm.jsonData.gridOMIMHeaders[header];
+				for(var header in vm.jsonData.gridDiseaseHeaders) {
+					header = vm.jsonData.gridDiseaseHeaders[header];
 					if(key.diseaseCells[header] && (selectedGenes.length == 0 || selectedGenes.indexOf(index) > -1) && (selectedPhenoTypesAndDiseases.length == 0 || selectedPhenoTypesAndDiseases.indexOf(header) > -1)) {
 						showRow = true;
 					}
@@ -261,8 +261,8 @@
 				}
 			}
 	
-			for(var header in vm.jsonData.gridOMIMHeaders) {
-				header = vm.jsonData.gridOMIMHeaders[header];
+			for(var header in vm.jsonData.gridDiseaseHeaders) {
+				header = vm.jsonData.gridDiseaseHeaders[header];
 				var showCol = false;
 				for(var key in vm.jsonData.gridRows) {
 					var index = key;
@@ -297,7 +297,7 @@
 			var newResults = {};
 			var data = [];
 
-			vm.OMIMHeaderCount = 0;
+			vm.DiseaseHeaderCount = 0;
 			vm.MPHeaderCount = 0;
 			vm.GeneCount = 0;
 
@@ -325,16 +325,16 @@
 
 			headerContent.push({});
 
-			// Push the OMIM Headers into the headerContent row
-			for(var header in vm.jsonData.gridOMIMHeaders) {
-				header = vm.jsonData.gridOMIMHeaders[header];
+			// Push the Disease Headers into the headerContent row
+			for(var header in vm.jsonData.gridDiseaseHeaders) {
+				header = vm.jsonData.gridDiseaseHeaders[header];
 				if(vm.displayCols.indexOf(header) > -1) {
 					if(vm.jsonData.gridHighLights) {
 						hash[header] = vm.jsonData.gridHighLights.indexOf(header);
 					} else {
 						hash[header] = -1;
 					}
-					vm.OMIMHeaderCount++;
+					vm.DiseaseHeaderCount++;
 					headerContent.push(hash);
 					hash = {};
 				}
@@ -389,8 +389,8 @@
 					}
 				}
 				rowContent.push({normalCount: 0, annotCount: 0, humanAnnotCount: 0});
-				for(var header in vm.jsonData.gridOMIMHeaders) {
-					header = vm.jsonData.gridOMIMHeaders[header];
+				for(var header in vm.jsonData.gridDiseaseHeaders) {
+					header = vm.jsonData.gridDiseaseHeaders[header];
 					if(vm.displayCols.indexOf(header) > -1) {
 						if(key.diseaseCells[header]) {
 							key.diseaseCells[header]["diseaseHeader"] = header;
@@ -408,7 +408,7 @@
 			// Push the final footer row
 			data.push([]);
 
-			newResults.totalcolcount = vm.OMIMHeaderCount + vm.MPHeaderCount;
+			newResults.totalcolcount = vm.DiseaseHeaderCount + vm.MPHeaderCount;
 			newResults.totalrowcount = vm.GeneCount;
 
 			updateWindowSize();

@@ -245,8 +245,8 @@ tr.gray td {background-color:#EEEEEE;}
    		<ol>
     		<li>Querying with the full name of a disease returns an exact match for the disease, and all associated markers.
 			<ol>
-    		    <li>Query for <b concordion:set="#disease">Netherton Syndrome; NETH</b> 256500</li>
-    		    <li>Verify that <b cc:assertResultsContain="getTermIdsByDisease(#disease)">OMIM:256500</b> (Netherton Syndrome; NETH) is returned.</li>
+    		    <li>Query for <b concordion:set="#disease">Netherton Syndrome</b> DOID:0050474</li>
+    		    <li>Verify that <b cc:assertResultsContain="getTermIdsByDisease(#disease)">DOID:0050474</b> (Netherton Syndrome) is returned.</li>
                 <li>Verify that <b cc:assertResultsContain="getSymbolsByDiseaseTerm(#disease)">Dsg4</b> is returned.</li>
                 <li>Verify that <b cc:assertResultsContain="getSymbolsByDiseaseTerm(#disease)">Spink5</b> is returned.</li> 
                 <li>Verify that <b cc:assertResultsContain="getSymbolsByDiseaseTerm(#disease)">SPINK5</b> is returned.</li>   

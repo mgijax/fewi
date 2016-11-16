@@ -264,20 +264,20 @@ public class DiseasePortalController {
 	 * (could be done in the JSP, but it was getting complex, so we may as well do it in Java)
 	 */
 	private String buildPopupTitle(List<String> humanMarkers, List<String> mouseMarkers, String header, boolean isPhenotype, HmdcAnnotationGroup mpGroup,
-			HmdcAnnotationGroup hpoGroup, HmdcAnnotationGroup omimGroup, boolean fromMarkerDetail) {
+			HmdcAnnotationGroup hpoGroup, HmdcAnnotationGroup diseaseGroup, boolean fromMarkerDetail) {
 
 		StringBuffer sb = new StringBuffer();
 		boolean human = ((hpoGroup != null) && (!hpoGroup.isEmpty())) ||
-			((omimGroup != null) && omimGroup.hasHumanRows());
+			((diseaseGroup != null) && diseaseGroup.hasHumanRows());
 		boolean mouse = ((mpGroup != null) && (!mpGroup.isEmpty())) ||
-			((omimGroup != null) && omimGroup.hasMouseRows());
+			((diseaseGroup != null) && diseaseGroup.hasMouseRows());
 		
 		// MP title formats:
 		//   1. Human and Mouse <header> abnormalities for <human genes>/<mouse genes>
 		//   2. Human <header> abnormalities for <human genes>/<mouse genes>
 		//   3. <header> abnormalities for <human genes>/<mouse genes>
 		//	 *. if header is "normal phenotype", skip the word "abnormalities"
-		// OMIM title formats:
+		// Disease title formats:
 		//	 1. Human Genes and Mouse Models for <header> and <human genes>/<mouse genes>
 		//	 2. Human Genes for <header> and <human genes>/<mouse genes>
 		//	 3. Mouse Models for <header> and <human genes>/<mouse genes>
@@ -303,15 +303,15 @@ public class DiseasePortalController {
 			} else if (mouse) { sb.append("Mouse Models for "); }
 		}
 		
-		// MP or OMIM header term
+		// MP or Disease header term
 		if (header != null) { sb.append(header); }
 		
-		// most MP terms have "abnormalities" in the title, but not OMIM
+		// most MP terms have "abnormalities" in the title, but not Disease
 		if (isPhenotype) {
 			if (!header.equalsIgnoreCase("normal phenotype")) { sb.append(" abnormalities for "); }
 			else { sb.append(" for "); }
 		}
-		else { sb.append(" and "); }		// OMIM
+		else { sb.append(" and "); }		// Disease
 		
 		// if both human and mouse markers, separate the organisms with a slash
 		if (humanMarkers != null && humanMarkers.size() > 0) {
@@ -527,11 +527,11 @@ public class DiseasePortalController {
 		/* need to split the annotation results up into their categories (one per table displayed):
 		 *	1. mouse genotype/phenotype (MP) annotations
 		 *	2. human marker/phenotype (HPO) annotations
-		 *	3. mouse genotype/OMIM annotations and human marker/OMIM annotations
+		 *	3. mouse genotype/DO annotations and human marker/DO annotations
 		 */
 		HmdcAnnotationGroup mpGroup = new HmdcAnnotationGroup(false);
 		HmdcAnnotationGroup hpoGroup = new HmdcAnnotationGroup(false);
-		HmdcAnnotationGroup omimGroup = new HmdcAnnotationGroup(true);
+		HmdcAnnotationGroup diseaseGroup = new HmdcAnnotationGroup(true);
 
 		for (SolrHdpGridAnnotationEntry result : annotationResults.getResultObjects()) {
 			Integer gridKey = result.getGridKey();
@@ -550,18 +550,18 @@ public class DiseasePortalController {
 				}
 			}
 			
-			if ("OMIM".equals(termType)) {
+			if ("Disease Ontology".equals(termType)) {
 				if (mouseGridKeys.contains(gridKey)) {
 					// is mouse genotype/disease annotation
-					omimGroup.addMouseAnnotation(allelePairs.get(gridKey), result.getTerm(), result.getByDagTerm(),
+					diseaseGroup.addMouseAnnotation(allelePairs.get(gridKey), result.getTerm(), result.getByDagTerm(),
 						genoClusterKeys.get(gridKey), genoClusterSeqNum.get(genoClusterKeys.get(gridKey)), false, false,
 						conditionalGenoclusters.contains(genoClusterKeys.get(gridKey)));
 				} else { 
 					// is human marker/disease annotation
-					omimGroup.addHumanAnnotation(humanSymbols.get(gridKey), homologyClusterKeys.get(gridKey),
+					diseaseGroup.addHumanAnnotation(humanSymbols.get(gridKey), homologyClusterKeys.get(gridKey),
 						result.getTerm(), result.getTerm(), result.getByDagTerm());
 				}
-				omimGroup.cacheDiseaseID(result.getTerm(), result.getTermId());
+				diseaseGroup.cacheDiseaseID(result.getTerm(), result.getTermId());
 			} else if ("Mammalian Phenotype".equals(termType)) {
 				// is mouse genotype/MP annotation
 				String term = result.getTerm();
@@ -575,7 +575,7 @@ public class DiseasePortalController {
 					result.isNormalAnnotation(), result.isBackgroundSensitive(),
 					conditionalGenoclusters.contains(genoClusterKeys.get(gridKey)));
 			} else {
-				// is human marker/HPO annotation (generated via OMIM-HPO mapping)
+				// is human marker/HPO annotation (generated via DO-HPO mapping)
 				hpoGroup.addHumanAnnotation(humanSymbols.get(gridKey), homologyClusterKeys.get(gridKey),
 					result.getSourceTerm(), result.getTerm(), result.getByDagTerm());
 				hpoGroup.cacheDiseaseID(result.getSourceTerm(), result.getSourceId());
@@ -590,10 +590,10 @@ public class DiseasePortalController {
 		mav.addObject("headerTerm", header);
 
 		// squish the multiple human gene/disease rows down into one row per gene
-		omimGroup.consolidateHumanRows();
+		diseaseGroup.consolidateHumanRows();
 		
 		// compose the popup title (could do in JSP, but it was getting complex...)
-		mav.addObject("pageTitle", buildPopupTitle(humanMarkers, mouseMarkers, header, isPhenotype, mpGroup, hpoGroup, omimGroup, fromMarkerDetail));
+		mav.addObject("pageTitle", buildPopupTitle(humanMarkers, mouseMarkers, header, isPhenotype, mpGroup, hpoGroup, diseaseGroup, fromMarkerDetail));
 		
 		if (isPhenotype) {
 			mav.addObject("isPhenotype", 1);
@@ -602,7 +602,10 @@ public class DiseasePortalController {
 			if (highlightedTerms.size() > 0) mav.addObject("highlights", highlightedTerms);
 		} else {
 			mav.addObject("isDisease", 1);
-			if (!omimGroup.isEmpty()) mav.addObject("omimGroup", omimGroup);
+			// TODO (kstone):
+			// refactor omimGroup to diseaseGroup
+			//  update JSPs, angular code, test mocking API
+			if (!diseaseGroup.isEmpty()) mav.addObject("omimGroup", diseaseGroup);
 		}
 		
 		if (mouseMarkers != null && mouseMarkers.size() > 0) { mav.addObject("mouseMarkers", mouseMarkers.toArray(new String[0])); }

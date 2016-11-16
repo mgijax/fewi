@@ -24,28 +24,28 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 	
 	private List<String> gridHighLights = null;
 	private List<String> gridMPHeaders = null;
-	private List<String> gridOMIMHeaders = null;
+	private List<String> gridDiseaseHeaders = null;
 
 	private SolrHdpGridEntry currentGridEntry;
 	
-	private HashMap<Integer, ArrayList<SolrHdpGridAnnotationEntry>> annotationMap = new HashMap<>();
+	private final HashMap<Integer, ArrayList<SolrHdpGridAnnotationEntry>> annotationMap = new HashMap<>();
 
-	private SearchResults<SolrHdpGridEntry> gridResults;
+	private final SearchResults<SolrHdpGridEntry> gridResults;
 	
 	public GridVisitor(SearchResults<SolrHdpGridEntry> gridResults, SearchResults<SolrHdpGridAnnotationEntry> annotationResults, List<String> highLights) {
 		this.gridResults = gridResults;
 		
 		gridHighLights = highLights;
 		gridMPHeaders = new ArrayList<String>();
-		gridOMIMHeaders = new ArrayList<String>();
+		gridDiseaseHeaders = new ArrayList<String>();
 
 		for(SolrHdpGridAnnotationEntry ar: annotationResults.getResultObjects()) {
 			
 			if(!gridMPHeaders.contains(ar.getTermHeader()) && ("Mammalian Phenotype".equals(ar.getTermType()) || "Human Phenotype Ontology".equals(ar.getTermType()))) {
 				gridMPHeaders.add(ar.getTermHeader());
 			}
-			if(!gridOMIMHeaders.contains(ar.getTermHeader()) && "OMIM".equals(ar.getTermType())) {
-				gridOMIMHeaders.add(ar.getTermHeader());
+			if(!gridDiseaseHeaders.contains(ar.getTermHeader()) && "Disease Ontology".equals(ar.getTermType())) {
+				gridDiseaseHeaders.add(ar.getTermHeader());
 			}
 			
 			if(!annotationMap.containsKey(ar.getGridKey())) {
@@ -112,7 +112,7 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 			GridTermHeaderAnnotation annotation = null;
 			String term = shgae.getTermHeader();
 			
-			if("OMIM".equals(shgae.getTermType())) {
+			if("Disease Ontology".equals(shgae.getTermType())) {
 				if(!diseaseCells.containsKey(term)) {
 					diseaseCells.put(term, new GridTermHeaderAnnotation());
 				}
@@ -151,7 +151,7 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 			if(annotation != null) {
 				annotation.setHeader(shgae.getTermHeader());
 
-				if(shgae.getTermType().equals("OMIM") && !annotation.getTerms().contains(shgae.getTerm())) {
+				if(shgae.getTermType().equals("Disease Ontology") && !annotation.getTerms().contains(shgae.getTerm())) {
 					//System.out.println("Term: " + shgae.getTerm());
 					//System.out.println("Type: " + shgae.getTermType());
 					annotation.getTerms().add(shgae.getTerm());
@@ -178,7 +178,7 @@ public class GridVisitor extends PrinterUtil implements GridVisitorInterface {
 			result = new GridResult();
 			result.setGridHighLights(gridHighLights);
 			result.setGridMPHeaders(gridMPHeaders);
-			result.setGridOMIMHeaders(gridOMIMHeaders);
+			result.setGridDiseaseHeaders(gridDiseaseHeaders);
 			result.setFilterQuery(gridResults.getFilterQuery());
 			result.setGridRows(new ArrayList<GridRow>());
 			result.Accept(this);

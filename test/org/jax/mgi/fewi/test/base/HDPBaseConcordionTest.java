@@ -129,6 +129,24 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	List<SolrHdpDisease> terms = mq.getDiseases();
     	return terms.size();
     }
+    
+    public List<String> getOMIMIdsForDiseaseId(String diseaseId) throws Exception
+    {
+    	List<String> omimIds = new ArrayList<String>();
+    	
+    	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
+    	mq.addTermIdClause(diseaseId);
+    	
+    	List<SolrHdpDisease> diseases = mq.getDiseases();
+    	
+    	for (SolrHdpDisease disease : diseases) {
+    		if (disease.getPrimaryId().equalsIgnoreCase(diseaseId)) {
+    			omimIds = disease.getOmimIds();
+    		}
+    	}
+    	
+    	return omimIds;
+    }
 
     public List<String> getTermsByPhenotype(String phenotype) throws Exception
     {	
@@ -280,13 +298,13 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
     	mq.addTermClause(phenotypes);
-    	return mq.getGrid().getGridOMIMHeaders().size();
+    	return mq.getGrid().getGridDiseaseHeaders().size();
     }
     public List<String> gridDiseaseIdsByPhenotype(String phenotypes) throws Exception
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
     	mq.addTermClause(phenotypes);
-    	List<String> diseases = mq.getGrid().getGridOMIMHeaders();
+    	List<String> diseases = mq.getGrid().getGridDiseaseHeaders();
     	Collections.sort(diseases);
     	return diseases;
     }
@@ -295,7 +313,7 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     {
     	MockHdpControllerQuery mq = getMockQuery().diseasePortalController(hdpController);
     	mq.addTermIdClause(phenotypes);
-    	List<String> diseases = mq.getGrid().getGridOMIMHeaders();
+    	List<String> diseases = mq.getGrid().getGridDiseaseHeaders();
     	Collections.sort(diseases);
     	return diseases;
     }
@@ -689,7 +707,7 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
 
     private List<String> getGridDiseases(MockHdpControllerQuery mq) throws Exception
     {
-    	return mq.getGrid().getGridOMIMHeaders();
+    	return mq.getGrid().getGridDiseaseHeaders();
     }
 
     public List<String> getGridPhenotypes(MockHdpControllerQuery mq) throws Exception
@@ -701,7 +719,7 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     private String gridCheckForDisease(MockHdpControllerQuery mq,String geneSymbol,String diseaseCluster) throws Exception
     {
     	GridResult gr = mq.getGrid();
-    	List<String> diseaseHeaders = gr.getGridOMIMHeaders();
+    	List<String> diseaseHeaders = gr.getGridDiseaseHeaders();
 
     	// if no disease column, no hit
     	if (diseaseHeaders == null) {

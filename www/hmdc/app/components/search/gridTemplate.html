@@ -53,7 +53,8 @@
 		</div>
 
 		<div ng-if="vm.results.totalrowcount > 0 && !vm.gridloading">
-			<div ngc-table
+			<div id="gridWrapper" 
+			    ngc-table
 				show-column-names="false" show-row-numbers="false"
 				left-column-number="2" right-column-number="1"
 				center-column-number="vm.results.maxcols"

@@ -118,15 +118,15 @@ tr.gray td {background-color:#EEEEEE;}
  			<p concordion:manual="true">klf 11/04/2013</p> <i>(semi-automated)</i>
     		<ol>
                 <li>Open the HDP query form</li>
-                <li>Enter <b concordion:set="#pheno">OMIM:135100</b> (Fibrodysplasia Ossificans Progressiva; FOP) in the Phenotypes and Diseases section and hit search</li>
-                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Acvr1</b> row and <b concordion:set="#column">Fibrodysplasia Ossificans Progressiva; FOP</b> column. </li>
+                <li>Enter <b concordion:set="#pheno">DOID:13374</b> (fibrodysplasia ossificans progressiva) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Acvr1</b> row and <b concordion:set="#column">fibrodysplasia ossificans progressiva</b> column. </li>
                 <li>Confirm that <b>1</b> genotype row is displayed for 
                 	<b cc:assertValueAppearsOnlyOnce="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Acvr1&lt;tm1Emsh&gt;/Acvr1&lt;+&gt;</b> (1 genotype exists).</li>
                 <li>Confirm that the text "<b>(chimeric)</b>" appears following the genotype.  (<span concordion:manual="true">klf</span>)</li>
                 <li>Confirm that human <b cc:assertResultsContain="diseaseGridPopupHumanMarkersByPheno(#pheno,#row,#column)">ACVR1</b> IS LISTED.</li>
                 <li>Clear the query form.</li>
-                <li>Enter <b concordion:set="#pheno">OMIM:305600</b> (Focal Dermal Hypoplasia; FDH) in the Phenotypes and Diseases section and hit search</li>
-                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Porcn</b> row and <b concordion:set="#column">Focal Dermal Hypoplasia; FDH</b> column. </li>
+                <li>Enter <b concordion:set="#pheno">DOID:2120</b> (focal dermal hypoplasia) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Porcn</b> row and <b concordion:set="#column">focal dermal hypoplasia</b> column. </li>
                 <li>Confirm that <b>1</b> genotype row is displayed for 
                 	<b cc:assertValueAppearsOnlyOnce="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Porcn&lt;tm1Vdv&gt;/Porcn&lt;+&gt;</b> (1 genotype exists).</li>
                 <li>Confirm that the text "<b>(chimeric)</b>" appears following the genotype.  (<span concordion:manual="true">klf</span>)</li>

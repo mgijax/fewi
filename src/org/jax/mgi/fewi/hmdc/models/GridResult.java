@@ -7,7 +7,7 @@ import org.jax.mgi.fewi.hmdc.visitors.GridVisitorInterface;
 public class GridResult extends AbstractGridModel {
 
 	private List<String> gridMPHeaders;
-	private List<String> gridOMIMHeaders;
+	private List<String> gridDiseaseHeaders;
 	private List<String> gridHighLights;
 	private List<GridRow> gridRows;
 	private String filterQuery;
@@ -19,11 +19,11 @@ public class GridResult extends AbstractGridModel {
 	public void setGridMPHeaders(List<String> gridMPHeaders) {
 		this.gridMPHeaders = gridMPHeaders;
 	}
-	public List<String> getGridOMIMHeaders() {
-		return gridOMIMHeaders;
+	public List<String> getGridDiseaseHeaders() {
+		return gridDiseaseHeaders;
 	}
-	public void setGridOMIMHeaders(List<String> gridOMIMHeaders) {
-		this.gridOMIMHeaders = gridOMIMHeaders;
+	public void setGridDiseaseHeaders(List<String> gridDiseaseHeaders) {
+		this.gridDiseaseHeaders = gridDiseaseHeaders;
 	}
 	public List<String> getGridHighLights() {
 		return gridHighLights;

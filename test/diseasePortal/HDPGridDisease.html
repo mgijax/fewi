@@ -214,7 +214,7 @@ tr.gray td {background-color:#EEEEEE;}
     					<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">MP:0010632</b> (cardiac muscle necrosis) in the Phenotypes and Diseases section and hit search</li>
-                <li>Click on the Grid tab and confirm the disease column <b cc:assertResultsContain="gridDiseasesByPhenotype(#pheno)">Myelodysplastic Syndrome; MDS</b> DOES exist.</li>
+                <li>Click on the Grid tab and confirm the disease column <b cc:assertResultsContain="gridDiseasesByPhenotype(#pheno)">myelodysplastic syndrome</b> DOES exist.</li>
                 <li>Confirm that mouse marker <b>Bap1</b> is associated with this disease. 
                 	(Genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:5439657">MGI:5439657</a> is a 'simple' genotype.)</li>
                 <li>Confirm that the count associated with Bap1 and Myelodysplastic Syndrome; MDS is <b>1</b>. (<span concordion:manual="true">klf</span>)</li>
@@ -223,22 +223,22 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Confirm that the count associated with Jup and Familial Arrhythmogenic Right Ventricular Dysplasia is <b>1</b> (<span concordion:manual="true">klf</span>) (not 2; only 1 genotype is common to the MP term and the disease).<br/><br/></li>
 
                 <li>Enter <b concordion:set="#pheno">MP:0011099</b> in the Phenotypes and Diseases section and hit search</li>
-                <li>Click on the Grid tab and confirm the disease column <b cc:assertResultsContain="gridDiseasesByPhenotype(#pheno)">Beta-Thalassemia</b> exists.</li>
-                <li>Confirm that mouse marker <b concordion:set="#row">Klf1</b> is associated with <b concordion:set="#column">Beta-Thalassemia</b> 
+                <li>Click on the Grid tab and confirm the disease column <b cc:assertResultsContain="gridDiseasesByPhenotype(#pheno)">beta thalassemia</b> exists.</li>
+                <li>Confirm that mouse marker <b concordion:set="#row">Klf1</b> is associated with <b concordion:set="#column">beta thalassemia</b> 
                 	and has a <b concordion:assertEquals="gridCheckForDiseaseByPhenotype(#pheno,#row,#column)">check</b>
                 	(via 'super-simple' or 'OMG' genotype <a href="http://scrumdog.informatics.jax.org/allele/genoview/MGI:2181627">MGI:2181627</a>).<br/><br/></li>
                 	
                 <li>Enter <b concordion:set="#pheno">MP:0003841</b> (abnormal lambdoidal suture morphology) in the Phenotypes and Diseases section and hit search</li>
-                <li>Click on the Grid tab and confirm the disease columns <b cc:assertResultsContain="gridDiseasesByPhenotype(#pheno)">Hutchinson-Gilford Progeria Syndrome; HGPS</b> 
+                <li>Click on the Grid tab and confirm the disease columns <b cc:assertResultsContain="gridDiseasesByPhenotype(#pheno)">progeria</b> 
                 	(genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:4459466">MGI:4459466</a> is super-simple (OMG) 
                 	and the human ortholog is also associated with this disease) <br/>
-                	and <b cc:assertResultsContain="gridDiseasesByPhenotype(#pheno)">Muenke Syndrome; MNKES</b>
+                	and <b cc:assertResultsContain="gridDiseasesByPhenotype(#pheno)">Muenke Syndrome</b>
                 	(has several super-simple genotypes and also the human ortholog annotated) are displayed.</li>
-                <li>Confirm disease <b cc:assertResultsContain="gridDiseasesByPhenotype(#pheno)">Apert Syndrome</b> is displayed 
+                <li>Confirm disease <b cc:assertResultsContain="gridDiseasesByPhenotype(#pheno)">acrocephalosyndactylia</b> is displayed 
                 	(genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3604025">MGI:3604025</a> is in common and is simple ).</li>
-                <li>Confirm that the gene <b>Fgfr2</b> is associated with <b>Apert Syndrome</b> and that the associated count is <b>4</b> (not 6). (<span concordion:manual="true">klf</span>)</li>
-                <li>Confirm that the gene <b>Fgfr3</b> is associated with <b>Muenke Syndrome; MNKES</b> and that the associated count is <b>3</b> (not 6). (<span concordion:manual="true">klf</span>)</li>
-                <li>Confirm that the gene <b>Lmna</b> is associated with <b>Hutchinson-Gilford Progeria Syndrome; HGPS</b> and that the associated count is <b>1</b> (not 5). (<span concordion:manual="true">klf</span>)<br/><br/></li>
+                <li>Confirm that the gene <b>Fgfr2</b> is associated with <b>acrocephalosyndactylia</b> and that the associated count is <b>4</b> (not 6). (<span concordion:manual="true">klf</span>)</li>
+                <li>Confirm that the gene <b>Fgfr3</b> is associated with <b>Muenke Syndrome</b> and that the associated count is <b>3</b> (not 6). (<span concordion:manual="true">klf</span>)</li>
+                <li>Confirm that the gene <b>Lmna</b> is associated with <b>progeria</b> and that the associated count is <b>1</b> (not 5). (<span concordion:manual="true">klf</span>)<br/><br/></li>
                 
                 <li>Enter <b concordion:set="#pheno">MP:0001853</b> (heart inflammation) in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and verify AT LEAST the following diseases are listed:
@@ -279,6 +279,7 @@ tr.gray td {background-color:#EEEEEE;}
 						<tr><td>embryo</td><td>When we implement these changes in popups, additional genotypes including allele Bic3&lt;tm1Jwb&gt; should go away.</td></tr>
 						<tr><td>growth/size/body</td><td>When we implement these changes in popups, additional genotypes including allele Bic3&lt;tm1Jwb&gt; should go away.</td></tr>
 						<tr><td>hematopoietic system</td><td>Associated only with genotypes also associated with the queried disease term.</td></tr>
+						<tr><td>homeostasis/metabolism</td><td>Associated only with genotypes also associated with the queried disease term.</td></tr>
 						<tr><td>immune system</td><td>Associated only with genotypes also associated with the queried disease term.</td></tr>
 						<tr><td>limbs/digits/tail</td><td>When we implement these changes in popups, additional genotypes including allele Bic3&lt;tm1Jwb&gt; should go away.</td></tr>
 						<tr><td>liver/biliary system</td><td>Associated only with genotypes also associated with the queried disease term.</td></tr>
@@ -306,7 +307,7 @@ tr.gray td {background-color:#EEEEEE;}
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">MP:0010954</b> (abnormal cellular respiration) in the Phenotypes and Diseases section and hit search</li>
-                <li>Click on the Grid tab and confirm the disease <b cc:assertResultsContain="gridDiseasesByPhenotype(#pheno)">Leber Optic Atrophy</b> is displayed.</li>
+                <li>Click on the Grid tab and confirm the disease <b cc:assertResultsContain="gridDiseasesByPhenotype(#pheno)">Leber hereditary optic neuropathy</b> is displayed.</li>
                 <li>Confirm the gene <b concordion:set="#row">mt-Nd6</b> <b>is displayed</b> and has a 
                 	<span class="hide" concordion:set="#column">Leber Optic Atrophy</span>
                 	<b concordion:assertEquals="gridCheckForDiseaseByPhenotype(#pheno,#row,#column)">check</b> for this disease (same exact genotype for both MP and OMIM annotations).</li>
@@ -403,15 +404,14 @@ tr.gray td {background-color:#EEEEEE;}
     		<li>Verify that Allele-Disease annotations are not displayed in the grid
 			<ol>
                 <li>Open the HDP query form</li>
-                <li>Enter <b concordion:set="#genes">Actb</b> in the Genes section and hit search</li>
+                <li>Enter <b concordion:set="#genes">Rb1</b> in the Genes section and hit search</li>
                 <li>
-                  <h3 style="background-color: lightblue;">TODO (kevin): Will be broken until we get slim headers working</h3>
                 Click on the Grid tab and confirm the disease column 
-                	<b cc:assertResultsContain="gridDiseasesByGene(#genes)">Alzheimer Disease</b> is displayed.</li>
-                <li>Verify that the row for human/mouse markers ACTB/<b concordion:set="#symbol">Actb</b> does NOT have a 
-                	<span class="hide" concordion:set="#diseaseId">Alzheimer Disease</span>
+                	<b cc:assertResultsContain="gridDiseasesByGene(#genes)">urinary bladder cancer</b> is displayed.</li>
+                <li>Verify that the row for human/mouse markers ACTB/<b concordion:set="#symbol">Rb1</b> does NOT have a 
+                	<span class="hide" concordion:set="#diseaseId">urinary bladder cancer</span>
                 	<b cc:assertNotEquals="gridCheckForDiseaseByGene(#genes,#symbol,#diseaseId)">check</b> for that disease.
-                	(Actb is annotated to that disease via Allele annotation, and nothing else.)</li>
+                	(Rb1 is annotated to that disease via Allele annotation, and nothing else.)</li>
     		</ol>
     		</li>
 			<li>Test that, for human genes, a Phenotype search displays only diseases with text matching the search, not all diseases associated with the human homolog of a returned mouse gene (sto136)
