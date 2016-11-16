@@ -68,6 +68,7 @@
 					<ul>
 
 					<c:if test="${(marker.countOfAlleles > 0) or (not empty marker.incidentalMutations) or (marker.countOfMutationInvolves > 0)}">
+
 						<c:if test="${marker.countOfAlleles > 0}">
 							<c:set var="alleleUrl" value="${configBean.FEWI_URL}allele/summary?markerId=${marker.primaryID}"/>
 							<li>
@@ -105,8 +106,15 @@
 									</c:forEach>
 								</div>
 							</li>
-
 						</c:if>
+
+						<li>
+							<div class="label">Find Mice (IMSR)</div>
+							<div class="value">
+								<a href="${configBean.IMSRURL}summary?gaccid=${marker.primaryID}&states=ES+Cell&states=embryo&states=live&states=ovaries&states=sperm">${marker.countForImsr} strains or lines available</a> 
+							</div>
+						</li>
+
 					</c:if>
 
 				</section>
