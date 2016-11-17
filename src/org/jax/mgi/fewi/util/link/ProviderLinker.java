@@ -16,7 +16,7 @@ public class ProviderLinker
 
 	// logger for the class
 
-	private static String genBankUrl = "http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nuccore&id=";
+	private static String genBankUrl = "https://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nuccore&id=";
 	private static String emblUrl = "http://www.ebi.ac.uk/ena/data/view/";
 	private static String ddbjUrl = "http://getentry.ddbj.nig.ac.jp/cgi-bin/get_entry.pl?";
 	private static String dfciUrl = "http://compbio.dfci.harvard.edu/tgi/cgi-bin/tgi/tc_report.pl?species=mouse&tc=";
@@ -25,9 +25,9 @@ public class ProviderLinker
 	private static String ensemblTranUrl = "http://www.ensembl.org/Mus_musculus/Transcript/Summary?db=core;t=";
 	private static String uniProtUrl = "http://www.uniprot.org/entry/";
 	private static String ebiUrl = "http://www.ebi.ac.uk/s4/summary/molecular?term=";
-	private static String ncbiGmUrl = "http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=Retrieve&dopt=Graphics&list_uids=";
+	private static String ncbiGmUrl = "https://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=Retrieve&dopt=Graphics&list_uids=";
 	private static String niaUrl = "http://lgsun.grc.nia.nih.gov/geneindex/mm9/bin/giU.cgi?genename=";
-	private static String refSeqUrl = "http://www.ncbi.nlm.nih.gov/entrez/viewer.cgi?val=";
+	private static String refSeqUrl = "https://www.ncbi.nlm.nih.gov/entrez/viewer.cgi?val=";
 	private static String vegaGmUrl = "http://vega.sanger.ac.uk/Mus_musculus/Gene/Summary?db=core;g=";
 	private static String vegaProtUrl = "http://vega.sanger.ac.uk/Mus_musculus/Transcript/ProteinSummary?db=core;t=";
 	private static String vegaTranUrl = "http://vega.sanger.ac.uk/Mus_musculus/Transcript/Summary?db=core;t=";
