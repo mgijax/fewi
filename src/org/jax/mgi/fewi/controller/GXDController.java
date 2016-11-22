@@ -21,6 +21,7 @@ import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.VocabTerm;
 
 import org.apache.commons.lang.StringUtils;
+import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.AlleleFinder;
 import org.jax.mgi.fewi.finder.BatchFinder;
 import org.jax.mgi.fewi.finder.GxdBatchFinder;
@@ -2607,6 +2608,13 @@ public class GXDController {
 		return stages;
 	}
 	
+	// redirects to the matrix for the full set of gxd data
+	@RequestMapping("/tissue_matrix")
+	public ModelAndView getFullDataMatrix() {
+		String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+		return new ModelAndView("redirect:" + fewiUrl + "gxd#gxd=nomenclature%3D%26vocabTerm%3D%26annotationId%3D%26locations%3D%26structure%3D%26structureID%3D%26theilerStage%3D0%26results%3D100%26startIndex%3D0%26sort%3D%26dir%3Dasc%26tab%3Dstagegridtab");
+	}
+
 	/* -----------------------------------------------------------------
 	 * Methods in this section handle URLs for GXD High-Throughput data, 
 	 * passing them on to separate controller.
