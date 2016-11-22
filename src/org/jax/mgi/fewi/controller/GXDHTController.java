@@ -314,91 +314,7 @@ public class GXDHTController {
 		}
 		return mav;
 	}
-/*
- * note -- should also do lookup by structure ID
- * 
-	@RequestMapping(value="/reference/{refID:.+}", method = RequestMethod.GET)
-	public ModelAndView gxdHtSummaryByReference(@PathVariable("refID") String refID) {
 
-		logger.debug("->gxdHtSummaryByReference started");
-
-		ModelAndView mav = new ModelAndView("gxdHt_summary_reference");
-
-		// setup search parameters object to gather the requested object
-		SearchParams searchParams = new SearchParams();
-		Filter refIdFilter = new Filter(SearchConstants.REF_ID, refID);
-		searchParams.setFilter(refIdFilter);
-
-		// find the requested reference
-		SearchResults<Reference> searchResults = referenceFinder.searchReferences(searchParams);
-		List<Reference> refList = searchResults.getResultObjects();
-
-		// there can be only one...
-		if (refList.size() < 1) {
-			// forward to error page
-			mav = new ModelAndView("error");
-			mav.addObject("errorMsg", "No reference found for " + refID);
-			return mav;
-		}
-		if (refList.size() > 1) {
-			// forward to error page
-			mav = new ModelAndView("error");
-			mav.addObject("errorMsg", "Dupe references found for " + refID);
-			return mav;
-		}
-
-		// pull out the reference, and place into the mav
-		Reference reference = refList.get(0);
-		mav.addObject("reference", reference);
-
-		// pre-generate query string
-		mav.addObject("queryString", "refKey=" + reference.getReferenceKey());
-
-		return mav;
-	}
-*/
-	
-/*
-*/
-
-	/*
-	 * This method handles requests various reports; txt, xls.  It is intended 
-	 * to perform the same query as the json method above, but only place the 
-	 * result objects list on the model.  It returns a string to indicate the
-	 * view name to look up in the view class in the excel or text.properties
-	 */
-/*
-	@RequestMapping("/report*")
-	public String referenceSummaryReport(HttpServletRequest request, Model model, @ModelAttribute GxdHtQueryForm query, @ModelAttribute Paginator page) {
-
-		logger.debug("gxdHtSummaryReport");		
-		SearchResults<Marker> searchResults = getSummaryResults(request, query, page);
-		model.addAttribute("results", searchResults.getResultObjects());
-		return "gxdHtSummaryReport";			
-	}
-*/
-
-	/*
-	 * This method maps requests for the gxdHt facet list.  The results are
-	 * returned as JSON.  
-	 */
-/*
-	@RequestMapping("/facet/gxdHt")
-	public @ResponseBody Map<String, List<String>> facetAuthor(@ModelAttribute GxdHtQueryForm query) {
-		// perform query and return results as json
-		logger.debug("get filter facets here");
-
-		SearchResults<String> results = new SearchResults<String>();
-		// hard-coded results for example purposes
-		List<String> gxdHts = new ArrayList<String>();
-		gxdHts.add("gxdHt 1");
-		gxdHts.add("gxdHt 2");
-		gxdHts.add("gxdHt 3");
-		results.setResultFacets(gxdHts);
-
-		return parseFacetResponse(results);
-	}
-*/
 	//--------------------------------------------------------------------//
 	// private methods
 	//--------------------------------------------------------------------//
@@ -418,32 +334,6 @@ public class GXDHTController {
 		return gxdHtFinder.getExperiments(params, query);
 	}
 
-	/*
-	 * This is a convenience method to parse the facet response from the 
-	 * SearchResults object, inspect it for error conditions, and return a 
-	 * map that the ui is expecting.
-	 */
-/*
-	private Map<String, List<String>> parseFacetResponse(SearchResults<String> facetResults) {
-
-		Map<String, List<String>> m = new HashMap<String, List<String>>();
-		List<String> l = new ArrayList<String>();
-
-		if (facetResults.getResultFacets().size() >= facetLimit){
-			logger.debug("too many facet results");
-			l.add("Too many results to display. Modify your search or try another filter first.");
-			m.put("error", l);
-		} else if (facetResults.getResultFacets().size() == 0) {
-			logger.debug("no facet results");
-			l.add("No values in results to filter.");
-			m.put("error", l);
-		} else {
-			m.put("resultFacets", facetResults.getResultFacets());
-		}
-		return m;
-	}
-*/
-	
 	/* return a mav for an error screen with the given message filled in
 	 */
 	private ModelAndView errorMav(String msg) {
