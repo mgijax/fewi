@@ -182,7 +182,7 @@ var updateResultsDiv = function(startIndex, rowsPerPage) {
 	$("#resultSummary").html("<img src='" + fewiurl + "assets/images/loading.gif' height='24' width='24'> Searching...");
 	log("added searching message");
 	$.ajax({
-		url: fewiurl + "gxdht/table?" + querystring,	// can take state as param and append here for pagination
+		url: fewiurl + "gxd/htexp_index/table?" + querystring,	// can take state as param and append here for pagination
 		datatype : "html",
 		success: function(data) {
 			log("successful response");
@@ -323,7 +323,7 @@ var gs_samplePopup = function(experimentID) {
 		alert("Need to call gs_setFewiUrl to initialize gxdht_summary.js module");
 		return;
 	}
-    var sampleUrl = fewiUrl + 'gxdht/samples/' + experimentID + '?' + querystring;
+    var sampleUrl = fewiUrl + 'gxd/htexp_index/samples/' + experimentID + '?' + querystring;
     window.open(sampleUrl,'sampleWindow-' + experimentID,'width=1000,height=400,resizable=yes,scrollbars=yes,alwaysRaised=yes');
 };
 
