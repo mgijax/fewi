@@ -12,9 +12,9 @@ compile.dir=www/WEB-INF/classes
 testoutput.dir=testoutput
 
 <!--local server directories -->
-fedatamodel.dir=dist
-snpdatamodel.dir=dist
-lib_java_fe.dir=dist
+fedatamodel.dir=../fedatamodel/dist
+snpdatamodel.dir=../snpdatamodel/dist
+lib_java_fe.dir=../lib_java_fe/dist
 global_config.dir=mgiconfig/web
 
 <!--data sources -->

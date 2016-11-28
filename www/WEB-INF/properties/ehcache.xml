@@ -26,7 +26,7 @@
 	<!-- REFERENCE -->
 	<cache
 		name="mgi.frontend.datamodel.Reference"
-		maxElementsInMemory="0"
+		maxElementsInMemory="100"
 		eternal="true"
 		overflowToDisk="false"
 		statistics="true" />
