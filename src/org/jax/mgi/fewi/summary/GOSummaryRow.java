@@ -131,7 +131,7 @@ public class GOSummaryRow {
 		List<AnnotationInferredFromID> inferred = annot.getInferredFromList();
 		if (inferred.size() >= 1)
 		{
-			String tooltipTemplate = "<span onMouseOver='return overlib(\"<ORGANISM>\", LEFT, WIDTH, <WIDTH>);' onMouseOut='nd();'><LINK></span>";
+			String tooltipTemplate = "<span onMouseOver='return overlib(\"<TOOLTIP>\", LEFT, WIDTH, <WIDTH>);' onMouseOut='nd();'><LINK></span>";
 
 			String inferredString = "";
 			Boolean first = Boolean.TRUE;
@@ -143,13 +143,27 @@ public class GOSummaryRow {
 
 			    for (String myID : aifi.getAccID().split(",")) {
 				String link = linker.getLink(aifi.getLogicalDB(), myID);
-				String organism = aifi.getOrganism();
+				String tooltip = aifi.getTooltip();
 
-				if (organism != null) {
+				if (tooltip != null) {
+					int length = 1;
+					for (String s : tooltip.split("\n")) {
+						if (s.length() > length) {
+							length = s.length();
+						}
+					}
+					int pixels = 10 * length;
+					if (length > 10) {
+						pixels = (int) Math.round(6.5 * length);
+					}
 					link = tooltipTemplate
 							.replace("<LINK>", link)
-							.replace("<WIDTH>", "" + (10 * organism.length()))
-							.replace("<ORGANISM>", organism);
+							.replace("<WIDTH>", "" + pixels)
+							.replace("<TOOLTIP>", tooltip
+									.replace("<", "&&&&&")
+									.replace(">", "</sup>")
+									.replace("&&&&&", "<sup>")
+									.replace("\n", "<br/>"));
 				}
 
 				if (first) {

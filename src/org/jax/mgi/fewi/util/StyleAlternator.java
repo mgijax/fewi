@@ -36,6 +36,14 @@ public class StyleAlternator
   // public instance methods
   //------------------------//
 
+  /** get the most recently returned string again (without advancing)
+   * @return String
+   */
+  public String getCurrent() {
+	  if (styleIndex == 0) { return styles[1]; }
+	  return styles[0];
+  }
+
   /**
    * get the next string
    * @return String

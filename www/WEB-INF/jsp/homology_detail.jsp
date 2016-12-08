@@ -70,9 +70,9 @@ function deselectAllSeqs() {
 <br/>
 
 <c:set var="popupTitle" value="MGI HomoloGene Information"/>
-<c:set var="popupText" value='<p>MGI loads vertebrate homology data from NCBI <A HREF="http://www.ncbi.nlm.nih.gov/homologene"><u>HomoloGene</u></A>, 
+<c:set var="popupText" value='<p>MGI loads vertebrate homology data from NCBI <A HREF="https://www.ncbi.nlm.nih.gov/homologene"><u>HomoloGene</u></A>, 
 		which programmatically detects homologs among the genome features of completely sequenced eukaryotic genomes 
-		(see: <A HREF="http://www.ncbi.nlm.nih.gov/HomoloGene/HTML/homologene_buildproc.html"><u>HomoloGene Build Procedure</u></A>).</p>
+		(see: <A HREF="https://www.ncbi.nlm.nih.gov/HomoloGene/HTML/homologene_buildproc.html"><u>HomoloGene Build Procedure</u></A>).</p>
 		
 		<p>MGI includes homology for the following selected vertebrate species from HomoloGene:<br>
 		&nbsp;- human<br>
@@ -99,7 +99,7 @@ function deselectAllSeqs() {
 		<div id="contentcolumn">
 			<div class="innertube">
 				<c:if test="${not empty homology.primaryID}">
-				 <span class="small"><a href='http://www.ncbi.nlm.nih.gov/sites/entrez?cmd=Retrieve&db=homologene&dopt=MultipleAlignment&list_uids=${homology.primaryID}'>HomoloGene:${homology.primaryID} Multiple Sequence Alignment</a></span>
+				 <span class="small"><a href='https://www.ncbi.nlm.nih.gov/sites/entrez?cmd=Retrieve&db=homologene&dopt=MultipleAlignment&list_uids=${homology.primaryID}'>HomoloGene:${homology.primaryID} Multiple Sequence Alignment</a></span>
 				 </c:if>
 			</div>
 		</div>
@@ -281,7 +281,9 @@ function deselectAllSeqs() {
 	    	    </c:choose>
 
 			<c:forEach var="disease" items="${diseases}" varStatus="stat">
-				<a href="${configBean.FEWI_URL}disease/${disease.termID}">${disease.term}</a><br/>
+				<c:if test="${disease.qualifier != 'NOT'}">
+					<a href="${configBean.FEWI_URL}disease/${disease.termID}">${disease.term}</a><br/>
+				</c:if>
 			</c:forEach>
 	    </td>
 		

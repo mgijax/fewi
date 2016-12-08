@@ -179,6 +179,20 @@ public class SearchConstants {
 
 	public static final String PRIMARY_KEY = "pKey";
 
+	// GXD high-throughput expression data
+	public static final String GXDHT_EXPERIMENT_KEY = "experimentKey";
+	public static final String GXDHT_SAMPLE_KEY = "sampleKey";
+	public static final String GXDHT_EXPERIMENT_ID = "experimentID";
+	public static final String GXDHT_STRUCTURE_SEARCH = "structureSearch";
+	public static final String GXDHT_SEX = "sex";
+	public static final String GXDHT_MUTATED_GENE = "mutatedGene";
+	public static final String GXDHT_METHOD = "method";
+	public static final String GXDHT_TITLE = "title";
+	public static final String GXDHT_DESCRIPTION = "description";
+	public static final String GXDHT_TITLE_DESCRIPTION = "titleDescription";
+	public static final String GXDHT_EXPERIMENTAL_VARIABLE = "experimentalVariable";
+	public static final String GXDHT_RELEVANCY = "relevancy";
+	
 	// Homology constants
 	public static final String HOMOLOGY_ID            = "homologyID";
 	public static final String DP_GRID_CLUSTER_KEY = "gridClusterKey";

@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import mgi.frontend.datamodel.Allele;
@@ -20,6 +21,7 @@ import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.VocabTerm;
 
 import org.apache.commons.lang.StringUtils;
+import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.AlleleFinder;
 import org.jax.mgi.fewi.finder.BatchFinder;
 import org.jax.mgi.fewi.finder.GxdBatchFinder;
@@ -28,6 +30,7 @@ import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.VocabularyFinder;
 import org.jax.mgi.fewi.forms.BatchQueryForm;
+import org.jax.mgi.fewi.forms.GxdHtQueryForm;
 import org.jax.mgi.fewi.forms.GxdLitQueryForm;
 import org.jax.mgi.fewi.forms.GxdQueryForm;
 import org.jax.mgi.fewi.handler.GxdMatrixHandler;
@@ -137,6 +140,9 @@ public class GXDController {
 
 	@Autowired
 	private BatchController batchController;
+
+	@Autowired
+	private GXDHTController gxdhtController;
 
 	@Autowired
 	private GxdMatrixHandler gxdMatrixHandler;
@@ -2600,5 +2606,42 @@ public class GXDController {
 			stages.add(s.toString());
 		}
 		return stages;
+	}
+	
+	// redirects to the matrix for the full set of gxd data
+	@RequestMapping("/tissue_matrix")
+	public ModelAndView getFullDataMatrix() {
+		String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+		return new ModelAndView("redirect:" + fewiUrl + "gxd#gxd=nomenclature%3D%26vocabTerm%3D%26annotationId%3D%26locations%3D%26structure%3D%26structureID%3D%26theilerStage%3D0%26results%3D100%26startIndex%3D0%26sort%3D%26dir%3Dasc%26tab%3Dstagegridtab");
+	}
+
+	/* -----------------------------------------------------------------
+	 * Methods in this section handle URLs for GXD High-Throughput data, 
+	 * passing them on to separate controller.
+	 * -----------------------------------------------------------------
+	 */
+	
+	// HT query form
+	@RequestMapping(value="/htexp_index", method=RequestMethod.GET)
+	public ModelAndView htQueryForm(HttpServletResponse response) {
+		return gxdhtController.getQueryForm(response);
+	}
+	
+	// HT summary page (no results table -- that's injected by Javascript)
+	@RequestMapping("/htexp_index/summary")
+	public ModelAndView gxdHtSummary(HttpServletRequest request, @ModelAttribute GxdHtQueryForm queryForm) {
+		return gxdhtController.gxdHtSummary(request, queryForm);
+	}
+	
+	// HT sample popup (expects ArrayExpress ID)
+	@RequestMapping(value="/htexp_index/samples/{experimentID:.+}", method = RequestMethod.GET)
+	public ModelAndView htSamplePopup(@PathVariable("experimentID") String experimentID, @ModelAttribute GxdHtQueryForm queryForm) {
+		return gxdhtController.gxdHtSamples(experimentID, queryForm);
+	}
+	
+	// HT result table to inject into summary page (retrieve via Ajax)
+	@RequestMapping("/htexp_index/table")
+	public ModelAndView htExperimentsTable (HttpServletRequest request, @ModelAttribute GxdHtQueryForm query, @ModelAttribute Paginator page) {
+		return gxdhtController.experimentsTable(request, query, page);
 	}
 }

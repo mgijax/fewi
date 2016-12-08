@@ -271,7 +271,7 @@ public class Filter {
 	}
 	
 	/**
-	 * Create a new Filter using the NOT IN operator.
+	 * Create a new Filter using the RANGE operator.
 	 */
 	public static Filter range(String property, String value1, String value2) {
 		List<String> values = new ArrayList<String>();
@@ -338,7 +338,13 @@ public class Filter {
             StringBuffer valueStrings = new StringBuffer();
             Iterator<String> valueIter = values.iterator();
 
+            // handle first iteration up front, so we can include commas in the 'while'
+            if (valueIter.hasNext()) {
+              valueStrings.append(valueIter.next());
+            }
+
             while (valueIter.hasNext()) {
+              valueStrings.append(",");
               valueStrings.append(valueIter.next());
             }
 

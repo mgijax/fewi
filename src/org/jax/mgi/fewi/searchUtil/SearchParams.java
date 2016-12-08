@@ -96,6 +96,10 @@ public class SearchParams {
 	 * Set Paginator
 	 */
 	
+	public Paginator getPaginator() {
+		return this.paginator;
+	}
+	
 	public void setPaginator(Paginator paginator){
 		this.paginator = paginator;
 	}

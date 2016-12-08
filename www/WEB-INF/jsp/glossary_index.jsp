@@ -83,14 +83,14 @@ basic genetic terms.
   </li>
   <li>
 The
-<a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=MeSH">MeSH Browser</a>
+<a href="https://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=MeSH">MeSH Browser</a>
 at <a href="${configBean.FEWI_URL}glossary/ncbi">NCBI</a>
 contains useful definitions of many terms, organized as a hierarchical
 <a href="${configBean.FEWI_URL}glossary/controlled_vocabulary">controlled vocabulary</a>.
   </li>
   <li>
 The
-<a href="http://www.ncbi.nlm.nih.gov/Education/BLASTinfo/glossary2.html">
+<a href="https://www.ncbi.nlm.nih.gov/Education/BLASTinfo/glossary2.html">
 BLAST Glossary</a> at NCBI defines terms used in searching sequence databases.
   </li>
   <li>

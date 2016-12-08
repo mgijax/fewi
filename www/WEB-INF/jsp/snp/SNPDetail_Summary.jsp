@@ -43,7 +43,7 @@
 							</c:if>
 							<a href="http://www.ensembl.org/Mus_musculus/snpview?snp=${snp.accid}" target="_blank"><nobr>Ensembl SNPView</nobr></a> |
 							<a href="http://genome.ucsc.edu/cgi-bin/hgTracks?clade=vertebrate&amp;org=Mouse&amp;db=mm9&amp;position=${snp.accid}" target="_blank"><nobr>UCSC Browser</nobr></a> |
-							<a href="http://www.ncbi.nlm.nih.gov/mapview/map_search.cgi?taxid=10090&amp;advsrch=off&amp;query=${snp.accid}" target="_blank"><nobr>NCBI MapViewer</nobr></a><br>
+							<a href="https://www.ncbi.nlm.nih.gov/mapview/map_search.cgi?taxid=10090&amp;advsrch=off&amp;query=${snp.accid}" target="_blank"><nobr>NCBI MapViewer</nobr></a><br>
 							<c:if test="${snp.multiCoord}">
 								<div style="color:red; padding-top:3px;">
 									* SNP maps to multiple genome locations. Mouse Genome Browser link is not available.
