@@ -62,17 +62,17 @@ td.padSmall { padding: 2px }
   <table class="diseasetable" id="diseasetable_id">
 
   <!-- create genotype headers -->
-  <tr class="stripe1"><th id="phenoSystemTH">Human Diseases</th>
-  <c:forEach var="diseaseGenotype" items="${genotypes}" varStatus="gStatus">
-    <th class="genoHeader genoBorder <c:if test="${gStatus.last}">rightGenoBorder</c:if>">
-    <c:set var="genotype" value="${diseaseGenotype.genotype}" scope="request"/>
-    <div class="${genotype.genotypeType}Geno ${genotype.genotypeType}GenoButton genoButton">
-    <a href='${configBean.FEWI_URL}allele/genoview/${diseaseGenotype.genotype.primaryID}?counter=${diseaseGenotype.genotypeSeq}' target="_blank" 
-    class='genoLink small' title='phenotype details'>
-    ${genotype.genotypeType}${diseaseGenotype.genotypeSeq}</a></div>
-    </th>
-  </c:forEach>
-  </tr>
+	<tr class="stripe1"><th id="phenoSystemTH">Human Diseases</th>
+		<c:forEach var="diseaseGenotype" items="${genotypes}" varStatus="gStatus">
+			<th class="genoHeader genoBorder <c:if test="${gStatus.last}">rightGenoBorder</c:if>">
+				<c:set var="genotype" value="${diseaseGenotype.genotype}" scope="request"/>
+				<div class="${genotype.genotypeType}Geno ${genotype.genotypeType}GenoButton genoButton">
+					<a href='${configBean.FEWI_URL}allele/genoview/${diseaseGenotype.genotype.primaryID}?counter=${diseaseGenotype.genotypeSeq}' target="_blank" 
+						class='genoLink small' title='phenotype details'>${genotype.genotypeType}${diseaseGenotype.genotypeSeq}</a>
+				</div>
+			</th>
+		</c:forEach>
+	</tr>
 
   <!-- create disease rows -->
   <c:forEach var="disease" items="${diseases}" varStatus="dStatus">
