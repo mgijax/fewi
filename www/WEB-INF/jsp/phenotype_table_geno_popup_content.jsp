@@ -107,7 +107,7 @@ td.outline { border: 1px solid black; }
 			<table border='1' cellpadding='3' cellspacing='0' class='results' style="border-collapse: collapse;">
 				<tr class='resultsHeaderYellow'>
 					<td colspan='2' class='resultsHeader outline padded' style='align:left'><div align='left'>Mouse Models of Human Disease</div></td>
-					<td class='resultsHeader outline padded'>OMIM ID</td>
+					<td class='resultsHeader outline padded'>DO ID</td>
 					<td class='resultsHeader outline padded'>Ref(s)</td>
 				</tr>
 				<c:forEach var="disease" items="${genotype.diseases}" varStatus="diseaseStatus">
@@ -121,7 +121,7 @@ td.outline { border: 1px solid black; }
 								<td class="outline padded" colspan='2' rowspan='1'>
 							</c:otherwise>
 						</c:choose>
-							<a class='MP' target="_blank" href="${configBean.FEWI_URL}disease/${disease.termID}">${disease.term}</a>
+							<a class='MP' target="_blank" href="${configBean.FEWI_URL}vocab/do/${disease.termID}">${disease.term}</a>
 						</td>
 						<td class="outline padded">
 							<a class='MP' target="_blank" href="http://www.omim.org/entry/${disease.termID}">${disease.termID}</a>
