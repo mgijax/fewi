@@ -81,9 +81,9 @@ td.padSmall { padding: 2px }
 						<!-- disease -->
 						<td class="noWrap borderUnder" style="min-width:250px" >
 							<div style="text-align:left;">
-								<a class="MP" href='${configBean.FEWI_URL}disease/${disease.omimID}'>${disease.disease}</a>&nbsp;&nbsp;
+								<a class="MP" href='${configBean.FEWI_URL}disease/${disease.diseaseID}'>${disease.disease}</a>&nbsp;&nbsp;
 								<span style="font-size:80%">
-							<a class="MP" href="http://www.omim.org/entry/${disease.omimID}">${disease.diseaseID }</a></span>
+							<a class="MP" href="http://www.omim.org/entry/${disease.diseaseID}">${disease.diseaseID }</a></span>
 							</div>
 						</td>
 						<c:set var="genoID" value="" />
