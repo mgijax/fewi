@@ -75,6 +75,7 @@
 												<td rowspan="${diseaseRow.get('headerRow')}">&nbsp;</td>
 											</c:if>
 											<td class="td_disease_tbl">
+												<!--  http://www.disease-ontology.org/?id=DOID:12700 -->
 												<a href="${configBean.FEWI_URL}disease/${diseaseRow.get('diseaseId')}">${diseaseRow.get('diseaseTerm')}</a>&nbsp;&nbsp;&nbsp;<span style="font-size: smaller;">OMIM: <a class="MP" href='http://www.omim.org/entry/${diseaseRow.get('diseaseId')}' target="_blank">${diseaseRow.get('diseaseId')}</a></span>
 											</td>
 											<td class="td_disease_tbl">
