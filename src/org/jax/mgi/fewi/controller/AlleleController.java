@@ -513,11 +513,11 @@ public class AlleleController {
 			filters.add(new Filter(SearchConstants.JNUM_ID,jnumId,Filter.Operator.OP_EQUAL));
 		}
 
-		// Has OMIM and remove mutation involves
-		String hasOMIM = query.getHasOMIM();
-		if(notEmpty(hasOMIM)) {
-			filters.add(new Filter(SearchConstants.ALL_HAS_OMIM, hasOMIM, Filter.Operator.OP_EQUAL));
-			if(hasOMIM.equals("1")) {
+		// Has DO and remove mutation involves
+		String hasDO = query.getHasDO();
+		if(notEmpty(hasDO)) {
+			filters.add(new Filter(SearchConstants.ALL_HAS_DO, hasDO, Filter.Operator.OP_EQUAL));
+			if(hasDO.equals("1")) {
 				String mrkId = query.getMarkerId();
 				// -(mutationInvolvesMarkerIDs:"MGI:99999")
 				Filter f = new Filter(SearchConstants.ALL_MI_MARKER_IDS, mrkId, Filter.Operator.OP_EQUAL);

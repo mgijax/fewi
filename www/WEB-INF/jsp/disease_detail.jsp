@@ -77,7 +77,7 @@
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="VOCAB_omim_browser_detail_help.shtml">	
+<div id="titleBarWrapper" userdoc="VOCAB_do_browser_detail_help.shtml">	
 	<span class="titleBarMainTitle">Human Disease and Mouse Model Detail</span>
 </div>
 
@@ -169,7 +169,7 @@
 	<td style="">&nbsp;</td>
 	<td style="">&nbsp;</td>
 	<td style="">&nbsp;</td>
-	<td colspan="4" style="">${asterisk}<font size="-1">Disease is associated/modeled with this <b>Gene</b> or a homolog. <a onclick="javascript:openUserhelpWindow('VOCAB_omim_browser_detail_help.shtml#how_interpret'); return false;" href="${configBean.USERHELP_URL}VOCAB_omim_browser_detail_help.shtml#how_interpret">More...</a></td>
+	<td colspan="4" style="">${asterisk}<font size="-1">Disease is associated/modeled with this <b>Gene</b> or a homolog. <a onclick="javascript:openUserhelpWindow('VOCAB_do_browser_detail_help.shtml#how_interpret'); return false;" href="${configBean.USERHELP_URL}VOCAB_do_browser_detail_help.shtml#how_interpret">More...</a></td>
 	</tr>
 	
 	<!-- heading row -->

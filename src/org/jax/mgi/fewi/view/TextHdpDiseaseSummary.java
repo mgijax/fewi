@@ -23,7 +23,7 @@ public class TextHdpDiseaseSummary extends AbstractTextView {
 		// write the headers
 		String[] headerTitles = {
 			    "Disease",
-				"OMIM Id",
+				"DO Id",
 				"Mouse Models",
 				"Associated Mouse Genes",
 				"Associated Human Genes"

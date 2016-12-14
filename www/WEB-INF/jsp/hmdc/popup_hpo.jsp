@@ -1,6 +1,6 @@
 <%
 	/* to be included by popup.jsp for table of human phenotype (HPO) annotations,
-	 * generated from human marker/OMIM annotations and an OMIM/HPO mapping.
+	 * generated from human marker/DO annotations and an DO/HPO mapping.
 	 */
 %>
 <c:if test="${not empty hpoGroup}">

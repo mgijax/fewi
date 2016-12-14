@@ -130,7 +130,7 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	return terms.size();
     }
     
-    public List<String> getOMIMIdsForDiseaseId(String diseaseId) throws Exception
+    public List<String> getDoIdsForDiseaseId(String diseaseId) throws Exception
     {
     	List<String> omimIds = new ArrayList<String>();
     	
@@ -141,7 +141,7 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	
     	for (SolrHdpDisease disease : diseases) {
     		if (disease.getPrimaryId().equalsIgnoreCase(diseaseId)) {
-    			omimIds = disease.getOmimIds();
+    			omimIds = disease.getDoIds();
     		}
     	}
     	

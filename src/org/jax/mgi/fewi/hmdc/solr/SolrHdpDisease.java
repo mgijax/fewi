@@ -12,7 +12,7 @@ public class SolrHdpDisease implements SolrHdpEntityInterface {
 	private Integer diseaseRefCount;
 	private List<String> diseaseMouseMarkers;
 	private List<String> diseaseHumanMarkers;
-	private List<String> omimIds;
+	private List<String> doIds;
 	
 	public String getPrimaryId() {
 		return primaryId;
@@ -60,11 +60,11 @@ public class SolrHdpDisease implements SolrHdpEntityInterface {
 		this.diseaseRefCount = diseaseRefCount;
 	}
 
-	public List<String> getOmimIds() {
-		return omimIds;
+	public List<String> getDoIds() {
+		return doIds;
 	}
-	public void setOmimIds(List<String> omimIds) {
-		this.omimIds = omimIds;
+	public void setDoIds(List<String> doIds) {
+		this.doIds = doIds;
 	}
 	
 	@Override

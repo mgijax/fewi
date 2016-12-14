@@ -759,25 +759,25 @@ public class MarkerController {
 		// DiseaseTerm -> DiseaseTermId
 		TreeMap<String, String> sortedDiseaseMapByTerm = new TreeMap<String, String>();
 		// DiseaseId -> Annotation
-		HashMap<String, Annotation> MouseOMIMAnnotations = new HashMap<String, Annotation>();
-		for(Annotation a: marker.getOMIMAnnotations()) {
+		HashMap<String, Annotation> MouseDOAnnotations = new HashMap<String, Annotation>();
+		for(Annotation a: marker.getDOAnnotations()) {
 			if (!"NOT".equals(a.getQualifier())) {
 				sortedDiseaseMapByTerm.put(a.getTerm(), a.getTermID());
-				MouseOMIMAnnotations.put(a.getTermID(), a);
+				MouseDOAnnotations.put(a.getTermID(), a);
 			}
 		}
 
 		// Symbol -> {DiseaseId -> Annoation}
-		HashMap<String, HashMap<String, Annotation>> humanAnnotations = marker.getHumanHomologOMIMAnnotations();
+		HashMap<String, HashMap<String, Annotation>> humanAnnotations = marker.getHumanHomologDOAnnotations();
 		// DiseaseId -> Annoation
-		HashMap<String, Annotation> HumanOMIMAnnotations = new HashMap<String, Annotation>();
+		HashMap<String, Annotation> HumanDOAnnotations = new HashMap<String, Annotation>();
 		// Symbol -> Symbol (sorted)
 		TreeMap<String, String> sortedAllHumanMarkers = new TreeMap<String, String>();
 		for(String symbol: humanAnnotations.keySet()) {
 			for(String annotId: humanAnnotations.get(symbol).keySet()) {
 				String term = humanAnnotations.get(symbol).get(annotId).getTerm();
 				sortedDiseaseMapByTerm.put(term, annotId);
-				HumanOMIMAnnotations.put(annotId, humanAnnotations.get(symbol).get(annotId));
+				HumanDOAnnotations.put(annotId, humanAnnotations.get(symbol).get(annotId));
 			}
 			sortedAllHumanMarkers.put(symbol, symbol);
 		}
@@ -794,13 +794,13 @@ public class MarkerController {
 		
 		for(String diseaseTerm: sortedDiseaseMapByTerm.keySet()) {
 			String diseaseId = sortedDiseaseMapByTerm.get(diseaseTerm);
-			if(MouseOMIMAnnotations.containsKey(diseaseId) && !"NOT".equals(MouseOMIMAnnotations.get(diseaseId).getQualifier()) && HumanOMIMAnnotations.containsKey(diseaseId)) {
+			if(MouseDOAnnotations.containsKey(diseaseId) && !"NOT".equals(MouseDOAnnotations.get(diseaseId).getQualifier()) && HumanDOAnnotations.containsKey(diseaseId)) {
 				both.add(diseaseTerm);
 				bothDiseaseCount++;
-			} else if(MouseOMIMAnnotations.containsKey(diseaseId)) {
+			} else if(MouseDOAnnotations.containsKey(diseaseId)) {
 				mouse.add(diseaseTerm);
 				mouseDiseaseCount++;
-			} else if(HumanOMIMAnnotations.containsKey(diseaseId)) {
+			} else if(HumanDOAnnotations.containsKey(diseaseId)) {
 				human.add(diseaseTerm);
 				humanDiseaseCount++;
 			}
@@ -823,19 +823,19 @@ public class MarkerController {
 			HashMap<String, String> row = new HashMap<String, String>();
 			String diseaseId = sortedDiseaseMapByTerm.get(diseaseTerm);
 			
-			if(MouseOMIMAnnotations.containsKey(diseaseId) && HumanOMIMAnnotations.containsKey(diseaseId)) {
+			if(MouseDOAnnotations.containsKey(diseaseId) && HumanDOAnnotations.containsKey(diseaseId)) {
 				row.put("type", "both");
 				if(bothCount == 0) {
 					row.put("headerRow", bothDiseaseCount + "");
 					bothCount++;
 				}
-			} else if(MouseOMIMAnnotations.containsKey(diseaseId)) {
+			} else if(MouseDOAnnotations.containsKey(diseaseId)) {
 				row.put("type", "mouse");
 				if(mouseCount == 0) {
 					row.put("headerRow", mouseDiseaseCount + "");
 					mouseCount++;
 				}
-			} else if(HumanOMIMAnnotations.containsKey(diseaseId)) {
+			} else if(HumanDOAnnotations.containsKey(diseaseId)) {
 				row.put("type", "human");
 				if(humanCount == 0) {
 					row.put("headerRow", humanDiseaseCount + "");
@@ -857,8 +857,8 @@ public class MarkerController {
 		mav.addObject("MouseModels", modelsMap);
 		mav.addObject("NotMouseModels", notModelsMap);
 		mav.addObject("AllHumanSymbols", StringUtils.join(sortedAllHumanMarkers.keySet(), ","));
-		mav.addObject("MouseOMIMAnnotations", MouseOMIMAnnotations);
-		mav.addObject("HumanOMIMAnnotations", HumanOMIMAnnotations);
+		mav.addObject("MouseDOAnnotations", MouseDOAnnotations);
+		mav.addObject("HumanDOAnnotations", HumanDOAnnotations);
 		mav.addObject("DiseaseRows", rowMap);
 		
 		// Formaters for Super scripts

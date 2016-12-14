@@ -132,7 +132,7 @@
         <br/>
 
         <EM><STRONG>Browse: </STRONG></EM>
-        <A HREF="${configBean.FEWI_URL}vocab/omim/A">Human Disease (OMIM) Vocabulary</a>
+        <A HREF="${configBean.FEWI_URL}vocab/do/">Human Disease (DO) Vocabulary</a>
         <br/>
 
         <span class="example" style='line-height:160%;'>

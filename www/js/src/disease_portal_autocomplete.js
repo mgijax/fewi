@@ -75,7 +75,7 @@ var getErrorMessages = function()
 //set up any autocomplete behavior
 
 /*
- * Phenotype / OMIM Disease autocomplete section
+ * Phenotype / DO Disease autocomplete section
 * Author: kstone
  */
 // the split and extractLast functions define how we will delimit multiple selections

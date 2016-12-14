@@ -1,4 +1,4 @@
-	<c:if test="${fn:length(MouseOMIMAnnotations) > 0 or fn:length(HumanOMIMAnnotations) > 0 or (not empty diseaseRefCount && diseaseRefCount > 0) or (marker.countOfAllelesWithHumanDiseases > 0)}">
+	<c:if test="${fn:length(MouseDOAnnotations) > 0 or fn:length(HumanDOAnnotations) > 0 or (not empty diseaseRefCount && diseaseRefCount > 0) or (marker.countOfAllelesWithHumanDiseases > 0)}">
 		<div class="row diseaseRibbon" >
 			<div class="header <%=leftTdStyles.getNext() %>">
 				Human Diseases
@@ -9,7 +9,7 @@
 				<c:set var="arrowtext" value="less" />
 				<c:set var="titletext" value="Show Less" />
 
-				<c:if test="${(fn:length(MouseOMIMAnnotations) > 0) or (fn:length(HumanOMIMAnnotations) > 0)}">
+				<c:if test="${(fn:length(MouseDOAnnotations) > 0) or (fn:length(HumanDOAnnotations) > 0)}">
 					<c:set var="arrowstate" value="hdExpand" />
 					<c:set var="arrowtext" value="more" />
 					<c:set var="titletext" value="Show More" />
@@ -19,7 +19,7 @@
 
 				<c:set var="sectionstate" value="open" />
 
-				<c:if test="${(fn:length(MouseOMIMAnnotations) > 0) or (fn:length(HumanOMIMAnnotations) > 0)}">
+				<c:if test="${(fn:length(MouseDOAnnotations) > 0) or (fn:length(HumanDOAnnotations) > 0)}">
 					<section class="summarySec1 wide">
 						<ul>
 							<li>
@@ -27,11 +27,11 @@
 									Diseases
 								</div>
 								<div class="value">
-									<c:if test="${fn:length(MouseOMIMAnnotations) > 0}">
-										${fn:length(MouseOMIMAnnotations)} with ${marker.symbol} mouse models<c:if test="${fn:length(HumanOMIMAnnotations) > 0}">;</c:if>
+									<c:if test="${fn:length(MouseDOAnnotations) > 0}">
+										${fn:length(MouseDOAnnotations)} with ${marker.symbol} mouse models<c:if test="${fn:length(HumanDOAnnotations) > 0}">;</c:if>
 									</c:if>
-									<c:if test="${fn:length(HumanOMIMAnnotations) > 0}">
-										${fn:length(HumanOMIMAnnotations)} with human ${AllHumanSymbols} associations
+									<c:if test="${fn:length(HumanDOAnnotations) > 0}">
+										${fn:length(HumanDOAnnotations)} with human ${AllHumanSymbols} associations
 									</c:if>
 								</div>
 							</li>
@@ -82,11 +82,11 @@
 												<c:set var="notCount" value="${fn:length(NotMouseModels.get(diseaseRow.get('diseaseId')))}" />
 					
 												<c:if test="${nonNotCount > 0}">
-													<span id="show${diseaseRow.get('diseaseId')}" class="link">View ${fn:length(MouseModels.get(diseaseRow.get('diseaseId')))}</span> model<c:if test="${fn:length(MouseModels.get(diseaseRow.get('diseaseId'))) > 1}">s</c:if>
+													<span id="show${diseaseRow.get('diseaseId').replace(':', '_')}" class="link">View ${fn:length(MouseModels.get(diseaseRow.get('diseaseId')))}</span> model<c:if test="${fn:length(MouseModels.get(diseaseRow.get('diseaseId'))) > 1}">s</c:if>
 													<%@ include file="MarkerDetail_disease_popup.jsp" %>
 												</c:if>
 												<c:if test="${nonNotCount == 0 and notCount > 0}">
-													<span id="show${diseaseRow.get('diseaseId')}" class="link">View ${fn:length(NotMouseModels.get(diseaseRow.get('diseaseId')))}</span> "NOT" model<c:if test="${fn:length(NotMouseModels.get(diseaseRow.get('diseaseId'))) > 1}">s</c:if>
+													<span id="show${diseaseRow.get('diseaseId').replace(':', '_')}" class="link">View ${fn:length(NotMouseModels.get(diseaseRow.get('diseaseId')))}</span> "NOT" model<c:if test="${fn:length(NotMouseModels.get(diseaseRow.get('diseaseId'))) > 1}">s</c:if>
 													<%@ include file="MarkerDetail_disease_popup.jsp" %>
 												</c:if>
 											</td>
@@ -111,7 +111,7 @@
 							<ul>
 								<li>
 									<div class="label">Mutations/Alleles</div>
-									<div class="value"><a href="${configBean.FEWI_URL}allele/summary?markerId=${marker.primaryID}&hasOMIM=1">${marker.countOfAllelesWithHumanDiseases}</a> with disease annotations</div>
+									<div class="value"><a href="${configBean.FEWI_URL}allele/summary?markerId=${marker.primaryID}&hasDO=1">${marker.countOfAllelesWithHumanDiseases}</a> with disease annotations</div>
 								</li>
 							</ul>
 						</section>

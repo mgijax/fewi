@@ -43,7 +43,6 @@ public class Main {
 			String json = mapper.writeValueAsString(map);
 			System.out.println("JSON: " + json);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

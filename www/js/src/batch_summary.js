@@ -91,12 +91,12 @@ var getMarkerIds = function() {
 	    	{key: "mpTerms",
 		    		label: "Term"}]});
     }
-    if (omim){
-    	myColumnDefs.push({label:"Human Disease (OMIM) <a onMouseOver='popupHelp(\"omim\");' class='helpLink'>Caveat &amp; Help</a>",
+    if (doa){
+    	myColumnDefs.push({label:"Human Disease (DO) <a onMouseOver='popupHelp(\"do\");' class='helpLink'>Caveat &amp; Help</a>",
     	    sortable:false,
-    	    children: [{key: "omimIds",
+    	    children: [{key: "doIds",
 	    		label: "ID"},
-	    	{key: "omimTerms",
+	    	{key: "doTerms",
 		    	label: "Term"}]});
     }
     if (allele){
@@ -160,8 +160,8 @@ var getMarkerIds = function() {
         	{key:"goCodes"},
         	{key:"mpIds"},
         	{key:"mpTerms"},
-        	{key:"omimIds"},
-        	{key:"omimTerms"},
+        	{key:"doIds"},
+        	{key:"doTerms"},
         	{key:"alleleIds"},
         	{key:"alleleSymbols"},
         	{key:"expressionStructure"},
@@ -319,7 +319,7 @@ function parseRequest(request){
 };
 
 function popupHelp(help_cat){	 
-	var omim_help = "<b>Human Disease (OMIM) Annotations</b><ul><li>Human Disease (OMIM) terms appear by gene.</li>\
+	var do_help = "<b>Human Disease (DO) Annotations</b><ul><li>Human Disease (DO) terms appear by gene.</li>\
 	    <li>Each term listed indicates that a mutant allele involving this gene is present in a mouse genotype used as a disease model.</li></ul><b>Caveats</b>\
 	    <ul><li>The term does not necessarily imply that mutations in that gene contribute to or cause the disease.</li>\
 	    <li>Analyzed mice may have causative mutations in other genes.</li>\
@@ -339,8 +339,8 @@ function popupHelp(help_cat){
 	var help_text = '';
 	if (help_cat == 'mp') {
 		help_text = mp_help;
-	} else if (help_cat == 'omim'){
-		help_text = omim_help;
+	} else if (help_cat == 'do'){
+		help_text = do_help;
 	} else {
 		help_text = exp_help;
 	}

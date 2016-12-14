@@ -22,7 +22,7 @@ public class AlleleQueryForm
     private String markerId;
     private String refKey;
     private String jnumId;
-    private String hasOMIM;
+    private String hasDO;
     private String isCellLine;
     private List<String> alleleType;
     private List<String> alleleSubType;
@@ -237,8 +237,8 @@ public class AlleleQueryForm
 	public String getJnumId() {
 		return jnumId;
 	}
-	public String getHasOMIM() {
-		return hasOMIM;
+	public String getHasDO() {
+		return hasDO;
 	}
 	public void setRefKey(String refKey) {
 		this.refKey = refKey;
@@ -246,8 +246,8 @@ public class AlleleQueryForm
 	public void setJnumId(String jnumId) {
 		this.jnumId = jnumId;
 	}
-	public void setHasOMIM(String hasOMIM) {
-		this.hasOMIM = hasOMIM;
+	public void setHasDO(String hasDO) {
+		this.hasDO = hasDO;
 	}
 
 	public List<String> getAlleleSubType() {
@@ -292,7 +292,7 @@ public class AlleleQueryForm
 		return "AlleleQueryForm [allKey=" + allKey + ", allIds=" + allIds
 				+ ", phenotype=" + phenotype + ", nomen=" + nomen
 				+ ", markerId=" + markerId + ", refKey=" + refKey + ", jnumId="
-				+ jnumId + ", hasOMIM=" + hasOMIM + ", excludeCellLines="
+				+ jnumId + ", hasDO=" + hasDO + ", excludeCellLines="
 				+ isCellLine + ", alleleType=" + alleleType
 				+ ", alleleSubType=" + alleleSubType + ", collection="
 				+ collection + ", chromosome=" + chromosome + ", coordinate="

@@ -92,7 +92,7 @@ public class ExcelAlleleSummary  extends AbstractBigExcelView
             List<String> diseases = new ArrayList<String>();
             for(AlleleSummaryDisease disease : allele.getSummaryDiseases())
             {
-              diseases.add(disease.getDisease() + " " + disease.getOmimID());
+              diseases.add(disease.getDisease() + " " + disease.getDoID());
             }
 
             // prep allele attribute

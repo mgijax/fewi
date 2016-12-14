@@ -163,13 +163,13 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 					}		    		
 		    		associations.add(wrapper);
 		    		evictCollection(session,m.getAnnotations());
-				} else if(queryForm.getOmim()){
+				} else if(queryForm.getDo()){
 					List<List<String>> wrapper = new ArrayList<List<String>>();
 					List<String> mpIds;
-	    			for (Annotation omimAnnot : m.getOMIMAnnotations()) {
+	    			for (Annotation doAnnot : m.getDOAnnotations()) {
 	    				mpIds = new ArrayList<String>();
-	    				mpIds.add(omimAnnot.getTermID());
-	    				mpIds.add(omimAnnot.getTerm());
+	    				mpIds.add(doAnnot.getTermID());
+	    				mpIds.add(doAnnot.getTerm());
 	    				wrapper.add(mpIds);
 					}		
 		    		associations.add(wrapper);
@@ -362,8 +362,8 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 		} else if(queryForm.getMp()){
 			row.createCell(i++).setCellValue("MP ID");
 			row.createCell(i++).setCellValue("Term");
-		} else if(queryForm.getOmim()){
-			row.createCell(i++).setCellValue("OMIM ID");
+		} else if(queryForm.getDo()){
+			row.createCell(i++).setCellValue("DO ID");
 			row.createCell(i++).setCellValue("Term");
 		} else if(queryForm.getAllele()){
 			row.createCell(i++).setCellValue("Allele ID");

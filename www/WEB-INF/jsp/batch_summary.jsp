@@ -110,7 +110,7 @@
 	// additional columns
 	var go = ${batchQueryForm.go};
 	var mp = ${batchQueryForm.mp};
-	var omim = ${batchQueryForm.omim};
+	var doa = ${batchQueryForm.do};
 	var allele = ${batchQueryForm.allele};
 	var exp = ${batchQueryForm.exp};
 	var refsnp = ${batchQueryForm.refsnp};	

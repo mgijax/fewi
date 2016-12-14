@@ -5,19 +5,19 @@
 			<li>
             <a target="_blank" href="${configBean.PUB_REPORTS_URL}MGI_Geno_Disease.rpt">Mouse Genotypes with both Phenotype and Disease Annotations</a> for Marker Type Genes, excluding conditional mutations
 				<ul>
-					<li class="font12">Tab-delimited: Allelic Composition, Allele symbol(s), Allele ID(s), Genetic background, MP ID, PubMed ID, MGI Marker ID, OMIM ID</li>
+					<li class="font12">Tab-delimited: Allelic Composition, Allele symbol(s), Allele ID(s), Genetic background, MP ID, PubMed ID, MGI Marker ID, DO ID</li>
 				</ul>
 			</li>
 			<li>
             <a target="_blank" href="${configBean.PUB_REPORTS_URL}MGI_Geno_NotDisease.rpt">Mouse Genotypes with both Phenotype and Negated Disease Annotations</a> for Marker Type Genes, excluding conditional mutations
 				<ul>
-					<li class="font12">Tab-delimited: Allelic Composition, Allele symbol(s), Allele ID(s), Genetic background, MP ID, PubMed ID, MGI Marker ID, OMIM ID</li>
+					<li class="font12">Tab-delimited: Allelic Composition, Allele symbol(s), Allele ID(s), Genetic background, MP ID, PubMed ID, MGI Marker ID, DO ID</li>
 				</ul>
 			</li>
 			<li>
-            <a target="_blank" href="${configBean.PUB_REPORTS_URL}MGI_OMIM.rpt">Associations of Human and Mouse Genes with OMIM Diseases</a>
+            <a target="_blank" href="${configBean.PUB_REPORTS_URL}MGI_OMIM.rpt">Associations of Human and Mouse Genes with DO Diseases</a>
 				<ul>
-					<li class="font12">Tab-delimited: OMIM Disease ID, OMIM Disease Name, HomoloGene ID, Common Organism Name, NCBI Taxon ID, Symbol, EntrezGene ID, Mouse MGI ID</li>
+					<li class="font12">Tab-delimited: DO Disease ID, DO Disease Name, HomoloGene ID, Common Organism Name, NCBI Taxon ID, Symbol, EntrezGene ID, Mouse MGI ID</li>
 				</ul>
 			</li>
             <li>All downloads for <a target="_blank" href="${configBean.PUB_REPORTS_URL}index.html#pheno">Alleles and Phenotypes</a></li>

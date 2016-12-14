@@ -51,7 +51,7 @@ public class BatchQueryForm {
 		
 		associationList.put("GO", "Gene Ontology (GO)");
 		associationList.put("MP", "Mammalian Phenotype (MP)");
-		associationList.put("OMIM", "Human Disease (OMIM)");
+		associationList.put("DO", "Human Disease (DO)");
 		associationList.put("Alleles", "Alleles");
 		associationList.put("Expression", "Gene Expression");
 		associationList.put("RefSNP", "RefSNP ID");
@@ -209,8 +209,8 @@ public class BatchQueryForm {
 	public boolean getMp(){
 		return this.hasAssociation("MP");
 	}
-	public boolean getOmim(){
-		return this.hasAssociation("omim");
+	public boolean getDo(){
+		return this.hasAssociation("do");
 	}
 	public boolean getAllele(){
 		return this.hasAssociation("Alleles");

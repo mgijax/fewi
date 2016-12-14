@@ -5,7 +5,7 @@
 <tr>
   <td class="summaryHeaderCat1">
        <span class="label">Human Disease</span><br/>
-       <span class="label">OMIM ID</span>
+       <span class="label">DO ID</span>
   </td>
   <td class="summaryHeaderData1">
 	<span><a href="${configBean.FEWI_URL}disease/${disease.primaryID}">${disease.disease}</a></span><br/>

@@ -146,17 +146,16 @@ public class TextBatchSummary extends AbstractTextView {
 					}
 		    		associations.add(mpIds);
 					evictCollection(session,m.getAnnotations());
-				} else if(queryForm.getOmim()){
-					//logger.debug("omim");
-					List<String> omimIds = new ArrayList<String>();
-					StringBuffer omim;
-	    			for (Annotation omimAnnot : m.getOMIMAnnotations()) {
-	    				omim = new StringBuffer();
-	    				omim.append(omimAnnot.getTermID() + "\t");
-	    				omim.append(omimAnnot.getTerm());
-	    				omimIds.add(omim.toString());
+				} else if(queryForm.getDo()){
+					List<String> doIds = new ArrayList<String>();
+					StringBuffer dobuf;
+	    			for (Annotation doAnnot : m.getDOAnnotations()) {
+	    				dobuf = new StringBuffer();
+	    				dobuf.append(doAnnot.getTermID() + "\t");
+	    				dobuf.append(doAnnot.getTerm());
+	    				doIds.add(dobuf.toString());
 					}
-		    		associations.add(omimIds);
+		    		associations.add(doIds);
 		    		evictCollection(session,m.getAnnotations());
 				} else if(queryForm.getAllele()){
 					//logger.debug("allele");
@@ -313,8 +312,8 @@ public class TextBatchSummary extends AbstractTextView {
 		} else if(queryForm.getMp()){
 			header.append("\tMP ID");
 			header.append("\tTerm");
-		} else if(queryForm.getOmim()){
-			header.append("\tOMIM ID");
+		} else if(queryForm.getDo()){
+			header.append("\tDO ID");
 			header.append("\tTerm");
 		} else if(queryForm.getAllele()){
 			header.append("\tAllele ID");

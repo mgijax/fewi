@@ -83,7 +83,7 @@
 		</c:if>
 
 		<c:if test="${modelCount > 0}">
-		<span id="show${diseaseRow.diseaseRowKey}" class="link">View ${modelCount}</span> ${tag}model<c:if test="${modelCount > 1}">s</c:if>
+		<span id="show${diseaseRow.diseaseRowKey.replace(':', '_')}" class="link">View ${modelCount}</span> ${tag}model<c:if test="${modelCount > 1}">s</c:if>
 		</c:if>
 	      </c:if>
 	    </td>

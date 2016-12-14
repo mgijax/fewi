@@ -42,7 +42,7 @@ public class BatchSummaryRow {
 
     private List<BatchMarkerGoAnnotation> goAnnots = null;
     private List<BatchMarkerMpAnnotation> mpAnnots = null;
-    private List<Annotation> omimAnnots = null;
+    private List<Annotation> doAnnots = null;
     private List<BatchMarkerAllele> markerAlleles = null;
     private List<MarkerTissueCount> expCounts = null;
 
@@ -264,37 +264,37 @@ public class BatchSummaryRow {
     	return StringUtils.join(mp, "<br/>");
     }
 
-    public String getOmimIds(){
-    	if (!query.getOmim()){
+    public String getDoIds(){
+    	if (!query.getDo()){
     		return "";
     	}
     	Marker marker = batchMarkerId.getMarker();
-    	List<String> omim = new ArrayList<String>();
-    	if (marker != null  && omimAnnots == null){
-    		omimAnnots = batchMarkerId.getMarker().getOMIMAnnotations();
+    	List<String> doa = new ArrayList<String>();
+    	if (marker != null  && doAnnots == null){
+    		doAnnots = batchMarkerId.getMarker().getDOAnnotations();
     	}
-    	if (omimAnnots != null){
-    		for (Annotation annotation : omimAnnots) {
-    			omim.add(String.format(noWrap, annotation.getTermID()));
+    	if (doAnnots != null){
+    		for (Annotation annotation :doAnnots) {
+    			doa.add(String.format(noWrap, annotation.getTermID()));
 			}
     	}
-    	return StringUtils.join(omim, "<br/>");
+    	return StringUtils.join(doa, "<br/>");
     }
 
-    public String getOmimTerms(){
-    	if(!query.getOmim()) return "";
+    public String getDoTerms(){
+    	if(!query.getDo()) return "";
     	Marker marker = batchMarkerId.getMarker();
-    	List<String> omim = new ArrayList<String>();
-    	if (marker != null  && omimAnnots == null){
-    		omimAnnots = batchMarkerId.getMarker().getOMIMAnnotations();
+    	List<String> doa = new ArrayList<String>();
+    	if (marker != null  && doAnnots == null){
+    		doAnnots = batchMarkerId.getMarker().getDOAnnotations();
     	}
-    	if (omimAnnots != null){
-    		for (Annotation annotation : omimAnnots) {
+    	if (doAnnots != null){
+    		for (Annotation annotation : doAnnots) {
     			String url = fewiUrl + "disease/" + annotation.getTermID();
-    			omim.add(String.format(noWrap, String.format(urlPattern, url, annotation.getTerm())));
+    			doa.add(String.format(noWrap, String.format(urlPattern, url, annotation.getTerm())));
 			}
     	}
-    	return StringUtils.join(omim, "<br/>");
+    	return StringUtils.join(doa, "<br/>");
     }
 
     public String getAlleleIds(){

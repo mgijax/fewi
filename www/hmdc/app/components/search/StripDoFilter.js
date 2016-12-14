@@ -1,8 +1,8 @@
 (function() {
 	'use strict';
 	angular.module('hmdc.search')
-		.filter('stripOmim',function() {
+		.filter('stripDo',function() {
 			return function(input) {
-				return input.replace("OMIM:","");
+				return input.replace("DOID:","");
 		}})
 })();

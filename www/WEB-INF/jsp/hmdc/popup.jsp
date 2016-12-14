@@ -89,7 +89,7 @@
 </c:if>
 
 <c:if test="${not empty isDisease}">
-<%@ include file="/WEB-INF/jsp/hmdc/popup_omim.jsp" %>
+<%@ include file="/WEB-INF/jsp/hmdc/popup_do.jsp" %>
 </c:if>
 
 <!-- Table and Wrapping div -->

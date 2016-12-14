@@ -48,7 +48,7 @@ public class SolrAlleleKeyHunter extends SolrHunter<Allele> {
          */
         propertyMap.put(SearchConstants.REF_KEY,new SolrPropertyMapper(IndexConstants.REF_KEY));
         propertyMap.put(SearchConstants.JNUM_ID,new SolrPropertyMapper(IndexConstants.JNUM_ID));
-        propertyMap.put(SearchConstants.ALL_HAS_OMIM,new SolrPropertyMapper(IndexConstants.ALL_HAS_OMIM));
+        propertyMap.put(SearchConstants.ALL_HAS_DO,new SolrPropertyMapper(IndexConstants.ALL_HAS_DO));
 
         
         /*

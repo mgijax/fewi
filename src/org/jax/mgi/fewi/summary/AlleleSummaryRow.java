@@ -165,7 +165,7 @@ public class AlleleSummaryRow
 	  List<String> diseases = new ArrayList<String>();
 	  for(AlleleSummaryDisease disease : allele.getSummaryDiseases())
 	  {
-		  String diseaseDisplay = String.format("<a href=\"%sdisease/%s\">%s</a> %s",fewiUrl,disease.getOmimID(),disease.getDisease(),disease.getOmimID());
+		  String diseaseDisplay = String.format("<a href=\"%sdisease/%s\">%s</a> %s",fewiUrl,disease.getDoID(),disease.getDisease(),disease.getDoID());
 		  diseases.add(diseaseDisplay);
 	  }
 	  return StringUtils.join(diseases,"; ");

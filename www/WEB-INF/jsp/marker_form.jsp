@@ -215,7 +215,7 @@ td.top { vertical-align: top; }
 		        <b>Select</b> <a href="javascript:childWindow=window.open('${configBean.FEWI_URL}allele/phenoPopup?formName=markerQF',
 		          'mywindow', 'status,width=540,height=400'); childWindow.focus()">Anatomical Systems Affected by Phenotypes</a><br>
 				<b>Browse</b> <a href="${configBean.WI_URL}searches/MP_form.shtml">Mammalian Phenotype Ontology (MP)</a><br>
-				<b>Browse</b> <a href="${configBean.FEWI_URL}vocab/omim/">Human Disease Vocabulary (OMIM)</a>
+				<b>Browse</b> <a href="${configBean.FEWI_URL}vocab/do/">Human Disease Vocabulary (DO)</a>
 		      </span>
 		      <br/>
 	        <span class="example" style='line-height:160%;'>

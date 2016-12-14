@@ -861,7 +861,7 @@ var diseasesResultsTable = function() {
 	// sortable:true enables sorting
 	    //{key: "highlightedFields", label: "Why Matched", sortable: false },
 		{key: "disease", label: "Disease", sortable: true },
-		{key: "diseaseId", label: "OMIM ID", sortable: true },
+		{key: "diseaseId", label: "DO ID", sortable: true },
 		{key: "diseaseModels", label: "Mouse Models", sortable: false },
 		{key: "mouseMarkers", label: "Associated Genes from Mouse Models", sortable: false },
 		{key: "humanMarkers", label: "Associated Human Genes (<span id=\"showMgiHumanDiseaseHelpDiv\" style=\"color: #06F;cursor: pointer;\">source</span>)", sortable: false },

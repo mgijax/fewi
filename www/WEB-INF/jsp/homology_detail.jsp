@@ -270,10 +270,10 @@ function deselectAllSeqs() {
 		<td class="${style}">
 		    <c:choose>
 		    <c:when test="${hc.organism == 'mouse'}">
-		        <c:set var="diseases" value="${m.OMIMAnnotations}"/>
+		        <c:set var="diseases" value="${m.DOAnnotations}"/>
 		    </c:when>
 		    <c:when test="${hc.organism == 'human'}">
-		        <c:set var="diseases" value="${m.OMIMHumanAnnotations}"/>
+		        <c:set var="diseases" value="${m.DOHumanAnnotations}"/>
 		    </c:when>
 	    	    <c:otherwise>
 			<c:set var="diseases" value=""/>

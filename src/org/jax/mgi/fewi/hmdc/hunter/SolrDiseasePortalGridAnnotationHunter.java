@@ -61,10 +61,6 @@ public class SolrDiseasePortalGridAnnotationHunter extends SolrHunter<SolrHdpEnt
 			gridAnnotationResult.setSourceId((String)doc.getFieldValue(DiseasePortalFields.SOURCE_TERM_ID));
 			gridAnnotationResult.setByDagTerm((Integer)doc.getFieldValue(DiseasePortalFields.BY_TERM_DAG));
 			gridAnnotationResult.setBackgroundSensitive((String)doc.getFieldValue(DiseasePortalFields.BACKGROUND_SENSITIVE));
-			
-			// TODO come back and add these
-			//gridAnnotationResult.setByTermHeader((Integer)doc.getFieldValue(DiseasePortalFields.BY_TERM_HEADER));
-			//gridAnnotationResult.setByTermName((Integer)doc.getFieldValue(DiseasePortalFields.BY_TERM_NAME));
 
 			sr.addResultObjects(gridAnnotationResult);
 			keys.add(gridAnnotationResult.getUniqueKey());

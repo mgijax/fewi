@@ -602,10 +602,9 @@ public class DiseasePortalController {
 			if (highlightedTerms.size() > 0) mav.addObject("highlights", highlightedTerms);
 		} else {
 			mav.addObject("isDisease", 1);
-			// TODO (kstone):
-			// refactor omimGroup to diseaseGroup
-			//  update JSPs, angular code, test mocking API
-			if (!diseaseGroup.isEmpty()) mav.addObject("omimGroup", diseaseGroup);
+			// TODO: refactor diseaseGroup to diseaseGroup
+			// update JSPs, angular code, test mocking API
+			if (!diseaseGroup.isEmpty()) mav.addObject("diseaseGroup", diseaseGroup);
 		}
 		
 		if (mouseMarkers != null && mouseMarkers.size() > 0) { mav.addObject("mouseMarkers", mouseMarkers.toArray(new String[0])); }

@@ -229,7 +229,7 @@ public class AutoCompleteController {
 	/*
 	 * This method handles requests for the EMAPA strucure autocomplete
 	 * fields on the CRE query form.  Results are returned as JSON.
-	 * TODO - move mgihome cre homepage to cre-specific controller url method
+	 * move mgihome cre homepage to cre-specific controller url method
 	 */
 	@RequestMapping("/emapa")
 	public @ResponseBody SearchResults<EmapaACResult> emapaAutoCompleteRequest(
@@ -257,7 +257,7 @@ public class AutoCompleteController {
 
 	/*
 	 * Duplicate of the above url for cre compatibility
-	 * TODO - move mgihome cre homepage to cre-specific controller url method
+	 * move mgihome cre homepage to cre-specific controller url method
 	 */
 	@RequestMapping("/structure")
 	public @ResponseBody SearchResults<EmapaACResult> structureAutoCompleteRequest(
@@ -267,7 +267,7 @@ public class AutoCompleteController {
 	}
 
 	/* method for use by automated testing, to mimic the above method
-	 * TODO - move to cre-specific method signature
+	 * move to cre-specific method signature
 	 */
 	public @ResponseBody SearchResults<EmapaACResult> emapaAutoComplete(String query) {
 		return performEmapaAutoComplete(query);
@@ -276,7 +276,7 @@ public class AutoCompleteController {
 	/* float any results that begins with the given query string up to the
 	 * top of the results
 	 *
-	 * TODO: We need to find a way to do this in Solr. Not only is this convoluted and inconsistent,
+	 *  We need to find a way to do this in Solr. Not only is this convoluted and inconsistent,
 	 * 	it likely won't do what is expected in every case. -kstone
 	 */
 	private SearchResults<EmapaACResult> floatBeginsMatches (String query,

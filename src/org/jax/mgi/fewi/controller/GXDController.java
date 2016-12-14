@@ -2046,7 +2046,7 @@ public class GXDController {
 		return gxdFilter;
 	}
 
-	// TODO: Returns a json mgi id list based on the filters that come in from the query form
+	// Returns a json mgi id list based on the filters that come in from the query form
 	@RequestMapping("/markers/idList")
 	public @ResponseBody String getIdList (HttpSession session, HttpServletRequest request, @ModelAttribute GxdQueryForm query) {
 

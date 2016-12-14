@@ -89,7 +89,7 @@
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="VOCAB_omim_browser_detail_help.shtml#mouse_models">	
+<div id="titleBarWrapper" userdoc="VOCAB_do_browser_detail_help.shtml#mouse_models">	
 	<span class="titleBarMainTitle">Mouse Models of ${disease.disease}</span>
 </div>
 

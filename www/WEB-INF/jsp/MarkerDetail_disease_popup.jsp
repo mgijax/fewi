@@ -1,7 +1,8 @@
+<c:set var="functionID" value="${diseaseRow.get('diseaseId').replace(':', '_')}" />
 <c:set var="dId" value="${diseaseRow.get('diseaseId')}" />
 <c:set var="dTerm" value="${diseaseRow.get('diseaseTerm')}" />
 
-<div id="models${dId}" class="facetFilter; bottomBorder" style="display:none"/>
+<div id="models${functionID}" class="facetFilter; bottomBorder" style="display:none"/>
 	<div class="hd">Mouse Models</div>
 	<div class="bd" style="overflow: auto; max-height: 150px; max-width: 750px;">
 		<a></a><!-- this empty 'a' tag is to keep Chrome and Safari from putting a selection box aroudn the first link displayed -->
@@ -24,18 +25,18 @@
  <script type="text/javascript">
 	YAHOO.namespace("diseaseDetail.container");
 
-	var show${dId} = function(e) {
-		YAHOO.diseaseDetail.container.panel${dId}.show(YAHOO.diseaseDetail.container.panel${dId});
-		pageTracker._trackEvent("MarkerDetailPageEvent", "disease model popup", "OMIM:${dId}");
+	var show${functionID} = function(e) {
+		YAHOO.diseaseDetail.container.panel${functionID}.show(YAHOO.diseaseDetail.container.panel${functionID});
+		pageTracker._trackEvent("MarkerDetailPageEvent", "disease model popup", "${functionID}");
 	};
 
 	YAHOO.util.Event.onDOMReady(function() {
-		YAHOO.diseaseDetail.container.panel${dId} = new YAHOO.widget.Panel ("models${dId}", { visible:false, constraintoviewport:true, context:['show${dId}', 'tl', 'br', ['beforeShow', 'windowResize'] ] } );
-		YAHOO.diseaseDetail.container.panel${dId}.render();
-		YAHOO.util.Event.addListener("show${dId}", "click", show${dId});
-		YAHOO.util.Event.addListener("YAHOO.diseaseDetail.container.panel${dId}", "move", YAHOO.diseaseDetail.container.panel${dId}.forceContainerRedraw);
-		YAHOO.util.Event.addListener("YAHOO.diseaseDetail.container.panel${dId}", "mouseover", YAHOO.diseaseDetail.container.panel${dId}.forceContainerRedraw);
-		var elem = document.getElementById("models${dId}");
+		YAHOO.diseaseDetail.container.panel${functionID} = new YAHOO.widget.Panel ("models${functionID}", { visible:false, constraintoviewport:true, context:['show${functionID}', 'tl', 'br', ['beforeShow', 'windowResize'] ] } );
+		YAHOO.diseaseDetail.container.panel${functionID}.render();
+		YAHOO.util.Event.addListener("show${functionID}", "click", show${functionID});
+		YAHOO.util.Event.addListener("YAHOO.diseaseDetail.container.panel${functionID}", "move", YAHOO.diseaseDetail.container.panel${functionID}.forceContainerRedraw);
+		YAHOO.util.Event.addListener("YAHOO.diseaseDetail.container.panel${functionID}", "mouseover", YAHOO.diseaseDetail.container.panel${functionID}.forceContainerRedraw);
+		var elem = document.getElementById("models${functionID}");
 		if (elem != null) {
 			elem.style.display = '';	// make the div visible
 		}

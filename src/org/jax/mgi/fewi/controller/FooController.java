@@ -93,7 +93,7 @@ public class FooController {
 	public ModelAndView vocSummary(HttpServletRequest request) {
 		logger.debug("->vocSummary started");
 
-		List<VocabTerm> terms = vocabFinder.getVocabSubset("OMIM","Z");
+		List<VocabTerm> terms = vocabFinder.getVocabSubset("DO","Z");
 		for(VocabTerm term : terms) {
 			logger.debug("found term "+term.getTerm());
 		}
