@@ -781,7 +781,6 @@ public class MarkerController {
 			}
 			sortedAllHumanMarkers.put(symbol, symbol);
 		}
-		
 
 		// Sort Mouse first then both then Human
 		ArrayList<String> mouse = new ArrayList<String>();
@@ -852,10 +851,8 @@ public class MarkerController {
 
 
 		// Disease ID -> List<GenotypeId>
-		HashMap<String, ArrayList<DiseaseModel>> modelsMap = marker.getMouseModelsMap();
-		HashMap<String, ArrayList<DiseaseModel>> notModelsMap = marker.getNotMouseModelsMap();
-		mav.addObject("MouseModels", modelsMap);
-		mav.addObject("NotMouseModels", notModelsMap);
+		mav.addObject("MouseModels", marker.getMouseModelsMap());
+		mav.addObject("NotMouseModels", marker.getNotMouseModelsMap());
 		mav.addObject("AllHumanSymbols", StringUtils.join(sortedAllHumanMarkers.keySet(), ","));
 		mav.addObject("MouseDOAnnotations", MouseDOAnnotations);
 		mav.addObject("HumanDOAnnotations", HumanDOAnnotations);

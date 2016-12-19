@@ -1,4 +1,4 @@
-<c:set var="functionID" value="${diseaseRow.get('diseaseId').replace(':', '_')}" />
+<c:set var="functionID" value="${fn:replace(diseaseRow.get('diseaseId'), ':', '_')}" />
 <c:set var="dId" value="${diseaseRow.get('diseaseId')}" />
 <c:set var="dTerm" value="${diseaseRow.get('diseaseTerm')}" />
 

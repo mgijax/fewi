@@ -602,8 +602,6 @@ public class DiseasePortalController {
 			if (highlightedTerms.size() > 0) mav.addObject("highlights", highlightedTerms);
 		} else {
 			mav.addObject("isDisease", 1);
-			// TODO: refactor diseaseGroup to diseaseGroup
-			// update JSPs, angular code, test mocking API
 			if (!diseaseGroup.isEmpty()) mav.addObject("diseaseGroup", diseaseGroup);
 		}
 		
