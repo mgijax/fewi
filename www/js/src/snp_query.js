@@ -169,7 +169,7 @@ snpqry.validateQF = function(e) {
 	// 1. if on region tab, must specify chromosome and coordinates
 	if (formID == 'form2') {
 		var hasChrom = ($('#chromosomeDropList').val().length != 0);
-		var hasCoord = ($('[name=coordinate]').val().length != 0);
+		var hasCoord = ($('[name=coordinate]').val().trim().length != 0);
 		
 		if (!hasChrom || !hasCoord) {
 			snpqry.showError('Your query is missing required parameters.  When searching by region, you must specify both Chromosome and Genome Coordinates.');
@@ -187,7 +187,7 @@ snpqry.validateQF = function(e) {
 
 	// 3. if on gene tab, must specify something in nomenclature field
 	if (formID == 'form1') {
-		if ($('#nomen').val().length == 0) {
+		if ($('#nomen').val().trim().length == 0) {
 			snpqry.showError('Your query is missing a required parameter. When searching by gene, you must specify a value for Gene Symbol/Name.');
 			return false;
 		}
