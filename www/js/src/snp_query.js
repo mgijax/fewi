@@ -171,15 +171,8 @@ snpqry.validateQF = function(e) {
 		var hasChrom = ($('#chromosomeDropList').val().length != 0);
 		var hasCoord = ($('[name=coordinate]').val().length != 0);
 		
-		if (!hasChrom) {
-			if (!hasCoord) {
-				snpqry.showError('Your query is missing required parameters.  When searching by region, you must specify both Chromosome and Genome Coordinates.');
-			} else {
-				snpqry.showError('Your query is missing a required parameter.  When searching by region, you must specify a Chromosome.');
-			}
-			return false;
-		} else if (!hasCoord) {
-			snpqry.showError('Your query is missing a required parameter.  When searching by region, you must specify Genome Coordinates.');
+		if (!hasChrom || !hasCoord) {
+			snpqry.showError('Your query is missing required parameters.  When searching by region, you must specify both Chromosome and Genome Coordinates.');
 			return false;
 		}
 	}
