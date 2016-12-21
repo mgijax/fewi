@@ -81,7 +81,7 @@ td.padSmall { padding: 2px }
 						<!-- disease -->
 						<td class="noWrap borderUnder" style="min-width:250px" >
 							<div style="text-align:left;">
-								<a class="MP" href='${configBean.FEWI_URL}vocab/do/${disease.diseaseID}'>${disease.disease}</a>&nbsp;&nbsp;
+								<a class="MP" href='${configBean.FEWI_URL}disease/${disease.diseaseID}'>${disease.disease}</a>&nbsp;&nbsp;
 								<span style="font-size:80%">
 							<a class="MP" target="_blank" href="http://www.disease-ontology.org/?id=${disease.diseaseID}">${disease.diseaseID }</a></span>
 							</div>
