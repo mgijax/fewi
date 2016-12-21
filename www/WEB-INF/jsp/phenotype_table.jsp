@@ -240,8 +240,7 @@ td.padTop { padding-top:4px }
         <td  class="noWrap borderUnder" style="min-width:250px" >
             <div style="text-align:left; ">
               <span style="margin-left:${phenoTableTerm.displayIndent}px;">
-                 <a class="MP" href='${configBean.WI_URL}searches/Phat.cgi?id=${phenoTableTerm.termId}'>
-                   ${phenoTableTerm.term}</a> 
+                 ${phenoTableTerm.term}
                  <!-- (termSeq= ${phenoTableTerm.termSeq}) -->
               </span>
             </div>
