@@ -92,7 +92,7 @@
 	</target>
 		  	
 	<!-- Compile tests -->
-	<target name="compile-test" depends="unittest,jsunittest,index-test">
+	<target name="compile-test" depends="unittest,index-test">
 		<copy file="./www/WEB-INF/properties/applicationContext-ci.xml" todir="./www/WEB-INF/classes" overwrite="true" />
 		<copy file="./www/WEB-INF/properties/common.fewi.properties" todir="./www/WEB-INF/classes" overwrite="true" />
 		<copy file="./www/WEB-INF/properties/common.solr.properties" todir="./www/WEB-INF/classes" overwrite="true" />
@@ -208,33 +208,6 @@
 		<fail message="Test failure detected, check test results." if="junit.failure" />
 	</target>
 	
-	<target name="jsunittest" depends="jsunittest-run,jsunittest-warning">
-	</target>
-	
-	<target name="jsunittest-run">
-		<echo>Running JS unit tests</echo>
-		<exec executable="www/js/tests/${phantomjs.script}" 
-			resultproperty="jsunittest.returncode"
-			failifexecutionfails="false">
-		    <arg value="www/js/tests/qrunner.js"/>
-		    <arg value="www/js/tests/FewiJsTests.html"/>
-		 </exec>
-		<condition property="jsunittest.returncode" value="1">
-		    <not>
-		        <isset property="jsunittest.returncode"/>
-		    </not>
-		</condition>
-		<condition property="jsunittest.failure">
-            <isfailure code="${jsunittest.returncode}"/>
-        </condition>
-	</target>
-				
-	<target name="jsunittest-warning" if="jsunittest.failure">
-		<echo>WARNING: Javascript unit tests either have failures or simply failed to run</echo>
-	</target>
-	
-
-	
 	<!-- Copies JS files to build directory, minifies if js.minify is set -->
 	<target name="static-content-package">
 		<!-- Copy JS files into build directory -->
@@ -278,7 +251,7 @@
 	
 	
 	<!--war -->
-	<target name="war" depends="unittest,jsunittest,static-content-package">
+	<target name="war" depends="unittest,static-content-package">
 		<echo>Build war file</echo>
 		<copy file="./www/WEB-INF/properties/excelviews.properties" todir="./www/WEB-INF/classes" overwrite="true" />
 		<copy file="./www/WEB-INF/properties/textviews.properties" todir="./www/WEB-INF/classes" overwrite="true" />
@@ -303,14 +276,6 @@
 		
 		<move file="${war.file}" todir="${deploy.dir}" overwrite="true" />
 	</target>
-	
-    <!--deploy-ds -->
-    <target name="deploy-ds" >
-            <echo>Deploy datasource</echo>
-            <copy file="${datasource}" todir="${deploy.dir}" overwrite="true"/>
-            <copy file="${jdbcdriver}" todir="${deploy.dir}" overwrite="true"/>
-    </target>
-	
 	
 	<!-- For development ONLY -->
 	<property name="war.file" value="${project.name}.war" />

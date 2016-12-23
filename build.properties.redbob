@@ -17,10 +17,6 @@ snpdatamodel.dir=dist
 lib_java_fe.dir=dist
 global_config.dir=mgiconfig/web
 
-<!--data sources -->
-datasource=postgresDev-local-ds.xml
-jdbcdriver=sharelib/postgresql-9.0-801.jdbc4.jar
-
 <!--config files -->
 #config.file=fewi.properties.default
 web_xml.file=web.xml.public

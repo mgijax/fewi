@@ -18,10 +18,6 @@ snpdatamodel.dir=/home/jsb/hpo/pub/snpdatamodel/dist/
 lib_java_fe.dir=/home/jsb/hpo/pub/lib/java/
 global_config.dir=/home/jsb/hpo/pub/mgiconfig/web
 
-<!--data sources -->
-datasource=postgresDev-local-ds.xml
-jdbcdriver=sharelib/postgresql-9.0-801.jdbc4.jar
-
 <!--config files -->
 #onfig.file=fewi.properties.bluebob
 web_xml.file=web.xml.public
