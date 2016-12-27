@@ -40,7 +40,7 @@
 						<div class="extra closed second">
 
 							<br/>
-							<table>
+							<table id="humanDiseaseTable">
 								<tbody>
 									<tr>
 										<th></th>

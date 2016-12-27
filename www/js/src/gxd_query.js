@@ -881,8 +881,8 @@ var interceptSubmit = function(e) {
 		newQueryState = true;
 		if(typeof resultsTabs != 'undefined')
 		{
-			// go to genes tab for differential, and results tab for anything else
-			if(currentQF=="differential") resultsTabs.selectTab(0);
+			// go to tissue x gene matrix for differential, and results tab for anything else
+			if(currentQF=="differential") resultsTabs.selectTab(5);
 			else resultsTabs.selectTab(2);
 		}
 		if(gxdDataTable != undefined)

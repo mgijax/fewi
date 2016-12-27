@@ -117,6 +117,14 @@
 											</div>
 										</c:if>
 
+										<c:if test="${not empty humanHomolog.uniProtIDs}">
+											<div style="float: left; margin-right: 20px;">UniProt:
+												<c:forEach var="uniProt" items="${humanHomolog.uniProtIDs}" varStatus="uniProtStatus">
+													<a href="${fn:replace(externalUrls.UniProt2, '@@@@', uniProt.accID)}" target="_blank">${uniProt.accID}</a><c:if test="${!uniProtStatus.last}">, </c:if>
+												</c:forEach>
+											</div>
+										</c:if>
+
 										<br style="clear:left;"/>
 									</div>
 								</li>

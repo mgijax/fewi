@@ -122,15 +122,92 @@ if (!YAHOO.lang.isUndefined(snpqry.toggleImg)){
 	YAHOO.util.Event.addListener("toggleImg", "click", snpqry.toggleQF);
 }
 
-snpqry.interceptSubmit = function(e) {
-	YAHOO.util.Event.preventDefault(e);	
-	snpqry.toggleQF(function(){
-		var form = YAHOO.util.Dom.get('snpQueryForm');
-		form.submit();
-	});
+// get the ID ('form1' or 'form2') of the active form
+snpqry.getActiveFormID = function() {
+	// the 'aria-controls' attribute of the active tab will be like 'tabs-1' or 'tabs-2'
+    return 'form' + $(".ui-tabs-active").attr('aria-controls').split('-')[1];
 };
 
-YAHOO.util.Event.addListener("snpQueryForm", "submit", snpqry.interceptSubmit);
+// hide the error rows (if visible)
+snpqry.hideErrors = function() {
+	$('#error1').removeClass("shown");
+	$('#error1').addClass("hidden");
+	$('#error2').removeClass("shown");
+	$('#error2').addClass("hidden");
+};
+
+$.fn.scrollView = function () {
+    return this.each(function () {
+        $('html, body').animate({
+            scrollTop: $(this).offset().top
+        }, 1000);
+    });
+}
+
+// show the error message on the current form, presenting the given message
+snpqry.showError = function(msg) {
+	var formNumber = snpqry.getActiveFormID().replace('form', '');
+	$('#error' + formNumber).html(msg);
+	$('#error' + formNumber).removeClass('hidden');
+	$('#error' + formNumber).addClass('shown');
+	
+	// now scroll to the error message, if it's off the screen
+	var err = document.getElementById('error' + formNumber);
+	var errTop = err.getBoundingClientRect().top;
+	var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+	if ((errTop < 0) || (errTop > viewportHeight)) {
+		$('#querytabs').scrollView();
+	}
+};
+
+// Validate the query form.  If no errors, return true and hide error DIV.
+// If errors, update and show the error DIV, then return false.
+// show error DIV on the form
+snpqry.validateQF = function(e) {
+	var formID = snpqry.getActiveFormID();
+	
+	// 1. if on region tab, must specify chromosome and coordinates
+	if (formID == 'form2') {
+		var hasChrom = ($('#chromosomeDropList').val().length != 0);
+		var hasCoord = ($('[name=coordinate]').val().trim().length != 0);
+		
+		if (!hasChrom || !hasCoord) {
+			snpqry.showError('Your query is missing required parameters.  When searching by region, you must specify both Chromosome and Genome Coordinates.');
+			return false;
+		}
+	}
+	
+	// 2. if choose same/different display, must specify reference strain
+	var sameDiff = $('#' + formID + ' [name=searchBySameDiff]:checked').val();
+	var refStrain = $('#' + formID + ' [name=referenceStrain]').val();
+	if ((refStrain.length == 0) && (sameDiff.length != 0)) {
+		snpqry.showError("Your query is missing a required parameter.  To show only 'same' or 'different' SNPs, you must select a Reference Strain.");
+		return false;
+	}
+
+	// 3. if on gene tab, must specify something in nomenclature field
+	if (formID == 'form1') {
+		if ($('#nomen').val().trim().length == 0) {
+			snpqry.showError('Your query is missing a required parameter. When searching by gene, you must specify a value for Gene Symbol/Name.');
+			return false;
+		}
+	}
+
+	return true;
+};
+
+snpqry.interceptSubmit = function(e) {
+	YAHOO.util.Event.preventDefault(e);	
+	if (snpqry.validateQF(e)) {
+		snpqry.toggleQF(function(){
+			var form = YAHOO.util.Dom.get(snpqry.getActiveFormID());
+			form.submit();
+		});
+	}
+};
+
+YAHOO.util.Event.addListener("form1", "submit", snpqry.interceptSubmit);
+YAHOO.util.Event.addListener("form2", "submit", snpqry.interceptSubmit);
 
 snpqry.resetQF = function (e) {
 	var errors = YAHOO.util.Dom.getElementsByClassName('qfError');		
@@ -138,6 +215,7 @@ snpqry.resetQF = function (e) {
 
 	YAHOO.util.Event.preventDefault(e); 
 
+	snpqry.hideErrors();
 	var form = YAHOO.util.Dom.get("form1");
 
 	form.nomen.value = "";

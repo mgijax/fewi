@@ -3,6 +3,10 @@
 <style>
 .left { text-align: left; }
 .font { font-size: 12px; }
+.red { color: red; }
+.noBorder { border: none; }
+.hidden { display: none; }
+.shown { display: block; clear: both; margin-bottom: 5px; text-align: left; }
 .ui-widget-content a { color: -webkit-link; }
 .ui-tabs .ui-tabs-panel { padding: 1em 1.4em 2.3em; }
 </style>
@@ -25,6 +29,7 @@
 		<div id="tabs-1">
 			<form:form id="form1" method="GET" commandName="snpQueryForm" action="${configBean.FEWI_URL}snp/summary">
 				<%@ include file="SNPForm_GeneSubmit.jsp" %><div style="padding-top: 5px;"><span style="margin-left: 10px;" class="label">Search for SNPs by Associated Gene(s)</span> - from ${buildNumber}</div>
+				<div id="error1" class="red noBorder hidden"></div>
 				<table width="100%" class="pad5 borderedTable">
 					<%@ include file="SNPForm_AssociatedGenes.jsp" %>
 					<%@ include file="SNPForm_StrainComparisons.jsp" %>
@@ -36,6 +41,7 @@
 		<div id="tabs-2">
 			<form:form id="form2" method="GET" commandName="snpQueryForm" action="${configBean.FEWI_URL}snp/summary">
 				<%@ include file="SNPForm_LocationSubmit.jsp" %><div style="padding-top: 5px;"><span style="margin-left: 10px;" class="label">Search for SNPs by Genome Region</span> - from ${buildNumber}</div>
+				<div id="error2" class="red noBorder hidden"></div>
 				<table width="100%" class="pad5 borderedTable">
 					<%@ include file="SNPForm_GenomeLocation.jsp" %>
 					<%@ include file="SNPForm_StrainComparisons.jsp" %>

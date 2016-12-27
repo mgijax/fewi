@@ -259,14 +259,29 @@ function updateTreeTitle(emapID) {
 }
 
 function resetTree(selectedNode) {
+	// if we've not yet instantiated the treeView, then 
     // instantiate from the initial data set shipped with the page itself:
-    treeView = new YAHOO.widget.TreeView("treeViewDiv");
-    loaded = false;
-    defaultPath = null;
-    waitForPath = true;
-    fetchDefaultPath(selectedNode);
-    updateTreeTitle(selectedNode);
+    setSelectedNode(selectedNode);
+    if (treeView === null) {
+    	treeView = new YAHOO.widget.TreeView("treeViewDiv");
+    	loaded = false;
+    	defaultPath = null;
+    	waitForPath = true;
+    	fetchDefaultPath(selectedNode);
+    	updateTreeTitle(selectedNode);
+    } else {
+    	// otherwise, just update the existing tree:
+    	// 1. remove highlighting of previously selected term
+    	// 2. highlight the newly selected term
+    	// 3. add the expression result count and link
+
+    	$('#treeViewDiv span').removeClass('bold').removeClass('highlight');
+    	highlightSelectedTerm();
+    }
 }
+
+var lastHighlightedNodes = null;	// set of nodes from last highlighting operation
+var originalTerms = {};				// map of ID -> original term (before highlighting)
 
 function highlightSelectedTerm () {
     // find and highlight all instances of the selected term (the one in the
@@ -320,27 +335,39 @@ function highlightSelectedTerm () {
     }
 
     if ((selectedNodeID == 'EMAPA:25765') || (selectedNodeID.indexOf("EMAPS:25765") == 0)) {
-	var mouseNodes = treeView.getNodesBy(function (node) { return true; });
-	if (mouseNodes) {
-	    var mouseNode;
-	    for (var j = 0; j < mouseNodes.length; j++) {
-	        mouseNode = mouseNodes[j];
-		if ((mouseNode.data.accID == 'EMAPA:25765') ||
-		    (mouseNode.data.accID.indexOf('EMAPS:25765') == 0)) {
-		  if (!mouseNode.data.highlighted) {
-	            mouseNode.data.highlighted = true;
-		    mouseNode.label = '<span class="highlight bold">'
-			+ mouseNode.label + '</span>' + link;
-		  }
+		var mouseNodes = treeView.getNodesBy(function (node) { return true; });
+		if (mouseNodes) {
+		    var mouseNode;
+	    	for (var j = 0; j < mouseNodes.length; j++) {
+	    	    mouseNode = mouseNodes[j];
+				if ((mouseNode.data.accID == 'EMAPA:25765') ||
+			    	(mouseNode.data.accID.indexOf('EMAPS:25765') == 0)) {
+			  		if (!mouseNode.data.highlighted) {
+			    		if (!(mouseNode.data.accID in originalTerms)) {
+			    			originalTerms[mouseNode.data.accID] = mouseNode.label;
+			    		}
+	    	        	mouseNode.data.highlighted = true;
+			    		mouseNode.label = '<span class="highlight bold">' + mouseNode.label + '</span>' + link;
+			  		}
+				}
+	    	}
+	    	treeView.render();
+	    	return;
 		}
-	    }
-	    treeView.render();
-	    return;
-	}
     }
 
+	// remove highights from previously selected nodes
+	if (lastHighlightedNodes != null) {
+		var pNode = null;
+		for (var j = 0; j < lastHighlightedNodes.length; j++) {
+			pNode = lastHighlightedNodes[j];
+			pNode.data.highlighted = false;
+			pNode.label = originalTerms[pNode.data.accID];
+		}
+	}
+	
     if (!selectedNodes) {
-	return;
+		return;
     }
 
     // walk through the nodes and highlight each one that's not already
@@ -348,13 +375,17 @@ function highlightSelectedTerm () {
 
     var node = null;
     for (var i = 0; i < selectedNodes.length; i++) {
-	node = selectedNodes[i];
+		node = selectedNodes[i];
         if (!node.data.highlighted) {
-	    node.data.highlighted = true;
-	    node.label = '<span class="highlight bold">'
-		    + selectedNodes[i].label + '</span>' + link;
-	}
+    		if (!(node.data.accID in originalTerms)) {
+    			originalTerms[node.data.accID] = node.label;
+    		}
+		    node.data.highlighted = true;
+		    node.label = '<span class="highlight bold">' + selectedNodes[i].label + '</span>' + link;
+		}
     }
+    lastHighlightedNodes = selectedNodes;
+    treeView.render();
 }
 
 var selectedNode = null;		// global - node for selected term

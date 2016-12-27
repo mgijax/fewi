@@ -67,6 +67,9 @@ public class GxdLitAgeAssayTypePairTableCount {
     		if (queryForm.getMarker_key() != null) {
     			queryUrl += "&marker_key=" + queryForm.getMarker_key();
     		}
+    		if (queryForm.getMarkerId() != null) {
+    			queryUrl += "&markerId=" + queryForm.getMarkerId();
+    		}
     		
     		return "<a href=\""+ queryUrl.replaceAll("\"", "%22") +"\">" + count + "</a>";
     	}
