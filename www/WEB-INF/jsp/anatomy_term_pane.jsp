@@ -58,7 +58,7 @@
 		  <td class="padded top">
 		    <c:forEach var="parentEdge" items="${term.emapParentEdges}" varStatus="status">
 		    <i>${fn:replace(parentEdge.edgeLabel, "_", "-")}</i>
-		    <a href="${configBean.FEWI_URL}vocab/gxd/anatomy/${parentEdge.parent.primaryId}" onClick="resetPanes('${parentEdge.parent.primaryId}'); return false">${parentEdge.parent.term}</a><br/>
+		    <a href="${configBean.FEWI_URL}vocab/gxd/anatomy/${parentEdge.parent.primaryId}" onClick="resetPanes('${parentEdge.parent.primaryId}', true); return false">${parentEdge.parent.term}</a><br/>
 		    </c:forEach>
 		  </td>
 		</tr>
