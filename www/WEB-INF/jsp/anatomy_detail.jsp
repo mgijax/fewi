@@ -173,9 +173,9 @@ function setDetailDiv(s) {
     return;
 }
 
-function fetchDetailDiv(selectedNode) {
-	log('fetchDetailDiv(' + selectedNode + ')');
-    var sUrl = "${configBean.FEWI_URL}vocab/gxd/anatomy/termPane/" + selectedNode;
+function fetchDetailDiv(selectedNodeID) {
+	log('fetchDetailDiv(' + selectedNodeID + ')');
+    var sUrl = "${configBean.FEWI_URL}vocab/gxd/anatomy/termPane/" + selectedNodeID;
 
     fetchAndCall(sUrl, setDetailDiv);
     return;
@@ -183,11 +183,12 @@ function fetchDetailDiv(selectedNode) {
 
 function setGxdResultCount(s) {
     gxdResultCount = s;
+    highlightSelectedTerm();
     return
 }
 
-function fetchResultCount(selectedNode) {
-    var sUrl = "${configBean.FEWI_URL}gxd/results/totalCount?structureID=" + selectedNode;
+function fetchResultCount(selectedNodeID) {
+    var sUrl = "${configBean.FEWI_URL}gxd/results/totalCount?structureID=" + selectedNodeID;
     fetchAndCall(sUrl, setGxdResultCount);
 }
 
@@ -207,9 +208,9 @@ function setDefaultPath(path) {
     return;
 }
 
-function fetchDefaultPath(selectedNode) {
-	log('fetchDefaultPath(' + selectedNode + ')');
-    var sUrl = "${configBean.FEWI_URL}vocab/gxd/anatomy/defaultPath/" + selectedNode;
+function fetchDefaultPath(selectedNodeID) {
+	log('fetchDefaultPath(' + selectedNodeID + ')');
+    var sUrl = "${configBean.FEWI_URL}vocab/gxd/anatomy/defaultPath/" + selectedNodeID;
     fetchAndCall(sUrl, setDefaultPath);
     return;
 }
@@ -255,11 +256,13 @@ function updateTreeTitle(emapID) {
     }
 }
 
-function resetTree(selectedNode, fullRebuild) {
+function resetTree(snID, fullRebuild) {
 	// if we've not yet instantiated the treeView, then 
     // instantiate from the initial data set shipped with the page itself:
-    log('resetTree(' + selectedNode + ', ' + fullRebuild + ')');
-    setSelectedNode(selectedNode);
+    log('resetTree(' + snID + ', ' + fullRebuild + ')');
+    selectedNodeID = snID;
+//    setSelectedNode(snID);
+    gxdResultCount = null;
     if ((treeView === null) || (fullRebuild === true)) {
 		log(' - in if');
     	treeView = new YAHOO.widget.TreeView("treeViewDiv");
@@ -267,8 +270,8 @@ function resetTree(selectedNode, fullRebuild) {
     	defaultPath = null;
     	waitForPath = true;
     	alreadyScrolled = false;
-    	fetchDefaultPath(selectedNode);
-    	updateTreeTitle(selectedNode);
+    	fetchDefaultPath(snID);
+    	updateTreeTitle(snID);
     } else {
     	// otherwise, just update the existing tree:
     	// 1. remove highlighting of previously selected term
@@ -337,6 +340,7 @@ function highlightSelectedTerm () {
         link = '</a>' + spaces + '(' + countStr + ' ' + resultText + ')';
     }
 
+/*
     if ((selectedNodeID == 'EMAPA:25765') || (selectedNodeID.indexOf("EMAPS:25765") == 0)) {
 		var mouseNodes = treeView.getNodesBy(function (node) { return true; });
 		if (mouseNodes) {
@@ -358,7 +362,7 @@ function highlightSelectedTerm () {
 	    	return;
 		}
     }
-
+*/
 	// remove highights from previously selected nodes
 	if (lastHighlightedNodes != null) {
 		var pNode = null;
@@ -408,7 +412,7 @@ function isLoaded() {
     // return true if the selected node has been populated dynamically and
     // has had its node constructed in the YUI tree view
 
-    if (selectedNode.getEl()) {
+    if ((selectedNode != null) && (selectedNode.getEl()) ) {
 	loaded = true;
 	clearInterval(checkNumber);	// stop checking
 	scrollTreeViewDiv(treeView);	// we can scroll the tree now
