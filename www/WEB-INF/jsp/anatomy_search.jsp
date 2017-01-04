@@ -29,7 +29,7 @@ ${resultCount} term<c:if test="${fn:length(results) > 1}">s</c:if>, sorted by be
 <div id="searchResults" style="text-align: left; padding-left: 2px; padding-right: 2px">
 <c:forEach var="result" items="${results}">
 <div style="padding-bottom: 8px">
-<a href="${configBean.FEWI_URL}vocab/gxd/anatomy/${result.accID}" onClick="resetPanes('${result.accID}'); return false;">${result.highlightedStructure}</a>
+<a href="${configBean.FEWI_URL}vocab/gxd/anatomy/${result.accID}" onClick="resetPanes('${result.accID}', true); return false;">${result.highlightedStructure}</a>
 <c:if test="${not result.matchedStructure}">(${result.highlightedSynonym})</c:if>
 <span class="small">${result.stageRange}</span>
 </div>

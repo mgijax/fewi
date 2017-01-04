@@ -435,7 +435,7 @@ public class VocabularyController {
 
 	//String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
 	StringBuffer dropdown = new StringBuffer();
-	dropdown.append ("<form id='stageLinkerForm'><select name='stageLinker' id='stageLinker' onChange='if (stageLinker.value != \"\") { resetPanes(stageLinker.value); }'></form>");
+	dropdown.append ("<form id='stageLinkerForm'><select name='stageLinker' id='stageLinker' onChange='if (stageLinker.value != \"\") { resetPanes(stageLinker.value, true); }'></form>");
 	dropdown.append ("<option value=''>Select developmental stage</option>");
 
 	VocabTerm emapaTerm = null;

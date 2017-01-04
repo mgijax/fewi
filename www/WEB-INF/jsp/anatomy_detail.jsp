@@ -107,6 +107,7 @@ var pathCheck = null;	// ID of interval-based check for defaultPath
 var selectedNodeID = null;	// ID of the currently highlighted node
 var alreadyScrolled = false;	// have we already scrolled for this term?
 var gxdResultCount = null;	// count of GXD results for selectedNodeID
+var logging = false;		// enable logging to browser console?
 
 function numberWithCommas(x) {
     var parts = x.toString().split(".");
@@ -116,10 +117,7 @@ function numberWithCommas(x) {
 
 function log(msg) {
     // log a message to the browser console
- 
-    setTimeout(function() {
-        throw new Error(msg);
-    }, 0);
+    if (logging == true) { console.log(msg); }
 }
 
 function fetchAndCall(url, callbackFn) {
@@ -175,9 +173,9 @@ function setDetailDiv(s) {
     return;
 }
 
-function fetchDetailDiv(selectedNode) {
-    var sUrl = "${configBean.FEWI_URL}vocab/gxd/anatomy/termPane/" +
-	selectedNode;
+function fetchDetailDiv(selectedNodeID) {
+	log('fetchDetailDiv(' + selectedNodeID + ')');
+    var sUrl = "${configBean.FEWI_URL}vocab/gxd/anatomy/termPane/" + selectedNodeID;
 
     fetchAndCall(sUrl, setDetailDiv);
     return;
@@ -185,34 +183,34 @@ function fetchDetailDiv(selectedNode) {
 
 function setGxdResultCount(s) {
     gxdResultCount = s;
+    highlightSelectedTerm();
     return
 }
 
-function fetchResultCount(selectedNode) {
-    var sUrl = "${configBean.FEWI_URL}gxd/results/totalCount?structureID=" +
-	selectedNode;
+function fetchResultCount(selectedNodeID) {
+    var sUrl = "${configBean.FEWI_URL}gxd/results/totalCount?structureID=" + selectedNodeID;
     fetchAndCall(sUrl, setGxdResultCount);
 }
 
 function setDefaultPath(path) {
+	log('setDefaultPath(' + path + ')');
     if (path === null) {
-	log("Could not get default path; tree cannot be created");
-	return;
+		log("Could not get default path; tree cannot be created");
+		return;
     }
 
     if (!defaultPath) {
-	defaultPath = path;
-	waitForPath = false;
+		defaultPath = path;
+		waitForPath = false;
     }
 
     fetchRootNode(defaultPath[0]);
     return;
 }
 
-function fetchDefaultPath(selectedNode) {
-    var sUrl = "${configBean.FEWI_URL}vocab/gxd/anatomy/defaultPath/" +
-	selectedNode;
-
+function fetchDefaultPath(selectedNodeID) {
+	log('fetchDefaultPath(' + selectedNodeID + ')');
+    var sUrl = "${configBean.FEWI_URL}vocab/gxd/anatomy/defaultPath/" + selectedNodeID;
     fetchAndCall(sUrl, setDefaultPath);
     return;
 }
@@ -258,23 +256,30 @@ function updateTreeTitle(emapID) {
     }
 }
 
-function resetTree(selectedNode) {
+function resetTree(snID, fullRebuild) {
 	// if we've not yet instantiated the treeView, then 
     // instantiate from the initial data set shipped with the page itself:
-    setSelectedNode(selectedNode);
-    if (treeView === null) {
+    log('resetTree(' + snID + ', ' + fullRebuild + ')');
+    selectedNodeID = snID;
+//    setSelectedNode(snID);
+    gxdResultCount = null;
+    if ((treeView === null) || (fullRebuild === true)) {
+		log(' - in if');
     	treeView = new YAHOO.widget.TreeView("treeViewDiv");
     	loaded = false;
     	defaultPath = null;
     	waitForPath = true;
-    	fetchDefaultPath(selectedNode);
-    	updateTreeTitle(selectedNode);
+    	alreadyScrolled = false;
+    	fetchDefaultPath(snID);
+    	updateTreeTitle(snID);
     } else {
     	// otherwise, just update the existing tree:
     	// 1. remove highlighting of previously selected term
     	// 2. highlight the newly selected term
     	// 3. add the expression result count and link
+    	// 4. expand the selected term to show its children
 
+		log(' - in else');
     	$('#treeViewDiv span').removeClass('bold').removeClass('highlight');
     	highlightSelectedTerm();
     }
@@ -286,7 +291,8 @@ var originalTerms = {};				// map of ID -> original term (before highlighting)
 function highlightSelectedTerm () {
     // find and highlight all instances of the selected term (the one in the
     // term detail pane) in the YUI tree view
-
+	log('highlightSelectedTerm');
+	
     // find instances of the selected node
 
     var selectedNodes = treeView.getNodesBy(function (node) {
@@ -334,6 +340,7 @@ function highlightSelectedTerm () {
         link = '</a>' + spaces + '(' + countStr + ' ' + resultText + ')';
     }
 
+/*
     if ((selectedNodeID == 'EMAPA:25765') || (selectedNodeID.indexOf("EMAPS:25765") == 0)) {
 		var mouseNodes = treeView.getNodesBy(function (node) { return true; });
 		if (mouseNodes) {
@@ -355,7 +362,7 @@ function highlightSelectedTerm () {
 	    	return;
 		}
     }
-
+*/
 	// remove highights from previously selected nodes
 	if (lastHighlightedNodes != null) {
 		var pNode = null;
@@ -382,6 +389,7 @@ function highlightSelectedTerm () {
     		}
 		    node.data.highlighted = true;
 		    node.label = '<span class="highlight bold">' + selectedNodes[i].label + '</span>' + link;
+		    node.expand();
 		}
     }
     lastHighlightedNodes = selectedNodes;
@@ -392,6 +400,7 @@ var selectedNode = null;		// global - node for selected term
 
 function setSelectedNode(node) {
     // remember the given node as being selected
+    log('setSelectedNode(' + node + ')');
     selectedNode = node;
 }
 
@@ -403,7 +412,7 @@ function isLoaded() {
     // return true if the selected node has been populated dynamically and
     // has had its node constructed in the YUI tree view
 
-    if (selectedNode.getEl()) {
+    if ((selectedNode != null) && (selectedNode.getEl()) ) {
 	loaded = true;
 	clearInterval(checkNumber);	// stop checking
 	scrollTreeViewDiv(treeView);	// we can scroll the tree now
@@ -424,6 +433,7 @@ function scrollOnceLoaded(selectedNode) {
 function scrollTreeViewDiv (treeView) {
     // scroll the treeview object to show the selected node
     
+    log('scrollTreeViewDiv(' + treeView + ') -> alreadyScrolled: ' + alreadyScrolled);
     if (alreadyScrolled) { return; }
 
     var selectedNodes = treeView.getNodesBy(function (node) {
@@ -479,12 +489,19 @@ function nodeLoader2(node, fnLoadComplete) {
     if (defaultPath) {
 	toExpand = defaultPath.pop();
     }
+    log('node = ' + node);
+    log('defaultPath = ' + defaultPath);
+    log('nodeLoader2.toExpand = ' + toExpand);
+
     var callback = {
 	success: function(oResponse) {
 	    var oResults = eval("(" + oResponse.responseText + ")");
 	    var children = eval(oResults.children);
 	    var selectedTerm = null;
 
+		log('oResults: ' + oResults);
+		log('children.length: ' + children.length);
+		
 	    // due to the oddities of asynchronous processing, we sometimes
 	    // end up trying to add duplicate nodes (presumably due to
 	    // duplicate requests/responses from retries).  We only want to
@@ -505,7 +522,9 @@ function nodeLoader2(node, fnLoadComplete) {
 
 		childNode = new YAHOO.widget.TextNode(children[i], node);
 
-		if (childNode.data.accID == toExpand) {
+		log(' - loaded ' + childNode.data.accID);
+		if ((childNode.data.accID == toExpand) || (childNode.data.accID == selectedNodeID)) {
+			log(' - expanding ' + toExpand);
 		    childNode.data.pathToOpen = defaultPath;
 		    childNode.data.openByDefault = true;
 		    scrollTreeViewDiv(treeView);
@@ -516,6 +535,7 @@ function nodeLoader2(node, fnLoadComplete) {
 	    oResponse.argument.fnLoadComplete();
 	    },
 	failure: function(oResponse) {
+	    log("Failed to get children from " + sUrl);
 	    YAHOO.log("Failed to get children from " + sUrl, "info", "mgi");
 	    oReponse.argument.fnLoadComplete();
 	    },
@@ -542,7 +562,7 @@ function fillSearchPane(contents) {
 
 	    var emapaID = contents.match(/EMAPA:[0-9]+/);
 	    if (emapaID != null) {
-		resetPanes(emapaID);
+		resetPanes(emapaID, true);
 	    }
 		
 	}
@@ -571,7 +591,7 @@ function resetSearch() {
     refreshSearchPane();
 }
 
-function resetPanes(accID) {
+function resetPanes(accID, rebuildTree) {
     // initialize the term detail and tree view panes to show the term with
     // the given accID
 
@@ -580,6 +600,7 @@ function resetPanes(accID) {
     // a different option the next time).  So, we reset the form to erase this
     // flawed memory.
 
+	log('resetPanes(' + accID + ', ' + rebuildTree + ')');
     var stageLinkerForm = null;
     stageLinkerForm = document.getElementById("stageLinkerForm");
     if (stageLinkerForm) {
@@ -590,18 +611,18 @@ function resetPanes(accID) {
     selectedNodeID = accID;
     fetchResultCount(accID);
     fetchDetailDiv(accID);
-    resetTree(accID);
+    resetTree(accID, rebuildTree);
     setBrowserTitle(accID);
     try {
-        window.history.replaceState('foo', 'title',
-	    '${configBean.FEWI_URL}vocab/gxd/anatomy/' + accID);
+        window.history.replaceState('foo', 'title', '${configBean.FEWI_URL}vocab/gxd/anatomy/' + accID);
     } catch (err) {}
     alreadyScrolled = false;
     scrollTreeViewDiv(treeView);
 }
 
 function resizePanes() {
-
+	log('resizePanes()');
+	
 // look up the window's x, y dimensions in a cross-browser way
 var w = window,
     d = document,
@@ -673,7 +694,7 @@ var w = window,
 resizePanes();
 YAHOO.namespace("example.container");
 YAHOO.util.Event.onDOMReady(function () {	
-	resetPanes("${term.primaryId}");
+	resetPanes("${term.primaryId}", true);
 	refreshSearchPane();
 	resizePanes();
 });
