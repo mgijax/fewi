@@ -34,7 +34,11 @@ public class DiseasePortalCondition {
 	public List<String> getIdTokens() {
 
 		input = input.replaceAll("\\#", "");
-		input = input.replaceAll("\\*", "");
+
+//	removed so we can match marker symbols containing asterisks, which makes us miss a single DO synonym.
+//	SME okayed this trade-off:
+//		input = input.replaceAll("\\*", "");
+
 		input = input.replaceAll("[^\\w:\\.\\-\\(\\)\\/\\#\\@\\<\\>\\*]+", " ");
 		input = input.replaceAll("\\^", " ");
 		input = input.replaceAll("\"", " ");
