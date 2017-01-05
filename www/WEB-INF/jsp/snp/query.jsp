@@ -39,6 +39,13 @@
 <script type="text/javascript">
 	snpqry.setQueryFormDisplay(true);
 	snpqry.setQueryFormHeight();
+
+	// need to wait a half-second before wiring up the checkbox updating functions, making sure to
+	// allow time for the tab buttons to be created
+	window.setTimeout(function() {
+		$("#ui-id-1").click(snpqry.updateQF1);
+		$("#ui-id-2").click(snpqry.updateQF2); 
+		}, 500);
 </script>
 
 
