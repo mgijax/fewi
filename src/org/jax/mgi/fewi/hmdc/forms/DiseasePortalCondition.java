@@ -33,7 +33,9 @@ public class DiseasePortalCondition {
 	@JsonIgnore
 	public List<String> getIdTokens() {
 
-		input = input.replaceAll("\\#", "");
+//	removed so we can match marker symbols containing pound signs.  There are currently no IDs with a # sign,
+//	no term synonyms with a # sign, and only one term with a # sign.  (It's a GO term, so doesn't affect HMDC.)
+//		input = input.replaceAll("\\#", "");
 
 //	removed so we can match marker symbols containing asterisks, which makes us miss a single DO synonym.
 //	SME okayed this trade-off:
