@@ -11,12 +11,7 @@ snpqry.setQueryFormDisplay = function(bool) {
 }
 
 snpqry.setQueryFormHeight = function() {
-//    var activeTab = "#form1";
-//    if (YAHOO.util.Dom.get("tabs-1").style.display == "none") {
 	snpqry.qwrapOpenHeight = snpqry.form2Height;
-//    } else {
-//	snpqry.qwrapOpenHeight = snpqry.form1Height;
-//    }
 }
 
 snpqry.getQueryFormHeight = function() {
@@ -247,6 +242,35 @@ snpqry.deselectAll = function() {
 snpqry.selectAll = function() {
 	//$("#wrapper input[type=button]")
 	$("input:checkbox").each(function(){ this.checked = true; });
+};
+
+/* update the strain checkboxes on 'toForm' to match those on 'fromForm'
+*/
+snpqry.updateQF = function(fromForm, toForm) {
+	var fromBoxes = $(fromForm + ' [name=selectedStrains]');
+	var checkedState = {};	// maps from checkbox value to its checked state (true or false)
+	for (var i in fromBoxes) {
+		var box = fromBoxes[i];
+		checkedState[box.value] = box.checked;
+	}
+
+	var toBoxes = $(toForm + ' [name=selectedStrains]');
+	for (var i in toBoxes) {
+		var box = toBoxes[i];
+		if (box.value in checkedState) {
+			box.checked = checkedState[box.value];
+		}
+	}
+};
+
+/* update the strain checkboxes on QF1 (search by gene) to match those on QF2 (search by region) */
+snpqry.updateQF1 = function() {
+	snpqry.updateQF('#form2', '#form1');
+};
+
+/* update the strain checkboxes on QF2 (search by region) to match those on QF1 (search by gene) */
+snpqry.updateQF2 = function() {
+	snpqry.updateQF('#form1', '#form2');
 };
 
 YAHOO.util.Event.addListener("form1", "reset", snpqry.resetQF);
