@@ -247,6 +247,8 @@ snpqry.selectAll = function() {
 /* update the strain checkboxes on 'toForm' to match those on 'fromForm'
 */
 snpqry.updateQF = function(fromForm, toForm) {
+	// first copy the values from the strain-specific checkboxes
+	
 	var fromBoxes = $(fromForm + ' [name=selectedStrains]');
 	var checkedState = {};	// maps from checkbox value to its checked state (true or false)
 	for (var i in fromBoxes) {
@@ -259,6 +261,24 @@ snpqry.updateQF = function(fromForm, toForm) {
 		var box = toBoxes[i];
 		if (box.value in checkedState) {
 			box.checked = checkedState[box.value];
+		}
+	}
+	
+	// then copy the reference strain select
+
+	var fromRefStrain = $(fromForm + ' [name=referenceStrain] option:selected').val()
+	var toRefStrain = $(toForm + ' [name=referenceStrain] option[value="' + fromRefStrain + '"]');
+	if (toRefStrain.length > 0) {
+		toRefStrain[0].selected = true;
+	}
+
+	// finally copy the same/different radio button
+
+	var fromRadioButton = $(fromForm + ' [name=searchBySameDiff]:checked');
+	if (fromRadioButton.length > 0) {
+		var toRadioButton = $(toForm + ' #' + fromRadioButton[0].id);
+		if (toRadioButton.length > 0) {
+			toRadioButton[0].checked = true;
 		}
 	}
 };
