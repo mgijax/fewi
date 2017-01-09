@@ -25,14 +25,3 @@ web_xml.file=web.xml.public
 <!-- JS minification -->
 # comment out to turn off minification
 js.minify=true
-
-<!-- JS Unit test config -->
-# phantomjs runs our unit tests in an emulated WebKit environment, but the implementation is OS specific
-# windows
-#phantomjs.script=phantomjs-1.9.7-windows/phantomjs.exe
-# mac
-#phantomjs.script=phantomjs-1.9.7-macosx/bin/phantomjs
-# linux 64 bit
-phantomjs.script=phantomjs-1.9.7-linux-x86_64/bin/phantomjs
-# linux 32 bit
-#phantomjs.script=phantomjs-1.9.7-linux-i686/bin/phantomjs
