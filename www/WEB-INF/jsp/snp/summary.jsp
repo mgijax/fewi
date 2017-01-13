@@ -153,6 +153,13 @@ width: 1250px;
 	filters.setHistoryManagement('historyModule', handleNavigation);
 	filters.addFilter('functionClassFilter', 'dbSNP Function Class', 'functionClassFilter', 'functionClassFilter', fewiurl + 'snp/facet/functionClass');
 	filters.registerCallback("pfs", updateRequest);
+
+	// need to wait a half-second before wiring up the checkbox updating functions, making sure to
+	// allow time for the tab buttons to be created
+	window.setTimeout(function() {
+		$("#ui-id-1").click(snpqry.updateQF1);
+		$("#ui-id-2").click(snpqry.updateQF2); 
+		}, 500);
 </script>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
