@@ -40,8 +40,7 @@ public class SolrAlleleKeyHunter extends SolrHunter<Allele> {
         propertyMap.put(SearchConstants.ALL_PHENOTYPE,
     		new SolrPropertyMapper(Arrays.asList(
     				IndexConstants.ALL_PHENO_ID,
-    				IndexConstants.ALL_PHENO_TEXT
-    					),"OR"));
+    				IndexConstants.ALL_PHENO_TEXT),"OR"));
      
         /*
          * Reference searches
