@@ -71,11 +71,20 @@ public class DiseaseController {
 			return mav;
 		}
 
-		return prepareDisease(disease.getPrimaryID(), "disease_detail");
+		return prepareDisease(disease.getPrimaryID(), "disease_browser");
 	}
 
 	@RequestMapping(value="/{diseaseID:.+}", method = RequestMethod.GET)
 	public ModelAndView diseaseDetailByID(@PathVariable("diseaseID") String diseaseID) {
+
+		logger.debug("->diseaseDetailByID started");
+
+		return prepareDisease(diseaseID, "disease_browser");
+	}
+	
+	// TODO - remove this; using old jsp of detail page; using for testing new browser
+	@RequestMapping(value="/old/{diseaseID:.+}", method = RequestMethod.GET)
+	public ModelAndView oldDiseaseDetailByID(@PathVariable("diseaseID") String diseaseID) {
 
 		logger.debug("->diseaseDetailByID started");
 
