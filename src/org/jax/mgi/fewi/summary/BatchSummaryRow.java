@@ -275,7 +275,10 @@ public class BatchSummaryRow {
     	}
     	if (doAnnots != null){
     		for (Annotation annotation :doAnnots) {
-    			doa.add(String.format(noWrap, annotation.getTermID()));
+    			// only keep positive annotations (no NOTs)
+    			if (annotation.getQualifier() == null) {
+    				doa.add(String.format(noWrap, annotation.getTermID()));
+    			}
 			}
     	}
     	return StringUtils.join(doa, "<br/>");
@@ -290,8 +293,11 @@ public class BatchSummaryRow {
     	}
     	if (doAnnots != null){
     		for (Annotation annotation : doAnnots) {
-    			String url = fewiUrl + "disease/" + annotation.getTermID();
-    			doa.add(String.format(noWrap, String.format(urlPattern, url, annotation.getTerm())));
+    			// only keep positive annotations (no NOTs)
+    			if (annotation.getQualifier() == null) {
+    				String url = fewiUrl + "disease/" + annotation.getTermID();
+    				doa.add(String.format(noWrap, String.format(urlPattern, url, annotation.getTerm())));
+    			}
 			}
     	}
     	return StringUtils.join(doa, "<br/>");
