@@ -35,6 +35,7 @@ public class SolrDiseasePortalDiseaseHunter extends SolrHunter<SolrHdpEntityInte
 		returnedFields.add(DiseasePortalFields.TERM_MOUSESYMBOL);
 		returnedFields.add(DiseasePortalFields.TERM_HUMANSYMBOL);
 		returnedFields.add(DiseasePortalFields.DO_ID);
+		returnedFields.add(DiseasePortalFields.OMIM_ID);
 
 		groupFields.put(DiseasePortalFields.TERM_ID, DiseasePortalFields.TERM_ID);
 	}
@@ -74,6 +75,7 @@ public class SolrDiseasePortalDiseaseHunter extends SolrHunter<SolrHdpEntityInte
 			vt.setDiseaseMouseMarkers(((List<String>)doc.getFieldValue(DiseasePortalFields.TERM_MOUSESYMBOL)));
 			vt.setDiseaseHumanMarkers(((List<String>)doc.getFieldValue(DiseasePortalFields.TERM_HUMANSYMBOL)));
 			vt.setDoIds((List<String>)doc.getFieldValue(DiseasePortalFields.DO_ID));
+			vt.setOmimIds((List<String>)doc.getFieldValue(DiseasePortalFields.OMIM_ID));
 
 			// return just the term name for now
 			sr.addResultObjects(vt);

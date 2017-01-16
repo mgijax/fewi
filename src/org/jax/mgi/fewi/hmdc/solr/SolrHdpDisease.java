@@ -13,6 +13,7 @@ public class SolrHdpDisease implements SolrHdpEntityInterface {
 	private List<String> diseaseMouseMarkers;
 	private List<String> diseaseHumanMarkers;
 	private List<String> doIds;
+	private List<String> omimIds;
 	
 	public String getPrimaryId() {
 		return primaryId;
@@ -67,6 +68,13 @@ public class SolrHdpDisease implements SolrHdpEntityInterface {
 		this.doIds = doIds;
 	}
 	
+	public List<String> getOmimIds() {
+		return omimIds;
+	}
+	public void setOmimIds(List<String> omimIds) {
+		this.omimIds = omimIds;
+	}
+
 	@Override
 	public String toString() {
 		return "SolrVocTerm [term=" + term + "]";
