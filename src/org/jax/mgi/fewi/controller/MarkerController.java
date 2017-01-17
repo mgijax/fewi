@@ -33,6 +33,7 @@ import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.RelatedMarker;
 import mgi.frontend.datamodel.Sequence;
 import mgi.frontend.datamodel.SequenceSource;
+import mgi.frontend.datamodel.sort.SmartAlphaComparator;
 
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonGenerationException;
@@ -757,7 +758,7 @@ public class MarkerController {
 	private void setupDiseaseRibbon(ModelAndView mav, Marker marker) {
 		
 		// DiseaseTerm -> DiseaseTermId
-		TreeMap<String, String> sortedDiseaseMapByTerm = new TreeMap<String, String>();
+		TreeMap<String, String> sortedDiseaseMapByTerm = new TreeMap<String, String>(new SmartAlphaComparator<String>());
 		// DiseaseId -> Annotation
 		HashMap<String, Annotation> MouseDOAnnotations = new HashMap<String, Annotation>();
 		for(Annotation a: marker.getDOAnnotations()) {
