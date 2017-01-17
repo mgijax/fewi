@@ -11,6 +11,7 @@
 			<c:set var="showGeneticMap" value="${(not empty marker.preferredCentimorgans) or (not empty marker.preferredCytoband) or (marker.countOfMappingExperiments > 0) or (not empty qtlIDs) or (not empty marker.aliases)}" />
 			
 			<c:set var="geneticMapExtra" value="${not empty qtlIDs or marker.countOfMappingExperiments > 0 or not empty marker.aliases or hasMiniMap}" />
+			<c:set var="showLocationNote" value="${not empty marker.locationNote}" />
 
 			<c:set var="arrowstate" value="hdExpand" />
 			<c:set var="extrastate" value="" />
@@ -136,6 +137,17 @@
 									<c:if test="${foundOne > 0}"> | </c:if>
 									<a href="${ncbiMapViewerUrl}" target="_new">NCBI</a>
 								</c:if>
+							</div>
+						</li>
+					</c:if>
+
+					<c:if test="${showLocationNote}">
+						<li class="extra closed">
+							<div class="label">
+								Location
+							</div>
+							<div class="value">
+								${marker.locationNote}
 							</div>
 						</li>
 					</c:if>
