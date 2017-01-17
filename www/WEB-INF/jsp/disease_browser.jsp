@@ -92,12 +92,14 @@
         ${synonym.synonym}<c:if test="${!status.last}">; </c:if>
       </c:forEach>
     </c:if><br/>
-    <c:if test="${not empty disease.vocabTerm.secondaryIds}">
+    <c:if test="${not empty disease.orderedSecondaryIDs}">
       <span class="bold">Alt IDs:</span>
-      <c:forEach var="id" items="${disease.vocabTerm.secondaryIds}" varStatus="status">
+      <c:forEach var="id" items="${disease.orderedSecondaryIDs}" varStatus="status">
         ${id.accID}<c:if test="${!status.last}">, </c:if>
       </c:forEach>
     </c:if><br/>
+
+
     </div>
   </div>
   <br>
