@@ -89,15 +89,19 @@
     </span><br/>  
     <c:if test="${not empty disease.diseaseSynonyms}">
       <span class="bold">Synonyms:</span>
+      <span id="diseaseSynonym">
       <c:forEach var="synonym" items="${disease.diseaseSynonyms}" varStatus="status">
-        <span id="diseaseSynonym">${synonym.synonym}<c:if test="${!status.last}">; </c:if></span>
+        ${synonym.synonym}<c:if test="${!status.last}">; </c:if>
       </c:forEach>
+      </span>
     </c:if><br/>
     <c:if test="${not empty disease.orderedSecondaryIDs}">
       <span class="bold">Alt IDs:</span>
+      <span id="diseaseSecondaryIDs">
       <c:forEach var="id" items="${disease.orderedSecondaryIDs}" varStatus="status">
-        <span id="diseaseSecondaryIDs">${id.accID}<c:if test="${!status.last}">, </c:if></span>
+        ${id.accID}<c:if test="${!status.last}">, </c:if>
       </c:forEach>
+      </span>
     </c:if><br/>
     </div>
   </div>
