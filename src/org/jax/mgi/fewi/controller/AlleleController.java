@@ -1450,6 +1450,7 @@ public class AlleleController {
 		mav.addObject("genotype",genotype);
 		mav.addObject("mpSystems", genotype.getMPSystems());
 
+/*
 		for (GenotypeDisease gd : genotype.getDiseases()) {
 			logger.info(" found disease: "+gd.getTerm());
 			for(GenotypeDiseaseReference gr : gd.getReferences()) {
@@ -1459,6 +1460,7 @@ public class AlleleController {
 		if(genotype.hasPrimaryImage()) {
 			logger.info(" has Image: "+genotype.getPrimaryImage().getMgiID());
 		}
+*/
 		mav.addObject("hasDiseaseModels", genotype.getDiseases().size()>0);
 		mav.addObject("hasImage",genotype.hasPrimaryImage());
 		mav.addObject("counter", request.getParameter("counter") );
