@@ -108,6 +108,7 @@ td.outline { border: 1px solid black; }
 				<tr class='resultsHeaderYellow'>
 					<td colspan='2' class='resultsHeader outline padded' style='align:left'><div align='left'>Mouse Models of Human Disease</div></td>
 					<td class='resultsHeader outline padded'>DO ID</td>
+					<td class='resultsHeader outline padded'>OMIM ID(s)</td>
 					<td class='resultsHeader outline padded'>Ref(s)</td>
 				</tr>
 				<c:forEach var="disease" items="${genotype.diseases}" varStatus="diseaseStatus">
@@ -125,6 +126,11 @@ td.outline { border: 1px solid black; }
 						</td>
 						<td class="outline padded">
 							<a class='MP' target="_blank" href="http://www.disease-ontology.org/?id=${disease.termID}">${disease.termID}</a>
+						</td>
+						<td class="outline padded">
+							<c:forEach var="omimId" items="${disease.omimIds}">
+								${omimId}<br>
+							</c:forEach>
 						</td>
 						<td class="outline padded">
 							<c:forEach var="reference" items="${disease.references}" varStatus="refStatus">
