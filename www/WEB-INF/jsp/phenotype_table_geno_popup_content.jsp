@@ -129,7 +129,7 @@ td.outline { border: 1px solid black; }
 						</td>
 						<td class="outline padded">
 							<c:forEach var="omimId" items="${disease.omimIds}">
-								${omimId}<br>
+								<a class='MP' target="_blank" href="http://www.omim.org/entry/${omimId}">OMIM:${omimId}</a><br>
 							</c:forEach>
 						</td>
 						<td class="outline padded">
