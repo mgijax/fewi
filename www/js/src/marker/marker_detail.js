@@ -140,7 +140,10 @@
 			}
 		});
 		
-		loadMinimap();
+		try {
+			// if no minimap for this page, degrade gracefully
+			loadMinimap();
+		} catch (e) {};
 
 	});
 
