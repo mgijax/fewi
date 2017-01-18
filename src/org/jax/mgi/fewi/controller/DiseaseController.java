@@ -8,6 +8,9 @@ import org.jax.mgi.fewi.finder.DiseaseFinder;
 import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.util.link.IDLinker;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,69 +42,32 @@ public class DiseaseController {
 	//--------------------------------------//
 	// Disease Detail by Disease Key
 	//--------------------------------------//
-	@RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
-	public ModelAndView diseaseDetailByKey(@PathVariable("dbKey") String dbKey) {
-		logger.debug ("-> diseaseDetailByKey started");
-
-		// find the requested disease by database key
-
-		SearchResults<Disease> searchResults = diseaseFinder.getDiseaseByKey(dbKey);
-		List<Disease> diseaseList = searchResults.getResultObjects();
-
-		// should only be one.  error condition if not.
-
-		if (diseaseList == null) {
-			ModelAndView mav = new ModelAndView("error");
-			mav.addObject ("errorMsg", "No Disease Found");
-			return mav;
-		} else if (diseaseList.size() < 1) {
-			ModelAndView mav = new ModelAndView("error");
-			mav.addObject ("errorMsg", "No Disease Found");
-			return mav;
-		} else if (diseaseList.size() > 1) {
-			ModelAndView mav = new ModelAndView("error");
-			mav.addObject ("errorMsg", "Non-Unique Disease Key Found");
-			return mav;
-		}
-
-		Disease disease = diseaseList.get(0);
-		if (disease == null) {
-			ModelAndView mav = new ModelAndView("error");
-			mav.addObject ("errorMsg", "No Disease Found");
-			return mav;
-		}
-
-		return prepareDisease(disease.getPrimaryID(), "disease_browser");
-	}
 
 	@RequestMapping(value="/{diseaseID:.+}", method = RequestMethod.GET)
-	public ModelAndView diseaseDetailByID(@PathVariable("diseaseID") String diseaseID) {
+	public ModelAndView diseaseBrowserByID(
+			HttpServletRequest request,
+			@PathVariable("diseaseID") String diseaseID) {
 
-		logger.debug("->diseaseDetailByID started");
+		logger.debug("->diseaseBrowserByID started");
+		
+		// handle requests for a specific summary tab
+		String openTab = request.getParameter("openTab");
 
-		return prepareDisease(diseaseID, "disease_browser");
+		return prepareDisease(diseaseID, "disease_browser", openTab);
 	}
 	
-	// TODO - remove this; using old jsp of detail page; using for testing new browser
-	@RequestMapping(value="/old/{diseaseID:.+}", method = RequestMethod.GET)
-	public ModelAndView oldDiseaseDetailByID(@PathVariable("diseaseID") String diseaseID) {
-
-		logger.debug("->diseaseDetailByID started");
-
-		return prepareDisease(diseaseID, "disease_detail");
-	}
-
 	@RequestMapping(value="/models/{diseaseID:.+}", method = RequestMethod.GET)
 	public ModelAndView diseaseModelsByID(@PathVariable("diseaseID") String diseaseID) {
 
 		logger.debug("->diseaseModelsByID started");
 
-		return prepareDisease(diseaseID, "disease_models");
+		return prepareDisease(diseaseID, "disease_models", "");
 	}
 
 	// code shared to send back a disease detail page, regardless of
 	// whether the initial link was by disease ID or by database key
-	private ModelAndView prepareDisease (String diseaseID, String view) {
+	private ModelAndView prepareDisease (String diseaseID, String view, String openTab) {
+System.out.println("-------open tab=" + openTab);
 
 		List<Disease> diseaseList = diseaseFinder.getDiseaseByID(diseaseID);
 		// there can be only one...
@@ -127,6 +93,9 @@ public class DiseaseController {
 		// add an IDLinker to the mav for use at the JSP level
 		mav.addObject("idLinker", idLinker);
 
+		// add open tab value to the mav for use at the JSP level
+		mav.addObject("openTab", openTab);
+
 		// add a pre-computed link for the disease ID
 		mav.addObject("linkOut", idLinker.getLink(disease.getLogicalDB(),
 				disease.getPrimaryID(), disease.getPrimaryID() ) );
@@ -138,4 +107,20 @@ public class DiseaseController {
 
 		return mav;
 	}
+
+
+////////// TODO - remove this; using old jsp of detail page; using for testing new browser
+	@RequestMapping(value="/old/{diseaseID:.+}", method = RequestMethod.GET)
+	public ModelAndView oldDiseaseDetailByID(@PathVariable("diseaseID") String diseaseID) {
+
+		logger.debug("->diseaseDetailByID started");
+
+		return prepareDisease(diseaseID, "disease_detail", "");
+	}
+
+
+
+
+
+
 }
