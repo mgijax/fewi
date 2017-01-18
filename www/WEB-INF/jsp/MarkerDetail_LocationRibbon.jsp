@@ -48,16 +48,7 @@
 							</c:if>
 
 							<c:if test="${(empty marker.preferredCoordinates and empty vegaGenomeBrowserUrl and empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty gbrowseUrl and empty jbrowseUrl)}">
-								<c:if test="${not showLocationNote}">
-									<span style="font-style: italic;font-size: smaller;">Genome coordinates not available</span>
-								</c:if>
-								<c:if test="${showLocationNote}">
-									<c:set var="locationNoteTeaser" value="${fn:split(marker.locationNote, '.')[0]}."/>
-									<span class="extra" style="font-size: smaller;">${locationNoteTeaser}
-										<c:if test="${locationNoteTeaser != locationNote}">...</c:if>
-									</span>
-									<span class="extra" style="display: none; font-size: smaller;">${marker.locationNote}</span>
-								</c:if>
+								<span style="font-style: italic;font-size: smaller;">Genome coordinates not available</span>
 							</c:if>
 						</div>
 					</li>
@@ -150,6 +141,13 @@
 						</li>
 					</c:if>
 
+					<c:if test="${showLocationNote}">
+						<li class="extra closed">
+							<div class="value" style="font-size: smaller; margin-left: 20.2em;">
+								${marker.locationNote}
+							</div>
+						</li>
+					</c:if>
 				</ul>
 			</section>
 
