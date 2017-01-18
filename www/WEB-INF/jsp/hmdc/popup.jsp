@@ -7,11 +7,11 @@
 	<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 	<link rel="stylesheet" href="//jqueryui.com/jquery-wp-content/themes/jqueryui.com/style.css">
-	<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/bootstrap/dist/css/bootstrap.css" />
-	<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/bootstrap/spacelab/bootstrap.min.css" />
-	<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/ng-dialog/css/ngDialog.min.css" />
-	<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/ng-dialog/css/ngDialog-theme-default.css" />
-	<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/hmdc/app/components/bower_components/ng-cells/dist/0.4.0/ng-cells.css" />
+	<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/bower_components/bootstrap/dist/css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/bower_components/bootstrap/spacelab/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/bower_components/ng-dialog/css/ngDialog.min.css" />
+	<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/bower_components/ng-dialog/css/ngDialog-theme-default.css" />
+	<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/bower_components/ng-cells/dist/0.4.0/ng-cells.css" />
 	<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/css/hmdc/search.css" />
 	<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/css/hmdc/popup.css" />
 </c:if>

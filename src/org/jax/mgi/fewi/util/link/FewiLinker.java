@@ -55,7 +55,6 @@ public class FewiLinker {
 		keyUrlMap.put(ObjectTypes.ASSAY, baseUrl +"assay/key/%s");
 		keyUrlMap.put(ObjectTypes.ANTIBODY, baseUrl +"antibody/key/%s");
 		keyUrlMap.put(ObjectTypes.MAPPING, baseUrl +"mapping/key/%s");
-		keyUrlMap.put(ObjectTypes.DISEASE, baseUrl +"disease/key/%s");
 		keyUrlMap.put(ObjectTypes.HOMOLOGY, baseUrl +"homology/key/%s");
 		keyUrlMap.put(ObjectTypes.MARKER_CLUSTER, baseUrl +"homology/key/%s");
 

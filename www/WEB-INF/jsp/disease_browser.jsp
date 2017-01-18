@@ -13,10 +13,17 @@
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 <%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
-<title>${disease.disease} Disease Ontology Browserr - ${disease.primaryID}</title>
+<title>${disease.disease} Disease Ontology Browser - ${disease.primaryID}</title>
 
-<meta name="description" content="<c:choose><c:when test="${empty disease.mouseHumanGroup and empty disease.mouseOnlyGroup and empty disease.humanOnlyGroup}">There are currently no human or mouse genes associated with this disease in the MGI database.</c:when><c:otherwise>Mutations in human and/or mouse homologs are associated with this disease.</c:otherwise></c:choose><c:if test="${not empty disease.diseaseSynonyms}"> Synonyms: <c:forEach var="synonym" items="${disease.diseaseSynonyms}" varStatus="status">${synonym.synonym}<c:if test="${!status.last}">; </c:if></c:forEach></c:if>">
-
+<meta name="description" content="<c:choose>
+  <c:when test="${empty disease.mouseHumanGroup and empty disease.mouseOnlyGroup and empty disease.humanOnlyGroup}">
+    There are currently no human or mouse genes associated with this disease in the MGI database.</c:when>
+  <c:otherwise>Mutations in human and/or mouse homologs are associated with this disease.</c:otherwise>
+  </c:choose>
+  <c:if test="${not empty disease.diseaseSynonyms}"> Synonyms: 
+  <c:forEach var="synonym" items="${disease.diseaseSynonyms}" varStatus="status">${synonym.synonym}<c:if test="${!status.last}">;</c:if>
+  </c:forEach>
+  </c:if>">
 
 <%  // Pull detail object into servlet scope
     Disease disease = (Disease) request.getAttribute("disease");
@@ -27,7 +34,6 @@
       = new StyleAlternator("detailData1","detailData2");
 %>
 
-
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
@@ -37,8 +43,6 @@
 <!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-
-
 <style type="text/css">
 
   .diseaseHeader { 
@@ -46,11 +50,9 @@
     border-color: #54709B;
     padding: 5px;
   }
-
   .diseaseHeaderDisease { 
     font-size: 1.5em;
   }
-
   .tabContainer { 
     width: 100%;
     min-height: 200px;
@@ -59,7 +61,6 @@
     border-color: #54709B;
     padding: 5px;
   }
-
   .superscript { 
     vertical-align: super; 
     font-size: 90%
@@ -98,17 +99,15 @@
         ${id.accID}<c:if test="${!status.last}">, </c:if>
       </c:forEach>
     </c:if><br/>
-
-
     </div>
   </div>
   <br>
 
   <!-- TAB DEFINITIONS -->
   <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#termTab">Term Details</a></li>
-    <li><a data-toggle="tab" href="#genesTab">Genes</a></li>
-    <li><a data-toggle="tab" href="#modelsTab">Models</a></li>
+    <li class="active" ><a data-toggle="tab" href="#termTab">Term Details</a></li>
+    <li><a id="genesTabButton" data-toggle="tab" href="#genesTab">Genes</a></li>
+    <li><a id="modelsTabButton" data-toggle="tab" href="#modelsTab">Models</a></li>
   </ul>
 
   <!-- TAB CONTENTS -->
@@ -138,6 +137,18 @@
   <a href="${configBean.FEWI_URL}reference/disease/${disease.primaryID}?typeFilter=Literature">(${diseaseRefCount})</a>
   
 </div>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+	<c:if test = "${openTab == 'genes'}">
+		$("#genesTabButton").click(); 
+	</c:if>
+	<c:if test = "${openTab == 'models'}">
+		$("#modelsTabButton").click(); 
+	</c:if>
+});
+</script>
 
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
