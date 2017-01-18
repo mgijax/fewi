@@ -45,7 +45,7 @@
 
 <style type="text/css">
 
-  .diseaseHeader { 
+  #diseaseHeader { 
     border: 2px solid;
     border-color: #54709B;
     padding: 5px;
@@ -82,21 +82,21 @@
 <div class="container-fluid">
 
   <!-- HEADER -->
-  <div class="row diseaseHeader">
+  <div class="row" id="diseaseHeader">
     <div class="col-sm-12">
     <span class="diseaseHeaderDisease">
-      ${disease.disease} (${disease.primaryID})
+      <span id="diseaseNameID">${disease.disease} (${disease.primaryID})</span>
     </span><br/>  
     <c:if test="${not empty disease.diseaseSynonyms}">
       <span class="bold">Synonyms:</span>
       <c:forEach var="synonym" items="${disease.diseaseSynonyms}" varStatus="status">
-        ${synonym.synonym}<c:if test="${!status.last}">; </c:if>
+        <span id="diseaseSynonym">${synonym.synonym}<c:if test="${!status.last}">; </c:if></span>
       </c:forEach>
     </c:if><br/>
     <c:if test="${not empty disease.orderedSecondaryIDs}">
       <span class="bold">Alt IDs:</span>
       <c:forEach var="id" items="${disease.orderedSecondaryIDs}" varStatus="status">
-        ${id.accID}<c:if test="${!status.last}">, </c:if>
+        <span id="diseaseSecondaryIDs">${id.accID}<c:if test="${!status.last}">, </c:if></span>
       </c:forEach>
     </c:if><br/>
     </div>
@@ -112,6 +112,7 @@
 
   <!-- TAB CONTENTS -->
   <div class="tab-content">
+
     <div id="termTab" class="tab-pane fade in active">
       <div class="tabContainer">
       <p>Future term detail tab</p>
@@ -121,11 +122,13 @@
       </c:if><br/>
       </div>
     </div>
+
     <div id="genesTab" class="tab-pane fade">
       <div class="tabContainer">
       <p>Future genes tab</p>
       </div>
     </div>
+
     <div id="modelsTab" class="tab-pane fade">
       <div class="tabContainer">
       <p>Future models tab</p>
