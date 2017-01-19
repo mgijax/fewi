@@ -2,7 +2,7 @@ package org.jax.mgi.fewi.controller;
 
 import java.util.List;
 
-import mgi.frontend.datamodel.Disease;
+import mgi.frontend.datamodel.Disease; 
 
 import org.jax.mgi.fewi.finder.DiseaseFinder;
 import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
@@ -67,7 +67,6 @@ public class DiseaseController {
 	// code shared to send back a disease detail page, regardless of
 	// whether the initial link was by disease ID or by database key
 	private ModelAndView prepareDisease (String diseaseID, String view, String openTab) {
-System.out.println("-------open tab=" + openTab);
 
 		List<Disease> diseaseList = diseaseFinder.getDiseaseByID(diseaseID);
 		// there can be only one...

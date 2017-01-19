@@ -24,6 +24,7 @@ public class TextHdpDiseaseSummary extends AbstractTextView {
 		String[] headerTitles = {
 			    "Disease",
 				"DO Id",
+				"OMIM Id",
 				"Mouse Models",
 				"Associated Mouse Genes",
 				"Associated Human Genes"
@@ -37,6 +38,7 @@ public class TextHdpDiseaseSummary extends AbstractTextView {
 			
 			writeIfNotNull(d.getTerm());
 			writeIfNotNull(d.getPrimaryId());
+			writeIfNotNull(FormatHelper.pipeDelimit(d.getOmimIds()));
 			writeIfNotNull(d.getDiseaseModelCount());
 			writeIfNotNull(FormatHelper.pipeDelimit(d.getDiseaseMouseMarkers()));
 			writeIfNotNull(FormatHelper.pipeDelimit(d.getDiseaseHumanMarkers()));
