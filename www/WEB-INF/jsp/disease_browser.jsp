@@ -46,7 +46,7 @@
 <style type="text/css">
 
   #diseaseHeader { 
-    border: 2px solid;
+    border: 3px solid;
     border-color: #54709B;
     padding: 5px;
   }
@@ -60,6 +60,14 @@
     border-bottom: 1px solid;
     border-color: #54709B;
     padding: 5px;
+  }
+  .termWrapper {
+    width: 100%;
+    min-height: 150px;
+	background-color: #DFEFFF;
+    border: 4px solid #54709B;
+    border-radius: 12px;
+    padding: 8px;
   }
   .superscript { 
     vertical-align: super; 
@@ -83,7 +91,7 @@
 
   <!-- HEADER -->
   <div class="row" id="diseaseHeader">
-    <div class="col-sm-12">
+    <div class="col-lg-12">
     <span class="diseaseHeaderDisease">
       <span id="diseaseNameID">${disease.disease} (${disease.primaryID})</span>
     </span><br/>  
@@ -93,16 +101,16 @@
       <c:forEach var="synonym" items="${disease.diseaseSynonyms}" varStatus="status">
         ${synonym.synonym}<c:if test="${!status.last}">; </c:if>
       </c:forEach>
-      </span>
-    </c:if><br/>
+      </span><br/>
+    </c:if>
     <c:if test="${not empty disease.orderedSecondaryIDs}">
       <span class="bold">Alt IDs:</span>
       <span id="diseaseSecondaryIDs">
       <c:forEach var="id" items="${disease.orderedSecondaryIDs}" varStatus="status">
         ${id.accID}<c:if test="${!status.last}">, </c:if>
       </c:forEach>
-      </span>
-    </c:if><br/>
+      </span><br/>
+    </c:if>
     </div>
   </div>
   <br>
@@ -119,11 +127,49 @@
 
     <div id="termTab" class="tab-pane fade in active">
       <div class="tabContainer">
-      <p>Future term detail tab</p>
+
+
+
+
+
+
+  <div class="row tabWrapper" id="termTabWrapper">
+    <div class="col-sm-4">
+      Parent term(s)
+      <div class="termWrapper">
+        ParentTerm
+      </div>
+      </div>
+      <div class="col-sm-4">Term with siblings
+      <div class="termWrapper">
+        ${disease.disease}<br>
+       </div>
+      </div>
+      <div class="col-sm-4">Child terms(s)
+      <div class="termWrapper">
+
+      <c:forEach var="child" items="${disease.vocabTerm.children}" varStatus="status">
+        <a href="${configBean.FEWI_URL}disease/${child.primaryID}">${child.term}</a>
+        <c:if test="${!status.last}"><br> </c:if>
+      </c:forEach>
+
+      </div>
+      </div>
+  </div>
+
+
+
+
+
+
+
+
+
       <c:if test="${not empty disease.vocabTerm.definition}">
         <span class="bold">Definition:</span>
         ${disease.vocabTerm.definition}
       </c:if><br/>
+
       </div>
     </div>
 
