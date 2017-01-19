@@ -13,10 +13,17 @@
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 <%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
-<title>${disease.disease} Disease Ontology Browserr - ${disease.primaryID}</title>
+<title>${disease.disease} Disease Ontology Browser - ${disease.primaryID}</title>
 
-<meta name="description" content="<c:choose><c:when test="${empty disease.mouseHumanGroup and empty disease.mouseOnlyGroup and empty disease.humanOnlyGroup}">There are currently no human or mouse genes associated with this disease in the MGI database.</c:when><c:otherwise>Mutations in human and/or mouse homologs are associated with this disease.</c:otherwise></c:choose><c:if test="${not empty disease.diseaseSynonyms}"> Synonyms: <c:forEach var="synonym" items="${disease.diseaseSynonyms}" varStatus="status">${synonym.synonym}<c:if test="${!status.last}">; </c:if></c:forEach></c:if>">
-
+<meta name="description" content="<c:choose>
+  <c:when test="${empty disease.mouseHumanGroup and empty disease.mouseOnlyGroup and empty disease.humanOnlyGroup}">
+    There are currently no human or mouse genes associated with this disease in the MGI database.</c:when>
+  <c:otherwise>Mutations in human and/or mouse homologs are associated with this disease.</c:otherwise>
+  </c:choose>
+  <c:if test="${not empty disease.diseaseSynonyms}"> Synonyms: 
+  <c:forEach var="synonym" items="${disease.diseaseSynonyms}" varStatus="status">${synonym.synonym}<c:if test="${!status.last}">;</c:if>
+  </c:forEach>
+  </c:if>">
 
 <%  // Pull detail object into servlet scope
     Disease disease = (Disease) request.getAttribute("disease");
@@ -27,7 +34,6 @@
       = new StyleAlternator("detailData1","detailData2");
 %>
 
-
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
@@ -37,20 +43,16 @@
 <!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-
-
 <style type="text/css">
 
-  .diseaseHeader { 
-    border: 2px solid;
+  #diseaseHeader { 
+    border: 3px solid;
     border-color: #54709B;
     padding: 5px;
   }
-
   .diseaseHeaderDisease { 
     font-size: 1.5em;
   }
-
   .tabContainer { 
     width: 100%;
     min-height: 200px;
@@ -59,7 +61,14 @@
     border-color: #54709B;
     padding: 5px;
   }
-
+  .termWrapper {
+    width: 100%;
+    min-height: 150px;
+	background-color: #DFEFFF;
+    border: 4px solid #54709B;
+    border-radius: 12px;
+    padding: 8px;
+  }
   .superscript { 
     vertical-align: super; 
     font-size: 90%
@@ -81,52 +90,95 @@
 <div class="container-fluid">
 
   <!-- HEADER -->
-  <div class="row diseaseHeader">
-    <div class="col-sm-12">
+  <div class="row" id="diseaseHeader">
+    <div class="col-lg-12">
     <span class="diseaseHeaderDisease">
-      ${disease.disease} (${disease.primaryID})
+      <span id="diseaseNameID">${disease.disease} (${disease.primaryID})</span>
     </span><br/>  
     <c:if test="${not empty disease.diseaseSynonyms}">
       <span class="bold">Synonyms:</span>
+      <span id="diseaseSynonym">
       <c:forEach var="synonym" items="${disease.diseaseSynonyms}" varStatus="status">
         ${synonym.synonym}<c:if test="${!status.last}">; </c:if>
       </c:forEach>
-    </c:if><br/>
+      </span><br/>
+    </c:if>
     <c:if test="${not empty disease.orderedSecondaryIDs}">
       <span class="bold">Alt IDs:</span>
+      <span id="diseaseSecondaryIDs">
       <c:forEach var="id" items="${disease.orderedSecondaryIDs}" varStatus="status">
         ${id.accID}<c:if test="${!status.last}">, </c:if>
       </c:forEach>
-    </c:if><br/>
-
-
+      </span><br/>
+    </c:if>
     </div>
   </div>
   <br>
 
   <!-- TAB DEFINITIONS -->
   <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#termTab">Term Details</a></li>
-    <li><a data-toggle="tab" href="#genesTab">Genes</a></li>
-    <li><a data-toggle="tab" href="#modelsTab">Models</a></li>
+    <li class="active" ><a data-toggle="tab" href="#termTab">Term Details</a></li>
+    <li><a id="genesTabButton" data-toggle="tab" href="#genesTab">Genes</a></li>
+    <li><a id="modelsTabButton" data-toggle="tab" href="#modelsTab">Models</a></li>
   </ul>
 
   <!-- TAB CONTENTS -->
   <div class="tab-content">
+
     <div id="termTab" class="tab-pane fade in active">
       <div class="tabContainer">
-      <p>Future term detail tab</p>
+
+
+
+
+
+
+  <div class="row tabWrapper" id="termTabWrapper">
+    <div class="col-sm-4">
+      Parent term(s)
+      <div class="termWrapper">
+        ParentTerm
+      </div>
+      </div>
+      <div class="col-sm-4">Term with siblings
+      <div class="termWrapper">
+        ${disease.disease}<br>
+       </div>
+      </div>
+      <div class="col-sm-4">Child terms(s)
+      <div class="termWrapper">
+
+      <c:forEach var="child" items="${disease.vocabTerm.children}" varStatus="status">
+        <a href="${configBean.FEWI_URL}disease/${child.primaryID}">${child.term}</a>
+        <c:if test="${!status.last}"><br> </c:if>
+      </c:forEach>
+
+      </div>
+      </div>
+  </div>
+
+
+
+
+
+
+
+
+
       <c:if test="${not empty disease.vocabTerm.definition}">
         <span class="bold">Definition:</span>
         ${disease.vocabTerm.definition}
       </c:if><br/>
+
       </div>
     </div>
+
     <div id="genesTab" class="tab-pane fade">
       <div class="tabContainer">
       <p>Future genes tab</p>
       </div>
     </div>
+
     <div id="modelsTab" class="tab-pane fade">
       <div class="tabContainer">
       <p>Future models tab</p>
@@ -138,6 +190,18 @@
   <a href="${configBean.FEWI_URL}reference/disease/${disease.primaryID}?typeFilter=Literature">(${diseaseRefCount})</a>
   
 </div>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+	<c:if test = "${openTab == 'genes'}">
+		$("#genesTabButton").click(); 
+	</c:if>
+	<c:if test = "${openTab == 'models'}">
+		$("#modelsTabButton").click(); 
+	</c:if>
+});
+</script>
 
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
