@@ -51,6 +51,7 @@
 										<th class="headerStripe td_disease_tbl_hdr" style="text-align: left">Mouse Models</th>
 									</tr>
 									<c:forEach var="diseaseRow" items="${DiseaseRows}">
+										<c:set var="disease_safe_name" value="${fn:replace(diseaseRow.get('diseaseId'), ':', '_')}" />
 										<c:set var="diseaseTooltip" value="Human and Mouse genes associated with disease"/>
 										<c:if test="${diseaseRow.get('type') == 'mouse'}">
 											<c:set var="diseaseTooltip" value="Mouse gene associated with disease"/>
@@ -76,20 +77,19 @@
 											</c:if>
 											<td class="td_disease_tbl">
 												<a href="${configBean.FEWI_URL}disease/${diseaseRow.get('diseaseId')}">${diseaseRow.get('diseaseTerm')}</a>
-													<c:forEach var="secondardId" items="${allAnnotations.get(diseaseRow.get('diseaseId')).vocabTerm.secondaryIds}">
-														<span style="font-size: smaller;">${idLinker.getLink(secondardId, secondardId.accID, 'MP')}</span>
-													</c:forEach>
+												&nbsp;&nbsp;&nbsp;<span id="show${disease_safe_name}_dialog" class="link">?</span>
+												<%@ include file="MarkerDetail_disease_popup2.jsp" %>
 											</td>
 											<td class="td_disease_tbl">
 												<c:set var="nonNotCount" value="${fn:length(MouseModels.get(diseaseRow.get('diseaseId')))}" />
 												<c:set var="notCount" value="${fn:length(NotMouseModels.get(diseaseRow.get('diseaseId')))}" />
 					
 												<c:if test="${nonNotCount > 0}">
-													<span id="show${fn:replace(diseaseRow.get('diseaseId'), ':', '_')}" class="link">View ${fn:length(MouseModels.get(diseaseRow.get('diseaseId')))}</span> model<c:if test="${fn:length(MouseModels.get(diseaseRow.get('diseaseId'))) > 1}">s</c:if>
+													<span id="show${disease_safe_name}" class="link">View ${fn:length(MouseModels.get(diseaseRow.get('diseaseId')))}</span> model<c:if test="${fn:length(MouseModels.get(diseaseRow.get('diseaseId'))) > 1}">s</c:if>
 													<%@ include file="MarkerDetail_disease_popup.jsp" %>
 												</c:if>
 												<c:if test="${nonNotCount == 0 and notCount > 0}">
-													<span id="show${fn:replace(diseaseRow.get('diseaseId'), ':', '_')}" class="link">View ${fn:length(NotMouseModels.get(diseaseRow.get('diseaseId')))}</span> "NOT" model<c:if test="${fn:length(NotMouseModels.get(diseaseRow.get('diseaseId'))) > 1}">s</c:if>
+													<span id="show${disease_safe_name}" class="link">View ${fn:length(NotMouseModels.get(diseaseRow.get('diseaseId')))}</span> "NOT" model<c:if test="${fn:length(NotMouseModels.get(diseaseRow.get('diseaseId'))) > 1}">s</c:if>
 													<%@ include file="MarkerDetail_disease_popup.jsp" %>
 												</c:if>
 											</td>

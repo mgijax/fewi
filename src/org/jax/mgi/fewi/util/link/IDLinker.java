@@ -419,7 +419,6 @@ public class IDLinker {
 		return makeLink(adb.getUrl(), id, linkText, className);
 	}
 
-
 	public String getLinks (AccessionID id) {
 		return getLinks (id.getLogicalDB(), id.getAccID(), " | ");
 	}

@@ -15,7 +15,6 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 
 import mgi.frontend.datamodel.Annotation;
-import mgi.frontend.datamodel.DiseaseModel;
 import mgi.frontend.datamodel.HomologyCluster;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerAlleleAssociation;
