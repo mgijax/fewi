@@ -855,9 +855,9 @@ public class MarkerController {
 			
 			rowMap.add(row);
 		}
-		
 
 
+		// TODO get the linker working
 		// Disease ID -> List<GenotypeId>
 		mav.addObject("MouseModels", marker.getMouseModelsMap());
 		mav.addObject("NotMouseModels", marker.getNotMouseModelsMap());

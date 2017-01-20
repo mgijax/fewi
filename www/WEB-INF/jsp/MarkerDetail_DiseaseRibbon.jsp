@@ -77,8 +77,7 @@
 											<td class="td_disease_tbl">
 												<a href="${configBean.FEWI_URL}disease/${diseaseRow.get('diseaseId')}">${diseaseRow.get('diseaseTerm')}</a>
 													<c:forEach var="secondardId" items="${allAnnotations.get(diseaseRow.get('diseaseId')).vocabTerm.secondaryIds}">
-														${secondardId.logicalDB}
-														<span style="font-size: smaller;"><a class="MP" href='http://www.disease-ontology.org/?id=${diseaseRow.get('diseaseId')}' target="_blank">${secondardId.accID}</a></span>
+														<span style="font-size: smaller;">${idLinker.getLink(secondardId, secondardId.accID, 'MP')}</span>
 													</c:forEach>
 											</td>
 											<td class="td_disease_tbl">
