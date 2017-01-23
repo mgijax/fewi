@@ -69,6 +69,13 @@
     border-radius: 12px;
     padding: 8px;
   }
+  #termInTermTabBubble  {
+    background-color: #FFFFE0;
+    padding-left: 3px;
+  }
+  .bubbleHeading {
+    padding-left: 12px;
+  }
   .superscript { 
     vertical-align: super; 
     font-size: 90%
@@ -130,7 +137,7 @@
 
     <div class="row tabWrapper" id="termTabWrapper">
     <div class="col-sm-4">
-      Parent term(s)
+      <span class='bubbleHeading'>Parent term(s)</span>
       <div class="termWrapper" id="termTabParentWrapper">
         <c:forEach var="parent" items="${disease.vocabTerm.parentEdges}" varStatus="status">
           <a href="${configBean.FEWI_URL}disease/${parent.parent.primaryID}">${parent.parent.term}</a> +
@@ -140,10 +147,11 @@
       </div>
       </div>
       <div class="col-sm-4">
-      Term with siblings
+      <span class='bubbleHeading'>Term with siblings</span>
       <div class="termWrapper" id="termTabTermWrapper">
+        <div id='termInTermTabBubble'>
         ${disease.disease}<c:if test="${disease.vocabTerm.isLeaf != 1}"> + </c:if>
-        <br>
+        </div><br>
         <c:forEach var="sibling" items="${disease.vocabTerm.siblings}" varStatus="status">
           <a href="${configBean.FEWI_URL}disease/${sibling.primaryID}">${sibling.term}</a> <c:if test="${sibling.isLeaf != 1}"> + </c:if>
           <c:if test="${!status.last}"><br> </c:if>
@@ -151,7 +159,7 @@
        </div>
       </div>
       <div class="col-sm-4">
-      Child terms(s)
+      <span class='bubbleHeading'>Child terms(s)</span>
       <div class="termWrapper" id="termTabChildWrapper">
         <c:forEach var="child" items="${disease.vocabTerm.vocabChildren}" varStatus="status">
           <img src="${configBean.WEBSHARE_URL}images/is-a.gif" alt="is-a" height="12" width="12" border="0">
@@ -162,6 +170,7 @@
       </div>
     </div>
     <br/>
+    <img src="${configBean.WEBSHARE_URL}images/is-a.gif" alt="is-a" height="12" width="12" border="0"> denotes an 'is-a' relationship
     <br/>
     <c:if test="${not empty disease.vocabTerm.definition}">
       <div class="row" id="diseaseHeader">
@@ -176,13 +185,13 @@
 
 
 
-    <div id="genesTab" class="tab-pane fade">
+  <div id="genesTab" class="tab-pane fade">
       <div class="tabContainer">
       <p>Future genes tab</p>
       </div>
-    </div>
+  </div>
 
-    <div id="modelsTab" class="tab-pane fade">
+  <div id="modelsTab" class="tab-pane fade">
       <div class="tabContainer">
       <p>Future models tab</p>
       </div>
