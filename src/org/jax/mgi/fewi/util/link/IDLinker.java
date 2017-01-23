@@ -38,7 +38,7 @@ public class IDLinker {
 
 
 	private static Map<String,List<ActualDB>> logicalDbMapCache = null;
-	
+
 	//--- Instance Variables ---
 
 
@@ -47,15 +47,15 @@ public class IDLinker {
 
 	@Autowired
 	private ActualDatabaseFinder actualDatabaseFinder;
-	
+
 	private Map<String,List<ActualDB>> logicalDbMap = null;
-	
-	
+
+
 	/**
 	 * externalUrls properties object
 	 */
 	private Properties externalUrlsProperties = null;
-	
+
 	/**
 	 * All other global properties object
 	 */
@@ -63,7 +63,7 @@ public class IDLinker {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
-	
+
 	/**
 	 * Exposed for testing
 	 */
@@ -76,21 +76,21 @@ public class IDLinker {
 		}
 		return this.externalUrlsProperties;
 	}
-	
+
 	/**
 	 * Exposed for testing
 	 */
 	public void setGlobalProperties(Properties config) {
 		this.globalProperties = config;
 	}
-	
+
 	private Properties getGlobalProperties() {
 		if (this.globalProperties == null) {
 			this.globalProperties = ContextLoader.getConfigBean();
 		}
 		return this.globalProperties;
 	}
-	
+
 	/**
 	 * Exposed for testing
 	 */
@@ -98,14 +98,14 @@ public class IDLinker {
 		this.logicalDbMap = logicalDbMap;
 		logicalDbMapCache = this.logicalDbMap;
 	}
-	
+
 	private Map<String,List<ActualDB>> getLogicalDbMap() {
 		// initialize static cache if needed
 		if (logicalDbMapCache == null) {
-			this.logicalDbMap = this.initLogicalDbMapCache();
+			this.logicalDbMap = initLogicalDbMapCache();
 			logicalDbMapCache = this.logicalDbMap;
 		}
-		
+
 		if (this.logicalDbMap == null) {
 			// pull from the cache if this is not set manually
 			this.logicalDbMap = logicalDbMapCache;
@@ -115,14 +115,14 @@ public class IDLinker {
 	}
 
 	//--- Private Instance Methods ---
-	
+
 	/**
 	 * Initialize map of logical DBs to actual DBs
 	 */
 	private Map<String,List<ActualDB>> initLogicalDbMapCache() {
-		
+
 		HashMap<String,List<ActualDB>> ldbToAdb = new HashMap<String,List<ActualDB>>();
-		
+
 		List<ActualDB> adbs;	// list of ActualDBs for this logical db
 
 		// used to cache our ActualDB objects by actual db name
@@ -133,8 +133,8 @@ public class IDLinker {
 		// look for ${myName} notation for config values that need to be inserted
 		Pattern hasName = Pattern.compile("\\$\\{([A-Za-z0-9_]+)\\}");
 		Properties configBean = ContextLoader.getConfigBean();
-		
-		Properties externalUrlsConfig = this.getExternalUrlsProperties();
+
+		Properties externalUrlsConfig = getExternalUrlsProperties();
 
 		for (Object key: externalUrlsConfig.keySet())
 		{
@@ -204,7 +204,7 @@ public class IDLinker {
 				// those entries are set for production
 				if (adbName.equals("MGI"))  continue; // skip it
 				if (ldbName.startsWith("MGI")) continue; // skip it
-				
+
 				if (allAdbs.containsKey(adbName)) 
 				{
 					continue;
@@ -220,7 +220,7 @@ public class IDLinker {
 					adb.setUrl (adb1.getUrl());
 					adb.setDisplayName (adbName);
 					adb.setOrderVal (
-						adb1.getSequenceNum());
+							adb1.getSequenceNum());
 
 					if (ldbToAdb.containsKey(ldbName)) 
 					{
@@ -228,20 +228,20 @@ public class IDLinker {
 					} 
 					else 
 					{
-					    adbs = new ArrayList<ActualDB>();
-					    ldbToAdb.put(ldbName, adbs);
+						adbs = new ArrayList<ActualDB>();
+						ldbToAdb.put(ldbName, adbs);
 					}
 					boolean seenIt = false;
 					for (ActualDB a: adbs) 
 					{
-					    if (a.getName().equals(adbName))
-					    {
-					    	seenIt = true;
-					    }
+						if (a.getName().equals(adbName))
+						{
+							seenIt = true;
+						}
 					}
 					if (!seenIt) 
 					{
-					    adbs.add(adb);
+						adbs.add(adb);
 					}
 				}
 			}
@@ -259,15 +259,15 @@ public class IDLinker {
 			lowerMap.put(ldb.toLowerCase(), ldbToAdb.get(ldb));
 		}
 		ldbToAdb.putAll(lowerMap);
-		
-		
+
+
 		return ldbToAdb;
 	}
 
 	/** get the List of ActualDBs for the given logical database
 	 */
 	private List<ActualDB> getActualDBs (String ldb) {
-		Map<String,List<ActualDB>> ldbToAdb = this.getLogicalDbMap();
+		Map<String,List<ActualDB>> ldbToAdb = getLogicalDbMap();
 		if (ldbToAdb.containsKey(ldb)) {
 			return ldbToAdb.get(ldb);
 		} else if (ldbToAdb.containsKey(ldb.toLowerCase())) {
@@ -279,8 +279,8 @@ public class IDLinker {
 	/** get the first ActualDB for the given logical database
 	 */
 	private ActualDB getActualDB (String ldb) {
-		List<ActualDB> adbs = this.getActualDBs(ldb);
-		
+		List<ActualDB> adbs = getActualDBs(ldb);
+
 		if (adbs == null) {
 			return null;
 		}
@@ -289,21 +289,25 @@ public class IDLinker {
 
 	/** return the <a href>...</a> tag for the given parameters
 	 */
-	private String makeLink (String url, String id, String label) {
-		return makeLink(url, id, label, true);
+	private String makeLink (String url, String id, String linkText, String className) {
+		return makeLink(url, id, linkText, className, true);
 	}
 	/** return the <a href>...</a> tag for the given parameters
 	 */
-	private String makeLink (String url, String id, String label, boolean targetBlank) {
+	private String makeLink (String url, String id, String linkText, String className, boolean targetBlank) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("<a href='");
+		sb.append("<a ");
+		if(className != null && className.length() > 0) {
+			sb.append("class=\"" + className + "\"");
+		}
+		sb.append("href='");
 		sb.append(url.replace("@@@@", id));
 		sb.append("'");
 		if (targetBlank) {
 			sb.append(" target='_blank'");
 		}
 		sb.append(">");
-		sb.append(label);
+		sb.append(linkText);
 		sb.append("</a>");
 		return sb.toString();
 	}
@@ -338,12 +342,12 @@ public class IDLinker {
 
 				boolean seenIt = false;
 				for (ActualDatabase a: adbs) {
-				    if (a.getActualDb().equals(adb.getActualDb() )) {
-					seenIt = true;
-				    }
+					if (a.getActualDb().equals(adb.getActualDb() )) {
+						seenIt = true;
+					}
 				}
 				if (!seenIt) {
-				    adbs.add(adb);
+					adbs.add(adb);
 				}
 			}
 		}
@@ -352,7 +356,7 @@ public class IDLinker {
 	}
 
 	//-- Specific object related link methods
-	
+
 	/**
 	 * Returns the default marker link by Symbol
 	 * 	depending on 
@@ -360,89 +364,79 @@ public class IDLinker {
 	 * 
 	 */
 	public String getDefaultMarkerLink(Marker marker) {
-		
-		Properties globalConfig = this.getGlobalProperties();
-		
+
+		Properties globalConfig = getGlobalProperties();
+
 		if (marker.getOrganism().equalsIgnoreCase("mouse")) {
 			String url = globalConfig.getProperty("FEWI_URL") + "marker/" + marker.getPrimaryID();
-			return this.makeLink(url, "", marker.getSymbol(), false);
+			return makeLink(url, "", marker.getSymbol(), "", false);
 		}
-		
+
 		MarkerID entrezGeneID = marker.getEntrezGeneID();
-		
+
 		if (entrezGeneID != null 
 				&& entrezGeneID.getAccID() != null 
 				&& !entrezGeneID.getAccID().equals("")) {
-			return this.getLink("Entrez Gene", entrezGeneID.getAccID(), marker.getSymbol());
+			return getLink("Entrez Gene", entrezGeneID.getAccID(), marker.getSymbol());
 		}
-		
+
 		// no link can be made
 		return marker.getSymbol();
 	}
-	
-	
-	//--- Public Instance Methods ---
 
-	/** get basic link using ID as link text, using first actual db for
-	 * the relevant logical db
-	 */
+
+
 	public String getLink (AccessionID id) {
 		String accID = id.getAccID();
-		return this.getLink(id.getLogicalDB(), accID, accID);
+		return getLink(id.getLogicalDB(), accID, accID);
 	}
 
-	/** get basic link using given label as link text, using first actual db
-	 * for the relevant logical db
-	 */
-	public String getLink (AccessionID id, String label) {
-		return this.getLink(id.getLogicalDB(), id.getAccID(), label);
+	public String getLink (AccessionID id, String linkText) {
+		return getLink(id.getLogicalDB(), id.getAccID(), linkText);
 	}
 
-	/** get basic link using given ID as link text, using first actual db
-	 * for the specified logical db
-	 */
+	public String getLink (AccessionID id, String linkText, String className) {
+		return getLink(id.getLogicalDB(), id.getAccID(), linkText, className);
+	}
+
 	public String getLink (String logicalDB, String id) {
-		return this.getLink(logicalDB, id, id);
+		return getLink(logicalDB, id, id);
 	}
 
-	/** get basic link using given label as link text, using first actual db
-	 * for the specified logical db
-	 */
-	public String getLink (String logicalDB, String id, String label) {
-		ActualDB adb = this.getActualDB(logicalDB);
+	public String getLink (String logicalDB, String id, String linkText) {
+		return getLink(logicalDB, id, linkText, "");
+	}
+
+	public String getLink (String logicalDB, String id, String linkText, String className) {
+		ActualDB adb = getActualDB(logicalDB);
 		if (adb == null) {
 			logger.warn("No ActualDB found for logicalDB = "+logicalDB);
 			return id;
 		}
-		return this.makeLink(adb.getUrl(), id, label);
+		if(logicalDB.equals("OMIM")) {
+			id = id.replaceAll("OMIM:", "");
+		}
+		return makeLink(adb.getUrl(), id, linkText, className);
 	}
 
-	/** get a string with links for each available actual database for the
-	 * given id, separated by a pipe symbol
-	 */
 	public String getLinks (AccessionID id) {
-		return this.getLinks (id.getLogicalDB(), id.getAccID(), " | ");
+		return getLinks (id.getLogicalDB(), id.getAccID(), " | ");
 	}
-
-	/** get a string with links for each available actual database for the
-	 * given id, separated by the given separator
-	 */
 	public String getLinks (AccessionID id, String separator) {
-		return this.getLinks (id.getLogicalDB(), id.getAccID(), " | ");
+		return getLinks (id.getLogicalDB(), id.getAccID(), separator, "");
+	}
+	public String getLinks (AccessionID id, String separator, String className) {
+		return getLinks (id.getLogicalDB(), id.getAccID(), separator, className);
 	}
 
-	/** get a string with links for each available actual database for the
-	 * given logical database, separated by a pipe symbol
-	 */
 	public String getLinks (String logicalDB, String id) {
-		return this.getLinks (logicalDB, id, " | ");
+		return getLinks (logicalDB, id, " | ");
 	}
-
-	/** get a string with links for each available actual database for the
-	 * given logical database, separated by the given separator
-	 */
 	public String getLinks (String logicalDB, String id, String separator) {
-		List<ActualDB> adbs = this.getActualDBs(logicalDB);
+		return getLinks (logicalDB, id, separator, "");
+	}
+	public String getLinks (String logicalDB, String id, String separator, String className) {
+		List<ActualDB> adbs = getActualDBs(logicalDB);
 		if (adbs == null) {
 			return id;
 		}
@@ -451,15 +445,17 @@ public class IDLinker {
 		boolean isFirst = true;
 		HashMap<String,String> done = new HashMap<String,String>();
 
-		for (ActualDB adb : adbs) 
-		{
+		for (ActualDB adb : adbs) {
 			if (!done.containsKey(adb.getName())) {
-			href = this.makeLink (adb.getUrl(), id, adb.getDisplayName());
-			if (!isFirst) {
-				sb.append (separator);
-			}
-			sb.append(href);
-			done.put(adb.getName(),"");
+				if(adb.getName().equals("OMIM")) {
+					id = id.replaceAll("OMIM:", "");
+				}
+				href = makeLink (adb.getUrl(), id, adb.getDisplayName(), className);
+				if (!isFirst) {
+					sb.append (separator);
+				}
+				sb.append(href);
+				done.put(adb.getName(),"");
 			}
 			isFirst = false;
 		}
@@ -470,11 +466,11 @@ public class IDLinker {
 	 */
 	public Properties getUrlsAsProperties() {
 		List<ActualDB> adbs;	// list of ActualDBs for this
-					// ...logical db
+		// ...logical db
 
 		Properties props = new Properties();
-		
-		Map<String,List<ActualDB>> ldbToAdb = this.getLogicalDbMap();
+
+		Map<String,List<ActualDB>> ldbToAdb = getLogicalDbMap();
 
 		for (String ldb : ldbToAdb.keySet()) {
 			adbs = ldbToAdb.get(ldb);

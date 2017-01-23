@@ -15,7 +15,6 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 
 import mgi.frontend.datamodel.Annotation;
-import mgi.frontend.datamodel.DiseaseModel;
 import mgi.frontend.datamodel.HomologyCluster;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerAlleleAssociation;
@@ -757,6 +756,7 @@ public class MarkerController {
 
 	private void setupDiseaseRibbon(ModelAndView mav, Marker marker) {
 		
+		HashMap<String, Annotation> allAnnotations = new HashMap<String, Annotation>();
 		// DiseaseTerm -> DiseaseTermId
 		TreeMap<String, String> sortedDiseaseMapByTerm = new TreeMap<String, String>(new SmartAlphaComparator<String>());
 		// DiseaseId -> Annotation
@@ -765,6 +765,9 @@ public class MarkerController {
 			if (!"NOT".equals(a.getQualifier())) {
 				sortedDiseaseMapByTerm.put(a.getTerm(), a.getTermID());
 				MouseDOAnnotations.put(a.getTermID(), a);
+				if(!allAnnotations.containsKey(a.getTermID())) {
+					allAnnotations.put(a.getTermID(), a);
+				}
 			}
 		}
 
@@ -779,6 +782,9 @@ public class MarkerController {
 				String term = humanAnnotations.get(symbol).get(annotId).getTerm();
 				sortedDiseaseMapByTerm.put(term, annotId);
 				HumanDOAnnotations.put(annotId, humanAnnotations.get(symbol).get(annotId));
+				if(!allAnnotations.containsKey(annotId)) {
+					allAnnotations.put(annotId, humanAnnotations.get(symbol).get(annotId));
+				}
 			}
 			sortedAllHumanMarkers.put(symbol, symbol);
 		}
@@ -848,15 +854,16 @@ public class MarkerController {
 			
 			rowMap.add(row);
 		}
-		
 
 
+		// TODO get the linker working
 		// Disease ID -> List<GenotypeId>
 		mav.addObject("MouseModels", marker.getMouseModelsMap());
 		mav.addObject("NotMouseModels", marker.getNotMouseModelsMap());
 		mav.addObject("AllHumanSymbols", StringUtils.join(sortedAllHumanMarkers.keySet(), ","));
 		mav.addObject("MouseDOAnnotations", MouseDOAnnotations);
 		mav.addObject("HumanDOAnnotations", HumanDOAnnotations);
+		mav.addObject("allAnnotations", allAnnotations);
 		mav.addObject("DiseaseRows", rowMap);
 		
 		// Formaters for Super scripts
