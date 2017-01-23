@@ -163,7 +163,7 @@
       <div class="termWrapper" id="termTabChildWrapper">
         <c:forEach var="child" items="${disease.vocabTerm.vocabChildren}" varStatus="status">
           <img src="${configBean.WEBSHARE_URL}images/is-a.gif" alt="is-a" height="12" width="12" border="0">
-          <a href="${configBean.FEWI_URL}disease/${child.childPrimaryId}">${child.childTerm}</a>
+          <a href="${configBean.FEWI_URL}disease/${child.childPrimaryId}">${child.childTerm}</a> <c:if test="${child.isLeaf != 1}"> + </c:if>
           <c:if test="${!status.last}"><br> </c:if>
         </c:forEach>
       </div>
