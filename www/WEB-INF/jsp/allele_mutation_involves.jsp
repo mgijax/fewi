@@ -21,7 +21,7 @@
 <link href="${configBean.WEBSHARE_URL}css/mgi.css" rel="stylesheet" type="text/css"/>
 
 
-<!-- iframe for history manager's use -->
+<!-- iframe for history managers use -->
 <iframe id="yui-history-iframe" src="${configBean.FEWI_URL}assets/blank.html"></iframe>
 <input id="yui-history-field" type="hidden">
 

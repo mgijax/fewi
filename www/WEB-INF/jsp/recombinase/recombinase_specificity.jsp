@@ -126,7 +126,7 @@ function show (i)
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 
-<!-- iframe for history manager's use -->
+<!-- iframe for history managers use -->
 <iframe id="yui-history-iframe" src="${configBean.FEWI_URL}assets/blank.html"></iframe>
 <input id="yui-history-field" type="hidden">
 
