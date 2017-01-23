@@ -63,7 +63,7 @@
   }
   .termWrapper {
     width: 100%;
-    min-height: 150px;
+    min-height: 200px;
 	background-color: #DFEFFF;
     border: 4px solid #54709B;
     border-radius: 12px;
@@ -133,7 +133,8 @@
       Parent term(s)
       <div class="termWrapper" id="termTabParentWrapper">
         <c:forEach var="parent" items="${disease.vocabTerm.parentEdges}" varStatus="status">
-          <a href="${configBean.FEWI_URL}disease/${parent.parent.primaryID}">${parent.parent.term}</a>
+          <a href="${configBean.FEWI_URL}disease/${parent.parent.primaryID}">${parent.parent.term}</a> +
+          <img src="${configBean.WEBSHARE_URL}images/is-a.gif" alt="is-a" height="12" width="12" border="0">
           <c:if test="${!status.last}"><br> </c:if>
         </c:forEach>
       </div>
@@ -141,9 +142,10 @@
       <div class="col-sm-4">
       Term with siblings
       <div class="termWrapper" id="termTabTermWrapper">
-        ${disease.disease}<br>
+        ${disease.disease}<c:if test="${disease.vocabTerm.isLeaf != 1}"> + </c:if>
+        <br>
         <c:forEach var="sibling" items="${disease.vocabTerm.siblings}" varStatus="status">
-          <a href="${configBean.FEWI_URL}disease/${sibling.primaryID}">${sibling.term}</a>
+          <a href="${configBean.FEWI_URL}disease/${sibling.primaryID}">${sibling.term}</a> <c:if test="${sibling.isLeaf != 1}"> + </c:if>
           <c:if test="${!status.last}"><br> </c:if>
         </c:forEach>
        </div>
@@ -152,6 +154,7 @@
       Child terms(s)
       <div class="termWrapper" id="termTabChildWrapper">
         <c:forEach var="child" items="${disease.vocabTerm.vocabChildren}" varStatus="status">
+          <img src="${configBean.WEBSHARE_URL}images/is-a.gif" alt="is-a" height="12" width="12" border="0">
           <a href="${configBean.FEWI_URL}disease/${child.childPrimaryId}">${child.childTerm}</a>
           <c:if test="${!status.last}"><br> </c:if>
         </c:forEach>
