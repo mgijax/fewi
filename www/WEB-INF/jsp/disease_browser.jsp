@@ -55,7 +55,7 @@
   }
   .tabContainer { 
     width: 100%;
-    min-height: 200px;
+    min-height: 250px;
     border-top: 1px solid;
     border-bottom: 1px solid;
     border-color: #54709B;
@@ -125,53 +125,53 @@
   <!-- TAB CONTENTS -->
   <div class="tab-content">
 
-    <div id="termTab" class="tab-pane fade in active">
-      <div class="tabContainer">
+  <div id="termTab" class="tab-pane fade in active">
+    <div class="tabContainer">
 
-
-
-
-
-
-  <div class="row tabWrapper" id="termTabWrapper">
+    <div class="row tabWrapper" id="termTabWrapper">
     <div class="col-sm-4">
       Parent term(s)
-      <div class="termWrapper">
-        ParentTerm
+      <div class="termWrapper" id="termTabParentWrapper">
+        <c:forEach var="parent" items="${disease.vocabTerm.parentEdges}" varStatus="status">
+          <a href="${configBean.FEWI_URL}disease/${parent.parent.primaryID}">${parent.parent.term}</a>
+          <c:if test="${!status.last}"><br> </c:if>
+        </c:forEach>
       </div>
       </div>
-      <div class="col-sm-4">Term with siblings
-      <div class="termWrapper">
+      <div class="col-sm-4">
+      Term with siblings
+      <div class="termWrapper" id="termTabTermWrapper">
         ${disease.disease}<br>
+        <c:forEach var="sibling" items="${disease.vocabTerm.siblings}" varStatus="status">
+          <a href="${configBean.FEWI_URL}disease/${sibling.primaryID}">${sibling.term}</a>
+          <c:if test="${!status.last}"><br> </c:if>
+        </c:forEach>
        </div>
       </div>
-      <div class="col-sm-4">Child terms(s)
-      <div class="termWrapper">
-
-      <c:forEach var="child" items="${disease.vocabTerm.children}" varStatus="status">
-        <a href="${configBean.FEWI_URL}disease/${child.primaryID}">${child.term}</a>
-        <c:if test="${!status.last}"><br> </c:if>
-      </c:forEach>
-
+      <div class="col-sm-4">
+      Child terms(s)
+      <div class="termWrapper" id="termTabChildWrapper">
+        <c:forEach var="child" items="${disease.vocabTerm.vocabChildren}" varStatus="status">
+          <a href="${configBean.FEWI_URL}disease/${child.childPrimaryId}">${child.childTerm}</a>
+          <c:if test="${!status.last}"><br> </c:if>
+        </c:forEach>
       </div>
       </div>
+    </div>
+    <br/>
+    <br/>
+    <c:if test="${not empty disease.vocabTerm.definition}">
+      <div class="row" id="diseaseHeader">
+      <div class="col-lg-12">
+      <span class="bold">Definition:</span>
+        ${disease.vocabTerm.definition}
+      </div>
+      </div>
+    </c:if>
+    </div>
   </div>
 
 
-
-
-
-
-
-
-
-      <c:if test="${not empty disease.vocabTerm.definition}">
-        <span class="bold">Definition:</span>
-        ${disease.vocabTerm.definition}
-      </c:if><br/>
-
-      </div>
-    </div>
 
     <div id="genesTab" class="tab-pane fade">
       <div class="tabContainer">
