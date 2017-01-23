@@ -2,7 +2,7 @@
 <c:set var="dId" value="${diseaseRow.get('diseaseId')}" />
 <c:set var="dTerm" value="${diseaseRow.get('diseaseTerm')}" />
 
-<div id="models${functionID}" class="facetFilter; bottomBorder" style="display:none"/>
+<div id="models${functionID}" class="facetFilter; bottomBorder" style="display:none">
 	<div class="hd">Mouse Models</div>
 	<div class="bd" style="overflow: auto; max-height: 150px; max-width: 750px;">
 		<a></a><!-- this empty 'a' tag is to keep Chrome and Safari from putting a selection box aroudn the first link displayed -->

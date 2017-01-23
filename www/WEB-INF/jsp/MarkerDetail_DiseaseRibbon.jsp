@@ -51,7 +51,6 @@
 										<th class="headerStripe td_disease_tbl_hdr" style="text-align: left">Mouse Models</th>
 									</tr>
 									<c:forEach var="diseaseRow" items="${DiseaseRows}">
-										<c:set var="disease_safe_name" value="${fn:replace(diseaseRow.get('diseaseId'), ':', '_')}" />
 										<c:set var="diseaseTooltip" value="Human and Mouse genes associated with disease"/>
 										<c:if test="${diseaseRow.get('type') == 'mouse'}">
 											<c:set var="diseaseTooltip" value="Mouse gene associated with disease"/>
@@ -77,7 +76,8 @@
 											</c:if>
 											<td class="td_disease_tbl">
 												<a href="${configBean.FEWI_URL}disease/${diseaseRow.get('diseaseId')}">${diseaseRow.get('diseaseTerm')}</a>
-												&nbsp;&nbsp;&nbsp;<span id="show${disease_safe_name}_dialog" class="link">?</span>
+												<c:set var="disease_safe_name" value="${fn:replace(diseaseRow.get('diseaseId'), ':', '_')}" />
+												&nbsp;&nbsp;&nbsp;<span id="show_${disease_safe_name}_dialog" class="link">?</span>
 												<%@ include file="MarkerDetail_disease_popup2.jsp" %>
 											</td>
 											<td class="td_disease_tbl">
