@@ -74,10 +74,10 @@
 												<td rowspan="${diseaseRow.get('headerRow')}" class='topBorder bottomBorder leftBorder'>&nbsp;&nbsp;</td>
 												<td rowspan="${diseaseRow.get('headerRow')}">&nbsp;</td>
 											</c:if>
+											<c:set var="disease_safe_name" value="${fn:replace(diseaseRow.get('diseaseId'), ':', '_')}" />
 											<td class="td_disease_tbl">
 												<a href="${configBean.FEWI_URL}disease/${diseaseRow.get('diseaseId')}">${diseaseRow.get('diseaseTerm')}</a>
-												<c:set var="disease_safe_name" value="${fn:replace(diseaseRow.get('diseaseId'), ':', '_')}" />
-												&nbsp;&nbsp;&nbsp;<span id="show_${disease_safe_name}_dialog" class="link">?</span>
+												&nbsp;<span id="show_${disease_safe_name}_dialog" class="link">IDs</span>
 												<%@ include file="MarkerDetail_disease_popup2.jsp" %>
 											</td>
 											<td class="td_disease_tbl">
