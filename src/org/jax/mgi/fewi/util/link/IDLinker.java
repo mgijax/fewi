@@ -416,6 +416,9 @@ public class IDLinker {
 		if(logicalDB.equals("OMIM")) {
 			id = id.replaceAll("OMIM:", "");
 		}
+		if(logicalDB.equals("MESH")) {
+			id = id.replaceAll("MESH:", "");
+		}
 		return makeLink(adb.getUrl(), id, linkText, className);
 	}
 
