@@ -30,9 +30,9 @@
 						${collection}<br/>
 					</c:forEach>
 				</td>
-				<td>${clone.age}</td>
-				<td>${clone.tissue}</td>
-				<td>${clone.cellLine}</td>
+				<td><fewi:suppressNA value="${clone.age}"/></td>
+				<td><fewi:suppressNA value="${clone.tissue}"/></td>
+				<td><fewi:suppressNA value="${clone.cellLine}"/></td>
 				<td><c:forEach var="marker" items="${clone.markers}" varStatus="mStatus">
 					<a href="${configBean.FEWI_URL}marker/${marker.primaryID}">${marker.symbol}</a><c:if
 						test="${marker.isPutative}"> (PUTATIVE)</c:if><c:if test="${!mStatus.last}">, </c:if>

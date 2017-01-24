@@ -3,9 +3,10 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
-<title>cDNA Clone Source Data for ${marker.symbol}</title>
+<title>cDNA Clone Source Data Summary for ${marker.symbol}</title>
 <meta http-equiv="X-UA-Compatible" content="chrome=1">
 <link rel="stylesheet" type="text/css" href="${configBean.WEBSHARE_URL}css/jquery-ui-1.10.2.custom.min.css" />
+<meta name="description" content="cDNA clones for a gene that includes Source Age, Source Tissue, and Source Cell Line"/>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
@@ -70,18 +71,14 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 <div id="titleBarWrapperGxd" userdoc="GENE_detail_help.shtml#cdna_summary" style="min-width: 1000px">
 	<a href="${configBean.HOMEPAGES_URL}expression.shtml"><img class="gxdLogo" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="75"></a>
 	<div id="pageHeaderWrapper" style='display:inline-block; margin-top: 20px;'>
-	<span class="titleBarMainTitleGxd">cDNA Clone Source Data</span>
-	<br/><span class="titleBarSubTitleGxd">Query Results -- Summary</span>
+	<span class="titleBarMainTitleGxd">cDNA Clone Source Data Summary</span>
 	</div>
 </div>
 
 <%@ include file="/WEB-INF/jsp/gxd/gxd_marker_header.jsp" %>
 
 <br clear="all" />
-<div id="summaryControl" class="summaryControl" style="display: inline">
-	<div id="resultbar" class="goldbar">Results</div>
-	<%@ include file="/WEB-INF/jsp/gxd/cdna_summary.jsp" %>
-</div>
+<%@ include file="/WEB-INF/jsp/gxd/cdna_summary.jsp" %>
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd/cdna_summary.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/external/jquery.paging.min.js"></script>
