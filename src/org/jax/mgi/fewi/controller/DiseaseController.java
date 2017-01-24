@@ -43,6 +43,13 @@ public class DiseaseController {
 	// Disease Detail by Disease Key
 	//--------------------------------------//
 
+	// default to DOID:7 if no ID provided in URL
+	@RequestMapping(method=RequestMethod.GET)
+	public ModelAndView getDefaultBrowserPage() {
+		return prepareDisease("DOID:7", "disease_browser", "");
+	}
+	
+	
 	@RequestMapping(value="/{diseaseID:.+}", method = RequestMethod.GET)
 	public ModelAndView diseaseBrowserByID(
 			HttpServletRequest request,
