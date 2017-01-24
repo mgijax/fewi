@@ -1,7 +1,7 @@
 <c:set var="functionID" value="${fn:replace(disease.diseaseID, ':', '_')}_dialog" />
 
 <div id="${functionID}" class="facetFilter; bottomBorder" style="display:none">
-	<div class="hd">IDs</div>
+	<div class="hd">${disease.disease} IDs</div>
 	<div class="bd" style="overflow: auto; max-height: 150px; max-width: 750px;">
 		<c:forEach var="secondardId" items="${disease.vocabTerm.secondaryIds}">
 			<span style="font-size: smaller;">${idLinker.getLink(secondardId, secondardId.accID, 'MP')}</span><br>
