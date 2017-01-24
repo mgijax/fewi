@@ -234,4 +234,9 @@ public class SearchConstants {
 	public static final String SAME_STRAINS = "samestrains";
 	public static final String CRE_SYSTEM = "creSystem";
 
+	// cDNA clones
+	public static final String CDNA_KEY = "cloneKey";
+	public static final String CDNA_MARKER_ID = "markerID";
+	public static final String CDNA_SEQUENCE_NUM = "sequenceNum";
+	public static final String CDNA_CLONE = "clone";
 }
