@@ -24,6 +24,7 @@ import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.AlleleFinder;
 import org.jax.mgi.fewi.finder.BatchFinder;
+import org.jax.mgi.fewi.finder.CdnaFinder;
 import org.jax.mgi.fewi.finder.GxdBatchFinder;
 import org.jax.mgi.fewi.finder.GxdFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
@@ -66,8 +67,10 @@ import org.jax.mgi.fewi.summary.GxdMarkerSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.QueryParser;
+import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.shr.fe.query.SolrLocationTranslator;
+import org.jax.mgi.shr.jsonmodel.Clone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,6 +149,9 @@ public class GXDController {
 
 	@Autowired
 	private GxdMatrixHandler gxdMatrixHandler;
+
+	@Autowired
+	private CdnaFinder cdnaFinder;
 
 	@Value("${solr.factetNumberDefault}")
 	private Integer facetLimit;
@@ -539,6 +545,72 @@ public class GXDController {
 		Marker marker = markerList.get(0);
 		mav.addObject("marker", marker);
 		return null;
+	}
+
+	/* cDNA summary by marker
+	 */
+	@RequestMapping(value="/cdna/marker/{mrkID}")
+	public ModelAndView cdnaSummaryByMarkerID(
+			HttpServletRequest request,
+			@PathVariable("mrkID") String mrkID) {
+
+		logger.debug("->cdnaSummaryByMarkerID started");
+		
+		ModelAndView mav = new ModelAndView("gxd/cdna_summary_by_marker");
+		mav.addObject("queryString", request.getQueryString());
+
+		// get the marker object (if possible) and add it to the mav
+		String error = addMarkerToMav(mav, mrkID);
+		if (error != null) {
+			return errorMav(error);
+		}
+
+		logger.debug("->cdnaSummaryByMarkerID routing to mav");
+		return mav;
+	}
+	
+	/* cDNA table of results (to be requested by JSON)
+	 */
+	@RequestMapping(value="/cdna/table")
+	public ModelAndView cdnaSummaryTable (HttpServletRequest request, @ModelAttribute Paginator page) {
+
+		logger.debug("->cdnaSummaryTable started");
+		
+		// grab the marker ID
+		String mrkID = request.getParameter("markerID");
+		if (mrkID == null) {
+			return errorMav("Missing marker ID parameter");
+		}
+		
+		// perform query, and pull out the requested objects
+		SearchResults<Clone> searchResults = getCdnaClones(request, mrkID, page);
+		List<Clone> cloneList = searchResults.getResultObjects();
+
+		ModelAndView mav = new ModelAndView("gxd/cdna_summary_table");
+		mav.addObject("clones", cloneList);
+		mav.addObject("count", cloneList.size());
+		mav.addObject("totalCount", searchResults.getTotalCount());
+		return mav;
+	}
+	
+	/*
+	 * This is a convenience method to handle packing the SearchParams object
+	 * and return the SearchResults from the finder for cDNA clones.
+	 */
+	private SearchResults<Clone> getCdnaClones(HttpServletRequest request, String mrkID, 
+			@ModelAttribute Paginator page) {
+
+		SearchParams params = new SearchParams();
+		params.setPaginator(page);
+		params.setFilter(new Filter(SearchConstants.CDNA_MARKER_ID, mrkID, Filter.Operator.OP_EQUAL));
+
+		// sort by sequence number in ascending order (descending = false)
+		List<Sort> sorts = new ArrayList<Sort>();
+		sorts.add(new Sort(SortConstants.SEQUENCE_NUM, false));
+		params.setSorts(sorts); 
+		
+		// perform query, return SearchResults 
+		return cdnaFinder.getClones(params);
 	}
 
 	/*
