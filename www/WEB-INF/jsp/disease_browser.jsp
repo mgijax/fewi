@@ -118,6 +118,12 @@
       </c:forEach>
       </span><br/>
     </c:if>
+    <c:if test="${not empty disease.vocabTerm.definition}">
+      <span class="bold">Definition:</span>
+      <span id='diseaseDefinition'>${disease.vocabTerm.definition}</span>
+    </c:if>
+
+
     </div>
   </div>
   <br>
@@ -170,16 +176,9 @@
       </div>
     </div>
     <br/>
+
     <img src="${configBean.WEBSHARE_URL}images/is-a.gif" alt="is-a" height="12" width="12" border="0"> denotes an 'is-a' relationship
-    <br/>
-    <c:if test="${not empty disease.vocabTerm.definition}">
-      <div class="row" id="diseaseHeader">
-      <div class="col-lg-12">
-      <span class="bold">Definition:</span>
-        ${disease.vocabTerm.definition}
-      </div>
-      </div>
-    </c:if>
+    
     </div>
   </div>
 
