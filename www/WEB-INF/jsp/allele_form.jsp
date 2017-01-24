@@ -132,7 +132,7 @@
         <br/>
 
         <EM><STRONG>Browse: </STRONG></EM>
-        <A HREF="${configBean.FEWI_URL}vocab/do/">Human Disease (DO) Vocabulary</a>
+        <A HREF="${configBean.FEWI_URL}vocab/do/">Human Disease Ontology (DO)</a>
         <br/>
 
         <span class="example" style='line-height:160%;'>

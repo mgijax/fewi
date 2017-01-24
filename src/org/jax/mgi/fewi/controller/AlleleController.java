@@ -1590,6 +1590,7 @@ public class AlleleController {
 		// setup view object
 		ModelAndView mav = new ModelAndView("disease_table");
 
+		mav.addObject("idLinker", idLinker);
 		// find the requested Allele
 		logger.debug("->asking alleleFinder for allele");
 		List<Allele> alleleList = alleleFinder.getAlleleByID(allID);
