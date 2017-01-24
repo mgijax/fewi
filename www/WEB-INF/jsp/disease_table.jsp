@@ -81,8 +81,8 @@ td.padSmall { padding: 2px }
 						<!-- disease -->
 						<td class="noWrap borderUnder" style="min-width:300px">
 							<div style="text-align:left;">
-								<a class="MP" href='${configBean.FEWI_URL}disease/${disease.diseaseID}' target="_blank">${disease.disease}</a>
-								&nbsp;<span id="show_${fn:replace(disease.vocabTerm.primaryId, ':', '_')}_dialog" class="link" style="float: right;">IDs</span>
+								<div style="float: left;"><a class="MP" href='${configBean.FEWI_URL}disease/${disease.diseaseID}' target="_blank">${disease.disease}</a></div>
+								<div style="float: right;"><span id="show_${fn:replace(disease.vocabTerm.primaryId, ':', '_')}_dialog" class="link">IDs</span></div>
 								<%@ include file="disease_table_popup.jsp" %>
 							</div>
 						</td>
