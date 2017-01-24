@@ -77,7 +77,7 @@
 											<c:set var="disease_safe_name" value="${fn:replace(diseaseRow.get('diseaseId'), ':', '_')}" />
 											<td class="td_disease_tbl">
 												<div style="float: left;"><a href="${configBean.FEWI_URL}disease/${diseaseRow.get('diseaseId')}">${diseaseRow.get('diseaseTerm')}</a></div>
-												<div><span id="show_${disease_safe_name}_dialog" class="link">IDs</span></div>
+												<div style="float: right;"><span id="show_${disease_safe_name}_dialog" class="link">IDs</span></div>
 												<%@ include file="MarkerDetail_disease_popup2.jsp" %>
 											</td>
 											<td class="td_disease_tbl">
