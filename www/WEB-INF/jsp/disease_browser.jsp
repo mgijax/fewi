@@ -1,5 +1,6 @@
 <%@ page import = "org.jax.mgi.fewi.util.StyleAlternator" %>
 <%@ page import = "org.jax.mgi.fewi.util.FormatHelper" %>
+<%@ page import = "org.jax.mgi.fewi.util.link.IDLinker" %>
 <%@ page import = "org.jax.mgi.fewi.util.NotesTagConverter" %>
 <%@ page import = "org.jax.mgi.fewi.config.ContextLoader" %>
 <%@ page import = "mgi.frontend.datamodel.*" %>
@@ -28,10 +29,9 @@
 <%  // Pull detail object into servlet scope
     Disease disease = (Disease) request.getAttribute("disease");
 
-    StyleAlternator leftTdStyles 
-      = new StyleAlternator("detailCat1","detailCat2");
-    StyleAlternator rightTdStyles 
-      = new StyleAlternator("detailData1","detailData2");
+	// ID linker use to generate external urls for a given ID/LogicalDB
+	IDLinker idLinker = (IDLinker) request.getAttribute("idLinker");
+	VocabTermID id;
 %>
 
 <!-- Latest compiled and minified CSS -->
@@ -110,20 +110,38 @@
       </c:forEach>
       </span><br/>
     </c:if>
+
+
+
     <c:if test="${not empty disease.orderedSecondaryIDs}">
       <span class="bold">Alt IDs:</span>
       <span id="diseaseSecondaryIDs">
       <c:forEach var="id" items="${disease.orderedSecondaryIDs}" varStatus="status">
-        ${id.accID}<c:if test="${!status.last}">, </c:if>
+
+
+		<c:choose>
+		  <c:when test="${id.logicalDB == 'OMIM'}">
+		    <% id = (VocabTermID) pageContext.getAttribute("id"); %>
+		    <%= idLinker.getLink(id.getLogicalDB(), id.getAccID()) %><c:if test="${!status.last}">, </c:if>
+		  </c:when>
+		  <c:otherwise>
+            ${id.accID}<c:if test="${!status.last}">, </c:if>
+		  </c:otherwise>
+		</c:choose>
+               
+        
       </c:forEach>
       </span><br/>
     </c:if>
+
+
+
+
+
     <c:if test="${not empty disease.vocabTerm.definition}">
       <span class="bold">Definition:</span>
       <span id='diseaseDefinition'>${disease.vocabTerm.definition}</span>
     </c:if>
-
-
     </div>
   </div>
   <br>
