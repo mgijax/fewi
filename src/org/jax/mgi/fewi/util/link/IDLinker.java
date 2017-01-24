@@ -410,7 +410,6 @@ public class IDLinker {
 	public String getLink (String logicalDB, String id, String linkText, String className) {
 		ActualDB adb = getActualDB(logicalDB);
 		if (adb == null) {
-			logger.warn("No ActualDB found for logicalDB = "+logicalDB);
 			return id;
 		}
 		if(logicalDB.equals("OMIM")) {
