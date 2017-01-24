@@ -67,7 +67,7 @@
 									<c:if test="${marker.countOfCdnaSources > 0}">
 										<li>
 											<div class="label">cDNA Data</div>
-											<div class="value"><a href="${configBean.WI_URL}searches/estclone_report.cgi?_Marker_key=${marker.markerKey}&sort=Tissue">${marker.countOfCdnaSources}</a></div>
+											<div class="value"><a href="${configBean.FEWI_URL}gxd/cdna/marker/${marker.primaryID}">${marker.countOfCdnaSources}</a></div>
 										</li>
 									</c:if>
 

@@ -79,10 +79,10 @@ td.padSmall { padding: 2px }
 				<c:forEach var="disease" items="${diseases}" varStatus="dStatus">
 					<tr class="${dStatus.index % 2==0 ? ' stripe2' : ' stripe1'}">
 						<!-- disease -->
-						<td class="noWrap borderUnder" style="min-width:250px">
+						<td class="noWrap borderUnder" style="min-width:300px">
 							<div style="text-align:left;">
 								<a class="MP" href='${configBean.FEWI_URL}disease/${disease.diseaseID}' target="_blank">${disease.disease}</a>
-								&nbsp;<span id="show_${fn:replace(disease.vocabTerm.primaryId, ':', '_')}_dialog" class="link">IDs</span>
+								&nbsp;<span id="show_${fn:replace(disease.vocabTerm.primaryId, ':', '_')}_dialog" class="link" style="float: right;">IDs</span>
 								<%@ include file="disease_table_popup.jsp" %>
 							</div>
 						</td>
