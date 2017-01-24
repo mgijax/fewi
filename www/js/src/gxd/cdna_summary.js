@@ -77,7 +77,7 @@ var updateResultsDiv = function(startIndex, rowsPerPage) {
 	// if we've scrolled closer to the bottom pagination than the top, assume the user clicked the bottom set and
 	// go back to the top
 	if (Math.abs(top - yPos) > Math.abs(bottom - yPos)) {
-		yPos = $('#resultbar').position().top;
+		yPos = top;
 	}
 	
 	log("entered updateResultsDiv()");
