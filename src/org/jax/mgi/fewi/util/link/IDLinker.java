@@ -415,8 +415,8 @@ public class IDLinker {
 		if(logicalDB.equals("OMIM")) {
 			id = id.replaceAll("OMIM:", "");
 		}
-		if(logicalDB.equals("MESH")) {
-			id = id.replaceAll("MESH:", "");
+		if(logicalDB.equals("ORDO")) {
+			id = id.replaceAll("ORDO:", "");
 		}
 		return makeLink(adb.getUrl(), id, linkText, className);
 	}
@@ -451,6 +451,9 @@ public class IDLinker {
 			if (!done.containsKey(adb.getName())) {
 				if(adb.getName().equals("OMIM")) {
 					id = id.replaceAll("OMIM:", "");
+				}
+				if(logicalDB.equals("ORDO")) {
+					id = id.replaceAll("ORDO:", "");
 				}
 				href = makeLink (adb.getUrl(), id, adb.getDisplayName(), className);
 				if (!isFirst) {
