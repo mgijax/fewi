@@ -206,7 +206,7 @@ td.padTop { padding-top:4px }
 
 <c:forEach var="phenoTableSystem" items="${phenoTableSystems}" varStatus="systemStatus">
     <tr id="${phenoTableSystem.cssId}_row" class="phenoSummarySystemRow  ${systemStatus.index % 2==0 ? ' stripe2' : ' stripe1'}">
-      <td  id="${phenoTableSystem.cssId}" class="noWrap borderUnder" style="min-width:250px" >
+      <td  id="${phenoTableSystem.cssId}" class="noWrap borderUnder" style="min-width:300px" >
         <div style="text-align:left; cursor: pointer;">
          <!-- Add the toggle arrows -->
           <span class="arrowRight ${phenoTableSystem.cssClass}">
@@ -237,7 +237,7 @@ td.padTop { padding-top:4px }
 
     <c:forEach var="phenoTableTerm" items="${phenoTableSystem.phenoTableTerms}" >
       <tr class="phenoSummaryTermRow ${phenoTableSystem.cssClass} ${systemStatus.index % 2==0 ? ' stripe2' : ' stripe1'}">
-        <td  class="noWrap borderUnder" style="min-width:250px" >
+        <td  class="noWrap borderUnder" style="min-width:300px" >
             <div style="text-align:left; ">
               <span style="margin-left:${phenoTableTerm.displayIndent}px;">
                  ${phenoTableTerm.term}
