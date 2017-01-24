@@ -17,7 +17,6 @@
 <script type="text/javascript" src="${configBean.WEBSHARE_URL}js/hideshow.js"></script>
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
-<!-- iframe for history manager's use -->
 <iframe id="yui-history-iframe" src="${configBean.FEWI_URL}assets/blank.html"></iframe>
 <input id="yui-history-field" type="hidden">
 
