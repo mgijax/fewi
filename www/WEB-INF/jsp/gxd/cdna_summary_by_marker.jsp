@@ -14,7 +14,7 @@
 .left { float: left; }
 .right { float: right; }
 
-#resultSummary {border:0;padding-left:5px; text-align: left; font-size: 12px; width: 100%; }
+#resultSummary {border:0;padding-right:5px; text-align: left; font-size: 12px; width: 100%; }
 #resultSummary .selected a,
 #resultSummary .selected a:focus,
 #resultSummary .selected a:hover{ margin-left: 0px;border:1px solid #808080;border-bottom:solid 1px #eee; color:black; background:none; background-color:#eee;}
@@ -31,6 +31,7 @@ body.yui-skin-sam div#outerGxd {overflow:visible; padding-top: 5px; padding-bott
 .yui-dt table {width: 100%;}
 
 td.yui-dt-col-assayID div.yui-dt-liner span {font-size: 75%;}
+td.summaryHeaderCat1Gxd { font-weight: bold; }
 
 .yui-skin-sam .yui-tt .bd
 {
@@ -43,7 +44,7 @@ td.yui-dt-col-assayID div.yui-dt-liner span {font-size: 75%;}
 
 #cdnaSummaryTable { width: 100%; }
 #cdnaSummaryTable tr:nth-child(odd) { background-color: #dddddd; }
-#cdnaSummaryTable th { border: 1px solid gray; padding: 4px; background-color: #ebca6d; }
+#cdnaSummaryTable th { border: 1px solid gray; padding: 4px; background-color: #ebca6d; font-weight: bold; }
 #cdnaSummaryTable td { border: 1px solid gray; padding: 4px; }
 </style>
 
