@@ -111,16 +111,16 @@
       </span><br/>
     </c:if>
 
-
-
     <c:if test="${not empty disease.orderedSecondaryIDs}">
       <span class="bold">Alt IDs:</span>
       <span id="diseaseSecondaryIDs">
       <c:forEach var="id" items="${disease.orderedSecondaryIDs}" varStatus="status">
 
-
+		<!-- only link certain types of IDs -->
 		<c:choose>
-		  <c:when test="${id.logicalDB == 'OMIM'}">
+		  <c:when test="${id.logicalDB == 'OMIM' || 
+		                  id.logicalDB == 'ORDO' ||
+		                  id.logicalDB == 'Disease Ontology'}">
 		    <% id = (VocabTermID) pageContext.getAttribute("id"); %>
 		    <%= idLinker.getLink(id.getLogicalDB(), id.getAccID()) %><c:if test="${!status.last}">, </c:if>
 		  </c:when>
@@ -128,15 +128,10 @@
             ${id.accID}<c:if test="${!status.last}">, </c:if>
 		  </c:otherwise>
 		</c:choose>
-               
-        
+                       
       </c:forEach>
       </span><br/>
     </c:if>
-
-
-
-
 
     <c:if test="${not empty disease.vocabTerm.definition}">
       <span class="bold">Definition:</span>
