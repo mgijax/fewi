@@ -100,7 +100,7 @@
   <div class="row" id="diseaseHeader">
     <div class="col-lg-12">
     <span class="diseaseHeaderDisease">
-      <span id="diseaseNameID">${disease.disease} (${disease.primaryID})</span>
+      <span id="diseaseNameID">${disease.disease} (<%= idLinker.getLink("Disease Ontology", disease.getPrimaryID()) %>)</span>
     </span><br/>  
     <c:if test="${not empty disease.diseaseSynonyms}">
       <span class="bold">Synonyms:</span>
@@ -120,7 +120,9 @@
 		<c:choose>
 		  <c:when test="${id.logicalDB == 'OMIM' || 
 		                  id.logicalDB == 'ORDO' ||
-		                  id.logicalDB == 'Disease Ontology'}">
+		                  id.logicalDB == 'KEGG' ||
+		                  id.logicalDB == 'MESH' ||
+		                  id.logicalDB == 'EFO'}">
 		    <% id = (VocabTermID) pageContext.getAttribute("id"); %>
 		    <%= idLinker.getLink(id.getLogicalDB(), id.getAccID()) %><c:if test="${!status.last}">, </c:if>
 		  </c:when>

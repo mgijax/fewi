@@ -418,6 +418,15 @@ public class IDLinker {
 		if(logicalDB.equals("ORDO")) {
 			id = id.replaceAll("ORDO:", "");
 		}
+		if(logicalDB.equals("EFO")) {
+			id = id.replaceAll("EFO:", "EFO_");
+		}
+		if(logicalDB.equals("KEGG")) {
+			id = id.replaceAll("KEGG:", "");
+		}
+		if(logicalDB.equals("MESH")) {
+			id = id.replaceAll("MESH:", "");
+		}
 		return makeLink(adb.getUrl(), id, linkText, className);
 	}
 
@@ -454,6 +463,15 @@ public class IDLinker {
 				}
 				if(logicalDB.equals("ORDO")) {
 					id = id.replaceAll("ORDO:", "");
+				}
+				if(logicalDB.equals("EFO")) {
+					id = id.replaceAll("EFO:", "EFO_");
+				}
+				if(logicalDB.equals("KEGG")) {
+					id = id.replaceAll("KEGG:", "");
+				}
+				if(logicalDB.equals("MESH")) {
+					id = id.replaceAll("MESH:", "");
 				}
 				href = makeLink (adb.getUrl(), id, adb.getDisplayName(), className);
 				if (!isFirst) {
