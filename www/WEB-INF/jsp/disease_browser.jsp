@@ -89,7 +89,7 @@
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="VOCAB_do_browser_detail_help.shtml">	
+<div id="titleBarWrapper" userdoc="VOCAB_do_browser_help.shtml">	
 	<span class="titleBarMainTitle">Disease Ontology Browser</span>
 </div>
 
