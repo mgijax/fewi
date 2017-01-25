@@ -14,8 +14,6 @@ import mgi.frontend.datamodel.AlleleID;
 import mgi.frontend.datamodel.AlleleRelatedMarker;
 import mgi.frontend.datamodel.AlleleSynonym;
 import mgi.frontend.datamodel.Genotype;
-import mgi.frontend.datamodel.GenotypeDisease;
-import mgi.frontend.datamodel.GenotypeDiseaseReference;
 import mgi.frontend.datamodel.Image;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerLocation;
@@ -415,7 +413,7 @@ public class AlleleController {
 
 		List<AlleleSummaryRow> sRows = new ArrayList<AlleleSummaryRow>();
 		for(Allele allele : sr.getResultObjects()) {
-			sRows.add(new AlleleSummaryRow(allele));
+			sRows.add(new AlleleSummaryRow(allele, idLinker));
 		}
 
 		logger.info("building summary rows");
