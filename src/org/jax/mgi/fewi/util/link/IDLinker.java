@@ -410,11 +410,19 @@ public class IDLinker {
 	public String getLink (String logicalDB, String id, String linkText, String className) {
 		ActualDB adb = getActualDB(logicalDB);
 		if (adb == null) {
-			logger.warn("No ActualDB found for logicalDB = "+logicalDB);
 			return id;
 		}
 		if(logicalDB.equals("OMIM")) {
 			id = id.replaceAll("OMIM:", "");
+		}
+		if(logicalDB.equals("ORDO")) {
+			id = id.replaceAll("ORDO:", "");
+		}
+		if(logicalDB.equals("EFO")) {
+			id = id.replaceAll("EFO:", "EFO_");
+		}
+		if(logicalDB.equals("KEGG")) {
+			id = id.replaceAll("KEGG:", "");
 		}
 		if(logicalDB.equals("MESH")) {
 			id = id.replaceAll("MESH:", "");
@@ -452,6 +460,18 @@ public class IDLinker {
 			if (!done.containsKey(adb.getName())) {
 				if(adb.getName().equals("OMIM")) {
 					id = id.replaceAll("OMIM:", "");
+				}
+				if(logicalDB.equals("ORDO")) {
+					id = id.replaceAll("ORDO:", "");
+				}
+				if(logicalDB.equals("EFO")) {
+					id = id.replaceAll("EFO:", "EFO_");
+				}
+				if(logicalDB.equals("KEGG")) {
+					id = id.replaceAll("KEGG:", "");
+				}
+				if(logicalDB.equals("MESH")) {
+					id = id.replaceAll("MESH:", "");
 				}
 				href = makeLink (adb.getUrl(), id, adb.getDisplayName(), className);
 				if (!isFirst) {

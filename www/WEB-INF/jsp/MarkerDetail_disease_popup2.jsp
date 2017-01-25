@@ -1,7 +1,7 @@
 <c:set var="functionID" value="${fn:replace(diseaseRow.get('diseaseId'), ':', '_')}_dialog" />
 
 <div id="${functionID}" class="facetFilter; bottomBorder" style="display:none">
-	<div class="hd">${diseaseRow.get('diseaseTerm')} IDs</div>
+	<div class="hd">${diseaseRow.get('diseaseTerm')}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
 	<div class="bd" style="overflow: auto; max-height: 150px; max-width: 750px;">
 		<a></a><!-- this empty 'a' tag is to keep Chrome and Safari from putting a selection box aroudn the first link displayed -->
 		<p/>
