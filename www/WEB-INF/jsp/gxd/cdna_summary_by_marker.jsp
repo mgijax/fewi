@@ -69,7 +69,7 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 
 
 <!-- header bar -->
-<div id="titleBarWrapperGxd" userdoc="GENE_detail_help.shtml#cdna_summary" style="min-width: 1000px">
+<div id="titleBarWrapperGxd" userdoc="EXPRESSION_cDNA_summary_help.shtml" style="min-width: 1000px">
 	<a href="${configBean.HOMEPAGES_URL}expression.shtml"><img class="gxdLogo" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="75"></a>
 	<div id="pageHeaderWrapper" style='display:inline-block; margin-top: 20px;'>
 	<span class="titleBarMainTitleGxd">cDNA Clone Source Data Summary</span>
