@@ -173,7 +173,7 @@ public class AlleleSummaryRow {
 			span.addStyle("font-size", "smaller");
 			span.setElementClass("link");
 			span.setOnMouseOver("setup_panel('" + dialogId + "');");
-			span.setText("IDs");
+			span.setText("(IDs)");
 			
 			DivCreator div = new DivCreator("dialog(" + dialogId + ")");
 			div.setElementClass("facetFilter; bottomBorder");
