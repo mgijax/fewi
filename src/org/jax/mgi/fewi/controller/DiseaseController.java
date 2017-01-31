@@ -39,10 +39,11 @@ public class DiseaseController {
 	@Autowired
 	private IDLinker idLinker;
 
-	//--------------------------------------//
-	// Disease Detail by Disease Key
-	//--------------------------------------//
+	//-----------------------------------------------------------------------
+	// Disease Browser Shell -- header and tab setup
+	//-----------------------------------------------------------------------
 
+	
 	// default to DOID:7 if no ID provided in URL
 	@RequestMapping(method=RequestMethod.GET)
 	public ModelAndView getDefaultBrowserPage() {
@@ -50,6 +51,7 @@ public class DiseaseController {
 	}
 	
 	
+	// mapping for disease browser via ID
 	@RequestMapping(value="/{diseaseID:.+}", method = RequestMethod.GET)
 	public ModelAndView diseaseBrowserByID(
 			HttpServletRequest request,
@@ -63,16 +65,8 @@ public class DiseaseController {
 		return prepareDisease(diseaseID, "disease_browser", openTab);
 	}
 	
-	@RequestMapping(value="/models/{diseaseID:.+}", method = RequestMethod.GET)
-	public ModelAndView diseaseModelsByID(@PathVariable("diseaseID") String diseaseID) {
 
-		logger.debug("->diseaseModelsByID started");
-
-		return prepareDisease(diseaseID, "disease_models", "");
-	}
-
-	// code shared to send back a disease detail page, regardless of
-	// whether the initial link was by disease ID or by database key
+	// code shared to send back a disease browser page
 	private ModelAndView prepareDisease (String diseaseID, String view, String openTab) {
 
 		List<Disease> diseaseList = diseaseFinder.getDiseaseByID(diseaseID);
@@ -113,8 +107,52 @@ public class DiseaseController {
 
 		return mav;
 	}
+	
 
+	//-----------------------------------------------------------------------
+	// Disease Browser Tab Handling -- tab contents
+	//-----------------------------------------------------------------------
 
+	@RequestMapping(value="/geneTab/{diseaseID:.+}", method = RequestMethod.GET)
+	public ModelAndView getGeneTab(@PathVariable("diseaseID") String diseaseID) {
+
+		logger.debug("->getGeneTab started");
+
+		return prepareDiseaseTab(diseaseID, "disease_browser_genetab");
+	}
+
+	// code shared to send back a disease browser tab content
+	private ModelAndView prepareDiseaseTab (String diseaseID, String view) {
+
+		List<Disease> diseaseList = diseaseFinder.getDiseaseByID(diseaseID);
+		// there can be only one...
+		if (diseaseList.size() < 1) { // none found
+			ModelAndView mav = new ModelAndView("error");
+			logger.info("No Disease Found");
+			mav.addObject("errorMsg", "No Disease Found");
+			return mav;
+		} else if (diseaseList.size() > 1) { // dupe found
+			ModelAndView mav = new ModelAndView("error");
+			mav.addObject("errorMsg", "Duplicate Disease ID");
+			return mav;
+		}
+		// success - we have a single object
+
+		// generate ModelAndView object to be passed to detail page
+		ModelAndView mav = new ModelAndView(view);
+
+		//pull out the Disease, and add to mav
+		Disease disease = diseaseList.get(0);
+		mav.addObject("disease", disease);
+
+		return mav;
+	}
+
+	//-------------------------------------------------------	
+	// REMOVE BELOW WHEN TESTING DONE
+	//-------------------------------------------------------
+
+	
 ////////// TODO - remove this; using old jsp of detail page; using for testing new browser
 	@RequestMapping(value="/old/{diseaseID:.+}", method = RequestMethod.GET)
 	public ModelAndView oldDiseaseDetailByID(@PathVariable("diseaseID") String diseaseID) {
@@ -124,6 +162,13 @@ public class DiseaseController {
 		return prepareDisease(diseaseID, "disease_detail", "");
 	}
 
+	@RequestMapping(value="/models/{diseaseID:.+}", method = RequestMethod.GET)
+	public ModelAndView diseaseModelsByID(@PathVariable("diseaseID") String diseaseID) {
+
+		logger.debug("->diseaseModelsByID started");
+
+		return prepareDisease(diseaseID, "disease_models", "");
+	}
 
 
 
