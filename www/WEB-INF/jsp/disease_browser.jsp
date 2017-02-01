@@ -144,73 +144,28 @@
   <br>
 
   <!-- TAB DEFINITIONS -->
-  <ul class="nav nav-tabs">
-    <li class="active" ><a data-toggle="tab" href="#termTab">Term Details</a></li>
-    <li><a id="genesTabButton" data-toggle="tab" href="#genesTab">Genes</a></li>
-    <li><a id="modelsTabButton" data-toggle="tab" href="#modelsTab">Models</a></li>
+  <ul class="nav nav-tabs tabs-up" id="review">
+    <li><a href="${configBean.FEWI_URL}disease/termTab/${disease.primaryID}" 
+    	data-target="#termTabContent" id="termTabButton" data-toggle="tabajax" class="active">Term Details</a></li>
+    <li><a href="${configBean.FEWI_URL}disease/geneTab/${disease.primaryID}" 
+    	data-target="#geneTabContent" id="genesTabButton" data-toggle="tabajax">Genes</a></li>
+    <li><a href="${configBean.FEWI_URL}disease/modelTab/${disease.primaryID}" 
+    	data-target="#modelTabContent" id="modelsTabButton" data-toggle="tabajax">Models</a></li>
   </ul>
 
-  <!-- TAB CONTENTS -->
+  <!-- TAB CONTENT - filled dynamically via subsequent request -->
   <div class="tab-content">
-
-  <div id="termTab" class="tab-pane fade in active">
-    <div class="tabContainer">
-
-    <div class="row tabWrapper" id="termTabWrapper">
-    <div class="col-sm-4">
-      <span class='bubbleHeading'>Parent term(s)</span>
-      <div class="termWrapper" id="termTabParentWrapper">
-        <c:forEach var="parent" items="${disease.vocabTerm.parentEdges}" varStatus="status">
-          <a href="${configBean.FEWI_URL}disease/${parent.parent.primaryID}">${parent.parent.term}</a> +
-          <img src="${configBean.WEBSHARE_URL}images/is-a.gif" alt="is-a" height="12" width="12" border="0">
-          <c:if test="${!status.last}"><br> </c:if>
-        </c:forEach>
-      </div>
-      </div>
-      <div class="col-sm-4">
-      <span class='bubbleHeading'>Term with siblings</span>
-      <div class="termWrapper" id="termTabTermWrapper">
-        <div id='termInTermTabBubble'>
-        ${disease.disease}<c:if test="${disease.vocabTerm.isLeaf != 1}"> + </c:if>
-        </div><br>
-        <c:forEach var="sibling" items="${disease.vocabTerm.siblings}" varStatus="status">
-          <a href="${configBean.FEWI_URL}disease/${sibling.primaryID}">${sibling.term}</a> <c:if test="${sibling.isLeaf != 1}"> + </c:if>
-          <c:if test="${!status.last}"><br> </c:if>
-        </c:forEach>
-       </div>
-      </div>
-      <div class="col-sm-4">
-      <span class='bubbleHeading'>Child terms(s)</span>
-      <div class="termWrapper" id="termTabChildWrapper">
-        <c:forEach var="child" items="${disease.vocabTerm.vocabChildren}" varStatus="status">
-          <img src="${configBean.WEBSHARE_URL}images/is-a.gif" alt="is-a" height="12" width="12" border="0">
-          <a href="${configBean.FEWI_URL}disease/${child.childPrimaryId}">${child.childTerm}</a> <c:if test="${child.isLeaf != 1}"> + </c:if>
-          <c:if test="${!status.last}"><br> </c:if>
-        </c:forEach>
-      </div>
-      </div>
+    <div class="tab-pane active" id="termTabContent">
     </div>
-    <br/>
-
-    <img src="${configBean.WEBSHARE_URL}images/is-a.gif" alt="is-a" height="12" width="12" border="0"> denotes an 'is-a' relationship
-    
+    <div class="tab-pane" id="geneTabContent">
+    </div>
+    <div class="tab-pane" id="modelTabContent">
     </div>
   </div>
 
 
 
-  <div id="genesTab" class="tab-pane fade">
-      <div class="tabContainer">
-      <p>Future genes tab</p>
-      </div>
-  </div>
-
-  <div id="modelsTab" class="tab-pane fade">
-      <div class="tabContainer">
-      <p>Future models tab</p>
-      </div>
-    </div>
-  </div>
+  <!-- TAB CONTENTS -->
 
   Disease References using Mouse Models 
   <a href="${configBean.FEWI_URL}reference/disease/${disease.primaryID}?typeFilter=Literature">(${diseaseRefCount})</a>
@@ -219,13 +174,36 @@
 
 
 <script type="text/javascript">
+
+<!-- tab retrieval functionality -->
+$('[data-toggle="tabajax"]').click(function(e) {
+    var $this = $(this),
+        loadurl = $this.attr('href'),
+        targ = $this.attr('data-target');
+
+    $.get(loadurl, function(data) {
+        $(targ).html(data);
+    });
+
+    $this.tab('show');
+    return false;
+});
+
+<!-- default tab action -->
 $(document).ready(function(){
-	<c:if test = "${openTab == 'genes'}">
+
+	<c:choose>
+	  <c:when test="${openTab == 'genes'}">
 		$("#genesTabButton").click(); 
-	</c:if>
-	<c:if test = "${openTab == 'models'}">
+	  </c:when>
+	  <c:when test="${openTab == 'models'}">
 		$("#modelsTabButton").click(); 
-	</c:if>
+	  </c:when>
+	  <c:otherwise>
+		$("#termTabButton").click(); 
+	  </c:otherwise>
+	</c:choose>
+
 });
 </script>
 

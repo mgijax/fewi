@@ -24,6 +24,8 @@
 <style type="text/css">
 </style>
 
-
+<div class="tabContainer">
 
 TODO -- GENE TAB CONTENT -- EMPTY INITIALLY
+
+</div>

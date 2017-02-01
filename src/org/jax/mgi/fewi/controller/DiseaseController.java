@@ -113,12 +113,26 @@ public class DiseaseController {
 	// Disease Browser Tab Handling -- tab contents
 	//-----------------------------------------------------------------------
 
+	@RequestMapping(value="/termTab/{diseaseID:.+}", method = RequestMethod.GET)
+	public ModelAndView getTermTab(@PathVariable("diseaseID") String diseaseID) {
+
+		logger.debug("->getTermTab started");
+
+		return prepareDiseaseTab(diseaseID, "disease_browser_termtab");
+	}
 	@RequestMapping(value="/geneTab/{diseaseID:.+}", method = RequestMethod.GET)
 	public ModelAndView getGeneTab(@PathVariable("diseaseID") String diseaseID) {
 
 		logger.debug("->getGeneTab started");
 
 		return prepareDiseaseTab(diseaseID, "disease_browser_genetab");
+	}
+	@RequestMapping(value="/modelTab/{diseaseID:.+}", method = RequestMethod.GET)
+	public ModelAndView getModelTab(@PathVariable("diseaseID") String diseaseID) {
+
+		logger.debug("->getModelTab started");
+
+		return prepareDiseaseTab(diseaseID, "disease_browser_modeltab");
 	}
 
 	// code shared to send back a disease browser tab content
