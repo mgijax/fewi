@@ -11,18 +11,23 @@
 					<ul>
 						<li>
 							<div style="padding-left: 90px;">
-								<c:set var="reagentUrl" value="${configBean.WI_URL}searches/probe_report.cgi?_Marker_key=${marker.markerKey}"/>
+								<c:set var="reagentUrl" value="${configBean.FEWI_URL}probe/marker/${marker.primaryID}"/>
 								<c:forEach var="item" items="${marker.molecularReagentCountsByType}">
-									<c:set var="reagentType" value="&DNAtypes=${item.countType}"/>
-									<c:if test="${fn:startsWith(item.countType, 'Primer')}">
-										<c:set var="reagentType" value="&DNAtypes=primer"/>
-									</c:if>
-									<c:if test="${item.countType == 'Other'}">
-										<c:set var="reagentType" value="&notDNAtypes=genomic,primer,cDNA"/>
-									</c:if>
-									<c:if test="${fn:startsWith(item.countType, 'All')}">
-										<c:set var="reagentType" value=""/>
-									</c:if>
+									<c:set var="reagentType" value="?segmentType=${item.countType}"/>
+									<c:choose>
+										<c:when test="${fn:startsWith(item.countType, 'Other')}">	
+											<c:set var="reagentType" value="?segmentType=other"/>
+										</c:when>
+										<c:when test="${fn:startsWith(item.countType, 'Genomic')}">	
+											<c:set var="reagentType" value="?segmentType=genomic"/>
+										</c:when>
+										<c:when test="${fn:startsWith(item.countType, 'Primer')}">	
+											<c:set var="reagentType" value="?segmentType=primer"/>
+										</c:when>
+										<c:when test="${fn:startsWith(item.countType, 'All')}">
+											<c:set var="reagentType" value=""/>
+										</c:when>
+									</c:choose>
 									<div style="float: left; padding-right: 25px;">${item.countType} <a href="${reagentUrl}${reagentType}">${item.count}</a></div>
 								</c:forEach>
 								<c:if test="${marker.countOfMicroarrayProbesets > 0}">

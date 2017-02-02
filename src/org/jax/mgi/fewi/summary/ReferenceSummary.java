@@ -147,7 +147,7 @@ public class ReferenceSummary {
         	sb.append(String.format("<li>Mapping data: <a href=\"%ssearches/mapdata_report_by_reference.cgi?%s\">%,d</a></li>", wiUrl, this.reference.getReferenceKey(), this.reference.getCountOfMappingResults()));
         }
         if(reference.getCountOfProbes() > 0){
-        	sb.append(String.format("<li>Molecular probes and clones: <a href=\"%ssearches/probe_report.cgi?_Refs_key=%s\">%,d</a></li>", wiUrl, this.reference.getReferenceKey(), this.reference.getCountOfProbes()));
+        	sb.append(String.format("<li>Molecular probes and clones: <a href=\"%sprobe/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfProbes()));
         }
         if(reference.getCountOfSequenceResults() >0){
         	sb.append(String.format("<li>Sequences: <a href=\"%ssequence/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfSequenceResults()));

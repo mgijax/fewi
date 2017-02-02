@@ -104,6 +104,9 @@ public class SortConstants {
 	public static final String BY_IMAGE_HYBRIDIZATION_ASC = "byImageHybridizationAsc";
 	public static final String BY_IMAGE_HYBRIDIZATION_DESC = "byImageHybridizationDesc";
 
+	// probe sorting options
+	public static final String PRB_BY_NAME = "byName";
+	public static final String PRB_BY_TYPE = "byType";
 
     // faux entry;  used by webapp class template
 	public static final String FOO_SORT              = "fooSort";
