@@ -29,7 +29,7 @@
 						${collection}<br/>
 					</c:forEach>
 				</td>
-				<td><fewi:suppressNA value="${probe.segmentType}"/></td>
+				<td>${probe.segmentType}</td>
 				<td><c:forEach var="marker" items="${probe.markers}" varStatus="mStatus">
 					<a href="${configBean.FEWI_URL}marker/${marker.primaryID}">${marker.symbol}</a><c:if
 						test="${marker.isPutative}"> (PUTATIVE)</c:if><c:if test="${!mStatus.last}"><br/></c:if>
