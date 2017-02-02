@@ -69,3 +69,8 @@ table, th, td {
 .yui-skin-sam tr.yui-dt-odd td.yui-dt-asc,
 .yui-skin-sam tr.yui-dt-odd td.yui-dt-desc { background-color:#f1f1f1; } /* dark blue sorted */
 
+.link {
+   color:#000099;
+   cursor: pointer;
+   text-decoration: none;
+}

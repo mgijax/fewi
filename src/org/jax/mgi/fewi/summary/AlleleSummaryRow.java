@@ -6,12 +6,17 @@ import java.util.List;
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.AlleleRelatedMarker;
 import mgi.frontend.datamodel.AlleleSynonym;
+import mgi.frontend.datamodel.VocabTermID;
 import mgi.frontend.datamodel.phenotype.AlleleSummaryDisease;
 import mgi.frontend.datamodel.phenotype.AlleleSummarySystem;
 
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.FormatHelper;
+import org.jax.mgi.fewi.util.html.DivCreator;
+import org.jax.mgi.fewi.util.html.LinkCreator;
+import org.jax.mgi.fewi.util.html.SpanCreator;
+import org.jax.mgi.fewi.util.link.IDLinker;
 
 public class AlleleSummaryRow {
 
@@ -22,14 +27,14 @@ public class AlleleSummaryRow {
 
 	// encapsulated row object
 	private final Allele allele;
+	private IDLinker idLinker;
 
-	// config values
 	String fewiUrl   = ContextLoader.getConfigBean().getProperty("FEWI_URL");
 	String webshareUrl = ContextLoader.getConfigBean().getProperty("WEBSHARE_URL");
-	String pywiUrl   = ContextLoader.getConfigBean().getProperty("WI_URL");
 
-	public AlleleSummaryRow (Allele allele) {
+	public AlleleSummaryRow (Allele allele, IDLinker idLinker) {
 		this.allele = allele;
+		this.idLinker = idLinker;
 	}
 
 
@@ -148,12 +153,53 @@ public class AlleleSummaryRow {
 		}
 		return StringUtils.join(systems,", ");
 	}
-	public String getDiseases(){
+	
+	public String getDiseases() {
 		List<String> diseases = new ArrayList<String>();
+
 		for(AlleleSummaryDisease disease : allele.getSummaryDiseases()) {
-			String diseaseDisplay = String.format("<a href=\"%sdisease/%s\">%s</a> %s",fewiUrl,disease.getDoID(),disease.getDisease(),disease.getDoID());
-			diseases.add(diseaseDisplay);
+			//disease.getVocabTerm().
+			LinkCreator makeUrl = new LinkCreator("", fewiUrl + "disease/" + disease.getDoID());
+			makeUrl.setElementClass("MP");
+			makeUrl.setTargetBlank(true);
+			makeUrl.setText(disease.getDisease());
+			
+			String dialogId = disease.getDoID().replaceAll(":", "_") + "_" + allele.getAlleleKey();
+			
+			SpanCreator span = new SpanCreator("show_dialog(" + dialogId + ")");
+			span.addStyle("color", "#000099");
+			span.addStyle("cursor", "pointer");
+			span.addStyle("text-decoration", "none");
+			span.addStyle("font-size", "smaller");
+			span.setElementClass("link");
+			span.setOnMouseOver("setup_panel('" + dialogId + "');");
+			span.setText("(IDs)");
+			
+			DivCreator div = new DivCreator("dialog(" + dialogId + ")");
+			div.setElementClass("facetFilter; bottomBorder");
+			div.addStyle("display", "none");
+			
+			DivCreator div_hd = new DivCreator();
+			div_hd.setElementClass("hd");
+			div_hd.setText(disease.getDisease() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			
+			DivCreator div_bd = new DivCreator("");
+			div_bd.setElementClass("bd");
+			div_bd.addStyle("overflow", "auto");
+			div_bd.addStyle("max-height", "150px");
+			div_bd.addStyle("max-width", "750px");
+
+			SpanCreator s = new SpanCreator();
+			String spans = "";
+			for(VocabTermID id: disease.getVocabTerm().getSecondaryIds()) {
+				s.setText(idLinker.getLink(id, id.getAccID(), "MP"));
+				spans += s.toString() + "<br>";
+			}
+			div_bd.setText(spans);
+			div.setText(div_hd.toString() + div_bd.toString());
+			
+			diseases.add(makeUrl.toString() + "&nbsp;" + span.toString() + div.toString());
 		}
-		return StringUtils.join(diseases,"; ");
+		return StringUtils.join(diseases,"<br>");
 	}
 }
