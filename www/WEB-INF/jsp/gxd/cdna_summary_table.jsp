@@ -23,7 +23,7 @@
 		</tr>
 		<c:forEach var="clone" items="${clones}" varStatus="status">
 			<tr>
-				<td><a href="${configBean.WI_URL}searches/probe.cgi?${clone.primaryID}"><fewi:super value="${clone.name}"/></a>
+				<td><a href="${configBean.WI_URL}searches/probe.cgi?${clone.primaryID}" target="_blank"><fewi:super value="${clone.name}"/></a>
 					<span class="smaller">(${clone.primaryID})</span>
 				</td>
 				<td><c:forEach var="collection" items="${clone.collections}" varStatus="cStatus">
@@ -34,7 +34,7 @@
 				<td><fewi:suppressNA value="${clone.age}"/></td>
 				<td><fewi:suppressNA value="${clone.cellLine}"/></td>
 				<td><c:forEach var="marker" items="${clone.markers}" varStatus="mStatus">
-					<a href="${configBean.FEWI_URL}marker/${marker.primaryID}">${marker.symbol}</a><c:if
+					<a href="${configBean.FEWI_URL}marker/${marker.primaryID}" target="_blank">${marker.symbol}</a><c:if
 						test="${marker.isPutative}"> (PUTATIVE)</c:if><c:if test="${!mStatus.last}">, </c:if>
 					</c:forEach>
 				</td>

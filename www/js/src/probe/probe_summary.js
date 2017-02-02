@@ -156,7 +156,7 @@ var updatePaginator = function(totalCount, pageLimit, callback) {
 	if (totalCount == null) {
 		alert("You cannot have a paginator with a null totalCount.");
 	}
-	if (pageLimit == null) { pageLimit = 50; }
+	if (pageLimit == null) { pageLimit = 250; }
 	if (callback == null) {
 		callback = function(page) {
 			alert("You forgot to define a callback for the paginator (page " + page + ")");

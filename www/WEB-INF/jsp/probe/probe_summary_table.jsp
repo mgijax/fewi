@@ -22,7 +22,7 @@
 		</tr>
 		<c:forEach var="probe" items="${probes}" varStatus="status">
 			<tr>
-				<td><a href="${configBean.WI_URL}searches/probe.cgi?${probe.primaryID}"><fewi:super value="${probe.name}"/></a>
+				<td><a href="${configBean.WI_URL}searches/probe.cgi?${probe.primaryID}" target="_blank"><fewi:super value="${probe.name}"/></a>
 					<span class="smaller">(${probe.primaryID})</span>
 				</td>
 				<td><c:forEach var="collection" items="${probe.collections}" varStatus="cStatus">
@@ -31,7 +31,7 @@
 				</td>
 				<td>${probe.segmentType}</td>
 				<td><c:forEach var="marker" items="${probe.markers}" varStatus="mStatus">
-					<a href="${configBean.FEWI_URL}marker/${marker.primaryID}">${marker.symbol}</a><c:if
+					<a href="${configBean.FEWI_URL}marker/${marker.primaryID}" target="_blank">${marker.symbol}</a><c:if
 						test="${marker.isPutative}"> (PUTATIVE)</c:if><c:if test="${!mStatus.last}"><br/></c:if>
 					</c:forEach>
 				</td>
