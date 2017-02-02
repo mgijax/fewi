@@ -26,6 +26,89 @@
 
 <div class="tabContainer">
 
-TODO -- GENE TAB CONTENT -- EMPTY INITIALLY
+  <c:set var="asterisk" value="<font color='maroon'>*</font>"/>
+
+  <c:if test="${empty disease.mouseHumanGroup and empty disease.mouseOnlyGroup and empty disease.humanOnlyGroup}">
+	<em>There are currently no human or mouse genes associated with this
+	disease in the MGI database.</em>
+  </c:if>
+
+  <c:if test="${not (empty disease.mouseHumanGroup and empty disease.mouseOnlyGroup and empty disease.humanOnlyGroup)}">
+
+	<table cellpadding="4" cellspacing="0" width="!">
+	<tbody>
+
+	<!-- explanation for asterisk -->
+	<tr>
+	<td style="">&nbsp;</td>
+	<td style="">&nbsp;</td>
+	<td style="">&nbsp;</td>
+	<td colspan="4" style="">${asterisk}<font size="-1">Disease is associated/modeled with this <b>Gene</b> or a homolog. <a onclick="javascript:openUserhelpWindow('VOCAB_do_browser_detail_help.shtml#how_interpret'); return false;" href="${configBean.USERHELP_URL}VOCAB_do_browser_detail_help.shtml#how_interpret">More...</a></td>
+	</tr>
+	
+	<!-- heading row -->
+	<tr>
+	<td style="">&nbsp;</td>
+	<td style="">&nbsp;</td>
+	<td style="">&nbsp;</td>
+	<td class="headerStripe allBorders"><font class="label"><font size="-1">Human Homologs</font></font></td>
+	<td class="headerStripe allBorders"><font class="label"><font size="-1">Mouse Homologs</font></font></td>
+	<td class="headerStripe allBorders"><font class="label"><font size="-1">Mouse Models</font></font></td>
+	<td class="headerStripe allBorders"><font class="label"><font size="-1">Homology Source</font></font></td>
+	</tr>
+
+	<c:set var="mouseIcon" value="<img src='${configBean.WEBSHARE_URL}images/black_mouse_small.gif'>"/>
+	<c:set var="humanIcon" value="<img src='${configBean.WEBSHARE_URL}images/man_icon.gif'>"/>
+
+	<c:set var="rowCount" value="0"/>
+
+	<!-- both mouse and human markers known to cause the disease -->
+	<c:if test="${not empty disease.mouseHumanGroup}">
+	  <c:set var="diseaseGroup" value="${disease.mouseHumanGroup}"/>
+	  <c:set var="diseaseRowCount" value="${fn:length(diseaseGroup.diseaseRows)}"/>
+	  <c:set var="sectionBorder" value="allBorders bottomBorderDark"/>
+
+	  <c:set var="prefix" value="<td rowspan='${diseaseRowCount}' class='centerMiddle'>${humanIcon}${mouseIcon}&nbsp;</td><td rowspan='${diseaseRowCount}' class='topBorder bottomBorder leftBorder'>&nbsp;&nbsp;</td><td rowspan='${diseaseRowCount}'>&nbsp;</td>"/>
+
+	  <%@ include file="/WEB-INF/jsp/disease_detail_subtable.jsp" %> 
+	</c:if>
+
+	<!-- only mouse markers known to cause the disease -->
+	<c:if test="${not empty disease.mouseOnlyGroup}">
+	  <c:set var="diseaseGroup" value="${disease.mouseOnlyGroup}"/>
+	  <c:set var="diseaseRowCount" value="${fn:length(diseaseGroup.diseaseRows)}"/>
+	  <c:set var="sectionBorder" value="allBorders bottomBorderDark"/>
+
+	  <c:set var="prefix" value="<td rowspan='${diseaseRowCount}' class='centerMiddle'>${mouseIcon}&nbsp;</td><td rowspan='${diseaseRowCount}' class='topBorder bottomBorder leftBorder'>&nbsp;&nbsp;</td><td rowspan='${diseaseRowCount}'>&nbsp;</td>"/>
+
+	  <%@ include file="/WEB-INF/jsp/disease_detail_subtable.jsp" %> 
+	</c:if>
+
+	<!-- only human markers known to cause the disease -->
+	<c:if test="${not empty disease.humanOnlyGroup}">
+	  <c:set var="diseaseGroup" value="${disease.humanOnlyGroup}"/>
+	  <c:set var="diseaseRowCount" value="${fn:length(diseaseGroup.diseaseRows)}"/>
+	  <c:set var="sectionBorder" value="allBorders"/>
+
+	  <c:set var="prefix" value="<td rowspan='${diseaseRowCount}' class='centerMiddle'>${humanIcon}&nbsp;</td><td rowspan='${diseaseRowCount}' class='topBorder bottomBorder leftBorder'>&nbsp;&nbsp;</td><td rowspan='${diseaseRowCount}'>&nbsp;</td>"/>
+
+	  <%@ include file="/WEB-INF/jsp/disease_detail_subtable.jsp" %> 
+	</c:if>
+
+	</table>
+ 
+  </c:if>
+
+
+
+
+
+
+
+
+
+
+
+
 
 </div>
