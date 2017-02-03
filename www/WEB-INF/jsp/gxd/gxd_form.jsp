@@ -151,7 +151,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 						<ul>
 							<li>Function - Gene Ontology (<a href="${configBean.WI_URL}searches/GO_form.shtml">GO</a>)</li>
 							<li>Phenotype - Mammalian Phenotype Ontology (<a href="${configBean.WI_URL}searches/MP_form.shtml">MP</a>)</li>
-							<li>Disease - Online Mendelian Inheritance in Man (<a href="${configBean.FEWI_URL}vocab/do/">DO</a>)</li>
+							<li>Disease - Online Mendelian Inheritance in Man (<a href="${configBean.FEWI_URL}disease">DO</a>)</li>
 						</ul>
 					</div>
 				</div>
