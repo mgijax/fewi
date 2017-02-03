@@ -83,6 +83,39 @@
   .bold { 
     font-weight: bold;
   }
+  .headerStripe { 
+    background-color: #D0E0F0; 
+    font-size: 100%;
+    font-family: Arial,Helvetica;
+    color: #000001;
+    font-weight: bold;  
+  }
+  .topBorder { border-top-color: #000000;
+    border-top-style:solid;
+    border-top-width:1px; 
+  }
+  .bottomBorder { border-bottom-color: #000000;
+    border-bottom-style:solid;
+    border-bottom-width:1px;
+  }
+  .leftBorder { border-left-color :#000000; 
+    border-left-style:solid;
+    border-left-width:1px; 
+  }
+  .rightBorder { border-right-color :#000000; 
+    border-right-style:solid;
+    border-right-width:1px; 
+  }
+  .allBorders {
+    border-top: thin solid gray;
+    border-bottom: thin solid gray;
+    border-left: thin solid gray;
+    border-right: thin solid gray;
+    padding:3px;
+    text-align:center;
+  }
+  .stripe1 { background-color: #FFFFFF; }
+  .stripe2 { background-color: #DDDDDD; }
 
 </style>
 
@@ -158,6 +191,7 @@
     <div class="tab-pane active" id="termTabContent">
     </div>
     <div class="tab-pane" id="geneTabContent">
+      <img src="/fewi/mgi/assets/images/loading.gif">	
     </div>
     <div class="tab-pane" id="modelTabContent">
     </div>
