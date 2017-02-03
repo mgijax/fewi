@@ -51,10 +51,10 @@
 	<td style="">&nbsp;</td>
 	<td style="">&nbsp;</td>
 	<td style="">&nbsp;</td>
-	<td class="headerStripe allBorders"><font class="label"><font size="-1">Human Homologs</font></font></td>
-	<td class="headerStripe allBorders"><font class="label"><font size="-1">Mouse Homologs</font></font></td>
-	<td class="headerStripe allBorders"><font class="label"><font size="-1">Mouse Models</font></font></td>
-	<td class="headerStripe allBorders"><font class="label"><font size="-1">Homology Source</font></font></td>
+	<td class="headerStripe allBorders">Human Homologs</td>
+	<td class="headerStripe allBorders">Mouse Homologs</td>
+	<td class="headerStripe allBorders">Mouse Models</td>
+	<td class="headerStripe allBorders">Homology Source</td>
 	</tr>
 
 	<c:set var="mouseIcon" value="<img src='${configBean.WEBSHARE_URL}images/black_mouse_small.gif'>"/>
