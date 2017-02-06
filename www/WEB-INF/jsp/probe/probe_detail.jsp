@@ -38,7 +38,7 @@
 <div class="container detailStructureTable">
 	<%@ include file="probe_detail_summary_ribbon.jsp" %>
 	<%@ include file="probe_detail_source_ribbon.jsp" %>
-	<!-- TODO marker ribbon -->
+	<%@ include file="probe_detail_marker_ribbon.jsp" %>
 	<%@ include file="probe_detail_expression_ribbon.jsp" %>
 	<!-- TODO sequence ribbon -->
 	<!-- TODO polymorphism ribbon -->
