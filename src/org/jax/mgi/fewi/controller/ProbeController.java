@@ -92,6 +92,42 @@ public class ProbeController {
 		return summaryPage(queryForm);
 	}
 
+	/* table of probe data for summary page, to be requested via JSON
+	 */
+	@RequestMapping("/table")
+	public ModelAndView probeTable (@ModelAttribute ProbeQueryForm query, @ModelAttribute Paginator page) {
+
+		logger.debug("->probeTable started");
+
+		// perform query, and pull out the requested objects
+		SearchResults<MolecularProbe> searchResults = getSummaryResults(query, page);
+		List<MolecularProbe> probeList = searchResults.getResultObjects();
+
+		ModelAndView mav = new ModelAndView("probe/probe_summary_table");
+		mav.addObject("probes", probeList);
+		mav.addObject("count", probeList.size());
+		mav.addObject("totalCount", searchResults.getTotalCount());
+
+		return mav;
+	}
+
+	//--------------------------------------------------------------------//
+	// private methods
+	//--------------------------------------------------------------------//
+
+	// This is a convenience method to handle packing the SearchParams object
+	// and return the SearchResults from the finder.
+	private SearchResults<MolecularProbe> getSummaryResults(@ModelAttribute ProbeQueryForm query, @ModelAttribute Paginator page) {
+
+		SearchParams params = new SearchParams();
+		params.setPaginator(page);
+		params.setSorts(genSorts(query));
+		params.setFilter(genFilters(query));
+		
+		// perform query, return SearchResults 
+		return probeFinder.getProbes(params);
+	}
+
 	/* generic method for summary pages by both marker and reference
 	 */
 	private ModelAndView summaryPage(ProbeQueryForm queryForm) {
@@ -194,39 +230,5 @@ public class ProbeController {
 		}
 
 		return containerFilter;
-	}
-	
-	@RequestMapping("/table")
-	public ModelAndView probeTable (@ModelAttribute ProbeQueryForm query, @ModelAttribute Paginator page) {
-
-		logger.debug("->probeTable started");
-
-		// perform query, and pull out the requested objects
-		SearchResults<MolecularProbe> searchResults = getSummaryResults(query, page);
-		List<MolecularProbe> probeList = searchResults.getResultObjects();
-
-		ModelAndView mav = new ModelAndView("probe/probe_summary_table");
-		mav.addObject("probes", probeList);
-		mav.addObject("count", probeList.size());
-		mav.addObject("totalCount", searchResults.getTotalCount());
-
-		return mav;
-	}
-
-	//--------------------------------------------------------------------//
-	// private methods
-	//--------------------------------------------------------------------//
-
-	// This is a convenience method to handle packing the SearchParams object
-	// and return the SearchResults from the finder.
-	private SearchResults<MolecularProbe> getSummaryResults(@ModelAttribute ProbeQueryForm query, @ModelAttribute Paginator page) {
-
-		SearchParams params = new SearchParams();
-		params.setPaginator(page);
-		params.setSorts(genSorts(query));
-		params.setFilter(genFilters(query));
-		
-		// perform query, return SearchResults 
-		return probeFinder.getProbes(params);
 	}
 }
