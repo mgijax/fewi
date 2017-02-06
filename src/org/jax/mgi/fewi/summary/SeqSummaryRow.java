@@ -3,6 +3,7 @@ package org.jax.mgi.fewi.summary;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.List;
 
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Probe;
@@ -136,8 +137,8 @@ public class SeqSummaryRow {
                 Iterator<Probe> probeIter = probeSet.iterator();
 				while (probeIter.hasNext()) {
 	                probe = probeIter.next();
-	                Set<ProbeCloneCollection> pccSet = probe.getProbeCloneCollection();
-                    Iterator<ProbeCloneCollection> pccIter = pccSet.iterator();
+	                List<ProbeCloneCollection> pccList = probe.getProbeCloneCollection();
+                    Iterator<ProbeCloneCollection> pccIter = pccList.iterator();
                     while (pccIter.hasNext()) {
 						pcc = pccIter.next();
 						cloneCollections.add(pcc.getCollection() + "<br/>");
