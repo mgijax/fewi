@@ -35,7 +35,7 @@
 
   <c:if test="${not (empty disease.mouseHumanGroup and empty disease.mouseOnlyGroup and empty disease.humanOnlyGroup)}">
 
-	<table cellpadding="4" cellspacing="0" width="!">
+	<table id='geneTabTable' cellpadding="4" cellspacing="0" width="!">
 	<tbody>
 
 	<!-- explanation for asterisk -->
