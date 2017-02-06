@@ -22,6 +22,20 @@
 						</li>
 					</c:if>
 
+					<c:if test="${not empty probe.primerSequence1}">
+						<li>
+							<div class="label">Primer 1 sequence</div>
+							<div class="value">${probe.primerSequence1}</div>
+						</li>
+					</c:if>
+					
+					<c:if test="${not empty probe.primerSequence2}">
+						<li>
+							<div class="label">Primer 2 sequence</div>
+							<div class="value">${probe.primerSequence2}</div>
+						</li>
+					</c:if>
+					
 					<li>
 						<div class="label">MGI Accession ID</div>
 						<div class="value">${probe.primaryID}</div>
