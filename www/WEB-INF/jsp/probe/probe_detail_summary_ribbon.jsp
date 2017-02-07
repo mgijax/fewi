@@ -101,7 +101,7 @@
 							<div class="label">Other Accession IDs</div>
 							<div class="value">
 								<c:forEach var="secID" items="${probe.secondaryIds}">
-									${secID.accID} (${secID.logicalDB})<br/>
+									${secID.accID} (${idLinker.getFirstLink(secID)})<br/>
 								</c:forEach>
 							</div>
 						</li>
