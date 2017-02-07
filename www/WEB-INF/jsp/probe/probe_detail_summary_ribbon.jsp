@@ -89,6 +89,13 @@
 						</li>
 					</c:if>
 					
+					<c:if test="${not empty probe.productSize}">
+						<li>
+							<div class="label">Product size</div>
+							<div class="value">${probe.productSize}</div>
+						</li>
+					</c:if>
+					
 					<c:if test="${not empty probe.secondaryIds}">
 						<li>
 							<div class="label">Other Accession IDs</div>
