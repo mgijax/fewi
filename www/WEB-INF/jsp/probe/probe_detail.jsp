@@ -40,9 +40,9 @@
 	<%@ include file="probe_detail_source_ribbon.jsp" %>
 	<%@ include file="probe_detail_marker_ribbon.jsp" %>
 	<%@ include file="probe_detail_expression_ribbon.jsp" %>
-	<!-- TODO sequence ribbon -->
+	<%@ include file="probe_detail_sequence_ribbon.jsp" %>
 	<!-- TODO polymorphism ribbon -->
-	<!-- TODO reference ribbon -->
+	<%@ include file="probe_detail_reference_ribbon.jsp" %>
 </div>
 
 <!--	close page template -->
