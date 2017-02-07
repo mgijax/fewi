@@ -17,21 +17,21 @@
 
 					<c:if test="${highLevelSegmentType == 'Probe'}">
 						<li>
-							<div class="label">Sequence type</div>
+							<div class="label">Sequence Type</div>
 							<div class="value">${probe.segmentType}</div>
 						</li>
 					</c:if>
 
 					<c:if test="${not empty probe.primerSequence1}">
 						<li>
-							<div class="label">Primer 1 sequence</div>
+							<div class="label">Primer 1 Sequence</div>
 							<div class="value">${probe.primerSequence1}</div>
 						</li>
 					</c:if>
 					
 					<c:if test="${not empty probe.primerSequence2}">
 						<li>
-							<div class="label">Primer 2 sequence</div>
+							<div class="label">Primer 2 Sequence</div>
 							<div class="value">${probe.primerSequence2}</div>
 						</li>
 					</c:if>
@@ -43,7 +43,7 @@
 
 					<c:if test="${not empty probe.regionCovered}">
 						<li>
-							<div class="label">Region covered</div>
+							<div class="label">Region Covered</div>
 							<div class="value">${probe.regionCovered}</div>
 						</li>
 					</c:if>
@@ -51,7 +51,7 @@
 					<c:set var="parentProbe" value="${probe.parentProbe}"/>
 					<c:if test="${not empty parentProbe}">
 						<li>
-							<div class="label">Parent clone</div>
+							<div class="label">Parent Clone</div>
 							<div class="value"><a href="${configBean.FEWI_URL}probe/${parentProbe.relatedProbeID}">${parentProbe.relatedProbeName}</a></div>
 						</li>
 					</c:if>
@@ -59,7 +59,7 @@
 					<c:set var="childProbes" value="${probe.childProbes}"/>
 					<c:if test="${not empty childProbes}">
 						<li>
-							<div class="label">Child clone<c:if test="${fn:length(childProbes) > 1}">s</c:if></div>
+							<div class="label">Child Clone<c:if test="${fn:length(childProbes) > 1}">s</c:if></div>
 							<div class="value">
 								<c:forEach var="childProbe" items="${childProbes}" varStatus="status">
 									<a href="${configBean.FEWI_URL}probe/${childProbe.relatedProbeID}">${childProbe.relatedProbeName}</a><c:if test="${!status.last}">, </c:if>
@@ -70,28 +70,28 @@
 					
 					<c:if test="${not empty probe.vector}">
 						<li>
-							<div class="label">Vector type</div>
+							<div class="label">Vector Type</div>
 							<div class="value">${probe.vector}</div>
 						</li>
 					</c:if>
 					
 					<c:if test="${not empty probe.insertSite}">
 						<li>
-							<div class="label">Insert site</div>
+							<div class="label">Insert Site</div>
 							<div class="value">${probe.insertSite}</div>
 						</li>
 					</c:if>
 					
 					<c:if test="${not empty probe.insertSize}">
 						<li>
-							<div class="label">Insert size</div>
+							<div class="label">Insert Size</div>
 							<div class="value">${probe.insertSize}</div>
 						</li>
 					</c:if>
 					
 					<c:if test="${not empty probe.productSize}">
 						<li>
-							<div class="label">Product size</div>
+							<div class="label">Product Size</div>
 							<div class="value">${probe.productSize}</div>
 						</li>
 					</c:if>

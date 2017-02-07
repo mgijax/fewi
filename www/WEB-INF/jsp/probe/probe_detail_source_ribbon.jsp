@@ -56,7 +56,7 @@
 					
 					<c:if test="${not empty probe.cellLine}">
 						<li>
-							<div class="label">Cell line</div>
+							<div class="label">Cell Line</div>
 							<div class="value">${probe.cellLine}</div>
 						</li>
 					</c:if>
