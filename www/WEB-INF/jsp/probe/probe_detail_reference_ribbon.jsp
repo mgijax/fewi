@@ -5,7 +5,7 @@
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %> referenceRibbon">
 			<section class="summarySec1 ">
-				<c:forEach var="reference" items="${probe.references}">
+				<c:forEach var="reference" items="${probe.uniqueReferences}">
 					<a href="${configBean.FEWI_URL}reference/${reference.jnumID}">${reference.jnumID}</a> 
 					${reference.shortCitation}
 					<br/>

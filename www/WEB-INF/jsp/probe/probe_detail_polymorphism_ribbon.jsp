@@ -37,7 +37,7 @@
 							</c:if>
 							<td>${details.allele}</td>
 							<td>${details.fragments}</td>
-							<td>${details.strains}</td>
+							<td><fewi:super value="${details.strains}"/></td>
 							</tr>
 						</c:forEach>
 					</c:forEach>
