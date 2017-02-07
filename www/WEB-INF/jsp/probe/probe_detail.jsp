@@ -41,7 +41,7 @@
 	<%@ include file="probe_detail_marker_ribbon.jsp" %>
 	<%@ include file="probe_detail_expression_ribbon.jsp" %>
 	<%@ include file="probe_detail_sequence_ribbon.jsp" %>
-	<!-- TODO polymorphism ribbon -->
+	<%@ include file="probe_detail_polymorphism_ribbon.jsp" %>
 	<%@ include file="probe_detail_reference_ribbon.jsp" %>
 </div>
 
