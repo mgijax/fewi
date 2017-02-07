@@ -48,8 +48,25 @@
 						</li>
 					</c:if>
 					
-					<!-- TODO: parent clone -->
-					<!-- TODO: child clone -->
+					<c:set var="parentProbe" value="${probe.parentProbe}"/>
+					<c:if test="${not empty parentProbe}">
+						<li>
+							<div class="label">Parent clone</div>
+							<div class="value"><a href="${configBean.FEWI_URL}probe/${parentProbe.relatedProbeID}">${parentProbe.relatedProbeName}</a></div>
+						</li>
+					</c:if>
+					
+					<c:set var="childProbes" value="${probe.childProbes}"/>
+					<c:if test="${not empty childProbes}">
+						<li>
+							<div class="label">Child clone<c:if test="${fn:length(childProbes) > 1}">s</c:if></div>
+							<div class="value">
+								<c:forEach var="childProbe" items="${childProbes}" varStatus="status">
+									<a href="${configBean.FEWI_URL}probe/${childProbe.relatedProbeID}">${childProbe.relatedProbeName}</a><c:if test="${!status.last}">, </c:if>
+								</c:forEach>
+							</div>
+						</li>
+					</c:if>
 					
 					<c:if test="${not empty probe.vector}">
 						<li>
