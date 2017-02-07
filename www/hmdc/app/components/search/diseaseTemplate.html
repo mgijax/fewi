@@ -28,7 +28,7 @@
 						<a target="_blank" href="https://omim.org/entry/{{omimId.replace('OMIM:', '')}}">{{omimId}}</a><span ng-if="!$last">, </span>
 					</span>
 				</td>
-				<td><a ng-if="row.diseaseModelCount > 0" target="_blank" href="{{FEWI_URL}}disease/models/{{ row.primaryId }}">{{ row.diseaseModelCount }}</a></td>
+				<td><a ng-if="row.diseaseModelCount > 0" target="_blank" href="{{FEWI_URL}}disease/{{ row.doIds[0] }}?openTab=models">{{ row.diseaseModelCount }}</a></td>
 				<td><div ng-bind-html="row.diseaseMouseMarkers | joinBy:', ' | handleSubscript "></div></td>
 				<td><div ng-bind-html="row.diseaseHumanMarkers | joinBy:', ' | handleSubscript "></div></td>
 				<td><a ng-if="row.diseaseRefCount > 0" target="_blank" href="{{FEWI_URL}}reference/disease/{{ row.primaryId }}?typeFilter=Literature">{{ row.diseaseRefCount }}</a></td>
