@@ -8,7 +8,11 @@
 					<c:if test="${not empty probe.library}">
 						<li>
 							<div class="label">Library</div>
-							<div class="value">${probe.library}</div>
+							<div class="value">${probe.library}
+								<c:if test="${not empty probe.libraryJnum}">
+								(<a href="${configBean.FEWI_URL}reference/${probe.libraryJnum}">${probe.libraryJnum}</a>)
+								</c:if>
+							</div>
 						</li>
 					</c:if>
 					
