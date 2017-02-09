@@ -104,7 +104,7 @@
 
 	<c:set var="rowCount" value="0"/>
 	<font class="label"></font><p>
-	<table cellpadding="4" cellspacing="0" width="!">
+	<table id="transgeneTable" cellpadding="4" cellspacing="0" width="!">
 	<tbody>
 	<tr>
 	<td style="">&nbsp;</td>
@@ -112,8 +112,9 @@
 	</tr>
 	<tr>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-	<td class="headerStripe allBorders"><font class="label"><font size="-1">Transgenes and Other Genome Features</font></font></td>
-	<td class="headerStripe allBorders"><font class="label"><font size="-1">Mouse Models</font></font></td>
+	<td class="headerStripe allBorders">Disease Term</td>
+	<td class="headerStripe allBorders">Transgenes and Other Genome Features</td>
+	<td class="headerStripe allBorders">Mouse Models</td>
 	</tr>
 
 	<c:set var="diseaseGroup" value="${disease.otherGroup}"/>

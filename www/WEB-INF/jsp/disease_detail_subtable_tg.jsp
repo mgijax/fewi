@@ -18,6 +18,9 @@
 	    <tr>
 	      <td>&nbsp;</td>
 	      <td class="${borders} ${stripe} leftAlign">
+	        ${diseaseGroupRow.annotatedDisease}
+	      </td>
+	      <td class="${borders} ${stripe} leftAlign">
 	      <c:forEach var="marker" items="${diseaseRow.mouseMarkers}" varStatus="mStatus">
 	        <c:set var="symbol" value="${marker.symbol}"/>
 	        <c:set var="symbol" value="${fn:replace(symbol, '<', '<<')}"/>
