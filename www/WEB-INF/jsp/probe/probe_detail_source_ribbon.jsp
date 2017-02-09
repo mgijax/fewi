@@ -1,3 +1,4 @@
+<c:if test="${probe.segmentType != 'primer'}">
 	<div class="row">
 		<div class="header <%=leftTdStyles.getNext() %>">
 			Source
@@ -23,28 +24,28 @@
 						</li>
 					</c:if>
 					
-					<c:if test="${not empty probe.strain}">
+					<c:if test="${not empty showStrain}">
 						<li>
 							<div class="label">Strain</div>
 							<div class="value">${probe.strain}</div>
 						</li>
 					</c:if>
 					
-					<c:if test="${not empty probe.age}">
+					<c:if test="${not empty showAge}">
 						<li>
 							<div class="label">Age</div>
 							<div class="value">${probe.age}</div>
 						</li>
 					</c:if>
 					
-					<c:if test="${not empty probe.sex}">
+					<c:if test="${not empty showSex}">
 						<li>
 							<div class="label">Sex</div>
 							<div class="value">${probe.sex}</div>
 						</li>
 					</c:if>
 					
-					<c:if test="${not empty probe.tissue}">
+					<c:if test="${not empty showTissue}">
 						<li>
 							<div class="label">Tissue</div>
 							<div class="value">${probe.tissue}</div>
@@ -58,7 +59,7 @@
 						</li>
 					</c:if>
 					
-					<c:if test="${not empty probe.cellLine}">
+					<c:if test="${not empty showCellLine}">
 						<li>
 							<div class="label">Cell Line</div>
 							<div class="value">${probe.cellLine}</div>
@@ -68,4 +69,4 @@
 			</section>
 		</div>
 	</div>
-
+</c:if>

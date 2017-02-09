@@ -37,7 +37,7 @@
 					</c:if>
 					
 					<li>
-						<div class="label">MGI Accession ID</div>
+						<div class="label">ID</div>
 						<div class="value">${probe.primaryID}</div>
 					</li>
 
@@ -68,7 +68,7 @@
 						</li>
 					</c:if>
 					
-					<c:if test="${not empty probe.vector}">
+					<c:if test="${not empty showVector}">
 						<li>
 							<div class="label">Vector Type</div>
 							<div class="value">${probe.vector}</div>
@@ -98,7 +98,7 @@
 					
 					<c:if test="${not empty probe.secondaryIds}">
 						<li>
-							<div class="label">Other Accession IDs</div>
+							<div class="label">Other IDs</div>
 							<div class="value">
 								<c:forEach var="secID" items="${probe.secondaryIds}">
 									${secID.accID} (${idLinker.getFirstLink(secID)})<br/>
@@ -120,8 +120,8 @@
 						<li>
 							<div class="label">Synonyms</div>
 							<div class="value">
-								<c:forEach var="synonym" items="${probe.synonyms}">
-									${synonym}<br/>
+								<c:forEach var="synonym" items="${probe.synonyms}" varStatus="sStatus">
+									${synonym}<c:if test="${!sStatus.last}">, </c:if>
 								</c:forEach>
 							</div>
 						</li>

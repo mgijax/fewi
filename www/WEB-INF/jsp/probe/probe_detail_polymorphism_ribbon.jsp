@@ -7,16 +7,23 @@
 		<div class="detail <%=rightTdStyles.getNext() %> polymorphismRibbon">
 			<section class="summarySec1 ">
 				<c:forEach var="ref" items="${polymorphismRefs}" varStatus="rStatus">
+					<div class="polymorphismReference">
 					<a href="${configBean.FEWI_URL}reference/${ref.reference.jnumID}">${ref.reference.jnumID}</a> 
-					${ref.reference.shortCitation}
-					<br/>
+					${ref.reference.miniCitation}
+					</div>
 					<c:if test="${not empty ref.note}">
-						<B>Notes:</B> ${ref.note}<br/>
+						<div class="polymorphismNote">
+						<span class="internalLabel">Notes:</span> ${ref.note}<br/>
+						</div>
 					</c:if>
-					<table>
+					<c:set var="spacer" value=" spacer"/>
+					<c:if test="${rStatus.last}">
+						<c:set var="spacer" value=""/>
+					</c:if>
+					<table class="polymorphismTable${spacer}">
 						<tr>
 							<th>Endonuclease</th>
-							<th>Marker</th>
+							<th>Gene</th>
 							<th>Allele</th>
 							<th>Fragments</th>
 							<th>Strains</th>
@@ -33,7 +40,7 @@
 							<tr>
 							<c:if test="${dStatus.first}">
 								<td${rowSpan}>${polymorphism.endonuclease}</td>
-								<td${rowSpan}>${polymorphism.markerID}</td>
+								<td${rowSpan}><a href="${configBean.FEWI_URL}marker/${polymorphism.markerID}">${polymorphism.markerSymbol}</a></td>
 							</c:if>
 							<td>${details.allele}</td>
 							<td>${details.fragments}</td>
