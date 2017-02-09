@@ -85,8 +85,7 @@ public class AccessionSummaryRow {
     	
     	// Handle the old wi cases.
     	
-    	else if (objectType.equals(ObjectTypes.PROBECLONE) || 
-    			objectType.equals(ObjectTypes.ASSAY) ||
+    	else if (objectType.equals(ObjectTypes.ASSAY) ||
     			objectType.equals(ObjectTypes.GO_CC) ||
     			objectType.equals(ObjectTypes.GO_BP) ||
     			objectType.equals(ObjectTypes.GO_MF) ||

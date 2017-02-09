@@ -22,7 +22,7 @@
 		</tr>
 		<c:forEach var="probe" items="${probes}" varStatus="status">
 			<tr>
-				<td><a href="${configBean.WI_URL}searches/probe.cgi?${probe.primaryID}" target="_blank"><fewi:super value="${probe.name}"/></a>
+				<td><a href="${configBean.FEWI_URL}probe/${probe.primaryID}" target="_blank"><fewi:super value="${probe.name}"/></a>
 					<span class="smaller">(${probe.primaryID})</span>
 				</td>
 				<td><c:forEach var="collection" items="${probe.collections}" varStatus="cStatus">

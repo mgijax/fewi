@@ -43,6 +43,7 @@ public class FewiLinker {
 		idUrlMap.put(ObjectTypes.GENOTYPE, baseUrl +"allele/genoview/%s");
 		idUrlMap.put(ObjectTypes.EMAPA, baseUrl +"vocab/gxd/anatomy/%s");
 		idUrlMap.put(ObjectTypes.EMAPS, baseUrl +"vocab/gxd/anatomy/%s");
+		idUrlMap.put(ObjectTypes.PROBECLONE, baseUrl +"probe/%s");
 
 		// Mapping that is key based
 
@@ -50,7 +51,6 @@ public class FewiLinker {
 		keyUrlMap.put(ObjectTypes.REFERENCE, baseUrl +"reference/key/%s");
 		keyUrlMap.put(ObjectTypes.ALLELE, baseUrl +"allele/key/%s");
 		keyUrlMap.put(ObjectTypes.SEQUENCE, baseUrl +"sequence/key/%s");
-		keyUrlMap.put(ObjectTypes.PROBECLONE, pythonWiUrl +"searches/probe.cgi?%s");
 		keyUrlMap.put(ObjectTypes.IMAGE, baseUrl +"image/key/%s");
 		keyUrlMap.put(ObjectTypes.ASSAY, baseUrl +"assay/key/%s");
 		keyUrlMap.put(ObjectTypes.ANTIBODY, baseUrl +"antibody/key/%s");

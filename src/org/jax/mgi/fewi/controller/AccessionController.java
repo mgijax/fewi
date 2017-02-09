@@ -126,8 +126,7 @@ public class AccessionController {
 			}
 
 			// Handle the old wi cases.        	
-			else if (objectType.equals(ObjectTypes.PROBECLONE) || 
-					objectType.equals(ObjectTypes.GO_CC) ||
+			else if (objectType.equals(ObjectTypes.GO_CC) ||
 					objectType.equals(ObjectTypes.GO_MF) ||
 					objectType.equals(ObjectTypes.GO_BP)) {
 				logger.debug("Old WI Case");

@@ -222,7 +222,7 @@
        </td>
        <td>
          <span class='' id='assayProbeName'>
-           <a href="${configBean.WI_URL}searches/probe.cgi?${assay.probeKey}">
+           <a href="${configBean.FEWI_URL}probe/${assay.probeID}">
             <%= FormatHelper.superscript(assay.getProbeName()) %> 
            </a>
          </span>
