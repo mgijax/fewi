@@ -415,6 +415,9 @@ public class IDLinker {
 		if(logicalDB.equals("OMIM")) {
 			id = id.replaceAll("OMIM:", "");
 		}
+		if(logicalDB.equals("NCI")) {
+			id = id.replaceAll("NCI:", "");
+		}
 		if(logicalDB.equals("ORDO")) {
 			id = id.replaceAll("ORDO:", "");
 		}
