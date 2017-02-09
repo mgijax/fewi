@@ -57,6 +57,7 @@ public class FewiLinker {
 		keyUrlMap.put(ObjectTypes.MAPPING, baseUrl +"mapping/key/%s");
 		keyUrlMap.put(ObjectTypes.HOMOLOGY, baseUrl +"homology/key/%s");
 		keyUrlMap.put(ObjectTypes.MARKER_CLUSTER, baseUrl +"homology/key/%s");
+		keyUrlMap.put(ObjectTypes.PROBECLONE, baseUrl +"probe/key/%s");
 
 	}
 
