@@ -1,5 +1,6 @@
 package org.jax.mgi.fewi.finder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.jax.mgi.fewi.hunter.SolrProbeHunter;
@@ -59,5 +60,21 @@ public class ProbeFinder {
     public List<Probe> getProbeByID(List<String> probeID)
     {
         return probeGatherer.get( Probe.class, probeID, "primaryID" );
+    }
+
+    /* return all Probe objects matching the given database (probe) key (should be 0-1)
+     */
+    public List<Probe> getProbeByKey(String dbKey) {
+
+        logger.debug("->getProbeByKey()");
+
+        // gather objects, add them to the results
+        Probe probe = probeGatherer.get( Probe.class, dbKey );
+
+        List<Probe> results = new ArrayList<Probe>();
+        if (probe != null) {
+        	results.add(probe);
+        }
+        return results;
     }
 }
