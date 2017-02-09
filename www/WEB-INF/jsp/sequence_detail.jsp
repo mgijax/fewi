@@ -320,9 +320,9 @@
           </c:forEach>
         </td>
         <td>
-          ${probe.cloneid}
+          ${probe.cloneID}
         </td>
-        <td>${probe.segmenttype}</td>
+        <td>${probe.segmentType}</td>
       </tr>
     </c:forEach>
 
