@@ -1,6 +1,8 @@
 	  <c:set var="borders" value="allBorders"/>
 
-	  <c:forEach var="diseaseRow" items="${diseaseGroup.diseaseRows}" varStatus="status">
+	  <c:forEach var="diseaseGroupRow" items="${diseaseGroup.diseaseGroupRows}" varStatus="status">
+
+	    <c:set var="diseaseRow" value="${diseaseGroupRow.diseaseRow}"/>
 
 	    <c:set var="rowCount" value="${rowCount + 1}"/>
 
