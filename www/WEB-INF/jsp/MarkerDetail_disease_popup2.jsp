@@ -6,12 +6,14 @@
 		<a></a><!-- this empty 'a' tag is to keep Chrome and Safari from putting a selection box aroudn the first link displayed -->
 		<p/>
 		<c:forEach var="secondardId" items="${allAnnotations.get(diseaseRow.get('diseaseId')).vocabTerm.secondaryIds}">
-			<c:if test="${diseaseRow.get('diseaseId') == secondardId.accID}">
-				<span style="font-size: smaller;">${idLinker.getLink(secondardId, secondardId.accID, 'MP')}1</span><br>
-			</c:if>
-			<c:if test="${diseaseRow.get('diseaseId') != secondardId.accID}">
-				<span style="font-size: smaller;">${idLinker.getLink(secondardId, secondardId.accID, 'MP')}2</span><br>
-			</c:if>
+			<c:choose>
+				<c:when test="${diseaseRow.get('diseaseId') != secondardId.accID && !fn:startsWith(secondardId.accID, 'DOID:')}">
+					<span style="font-size: smaller;">${idLinker.getLink(secondardId, secondardId.accID, 'MP')}1</span><br>
+				</c:when>    
+				<c:otherwise>
+					<span style="font-size: smaller;">${secondardId.accID}</span><br>
+				</c:otherwise>
+			</c:choose>
 		</c:forEach>
 	</div>
 </div>
