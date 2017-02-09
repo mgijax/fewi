@@ -116,6 +116,7 @@
   }
   .stripe1 { background-color: #FFFFFF; }
   .stripe2 { background-color: #DDDDDD; }
+  .leftAlign {text-align:left;}
 
 </style>
 
