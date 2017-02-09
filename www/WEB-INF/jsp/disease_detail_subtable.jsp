@@ -1,7 +1,8 @@
 	  <c:set var="borders" value="allBorders"/>
 
-	  <c:forEach var="diseaseRow" items="${diseaseGroup.diseaseRows}" varStatus="status">
+	  <c:forEach var="diseaseGroupRow" items="${diseaseGroup.diseaseGroupRows}" varStatus="status">
 
+	    <c:set var="diseaseRow" value="${diseaseGroupRow.diseaseRow}"/>
 	    <c:set var="cluster" value="${diseaseRow.homologyCluster}"/>
 	    <c:set var="clusterSource" value=""/>
 	    <c:set var="homologyUrl" value=""/>
@@ -33,6 +34,11 @@
 	    </c:if>
 
 	    <tr>${prefix}
+
+	    <td class="${borders} ${stripe} leftAlign">
+          ${diseaseGroupRow.annotatedDisease}
+	    </td>
+
 	    <td class="${borders} ${stripe} leftAlign">
 	      <c:forEach var="hMarker" items="${diseaseRow.humanMarkers}" varStatus="hStatus">
 	        <c:set var="hSymbol" value="${hMarker.symbol}"/>

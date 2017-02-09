@@ -43,7 +43,7 @@
 	<td style="">&nbsp;</td>
 	<td style="">&nbsp;</td>
 	<td style="">&nbsp;</td>
-	<td colspan="4" style="">${asterisk}<font size="-1">Disease is associated/modeled with this <b>Gene</b> or a homolog. <a onclick="javascript:openUserhelpWindow('VOCAB_do_browser_detail_help.shtml#how_interpret'); return false;" href="${configBean.USERHELP_URL}VOCAB_do_browser_detail_help.shtml#how_interpret">More...</a></td>
+	<td colspan="5" style="">${asterisk}<font size="-1">Disease is associated/modeled with this <b>Gene</b> or a homolog. <a onclick="javascript:openUserhelpWindow('VOCAB_do_browser_detail_help.shtml#how_interpret'); return false;" href="${configBean.USERHELP_URL}VOCAB_do_browser_detail_help.shtml#how_interpret">More...</a></td>
 	</tr>
 	
 	<!-- heading row -->
@@ -51,6 +51,7 @@
 	<td style="">&nbsp;</td>
 	<td style="">&nbsp;</td>
 	<td style="">&nbsp;</td>
+	<td class="headerStripe allBorders">Disease Term</td>
 	<td class="headerStripe allBorders">Human Homologs</td>
 	<td class="headerStripe allBorders">Mouse Homologs</td>
 	<td class="headerStripe allBorders">Mouse Models</td>
@@ -65,7 +66,7 @@
 	<!-- both mouse and human markers known to cause the disease -->
 	<c:if test="${not empty disease.mouseHumanGroup}">
 	  <c:set var="diseaseGroup" value="${disease.mouseHumanGroup}"/>
-	  <c:set var="diseaseRowCount" value="${fn:length(diseaseGroup.diseaseRows)}"/>
+	  <c:set var="diseaseRowCount" value="${fn:length(diseaseGroup.diseaseGroupRows)}"/>
 	  <c:set var="sectionBorder" value="allBorders bottomBorderDark"/>
 
 	  <c:set var="prefix" value="<td rowspan='${diseaseRowCount}' class='centerMiddle'>${humanIcon}${mouseIcon}&nbsp;</td><td rowspan='${diseaseRowCount}' class='topBorder bottomBorder leftBorder'>&nbsp;&nbsp;</td><td rowspan='${diseaseRowCount}'>&nbsp;</td>"/>
@@ -76,7 +77,7 @@
 	<!-- only mouse markers known to cause the disease -->
 	<c:if test="${not empty disease.mouseOnlyGroup}">
 	  <c:set var="diseaseGroup" value="${disease.mouseOnlyGroup}"/>
-	  <c:set var="diseaseRowCount" value="${fn:length(diseaseGroup.diseaseRows)}"/>
+	  <c:set var="diseaseRowCount" value="${fn:length(diseaseGroup.diseaseGroupRows)}"/>
 	  <c:set var="sectionBorder" value="allBorders bottomBorderDark"/>
 
 	  <c:set var="prefix" value="<td rowspan='${diseaseRowCount}' class='centerMiddle'>${mouseIcon}&nbsp;</td><td rowspan='${diseaseRowCount}' class='topBorder bottomBorder leftBorder'>&nbsp;&nbsp;</td><td rowspan='${diseaseRowCount}'>&nbsp;</td>"/>
@@ -87,7 +88,7 @@
 	<!-- only human markers known to cause the disease -->
 	<c:if test="${not empty disease.humanOnlyGroup}">
 	  <c:set var="diseaseGroup" value="${disease.humanOnlyGroup}"/>
-	  <c:set var="diseaseRowCount" value="${fn:length(diseaseGroup.diseaseRows)}"/>
+	  <c:set var="diseaseRowCount" value="${fn:length(diseaseGroup.diseaseGroupRows)}"/>
 	  <c:set var="sectionBorder" value="allBorders"/>
 
 	  <c:set var="prefix" value="<td rowspan='${diseaseRowCount}' class='centerMiddle'>${humanIcon}&nbsp;</td><td rowspan='${diseaseRowCount}' class='topBorder bottomBorder leftBorder'>&nbsp;&nbsp;</td><td rowspan='${diseaseRowCount}'>&nbsp;</td>"/>
@@ -96,9 +97,40 @@
 	</c:if>
 
 	</table>
- 
+
+  <br/>
+
+  <c:if test="${not empty disease.otherGroup}">
+
+	<c:set var="rowCount" value="0"/>
+	<font class="label"></font><p>
+	<table cellpadding="4" cellspacing="0" width="!">
+	<tbody>
+	<tr>
+	<td style="">&nbsp;</td>
+	<td colspan="2" style="">Transgenes and other genome features developed in mice to model this disease.</td>
+	</tr>
+	<tr>
+	<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+	<td class="headerStripe allBorders"><font class="label"><font size="-1">Transgenes and Other Genome Features</font></font></td>
+	<td class="headerStripe allBorders"><font class="label"><font size="-1">Mouse Models</font></font></td>
+	</tr>
+
+	<c:set var="diseaseGroup" value="${disease.otherGroup}"/>
+	<c:set var="diseaseRowCount" value="${fn:length(diseaseGroup.diseaseGroupRows)}"/>
+	<c:set var="sectionBorder" value="allBorders"/>
+
+	<%@ include file="/WEB-INF/jsp/disease_detail_subtable_tg.jsp" %> 
+
+	</table>
+      </td>
+    </tr>
   </c:if>
 
+
+ 
+  </c:if>
+<br/>
 
 
 

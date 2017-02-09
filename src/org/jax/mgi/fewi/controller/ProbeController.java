@@ -22,6 +22,7 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
+import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.shr.jsonmodel.MolecularProbe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.Probe;
 import mgi.frontend.datamodel.Reference;
 
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,6 +60,9 @@ public class ProbeController {
 
 	@Autowired
 	private ProbeFinder probeFinder;
+
+    @Autowired
+    private IDLinker idLinker;
 
 	@Value("${solr.factetNumberDefault}")
 	private Integer facetLimit; 
@@ -111,10 +116,108 @@ public class ProbeController {
 		return mav;
 	}
 
+    @RequestMapping(value="/{probeID:.+}", method = RequestMethod.GET)
+    public ModelAndView probeDetail(@PathVariable("probeID") String probeID) {
+
+        logger.debug("->probeDetail started");
+
+        List<Probe> probeList = probeFinder.getProbeByID(probeID);
+        // there can be only one...
+        if (probeList.size() < 1) { // none found
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Probe Found for ID " + probeID);
+            return mav;
+        } else if (probeList.size() > 1) { // dupe found
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "ID " + probeID + " is associated with multiple probes");
+            return mav;
+        }
+        // success - we have a single object
+
+        // generate ModelAndView object to be passed to detail page
+        ModelAndView mav = new ModelAndView("probe/probe_detail");
+        
+        //pull out the Probe, and add to mav
+        Probe probe = probeList.get(0);
+        mav.addObject("probe", probe);
+        addDetailSeo(probe, mav);
+        flagDisplayFields(probe, mav);
+
+        // add an IDLinker to the mav for use at the JSP level
+        mav.addObject("idLinker", idLinker);
+        return mav;
+    }
+
 	//--------------------------------------------------------------------//
 	// private methods
 	//--------------------------------------------------------------------//
 
+    // returns true if 's' has a value to show, false if it is null, Not Applicable, or Not Specified
+    private boolean hasValueToShow(String s) {
+    	return !((s == null) || "Not Applicable".equals(s) || "Not Specified".equals(s));
+    }
+    
+    // adds flags to mav to indicate whether certain fields should be displayed (easier to handle here
+    // in Java for cases where we want to suppress both Not Applicable and Not Specified)
+    private void flagDisplayFields (Probe p, ModelAndView mav) {
+    	if (hasValueToShow(p.getVector())) { mav.addObject("showVector", true); }
+    	if (hasValueToShow(p.getStrain())) { mav.addObject("showStrain", true); }
+    	if (hasValueToShow(p.getSex())) { mav.addObject("showSex", true); }
+    	if (hasValueToShow(p.getAge())) { mav.addObject("showAge", true); }
+    	if (hasValueToShow(p.getTissue())) { mav.addObject("showTissue", true); }
+    	if (hasValueToShow(p.getCellLine())) { mav.addObject("showCellLine", true); }
+    }
+    
+    // add SEO data (seoDescription, seoTitle, and seoKeywords) to the given detail page's mav
+    private void addDetailSeo (Probe p, ModelAndView mav) {
+    	List<String> synonyms = p.getSynonyms();
+    	
+    	// identify high-level segment type (probe or primer)
+    	
+    	String highLevelSegmentType = "Probe";
+    	if ("primer".equals(p.getSegmentType()) ) {
+    		highLevelSegmentType = "Primer";
+    	}
+    	mav.addObject("highLevelSegmentType", highLevelSegmentType);
+    	
+    	// compose browser / SEO title
+    	
+    	StringBuffer seoTitle = new StringBuffer();
+    	seoTitle.append(p.getName());
+    	seoTitle.append(" ");
+    	seoTitle.append(highLevelSegmentType);
+    	seoTitle.append(" Detail MGI Mouse ");
+    	seoTitle.append(p.getPrimaryID());
+    	mav.addObject("seoTitle", seoTitle.toString());
+    	
+    	// compose set of SEO keywords
+    	
+    	StringBuffer seoKeywords = new StringBuffer();
+    	seoKeywords.append(p.getName());
+    	if (!"Probe".equals(highLevelSegmentType)) {		// already adding lowercase 'probe' below
+    		seoKeywords.append(", ");
+    		seoKeywords.append(highLevelSegmentType); 
+    	}
+    	if ((synonyms != null) && (synonyms.size() > 0)) {
+    		for (String synonym : synonyms) {
+    			seoKeywords.append(", ");
+    			seoKeywords.append(synonym);
+    		}
+    	}
+    	seoKeywords.append(", probe, clone, mouse, mice, murine, Mus");
+    	mav.addObject("seoKeywords", seoKeywords);
+    	
+    	// compose SEO description
+    	
+    	StringBuffer seoDescription = new StringBuffer();
+    	seoDescription.append("View ");
+    	seoDescription.append(highLevelSegmentType);
+    	seoDescription.append(" ");
+    	seoDescription.append(p.getName());
+    	seoDescription.append(" : location, molecular source, gene associations, expression, sequences, polymorphisms, and references.");
+    	mav.addObject("seoDescription", seoDescription);
+    }
+    
 	// This is a convenience method to handle packing the SearchParams object
 	// and return the SearchResults from the finder.
 	private SearchResults<MolecularProbe> getSummaryResults(@ModelAttribute ProbeQueryForm query, @ModelAttribute Paginator page) {

@@ -433,6 +433,13 @@ public class IDLinker {
 		return makeLink(adb.getUrl(), id, linkText, className);
 	}
 
+	/* generates the set of links for the given 'id', but just returns the first one
+	 */
+	public String getFirstLink (AccessionID id) {
+		String links = getLinks (id.getLogicalDB(), id.getAccID(), " ||| ");
+		return links.replaceAll(" [|]{3}.*", "");
+	}
+
 	public String getLinks (AccessionID id) {
 		return getLinks (id.getLogicalDB(), id.getAccID(), " | ");
 	}
@@ -476,7 +483,7 @@ public class IDLinker {
 				if(logicalDB.equals("MESH")) {
 					id = id.replaceAll("MESH:", "");
 				}
-				href = makeLink (adb.getUrl(), id, adb.getDisplayName(), className);
+				href = makeLink (adb.getUrl(), id, adb.getDisplayName().replace("_", " "), className);
 				if (!isFirst) {
 					sb.append (separator);
 				}
