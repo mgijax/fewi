@@ -412,21 +412,7 @@ public class IDLinker {
 		if (adb == null) {
 			return id;
 		}
-		if(logicalDB.equals("OMIM")) {
-			id = id.replaceAll("OMIM:", "");
-		}
-		if(logicalDB.equals("ORDO")) {
-			id = id.replaceAll("ORDO:", "");
-		}
-		if(logicalDB.equals("EFO")) {
-			id = id.replaceAll("EFO:", "EFO_");
-		}
-		if(logicalDB.equals("KEGG")) {
-			id = id.replaceAll("KEGG:", "");
-		}
-		if(logicalDB.equals("MESH")) {
-			id = id.replaceAll("MESH:", "");
-		}
+		id = fixIds(logicalDB, id);
 		return makeLink(adb.getUrl(), id, linkText, className);
 	}
 
@@ -465,21 +451,7 @@ public class IDLinker {
 
 		for (ActualDB adb : adbs) {
 			if (!done.containsKey(adb.getName())) {
-				if(adb.getName().equals("OMIM")) {
-					id = id.replaceAll("OMIM:", "");
-				}
-				if(logicalDB.equals("ORDO")) {
-					id = id.replaceAll("ORDO:", "");
-				}
-				if(logicalDB.equals("EFO")) {
-					id = id.replaceAll("EFO:", "EFO_");
-				}
-				if(logicalDB.equals("KEGG")) {
-					id = id.replaceAll("KEGG:", "");
-				}
-				if(logicalDB.equals("MESH")) {
-					id = id.replaceAll("MESH:", "");
-				}
+				id = fixIds(adb.getName(), id);
 				href = makeLink (adb.getUrl(), id, adb.getDisplayName().replace("_", " "), className);
 				if (!isFirst) {
 					sb.append (separator);
@@ -492,6 +464,27 @@ public class IDLinker {
 		return sb.toString();
 	}
 
+	private String fixIds(String dbName, String id) {
+		if(dbName.equals("OMIM") || dbName.equals("OMIM:PS")) {
+			id = id.replaceAll("OMIM:", "");
+		}
+		if(dbName.equals("NCI")) {
+			id = id.replaceAll("NCI:", "");
+		}
+		if(dbName.equals("ORDO")) {
+			id = id.replaceAll("ORDO:", "");
+		}
+		if(dbName.equals("EFO")) {
+			id = id.replaceAll("EFO:", "EFO_");
+		}
+		if(dbName.equals("KEGG")) {
+			id = id.replaceAll("KEGG:", "");
+		}
+		if(dbName.equals("MESH")) {
+			id = id.replaceAll("MESH:", "");
+		}
+		return id;
+	}
 	/** get the URLs as a Properties object
 	 */
 	public Properties getUrlsAsProperties() {

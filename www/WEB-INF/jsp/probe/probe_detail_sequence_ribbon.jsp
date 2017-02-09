@@ -6,9 +6,12 @@
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %> sequenceRibbon">
 			<section class="summarySec1 ">
-				<c:forEach var="sequence" items="${sequences}">
-					<a href="${configBean.FEWI_URL}sequence/${sequence.primaryID}">${sequence.sequenceID}</a> 
-					<br/>
+				<c:forEach var="seq" items="${sequences}">
+					<div class="sequence">
+						${seq.sequenceID}
+						(${idLinker.getLinks(seq.sequence.preferredGenBankID)} |
+						<a href="${configBean.FEWI_URL}sequence/${seq.primaryID}">MGI Sequence Detail</a>)
+					</div>
 				</c:forEach>
 			</section>
 		</div>

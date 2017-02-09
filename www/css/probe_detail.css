@@ -214,16 +214,24 @@ border-bottom: 1px solid gray;
 	}
 
 	#body .label {
-		width: 16.219em;
+		width: 9.219em;
 		text-align: right;
 		font-size: 1em;
 		white-space: nowrap;
 		margin-right: .406em;
 		float: left;
+		margin-top: 1px;
 	}
 
+	#gxdLogoImage {
+		width: 90%;
+		padding-right: 2px;
+		padding-top: 4px;
+		padding-bottom: 4px;
+	}
+	
 	#body .value {
-		margin-left: 16.813em;
+		margin-left: 9.813em;
 	}
 
 	#body .value.emphasis {
@@ -233,7 +241,7 @@ border-bottom: 1px solid gray;
 	#body section {
 		display: inline-block;
 		vertical-align: top;
-		width: 49%;
+		width: 99%;
 	}
 
 	#body .summarySec1 {
@@ -376,7 +384,7 @@ border-bottom: 1px solid gray;
 		margin-left: 9.406em;
 		padding-left: .406em;
 		padding-right: .406em;
-		padding-top: 1em;
+		padding-top: 0.625em;
 	}
 
 	#body .row {
@@ -498,4 +506,60 @@ border-bottom: 1px solid gray;
 
 	#body .closed {
 		display: none;
+	}
+	
+	#markerTable {
+		margin-top: -4px;
+	}
+	
+	#markerTable td {
+		padding: 4px;
+	}
+
+	.polymorphismTable th {
+		padding: 4px;
+		font-weight: bold;
+		border: 1px solid gray;
+	}
+
+	.polymorphismTable {
+		margin-left: 20px;
+	}
+	
+	.spacer {
+		margin-bottom: 10px;
+	}
+	
+	.polymorphismTable td {
+		padding: 4px;
+		vertical-align: top;
+		text-align: left;
+		border: 1px solid gray;
+		margin-left: 10px;
+	}
+	
+	.polymorphismReference {
+		padding-bottom: 4px;
+		margin-left: 4px;
+	}
+
+	.polymorphismNote {
+		padding-bottom: 4px;
+		margin-left: 20px;
+	}
+	
+	.reference {
+		padding-bottom: 4px;
+		margin-left: 4px;
+	}
+	
+	.internalLabel {
+		font-weight: bold;
+		font-size: 1em;
+		font-family: Arial,Helvetica;
+	}
+	
+	.sequence {
+		margin-left: 4px;
+		padding-bottom: 4px;
 	}

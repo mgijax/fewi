@@ -141,6 +141,7 @@ public class ProbeController {
         Probe probe = probeList.get(0);
         mav.addObject("probe", probe);
         addDetailSeo(probe, mav);
+        flagDisplayFields(probe, mav);
 
         // add an IDLinker to the mav for use at the JSP level
         mav.addObject("idLinker", idLinker);
@@ -151,6 +152,22 @@ public class ProbeController {
 	// private methods
 	//--------------------------------------------------------------------//
 
+    // returns true if 's' has a value to show, false if it is null, Not Applicable, or Not Specified
+    private boolean hasValueToShow(String s) {
+    	return !((s == null) || "Not Applicable".equals(s) || "Not Specified".equals(s));
+    }
+    
+    // adds flags to mav to indicate whether certain fields should be displayed (easier to handle here
+    // in Java for cases where we want to suppress both Not Applicable and Not Specified)
+    private void flagDisplayFields (Probe p, ModelAndView mav) {
+    	if (hasValueToShow(p.getVector())) { mav.addObject("showVector", true); }
+    	if (hasValueToShow(p.getStrain())) { mav.addObject("showStrain", true); }
+    	if (hasValueToShow(p.getSex())) { mav.addObject("showSex", true); }
+    	if (hasValueToShow(p.getAge())) { mav.addObject("showAge", true); }
+    	if (hasValueToShow(p.getTissue())) { mav.addObject("showTissue", true); }
+    	if (hasValueToShow(p.getCellLine())) { mav.addObject("showCellLine", true); }
+    }
+    
     // add SEO data (seoDescription, seoTitle, and seoKeywords) to the given detail page's mav
     private void addDetailSeo (Probe p, ModelAndView mav) {
     	List<String> synonyms = p.getSynonyms();
