@@ -241,5 +241,5 @@ $(document).ready(function(){
 });
 </script>
 
-
+<%@ include file="/WEB-INF/jsp/disease_detail_popups.jsp" %> 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
