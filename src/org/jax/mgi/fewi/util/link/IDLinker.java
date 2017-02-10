@@ -388,19 +388,19 @@ public class IDLinker {
 
 	public String getLink (AccessionID id) {
 		String accID = id.getAccID();
-		return getLink(id.getLogicalDB(), accID, accID);
+		return getLink(id.getLogicalDB(), accID, accID, "");
 	}
 
 	public String getLink (AccessionID id, String linkText) {
-		return getLink(id.getLogicalDB(), id.getAccID(), linkText);
+		return getLink(id.getLogicalDB(), id.getAccID(), linkText, "");
 	}
 
-	public String getLink (AccessionID id, String linkText, String className) {
+	public String getLinkWithClass (AccessionID id, String linkText, String className) {
 		return getLink(id.getLogicalDB(), id.getAccID(), linkText, className);
 	}
 
 	public String getLink (String logicalDB, String id) {
-		return getLink(logicalDB, id, id);
+		return getLink(logicalDB, id, id, "");
 	}
 
 	public String getLink (String logicalDB, String id, String linkText) {

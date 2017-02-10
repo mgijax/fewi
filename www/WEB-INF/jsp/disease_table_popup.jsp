@@ -4,7 +4,7 @@
 	<div class="hd">${disease.disease}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
 	<div class="bd" style="overflow: auto; max-height: 150px; max-width: 750px;">
 		<c:forEach var="secondardId" items="${disease.vocabTerm.secondaryIds}">
-			<span style="font-size: smaller;">${idLinker.getLink(secondardId, secondardId.accID, 'MP')}</span><br>
+			<span style="font-size: smaller;">${idLinker.getLinkWithClass(secondardId, secondardId.accID, 'MP')}</span><br>
 		</c:forEach>
 	</div>
 </div>
