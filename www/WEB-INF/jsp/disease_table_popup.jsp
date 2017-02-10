@@ -4,7 +4,14 @@
 	<div class="hd">${disease.disease}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
 	<div class="bd" style="overflow: auto; max-height: 150px; max-width: 750px;">
 		<c:forEach var="secondardId" items="${disease.vocabTerm.secondaryIds}">
-			<span style="font-size: smaller;">${idLinker.getLinkWithClass(secondardId, secondardId.accID, 'MP')}</span><br>
+			<c:choose>
+				<c:when test="${disease.diseaseID.equals(secondardId.accID) || (!fn:startsWith(secondardId.accID, 'DOID:') && !fn:startsWith(secondardId.accID, 'HP:'))}">
+					<span style="font-size: smaller;">${idLinker.getLinkWithClass(secondardId, secondardId.accID, 'MP')}</span><br>
+				</c:when>    
+				<c:otherwise>
+					<span style="font-size: smaller;">${secondardId.accID}</span><br>
+				</c:otherwise>
+			</c:choose>
 		</c:forEach>
 	</div>
 </div>
