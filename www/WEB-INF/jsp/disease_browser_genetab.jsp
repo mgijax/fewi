@@ -67,7 +67,7 @@
 	<c:if test="${not empty disease.mouseHumanGroup}">
 	  <c:set var="diseaseGroup" value="${disease.mouseHumanGroup}"/>
 	  <c:set var="diseaseRowCount" value="${fn:length(diseaseGroup.diseaseGroupRows)}"/>
-	  <c:set var="sectionBorder" value="allBorders bottomBorderDark"/>
+	  <c:set var="sectionBorder" value="allBorders groupSeparater"/>
 
 	  <c:set var="prefix" value="<td rowspan='${diseaseRowCount}' class='centerMiddle'>${humanIcon}${mouseIcon}&nbsp;</td><td rowspan='${diseaseRowCount}' class='topBorder bottomBorder leftBorder'>&nbsp;&nbsp;</td><td rowspan='${diseaseRowCount}'>&nbsp;</td>"/>
 
@@ -78,7 +78,7 @@
 	<c:if test="${not empty disease.mouseOnlyGroup}">
 	  <c:set var="diseaseGroup" value="${disease.mouseOnlyGroup}"/>
 	  <c:set var="diseaseRowCount" value="${fn:length(diseaseGroup.diseaseGroupRows)}"/>
-	  <c:set var="sectionBorder" value="allBorders bottomBorderDark"/>
+	  <c:set var="sectionBorder" value="allBorders groupSeparater"/>
 
 	  <c:set var="prefix" value="<td rowspan='${diseaseRowCount}' class='centerMiddle'>${mouseIcon}&nbsp;</td><td rowspan='${diseaseRowCount}' class='topBorder bottomBorder leftBorder'>&nbsp;&nbsp;</td><td rowspan='${diseaseRowCount}'>&nbsp;</td>"/>
 
@@ -98,9 +98,11 @@
 
 	</table>
 
-  <br/>
 
   <c:if test="${not empty disease.otherGroup}">
+
+    <br/>
+    <hr id='tableSeparater'>
 
 	<c:set var="rowCount" value="0"/>
 	<font class="label"></font><p>
