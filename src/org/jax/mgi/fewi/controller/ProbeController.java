@@ -148,6 +148,36 @@ public class ProbeController {
         return mav;
     }
 
+    /* Probe Detail by key
+     */
+    @RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
+    public ModelAndView probeDetailByKey(@PathVariable("dbKey") String dbKey) {
+
+        logger.debug("->probeDetailByKey started");
+
+        List<Probe> probeList = probeFinder.getProbeByKey(dbKey);
+        // there can be only one...
+        if (probeList.size() < 1) { // none found
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Probe Found for key " + dbKey);
+            return mav;
+        }
+        // success - we have a single object
+
+        // generate ModelAndView object to be passed to detail page
+        ModelAndView mav = new ModelAndView("probe/probe_detail");
+        
+        // pull out the Probe, and add to mav
+        Probe probe = probeList.get(0);
+        mav.addObject("probe", probe);
+        addDetailSeo(probe, mav);
+        flagDisplayFields(probe, mav);
+
+        // add an IDLinker to the mav for use at the JSP level
+        mav.addObject("idLinker", idLinker);
+        return mav;
+    }
+
 	//--------------------------------------------------------------------//
 	// private methods
 	//--------------------------------------------------------------------//

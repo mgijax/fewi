@@ -85,14 +85,13 @@ public class AccessionSummaryRow {
     	
     	// Handle the old wi cases.
     	
-    	else if (objectType.equals(ObjectTypes.PROBECLONE) || 
-    			objectType.equals(ObjectTypes.ASSAY) ||
+    	else if (objectType.equals(ObjectTypes.ASSAY) ||
     			objectType.equals(ObjectTypes.GO_CC) ||
     			objectType.equals(ObjectTypes.GO_BP) ||
     			objectType.equals(ObjectTypes.GO_MF) ||
+    			objectType.equals(ObjectTypes.PROBECLONE) ||
     			objectType.equals(ObjectTypes.ANTIBODY) ||
     			objectType.equals(ObjectTypes.ANTIGEN)) {
-    		logger.debug("Old WI Case");
     		url = feLinker.getFewiKeyLink(objectType, "" + acc.getObjectKey());
     	}
     	else {

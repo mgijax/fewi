@@ -310,7 +310,7 @@
     <c:forEach var="probe" items="${probes}" >
       <tr>
         <td>
-          <a href="${configBean.WI_URL}searches/probe.cgi?${probe.probeKey}">
+          <a href="${configBean.FEWI_URL}probe/${probe.primaryID}">
           <fewi:verbatim value="${probe.name}" />
           </a>
         </td>
