@@ -2,9 +2,10 @@ package org.jax.mgi.fewi.finder;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
 
 import mgi.frontend.datamodel.Disease;
-
+import mgi.frontend.datamodel.VocabTermID;
 import org.jax.mgi.fewi.hunter.SolrDiseaseHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
@@ -38,6 +39,8 @@ public class DiseaseFinder {
     @Autowired
     private HibernateObjectGatherer<Disease> diseaseGatherer;
 
+    @Autowired
+    private HibernateObjectGatherer<VocabTermID> termGatherer;
 
     /*-----------------------------------------*/
     /* Retrieval of a disease, for a given ID
@@ -82,7 +85,29 @@ public class DiseaseFinder {
     }
     public List<Disease> getDiseaseByID(List<String> diseaseID)
     {
-        return diseaseGatherer.get( Disease.class, diseaseID, "primaryID" );
+    	// search against basic diseases
+    	List<Disease> diseaseList = diseaseGatherer.get( Disease.class, diseaseID, "primaryID" );
+
+    	// if that didn't work, check secondary IDs of diseases
+    	if (diseaseList.size() == 0) {
+			
+    		// standard secondary IDs
+    		List<VocabTermID> vtList = termGatherer.get( VocabTermID.class, diseaseID, "accID" );
+			if (vtList.size() == 1) {
+				diseaseList = diseaseGatherer.get( Disease.class, 
+						vtList.get(0).getVocabTerm().getPrimaryID(), "primaryID" );
+			}
+
+			// check for old OMIM ID pattern
+			List<String> omimID = new ArrayList<String>();
+			omimID.add("OMIM:" + diseaseID.get(0));
+			List<VocabTermID> vtoList = termGatherer.get( VocabTermID.class, omimID, "accID" );
+			if (vtoList.size() == 1) {
+				diseaseList = diseaseGatherer.get( Disease.class, 
+						vtoList.get(0).getVocabTerm().getPrimaryID(), "primaryID" );
+			}    	
+    	}
+        return diseaseList;
     }
     
 //    // convenience wrapper
