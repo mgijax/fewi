@@ -163,6 +163,8 @@
 		  <c:when test="${id.logicalDB == 'OMIM' || 
 		                  id.logicalDB == 'ORDO' ||
 		                  id.logicalDB == 'KEGG' ||
+		                  id.logicalDB == 'NCI' ||
+		                  id.logicalDB == 'OMIM:PS' ||
 		                  id.logicalDB == 'MESH' ||
 		                  id.logicalDB == 'EFO'}">
 		    <% id = (VocabTermID) pageContext.getAttribute("id"); %>
