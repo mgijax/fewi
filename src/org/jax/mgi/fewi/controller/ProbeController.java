@@ -48,15 +48,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping(value="/probe")
 public class ProbeController {
 
-	//--- class variables ---//
-	
-	// list of logical databases where we want to show the name of the logical db instead of a link
-	// (on the probe detail page)
-	public static List<String> oldLogicalDatabases = Arrays.asList(new String[] {"ATCC", "ATCC home page", "WashU", "BROAD", "NIA", "NIA 15K", "NIA 7.4K"});
-
-	// list of logical databases where we want to only show the ID, but no name or link (on the probe detail page)
-	public static List<String> suppressedLogicalDatabases = Arrays.asList(new String[] {"MGI"});
-
 	//--- instance variables ---//
 	
 	private Logger logger = LoggerFactory.getLogger(ProbeController.class);
@@ -152,9 +143,6 @@ public class ProbeController {
         addDetailSeo(probe, mav);
         flagDisplayFields(probe, mav);
 
-        mav.addObject("oldLogicalDatabases", oldLogicalDatabases);
-        mav.addObject("suppressedLogicalDatabases", suppressedLogicalDatabases);
-
         // add an IDLinker to the mav for use at the JSP level
         mav.addObject("idLinker", idLinker);
         return mav;
@@ -184,9 +172,6 @@ public class ProbeController {
         mav.addObject("probe", probe);
         addDetailSeo(probe, mav);
         flagDisplayFields(probe, mav);
-
-        mav.addObject("oldLogicalDatabases", oldLogicalDatabases);
-        mav.addObject("suppressedLogicalDatabases", suppressedLogicalDatabases);
 
         // add an IDLinker to the mav for use at the JSP level
         mav.addObject("idLinker", idLinker);

@@ -1,3 +1,5 @@
+	<c:set var="suppressedLogicalDatabases" value="MGI"/>
+	<c:set var="oldLogicalDatabases" value="ATCC, ATCC home page, WashU, BROAD, NIA, NIA 15K, NIA 7.4K"/>
 	<div class="row">
 		<div class="header <%=leftTdStyles.getNext() %>">
 			<c:choose>
@@ -103,10 +105,10 @@
 								<c:forEach var="secID" items="${probe.secondaryIds}">
 									${secID.accID}
 									<c:choose>
-										<c:when test="${suppressedLogicalDatabases.contains(secID.logicalDB)}">
+										<c:when test="${fn:indexOf(suppressedLogicalDatabases, secID.logicalDB) >= 0}">
 											<br/>
 										</c:when>
-										<c:when test="${oldLogicalDatabases.contains(secID.logicalDB)}">
+										<c:when test="${fn:indexOf(oldLogicalDatabases, secID.logicalDB) >= 0}">
 											(${secID.logicalDB})<br/>
 										</c:when>
 										<c:otherwise>
