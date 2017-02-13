@@ -52,10 +52,10 @@ public class ProbeController {
 	
 	// list of logical databases where we want to show the name of the logical db instead of a link
 	// (on the probe detail page)
-	private static List<String> oldLogicalDatabases = Arrays.asList(new String[] {"ATCC", "ATCC home page", "WashU", "BROAD", "NIA", "NIA 15K", "NIA 7.4K"});
+	public static List<String> oldLogicalDatabases = Arrays.asList(new String[] {"ATCC", "ATCC home page", "WashU", "BROAD", "NIA", "NIA 15K", "NIA 7.4K"});
 
 	// list of logical databases where we want to only show the ID, but no name or link (on the probe detail page)
-	private static List<String> suppressedLogicalDatabases = Arrays.asList(new String[] {"MGI"});
+	public static List<String> suppressedLogicalDatabases = Arrays.asList(new String[] {"MGI"});
 
 	//--- instance variables ---//
 	
