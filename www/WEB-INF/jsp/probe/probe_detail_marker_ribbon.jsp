@@ -10,7 +10,7 @@
 					<tr><td>
 					<a href="${configBean.FEWI_URL}marker/${markerAssoc.marker.primaryID}">${markerAssoc.marker.symbol}</a> 
 					</td><td>
-					${markerAssoc.marker.coordinates}
+					${markerAssoc.marker.name}
 					</td><td>
 					<c:if test="${markerAssoc.qualifier == 'P'}">(PUTATIVE)</c:if>
 					</td></tr>
