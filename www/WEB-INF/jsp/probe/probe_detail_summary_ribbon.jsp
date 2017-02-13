@@ -101,7 +101,18 @@
 							<div class="label">Other IDs</div>
 							<div class="value">
 								<c:forEach var="secID" items="${probe.secondaryIds}">
-									${secID.accID} (${idLinker.getFirstLink(secID)})<br/>
+									${secID.accID}
+									<c:choose>
+										<c:when test="${suppressedLogicalDatabases.contains(secID.logicalDB)}">
+											<br/>
+										</c:when>
+										<c:when test="${oldLogicalDatabases.contains(secID.logicalDB)}">
+											(${secID.logicalDB})<br/>
+										</c:when>
+										<c:otherwise>
+											(${fn:replace(idLinker.getFirstLink(secID), " home page", "")})<br/>
+										</c:otherwise>
+									</c:choose>
 								</c:forEach>
 							</div>
 						</li>
