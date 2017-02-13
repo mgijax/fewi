@@ -7,7 +7,7 @@
 			</div>
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %> expressionRibbon">
-			<section class="summarySec1 ">
+			<section class="summarySec1" style="padding-top: 31px">
 				<ul>
 					<li>
 						<div class="label">Assay Results</div>
