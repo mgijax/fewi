@@ -192,7 +192,11 @@ public class AlleleSummaryRow {
 			SpanCreator s = new SpanCreator();
 			String spans = "";
 			for(VocabTermID id: disease.getVocabTerm().getSecondaryIds()) {
-				s.setText(idLinker.getLink(id, id.getAccID(), "MP"));
+				if(disease.getVocabTerm().getPrimaryId().equals(id.getAccID()) || (!id.getAccID().startsWith("DOID:") && !id.getAccID().startsWith("HP:"))) {
+					s.setText(idLinker.getLinkWithClass(id, id.getAccID(), "MP"));
+				} else {
+					s.setText(id.getAccID());
+				}
 				spans += s.toString() + "<br>";
 			}
 			div_bd.setText(spans);

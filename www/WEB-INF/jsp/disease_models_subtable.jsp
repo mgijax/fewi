@@ -1,23 +1,34 @@
 	  <c:set var="borders" value="allBorders"/>
 
 <%
-	  dmIt = models.iterator();
-	  while (dmIt.hasNext()) {
-	    model = dmIt.next();
+dmIt = models.iterator();
+while (dmIt.hasNext()) {
+  model = dmIt.next();
 
-	    if (!dmIt.hasNext()) {
+  if (!dmIt.hasNext()) {
 %>
-	      <c:set var="borders" value="${sectionBorder}"/>
+    <c:set var="borders" value="${sectionBorder}"/>
 <%
-	    } // end of section; need darker bottom border
+  } // end of section; need darker bottom border
 %>
+<c:set var="rowCount" value="${rowCount + 1}"/>
+<c:set var="stripe" value="stripe1"/>
+<c:if test="${(rowCount % 2) == 0}">
+	<c:set var="stripe" value="stripe2"/>
+</c:if>
 
-	    <tr>${prefix}
-	      <td class="${borders} ${stripe} leftAlign">
+<tr>${prefix}
+
+	<td class="${borders} ${stripe} leftAlign">
+<%= model.getDisease() %></td>
+
+	<td class="${borders} ${stripe} leftAlign">
 <%= ntc.convertNotes(model.getAllelePairs(), '|').trim().replace("\n", "<br/>").replace("</sup>", "</span>").replace("<sup>", "<span class='superscript'>") %></td>
-	      <td class="${borders} ${stripe} leftAlign">
+
+	<td class="${borders} ${stripe} leftAlign">
 <%= FormatHelper.superscript(model.getBackgroundStrain()).replace("</SUP>", "</span>").replace("<SUP>", "<span class='superscript'>") %></td>
-	      <td class="${borders} ${stripe} leftAlign">
+
+	<td class="${borders} ${stripe} leftAlign">
 <%
                      refIt = model.getReferences().iterator();
                      while (refIt.hasNext()) {
@@ -29,13 +40,14 @@
                        } // if we need a comma
                      } // while more references
 %>
-	      </td>
-	      <td class="${borders} ${stripe} leftAlign">
-		<a href="<%= fewiUrl %>allele/genoview/<%= model.getGenotypeID() %>" target="_blank">View</a>
-	      </td>
-	    </tr>
+	</td>
 
-	    <c:set var="prefix" value=""/>
+	<td class="${borders} ${stripe} leftAlign">
+		<a href="<%= fewiUrl %>allele/genoview/<%= model.getGenotypeID() %>" target="_blank">View</a>
+	</td>
+</tr>
+
+<c:set var="prefix" value=""/>
 <%
-	  } // while more models
+} // while more models
 %>

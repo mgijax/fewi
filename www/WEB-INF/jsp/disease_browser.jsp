@@ -114,6 +114,14 @@
     padding:3px;
     text-align:center;
   }
+  .groupSeparater { 
+    border-bottom-color: #000000;
+    border-bottom-style:solid;
+    border-bottom-width:2px; 
+  }
+  #tableSeparater {
+    border-top: 2px solid #D0E0F0;
+  }
   .stripe1 { background-color: #FFFFFF; }
   .stripe2 { background-color: #DDDDDD; }
   .leftAlign {text-align:left;}

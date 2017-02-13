@@ -298,7 +298,7 @@ public class IDLinker {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<a ");
 		if(className != null && className.length() > 0) {
-			sb.append("class=\"" + className + "\"");
+			sb.append("class=\"" + className + "\" ");
 		}
 		sb.append("href='");
 		sb.append(url.replace("@@@@", id));
@@ -388,19 +388,19 @@ public class IDLinker {
 
 	public String getLink (AccessionID id) {
 		String accID = id.getAccID();
-		return getLink(id.getLogicalDB(), accID, accID);
+		return getLink(id.getLogicalDB(), accID, accID, "");
 	}
 
 	public String getLink (AccessionID id, String linkText) {
-		return getLink(id.getLogicalDB(), id.getAccID(), linkText);
+		return getLink(id.getLogicalDB(), id.getAccID(), linkText, "");
 	}
 
-	public String getLink (AccessionID id, String linkText, String className) {
+	public String getLinkWithClass (AccessionID id, String linkText, String className) {
 		return getLink(id.getLogicalDB(), id.getAccID(), linkText, className);
 	}
 
 	public String getLink (String logicalDB, String id) {
-		return getLink(logicalDB, id, id);
+		return getLink(logicalDB, id, id, "");
 	}
 
 	public String getLink (String logicalDB, String id, String linkText) {
