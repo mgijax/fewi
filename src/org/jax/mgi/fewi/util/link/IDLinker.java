@@ -298,7 +298,7 @@ public class IDLinker {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<a ");
 		if(className != null && className.length() > 0) {
-			sb.append("class=\"" + className + "\"");
+			sb.append("class=\"" + className + "\" ");
 		}
 		sb.append("href='");
 		sb.append(url.replace("@@@@", id));
