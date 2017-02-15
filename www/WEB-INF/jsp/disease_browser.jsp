@@ -190,7 +190,7 @@
   <!-- TAB DEFINITIONS -->
   <ul class="nav nav-tabs tabs-up" id="review">
     <li><a href="${configBean.FEWI_URL}disease/termTab/${disease.primaryID}" 
-    	data-target="#termTabContent" id="termTabButton" data-toggle="tabajax" class="active">Term Details</a></li>
+    	data-target="#termTabContent" id="termTabButton" data-toggle="tabajax" class="active">Term Browser</a></li>
     <li><a href="${configBean.FEWI_URL}disease/geneTab/${disease.primaryID}" 
     	data-target="#geneTabContent" id="genesTabButton" data-toggle="tabajax">Genes</a></li>
     <li><a href="${configBean.FEWI_URL}disease/modelTab/${disease.primaryID}" 
