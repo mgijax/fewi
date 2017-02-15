@@ -210,10 +210,17 @@
 
 
 
-  <!-- TAB CONTENTS -->
+  <!-- Include reference link -->
 
-  Disease References using Mouse Models 
-  <a href="${configBean.FEWI_URL}reference/disease/${disease.primaryID}?typeFilter=Literature">(${diseaseRefCount})</a>
+  <c:if test="${disease.diseaseReferenceCount > 0}">
+    Disease References using Mouse Models 
+    <a href="${configBean.FEWI_URL}reference/disease/${disease.primaryID}?typeFilter=Literature">(${diseaseRefCount})</a>
+   </c:if>
+
+
+
+
+
   
 </div>
 
