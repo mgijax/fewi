@@ -110,7 +110,7 @@
 	<tbody>
 	<tr>
 	<td style="">&nbsp;</td>
-	<td colspan="2" style="">Transgenes and other genome features developed in mice to model this disease.</td>
+	<td colspan="3" style="">Transgenes and other genome features developed in mice to model this disease.</td>
 	</tr>
 	<tr>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>

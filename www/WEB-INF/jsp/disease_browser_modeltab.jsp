@@ -54,6 +54,15 @@ DiseaseModelFilter dmFilter = new DiseaseModelFilter();
 	<table id='modelTabTable' cellpadding="4" cellspacing="0" width="!">
 	<tbody>
 
+	<!-- descriptive text -->
+	<tr>
+	<td style="">&nbsp;</td>
+	<td style="">&nbsp;</td>
+	<td style="">&nbsp;</td>
+	<td style="">&nbsp;</td>
+	<td colspan="5" style="">All mouse models of ${disease.disease} with phenotypic similarity to the human disease</td>
+	</tr>
+
 	<!-- heading row -->
 	<tr>
 	<td style="">&nbsp;</td>
@@ -143,10 +152,63 @@ DiseaseModelFilter dmFilter = new DiseaseModelFilter();
 
 	</tbody>
 	</table>
-      </c:if><!-- we have models -->
+  </c:if><!-- we have models -->
 
 
 
+<c:if test="${not ((empty disease.notModels))}">
+
+    <br/>
+    <hr id='tableSeparater'>
+
+	<c:set var="rowCount" value="0"/>
+
+	<table id='modelTabNotTable' cellpadding="4" cellspacing="0" width="!">
+	<tbody>
+
+	<!-- descriptive text -->
+	<tr>
+	<td style="">&nbsp;</td>
+	<td style="">&nbsp;</td>
+	<td style="">&nbsp;</td>
+	<td style="">&nbsp;</td>
+	<td colspan="5" style="">No similarity to the expected human disease phenotype was found.</td>
+	</tr>
+
+	<!-- heading row -->
+	<tr>
+	<td style="">&nbsp;</td>
+	<td style="">&nbsp;</td>
+	<td style="">&nbsp;</td>
+	<td style="">&nbsp;</td>
+	<td class="headerStripe allBorders">Disease Term</td>
+	<td class="headerStripe allBorders">Allelic Composition</td>
+	<td class="headerStripe allBorders">Genetic Background</td>
+	<td class="headerStripe allBorders">Reference</td>
+	<td class="headerStripe allBorders">Phenotypes</td>
+	</tr>
+
+	<c:set var="mouseIcon" value="<img src='${configBean.WEBSHARE_URL}images/black_mouse_small.gif'>"/>
+	<c:set var="humanIcon" value="<img src='${configBean.WEBSHARE_URL}images/man_icon.gif'>"/>
+
+	<c:set var="sectionCount" value="0"/>
+
+	<!-- 'Not' models for this disease -->
+<%
+	models = disease.getNotModels();
+	models = dmFilter.filter(models);
+	pageContext.setAttribute("diseaseModelCount", models.size());
+%>
+	<c:if test="${diseaseModelCount > 0}">
+	  <c:set var="sectionBorder" value="allBorders groupSeparater"/>
+
+	  <c:set var="prefix" value="<td rowspan='${diseaseModelCount}' class='centerMiddle'>NOT Models&nbsp;</td><td rowspan='${diseaseModelCount}'>&nbsp;</td><td rowspan='${diseaseModelCount}' class='topBorder bottomBorder leftBorder'>&nbsp;&nbsp;</td><td rowspan='${diseaseModelCount}'>&nbsp;</td>"/>
+	  <%@ include file="/WEB-INF/jsp/disease_models_subtable.jsp" %> 
+	</c:if>
+
+	</tbody>
+	</table>
+  </c:if><!-- we have NOT models -->
 
 
 

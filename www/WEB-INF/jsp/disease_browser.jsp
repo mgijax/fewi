@@ -163,6 +163,8 @@
 		  <c:when test="${id.logicalDB == 'OMIM' || 
 		                  id.logicalDB == 'ORDO' ||
 		                  id.logicalDB == 'KEGG' ||
+		                  id.logicalDB == 'NCI' ||
+		                  id.logicalDB == 'OMIM:PS' ||
 		                  id.logicalDB == 'MESH' ||
 		                  id.logicalDB == 'EFO'}">
 		    <% id = (VocabTermID) pageContext.getAttribute("id"); %>
@@ -188,7 +190,7 @@
   <!-- TAB DEFINITIONS -->
   <ul class="nav nav-tabs tabs-up" id="review">
     <li><a href="${configBean.FEWI_URL}disease/termTab/${disease.primaryID}" 
-    	data-target="#termTabContent" id="termTabButton" data-toggle="tabajax" class="active">Term Details</a></li>
+    	data-target="#termTabContent" id="termTabButton" data-toggle="tabajax" class="active">Term Browser</a></li>
     <li><a href="${configBean.FEWI_URL}disease/geneTab/${disease.primaryID}" 
     	data-target="#geneTabContent" id="genesTabButton" data-toggle="tabajax">Genes</a></li>
     <li><a href="${configBean.FEWI_URL}disease/modelTab/${disease.primaryID}" 
@@ -208,10 +210,17 @@
 
 
 
-  <!-- TAB CONTENTS -->
+  <!-- Include reference link -->
 
-  Disease References using Mouse Models 
-  <a href="${configBean.FEWI_URL}reference/disease/${disease.primaryID}?typeFilter=Literature">(${diseaseRefCount})</a>
+  <c:if test="${disease.diseaseReferenceCount > 0}">
+    Disease References using Mouse Models 
+    <a href="${configBean.FEWI_URL}reference/disease/${disease.primaryID}?typeFilter=Literature">(${diseaseRefCount})</a>
+   </c:if>
+
+
+
+
+
   
 </div>
 
