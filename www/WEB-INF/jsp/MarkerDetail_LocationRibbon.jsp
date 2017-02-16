@@ -16,7 +16,7 @@
 			<c:set var="extrastate" value="" />
 			<c:set var="arrowtext" value="more" />
 			<c:set var="titletext" value="Show More" />
-			<c:if test="${not (showLocationNote or showJBrowser or showDownloadSequence or showGenomeBrowserLinks or geneticMapExtra)}">
+			<c:if test="${not (showJBrowser or showDownloadSequence or showGenomeBrowserLinks or geneticMapExtra)}">
 				<c:set var="arrowstate" value="hdCollapse" />
 				<c:set var="extrastate" value="extra" />
 				<c:set var="arrowtext" value="less" />
