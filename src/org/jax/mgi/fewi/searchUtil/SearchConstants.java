@@ -246,4 +246,10 @@ public class SearchConstants {
 	public static final String PRB_REFERENCE_ID = "referenceID";
 	public static final String PRB_SEGMENT_TYPE = "segmentType";
 	public static final String PRB_PROBE = "probe";
+
+	// genetic mapping experiments
+	public static final String MLD_EXPERIMENT_KEY = "experimentKey";
+	public static final String MLD_EXPERIMENT = "experiment";
+	public static final String MLD_REFERENCE_ID = "referenceID";
+	public static final String MLD_MARKER_ID = "markerID";
 }

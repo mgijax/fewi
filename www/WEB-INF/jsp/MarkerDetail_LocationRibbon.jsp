@@ -195,7 +195,7 @@
 							<li class="extra closed">
 								<div class="label">Mapping Data</div>
 								<div class="value">
-									<a href="${configBean.WI_URL}searches/mapdata_report_by_marker.cgi?${marker.markerKey}">${marker.countOfMappingExperiments}</a> experiment<c:if test="${marker.countOfMappingExperiments > 1}">s</c:if>
+									<a href="${configBean.FEWI_URL}mapping/marker/${marker.primaryID}">${marker.countOfMappingExperiments}</a> experiment<c:if test="${marker.countOfMappingExperiments > 1}">s</c:if>
 								</div>
 							</li>
 						</c:if>
