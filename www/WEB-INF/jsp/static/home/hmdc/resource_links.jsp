@@ -3,19 +3,19 @@
 		Download Links:
 		<ul>
 			<li>
-            <a target="_blank" href="${configBean.PUB_REPORTS_URL}MGI_Geno_Disease.rpt">Mouse Genotypes with both Phenotype and Disease Annotations</a> for Marker Type Genes, excluding conditional mutations
+            <a target="_blank" href="${configBean.PUB_REPORTS_URL}MGI_Geno_DiseaseDO.rpt">Mouse Genotypes with both Phenotype and Disease Annotations</a> for Marker Type Genes, excluding conditional mutations
 				<ul>
 					<li class="font12">Tab-delimited: Allelic Composition, Allele symbol(s), Allele ID(s), Genetic background, MP ID, PubMed ID, MGI Marker ID, DO ID</li>
 				</ul>
 			</li>
 			<li>
-            <a target="_blank" href="${configBean.PUB_REPORTS_URL}MGI_Geno_NotDisease.rpt">Mouse Genotypes with both Phenotype and Negated Disease Annotations</a> for Marker Type Genes, excluding conditional mutations
+            <a target="_blank" href="${configBean.PUB_REPORTS_URL}MGI_Geno_NotDiseaseDO.rpt">Mouse Genotypes with both Phenotype and Negated Disease Annotations</a> for Marker Type Genes, excluding conditional mutations
 				<ul>
 					<li class="font12">Tab-delimited: Allelic Composition, Allele symbol(s), Allele ID(s), Genetic background, MP ID, PubMed ID, MGI Marker ID, DO ID</li>
 				</ul>
 			</li>
 			<li>
-            <a target="_blank" href="${configBean.PUB_REPORTS_URL}MGI_OMIM.rpt">Associations of Human and Mouse Genes with DO Diseases</a>
+            <a target="_blank" href="${configBean.PUB_REPORTS_URL}MGI_DO.rpt">Associations of Human and Mouse Genes with DO Diseases</a>
 				<ul>
 					<li class="font12">Tab-delimited: DO Disease ID, DO Disease Name, HomoloGene ID, Common Organism Name, NCBI Taxon ID, Symbol, EntrezGene ID, Mouse MGI ID</li>
 				</ul>
