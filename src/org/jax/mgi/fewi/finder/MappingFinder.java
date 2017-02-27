@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import mgi.frontend.datamodel.MappingExperiment;
+
 //import mgi.frontend.datamodel.MappingExperiment;
 
 /*
@@ -29,8 +31,8 @@ public class MappingFinder {
 	@Autowired
 	private SolrMappingHunter mappingHunter;
 
-//    @Autowired
-//    private HibernateObjectGatherer<MappingExperiment> experimentGatherer;
+    @Autowired
+    private HibernateObjectGatherer<MappingExperiment> experimentGatherer;
 
 	//--- public methods ---//
 
@@ -49,37 +51,33 @@ public class MappingFinder {
 		return searchResults;
 	}
 	
-	/* return all Probe objects (from database via Hibernate) matching the given ID
+	/* return all MappingExperiment objects (from database via Hibernate) matching the given ID
 	 */
-	/*
-    public List<Probe> getProbeByID(String probeID)
+    public List<MappingExperiment> getExperimentByID(String experimentID)
     {
-        return getProbeByID(Arrays.asList(probeID));
+        return getExperimentByID(Arrays.asList(experimentID));
     }
-*/
-	/* return all Probe objects (from database via Hibernate) matching at least one of the given list of IDs
-	 */
-	/*
-    public List<Probe> getProbeByID(List<String> probeID)
-    {
-        return probeGatherer.get( Probe.class, probeID, "primaryID" );
-    }
-*/
-    /* return all Probe objects matching the given database (probe) key (should be 0-1)
-     */
-	/*
-    public List<Probe> getProbeByKey(String dbKey) {
 
-        logger.debug("->getProbeByKey()");
+	/* return all MappingExperiment objects (from database via Hibernate) matching at least one of the given list of IDs
+	 */
+    public List<MappingExperiment> getExperimentByID(List<String> experimentID)
+    {
+        return experimentGatherer.get( MappingExperiment.class, experimentID, "primaryID" );
+    }
+
+    /* return all MappingExperiment objects matching the given database (experiment) key (should be 0-1)
+     */
+    public List<MappingExperiment> getExperimentByKey(String dbKey) {
+
+        logger.debug("->getExperimentByKey()");
 
         // gather objects, add them to the results
-        Probe probe = probeGatherer.get( Probe.class, dbKey );
+        MappingExperiment experiment = experimentGatherer.get( MappingExperiment.class, dbKey );
 
-        List<Probe> results = new ArrayList<Probe>();
-        if (probe != null) {
-        	results.add(probe);
+        List<MappingExperiment> results = new ArrayList<MappingExperiment>();
+        if (experiment != null) {
+        	results.add(experiment);
         }
         return results;
     }
-    */
 }

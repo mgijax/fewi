@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import mgi.frontend.datamodel.MappingExperiment;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Reference;
 
@@ -91,127 +92,77 @@ public class MappingController {
 		return summaryPage(referenceID, REFERENCE);
 	}
 
-	
-	
-/*	
-    @RequestMapping(value="/{probeID:.+}", method = RequestMethod.GET)
-    public ModelAndView probeDetail(@PathVariable("probeID") String probeID) {
+    @RequestMapping(value="/{experimentID:.+}", method = RequestMethod.GET)
+    public ModelAndView experimentDetail(@PathVariable("experimentID") String experimentID) {
 
-        logger.debug("->probeDetail started");
+        logger.debug("->experimentDetail started");
 
-        List<MappingExperiment> experimentList = mappingFinder.getExperimentByID(probeID);
+        List<MappingExperiment> experimentList = mappingFinder.getExperimentByID(experimentID);
         // there can be only one...
-        if (probeList.size() < 1) { // none found
+        if (experimentList.size() < 1) { // none found
             ModelAndView mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No Probe Found for ID " + probeID);
+            mav.addObject("errorMsg", "No mapping experiment Found for ID " + experimentID);
             return mav;
-        } else if (probeList.size() > 1) { // dupe found
+        } else if (experimentList.size() > 1) { // dupe found
             ModelAndView mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "ID " + probeID + " is associated with multiple probes");
+            mav.addObject("errorMsg", "ID " + experimentID + " is associated with multiple experiments");
             return mav;
         }
         // success - we have a single object
 
         // generate ModelAndView object to be passed to detail page
-        ModelAndView mav = new ModelAndView("probe/probe_detail");
+        ModelAndView mav = new ModelAndView("mapping/mapping_detail");
         
-        //pull out the Probe, and add to mav
-        Probe probe = probeList.get(0);
-        mav.addObject("probe", probe);
-        addDetailSeo(probe, mav);
-        flagDisplayFields(probe, mav);
+        //pull out the MappingExperiment, and add to mav
+        MappingExperiment experiment = experimentList.get(0);
+        mav.addObject("experiment", experiment);
+        addDetailSeo(experiment, mav);
 
         // add an IDLinker to the mav for use at the JSP level
         mav.addObject("idLinker", idLinker);
         return mav;
     }
-*/
-    /* Probe Detail by key
+
+    /* Mapping Experiment Detail by key
      */
-/*
     @RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
-    public ModelAndView probeDetailByKey(@PathVariable("dbKey") String dbKey) {
+    public ModelAndView experimentDetailByKey(@PathVariable("dbKey") String dbKey) {
 
-        logger.debug("->probeDetailByKey started");
+        logger.debug("->experimentDetailByKey started");
 
-        List<Probe> probeList = probeFinder.getProbeByKey(dbKey);
+        List<MappingExperiment> experimentList = mappingFinder.getExperimentByKey(dbKey);
         // there can be only one...
-        if (probeList.size() < 1) { // none found
+        if (experimentList.size() < 1) { // none found
             ModelAndView mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No Probe Found for key " + dbKey);
+            mav.addObject("errorMsg", "No Mapping Experiment found for key " + dbKey);
             return mav;
         }
         // success - we have a single object
 
         // generate ModelAndView object to be passed to detail page
-        ModelAndView mav = new ModelAndView("probe/probe_detail");
+        ModelAndView mav = new ModelAndView("mapping/mapping_detail");
         
-        // pull out the Probe, and add to mav
-        Probe probe = probeList.get(0);
-        mav.addObject("probe", probe);
-        addDetailSeo(probe, mav);
-        flagDisplayFields(probe, mav);
+        // pull out the MappingExperiment, and add to mav
+        MappingExperiment experiment = experimentList.get(0);
+        mav.addObject("experiment", experiment);
+        addDetailSeo(experiment, mav);
 
         // add an IDLinker to the mav for use at the JSP level
         mav.addObject("idLinker", idLinker);
         return mav;
     }
-*/
+
 	//--------------------------------------------------------------------//
 	// private methods
 	//--------------------------------------------------------------------//
 
-/*
      // add SEO data (seoDescription, seoTitle, and seoKeywords) to the given detail page's mav
-    private void addDetailSeo (Probe p, ModelAndView mav) {
-    	List<String> synonyms = p.getSynonyms();
-    	
-    	// identify high-level segment type (probe or primer)
-    	
-    	String highLevelSegmentType = "Probe";
-    	if ("primer".equals(p.getSegmentType()) ) {
-    		highLevelSegmentType = "Primer";
-    	}
-    	mav.addObject("highLevelSegmentType", highLevelSegmentType);
-    	
-    	// compose browser / SEO title
-    	
-    	StringBuffer seoTitle = new StringBuffer();
-    	seoTitle.append(p.getName());
-    	seoTitle.append(" ");
-    	seoTitle.append(highLevelSegmentType);
-    	seoTitle.append(" Detail MGI Mouse ");
-    	seoTitle.append(p.getPrimaryID());
-    	mav.addObject("seoTitle", seoTitle.toString());
-    	
-    	// compose set of SEO keywords
-    	
-    	StringBuffer seoKeywords = new StringBuffer();
-    	seoKeywords.append(p.getName());
-    	if (!"Probe".equals(highLevelSegmentType)) {		// already adding lowercase 'probe' below
-    		seoKeywords.append(", ");
-    		seoKeywords.append(highLevelSegmentType); 
-    	}
-    	if ((synonyms != null) && (synonyms.size() > 0)) {
-    		for (String synonym : synonyms) {
-    			seoKeywords.append(", ");
-    			seoKeywords.append(synonym);
-    		}
-    	}
-    	seoKeywords.append(", probe, clone, mouse, mice, murine, Mus");
-    	mav.addObject("seoKeywords", seoKeywords);
-    	
-    	// compose SEO description
-    	
-    	StringBuffer seoDescription = new StringBuffer();
-    	seoDescription.append("View ");
-    	seoDescription.append(highLevelSegmentType);
-    	seoDescription.append(" ");
-    	seoDescription.append(p.getName());
-    	seoDescription.append(" : location, molecular source, gene associations, expression, sequences, polymorphisms, and references.");
-    	mav.addObject("seoDescription", seoDescription);
+    private void addDetailSeo (MappingExperiment e, ModelAndView mav) {
+    	mav.addObject("seoTitle", e.getType() + " Mapping MGI Mouse " + e.getPrimaryID());
+    	mav.addObject("seoDescription", "View " + e.getType() + " mapping: chromosome, reference, "
+    		+ "genes, notes, and experiment details.");
+    	mav.addObject("seoKeywords", "CROSS, FISH, HYBRID, IN SITU, RI, TEXT, mapping, mouse, mice, murine, mus");
     }
- */
     
 	// This is a convenience method to handle packing the SearchParams object
 	// and return the SearchResults from the finder.
