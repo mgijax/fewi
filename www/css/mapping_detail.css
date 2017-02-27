@@ -508,13 +508,13 @@ border-bottom: 1px solid gray;
 		display: none;
 	}
 	
-	.genesTable th {
+	.mappingTable th {
 		padding: 4px;
 		font-weight: bold;
 		border: 1px solid gray;
 	}
 
-	.genesTable {
+	.mappingTable {
 		margin-left: 20px;
 	}
 	
@@ -522,7 +522,7 @@ border-bottom: 1px solid gray;
 		margin-bottom: 10px;
 	}
 	
-	.genesTable td {
+	.mappingTable td {
 		padding: 4px;
 		vertical-align: top;
 		text-align: left;

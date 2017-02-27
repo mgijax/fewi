@@ -6,7 +6,7 @@
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %> genesRibbon">
 			<section class="summarySec1 ">
-				<table class="genesTable">
+				<table class="mappingTable">
 				<tr><th>Gene</th><th>Allele</th><th>Assay Type</th><th>Description</th></tr>
 				<c:forEach var="assoc" items="${markerAssociations}">
 					<tr>
