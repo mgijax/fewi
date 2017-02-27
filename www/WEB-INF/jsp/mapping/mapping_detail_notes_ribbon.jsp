@@ -10,7 +10,7 @@
 					<li>
 						<div class="label">Reference</div>
 						<div class="value">
-							${experiment.referenceNote}
+							${experiment.referenceNoteHtml}
 						</div>
 					</li>
 				</c:if>
@@ -18,7 +18,7 @@
 					<li>
 						<div class="label">Experiment</div>
 						<div class="value">
-							${experiment.note}
+							${experiment.noteHtml}
 						</div>
 					</li>
 				</c:if>
