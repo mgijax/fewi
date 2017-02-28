@@ -39,6 +39,8 @@
 	<%@ include file="mapping_detail_rirc_ribbon.jsp" %>
 	<%@ include file="mapping_detail_cross_ribbon.jsp" %>
 	<%@ include file="mapping_detail_hybrid_ribbon.jsp" %>
+	<%@ include file="mapping_detail_fish_ribbon.jsp" %>
+	<%@ include file="mapping_detail_insitu_ribbon.jsp" %>
 </div>
 
 <!--	close page template -->
