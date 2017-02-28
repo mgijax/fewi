@@ -15,7 +15,7 @@
 						</div>
 					</li>
 				</c:if>
-				<c:if test="${not empty hybrid.concordanceType}">
+				<c:if test="${(not empty hybrid.concordanceType) and (not empty experiment.hybridMatrix)}">
 					<li>
 						<div class="label">Concordance</div>
 						<div class="value">
