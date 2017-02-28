@@ -12,7 +12,7 @@
 				<c:forEach var="assoc" items="${markerAssociations}">
 					<tr>
 					<c:choose>
-						<c:when test="${not empty assoc.marker.primaryID}">
+						<c:when test="${(not empty assoc.marker.primaryID) and (assoc.marker.status != 'withdrawn')}">
 							<td><a href="${configBean.FEWI_URL}marker/${assoc.marker.primaryID}"><fewi:super value="${assoc.marker.symbol}"/></a></td>
 						</c:when>
 						<c:otherwise>
