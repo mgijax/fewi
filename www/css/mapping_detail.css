@@ -522,6 +522,10 @@ border-bottom: 1px solid gray;
 		margin-bottom: 10px;
 	}
 	
+	.fixedWidthFont {
+		font-family: Courier, monospace;
+	}
+	
 	.scrollY {
 		overflow-y: scroll;
 	}
