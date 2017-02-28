@@ -522,6 +522,12 @@ border-bottom: 1px solid gray;
 		margin-bottom: 10px;
 	}
 	
+	.mappingTableHeader {
+		font-weight: bold;
+		padding-top: 10px;
+		padding-bottom: 5px;
+	}
+	
 	.mappingTable td {
 		padding: 4px;
 		vertical-align: top;

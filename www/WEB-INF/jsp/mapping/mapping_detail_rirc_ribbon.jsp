@@ -40,27 +40,21 @@
 					</li>
 				</c:if>
 				</ul>
-			<!--
-				<table class="mappingTable">
-				<tr><th>Gene</th><th>Allele</th><th>Assay Type</th><th>Description</th></tr>
-				<c:forEach var="assoc" items="${markerAssociations}">
-					<tr>
-					<c:choose>
-						<c:when test="${not empty assoc.marker.primaryID}">
-							<td><a href="${configBean.FEWI_URL}marker/${assoc.marker.primaryID}"><fewi:super value="${assoc.marker.symbol}"/></a></td>
-						</c:when>
-						<c:otherwise>
-							<td><fewi:super value="${assoc.marker.symbol}"/></td>
-						</c:otherwise>
-					</c:choose>
-					</td>
-					<td><fewi:super value="${assoc.allele.symbol}"/></td>
-					<td>${assoc.assayType}</td>
-					<td>${assoc.description}</td>
-					</tr>
-				</c:forEach>
-				</table>
-			-->
+
+				<!-- RI/RC data matrix -->
+				<c:set var="experimentTable" value="${experiment.rircMatrix}"/>
+				<c:set var="experimentTableName" value="RI Data"/>
+				<%@ include file="mapping_detail_table.jsp" %>
+				
+				<!-- RI/RC 2x2 data -->
+				<c:set var="experimentTable" value="${experiment.rirc2x2}"/>
+				<c:set var="experimentTableName" value="2x2 Data"/>
+				<%@ include file="mapping_detail_table.jsp" %>
+				
+				<!-- RI/RC statistics -->
+				<c:set var="experimentTable" value="${experiment.rircStatistics}"/>
+				<c:set var="experimentTableName" value="Statistics"/>
+				<%@ include file="mapping_detail_table.jsp" %>
 			</section>
 		</div>
 	</div>
