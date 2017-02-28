@@ -130,7 +130,7 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 		</tr>
 		<c:forEach var="experiment" items="${experiments}" varStatus="status">
 			<tr>
-				<td class='nw'><a href="${configBean.WI_URL}searches/mapdata.cgi?${experiment.primaryID}"><fewi:super value="${experiment.type}"/></a></td>
+				<td class='nw'><a href="${configBean.FEWI_URL}mapping/${experiment.primaryID}"><fewi:super value="${experiment.type}"/></a></td>
 				<td class='nw'><c:forEach var="detail" items="${experiment.details}" varStatus="cStatus">
 						${detail}<br/>
 					</c:forEach>

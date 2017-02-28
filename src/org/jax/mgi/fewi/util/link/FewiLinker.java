@@ -44,6 +44,7 @@ public class FewiLinker {
 		idUrlMap.put(ObjectTypes.EMAPA, baseUrl +"vocab/gxd/anatomy/%s");
 		idUrlMap.put(ObjectTypes.EMAPS, baseUrl +"vocab/gxd/anatomy/%s");
 		idUrlMap.put(ObjectTypes.PROBECLONE, baseUrl +"probe/%s");
+		idUrlMap.put(ObjectTypes.MAPPING, baseUrl + "mapping/%s");
 
 		// Mapping that is key based
 
