@@ -1,5 +1,5 @@
-<c:set var="rirc" value="${experiment.rirc}"/>
-<c:if test="${not empty rirc}">
+<c:if test="${not empty experiment.rirc}">
+	<c:set var="rirc" value="${experiment.rirc}"/>
 	<div class="row">
 		<div class="header <%=leftTdStyles.getNext() %>">
 			${experiment.type}

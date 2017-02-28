@@ -522,6 +522,14 @@ border-bottom: 1px solid gray;
 		margin-bottom: 10px;
 	}
 	
+	.scrollY {
+		overflow-y: scroll;
+	}
+	
+	#mappingTableWrapper {
+		max-height:525px;
+	}
+	
 	.mappingTableHeader {
 		font-weight: bold;
 		padding-top: 10px;

@@ -37,6 +37,7 @@
 	<%@ include file="mapping_detail_marker_ribbon.jsp" %>
 	<%@ include file="mapping_detail_notes_ribbon.jsp" %>
 	<%@ include file="mapping_detail_rirc_ribbon.jsp" %>
+	<%@ include file="mapping_detail_cross_ribbon.jsp" %>
 </div>
 
 <!--	close page template -->

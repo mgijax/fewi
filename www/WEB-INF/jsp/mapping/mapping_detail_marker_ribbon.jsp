@@ -6,6 +6,7 @@
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %> genesRibbon">
 			<section class="summarySec1 ">
+			  <div id="mappingTableWrapper">
 				<table class="mappingTable">
 				<tr><th>Gene</th><th>Allele</th><th>Assay Type</th><th>Description</th></tr>
 				<c:forEach var="assoc" items="${markerAssociations}">
@@ -25,7 +26,15 @@
 					</tr>
 				</c:forEach>
 				</table>
+			  </div>
 			</section>
 		</div>
 	</div>
+	<script>
+	// set wrapper width so scrollbar is right beside the table of markers
+	if ($('#mappingTableWrapper table').height() > $('#mappingTableWrapper').height()) {
+		$('#mappingTableWrapper').width($('#mappingTableWrapper table').width() + 37);
+		$('#mappingTableWrapper').addClass('scrollY');
+	}
+	</script>
 </c:if>
