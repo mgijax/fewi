@@ -87,7 +87,15 @@
 				
 				<!-- CROSS 2x2 data -->
 				<c:set var="experimentTable" value="${experiment.cross2x2}"/>
-				<c:set var="experimentTableName" value="2x2 Data Reported"/>
+				<!-- title needs to be customized -->
+				<c:choose>
+					<c:when test="${empty experiment.crossMatrix}">
+						<c:set var="experimentTableName" value="2x2 Data Reported"/>
+					</c:when>
+					<c:otherwise>
+						<c:set var="experimentTableName" value="Additional Mice Typed Only for Specific Pairs of Loci"/>
+					</c:otherwise>
+				</c:choose>
 				<%@ include file="mapping_detail_table.jsp" %>
 				
 				<!-- CROSS statistics -->
