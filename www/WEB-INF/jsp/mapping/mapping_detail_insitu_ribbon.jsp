@@ -7,7 +7,7 @@
 		<div class="detail <%=rightTdStyles.getNext() %> detailsRibbon">
 			<section class="summarySec1 ">
 				<ul>
-				<c:if test="${not empty inSitu.band}">
+				<c:if test="${(not empty inSitu.band) and (fn:length(fn:trim(inSitu.band)) > 0)}">
 					<li>
 						<div class="label">Band</div>
 						<div class="value">
@@ -83,7 +83,7 @@
 
 				<!-- INSITU data matrix -->
 				<c:set var="experimentTable" value="${experiment.inSituMatrix}"/>
-				<c:set var="experimentTableName" value="INSITU Data"/>
+				<c:set var="experimentTableName" value="IN SITU Data"/>
 				<%@ include file="mapping_detail_table.jsp" %>
 			</section>
 		</div>
