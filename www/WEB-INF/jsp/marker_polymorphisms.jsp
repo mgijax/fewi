@@ -47,6 +47,7 @@ td.summaryHeaderCat1Gxd { font-weight: bold; }
 .nw { white-space: nowrap; }
 .byMarker { width: 100%; }
 .header { padding-top: 10px; padding-bottom: 10px; }
+.vtop { vertical-align: top; }
 </style>
 
 <!--[if IE]>
@@ -70,7 +71,7 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="mapping_experimental_data_help.shtml#mapsum" style="min-width: 1000px">
+<div id="titleBarWrapper" userdoc="POLYMORPHISM_help.shtml" style="min-width: 1000px">
 	<div id="pageHeaderWrapper" style='display:inline-block; margin-top: 5px;'>
 	<span class="titleBarMainTitle">${polymorphismType} Polymorphisms</span>
 	</div>
@@ -114,6 +115,8 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 			<th>Fragments</th>
 			<th>Strains</th>
 		</tr>
+		<c:set var="vtop" value=" CLASS='vtop'"/>
+
 		<c:forEach var="polymorphism" items="${polymorphisms}" varStatus="pStatus">
 			<c:set var="rowspan" value=""/>
 			<c:if test="${fn:length(polymorphism.alleles) > 1}">
@@ -129,20 +132,20 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 				<c:choose>
 					<c:when test="${dStatus.first}">
 						<tr${shaded}>
-							<td${rowspan}>${polymorphismType}</td>
-							<td${rowspan}><a href="${configBean.FEWI_URL}reference/${polymorphism.jnumID}">${polymorphism.jnumID}</a></td>
-							<td${rowspan}><a href="${configBean.FEWI_URL}probe/${polymorphism.probeID}">${polymorphism.probeName}</a></td>
-							<td${rowspan}>${polymorphism.endonuclease}</td>
-							<td>${detail.allele}</td>
+							<td${rowspan}${vtop}>${polymorphismType}</td>
+							<td${rowspan}${vtop}><a href="${configBean.FEWI_URL}reference/${polymorphism.jnumID}">${polymorphism.jnumID}</a></td>
+							<td${rowspan}${vtop}><a href="${configBean.FEWI_URL}probe/${polymorphism.probeID}">${polymorphism.probeName}</a></td>
+							<td${rowspan}${vtop}>${polymorphism.endonuclease}</td>
+							<td><fewi:super value="${detail.allele}"/></td>
 							<td>${detail.fragments}</td>
-							<td>${detail.strains}</td>
+							<td><fewi:super value="${detail.strains}"/></td>
 						</tr>
 					</c:when>
 					<c:otherwise>
 						<tr${shaded}>
-							<td>${detail.allele}</td>
+							<td><fewi:super value="${detail.allele}"/></td>
 							<td>${detail.fragments}</td>
-							<td>${detail.strains}</td>
+							<td><fewi:super value="${detail.strains}"/></td>
 						</tr>
 					</c:otherwise>
 				</c:choose>
