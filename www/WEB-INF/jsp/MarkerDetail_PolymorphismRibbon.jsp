@@ -37,8 +37,7 @@
 						<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
 							<c:if test="${(item.countType == 'PCR') or (item.countType == 'RFLP')}">
 								<li>
-									<c:set var="polyUrl" value="${configBean.WI_URL}searches/polymorphism_report.cgi?_Marker_key=${marker.markerKey}"/>
-									<c:set var="polyUrl" value="${polyUrl}&search=${item.countType}"/>
+									<c:set var="polyUrl" value="${configBean.FEWI_URL}marker/polymorphisms/${fn:toLowerCase(item.countType)}/${marker.primaryID}"/>
 									<div class="label" style="white-space: normal;">${item.countType}</div>
 									<div class="value"><a href="${polyUrl}">${item.count}</a></div>
 								</li>

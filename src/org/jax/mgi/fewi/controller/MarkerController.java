@@ -86,6 +86,10 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(value="/marker")
 public class MarkerController {
 
+	// constants for polymorphism data
+	private static String PCR = "PCR";
+	private static String RFLP = "RFLP";
+	
 	// maps from marker key to the URL for the minimap image
 	private static HashMap<Integer,String> minimaps =  new HashMap<Integer,String>();
 
@@ -1305,6 +1309,54 @@ public class MarkerController {
 		// pre-generate query string
 		mav.addObject("queryString", "refKey=" + reference.getReferenceKey());
 		logger.debug("markerSummaryByRef routing to view ");
+		return mav;
+	}
+
+	@RequestMapping(value="/polymorphisms/pcr/{markerID}")
+	public ModelAndView markerPolymorphismsPcr(@PathVariable("markerID") String markerID) {
+		return markerPolymorphisms(markerID, PCR);
+	}
+
+	@RequestMapping(value="/polymorphisms/rflp/{markerID}")
+	public ModelAndView markerPolymorphismsRflp(@PathVariable("markerID") String markerID) {
+		return markerPolymorphisms(markerID, RFLP);
+	}
+
+	private ModelAndView markerPolymorphisms(String markerID, String polymorphismType) {
+
+		logger.debug("->markerPolymorphisms started (" + markerID + ", " + polymorphismType + ")");
+		
+		if (!RFLP.equals(polymorphismType) && !PCR.equals(polymorphismType)) {
+			return errorMav("Unknown polymorphismType: " + polymorphismType);
+		}
+
+		// find the requested marker
+		SearchResults<Marker> searchResults = markerFinder.getMarkerByID(markerID);
+		List<Marker> markerList = searchResults.getResultObjects();
+
+		// there can be only one...
+		if (markerList.size() < 1) { // none found
+			return errorMav("No marker found for " + markerID);
+		} else if (markerList.size() > 1) { // dupe found
+			return errorMav("ID " + markerID + " refers to more than one marker");
+		}
+
+		Marker marker = markerList.get(0);
+
+		// generate ModelAndView object to be passed to polymorphism page
+		ModelAndView mav = new ModelAndView("marker_polymorphisms");
+		mav.addObject("marker", marker);
+		mav.addObject("polymorphismType", polymorphismType);
+		mav.addObject("title", polymorphismType + " Polymorphisms for " + marker.getSymbol());
+		mav.addObject("description", polymorphismType + " polymorphisms associated with mouse " + marker.getMarkerType()
+				+ " " + marker.getSymbol() + ", " + marker.getPrimaryID());
+		if (PCR.equals(polymorphismType)) {
+			mav.addObject("polymorphisms", marker.getPcrPolymorphisms());
+		} else {
+			mav.addObject("polymorphisms", marker.getRflpPolymorphisms());
+		}
+		dbDate(mav);
+
 		return mav;
 	}
 
