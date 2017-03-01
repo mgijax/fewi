@@ -25,7 +25,7 @@
 				</c:if>
 				<c:if test="${not empty fish.cellOrigin}">
 					<li>
-						<div class="label">Cell type</div>
+						<div class="label">Cell Type</div>
 						<div class="value">
 							${fish.cellOrigin}
 						</div>
@@ -33,7 +33,7 @@
 				</c:if>
 				<c:if test="${not empty fish.karyotypeMethod}">
 					<li>
-						<div class="label">Karyotype method</div>
+						<div class="label">Karyotype Method</div>
 						<div class="value">
 							${fish.karyotypeMethod}
 						</div>
@@ -49,7 +49,7 @@
 				</c:if>
 				<c:if test="${not empty fish.metaphaseCount}">
 					<li>
-						<div class="label">Metaphases analyzed</div>
+						<div class="label">Metaphases Analyzed</div>
 						<div class="value" style="margin-left: 10.5em">
 							${fish.metaphaseCount}
 						</div>
@@ -57,7 +57,7 @@
 				</c:if>
 				<c:if test="${not empty fish.singleSignalCount}">
 					<li>
-						<div class="label">Single signals</div>
+						<div class="label">Single Signals</div>
 						<div class="value">
 							${fish.singleSignalCount}
 						</div>
@@ -65,7 +65,7 @@
 				</c:if>
 				<c:if test="${not empty fish.doubleSignalCount}">
 					<li>
-						<div class="label">Double signals</div>
+						<div class="label">Double Signals</div>
 						<div class="value">
 							${fish.doubleSignalCount}
 						</div>
@@ -73,7 +73,7 @@
 				</c:if>
 				<c:if test="${not empty fish.label}">
 					<li>
-						<div class="label">label</div>
+						<div class="label">Label</div>
 						<div class="value">
 							${fish.label}
 						</div>

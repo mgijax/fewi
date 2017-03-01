@@ -25,7 +25,7 @@
 				</c:if>
 				<c:if test="${not empty inSitu.cellOrigin}">
 					<li>
-						<div class="label">Cell type</div>
+						<div class="label">Cell Type</div>
 						<div class="value">
 							${inSitu.cellOrigin}
 						</div>
@@ -33,7 +33,7 @@
 				</c:if>
 				<c:if test="${not empty inSitu.karyotypeMethod}">
 					<li>
-						<div class="label">Karyotype method</div>
+						<div class="label">Karyotype Method</div>
 						<div class="value">
 							${inSitu.karyotypeMethod}
 						</div>
@@ -49,7 +49,7 @@
 				</c:if>
 				<c:if test="${not empty inSitu.metaphaseCount}">
 					<li>
-						<div class="label">Metaphases analyzed</div>
+						<div class="label">Metaphases Analyzed</div>
 						<div class="value" style="margin-left: 10.5em">
 							${inSitu.metaphaseCount}
 						</div>
@@ -57,7 +57,7 @@
 				</c:if>
 				<c:if test="${not empty inSitu.grainsScored}">
 					<li>
-						<div class="label">Grains scored</div>
+						<div class="label">Grains Scored</div>
 						<div class="value">
 							${inSitu.grainsScored}
 						</div>
@@ -65,7 +65,7 @@
 				</c:if>
 				<c:if test="${not empty inSitu.grainsOnCorrectChromosome}">
 					<li>
-						<div class="label">Grains on correct chromosome</div>
+						<div class="label">Grains on Correct Chromosome</div>
 						<div class="value" style="margin-left: 15.5em">
 							${inSitu.grainsOnCorrectChromosome}
 						</div>
@@ -73,7 +73,7 @@
 				</c:if>
 				<c:if test="${not empty inSitu.grainsOnOtherChromosome}">
 					<li>
-						<div class="label">Grains on other chromosome</div>
+						<div class="label">Grains on Other Chromosome</div>
 						<div class="value" style="margin-left: 14.75em">
 							${inSitu.grainsOnOtherChromosome}
 						</div>
