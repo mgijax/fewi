@@ -84,6 +84,7 @@
 				<!-- INSITU data matrix -->
 				<c:set var="experimentTable" value="${experiment.inSituMatrix}"/>
 				<c:set var="experimentTableName" value="IN SITU Data"/>
+				<c:set var="superscriptLabels" value="true"/>
 				<%@ include file="mapping_detail_table.jsp" %>
 			</section>
 		</div>

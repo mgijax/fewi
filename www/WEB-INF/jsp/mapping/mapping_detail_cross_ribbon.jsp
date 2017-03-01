@@ -83,7 +83,9 @@
 				<!-- CROSS data matrix -->
 				<c:set var="experimentTable" value="${experiment.crossMatrix}"/>
 				<c:set var="experimentTableName" value="CROSS Data"/>
+				<c:set var="superscriptLabels" value="false"/>
 				<%@ include file="mapping_detail_table.jsp" %>
+				<c:set var="superscriptLabels" value="true"/>
 				
 				<!-- CROSS 2x2 data -->
 				<c:set var="experimentTable" value="${experiment.cross2x2}"/>

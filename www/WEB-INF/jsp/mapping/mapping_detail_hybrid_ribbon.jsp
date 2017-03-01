@@ -28,6 +28,7 @@
 				<!-- HYBRID data matrix -->
 				<c:set var="experimentTable" value="${experiment.hybridMatrix}"/>
 				<c:set var="experimentTableName" value="HYBRID Data"/>
+				<c:set var="superscriptLabels" value="true"/>
 				<div id="hybridTable">
 				<%@ include file="mapping_detail_table.jsp" %>
 				</div>

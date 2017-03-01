@@ -44,6 +44,7 @@
 				<!-- RI/RC data matrix -->
 				<c:set var="experimentTable" value="${experiment.rircMatrix}"/>
 				<c:set var="experimentTableName" value="RI Data"/>
+				<c:set var="superscriptLabels" value="true"/>
 				<%@ include file="mapping_detail_table.jsp" %>
 				
 				<!-- RI/RC 2x2 data -->

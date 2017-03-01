@@ -84,6 +84,7 @@
 				<!-- FISH data matrix -->
 				<c:set var="experimentTable" value="${experiment.fishMatrix}"/>
 				<c:set var="experimentTableName" value="FISH Data"/>
+				<c:set var="superscriptLabels" value="true"/>
 				<%@ include file="mapping_detail_table.jsp" %>
 			</section>
 		</div>
