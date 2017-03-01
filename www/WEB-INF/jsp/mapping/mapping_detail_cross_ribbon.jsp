@@ -64,17 +64,17 @@
 				</c:if>
 				<c:if test="${(not empty cross.homozygousAllele) and (not empty cross.homozygousStrain)}">
 					<li>
-						<div class="label">Homozygous</div>
+						<div class="label">Allele 1</div>
 						<div class="value">
-							Symbol <b>${cross.homozygousAllele}</b> used here to designate allele from <b>${cross.homozygousStrain}</b>
+							<b>${cross.homozygousAllele}</b> from <b>${cross.homozygousStrain}</b>
 						</div>
 					</li>
 				</c:if>
 				<c:if test="${(not empty cross.heterozygousAllele) and (not empty cross.heterozygousStrain)}">
 					<li>
-						<div class="label">Heterozygous</div>
+						<div class="label">Allele 2</div>
 						<div class="value">
-							Symbol <b>${cross.heterozygousAllele}</b> used here to designate allele from <b>${cross.heterozygousStrain}</b>
+							<b>${cross.heterozygousAllele}</b> from <b>${cross.heterozygousStrain}</b>
 						</div>
 					</li>
 				</c:if>
