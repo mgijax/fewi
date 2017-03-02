@@ -126,6 +126,10 @@
   .stripe2 { background-color: #DDDDDD; }
   .leftAlign {text-align:left;}
 
+  table {
+    background-color: #fff; 
+  }
+
 </style>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
