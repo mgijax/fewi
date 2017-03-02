@@ -126,7 +126,7 @@
   .stripe2 { background-color: #DDDDDD; }
   .leftAlign {text-align:left;}
 
-  table {
+  #overDiv table {
     background-color: #fff; 
   }
 
