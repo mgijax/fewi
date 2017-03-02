@@ -30,11 +30,17 @@
 			</section>
 		</div>
 	</div>
+	<style>
+		.maxWidth { max-width: 90%; }
+	</style>
 	<script>
-	// set wrapper width so scrollbar is right beside the table of markers
+	// set wrapper width so scrollbar is right beside the table of markers, if we have scrolling
 	if ($('#mappingTableWrapper table').height() > $('#mappingTableWrapper').height()) {
-		$('#mappingTableWrapper').width($('#mappingTableWrapper table').width() + 37);
-		$('#mappingTableWrapper').addClass('scrollY');
+		$('#mappingTableWrapper').addClass('maxWidth');
+		setTimeout(function() {
+			$('#mappingTableWrapper').width($('#mappingTableWrapper table').width() + 37);
+			$('#mappingTableWrapper').addClass('scrollY');
+			}, 500);
 	}
 	</script>
 </c:if>
