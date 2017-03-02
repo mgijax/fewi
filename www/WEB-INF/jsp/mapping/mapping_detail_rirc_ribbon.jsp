@@ -43,7 +43,7 @@
 
 				<!-- RI/RC data matrix -->
 				<c:set var="experimentTable" value="${experiment.rircMatrix}"/>
-				<c:set var="experimentTableName" value="RI Data"/>
+				<c:set var="experimentTableName" value="RI Data (columns show RI Lines sampled)"/>
 				<c:set var="superscriptLabels" value="true"/>
 				<%@ include file="mapping_detail_table.jsp" %>
 				
