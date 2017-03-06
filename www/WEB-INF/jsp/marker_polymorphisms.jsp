@@ -107,8 +107,8 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 	<div class="header">${fn:length(polymorphisms)} <fewi:plural value="polymorphism" size="${fn:length(polymorphisms)}"/></div>
 	<table id="polymorphismSummaryTable" class="byMarker">
 		<tr>
-			<th>Probe</th>
 			<th>Reference</th>
+			<th>Probe</th>
 			<th>Endonuclease</th>
 			<th>Allele</th>
 			<th>Fragments</th>
@@ -131,8 +131,8 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 				<c:choose>
 					<c:when test="${dStatus.first}">
 						<tr${shaded}>
-							<td${rowspan}${vtop}><a href="${configBean.FEWI_URL}probe/${polymorphism.probeID}">${polymorphism.probeName}</a></td>
 							<td${rowspan}${vtop}><a href="${configBean.FEWI_URL}reference/${polymorphism.jnumID}">${polymorphism.jnumID}</a></td>
+							<td${rowspan}${vtop}><a href="${configBean.FEWI_URL}probe/${polymorphism.probeID}">${polymorphism.probeName}</a></td>
 							<td${rowspan}${vtop}>${polymorphism.endonuclease}</td>
 							<td><fewi:super value="${detail.allele}"/></td>
 							<td>${detail.fragments}</td>
