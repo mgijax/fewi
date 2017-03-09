@@ -60,12 +60,14 @@ td.padTop { padding-top: 2px }
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <!-- header bar -->
+<c:set var="outerDiv" value="outer"/>
 <c:choose>
   <c:when test="${branding == 'GXD'}">
     <div id="titleBarWrapperGxd" userdoc="${helpDoc}">
       <a href="${configBean.HOMEPAGES_URL}expression.shtml"><img class="gxdLogo" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="75"></a>
       <span class="titleBarMainTitleGxd" style="display:inline-block; margin-top: 20px">${pageTitle}</span>
     </div>
+	<c:set var="outerDiv" value="outerGxd"/>
   </c:when>
   <c:otherwise>
 	<div id="titleBarWrapper" userdoc="${helpDoc}" style="max-width: none;">
@@ -78,7 +80,7 @@ td.padTop { padding-top: 2px }
 
 <!-- 3-section table: search, term detail, tree view -->
 
-<div id="outerGxd" style="padding: 2px">
+<div id="${outerDiv}" style="padding: 2px">
   <table style="width: 100%; background-color: white; border:0">
   <tr><td rowspan="2" class="bordered top padTop" style="width: 30%">
       <div style='width: 100%;' id='searchContainer'>
