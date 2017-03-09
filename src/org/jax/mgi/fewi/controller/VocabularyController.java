@@ -18,6 +18,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrAnatomyTerm;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.TreeNode;
 import org.jax.mgi.fewi.util.link.IDLinker;
+import org.jax.mgi.shr.jsonmodel.BrowserTerm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,15 +44,15 @@ public class VocabularyController {
 
     // cache of default paths for EMAPA/EMAPS terms;
     // maps from term ID to the JSON string for its path
-    private static HashMap<String,String> pathCache =
-	new HashMap<String,String>(); 
+    private static HashMap<String,String> pathCache = new HashMap<String,String>(); 
+    
+    private static String MA_VOCAB = "Adult Mouse Anatomy";
 
     //--------------------//
     // instance variables
     //--------------------//
 
-    private final Logger logger
-      = LoggerFactory.getLogger(VocabularyController.class);
+    private final Logger logger = LoggerFactory.getLogger(VocabularyController.class);
 
     @Autowired
     private VocabularyFinder vocabFinder;
@@ -122,6 +123,8 @@ public class VocabularyController {
 
 	return mav;
     }
+
+    /*--- developmental anatomy browser ----------------------------------------------*/
 
     /* support new GXD anatomy browser by dynamically looking up children for
      * a given node
@@ -494,7 +497,6 @@ public class VocabularyController {
 	mav.addObject("dropdown", dropdown.toString()); 
 	mav.addObject("dropdownMsg", dropdownMsg);
 
-	
 	return mav;
     }
 
@@ -540,14 +542,94 @@ public class VocabularyController {
 
 	return mav;
     }
+    
+    /*--------------------------------------------------------------------------------*/
 
     // convenience method -- construct a ModelAndView for the error page and
     // include the given 'msg' as the error String to be reported
     private ModelAndView errorMav (String msg) {
-	ModelAndView mav = new ModelAndView("error");
-	mav.addObject("errorMsg", msg);
-	return mav;
+    	ModelAndView mav = new ModelAndView("error");
+    	mav.addObject("errorMsg", msg);
+    	return mav;
     }
 
+    /*--- AMA browser ----------------------------------------------------------------*/
 
+    /* [Adult] Mouse Anatomy browser home page
+     */
+    @RequestMapping("/gxd/ma_ontology")
+    public ModelAndView getMouseAnatomyDetail() {
+    	logger.debug("->getMouseAnatomyDetail() started");
+
+    	// start with 'postnatal mouse' as a default
+    	return getMouseAnatomyDetail("MA:0002405");
+    }
+    
+    /* [Adult] Mouse Anatomy browser for a specified MA ID */
+
+    @RequestMapping("/gxd/ma_ontology/{id}")
+    public ModelAndView getMouseAnatomyDetail(@PathVariable("id") String id) {
+    	logger.debug("->getMouseAnatomyDetail(" + id + ") started");
+    	ModelAndView mav = getSharedBrowserDetail(id, MA_VOCAB);
+    	mav.addObject("pageTitle", "Mouse Anatomy Ontology");
+    	mav.addObject("searchPaneTitle", "Anatomy Search");
+    	mav.addObject("termPaneTitle", "Anatomy Term Detail");
+    	mav.addObject("treePaneTitle", "Anatomy Tree View");
+    	mav.addObject("helpDoc", "VOCAB_amad_browser_help.shtml#td_page");
+    	mav.addObject("branding", "GXD");
+    	return mav;
+    }
+    
+    /* [Adult] Mouse Anatomy term detail pane
+     */
+    @RequestMapping("/gxd/ma_ontology/termPane/{id}")
+    public ModelAndView getMouseAnatomyTermPane(@PathVariable("id") String id) {
+    	logger.debug("->getMouseAnatomyTermPane(" + id + ") started");
+    	return getSharedBrowserTermPane(id, MA_VOCAB);
+    }
+    
+    /*--- shared vocab browser -------------------------------------------------------*/
+
+    /* shared method for building the shared vocab browser detail page
+     */
+    private ModelAndView getSharedBrowserDetail(String id, String vocab) {
+    	List<BrowserTerm> terms = vocabFinder.getBrowserTerm(id, vocab);
+
+    	if (terms.size() < 1) {
+    		terms = vocabFinder.getBrowserTerm(id.toUpperCase(), vocab);
+    	}
+
+    	if (terms.size() < 1) { return errorMav("No term found for " + id); }
+    	else if (terms.size() > 1) { return errorMav("Duplicate ID; " + id + " has multiple terms."); }
+
+    	BrowserTerm term = terms.get(0);
+
+    	ModelAndView mav = new ModelAndView("vocabBrowser/frames");
+    	mav.addObject("termID", id);
+    	mav.addObject("term", term);
+    	mav.addObject("vocab", vocab);
+    	return mav;
+    }
+
+    /* term detail pane for shared vocabulary browser
+     */
+    private ModelAndView getSharedBrowserTermPane(String id, String vocab) {
+
+    	List<BrowserTerm> terms = vocabFinder.getBrowserTerm(id, vocab);
+
+    	if (terms.size() < 1) {
+    		terms = vocabFinder.getBrowserTerm(id.toUpperCase(), vocab);
+    	}
+
+    	if (terms.size() < 1) { return errorMav("No term found for " + id); }
+    	else if (terms.size() > 1) { return errorMav("Duplicate ID; " + id + " has multiple terms."); }
+
+    	BrowserTerm term = terms.get(0);
+
+    	ModelAndView mav = new ModelAndView("vocabBrowser/term");
+    	mav.addObject("term", term);
+    	mav.addObject("title", term.getTerm());
+    	mav.addObject("vocab", term);
+    	return mav;
+    }
 }

@@ -12,10 +12,14 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.jax.mgi.fewi.hunter.SolrAnatomyTermHunter;
+import org.jax.mgi.fewi.hunter.SolrBrowserTermHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
+import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAnatomyTerm;
+import org.jax.mgi.shr.jsonmodel.BrowserTerm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +50,9 @@ public class VocabularyFinder
 
     @Autowired
     private SolrAnatomyTermHunter anatomyTermHunter;
+
+    @Autowired
+    private SolrBrowserTermHunter browserTermHunter;
 
     /* 
      * returns all vocab terms for the vocabulary beginning with the subsetLetter
@@ -128,5 +135,56 @@ public class VocabularyFinder
 	    + searchResults.getResultObjects().size() + " anatomy terms");
 
 	return searchResults;
+    }
+    
+    /*--- shared vocab browser methods -----------------------------------------------------*/
+    
+    /* quick lookup based solely on ID
+     */
+    public List<BrowserTerm> getBrowserTerm (String id) {
+    	return getBrowserTerm(id, null, null);
+    }
+
+    /* quick lookup based on ID and vocab
+     */
+    public List<BrowserTerm> getBrowserTerm (String id, String vocabulary) {
+    	return getBrowserTerm(id, vocabulary, null);
+    }
+
+    /* quick lookup based on ID, vocab, and DAG
+     */
+    public List<BrowserTerm> getBrowserTerm (String id, String vocabulary, String dag) {
+    	List<Filter> filters = new ArrayList<Filter>();
+    	filters.add(new Filter(SearchConstants.VB_ACC_ID, id.trim()));
+    	if (vocabulary != null) {
+    		filters.add(new Filter(SearchConstants.VB_VOCAB_NAME, vocabulary));
+    	}
+    	if (dag != null) {
+    		filters.add(new Filter(SearchConstants.VB_DAG_NAME, dag));
+    	}
+    	
+    	SearchParams sp = new SearchParams();
+    	sp.setPageSize(2);						// just need to know if there's more than one
+
+    	if (filters.size() > 1) { sp.setFilter(Filter.and(filters)); }
+    	else { sp.setFilter(filters.get(0)); }
+    	
+    	SearchResults<BrowserTerm> results = getBrowserTerms(sp);
+    	return results.getResultObjects();
+    }
+    
+    /* more flexible searching, using standard SearchParams object
+     */
+    public SearchResults<BrowserTerm> getBrowserTerms (SearchParams searchParams) {
+    	logger.debug("->VocabularyFinder.getBrowserTerms()");
+
+    	// result object to be returned
+    	SearchResults<BrowserTerm> searchResults = new SearchResults<BrowserTerm>();
+
+    	// ask the hunter to identify which objects to return
+    	browserTermHunter.hunt(searchParams, searchResults);
+    	logger.debug("->hunter found " + searchResults.getResultObjects().size() + " BrowserTerms");
+
+    	return searchResults;
     }
 }

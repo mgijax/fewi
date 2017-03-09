@@ -252,4 +252,14 @@ public class SearchConstants {
 	public static final String MLD_EXPERIMENT = "experiment";
 	public static final String MLD_REFERENCE_ID = "referenceID";
 	public static final String MLD_MARKER_ID = "markerID";
+	
+	// shared vocabulary browser fields
+	public static final String VB_PRIMARY_ID = "primaryID";
+	public static final String VB_ACC_ID = "accID";
+	public static final String VB_TERM = "term";
+	public static final String VB_SYNONYM = "synonym";
+	public static final String VB_PARENT_ID = "parentID";
+	public static final String VB_SEQUENCE_NUM = "sequenceNum";
+	public static final String VB_VOCAB_NAME = "vocabName";
+	public static final String VB_DAG_NAME = "dagName";
 }

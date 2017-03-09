@@ -110,4 +110,8 @@ public class SortConstants {
 
     // faux entry;  used by webapp class template
 	public static final String FOO_SORT              = "fooSort";
+	
+	// shared vocabulary browser
+	public static final String VB_SEQUENCE_NUM = "sequenceNum";
+	public static final String VB_TERM = "term";
 }
