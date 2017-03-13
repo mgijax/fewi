@@ -2,17 +2,14 @@
 <%@ page import = "org.jax.mgi.fewi.util.FormatHelper" %>
 <%@ page import = "org.jax.mgi.fewi.util.link.ProviderLinker" %>
 <%@ page import = "java.util.List" %>
-<%@ page import = "org.jax.mgi.fewi.searchUtil.entities.SolrAnatomyTerm" %>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" 
-    pageEncoding="ISO-8859-1"%>
+<%@ page import = "org.jax.mgi.fewi.summary.VocabBrowserSearchResult" %>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
-
-
 <div style="padding-bottom: 8px;">
-<form name="anatomySearchForm" onSubmit="refreshSearchPane(); return false;">
-	<input type="text" size="35" id="searchTerm" name="searchTerm" value="${searchTerm}" style="width: auto; position: relative;">
-    <div id="structureContainer" style="width: 250px; text-align: left; display: inline;"></div>
+<form name="vocabBrowserSearchForm" onSubmit="refreshSearchPane(); return false;">
+	<input type="text" size="35" id="searchTerm" name="term" value="${searchTerm}" style="width: auto; position: relative;">
+    <div id="termContainer" style="width: 250px; text-align: left; display: inline;"></div>
     <input type="button" value="Clear" name="Clear" onClick="resetSearch()">
 </form>
 </div>
@@ -29,9 +26,8 @@ ${resultCount} term<c:if test="${fn:length(results) > 1}">s</c:if>, sorted by be
 <div id="searchResults" style="text-align: left; padding-left: 2px; padding-right: 2px">
 <c:forEach var="result" items="${results}">
 <div style="padding-bottom: 8px">
-<a href="${configBean.FEWI_URL}vocab/gxd/anatomy/${result.accID}" onClick="resetPanes('${result.accID}', true); return false;">${result.highlightedStructure}</a>
-<c:if test="${not result.matchedStructure}">(${result.highlightedSynonym})</c:if>
-<span class="small">${result.stageRange}</span>
+<a href="${browserUrl}${result.accID}" onClick="resetPanes('${result.accID}', true); return false;">${result.highlightedTerm}</a>
+<c:if test="${not result.matchedTerm}">(${result.highlightedSynonym})</c:if>
 </div>
 </c:forEach>
 </div>

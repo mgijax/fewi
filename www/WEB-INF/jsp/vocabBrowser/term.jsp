@@ -53,3 +53,7 @@
 			</tr>
 	    </c:if>
       </table>
+
+<script>
+	setBrowserTitle("${title}");
+</script>

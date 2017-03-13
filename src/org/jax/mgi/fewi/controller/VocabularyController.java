@@ -9,12 +9,16 @@ import mgi.frontend.datamodel.VocabTerm;
 import mgi.frontend.datamodel.sort.VocabTermComparator;
 
 import org.hibernate.SessionFactory;
+import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.VocabularyFinder;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.searchUtil.Sort;
+import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAnatomyTerm;
+import org.jax.mgi.fewi.summary.VocabBrowserSearchResult;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.TreeNode;
 import org.jax.mgi.fewi.util.link.IDLinker;
@@ -165,8 +169,8 @@ public class VocabularyController {
     @RequestMapping("/gxd/anatomySearch")
     public ModelAndView getAnatomySearchPane(@RequestParam("term") String term) {
 	if ((term == null) || term.equals("")) {
-	    logger.debug("->getAnatomySearchPaneEmpty() started");
-	    ModelAndView mav = new ModelAndView("anatomy_search");
+	    logger.info("->getAnatomySearchPane(null) started");
+	    ModelAndView mav = new ModelAndView("vocabBrowser/search");
 	    return mav;
 	}
 
@@ -565,18 +569,27 @@ public class VocabularyController {
     	return getMouseAnatomyDetail("MA:0002405");
     }
     
+    private String getMouseAnatomyTitle(BrowserTerm term) {
+    	if (term == null) { return "Adult Mouse Anatomy Browser"; }
+    	return term.getTerm() + " Adult Mouse Anatomy Term (" + term.getPrimaryID().getAccID() + ")";
+    }
     /* [Adult] Mouse Anatomy browser for a specified MA ID */
 
     @RequestMapping("/gxd/ma_ontology/{id}")
     public ModelAndView getMouseAnatomyDetail(@PathVariable("id") String id) {
     	logger.debug("->getMouseAnatomyDetail(" + id + ") started");
     	ModelAndView mav = getSharedBrowserDetail(id, MA_VOCAB);
-    	mav.addObject("pageTitle", "Mouse Anatomy Ontology");
+    	mav.addObject("pageTitle", "Adult Mouse Anatomy Browser");
     	mav.addObject("searchPaneTitle", "Anatomy Search");
-    	mav.addObject("termPaneTitle", "Anatomy Term Detail");
+    	mav.addObject("termPaneTitle", "Adult Anatomy Term Detail");
     	mav.addObject("treePaneTitle", "Anatomy Tree View");
     	mav.addObject("helpDoc", "VOCAB_amad_browser_help.shtml#td_page");
     	mav.addObject("branding", "GXD");
+    	mav.addObject("seoDescription", "The Adult Mouse Anatomy Ontology organizes anatomical structures "
+    		+ "for the postnatal mouse (Theiler stage 28) spatially and functionally, using 'is a' and "
+    		+ "'part of' relationships.  This browser can be used to view anatomical terms and their "
+    		+ "relationships in a hierarchical display.");
+    	mav.addObject("title", getMouseAnatomyTitle((BrowserTerm) mav.getModel().get("term")));
     	return mav;
     }
     
@@ -585,10 +598,190 @@ public class VocabularyController {
     @RequestMapping("/gxd/ma_ontology/termPane/{id}")
     public ModelAndView getMouseAnatomyTermPane(@PathVariable("id") String id) {
     	logger.debug("->getMouseAnatomyTermPane(" + id + ") started");
-    	return getSharedBrowserTermPane(id, MA_VOCAB);
+    	ModelAndView mav = getSharedBrowserTermPane(id, MA_VOCAB);
+    	mav.addObject("title", getMouseAnatomyTitle((BrowserTerm) mav.getModel().get("term")));
+    	return mav;
     }
     
+    /* [Adult] Mouse Anatomy search pane
+     */
+    @RequestMapping("/gxd/ma_ontology/search")
+    public ModelAndView getMouseAnatomySearchPane(@RequestParam("term") String term) {
+    	ModelAndView mav = getSharedBrowserSearchPane(term, MA_VOCAB);
+    	mav.addObject("browserUrl", ContextLoader.getConfigBean().getProperty("FEWI_URL") + "vocab/gxd/ma_ontology/");
+    	return mav;
+    }
+
     /*--- shared vocab browser -------------------------------------------------------*/
+
+    /* get shared browser's search pane
+     */
+    public ModelAndView getSharedBrowserSearchPane(String term, String vocabName) {
+    	if ((term == null) || term.equals("")) {
+    		logger.debug("->getSharedBrowserSearchPane(null)");
+    		ModelAndView mav = new ModelAndView("vocabBrowser/search");
+    		return mav;
+    	}
+
+    	logger.debug("->getSharedBrowserSearchPane(" + term + ", " + vocabName + ") started");
+
+    	// clean up the term a little by:
+    	// 1. converting hyphens to spaces
+    	// 2. stripping non-alphanumerics and non-whitespace
+
+    	String cleanTerm = term.replaceAll("-", " ");
+    	cleanTerm = cleanTerm.replaceAll(",", " ");
+    	cleanTerm = cleanTerm.replaceAll("[^A-Za-z0-9\\s]", "");
+    	cleanTerm = cleanTerm.replaceAll("\\s\\s+", " ");
+
+    	SearchParams sp = new SearchParams();
+
+    	// need to AND the requested tokens together, then OR the searches of terms and synonyms
+
+    	ArrayList<Filter> termFilters = new ArrayList<Filter>();
+    	ArrayList<Filter> synonymFilters = new ArrayList<Filter>();
+    	ArrayList<String> tokens = new ArrayList<String>();
+
+    	termFilters.add(new Filter(SearchConstants.VB_VOCAB_NAME, vocabName));
+    	synonymFilters.add(new Filter(SearchConstants.VB_VOCAB_NAME, vocabName));
+    	
+    	for (String token : cleanTerm.split("\\s")) {
+    		termFilters.add(new Filter(SearchConstants.VB_TERM, token));
+    		synonymFilters.add(new Filter(SearchConstants.VB_SYNONYM, token));
+    		tokens.add(token);
+    	}
+
+    	ArrayList<Filter> eitherFilters = new ArrayList<Filter>();
+
+    	eitherFilters.add(Filter.and(termFilters));
+    	eitherFilters.add(Filter.and(synonymFilters));
+
+    	sp.setFilter(Filter.or(eitherFilters));
+    	sp.addSort(new Sort(SortConstants.VB_SEQUENCE_NUM));
+
+    	// We need to get 501 results, so we know if the count should display
+    	// as 50 or as 50+
+    	int maxToReturn = 50;
+    	sp.setPageSize(maxToReturn + 1);
+
+    	SearchResults<BrowserTerm> sr = vocabFinder.getBrowserTerms(sp);
+
+    	// need to wrap each resulting BrowserTerm in a VocabBrowserSearchResults, then pass it the
+    	// list of search tokens (needed for highlighting)
+
+    	List<VocabBrowserSearchResult> results = new ArrayList<VocabBrowserSearchResult>();
+    	for (BrowserTerm matchedTerm : sr.getResultObjects()) {
+    		VocabBrowserSearchResult result = new VocabBrowserSearchResult(matchedTerm);
+    		result.setTokens(tokens);
+    		results.add(result);
+    	}
+
+    	List<VocabBrowserSearchResult> sortedResults = prioritizeMatches(results, tokens);
+
+    	ModelAndView mav = new ModelAndView("vocabBrowser/search");
+    	mav.addObject("searchTerm", term);
+
+    	int numReturned = sr.getResultObjects().size();
+    	if (numReturned > maxToReturn) {
+    		mav.addObject("resultCount", maxToReturn + "+");
+    		mav.addObject("results", sortedResults.subList(0, maxToReturn));
+    	} else {
+    		mav.addObject("resultCount", numReturned);
+    		mav.addObject("results", sortedResults);
+    	}
+    	return mav;
+    }
+
+    /* prioritize our matches according to several criteria:
+     * 1. exact matches to term
+     * 2. exact matches to synonym
+     * 3. begins matches to term
+     * 4. begins matches to synonym
+     * 5. other
+     */
+    private List<VocabBrowserSearchResult> prioritizeMatches (List<VocabBrowserSearchResult> matches,
+    		List<String> tokens) {
+
+    	ArrayList<VocabBrowserSearchResult> termExact = new ArrayList<VocabBrowserSearchResult>();
+    	ArrayList<VocabBrowserSearchResult> synonymExact = new ArrayList<VocabBrowserSearchResult>();
+    	ArrayList<VocabBrowserSearchResult> termBegins = new ArrayList<VocabBrowserSearchResult>();
+    	ArrayList<VocabBrowserSearchResult> synonymBegins = new ArrayList<VocabBrowserSearchResult>();
+    	ArrayList<VocabBrowserSearchResult> other = new ArrayList<VocabBrowserSearchResult>();
+
+    	String searchString = "";
+    	boolean isFirst = true;
+
+    	for (String s : tokens) {
+    		if (isFirst) {
+    			searchString = s;
+    			isFirst = false;
+    		} else {
+    			searchString = searchString + " " + s;
+    		}
+    	}
+    	searchString = searchString.toLowerCase();
+
+    	for (VocabBrowserSearchResult match : matches) {
+    		String term = match.getTerm().toLowerCase();
+    		List<String> synonyms = match.getSynonyms();
+
+    		// order of preference:
+    		// 1. exact match to term
+    		// 2. exact match to a synonym
+    		// 3. begins match to a term
+    		// 4. begins match to a synonym
+    		// 5. everything else
+
+    		boolean done = false;
+    		boolean exactSynonym = false;
+    		boolean beginsSynonym = false;
+
+    		if (term.equals(searchString)) {
+    			termExact.add(match);
+    			done = true;
+    		} else if (term.replace('-', ' ').equals(searchString)) {
+    			termExact.add(match);
+    			done = true; 
+    		} else if (synonyms != null) {
+    			for (String synonym : synonyms) {
+    				String synLower = synonym.toLowerCase();
+
+    				if (synLower.equals(searchString)) {
+    					exactSynonym = true;
+    					break;
+    				} else if (synLower.startsWith(searchString)) {
+    					beginsSynonym = true;
+    				}
+    			}
+    		}
+
+    		if (!done && exactSynonym) {
+    			synonymExact.add(match);
+    			done = true;
+    		}
+
+    		if (!done && term.startsWith(searchString)) {
+    			termBegins.add(match);
+    			done = true;
+    		}
+
+    		if (!done && beginsSynonym) {
+    			synonymBegins.add(match);
+    			done = true;
+    		}
+
+    		if (!done) {
+    			other.add(match);
+    		}
+    	}
+
+    	termExact.addAll(synonymExact);
+    	termExact.addAll(termBegins);
+    	termExact.addAll(synonymBegins);
+    	termExact.addAll(other);
+
+    	return termExact;
+    }
 
     /* shared method for building the shared vocab browser detail page
      */

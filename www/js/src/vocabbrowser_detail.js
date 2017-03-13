@@ -9,6 +9,8 @@ var log = function(msg) {
     if (logging) { console.log(msg); }
 }
 
+/* set the initial term ID for when the browser was brought up
+ */
 var setInitialTermID = function(id) {
 	initialID = id;
 };
@@ -42,6 +44,8 @@ var parentClick = function(id) {
     } catch (err) {}
 };
 
+/* add an event listener to enable reasonable results when stepping back through browser history
+ */
 window.addEventListener('popstate', function(e) {
 	var id = e.state;
 	if (id != null) {
