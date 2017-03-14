@@ -26,7 +26,7 @@ ${resultCount} term<c:if test="${fn:length(results) > 1}">s</c:if>, sorted by be
 <div id="searchResults" style="text-align: left; padding-left: 2px; padding-right: 2px">
 <c:forEach var="result" items="${results}">
 <div style="padding-bottom: 8px">
-<a href="${browserUrl}${result.accID}" onClick="resetPanes('${result.accID}', true); return false;">${result.highlightedTerm}</a>
+<a href="${browserUrl}${result.accID}" onClick="searchResultClick('${result.accID}'); return false;">${result.highlightedTerm}</a>
 <c:if test="${not result.matchedTerm}">(${result.highlightedSynonym})</c:if>
 </div>
 </c:forEach>

@@ -82,14 +82,14 @@ td.padTop { padding-top: 2px }
 
 <div id="${outerDiv}" style="padding: 2px">
   <table style="width: 100%; background-color: white; border:0">
-  <tr><td rowspan="2" class="bordered top padTop" style="width: 30%">
+  <tr><td id='searchTD' rowspan="2" class="bordered top padTop" style="width: 30%">
       <div style='width: 100%;' id='searchContainer'>
       <div style='width: 100%; text-align: center; font-size:125%; font-weight: bold; clear:both; padding-bottom: 8px;' id='searchTitle'>${searchPaneTitle}</div>
       <div id="searchPane" style="width:100%; overflow:auto; text-align:center;">
       </div>
       </div>
     </td>
-    <td class="bordered top padTop">
+    <td id='detailTD' class="bordered top padTop">
       <div style='width: 100%' id='detailContainer'>
       <div style='width: 100%; text-align: center; font-size:125%; font-weight: bold' id='detailTitle'>${termPaneTitle}<br></div>
       <div id="detail" style="width:100%; overflow: auto">
@@ -97,7 +97,7 @@ td.padTop { padding-top: 2px }
       </div>
     </td>
   </tr>
-  <tr><td class="bordered top padTop">
+  <tr><td id='treeTD' class="bordered top padTop">
 	<div style='width:100%' id='treeViewContainer'>
         <div style='width: 100%; text-align: center; font-size:125%; font-weight: bold' id="treeMainTitle">${treePaneTitle}</div>
 	<div style="width: 100%; text-align: center" id='treeTitle'>
@@ -111,6 +111,7 @@ td.padTop { padding-top: 2px }
 <script type="text/javascript">
 	fetchTermPane("${termID}");
 	setInitialTermID("${termID}");
+	fetchSearchPane();
 </script>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

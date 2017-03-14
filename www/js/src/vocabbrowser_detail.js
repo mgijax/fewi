@@ -24,8 +24,29 @@ var fetchTermPane = function(id) {
 		datatype : "html",
 		success: function(htmlText) {
 				$("#detail").html(htmlText);
+				$('#detailTD').height($('#detailContainer').height());
 			}
 		});
+};
+
+/* make an Ajax request to the server to get the contents of the search pane, then add it to the page
+ */
+var fetchSearchPane = function(searchTerm) {
+	$("#searchPane").html("<img src='" + fewiurl + "assets/images/loading.gif' height='24' width='24'> Loading...");
+	if (searchTerm == null) {
+		searchTerm = "";
+	}
+	$.ajax({
+		url: fewiurl + "vocab/gxd/ma_ontology/search?term=" + searchTerm,
+		datatype : "html",
+		success: function(htmlText) {
+				$("#searchPane").html(htmlText);
+			}
+		});
+};
+
+var refreshSearchPane = function() {
+	fetchSearchPane($('#searchTerm').val());
 };
 
 /* update the title for this tab in the browser
@@ -34,6 +55,16 @@ var setBrowserTitle = function(pageTitle) {
     document.title = pageTitle;
 }
 
+/* update the panes that need to be updated when the user clicks on a result in the search pane
+ */
+var searchResultClick = function(id) {
+	fetchTermPane(id);
+    setBrowserTitle(id);
+    try {
+        window.history.pushState(id, 'title', fewiurl + 'vocab/gxd/ma_ontology/' + id);
+    } catch (err) {}
+};
+ 
 /* update the panes that need to be updated when the user clicks on a parent in the term detail pane
  */
 var parentClick = function(id) {
