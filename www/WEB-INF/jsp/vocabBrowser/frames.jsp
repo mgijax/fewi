@@ -28,7 +28,10 @@
 %>
 
 <script type="text/javascript">
-var fewiurl = "${configBean.FEWI_URL}";
+	var fewiurl = "${configBean.FEWI_URL}";
+	var browserUrl = "${browserUrl}";
+	var termPaneUrl = "${termPaneUrl}";
+	var searchPaneUrl = "${searchPaneUrl}";
 </script>
 <SCRIPT TYPE="text/javascript" SRC='${configBean.WEBSHARE_URL}js/hideshow.js'></SCRIPT>
 <script type="text/javascript" src='${configBean.FEWI_URL}assets/js/vocabbrowser_detail.js'></script>

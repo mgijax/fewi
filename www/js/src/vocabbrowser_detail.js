@@ -20,7 +20,7 @@ var setInitialTermID = function(id) {
 var fetchTermPane = function(id) {
 	$("#detail").html("<img src='" + fewiurl + "assets/images/loading.gif' height='24' width='24'> Loading...");
 	$.ajax({
-		url: fewiurl + "vocab/gxd/ma_ontology/termPane/" + id,
+		url: termPaneUrl + id,
 		datatype : "html",
 		success: function(htmlText) {
 				$("#detail").html(htmlText);
@@ -37,7 +37,7 @@ var fetchSearchPane = function(searchTerm) {
 		searchTerm = "";
 	}
 	$.ajax({
-		url: fewiurl + "vocab/gxd/ma_ontology/search?term=" + searchTerm,
+		url: searchPaneUrl + searchTerm,
 		datatype : "html",
 		success: function(htmlText) {
 				$("#searchPane").html(htmlText);
@@ -61,7 +61,7 @@ var searchResultClick = function(id) {
 	fetchTermPane(id);
     setBrowserTitle(id);
     try {
-        window.history.pushState(id, 'title', fewiurl + 'vocab/gxd/ma_ontology/' + id);
+        window.history.pushState(id, 'title', browserUrl + id);
     } catch (err) {}
 };
  
@@ -71,7 +71,7 @@ var parentClick = function(id) {
 	fetchTermPane(id);
     setBrowserTitle(id);
     try {
-        window.history.pushState(id, 'title', fewiurl + 'vocab/gxd/ma_ontology/' + id);
+        window.history.pushState(id, 'title', browserUrl + id);
     } catch (err) {}
 };
 

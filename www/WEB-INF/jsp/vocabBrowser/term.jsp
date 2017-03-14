@@ -47,7 +47,7 @@
 			  <td class="padded top">
 			    <c:forEach var="parent" items="${term.allParents}" varStatus="status">
 			      <c:if test="${not empty parent.edgeType}"><I>${parent.edgeType}</I></c:if>
-			      <a href="${configBean.FEWI_URL}vocab/gxd/ma_ontology/${parent.primaryID}" onClick="parentClick('${parent.primaryID}'); return false;">${parent.term}</a><c:if test="${!status.last}"><br/></c:if> 
+			      <a href="${browserUrl}${parent.primaryID}" onClick="parentClick('${parent.primaryID}'); return false;">${parent.term}</a><c:if test="${!status.last}"><br/></c:if> 
 			    </c:forEach>
 			  </td>
 			</tr>

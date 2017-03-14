@@ -569,10 +569,23 @@ public class VocabularyController {
     	return getMouseAnatomyDetail("MA:0002405");
     }
     
+    /* fill in the standard URLs for the Adult Mouse Anatomy browser
+     */
+    private ModelAndView fillMouseAnatomyUrls(ModelAndView mav) {
+    	String baseUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "vocab/gxd/ma_ontology/";
+    	mav.addObject("browserUrl", baseUrl);
+    	mav.addObject("termPaneUrl", baseUrl + "termPane/");
+    	mav.addObject("searchPaneUrl", baseUrl + "/search?term=");
+    	return mav;
+    }
+    
+    /* get the browser title string for a term in the Adult Mouse Anatomy
+     */
     private String getMouseAnatomyTitle(BrowserTerm term) {
     	if (term == null) { return "Adult Mouse Anatomy Browser"; }
     	return term.getTerm() + " Adult Mouse Anatomy Term (" + term.getPrimaryID().getAccID() + ")";
     }
+
     /* [Adult] Mouse Anatomy browser for a specified MA ID */
 
     @RequestMapping("/gxd/ma_ontology/{id}")
@@ -590,6 +603,7 @@ public class VocabularyController {
     		+ "'part of' relationships.  This browser can be used to view anatomical terms and their "
     		+ "relationships in a hierarchical display.");
     	mav.addObject("title", getMouseAnatomyTitle((BrowserTerm) mav.getModel().get("term")));
+    	fillMouseAnatomyUrls(mav);
     	return mav;
     }
     
@@ -600,6 +614,7 @@ public class VocabularyController {
     	logger.debug("->getMouseAnatomyTermPane(" + id + ") started");
     	ModelAndView mav = getSharedBrowserTermPane(id, MA_VOCAB);
     	mav.addObject("title", getMouseAnatomyTitle((BrowserTerm) mav.getModel().get("term")));
+    	fillMouseAnatomyUrls(mav);
     	return mav;
     }
     
@@ -609,6 +624,7 @@ public class VocabularyController {
     public ModelAndView getMouseAnatomySearchPane(@RequestParam("term") String term) {
     	ModelAndView mav = getSharedBrowserSearchPane(term, MA_VOCAB);
     	mav.addObject("browserUrl", ContextLoader.getConfigBean().getProperty("FEWI_URL") + "vocab/gxd/ma_ontology/");
+    	fillMouseAnatomyUrls(mav);
     	return mav;
     }
 
