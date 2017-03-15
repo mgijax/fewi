@@ -8,9 +8,14 @@
 
 <div style="padding-bottom: 8px;">
 <form name="vocabBrowserSearchForm" onSubmit="refreshSearchPane(); return false;">
-	<input type="text" size="35" id="searchTerm" name="term" value="${searchTerm}" style="width: auto; position: relative;">
-    <div id="termContainer" style="width: 250px; text-align: left; display: inline;"></div>
-    <input type="button" value="Clear" name="Clear" onClick="resetSearch()">
+	<div id="searchWrapper">
+		<div id="searchBoxDiv" style="float: left; padding-left: 10px;">
+			<input type="text" size="35" id="searchTerm" name="term" value="${searchTerm}" style="width: auto; position: relative;">
+		</div>
+		<div id="clearButtonDiv" style="padding-top: 4px">
+    		<input type="button" id="clearButton" value="Clear" name="Clear" onClick="resetSearch()">
+    	</div>
+    </div>
 </form>
 </div>
 
@@ -23,7 +28,7 @@ ${resultCount} term<c:if test="${fn:length(results) > 1}">s</c:if>, sorted by be
 </c:if>
 </div>
 
-<div id="searchResults" style="text-align: left; padding-left: 2px; padding-right: 2px">
+<div id="searchResults" style="text-align: left; padding-left: 2px; padding-right: 2px; min-height: 300px;">
 <c:forEach var="result" items="${results}">
 <div style="padding-bottom: 8px">
 <a href="${browserUrl}${result.accID}" onClick="searchResultClick('${result.accID}'); return false;">${result.highlightedTerm}</a>
@@ -31,3 +36,32 @@ ${resultCount} term<c:if test="${fn:length(results) > 1}">s</c:if>, sorted by be
 </div>
 </c:forEach>
 </div>
+
+<style>
+.easy-autocomplete-container { overflow-y: auto; }
+.easy-autocomplete-container ul { text-align: left; }
+</style>
+
+<script>
+var options = {
+	url: function(phrase) {
+			return "${autocompleteUrl}" + phrase;
+		},
+	getValue: "term",
+	template: {
+		type: 'custom',
+		method: function(value, item) {
+			return item.autocompleteDisplay;
+			}
+		},
+		list: {
+			onChooseEvent: function() {
+				refreshSearchPane();
+			},
+			maxNumberOfElements: 200
+		},
+		requestDelay: 250,
+		listLocation: 'resultObjects'
+};
+$('#searchTerm').easyAutocomplete(options);
+</script>

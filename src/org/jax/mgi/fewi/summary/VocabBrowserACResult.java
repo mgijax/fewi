@@ -25,6 +25,11 @@ public class VocabBrowserACResult {
     // public instance methods
     //------------------------------------------------------------------------
 
+    // primary ID of the term
+    public String getAccID() {
+    	return this.result.getAccID();
+    }
+
     // text of the term itself
     public String getTerm() {
     	return this.result.getTerm();

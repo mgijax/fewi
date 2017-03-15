@@ -576,6 +576,7 @@ public class VocabularyController {
     	mav.addObject("browserUrl", baseUrl);
     	mav.addObject("termPaneUrl", baseUrl + "termPane/");
     	mav.addObject("searchPaneUrl", baseUrl + "/search?term=");
+    	mav.addObject("autocompleteUrl", ContextLoader.getConfigBean().getProperty("FEWI_URL") + "autocomplete/ma_ontology?query=");
     	return mav;
     }
     
@@ -687,8 +688,8 @@ public class VocabularyController {
     	synonymFilters.add(new Filter(SearchConstants.VB_VOCAB_NAME, vocabName));
     	
     	for (String token : cleanTerm.split("\\s")) {
-    		termFilters.add(new Filter(SearchConstants.VB_TERM, token));
-    		synonymFilters.add(new Filter(SearchConstants.VB_SYNONYM, token));
+    		termFilters.add(new Filter(SearchConstants.VB_TERM, token, Filter.Operator.OP_BEGINS));
+    		synonymFilters.add(new Filter(SearchConstants.VB_SYNONYM, token, Filter.Operator.OP_BEGINS));
     		tokens.add(token);
     	}
 
