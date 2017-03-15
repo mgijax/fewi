@@ -73,7 +73,7 @@ public class VocabBrowserSearchResult {
     	if (this.getMatchedTerm()) {
     		return this.getHighlightedTerm();
     	}
-    	return this.getTerm() + " [" + this.getHighlightedSynonym() + "]";
+    	return this.getTerm() + " (" + this.getHighlightedSynonym() + ")";
     }
     
     // true if this term matched the term field

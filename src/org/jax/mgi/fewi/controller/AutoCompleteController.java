@@ -26,6 +26,7 @@ import org.jax.mgi.fewi.summary.AutocompleteAuthorResult;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.VocabACSummaryRow;
 import org.jax.mgi.fewi.summary.VocabACSummaryRow.ACType;
+import org.jax.mgi.fewi.summary.VocabBrowserACResult;
 import org.jax.mgi.fewi.summary.VocabBrowserSearchResult;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.QueryParser;
@@ -625,13 +626,23 @@ public class AutoCompleteController {
 	/* autocomplete for the Adult Mouse Anatomy browser's search pane
 	 */
 	@RequestMapping("/ma_ontology")
-	public @ResponseBody SearchResults<VocabBrowserSearchResult> getMouseAnatomyAutocomplete(
+	public @ResponseBody SearchResults<VocabBrowserACResult> getMouseAnatomyAutocomplete(
 			HttpServletResponse response, @RequestParam("query") String query) {
 		logger.debug("autoCompleteController.getMouseAnatomyAutocomplete(" + query + ")");
 		AjaxUtils.prepareAjaxHeaders(response);
+		return getSharedVocabBrowserAutocomplete(query, VocabularyController.MA_VOCAB);
+	}
+	
+	/*-------------------- shared vocab browser methods --------------------*/
+
+	private SearchResults<VocabBrowserACResult> getSharedVocabBrowserAutocomplete (
+			String query, String vocabName) {
+
 		List<VocabBrowserSearchResult> results = vocabController.getSharedBrowserSearchResults(query, VocabularyController.MA_VOCAB, 50);
-		SearchResults<VocabBrowserSearchResult> sr = new SearchResults<VocabBrowserSearchResult>();
-		sr.setResultObjects(results);
+		SearchResults<VocabBrowserACResult> sr = new SearchResults<VocabBrowserACResult>();
+		for (VocabBrowserSearchResult result : results) {
+			sr.addResultObjects(new VocabBrowserACResult(result));
+		}
 		sr.setTotalCount(results.size());
 		return sr;
 	}
