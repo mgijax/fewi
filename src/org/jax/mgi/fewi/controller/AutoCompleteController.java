@@ -26,10 +26,12 @@ import org.jax.mgi.fewi.summary.AutocompleteAuthorResult;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.VocabACSummaryRow;
 import org.jax.mgi.fewi.summary.VocabACSummaryRow.ACType;
+import org.jax.mgi.fewi.summary.VocabBrowserSearchResult;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.CreFields;
+import org.jax.mgi.shr.jsonmodel.BrowserTerm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +53,10 @@ public class AutoCompleteController {
 	// get the finders used by various methods
 	@Autowired
 	private AutocompleteFinder autocompleteFinder;
+
+	// get a vocabulary controller
+	@Autowired
+	private VocabularyController vocabController;
 
 
 	/*
@@ -612,5 +618,21 @@ public class AutoCompleteController {
 
 		SearchResults<EmapaACResult> results = autocompleteFinder.getGxdEmapaAutoComplete(params);
 		return results;
+	}
+	
+	/*-------------------- Adult Mouse Anatomy (MA) methods --------------------*/
+
+	/* autocomplete for the Adult Mouse Anatomy browser's search pane
+	 */
+	@RequestMapping("/ma_ontology")
+	public @ResponseBody SearchResults<VocabBrowserSearchResult> getMouseAnatomyAutocomplete(
+			HttpServletResponse response, @RequestParam("query") String query) {
+		logger.debug("autoCompleteController.getMouseAnatomyAutocomplete(" + query + ")");
+		AjaxUtils.prepareAjaxHeaders(response);
+		List<VocabBrowserSearchResult> results = vocabController.getSharedBrowserSearchResults(query, VocabularyController.MA_VOCAB, 50);
+		SearchResults<VocabBrowserSearchResult> sr = new SearchResults<VocabBrowserSearchResult>();
+		sr.setResultObjects(results);
+		sr.setTotalCount(results.size());
+		return sr;
 	}
 }

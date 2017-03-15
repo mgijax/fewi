@@ -50,7 +50,7 @@ public class VocabularyController {
     // maps from term ID to the JSON string for its path
     private static HashMap<String,String> pathCache = new HashMap<String,String>(); 
     
-    private static String MA_VOCAB = "Adult Mouse Anatomy";
+    public static String MA_VOCAB = "Adult Mouse Anatomy";
 
     //--------------------//
     // instance variables
@@ -169,7 +169,7 @@ public class VocabularyController {
     @RequestMapping("/gxd/anatomySearch")
     public ModelAndView getAnatomySearchPane(@RequestParam("term") String term) {
 	if ((term == null) || term.equals("")) {
-	    logger.info("->getAnatomySearchPane(null) started");
+	    logger.debug("->getAnatomySearchPane(null) started");
 	    ModelAndView mav = new ModelAndView("vocabBrowser/search");
 	    return mav;
 	}
@@ -623,7 +623,6 @@ public class VocabularyController {
     @RequestMapping("/gxd/ma_ontology/search")
     public ModelAndView getMouseAnatomySearchPane(@RequestParam("term") String term) {
     	ModelAndView mav = getSharedBrowserSearchPane(term, MA_VOCAB);
-    	mav.addObject("browserUrl", ContextLoader.getConfigBean().getProperty("FEWI_URL") + "vocab/gxd/ma_ontology/");
     	fillMouseAnatomyUrls(mav);
     	return mav;
     }
@@ -641,12 +640,38 @@ public class VocabularyController {
 
     	logger.debug("->getSharedBrowserSearchPane(" + term + ", " + vocabName + ") started");
 
+    	// We need to get 51 results, so we know if the count should display
+    	// as 50 or as 50+
+    	int maxToReturn = 50;
+
+    	List<VocabBrowserSearchResult> sortedResults = getSharedBrowserSearchResults(term, vocabName, maxToReturn);
+
+    	ModelAndView mav = new ModelAndView("vocabBrowser/search");
+    	mav.addObject("searchTerm", term);
+
+    	int numReturned = sortedResults.size();
+    	if (numReturned > maxToReturn) {
+    		mav.addObject("resultCount", maxToReturn + "+");
+    		mav.addObject("results", sortedResults.subList(0, maxToReturn));
+    	} else {
+    		mav.addObject("resultCount", numReturned);
+    		mav.addObject("results", sortedResults);
+    	}
+    	return mav;
+    }
+
+    /* get the set of vocabulary terms that match the given search string for the given vocab
+     */
+    protected List<VocabBrowserSearchResult> getSharedBrowserSearchResults(String term, String vocabName,
+    		int maxToReturn) {
+
     	// clean up the term a little by:
     	// 1. converting hyphens to spaces
     	// 2. stripping non-alphanumerics and non-whitespace
 
     	String cleanTerm = term.replaceAll("-", " ");
     	cleanTerm = cleanTerm.replaceAll(",", " ");
+    	cleanTerm = cleanTerm.replaceAll("/", " ");
     	cleanTerm = cleanTerm.replaceAll("[^A-Za-z0-9\\s]", "");
     	cleanTerm = cleanTerm.replaceAll("\\s\\s+", " ");
 
@@ -674,10 +699,6 @@ public class VocabularyController {
 
     	sp.setFilter(Filter.or(eitherFilters));
     	sp.addSort(new Sort(SortConstants.VB_SEQUENCE_NUM));
-
-    	// We need to get 501 results, so we know if the count should display
-    	// as 50 or as 50+
-    	int maxToReturn = 50;
     	sp.setPageSize(maxToReturn + 1);
 
     	SearchResults<BrowserTerm> sr = vocabFinder.getBrowserTerms(sp);
@@ -693,21 +714,9 @@ public class VocabularyController {
     	}
 
     	List<VocabBrowserSearchResult> sortedResults = prioritizeMatches(results, tokens);
-
-    	ModelAndView mav = new ModelAndView("vocabBrowser/search");
-    	mav.addObject("searchTerm", term);
-
-    	int numReturned = sr.getResultObjects().size();
-    	if (numReturned > maxToReturn) {
-    		mav.addObject("resultCount", maxToReturn + "+");
-    		mav.addObject("results", sortedResults.subList(0, maxToReturn));
-    	} else {
-    		mav.addObject("resultCount", numReturned);
-    		mav.addObject("results", sortedResults);
-    	}
-    	return mav;
+    	return sortedResults;
     }
-
+    
     /* prioritize our matches according to several criteria:
      * 1. exact matches to term
      * 2. exact matches to synonym
@@ -736,11 +745,14 @@ public class VocabularyController {
     		}
     	}
     	searchString = searchString.toLowerCase();
+    	logger.info("searchString: " + searchString);
 
     	for (VocabBrowserSearchResult match : matches) {
     		String term = match.getTerm().toLowerCase();
     		List<String> synonyms = match.getSynonyms();
 
+    		logger.info("term: " + term);
+    		
     		// order of preference:
     		// 1. exact match to term
     		// 2. exact match to a synonym
@@ -752,15 +764,14 @@ public class VocabularyController {
     		boolean exactSynonym = false;
     		boolean beginsSynonym = false;
 
+    		term = term.replaceAll("-",  " ").replaceAll("/",  " ").replaceAll("'", "");
     		if (term.equals(searchString)) {
     			termExact.add(match);
     			done = true;
-    		} else if (term.replace('-', ' ').equals(searchString)) {
-    			termExact.add(match);
-    			done = true; 
     		} else if (synonyms != null) {
     			for (String synonym : synonyms) {
     				String synLower = synonym.toLowerCase();
+    				synLower = synLower.replaceAll("-",  " ").replaceAll("/",  " ").replaceAll("'", "");
 
     				if (synLower.equals(searchString)) {
     					exactSynonym = true;

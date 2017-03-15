@@ -45,8 +45,17 @@ var fetchSearchPane = function(searchTerm) {
 		});
 };
 
+/* submit the value in the search box to the server as a search string, get and display the set of results
+ */
 var refreshSearchPane = function() {
 	fetchSearchPane($('#searchTerm').val());
+};
+
+/* clear the search box and the set of results
+ */
+var resetSearch = function() {
+	$("#searchTerm").val("");
+	refreshSearchPane();
 };
 
 /* update the title for this tab in the browser
@@ -206,14 +215,6 @@ function setDetailDiv(s) {
 
 	resizePanes();
     }
-    return;
-}
-
-function fetchDetailDiv(selectedNodeID) {
-	log('fetchDetailDiv(' + selectedNodeID + ')');
-    var sUrl = "${configBean.FEWI_URL}vocab/gxd/anatomy/termPane/" + selectedNodeID;
-
-    fetchAndCall(sUrl, setDetailDiv);
     return;
 }
 

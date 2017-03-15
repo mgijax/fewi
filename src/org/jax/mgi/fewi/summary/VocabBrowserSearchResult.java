@@ -68,6 +68,14 @@ public class VocabBrowserSearchResult {
     	return synonyms;
     }
 
+    // display string for autocomplete
+    public String getAutocompleteDisplay() {
+    	if (this.getMatchedTerm()) {
+    		return this.getHighlightedTerm();
+    	}
+    	return this.getTerm() + " [" + this.getHighlightedSynonym() + "]";
+    }
+    
     // true if this term matched the term field
 	public boolean getMatchedTerm() {
 		return this.tokensMatched(this.term.getTerm());
@@ -233,46 +241,60 @@ public class VocabBrowserSearchResult {
 	// list.  Converts other whitespace (tabs, newlines) into spaces.
 	// Example: "one-cell stage embryo" ==> //	[ "one", "-", "cell", " ", "stage", " ", "embryo" ]
 	private List<String> splitTerm (String term) {
-	    boolean hasHyphen = (term.indexOf("-") >= 0);
+		boolean hasHyphen = (term.indexOf("-") >= 0);
+		boolean hasSlash = (term.indexOf("/") >= 0);
 
-	    // split on whitespace
-	    String[] pieces = term.split("\\s");
+		// split on whitespace
+		String[] pieces = term.split("\\s");
 
-	    ArrayList<String> out = new ArrayList<String>();
+		ArrayList<String> out = new ArrayList<String>();
 
-	    String p = null;
-	    boolean first = false;
+		String p = null;
+		boolean first = false;
 
-	    for (int i = 0; i < pieces.length; i++) {
-		// if not the first time through the loop, prepend a space
-		if (out.size() != 0) {
-		    out.add(" ");
-		}
-
-		p = pieces[i];
-
-		// if no hyphen in the whole string, don't bother looking
-		if (!hasHyphen) {
-		    out.add(p);
-
-		} else if (p.indexOf("-") >= 0) {
-		    first = true;
-		    for (String s : p.split("-")) {
-
-		        // if not first part of the hyphenated term, add
-		        // a hyphen
-
-		        if (!first) {
-			    out.add("-");
+		for (int i = 0; i < pieces.length; i++) {
+			// if not the first time through the loop, prepend a space
+			if (out.size() != 0) {
+				out.add(" ");
 			}
-			out.add(s);
-			first = false;
-		    }
-		} else {
-		    out.add(p);
+
+			p = pieces[i];
+
+			// if no hyphen in the whole string, don't bother looking
+			if (!hasHyphen && !hasSlash) {
+				out.add(p);
+
+			} else if (hasHyphen && p.indexOf("-") >= 0) {
+				first = true;
+				for (String s : p.split("-")) {
+
+					// if not first part of the hyphenated term, add
+					// a hyphen
+
+					if (!first) {
+						out.add("-");
+					}
+					out.add(s);
+					first = false;
+				}
+
+			} else if (hasSlash && p.indexOf("/") >= 0) {
+				first = true;
+				for (String s : p.split("/")) {
+
+					// if not first part of the slash-delimited term, add a slash
+
+					if (!first) {
+						out.add("/");
+					}
+					out.add(s);
+					first = false;
+				}
+			} else {
+				out.add(p);
+			}
 		}
-	    }
-	    return out; 
+		return out; 
 	}
 
     //------------------------------------------------------------------------
