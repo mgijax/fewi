@@ -47,6 +47,11 @@ ${resultCount} term<c:if test="${fn:length(results) > 1}">s</c:if>, sorted by be
 	width: 300px;
 	max-height: 300px;
 }
+
+.easy-autocomplete-container ul li {
+	font-size: 90%;
+	line-height: 0.9em;
+}
 </style>
 
 <script>
@@ -67,7 +72,7 @@ var options = {
 			},
 			maxNumberOfElements: 200
 		},
-		requestDelay: 250,
+		requestDelay: 100,
 		listLocation: 'resultObjects'
 };
 $('#searchTerm').easyAutocomplete(options);

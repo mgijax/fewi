@@ -746,14 +746,11 @@ public class VocabularyController {
     		}
     	}
     	searchString = searchString.toLowerCase();
-    	logger.info("searchString: " + searchString);
 
     	for (VocabBrowserSearchResult match : matches) {
     		String term = match.getTerm().toLowerCase();
     		List<String> synonyms = match.getSynonyms();
 
-    		logger.info("term: " + term);
-    		
     		// order of preference:
     		// 1. exact match to term
     		// 2. exact match to a synonym
