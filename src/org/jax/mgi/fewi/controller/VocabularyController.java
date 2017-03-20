@@ -3,7 +3,9 @@ package org.jax.mgi.fewi.controller;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import mgi.frontend.datamodel.VocabTerm;
 import mgi.frontend.datamodel.sort.VocabTermComparator;
@@ -51,6 +53,17 @@ public class VocabularyController {
     private static HashMap<String,String> pathCache = new HashMap<String,String>(); 
     
     public static String MA_VOCAB = "Adult Mouse Anatomy";
+    
+    // set of special words that must be matched exactly, rather than using wildcards
+    private static Set<String> noWildcards = null;
+    static {
+    	noWildcards = new HashSet<String>();
+    	noWildcards.add("of");
+    	noWildcards.add("and");
+    	noWildcards.add("to");
+    	noWildcards.add("or");
+    	noWildcards.add("for");
+    }
 
     //--------------------//
     // instance variables
@@ -688,8 +701,16 @@ public class VocabularyController {
     	synonymFilters.add(new Filter(SearchConstants.VB_VOCAB_NAME, vocabName));
     	
     	for (String token : cleanTerm.split("\\s")) {
-    		termFilters.add(new Filter(SearchConstants.VB_TERM, token, Filter.Operator.OP_BEGINS));
-    		synonymFilters.add(new Filter(SearchConstants.VB_SYNONYM, token, Filter.Operator.OP_BEGINS));
+    		/* odd hack...  Solr is not recognizing certain short words when ending with a wildcard; these
+    		 * must be matched by exact match.  So, adjust the operator as needed...
+    		 */
+    		if (noWildcards.contains(token)) {
+    			termFilters.add(new Filter(SearchConstants.VB_TERM, token, Filter.Operator.OP_EQUAL));
+    			synonymFilters.add(new Filter(SearchConstants.VB_SYNONYM, token, Filter.Operator.OP_EQUAL));
+    		} else {
+    			termFilters.add(new Filter(SearchConstants.VB_TERM, token, Filter.Operator.OP_BEGINS));
+    			synonymFilters.add(new Filter(SearchConstants.VB_SYNONYM, token, Filter.Operator.OP_BEGINS));
+    		}
     		tokens.add(token);
     	}
 
