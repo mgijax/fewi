@@ -3,6 +3,7 @@ package org.jax.mgi.fewi.summary;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.shr.jsonmodel.BrowserSynonym;
@@ -68,6 +69,25 @@ public class VocabBrowserSearchResult {
     	return synonyms;
     }
 
+    // maps from strings (term and/or synonyms) that match the user's search tokens to their 
+    // highlighted versions
+    public Map<String,String> getAllMatches() {
+    	Map<String,String> matches = new HashMap<String,String>();
+
+    	// term matches?
+    	if (this.tokensMatched(this.getTerm())) {
+    		matches.put(this.getTerm(), this.highlightString(this.getTerm()));
+    	}
+    	
+    	// matching synonyms?
+    	for (String synonym : this.getSynonyms()) {
+    		if (this.tokensMatched(synonym)) {
+    			matches.put(synonym, this.highlightString(synonym) + " <span class='synonymTag'>[synonym]</span>");
+    		}
+    	}
+    	return matches;
+    }
+    
     // display string for autocomplete
     public String getAutocompleteDisplay() {
     	if (this.getMatchedTerm()) {

@@ -3,6 +3,8 @@ package org.jax.mgi.fewi.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -635,15 +637,80 @@ public class AutoCompleteController {
 	
 	/*-------------------- shared vocab browser methods --------------------*/
 
-	private SearchResults<VocabBrowserACResult> getSharedVocabBrowserAutocomplete (
-			String query, String vocabName) {
+	private SearchResults<VocabBrowserACResult> getSharedVocabBrowserAutocomplete (String query, String vocabName) {
 
 		List<VocabBrowserSearchResult> results = vocabController.getSharedBrowserSearchResults(query, VocabularyController.MA_VOCAB, 50);
-		SearchResults<VocabBrowserACResult> sr = new SearchResults<VocabBrowserACResult>();
+		List<VocabBrowserACResult> acResults = new ArrayList<VocabBrowserACResult>();
 		for (VocabBrowserSearchResult result : results) {
-			sr.addResultObjects(new VocabBrowserACResult(result));
+			Map<String,String> matches = result.getAllMatches();
+			for (String term : matches.keySet()) {
+				acResults.add(new VocabBrowserACResult(term, matches.get(term), result.getAccID()));
+			}
 		}
-		sr.setTotalCount(results.size());
+
+		ACResultComparator<VocabBrowserACResult> comparator = new ACResultComparator<VocabBrowserACResult>(query);
+		Collections.sort(acResults, comparator);
+
+		SearchResults<VocabBrowserACResult> sr = new SearchResults<VocabBrowserACResult>();
+		sr.setResultObjects(acResults);
+		sr.setTotalCount(acResults.size());
 		return sr;
+	}
+	
+	/*-------------------- helper class for shared vocab browser --------------------*/
+
+	private class ACResultComparator<T> implements Comparator<T> {
+		private String searchString;
+		
+		private ACResultComparator() {}
+
+		public ACResultComparator(String searchString) {
+			this.searchString = searchString.toLowerCase().replaceAll("-", " ").replaceAll("/", " ")
+				.replaceAll("'", "").replaceAll(",", " ").replaceAll("[^A-Za-z0-9\\s]", "")
+				.replaceAll("\\s\\s+", " ");
+		}
+
+		@Override
+		public int compare(T arg0, T arg1) {
+			return this.compare((VocabBrowserACResult) arg0, (VocabBrowserACResult) arg1);
+		}
+
+		public int compare(VocabBrowserACResult a, VocabBrowserACResult b) {
+			String aTerm = a.getTerm().toLowerCase().replaceAll("-", " ").replaceAll("/", " ").replaceAll("'", "");
+			String bTerm = b.getTerm().toLowerCase().replaceAll("-", " ").replaceAll("/", " ").replaceAll("'", "");
+
+			// deal with exact matches first
+			
+			if (aTerm.equals(searchString)) {
+				if (bTerm.equals(searchString)) {
+					// a and b both exact matches, order by display string to put synonyms second
+					return a.getAutocompleteDisplay().compareTo(b.getAutocompleteDisplay());
+				} else {
+					// a is exact match, b is not, so a first
+					return -1;	
+				}
+			} else if (bTerm.equals(searchString)) {
+				// a is not an exact match, b is, so b first
+				return 1;
+			}
+			
+			// then deal with begins matches next
+			
+			if (aTerm.startsWith(searchString)) {
+				if (bTerm.startsWith(searchString)) {
+					// a and b both begin with the search string; order by display string to put synonyms second
+					return a.getAutocompleteDisplay().compareTo(b.getAutocompleteDisplay());
+				} else {
+					// a is begins match, b is not, so a first
+					return -1;	
+				}
+			} else if (bTerm.startsWith(searchString)) {
+				// a is not a begins match, b is, so b first
+				return 1;
+			}
+
+			// fall back on string ordering of display string (if text matches, put synonym last)
+			return a.getAutocompleteDisplay().compareTo(b.getAutocompleteDisplay());
+		}
 	}
 }

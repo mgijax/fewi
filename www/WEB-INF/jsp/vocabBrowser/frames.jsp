@@ -58,6 +58,7 @@ td.padTop { padding-top: 2px }
 .ygtv-highlight0 { background-color: white }
 .ygtv-highlight1 { background-color: white }
 .ygtv-highlight2 { background-color: white }
+.synonymTag { font-size: 0.8em; color: #222; font-style: normal; }
 </style>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>

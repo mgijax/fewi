@@ -44,8 +44,8 @@ ${resultCount} term<c:if test="${fn:length(results) > 1}">s</c:if>, sorted by be
 .easy-autocomplete-container ul {
 	text-align: left;
 	margin-left: -40px;
-	width: 300px;
-	max-height: 300px;
+	width: 325px;
+	max-height: 290px;
 }
 
 .easy-autocomplete-container ul li {
@@ -55,6 +55,7 @@ ${resultCount} term<c:if test="${fn:length(results) > 1}">s</c:if>, sorted by be
 </style>
 
 <script>
+var selectedID = null;
 var options = {
 	url: function(phrase) {
 			return "${autocompleteUrl}" + phrase;
@@ -67,12 +68,18 @@ var options = {
 			}
 		},
 		list: {
+			onSelectItemEvent: function() {
+				selectedID = $('#searchTerm').getSelectedItemData().accID;
+			},
 			onChooseEvent: function() {
 				refreshSearchPane();
+				if (selectedID != null) {
+					searchResultClick(selectedID);
+				}
 			},
 			maxNumberOfElements: 200
 		},
-		requestDelay: 100,
+		requestDelay: 50,
 		listLocation: 'resultObjects'
 };
 $('#searchTerm').easyAutocomplete(options);
