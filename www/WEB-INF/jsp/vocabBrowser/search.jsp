@@ -40,6 +40,7 @@ ${resultCount} term<c:if test="${fn:length(results) > 1}">s</c:if>, sorted by be
 <style>
 .easy-autocomplete-container {
 	overflow-y: auto;
+	overflow-x: hidden;
 }
 .easy-autocomplete-container ul {
 	text-align: left;
@@ -92,4 +93,5 @@ var options = {
 		listLocation: 'resultObjects'
 };
 $('#searchTerm').easyAutocomplete(options);
+$('#searchTerm').focus();
 </script>
