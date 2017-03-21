@@ -49,7 +49,7 @@ var fetchSearchPane = function(searchTerm) {
  */
 var refreshSearchPane = function() {
 	// if the user has not chosen a selection from the autocomplete, pick the first one
-	if ($('#searchTerm').getSelectedItemIndex() == -1) {
+	if (($('#searchTerm').val() != '') && $('#searchTerm').getSelectedItemIndex() == -1) {
 		$('#searchTerm').val($('#searchTerm').getItemData(0).term);
 		searchResultClick($('#searchTerm').getItemData(0).accID);
 	}
