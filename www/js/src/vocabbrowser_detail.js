@@ -49,11 +49,12 @@ var fetchSearchPane = function(searchTerm) {
  */
 var refreshSearchPane = function() {
 	// if the user has not chosen a selection from the autocomplete, pick the first one
+	var searchTerm = $('#searchTerm').val();
 	if (($('#searchTerm').val() != '') && $('#searchTerm').getSelectedItemIndex() == -1) {
 		$('#searchTerm').val($('#searchTerm').getItemData(0).term);
 		searchResultClick($('#searchTerm').getItemData(0).accID);
 	}
-	fetchSearchPane($('#searchTerm').val());
+	fetchSearchPane(searchTerm);
 };
 
 /* clear the search box and the set of results
@@ -72,11 +73,13 @@ var setBrowserTitle = function(pageTitle) {
 /* update the panes that need to be updated when the user clicks on a result in the search pane
  */
 var searchResultClick = function(id) {
-	fetchTermPane(id);
-    setBrowserTitle(id);
-    try {
-        window.history.pushState(id, 'title', browserUrl + id);
-    } catch (err) {}
+	if ((id !== null) && (id !== undefined)) {
+		fetchTermPane(id);
+   		setBrowserTitle(id);
+   		try {
+        	window.history.pushState(id, 'title', browserUrl + id);
+    	} catch (err) {}
+    }
 };
  
 /* update the panes that need to be updated when the user clicks on a parent in the term detail pane

@@ -72,14 +72,19 @@ var options = {
 				selectedID = $('#searchTerm').getSelectedItemData().accID;
 			},
 			onChooseEvent: function() {
-				refreshSearchPane();
 				if (selectedID != null) {
 					searchResultClick(selectedID);
 				} else {
 					selectedID = $('#searchTerm').getItemData(0).accID;
-					searchResultClick(selectedID);
-					$('#searchTerm').val($('#searchTerm').getItemData(0).term);
+					if ((selectedID !== null) && (selectedID !== undefined)) {
+						searchResultClick(selectedID);
+						$('#searchTerm').val($('#searchTerm').getItemData(0).term);
+					}
 				}
+				refreshSearchPane();
+			},
+			onMouseOutEvent: function() {
+				selectedID = null;
 			},
 			maxNumberOfElements: 200
 		},
