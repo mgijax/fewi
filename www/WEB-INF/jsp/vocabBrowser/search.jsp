@@ -75,6 +75,10 @@ var options = {
 				refreshSearchPane();
 				if (selectedID != null) {
 					searchResultClick(selectedID);
+				} else {
+					selectedID = $('#searchTerm').getItemData(0).accID;
+					searchResultClick(selectedID);
+					$('#searchTerm').val($('#searchTerm').getItemData(0).term);
 				}
 			},
 			maxNumberOfElements: 200

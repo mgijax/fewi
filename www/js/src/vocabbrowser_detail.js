@@ -48,6 +48,11 @@ var fetchSearchPane = function(searchTerm) {
 /* submit the value in the search box to the server as a search string, get and display the set of results
  */
 var refreshSearchPane = function() {
+	// if the user has not chosen a selection from the autocomplete, pick the first one
+	if ($('#searchTerm').getSelectedItemIndex() == -1) {
+		$('#searchTerm').val($('#searchTerm').getItemData(0).term);
+		searchResultClick($('#searchTerm').getItemData(0).accID);
+	}
 	fetchSearchPane($('#searchTerm').val());
 };
 
