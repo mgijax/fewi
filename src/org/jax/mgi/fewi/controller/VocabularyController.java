@@ -578,8 +578,8 @@ public class VocabularyController {
     public ModelAndView getMouseAnatomyDetail() {
     	logger.debug("->getMouseAnatomyDetail() started");
 
-    	// start with 'postnatal mouse' as a default
-    	return getMouseAnatomyDetail("MA:0002405");
+    	// start with 'anatomical structure' as a default
+    	return getMouseAnatomyDetail("MA:0003000");
     }
     
     /* fill in the standard URLs for the Adult Mouse Anatomy browser
