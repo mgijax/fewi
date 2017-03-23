@@ -36,8 +36,10 @@
 <SCRIPT TYPE="text/javascript" SRC='${configBean.WEBSHARE_URL}js/hideshow.js'></SCRIPT>
 <script type="text/javascript" src='${configBean.FEWI_URL}assets/js/vocabbrowser_detail.js'></script>
 <script type="text/javascript" src='${configBean.FEWI_URL}assets/js/external/jquery.easy-autocomplete.min.js'></script>
+<script type="text/javascript" src='${configBean.FEWI_URL}assets/js/external/jstree/jstree.min.js'></script>
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/easy-autocomplete.min.css">
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/reference_summary.css" />
+<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/js/external/jstree/themes/default/style.min.css" />
     
 <style>
 td.bordered { border: 1px solid black }
@@ -116,6 +118,7 @@ td.padTop { padding-top: 2px }
 	fetchTermPane("${termID}");
 	setInitialTermID("${termID}");
 	fetchSearchPane();
+	initializeTreeView("${termID}");
 </script>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

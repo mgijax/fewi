@@ -76,6 +76,7 @@ var searchResultClick = function(id) {
 	if ((id !== null) && (id !== undefined)) {
 		fetchTermPane(id);
    		setBrowserTitle(id);
+   		initializeTreeView(id);
    		try {
         	window.history.pushState(id, 'title', browserUrl + id);
     	} catch (err) {}
@@ -87,6 +88,7 @@ var searchResultClick = function(id) {
 var parentClick = function(id) {
 	fetchTermPane(id);
     setBrowserTitle(id);
+    initializeTreeView(id);
     try {
         window.history.pushState(id, 'title', browserUrl + id);
     } catch (err) {}
@@ -104,6 +106,53 @@ window.addEventListener('popstate', function(e) {
 		setBrowserTitle(initialID);
 	}
 });
+
+var populatedTree = false;
+
+/* clear any exiting tree view and display one for the given id, if specified
+ */
+var initializeTreeView = function(id) {
+	log("entered initializeTreeView(" + id + ")");
+	if (populatedTree) {
+		$.jstree.destroy();
+		$('#treeViewDiv').html('');
+	}
+	populatedTree = false;
+	if (id !== null) {
+		buildTree(id);
+	}
+};
+
+/* initialize the tree view pane for the browser
+ */
+var buildTree = function(id) {
+	log("entered buildTree(" + id + ")");
+	var config = {
+		'core' : {
+			'data' : {
+				'dataType' : 'json',
+				'data' : function(node) {
+					if ((node != null) && (node.data != null)) {
+						return { 'id' : node.data.accID, 'nodeID' : node.id, 'edgeType' : node.data.edgeType };
+					} else {
+						return { 'id' : id };
+					}
+				},
+				'url' : function(node) {
+					if (populatedTree) {
+						return fewiurl + 'vocab/gxd/ma_ontology/treeChildren';
+					} else {
+						populatedTree = true;
+						return fewiurl + 'vocab/gxd/ma_ontology/treeInitial';
+					}
+				}
+			}
+		}
+	};
+	log("finished config");
+	$('#treeViewDiv').jstree(config);
+	log("initialized jstree");
+};
 
 /*
  * Anatomical Dictionary Auto Complete Section (modified from gxd_query.js)

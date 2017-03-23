@@ -22,8 +22,11 @@ import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAnatomyTerm;
 import org.jax.mgi.fewi.summary.VocabBrowserSearchResult;
 import org.jax.mgi.fewi.util.FormatHelper;
+import org.jax.mgi.fewi.util.JSTreeNode;
 import org.jax.mgi.fewi.util.TreeNode;
 import org.jax.mgi.fewi.util.link.IDLinker;
+import org.jax.mgi.shr.jsonmodel.BrowserChild;
+import org.jax.mgi.shr.jsonmodel.BrowserParent;
 import org.jax.mgi.shr.jsonmodel.BrowserTerm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -570,9 +573,9 @@ public class VocabularyController {
     	return mav;
     }
 
-    /*--- AMA browser ----------------------------------------------------------------*/
+    /*--- MA browser ----------------------------------------------------------------*/
 
-    /* [Adult] Mouse Anatomy browser home page
+    /* Adult Mouse Anatomy browser home page
      */
     @RequestMapping("/gxd/ma_ontology")
     public ModelAndView getMouseAnatomyDetail() {
@@ -600,7 +603,7 @@ public class VocabularyController {
     	return term.getTerm() + " Adult Mouse Anatomy Term (" + term.getPrimaryID().getAccID() + ")";
     }
 
-    /* [Adult] Mouse Anatomy browser for a specified MA ID */
+    /* Adult Mouse Anatomy browser for a specified MA ID */
 
     @RequestMapping("/gxd/ma_ontology/{id}")
     public ModelAndView getMouseAnatomyDetail(@PathVariable("id") String id) {
@@ -621,7 +624,7 @@ public class VocabularyController {
     	return mav;
     }
     
-    /* [Adult] Mouse Anatomy term detail pane
+    /* Adult Mouse Anatomy term detail pane
      */
     @RequestMapping("/gxd/ma_ontology/termPane/{id}")
     public ModelAndView getMouseAnatomyTermPane(@PathVariable("id") String id) {
@@ -632,7 +635,7 @@ public class VocabularyController {
     	return mav;
     }
     
-    /* [Adult] Mouse Anatomy search pane
+    /* Adult Mouse Anatomy search pane
      */
     @RequestMapping("/gxd/ma_ontology/search")
     public ModelAndView getMouseAnatomySearchPane(@RequestParam("term") String term) {
@@ -641,6 +644,26 @@ public class VocabularyController {
     	return mav;
     }
 
+    /* Adult Mouse Anatomy browser - initial load of terms for tree view, for the term with the
+     * given ID.  Rules:
+     * 1. retrieve specified node
+     * 2. retrieve its children
+     * 3. retrieve its default parent and its children
+     * 4. repeat #3 all the way up to the root node
+     */
+    @RequestMapping("/gxd/ma_ontology/treeInitial")
+    public @ResponseBody String getMouseAnatomyTreeInitial(@RequestParam("id") String id) {
+    	return this.getSharedBrowserTreeInitial(id, MA_VOCAB);
+    }
+
+    /* Adult Mouse Anatomy browser - load children of the term with the given ID
+     */
+    @RequestMapping("/gxd/ma_ontology/treeChildren")
+    public @ResponseBody String getMouseAnatomyTreeChildren(@RequestParam("id") String id,
+    		@RequestParam("nodeID") String nodeID, @RequestParam("edgeType") String edgeType) {
+    	return this.getSharedBrowserTreeChildren(id, nodeID, edgeType, MA_VOCAB);
+    }
+    
     /*--- shared vocab browser -------------------------------------------------------*/
 
     /* get shared browser's search pane
@@ -832,16 +855,10 @@ public class VocabularyController {
     /* shared method for building the shared vocab browser detail page
      */
     private ModelAndView getSharedBrowserDetail(String id, String vocab) {
-    	List<BrowserTerm> terms = vocabFinder.getBrowserTerm(id, vocab);
-
-    	if (terms.size() < 1) {
-    		terms = vocabFinder.getBrowserTerm(id.toUpperCase(), vocab);
+    	BrowserTerm term = getBrowserTerm(id, vocab);
+    	if (term == null) {
+    		return errorMav("No term found for " + id); 
     	}
-
-    	if (terms.size() < 1) { return errorMav("No term found for " + id); }
-    	else if (terms.size() > 1) { return errorMav("Duplicate ID; " + id + " has multiple terms."); }
-
-    	BrowserTerm term = terms.get(0);
 
     	ModelAndView mav = new ModelAndView("vocabBrowser/frames");
     	mav.addObject("termID", id);
@@ -853,22 +870,82 @@ public class VocabularyController {
     /* term detail pane for shared vocabulary browser
      */
     private ModelAndView getSharedBrowserTermPane(String id, String vocab) {
-
-    	List<BrowserTerm> terms = vocabFinder.getBrowserTerm(id, vocab);
-
-    	if (terms.size() < 1) {
-    		terms = vocabFinder.getBrowserTerm(id.toUpperCase(), vocab);
+    	BrowserTerm term = getBrowserTerm(id, vocab);
+    	if (term == null) {
+    		return errorMav("No term found for " + id); 
     	}
-
-    	if (terms.size() < 1) { return errorMav("No term found for " + id); }
-    	else if (terms.size() > 1) { return errorMav("Duplicate ID; " + id + " has multiple terms."); }
-
-    	BrowserTerm term = terms.get(0);
 
     	ModelAndView mav = new ModelAndView("vocabBrowser/term");
     	mav.addObject("term", term);
     	mav.addObject("title", term.getTerm());
     	mav.addObject("vocab", term);
     	return mav;
+    }
+
+    /* shared vocabulary browser - initial load of terms for tree view, for the term with the
+     * given ID in the given vocabulary.  Rules:
+     * 1. retrieve specified node
+     * 2. retrieve its children
+     * 3. retrieve its default parent and its children (siblings of specified node)
+     * 4. repeat #3 all the way up to the root node
+     */
+    private String getSharedBrowserTreeInitial(String id, String vocab) {
+    	BrowserTerm term = getBrowserTerm(id, vocab);
+    	if (term == null) { return "[]"; }
+    	
+    	BrowserParent parent = term.getDefaultParent();
+    	String edgeType = null;
+    	if (parent != null) {
+    		edgeType = parent.getEdgeType();
+    	}
+    	
+    	// list of nodes with initial term first and its ancestors (up the default path)
+    	// from left to right
+    	List<JSTreeNode> nodes = new ArrayList<JSTreeNode>();
+    	nodes.add(new JSTreeNode(term, edgeType, true, true));	// opened and selected
+    	
+    	while ((term != null) && (parent != null)) {
+    		term = getBrowserTerm(parent.getPrimaryID(), vocab);
+    		if (term != null) {
+    			parent = term.getDefaultParent();
+    			edgeType = null;
+    			if (parent != null) {
+    				edgeType = parent.getEdgeType();
+    			}
+    			nodes.add(new JSTreeNode(term, edgeType, true, false));		// opened, not selected
+    			
+    			// and note the opened child node at each level of ancestry
+    			nodes.get(nodes.size() - 1).setChosenChild(nodes.get(nodes.size() - 2));
+    		}
+    	}
+    	
+    	return "[" + nodes.get(nodes.size() - 1).toStringWithChildren() + "]";
+    }
+
+    /* shared vocabulary browser - load children of the term with the given ID in the given vocabulary
+     */
+    private String getSharedBrowserTreeChildren(String id, String nodeID, String edgeType, String vocab) {
+   		StringBuffer sb = new StringBuffer();
+   		sb.append("[");
+
+    	BrowserTerm term = getBrowserTerm(id, vocab);
+    	if (term != null) {
+    		sb.append((new JSTreeNode(term, edgeType, true, true)).setNodeID(nodeID).toStringWithChildren());
+    	}
+   		sb.append("]");
+    	return sb.toString();
+    }
+    
+    /* get the first term for the given id in the given vocabulary.  Return null if there are none.
+     */
+    private BrowserTerm getBrowserTerm(String id, String vocab) {
+    	List<BrowserTerm> terms = vocabFinder.getBrowserTerm(id, vocab);
+    	if (terms.size() < 1) {
+    		terms = vocabFinder.getBrowserTerm(id.toUpperCase(), vocab);
+    	}
+    	if (terms.size() >= 1) {
+    		return terms.get(0);
+    	}
+    	return null;
     }
 }
