@@ -3,6 +3,7 @@ package org.jax.mgi.fewi.controller;
 import java.util.List;
 
 import mgi.frontend.datamodel.Disease; 
+import mgi.frontend.datamodel.DiseaseRow; 
 
 import org.jax.mgi.fewi.finder.DiseaseFinder;
 import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
@@ -135,7 +136,9 @@ public class DiseaseController {
 		return prepareDiseaseTab(diseaseID, "disease_browser_modeltab");
 	}
 
-	// code shared to send back a disease browser tab content
+	/*
+	 * code shared to send back a disease browser tab content
+	 */
 	private ModelAndView prepareDiseaseTab (String diseaseID, String view) {
 
 		List<Disease> diseaseList = diseaseFinder.getDiseaseByID(diseaseID);
@@ -163,25 +166,21 @@ public class DiseaseController {
 	}
 
 	//-------------------------------------------------------	
-	// REMOVE BELOW WHEN TESTING DONE
+	// Disease Models Popup
 	//-------------------------------------------------------
 
-	
-////////// TODO - remove this; using old jsp of detail page; using for testing new browser
-	@RequestMapping(value="/old/{diseaseID:.+}", method = RequestMethod.GET)
-	public ModelAndView oldDiseaseDetailByID(@PathVariable("diseaseID") String diseaseID) {
+	@RequestMapping(value="/modelsPopup/{diseaseRowKey:.+}", method = RequestMethod.GET)
+	public ModelAndView diseaseBrowserModelsPopup(@PathVariable("diseaseRowKey") String diseaseRowKey) {
 
-		logger.debug("->diseaseDetailByID started");
+		logger.debug("->diseaseBrowserModelsPopup started");
 
-		return prepareDisease(diseaseID, "disease_detail", "");
-	}
+		// generate ModelAndView object to be passed to detail page
+		ModelAndView mav = new ModelAndView("disease_browser_models_popup");
+		
+		DiseaseRow diseaseRow = diseaseFinder.getDiseaseRowByKey(Integer.parseInt(diseaseRowKey));
+		mav.addObject("diseaseRow", diseaseRow);
 
-	@RequestMapping(value="/models/{diseaseID:.+}", method = RequestMethod.GET)
-	public ModelAndView diseaseModelsByID(@PathVariable("diseaseID") String diseaseID) {
-
-		logger.debug("->diseaseModelsByID started");
-
-		return prepareDisease(diseaseID, "disease_models", "");
+		return mav;
 	}
 
 
