@@ -2,6 +2,9 @@
 
 var logging = true;
 var initialID = null;
+var previouslySelected = {};		// mapping from node id to node object, for previously selected nodes
+var populatedTree = false;
+
 
 /* write the given log message to the browser console, if logging is currently enabled
  */
@@ -94,6 +97,16 @@ var parentClick = function(id) {
     } catch (err) {}
 };
 
+/* update the panes that need to be updated when the user clicks on a term in the tree view pane
+ */
+var treeTermClick = function(id) {
+	fetchTermPane(id);
+    setBrowserTitle(id);
+    try {
+        window.history.pushState(id, 'title', browserUrl + id);
+    } catch (err) {}
+};
+
 /* add an event listener to enable reasonable results when stepping back through browser history
  */
 window.addEventListener('popstate', function(e) {
@@ -109,7 +122,25 @@ window.addEventListener('popstate', function(e) {
 	}
 });
 
-var populatedTree = false;
+/* scroll the selected term to the center of the tree view pane, if it's not currently visible;
+ * returns true if done, false if the right nodes aren't in the tree yet.
+ */
+var scrollTreeView = function() {
+		var selectedIDs = $('#treeViewDiv').jstree().get_selected();
+		log('found ' + selectedIDs.length + ' selectedIDs');
+		if (selectedIDs.length == 1) {
+			var nodeRectangle = $('#' + selectedIDs[0])[0].getBoundingClientRect();
+			var divRectangle = $('#treeViewDiv')[0].getBoundingClientRect();
+
+			log('nodeRectangle.bottom: ' + nodeRectangle.bottom);
+			log('divRectangle.bottom: ' + divRectangle.bottom);
+			if (nodeRectangle.bottom > divRectangle.bottom) {
+			    $('#treeViewDiv')[0].scrollTop = nodeRectangle.top - divRectangle.top
+			    	- 0.5 * (divRectangle.bottom - divRectangle.top);
+			    log('scrolled tree');
+			}
+		}
+};
 
 /* clear any exiting tree view and display one for the given id, if specified
  */
@@ -122,6 +153,7 @@ var initializeTreeView = function(id) {
 	populatedTree = false;
 	if (id !== null) {
 		buildTree(id);
+		setTimeout(scrollTreeView, 500);	// wait for nodes to load, then scroll if needed
 	}
 };
 
@@ -153,8 +185,67 @@ var buildTree = function(id) {
 	};
 	log("finished config");
 	$('#treeViewDiv').jstree(config);
+	$('#treeViewDiv').on('changed.jstree', selectionChange);
 	log("initialized jstree");
 };
+
+/* convert a list of tree nodes to be a hash, using node ids as keys and the node objects as values
+ */
+var nodeListToHash = function(nodeList) {
+	var hash = {};
+	for (var i = 0; i < nodeList.length; i++) {
+		hash[nodeList[i].id] = nodeList[i];
+	}
+	return hash;
+};
+
+/* event handler for change of selections in the tree; ensures we only allow one selected node at a time,
+ * and update the detail pane accordingly.
+ */
+var selectionChange = function(e, data) {
+	var selectedList = data.instance.get_selected(true);			// list of now-selected node objects
+	var nowSelected = nodeListToHash(selectedList); 				// hash from node id to node object
+	var previouslySelectedIDs = Object.keys(previouslySelected);	// list of previously selected node keys
+	
+	// if the IDs in nowSelected and in previouslySelected are the same, this function should be a no-op
+	if (previouslySelectedIDs.length == selectedList.length) {
+		var same = true;
+		for (var z = 0; z < previouslySelectedIDs.length; z++) {
+			if (!(previouslySelectedIDs[z] in nowSelected)) {
+				same = false;
+			}
+		}
+		if (same) {
+			return;
+		}
+	}
+
+	// turn off all old selections and deselect them from the new set (prevents user from doing
+	// multiple selections using control key)
+	for (var i = 0; i < previouslySelectedIDs.length; i++) {
+		data.instance.deselect_node(previouslySelectedIDs[i]);
+		if (previouslySelectedIDs[i] in nowSelected) {
+			delete nowSelected[previouslySelectedIDs[i]];
+		}
+	}
+	
+	// any nodes now selected that were not previously selected, highlight them (should only be 1)
+	var newSelections = Object.keys(nowSelected);
+	if (newSelections.length > 0) {
+		for (var j = 0; j < newSelections.length; j++) {
+			data.instance.select_node(newSelections[j]);
+			treeTermClick(nowSelected[newSelections[j]].data.accID);
+		}
+	} else {
+		// if none, turn the previous selection back on
+		for (var i = 0; i < previouslySelectedIDs.length; i++) {
+			data.instance.select_node(previouslySelectedIDs[i]);
+		}
+		nowSelected = previouslySelected;
+	}
+	previouslySelected = nowSelected;
+};
+
 
 /*
  * Anatomical Dictionary Auto Complete Section (modified from gxd_query.js)

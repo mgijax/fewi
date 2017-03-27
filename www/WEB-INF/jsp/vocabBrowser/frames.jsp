@@ -63,6 +63,9 @@ td.padTop { padding-top: 2px }
 .ygtv-highlight1 { background-color: white }
 .ygtv-highlight2 { background-color: white }
 .synonymTag { font-size: 0.8em; color: #222; font-style: normal; }
+#treeViewDiv {
+	max-height:400px;
+}
 </style>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
