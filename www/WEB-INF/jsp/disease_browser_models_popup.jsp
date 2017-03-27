@@ -60,7 +60,8 @@ body {
 <body>
 <div id="diseaseBrowserModelsPopup">
 
-<span class="bold">Human Disease Modeled:</span><br/>
+<span class="bold">Human Disease Modeled:</span>${disease.disease}
+<br/>
 <span class="bold">Associated Mouse Gene:</span>
 <c:forEach var="marker" items="${diseaseRow.causativeMouseMarkers}">
 	<a href="${configBean.FEWI_URL}marker/${marker.primaryID}" target="_blank">
@@ -118,7 +119,7 @@ body {
 <span class="bold">NOT Models</span><br/>
 No similarity to the expected human disease phenotype was found.
 
-<table id="diseaseBrowserModelPopupTable">
+<table id="diseaseBrowserNotModelPopupTable">
 
 <tr>
 	<th>Allelic Composition</th>

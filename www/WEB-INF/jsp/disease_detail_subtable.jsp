@@ -89,7 +89,7 @@
 		</c:if>
 
 		<c:if test="${modelCount > 0}">
-          <a href="javascript:childWindow=window.open('${configBean.FEWI_URL}disease/modelsPopup/${diseaseRow.diseaseRowKey}', 'helpWindow${diseaseRow.diseaseRowKey}', 'width=800,height=500,resizable=yes,scrollbars=yes,alwaysRaised=yes'); childWindow.focus();">
+          <a href="javascript:childWindow=window.open('${configBean.FEWI_URL}disease/modelsPopup/${diseaseRow.diseaseRowKey}?doid=${disease.primaryID}', 'helpWindow${diseaseRow.diseaseRowKey}', 'width=800,height=500,resizable=yes,scrollbars=yes,alwaysRaised=yes'); childWindow.focus();">
 			  ${modelCount} ${tag}model<c:if test="${modelCount > 1}">s</c:if> 
 		  </a>
 
