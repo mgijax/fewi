@@ -101,9 +101,11 @@ window.addEventListener('popstate', function(e) {
 	if (id != null) {
 		fetchTermPane(id);
 		setBrowserTitle(id);
+		initializeTreeView(id);
 	} else {
 		fetchTermPane(initialID);
 		setBrowserTitle(initialID);
+		initializeTreeView(initialID);
 	}
 });
 
