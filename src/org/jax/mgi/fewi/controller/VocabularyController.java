@@ -592,6 +592,8 @@ public class VocabularyController {
     	mav.addObject("browserUrl", baseUrl);
     	mav.addObject("termPaneUrl", baseUrl + "termPane/");
     	mav.addObject("searchPaneUrl", baseUrl + "/search?term=");
+    	mav.addObject("treeInitialUrl", baseUrl + "treeInitial");
+    	mav.addObject("treeChildrenUrl", baseUrl + "treeChildren");
     	mav.addObject("autocompleteUrl", ContextLoader.getConfigBean().getProperty("FEWI_URL") + "autocomplete/ma_ontology?query=");
     	return mav;
     }

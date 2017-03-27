@@ -140,10 +140,10 @@ var buildTree = function(id) {
 				},
 				'url' : function(node) {
 					if (populatedTree) {
-						return fewiurl + 'vocab/gxd/ma_ontology/treeChildren';
+						return treeChildrenUrl;
 					} else {
 						populatedTree = true;
-						return fewiurl + 'vocab/gxd/ma_ontology/treeInitial';
+						return treeInitialUrl;
 					}
 				}
 			}

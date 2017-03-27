@@ -32,6 +32,8 @@
 	var browserUrl = "${browserUrl}";
 	var termPaneUrl = "${termPaneUrl}";
 	var searchPaneUrl = "${searchPaneUrl}";
+	var treeInitialUrl = "${treeInitialUrl}";
+	var treeChildrenUrl = "${treeChildrenUrl}";
 </script>
 <SCRIPT TYPE="text/javascript" SRC='${configBean.WEBSHARE_URL}js/hideshow.js'></SCRIPT>
 <script type="text/javascript" src='${configBean.FEWI_URL}assets/js/vocabbrowser_detail.js'></script>
