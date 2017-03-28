@@ -57,7 +57,7 @@ of developmental stages, using standard anatomical nomenclature.
   </li>
   <li>
 The
-<a href="${configBean.WI_URL}searches/AMA_form.shtml">
+<a href="${configBean.FEWI_URL}vocab/gxd/ma_ontology">
 Adult Mouse Anatomy Browser</a> provides standardized
 nomenclature for anatomical structures in the postnatal mouse
 (Theiler stage 28).
