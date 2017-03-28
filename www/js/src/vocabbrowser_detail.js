@@ -2,9 +2,8 @@
 
 var logging = true;
 var initialID = null;
-var previouslySelected = {};		// mapping from node id to node object, for previously selected nodes
 var populatedTree = false;
-
+var previousSelectedNodeIDs = []; 
 
 /* write the given log message to the browser console, if logging is currently enabled
  */
@@ -184,66 +183,77 @@ var buildTree = function(id) {
 		}
 	};
 	log("finished config");
+	
+	/* Not all the events documented for jsTree actually fire...  It seems these are what we can mostly rely on:
+	 *   1. change - fires when we expand a branch, click a node's text, or click a triangle to collapse a node.
+	 *   2. select_node (or activate_node) - fires when we click on the text of a node.
+	 *   3. close_node - fires when we click on a triangle to close a node.
+	 * So, strategy-wise...
+	 *   1. use 'change' to look for expansion of a node, but suppress the selection of the node itself.
+	 *   2. use 'select_node' to select the node itself, display its annotation info, and hide the previous
+	 *		selection's annotation info.
+	 */
 	$('#treeViewDiv').jstree(config);
-	$('#treeViewDiv').on('changed.jstree', selectionChange);
+	$('#treeViewDiv').on('changed.jstree', onChange);
+	$('#treeViewDiv').on('select_node.jstree', onSelectNode);
 	log("initialized jstree");
 };
 
-/* convert a list of tree nodes to be a hash, using node ids as keys and the node objects as values
+/* handle a 'change' event from jsTree.  This event fires when the user clicks a triangle to expand a node's
+ * children, clicks a node's text to select the node, or clicks a triangle to collapse a node's children.  We
+ * do not deal with the selection of the node itself here, as we use the select_node event for that.
  */
-var nodeListToHash = function(nodeList) {
-	var hash = {};
-	for (var i = 0; i < nodeList.length; i++) {
-		hash[nodeList[i].id] = nodeList[i];
+var onChange = function(node, action, selected, event) {
+	log('onChange');
+	if (previousSelectedNodeIDs.length == 0) {
+		previousSelectedNodeIDs = $('#treeViewDiv').jstree().get_selected();
+		return;		// if nothing previously selected, don't deselect anything (tree is building initial state)
 	}
-	return hash;
+		
+	var newSelected = $('#treeViewDiv').jstree().get_selected();
+	for (var i = 0; i < newSelected.length; i++) {
+		if (previousSelectedNodeIDs.indexOf(newSelected[i]) == -1) {
+			$('#treeViewDiv').jstree().deselect_node(newSelected[i]);
+			log(' - Unselected ' + newSelected[i]);
+		} else {
+			log(' - Matches: ' + newSelected[i]);
+		}
+	}
 };
 
-/* event handler for change of selections in the tree; ensures we only allow one selected node at a time,
- * and update the detail pane accordingly.
+/* handle an 'select_node' event from jsTree.  (select the node, hide any prior annotations link, show the
+ * annotations link for this node)
  */
-var selectionChange = function(e, data) {
-	var selectedList = data.instance.get_selected(true);			// list of now-selected node objects
-	var nowSelected = nodeListToHash(selectedList); 				// hash from node id to node object
-	var previouslySelectedIDs = Object.keys(previouslySelected);	// list of previously selected node keys
-	
-	// if the IDs in nowSelected and in previouslySelected are the same, this function should be a no-op
-	if (previouslySelectedIDs.length == selectedList.length) {
-		var same = true;
-		for (var z = 0; z < previouslySelectedIDs.length; z++) {
-			if (!(previouslySelectedIDs[z] in nowSelected)) {
-				same = false;
-			}
-		}
-		if (same) {
-			return;
-		}
-	}
-
-	// turn off all old selections and deselect them from the new set (prevents user from doing
-	// multiple selections using control key)
-	for (var i = 0; i < previouslySelectedIDs.length; i++) {
-		data.instance.deselect_node(previouslySelectedIDs[i]);
-		if (previouslySelectedIDs[i] in nowSelected) {
-			delete nowSelected[previouslySelectedIDs[i]];
-		}
-	}
-	
-	// any nodes now selected that were not previously selected, highlight them (should only be 1)
-	var newSelections = Object.keys(nowSelected);
-	if (newSelections.length > 0) {
-		for (var j = 0; j < newSelections.length; j++) {
-			data.instance.select_node(newSelections[j]);
-			treeTermClick(nowSelected[newSelections[j]].data.accID);
+var onSelectNode = function(node, event) {
+	/* We want to prevent the selection of multiple nodes, so we need to deselect any previously
+	 * selected nodes.
+	 */
+	log('onSelect');
+	var tree = $('#treeViewDiv').jstree();
+	var selectedNodeIDs = tree.get_selected();
+	if (selectedNodeIDs.length > 1) {
+		// if multiple nodes selected, need to just keep the latest one
+		for (var i = 0; i < previousSelectedNodeIDs.length; i++) {
+			tree.deselect_node(previousSelectedNodeIDs[i]);
+			log(' - Deselected node: ' + previousSelectedNodeIDs[i]);
 		}
 	} else {
-		// if none, turn the previous selection back on
-		for (var i = 0; i < previouslySelectedIDs.length; i++) {
-			data.instance.select_node(previouslySelectedIDs[i]);
-		}
-		nowSelected = previouslySelected;
+		log(' - Only one node selected: ' + selectedNodeIDs[0]);
 	}
-	previouslySelected = nowSelected;
+	previousSelectedNodeIDs = tree.get_selected();
+	
+	/* ensure that this node is open */
+	var node = tree.get_node(previousSelectedNodeIDs[0]);
+	if (!tree.is_open(node)) {
+		tree.open_node(node);
+		log(' - Opened node: ' + previousSelectedNodeIDs[0]);
+	}
+	 
+	/* update the term pane */
+	treeTermClick(node.data.accID);
+
+	/* TODO: hide old annotations link */
+	/* TODO: show new annotations link */
 };
 
 

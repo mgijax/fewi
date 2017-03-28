@@ -66,6 +66,9 @@ td.padTop { padding-top: 2px }
 #treeViewDiv {
 	max-height:400px;
 }
+.jstree-default .jstree-clicked {
+	font-weight: bold;
+}
 </style>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
