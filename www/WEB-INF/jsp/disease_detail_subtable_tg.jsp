@@ -1,3 +1,5 @@
+<%@ page import="java.net.*" %>
+
 	  <c:set var="borders" value="allBorders"/>
 
 	  <c:forEach var="diseaseGroupRow" items="${diseaseGroup.diseaseGroupRows}" varStatus="status">
@@ -41,7 +43,11 @@
 		</c:if>
 
 		<c:if test="${modelCount > 0}">
-          <a href="javascript:childWindow=window.open('${configBean.FEWI_URL}disease/modelsPopup/${diseaseRow.diseaseRowKey}?doid=${disease.primaryID}', 'helpWindow', 'width=800,height=500,resizable=yes,scrollbars=yes,alwaysRaised=yes'); childWindow.focus();">
+		  <c:set var="cleanedDisease" value="${diseaseGroupRow.annotatedDisease}"/>
+		  <% String cleanedDisease = (String)pageContext.getAttribute("cleanedDisease");
+		  cleanedDisease = cleanedDisease.replaceAll("'", "");
+		  %>
+          <a href="javascript:childWindow=window.open('${configBean.FEWI_URL}disease/modelsPopup/${diseaseRow.diseaseRowKey}?disease=<%=cleanedDisease%>', 'helpWindowTG${diseaseRow.diseaseRowKey}', 'width=800,height=500,resizable=yes,scrollbars=yes,alwaysRaised=yes'); childWindow.focus();">
 			  ${modelCount} ${tag}model<c:if test="${modelCount > 1}">s</c:if> 
 		  </a>
 		</c:if>

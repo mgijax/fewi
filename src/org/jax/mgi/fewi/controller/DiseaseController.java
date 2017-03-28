@@ -177,26 +177,10 @@ public class DiseaseController {
 		logger.debug("->diseaseBrowserModelsPopup started");
 		
 		// get the disease from which this popup was triggered
-		String doid = request.getParameter("doid");
+		String disease = request.getParameter("disease");
 
 		// generate ModelAndView object to be passed to detail page
 		ModelAndView mav = new ModelAndView("disease_browser_models_popup");
-		
-		// gather the disease for this popup
-		List<Disease> diseaseList = diseaseFinder.getDiseaseByID(doid);
-		// there can be only one...
-		if (diseaseList.size() < 1) { // none found
-			mav = new ModelAndView("error");
-			logger.info("No Disease Found");
-			mav.addObject("errorMsg", "No Disease Found");
-			return mav;
-		} else if (diseaseList.size() > 1) { // dupe found
-			mav = new ModelAndView("error");
-			mav.addObject("errorMsg", "Duplicate Disease ID");
-			return mav;
-		}
-		// success - we have a single object Disease 
-		Disease disease = diseaseList.get(0);
 		
 		DiseaseRow diseaseRow = diseaseFinder.getDiseaseRowByKey(Integer.parseInt(diseaseRowKey));
 		mav.addObject("diseaseRow", diseaseRow);

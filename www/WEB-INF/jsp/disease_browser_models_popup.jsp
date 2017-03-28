@@ -60,15 +60,15 @@ body {
 <body>
 <div id="diseaseBrowserModelsPopup">
 
-<span class="bold">Human Disease Modeled:</span>${disease.disease}
+<span class="bold">Human Disease Modeled:</span> <span id="diseaseDisplay">${disease}</span>
 <br/>
-<span class="bold">Associated Mouse Gene:</span>
+<span class="bold">Associated Mouse Gene:</span> <span id="markerDisplay">
 <c:forEach var="marker" items="${diseaseRow.causativeMouseMarkers}">
 	<a href="${configBean.FEWI_URL}marker/${marker.primaryID}" target="_blank">
 		${marker.symbol}
 	</a><c:if test="${!status.last}"><br/></c:if>
 </c:forEach>
-
+</span>
 
 
 
