@@ -139,6 +139,7 @@ var scrollTreeView = function() {
 			    log('scrolled tree');
 			}
 		}
+		selectSimilarNodes();
 };
 
 /* clear any exiting tree view and display one for the given id, if specified
@@ -205,6 +206,8 @@ var buildTree = function(id) {
  * do not deal with the selection of the node itself here, as we use the select_node event for that.
  */
 var onChange = function(node, action, selected, event) {
+	if (suppressSelectHandler) { return; }
+
 	log('onChange');
 	if (previousSelectedNodeIDs.length == 0) {
 		previousSelectedNodeIDs = $('#treeViewDiv').jstree().get_selected();
@@ -220,7 +223,10 @@ var onChange = function(node, action, selected, event) {
 			log(' - Matches: ' + newSelected[i]);
 		}
 	}
+	selectSimilarNodes();
 };
+
+var suppressSelectHandler = false;
 
 /* handle an 'select_node' event from jsTree.  (select the node, hide any prior annotations link, show the
  * annotations link for this node)
@@ -229,6 +235,8 @@ var onSelectNode = function(node, event) {
 	/* We want to prevent the selection of multiple nodes, so we need to deselect any previously
 	 * selected nodes.
 	 */
+	if (suppressSelectHandler) { return; }
+
 	log('onSelect');
 	var tree = $('#treeViewDiv').jstree();
 	var selectedNodeIDs = tree.get_selected();
@@ -243,16 +251,95 @@ var onSelectNode = function(node, event) {
 	}
 	previousSelectedNodeIDs = tree.get_selected();
 	
-	/* ensure that this node is open */
+	/* ensure that this node is open -- if this is not an automatic selection */
 	var node = tree.get_node(previousSelectedNodeIDs[0]);
-	if (!tree.is_open(node)) {
-		tree.open_node(node);
-		log(' - Opened node: ' + previousSelectedNodeIDs[0]);
+	if (!suppressSelectHandler) {
+		if (!tree.is_open(node)) {
+			tree.open_node(node);
+			log(' - Opened node: ' + previousSelectedNodeIDs[0]);
+		}
 	}
 	 
 	/* update the term pane */
 	treeTermClick(node.data.accID);
+	
+	/* and select all other nodes with the same accession ID */
+	selectSimilarNodes();
 
 	/* TODO: hide old annotations link */
 	/* TODO: show new annotations link */
+};
+
+/* return a list that is the distinct set of items from 'arr' (from stackoverflow)
+ */
+var uniqueList = function(arr) {
+	var u = {}, a = [];
+    for(var i = 0, l = arr.length; i < l; ++i){
+        if(!u.hasOwnProperty(arr[i])) {
+            a.push(arr[i]);
+            u[arr[i]] = 1;
+        }
+    }
+    return a;
+};
+
+/* get a list of all the node IDs that are currently in the tree, except the starter ID
+ */
+var getAllOtherNodeIDs = function(starterID) {
+	var tree = $('#treeViewDiv').jstree();
+	var toDo = tree.get_path(starterID, null, true);	// list of node IDs from root to starterID
+	var done = [];										// list of node IDs we've already considered
+	var allNodes = [];									// list of all nodes found so far
+	
+	while (toDo.length > 0) {
+		var id = toDo.pop();
+		if (done.indexOf(id) < 0) {
+			if (id != starterID) {
+				allNodes.push(id);
+			}
+			var children = tree.get_children_dom(id);
+			for (var i = 0; i < children.length; i++) {
+				toDo.push(children[i].id);
+			}
+		}
+	}
+	return uniqueList(allNodes);
+};
+
+/* Assuming there are no cycles, we should not find a parent with the same ID below the currently selected node.
+ * So, we go to the currently selected node, get its accession ID, go up through its ancestors and down into their
+ * children, trying to find and select those that have a matching accession ID.
+ */ 
+var selectSimilarNodes = function() {
+	log('selectSimilarNodes');
+	var tree = $('#treeViewDiv').jstree();
+	previousSelectedNodeIDs = tree.get_selected();
+	
+	// If we don't have at least one selected node upon entry to this function, bail out.
+	if (previousSelectedNodeIDs.length < 1) {
+		return;
+	}
+	
+	var selectedNode = tree.get_node(previousSelectedNodeIDs[0]);
+	if ((selectedNode === undefined) || (selectedNode === null)) {
+		// can't find the selected node, so bail out
+		return;
+	}
+	
+	var accID = selectedNode.data.accID;
+	log(' - found ID ' + accID);
+	var otherNodeIDs = getAllOtherNodeIDs(previousSelectedNodeIDs[0]);
+	log(' - found ' + otherNodeIDs.length + ' other nodes');
+	
+	suppressSelectHandler = true;
+	for (var i = 0; i < otherNodeIDs.length; i++) {
+		var node = tree.get_node(otherNodeIDs[i]);
+		log(' - comparing ID ' + node.data.accID);
+		if (node.data.accID == accID) {
+			tree.select_node(node);
+			log(' - selected ' + otherNodeIDs[i]);
+		}
+	}
+	previousSelectedNodeIDs = $('#treeViewDiv').jstree().get_selected();
+	suppressSelectHandler = false;
 };
