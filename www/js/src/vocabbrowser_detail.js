@@ -148,6 +148,7 @@ var initializeTreeView = function(id) {
 	if (populatedTree) {
 		$.jstree.destroy();
 		$('#treeViewDiv').html('');
+		previousSelectedNodeIDs = []; 
 	}
 	populatedTree = false;
 	if (id !== null) {
