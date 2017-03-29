@@ -26,7 +26,7 @@ var fetchTermPane = function(id) {
 		datatype : "html",
 		success: function(htmlText) {
 				$("#detail").html(htmlText);
-				$('#detailTD').height($('#detailContainer').height());
+				setTimeout(resizePanes, 150);
 			}
 		});
 };
@@ -127,7 +127,7 @@ window.addEventListener('popstate', function(e) {
 var scrollTreeView = function() {
 		var selectedIDs = $('#treeViewDiv').jstree().get_selected();
 		log('found ' + selectedIDs.length + ' selectedIDs');
-		if (selectedIDs.length == 1) {
+		if (selectedIDs.length >= 1) {
 			var nodeRectangle = $('#' + selectedIDs[0])[0].getBoundingClientRect();
 			var divRectangle = $('#treeViewDiv')[0].getBoundingClientRect();
 
@@ -154,7 +154,7 @@ var initializeTreeView = function(id) {
 	populatedTree = false;
 	if (id !== null) {
 		buildTree(id);
-		setTimeout(scrollTreeView, 500);	// wait for nodes to load, then scroll if needed
+		setTimeout(scrollTreeView, 750);	// wait for nodes to load, then scroll if needed
 	}
 };
 
@@ -343,3 +343,69 @@ var selectSimilarNodes = function() {
 	previousSelectedNodeIDs = $('#treeViewDiv').jstree().get_selected();
 	suppressSelectHandler = false;
 };
+
+/* adjust the size of the panes (search, term detail, tree) to fit the current browser dimensions.
+ */
+var resizePanes = function() {
+	log('resizePanes');
+	var vWidth = $(window).width();					// width the browser's viewport
+	
+	var detailContainer = $('#detailContainer');	// shortcuts for the three pane containers
+	var treeContainer = $('#treeViewContainer');
+	var searchContainer = $('#searchContainer');
+	
+    var treeMainTitle = $('#treeMainTitle');		// shortcuts for the three pane titles
+    var searchTitle = $('#searchTitle');
+    var detailTitle = $('#detailTitle');
+
+    var treeViewDiv = $('#treeViewDiv');			// shortcuts for the dynamically-populated DIVs in the panes
+    var searchPane = $('#searchPane');
+    var detail = $('#detail');
+
+    // left pane is for search and takes 1/3 of the width; right pane gets 2/3
+
+    var leftPaneX = Math.round(vWidth / 3);
+    var rightPaneX = vWidth - leftPaneX;
+
+    // don't use the whole height, to allow for display of header and partial footer
+ 
+    var usableY = $(window).height() - 225;
+
+    // top right pane is for detail, max out at 1/3 of the height.
+    // if detail requires less than 1/3 of height, shrink to what it needs (with a 5px pad for appearance).
+    // bottom right pane is for tree view, takes remainder of height
+
+    var detailContainerY = Math.round(usableY / 3);
+    detail.height('auto');
+    var detailScrollHeight = detail.prop('scrollHeight');		// not just what's displayed, but all
+
+    if ((detailScrollHeight + detailTitle.height()) < detailContainerY) {
+		detailContainerY = detailScrollHeight + detailTitle.height() + 5;
+    }
+
+    var treeContainerY = usableY - detailContainerY;
+
+    var treeDivY = treeContainerY - treeMainTitle.height();
+    var searchDivY = usableY - searchTitle.height();
+    var detailDivY = detailContainerY - detailTitle.height();
+
+    detailContainer.width(rightPaneX - 7);
+    detailContainer.height(detailContainerY);
+	detail.height(detailDivY);
+	$('#detailTD').height($('#detailContainer').height());
+
+    searchContainer.width(leftPaneX - 30);
+    searchContainer.height(treeDivY + detailDivY);
+    searchPane.height(searchDivY);
+
+    treeContainer.width(rightPaneX - 7);
+    treeContainer.height(treeContainerY);
+    treeViewDiv.height(treeDivY);
+};
+
+/* set up automatic pane resizing for when the page first loads and when the browser is resized.
+ */
+$(document).ready(function() { 
+	setTimeout(resizePanes, 250);
+	});
+$(window).resize(resizePanes);
