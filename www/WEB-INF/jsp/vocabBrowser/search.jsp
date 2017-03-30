@@ -45,7 +45,7 @@ ${resultCount} term<c:if test="${fn:length(results) > 1}">s</c:if>, sorted by be
 .easy-autocomplete-container ul {
 	text-align: left;
 	margin-left: -40px;
-	width: 500px;
+	width: 650px;
 	max-height: 290px;
 }
 .easy-autocomplete-container ul li {
