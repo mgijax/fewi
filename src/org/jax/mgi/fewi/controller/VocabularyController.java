@@ -56,6 +56,7 @@ public class VocabularyController {
     private static HashMap<String,String> pathCache = new HashMap<String,String>(); 
     
     public static String MA_VOCAB = "Adult Mouse Anatomy";
+    public static String MP_VOCAB = "Mammalian Phenotype";
     
     // set of special words that must be matched exactly, rather than using wildcards
     private static Set<String> noWildcards = null;
@@ -664,6 +665,99 @@ public class VocabularyController {
     public @ResponseBody String getMouseAnatomyTreeChildren(@RequestParam("id") String id,
     		@RequestParam("nodeID") String nodeID, @RequestParam("edgeType") String edgeType) {
     	return this.getSharedBrowserTreeChildren(id, nodeID, edgeType, MA_VOCAB);
+    }
+    
+    /*--- MP browser ----------------------------------------------------------------*/
+
+    /* Mammalian Phenotype browser home page
+     */
+    @RequestMapping("/mp_ontology")
+    public ModelAndView getMPDetail() {
+    	logger.debug("->getMPDetail() started");
+
+    	// start with 'mammalian phenotype' as a default
+    	return getMPDetail("MP:0000001");
+    }
+    
+    /* fill in the standard URLs for the Mammalian Phenotype browser
+     */
+    private ModelAndView fillMPUrls(ModelAndView mav) {
+    	String baseUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "vocab/mp_ontology/";
+    	mav.addObject("browserUrl", baseUrl);
+    	mav.addObject("termPaneUrl", baseUrl + "termPane/");
+    	mav.addObject("searchPaneUrl", baseUrl + "/search?term=");
+    	mav.addObject("treeInitialUrl", baseUrl + "treeInitial");
+    	mav.addObject("treeChildrenUrl", baseUrl + "treeChildren");
+    	mav.addObject("autocompleteUrl", ContextLoader.getConfigBean().getProperty("FEWI_URL") + "autocomplete/mp_ontology?query=");
+    	return mav;
+    }
+    
+    /* get the browser title string for a term in the MP browser
+     */
+    private String getMPTitle(BrowserTerm term) {
+    	if (term == null) { return "Mammalian Phenotype Browser"; }
+    	return term.getTerm() + " Mammalian Phenotype Term (" + term.getPrimaryID().getAccID() + ")";
+    }
+
+    /* Mammalian Phenotype browser for a specified MP ID */
+
+    @RequestMapping("/mp_ontology/{id}")
+    public ModelAndView getMPDetail(@PathVariable("id") String id) {
+    	logger.debug("->getMPDetail(" + id + ") started");
+    	ModelAndView mav = getSharedBrowserDetail(id, MP_VOCAB);
+    	mav.addObject("pageTitle", "Mammalian Phenotype Browser");
+    	mav.addObject("searchPaneTitle", "Phenotype Search");
+    	mav.addObject("termPaneTitle", "Phenotype Term Detail");
+    	mav.addObject("treePaneTitle", "Phenotype Tree View");
+    	mav.addObject("helpDoc", "VOCAB_mp_browser_help.shtml");
+    	mav.addObject("branding", "MGI");
+    	mav.addObject("seoDescription", "The Mammalian Phenotype (MP) Ontology is a community effort to "
+    		+ "provide standard terms for annotating phenotypic data. You can use this browser to view terms, "
+    		+ "definitions, and term relationships in a hierarchical display. Links to summary annotated "
+    		+ "phenotype data at MGI are provided in Term Detail reports.");
+    	mav.addObject("title", getMPTitle((BrowserTerm) mav.getModel().get("term")));
+    	fillMPUrls(mav);
+    	return mav;
+    }
+    
+    /* Mammalian Phenotype term detail pane
+     */
+    @RequestMapping("/mp_ontology/termPane/{id}")
+    public ModelAndView getMPTermPane(@PathVariable("id") String id) {
+    	logger.debug("->getMPTermPane(" + id + ") started");
+    	ModelAndView mav = getSharedBrowserTermPane(id, MP_VOCAB);
+    	mav.addObject("title", getMPTitle((BrowserTerm) mav.getModel().get("term")));
+    	fillMPUrls(mav);
+    	return mav;
+    }
+    
+    /* Mammalian Phenotype search pane
+     */
+    @RequestMapping("/mp_ontology/search")
+    public ModelAndView getMPSearchPane(@RequestParam("term") String term) {
+    	ModelAndView mav = getSharedBrowserSearchPane(term, MP_VOCAB);
+    	fillMPUrls(mav);
+    	return mav;
+    }
+
+    /* Mammalian Phenotype browser - initial load of terms for tree view, for the term with the
+     * given ID.  Rules:
+     * 1. retrieve specified node
+     * 2. retrieve its children
+     * 3. retrieve its default parent and its children
+     * 4. repeat #3 all the way up to the root node
+     */
+    @RequestMapping("/mp_ontology/treeInitial")
+    public @ResponseBody String getMPTreeInitial(@RequestParam("id") String id) {
+    	return this.getSharedBrowserTreeInitial(id, MP_VOCAB);
+    }
+
+    /* Mammalian Phenotype browser - load children of the term with the given ID
+     */
+    @RequestMapping("/mp_ontology/treeChildren")
+    public @ResponseBody String getMPTreeChildren(@RequestParam("id") String id,
+    		@RequestParam("nodeID") String nodeID, @RequestParam("edgeType") String edgeType) {
+    	return this.getSharedBrowserTreeChildren(id, nodeID, edgeType, MP_VOCAB);
     }
     
     /*--- shared vocab browser -------------------------------------------------------*/

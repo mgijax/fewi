@@ -635,11 +635,23 @@ public class AutoCompleteController {
 		return getSharedVocabBrowserAutocomplete(query, VocabularyController.MA_VOCAB);
 	}
 	
+	/*-------------------- Mammalian Phenotype (MP) methods --------------------*/
+
+	/* autocomplete for the Mammalian Phenotype browser's search pane
+	 */
+	@RequestMapping("/mp_ontology")
+	public @ResponseBody SearchResults<VocabBrowserACResult> getMPAutocomplete(
+			HttpServletResponse response, @RequestParam("query") String query) {
+		logger.debug("autoCompleteController.getMPAutocomplete(" + query + ")");
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getSharedVocabBrowserAutocomplete(query, VocabularyController.MP_VOCAB);
+	}
+	
 	/*-------------------- shared vocab browser methods --------------------*/
 
 	private SearchResults<VocabBrowserACResult> getSharedVocabBrowserAutocomplete (String query, String vocabName) {
 
-		List<VocabBrowserSearchResult> results = vocabController.getSharedBrowserSearchResults(query, VocabularyController.MA_VOCAB, 50);
+		List<VocabBrowserSearchResult> results = vocabController.getSharedBrowserSearchResults(query, vocabName, 50);
 		List<VocabBrowserACResult> acResults = new ArrayList<VocabBrowserACResult>();
 		for (VocabBrowserSearchResult result : results) {
 			Map<String,String> matches = result.getAllMatches();
