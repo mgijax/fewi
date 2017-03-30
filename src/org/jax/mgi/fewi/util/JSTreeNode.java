@@ -28,6 +28,8 @@ public class JSTreeNode {
 	private boolean hasChildren = false;
 	private List<BrowserChild> children;
 	private JSTreeNode chosenChild;
+	private String annotationLinkText;
+	private String annotationLinkUrl;
 	
 	/*--- constructors ---*/
 
@@ -90,6 +92,8 @@ public class JSTreeNode {
 		this.primaryID = term.getPrimaryID().getAccID();
 		this.children = term.getChildren();
 		this.hasChildren = ((this.children != null) && (this.children.size() > 0));
+		this.annotationLinkText = term.getAnnotationLabel();
+		this.annotationLinkUrl = term.getAnnotationUrl();
 	}
 	
 	/* take the values we need from the BrowserChild to initialize this object
@@ -170,7 +174,18 @@ public class JSTreeNode {
 		
 		sb.append(", \"data\" : {\"accID\" : \"");	// term ID for the node, bundled into an accID field
 		sb.append(this.primaryID);
-		sb.append("\", \"edgeType\" : \"");
+		
+		if ((this.annotationLinkText != null) && (this.annotationLinkUrl != null)) {
+			sb.append("\", \"annotationUrl\" : \"");
+			sb.append(this.annotationLinkUrl);
+			sb.append("\", \"annotationLabel\" : \"");
+			sb.append(this.annotationLinkText);
+			sb.append("\"");
+		} else {
+			sb.append("\", \"annotationUrl\" : null, \"annotationLabel\" : null");
+		
+		}
+		sb.append(", \"edgeType\" : \"");
 		sb.append(this.edgeType);
 		sb.append("\"}");
 		

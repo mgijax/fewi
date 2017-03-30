@@ -127,7 +127,7 @@ public class VocabBrowserSearchResult {
 		    return "matches across multiple synonyms";
 		}
 
-		return "no matching synonym";
+		return "matches across term and synonym(s)";
 	}
 
     //------------------------------------------------------------------------
