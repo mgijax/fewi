@@ -11,28 +11,16 @@
     BrowserTerm term = (BrowserTerm) request.getAttribute("term");
 %>
       <input type="hidden" id="pageTitle" value="${title}"/>
-      <table style="width:75%" id="termPaneDetails">
+      <table style="width:95%" id="termPaneDetails">
         <tr style="width:100%">
          <th class="rightBorderThinGray padded label top">Term: </th>
 	     <td class="padded top" style="width:*"><span class="highlight"><b>${term.term}</b></span></td>
 	    </tr>
-        <tr><th class="rightBorderThinGray padded label top">ID: </th>
-	      <td class="padded top">${term.primaryID.accID}</td>
-	    </tr>
-		<c:if test="${not empty term.secondaryIDs}">
-	        <tr><th class="rightBorderThinGray padded label top">Other IDs: </th>
-			  <td class="padded top">
-			    <c:forEach var="id" items="${term.secondaryIDs}" varStatus="status">
-			      ${id.accID}<c:if test="${!status.last}">, </c:if>
-			    </c:forEach>
-			  </td>
-			</tr>
-		</c:if>
 		<c:if test="${not empty term.synonyms}">
 	        <tr><th class="rightBorderThinGray padded label top">Synonyms: </th>
 			  <td class="padded top">
-			    <c:forEach var="synonym" items="${term.synonyms}" varStatus="status">
-			      ${synonym.synonym}<c:if test="${!status.last}">, </c:if>
+			    <c:forEach var="synonym" items="${term.distinctSynonyms}" varStatus="status">
+			      ${synonym}<c:if test="${!status.last}"> | </c:if>
 			    </c:forEach>
 			  </td>
 			</tr>
@@ -52,6 +40,18 @@
 			  </td>
 			</tr>
 	    </c:if>
+        <tr><th class="rightBorderThinGray padded label top">ID: </th>
+	      <td class="padded top">${term.primaryID.accID}</td>
+	    </tr>
+		<c:if test="${not empty term.secondaryIDs}">
+	        <tr><th class="rightBorderThinGray padded label top">Other IDs: </th>
+			  <td class="padded top">
+			    <c:forEach var="id" items="${term.secondaryIDs}" varStatus="status">
+			      ${id.accID}<c:if test="${!status.last}">, </c:if>
+			    </c:forEach>
+			  </td>
+			</tr>
+		</c:if>
       </table>
 
 <script>

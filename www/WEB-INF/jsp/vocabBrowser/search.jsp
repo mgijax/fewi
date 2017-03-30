@@ -40,18 +40,18 @@ ${resultCount} term<c:if test="${fn:length(results) > 1}">s</c:if>, sorted by be
 <style>
 .easy-autocomplete-container {
 	overflow-y: auto;
-	overflow-x: hidden;
+	overflow-x: auto;
 }
 .easy-autocomplete-container ul {
 	text-align: left;
 	margin-left: -40px;
-	width: 325px;
+	width: 500px;
 	max-height: 290px;
 }
-
 .easy-autocomplete-container ul li {
 	font-size: 90%;
 	line-height: 0.9em;
+	white-space: nowrap;
 }
 </style>
 
