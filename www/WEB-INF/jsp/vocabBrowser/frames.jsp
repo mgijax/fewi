@@ -53,7 +53,6 @@ td.bordered { border: 1px solid black }
 td.top { vertical-align: top }
 td.padded { padding: 4px }
 td.padTop { padding-top: 2px }
-.highlight { background-color: #EBCA6D }
 .bold { font-weight: bold }
 .ygtvlabel { background-color: white; color: black; }
 .ygtvlabel:link { background-color: white; color: black; }
@@ -76,6 +75,9 @@ td.padTop { padding-top: 2px }
 <c:set var="outerDiv" value="outer"/>
 <c:choose>
   <c:when test="${branding == 'GXD'}">
+	<style>
+		.highlight { background-color: #EBCA6D }
+	</style>
     <div id="titleBarWrapperGxd" userdoc="${helpDoc}">
       <a href="${configBean.HOMEPAGES_URL}expression.shtml"><img class="gxdLogo" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="75"></a>
       <span class="titleBarMainTitleGxd" style="display:inline-block; margin-top: 20px">${pageTitle}</span>
@@ -83,6 +85,9 @@ td.padTop { padding-top: 2px }
 	<c:set var="outerDiv" value="outerGxd"/>
   </c:when>
   <c:otherwise>
+	<style>
+		.highlight { background-color: #BEEBFF; }
+	</style>
 	<div id="titleBarWrapper" userdoc="${helpDoc}" style="max-width: none;">
 		<div name="centeredTitle">
 			<span class="titleBarMainTitle">${pageTitle}</span>
