@@ -4,11 +4,14 @@ import java.util.List;
 
 import mgi.frontend.datamodel.Disease; 
 import mgi.frontend.datamodel.DiseaseRow; 
+import mgi.frontend.datamodel.VocabTerm; 
+import mgi.frontend.datamodel.VocabChild; 
 
 import org.jax.mgi.fewi.finder.DiseaseFinder;
 import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.util.link.IDLinker;
+import org.jax.mgi.fewi.util.DotInputStrFactory;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -119,7 +122,33 @@ public class DiseaseController {
 
 		logger.debug("->getTermTab started");
 
-		return prepareDiseaseTab(diseaseID, "disease_browser_termtab");
+		ModelAndView mav = new ModelAndView("disease_browser_termtab");
+
+		List<Disease> diseaseList = diseaseFinder.getDiseaseByID(diseaseID);
+		// there can be only one...
+		if (diseaseList.size() < 1) { // none found
+			ModelAndView errorMav = new ModelAndView("error");
+			logger.info("No Disease Found");
+			errorMav.addObject("errorMsg", "No Disease Found");
+			return errorMav;
+		} else if (diseaseList.size() > 1) { // dupe found
+			ModelAndView errorMav = new ModelAndView("error");
+			errorMav.addObject("errorMsg", "Duplicate Disease ID");
+			return errorMav;
+		}
+		// success - we have a single object
+		Disease disease = diseaseList.get(0);
+		
+		// prep input to dot graph generation
+		DotInputStrFactory disFactory = new DotInputStrFactory();
+		for (VocabChild vc : disease.getVocabTerm().getVocabChildren() ) {
+			disFactory.addEdge(disease.getDisease(), vc.getChildTerm());
+		}
+
+		// add objects to mav, and return to display 
+		mav.addObject("disease", disease);
+		mav.addObject("dotInputStr", disFactory.getDotInputStr());
+		return mav;
 	}
 	@RequestMapping(value="/geneTab/{diseaseID:.+}", method = RequestMethod.GET)
 	public ModelAndView getGeneTab(@PathVariable("diseaseID") String diseaseID) {
