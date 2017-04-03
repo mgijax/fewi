@@ -128,7 +128,7 @@
         <br/>
 
         <EM><STRONG>Browse: </STRONG></EM>
-        <A HREF="${configBean.WI_URL}searches/MP_form.shtml">Full Mammalian Phenotype (MP) Ontology</a>
+        <A HREF="${configBean.FEWI_URL}vocab/mp_ontology">Full Mammalian Phenotype (MP) Ontology</a>
         <br/>
 
         <EM><STRONG>Browse: </STRONG></EM>

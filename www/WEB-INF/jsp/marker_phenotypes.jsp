@@ -110,7 +110,7 @@ td.spaced { line-height: 1.5em; }
 	<c:if test="${not empty annotation.qualifier}">
 	  <strong>${annotation.qualifier}</strong>
 	</c:if>
-	<a href="${configBean.WI_URL}searches/Phat.cgi?id=${annotation.termID}">${annotation.term}</a></td>
+	<a href="${configBean.FEWI_URL}vocab/mp_ontology/${annotation.termID}">${annotation.term}</a></td>
       <td class="body">
 	<c:forEach var="ref" items="${annotation.mpReferences}" varStatus="rStatus">
 	<a href="${configBean.FEWI_URL}reference/${ref.jnumID}">${ref.jnumID}</a><c:if test="${not rStatus.last}">, </c:if>

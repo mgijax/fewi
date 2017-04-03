@@ -82,7 +82,7 @@ span.tall { line-height: 150%; }
 <!-- row 2 : searched term with link to MP browser -->
 <tr class="pageInfo">
   <td colspan="3" class="mpAnnot">
-	  <b>Searched Term:</b> <a href="${configBean.WI_URL}searches/Phat.cgi?id=${term.primaryID}">${term.term}</a>
+	  <b>Searched Term:</b> <a href="${configBean.FEWI_URL}vocab/mp_ontology/${term.primaryID}">${term.term}</a>
   </td>
 </tr>
 
@@ -98,7 +98,7 @@ span.tall { line-height: 150%; }
 <!-- rows 5-n : data rows, one per genotype with subrows for annotated terms -->
 
 <c:set var="refDetail" value="${configBean.FEWI_URL}reference/"/>
-<c:set var="termDetail" value="${configBean.WI_URL}searches/Phat.cgi?id="/>
+<c:set var="termDetail" value="${configBean.FEWI_URL}vocab/mp_ontology/"/>
 
 <c:forEach var="row" items="${rows}">
 	<% stripe = stripes.getNext(); %>
