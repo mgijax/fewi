@@ -647,6 +647,18 @@ public class AutoCompleteController {
 		return getSharedVocabBrowserAutocomplete(query, VocabularyController.MP_VOCAB);
 	}
 	
+	/*-------------------- Gene Ontology (GO) methods --------------------*/
+
+	/* autocomplete for the Gene Ontology browser's search pane
+	 */
+	@RequestMapping("/gene_ontology")
+	public @ResponseBody SearchResults<VocabBrowserACResult> getGOAutocomplete(
+			HttpServletResponse response, @RequestParam("query") String query) {
+		logger.debug("autoCompleteController.getGOAutocomplete(" + query + ")");
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getSharedVocabBrowserAutocomplete(query, VocabularyController.GO_VOCAB);
+	}
+	
 	/*-------------------- shared vocab browser methods --------------------*/
 
 	private SearchResults<VocabBrowserACResult> getSharedVocabBrowserAutocomplete (String query, String vocabName) {

@@ -56,6 +56,7 @@ public class VocabularyController {
     
     public static String MA_VOCAB = "Adult Mouse Anatomy";
     public static String MP_VOCAB = "Mammalian Phenotype";
+    public static String GO_VOCAB = "GO";
     
     // set of special words that must be matched exactly, rather than using wildcards
     private static Set<String> noWildcards = null;
@@ -757,6 +758,98 @@ public class VocabularyController {
     public @ResponseBody String getMPTreeChildren(@RequestParam("id") String id,
     		@RequestParam("nodeID") String nodeID, @RequestParam("edgeType") String edgeType) {
     	return this.getSharedBrowserTreeChildren(id, nodeID, edgeType, MP_VOCAB);
+    }
+    
+    /*--- GO browser ----------------------------------------------------------------*/
+
+    /* Gene Ontology (GO) browser home page
+     */
+    @RequestMapping("/gene_ontology")
+    public ModelAndView getGODetail() {
+    	logger.debug("->getGODetail() started");
+
+    	// start with 'molecular function' as a default
+    	return getGODetail("GO:0003674");
+    }
+    
+    /* fill in the standard URLs for the GO browser
+     */
+    private ModelAndView fillGOUrls(ModelAndView mav) {
+    	String baseUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "vocab/gene_ontology/";
+    	mav.addObject("browserUrl", baseUrl);
+    	mav.addObject("termPaneUrl", baseUrl + "termPane/");
+    	mav.addObject("searchPaneUrl", baseUrl + "/search?term=");
+    	mav.addObject("treeInitialUrl", baseUrl + "treeInitial");
+    	mav.addObject("treeChildrenUrl", baseUrl + "treeChildren");
+    	mav.addObject("autocompleteUrl", ContextLoader.getConfigBean().getProperty("FEWI_URL") + "autocomplete/gene_ontology?query=");
+    	return mav;
+    }
+    
+    /* get the browser title string for a term in the GO browser
+     */
+    private String getGOTitle(BrowserTerm term) {
+    	if (term == null) { return "Gene Ontology Browser"; }
+    	return term.getTerm() + " Gene Ontology Term (" + term.getPrimaryID().getAccID() + ")";
+    }
+
+    /* GO browser for a specified GO ID */
+
+    @RequestMapping("/gene_ontology/{id}")
+    public ModelAndView getGODetail(@PathVariable("id") String id) {
+    	logger.debug("->getGODetail(" + id + ") started");
+    	ModelAndView mav = getSharedBrowserDetail(id, GO_VOCAB);
+    	mav.addObject("pageTitle", "Gene Ontology Browser");
+    	mav.addObject("searchPaneTitle", "GO Search");
+    	mav.addObject("termPaneTitle", "GO Term Detail");
+    	mav.addObject("treePaneTitle", "GO Tree View");
+    	mav.addObject("helpDoc", "VOCAB_go_browser_help.shtml");
+    	mav.addObject("branding", "MGI");
+    	mav.addObject("seoDescription", "The Gene Ontology (GO) project is a collaborative effort to address "
+   			+ "the need for consistent descriptions of gene products across databases.  You can use this "
+    		+ "browser to view terms, definitions, and term relationships in a hierarchical display. Links "
+   			+ "to summary annotated gene data at MGI are provided in Term Detail reports.");
+    	mav.addObject("title", getGOTitle((BrowserTerm) mav.getModel().get("term")));
+    	fillGOUrls(mav);
+    	return mav;
+    }
+    
+    /* GO term detail pane
+     */
+    @RequestMapping("/gene_ontology/termPane/{id}")
+    public ModelAndView getGOTermPane(@PathVariable("id") String id) {
+    	logger.debug("->getGOTermPane(" + id + ") started");
+    	ModelAndView mav = getSharedBrowserTermPane(id, GO_VOCAB);
+    	mav.addObject("title", getGOTitle((BrowserTerm) mav.getModel().get("term")));
+    	fillGOUrls(mav);
+    	return mav;
+    }
+    
+    /* GO search pane
+     */
+    @RequestMapping("/gene_ontology/search")
+    public ModelAndView getGOSearchPane(@RequestParam("term") String term) {
+    	ModelAndView mav = getSharedBrowserSearchPane(term, GO_VOCAB);
+    	fillGOUrls(mav);
+    	return mav;
+    }
+
+    /* GO browser - initial load of terms for tree view, for the term with the given ID.  Rules:
+     * 1. retrieve specified node
+     * 2. retrieve its children
+     * 3. retrieve its default parent and its children
+     * 4. repeat #3 all the way up to the root node
+     */
+    @RequestMapping("/gene_ontology/treeInitial")
+    public @ResponseBody String getGOTreeInitial(@RequestParam("id") String id) {
+    	return this.getSharedBrowserTreeInitial(id, GO_VOCAB);
+    }
+
+    /* GO browser - load children of the term with the given ID
+     */
+    @RequestMapping("/gene_ontology/treeChildren")
+    public @ResponseBody String getGOTreeChildren(@RequestParam("id") String id,
+    		@RequestParam("nodeID") String nodeID, @RequestParam("edgeType") String edgeType) {
+    	return this.getSharedBrowserTreeChildren(id, nodeID, edgeType, GO_VOCAB);
     }
     
     /*--- shared vocab browser -------------------------------------------------------*/
