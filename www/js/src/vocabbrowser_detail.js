@@ -194,6 +194,7 @@ var buildTree = function(id) {
 	$('#treeViewDiv').on('changed.jstree', onChange);
 	$('#treeViewDiv').on('select_node.jstree', onSelectNode);
 	$('#treeViewDiv').on('ready.jstree', scrollTreeView);
+	addTooltips();
 	log("initialized jstree");
 };
 
@@ -217,6 +218,7 @@ var onChange = function(node, action, selected, event) {
 		}
 	}
 	selectSimilarNodes();
+	addTooltips();
 };
 
 var suppressSelectHandler = false;
@@ -414,6 +416,15 @@ var resizePanes = function() {
     treeContainer.width(rightPaneX - 7);
     treeContainer.height(treeContainerY);
     treeViewDiv.height(treeDivY);
+};
+
+// add any necessary tooltips for the icons
+var addTooltips = function() {
+	$('[style*="/assets/images/is_a.gif"]').prop('title', 'is-a');
+	$('[style*="/assets/images/part_of.gif"]').prop('title', 'part-of');
+	$('[style*="/assets/images/regulates.gif"]').prop('title', 'regulates');
+	$('[style*="/assets/images/negatively_regulates.gif"]').prop('title', 'negatively-regulates');
+	$('[style*="/assets/images/positively_regulates.gif"]').prop('title', 'positively-regulates');
 };
 
 /* set up automatic pane resizing for when the page first loads and when the browser is resized.
