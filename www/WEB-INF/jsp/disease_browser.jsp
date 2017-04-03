@@ -198,9 +198,9 @@
     <li><a href="${configBean.FEWI_URL}disease/termTab/${disease.primaryID}" 
     	data-target="#termTabContent" id="termTabButton" data-toggle="tabajax" class="active">Term Browser</a></li>
     <li><a href="${configBean.FEWI_URL}disease/geneTab/${disease.primaryID}" 
-    	data-target="#geneTabContent" id="genesTabButton" data-toggle="tabajax">Genes</a></li>
+    	data-target="#geneTabContent" id="genesTabButton" data-toggle="tabajax">Genes (${disease.genesTabCount})</a></li>
     <li><a href="${configBean.FEWI_URL}disease/modelTab/${disease.primaryID}" 
-    	data-target="#modelTabContent" id="modelsTabButton" data-toggle="tabajax">Models</a></li>
+    	data-target="#modelTabContent" id="modelsTabButton" data-toggle="tabajax">Models (${disease.modelsTabCount})</a></li>
   </ul>
 
   <!-- TAB CONTENT - filled dynamically via subsequent request -->
