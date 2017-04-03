@@ -20,8 +20,10 @@
     StyleAlternator rightTdStyles 
       = new StyleAlternator("detailData1","detailData2");
 %>
-
 <style type="text/css">
+#imageWrapper{width:100%;}
+#imageHolder{margin: 0 auto;}
+
 </style>
 
 <div class="tabContainer">
@@ -63,5 +65,15 @@
     <br/>
 
     <img src="${configBean.WEBSHARE_URL}images/is-a.gif" alt="is-a" height="12" width="12" border="0"> denotes an 'is-a' relationship
+
+    <div id='imageWrapper'>
+      <div id='imageHolder'></div>
+    </div>
+
+	<script type="text/javascript">
+        image = Viz('${dotInputStr}', 
+                { format: "svg", engine: "dot" });
+         document.getElementById('imageHolder').innerHTML += image
+	</script>
 
 </div>
