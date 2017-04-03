@@ -25,7 +25,6 @@ import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.JSTreeNode;
 import org.jax.mgi.fewi.util.TreeNode;
 import org.jax.mgi.fewi.util.link.IDLinker;
-import org.jax.mgi.shr.jsonmodel.BrowserChild;
 import org.jax.mgi.shr.jsonmodel.BrowserParent;
 import org.jax.mgi.shr.jsonmodel.BrowserTerm;
 import org.slf4j.Logger;

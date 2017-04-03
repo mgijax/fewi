@@ -302,11 +302,18 @@ var addAnnotationLinks = function() {
 		var node = nodes[i];
 		$('#' + node.id + '_annotations').remove();
 		
-		if ((node.data.annotationUrl != null) && (node.data.annotationLabel != null)) {
+		/* We can have a label without a URL for nodes with zero counts.  In that case, do not
+		 * make the link, just show the count.
+		 */
+		if (node.data.annotationLabel != null) {
 			var linkText = '<span id="' + node.id + '_annotations" class="annotationLink"> ('
 				+ '<a href="' + fewiurl + node.data.annotationUrl + '" target="_blank">'
 				+ node.data.annotationLabel
 				+ "</a>)</span>";
+			if (node.data.annotationUrl == null) {
+				linkText = '<span id="' + node.id + '_annotations" class="annotationLink"> ('
+					+ node.data.annotationLabel + ")</span>";
+			}
 			var nodeLink = $('#' + node.id + '_anchor');
 			if (nodeLink != null) {
 				nodeLink.after(linkText);

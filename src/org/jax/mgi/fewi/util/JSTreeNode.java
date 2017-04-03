@@ -2,6 +2,8 @@ package org.jax.mgi.fewi.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import mgi.frontend.datamodel.VocabTerm;
 
@@ -15,6 +17,7 @@ public class JSTreeNode {
 
 	/*--- instance variables ---*/
 
+    private final Logger logger = LoggerFactory.getLogger(JSTreeNode.class);
 	private static int nextID = 1;
 
 	/*--- instance variables ---*/
@@ -102,6 +105,8 @@ public class JSTreeNode {
 		this.text = child.getTerm();
 		this.primaryID = child.getPrimaryID();
 		this.hasChildren = child.getHasChildren() > 0;
+		this.annotationLinkText = child.getAnnotationLabel();
+		this.annotationLinkUrl = child.getAnnotationUrl();
 	}
 	
 	/* get the next available ID, wrapping the nextID back to 1 if we go past the max int
@@ -155,8 +160,6 @@ public class JSTreeNode {
 		StringBuffer sb = new StringBuffer();
 		sb.append ("{");
 		
-		// needed fields: children
-		
 		sb.append("\"id\" : \"");		// id field
 		sb.append(this.id);
 		sb.append("\"");
@@ -175,15 +178,20 @@ public class JSTreeNode {
 		sb.append(", \"data\" : {\"accID\" : \"");	// term ID for the node, bundled into an accID field
 		sb.append(this.primaryID);
 		
-		if ((this.annotationLinkText != null) && (this.annotationLinkUrl != null)) {
+		if (this.annotationLinkUrl != null) {
 			sb.append("\", \"annotationUrl\" : \"");
 			sb.append(this.annotationLinkUrl);
-			sb.append("\", \"annotationLabel\" : \"");
+			sb.append("\"");
+		} else {
+			sb.append("\", \"annotationUrl\" : null");
+		}
+
+		if (this.annotationLinkText != null) {
+			sb.append(", \"annotationLabel\" : \"");
 			sb.append(this.annotationLinkText);
 			sb.append("\"");
 		} else {
-			sb.append("\", \"annotationUrl\" : null, \"annotationLabel\" : null");
-		
+			sb.append(", \"annotationLabel\" : \"0 annotations\"");
 		}
 		sb.append(", \"edgeType\" : \"");
 		sb.append(this.edgeType);
