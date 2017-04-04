@@ -49,6 +49,9 @@
 		      <td class="padded top">${term.dagName}</td>
 	    	</tr>
 	    </c:if>
+	    <tr><th class="rightBorderThinGray padded label top">ID: </th>
+	      <td class="padded top">${term.primaryID.accID}</td>
+	    </tr>
 		<c:if test="${not empty term.secondaryIDs}">
 	        <tr><th class="rightBorderThinGray padded label top">Other IDs: </th>
 			  <td class="padded top">
