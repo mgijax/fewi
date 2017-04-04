@@ -43,12 +43,12 @@
 	</div>
 </c:if>
 <c:if test="${(not empty hasImpcData) && (not empty singleMarker)}">
-	<div>
+	<div style="text-align: center">
 		<a href="http://www.mousephenotype.org/data/genes/${singleMarker}" target="_blank">IMPC Data for ${singleMarkerSymbol}</a>
 	</div>
 </c:if>
 <c:if test="${(not empty hasDmddData) && (not empty singleMarker)}">
 	<div style="text-align: center">
-		<a href="https://dmdd.org.uk/" target="_blank">DMDD Data</a>
+		<a href="https://dmdd.org.uk/mutants/${singleMarkerSymbol}" target="_blank">DMDD Data for ${singleMarkerSymbol}</a>
 	</div>
 </c:if>
