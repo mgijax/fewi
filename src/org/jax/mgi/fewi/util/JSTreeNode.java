@@ -190,8 +190,6 @@ public class JSTreeNode {
 			sb.append(", \"annotationLabel\" : \"");
 			sb.append(this.annotationLinkText);
 			sb.append("\"");
-		} else {
-			sb.append(", \"annotationLabel\" : \"0 annotations\"");
 		}
 		sb.append(", \"edgeType\" : \"");
 		sb.append(this.edgeType);
