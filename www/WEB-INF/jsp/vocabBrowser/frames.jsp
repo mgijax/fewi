@@ -67,6 +67,7 @@ td.padTop { padding-top: 2px }
 .jstree-default .jstree-clicked {
 	font-weight: bold;
 }
+.goHeaderLink { font-weight: bold; text-decoration: none; }
 </style>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
@@ -92,6 +93,16 @@ td.padTop { padding-top: 2px }
 		<div name="centeredTitle">
 			<span class="titleBarMainTitle">${pageTitle}</span>
 		</div>
+		<c:if test="${branding == 'GO'}">
+			<div id="goCategories">
+				<a href="${browserUrl}GO:0003674" class="goHeaderLink">Molecular Function</a> |
+				<a href="${browserUrl}GO:0008150" class="goHeaderLink">Biological Process</a> |
+				<a href="${browserUrl}GO:0005575" class="goHeaderLink">Cellular Component</a>
+			</div>
+			<script>
+				$('#titleBarWrapper').css({'padding-bottom':'4px'});
+			</script>
+		</c:if>
 	</div>
   </c:otherwise>
 </c:choose>

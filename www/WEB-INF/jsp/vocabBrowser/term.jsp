@@ -40,9 +40,15 @@
 			  </td>
 			</tr>
 	    </c:if>
-        <tr><th class="rightBorderThinGray padded label top">ID: </th>
-	      <td class="padded top">${term.primaryID.accID}</td>
-	    </tr>
+		<c:if test="${not empty term.comment}">
+          <tr><th class="rightBorderThinGray padded label top">Comment: </th>
+	          <td class="padded top">${term.comment}</td>
+	    </c:if>
+		<c:if test="${not empty term.dagName}">
+	        <tr><th class="rightBorderThinGray padded label top">Category: </th>
+		      <td class="padded top">${term.dagName}</td>
+	    	</tr>
+	    </c:if>
 		<c:if test="${not empty term.secondaryIDs}">
 	        <tr><th class="rightBorderThinGray padded label top">Other IDs: </th>
 			  <td class="padded top">

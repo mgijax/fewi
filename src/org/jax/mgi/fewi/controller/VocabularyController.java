@@ -803,7 +803,7 @@ public class VocabularyController {
     	mav.addObject("termPaneTitle", "GO Term Detail");
     	mav.addObject("treePaneTitle", "GO Tree View");
     	mav.addObject("helpDoc", "VOCAB_go_browser_help.shtml");
-    	mav.addObject("branding", "MGI");
+    	mav.addObject("branding", "GO");
     	mav.addObject("seoDescription", "The Gene Ontology (GO) project is a collaborative effort to address "
    			+ "the need for consistent descriptions of gene products across databases.  You can use this "
     		+ "browser to view terms, definitions, and term relationships in a hierarchical display. Links "
