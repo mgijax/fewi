@@ -193,7 +193,10 @@ var buildTree = function(id) {
 	$('#treeViewDiv').jstree(config);
 	$('#treeViewDiv').on('changed.jstree', onChange);
 	$('#treeViewDiv').on('select_node.jstree', onSelectNode);
-	$('#treeViewDiv').on('ready.jstree', scrollTreeView);
+	$('#treeViewDiv').on('ready.jstree', function() {
+		// adding a little time before the scrolling seems to help some browsers (IE, possibly Mac browsers)
+		setTimeout(scrollTreeView, 250); 
+		} );
 	addTooltips();
 	log("initialized jstree");
 };
