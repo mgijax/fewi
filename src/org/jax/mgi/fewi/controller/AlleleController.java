@@ -1168,7 +1168,7 @@ public class AlleleController {
 			imsrStrains = "<a href='" + imsrUrl + "summary?gaccid=" + allele.getPrimaryID() + "&states=embryo&states=live&states=ovaries&states=sperm'" + " class='MP'>" + imsrStrains + "</a>";
 		}
 		if (imsrForMarkerCount > 0) {
-			imsrForMarker = "<a href='" + imsrUrl + "summary?gaccid=" + marker.getPrimaryID() + "&states=ES+Cell&states=embryo&states=live&states=ovaries&states=sperm' class='MP'>" + imsrForMarker + "</a>";
+			imsrForMarker = "<a href='" + imsrUrl + "summary?gaccid=" + marker.getPrimaryID() + "&states=Any' class='MP'>" + imsrForMarker + "</a>";
 		}
 
 		mav.addObject("imsrCellLines", imsrCellLines);
