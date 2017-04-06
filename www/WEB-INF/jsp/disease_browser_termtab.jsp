@@ -21,8 +21,12 @@
       = new StyleAlternator("detailData1","detailData2");
 %>
 <style type="text/css">
-#imageWrapper{width:100%;}
-#imageHolder{margin: 0 auto;}
+#imageWrapper {width:100%;}
+#imageHolder svg {
+    display: block;
+    margin: auto;
+    width: 96%;
+}
 
 </style>
 

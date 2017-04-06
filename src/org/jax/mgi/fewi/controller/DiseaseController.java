@@ -141,10 +141,22 @@ public class DiseaseController {
 		
 		// prep input to dot graph generation
 		DotInputStrFactory disFactory = new DotInputStrFactory();
+
+		// add label to disease we're displaying
+		disFactory.addNodeLabel(disease.getPrimaryID(), disease.getDisease());
+
+		// children of this term
 		for (VocabChild vc : disease.getVocabTerm().getVocabChildren() ) {
-			disFactory.addEdge(disease.getDisease(), vc.getChildTerm());
+			disFactory.addEdge(disease.getPrimaryID(), vc.getChildPrimaryId());
+			disFactory.addNodeLabel(vc.getChildPrimaryId(), vc.getChildTerm());
 		}
 
+		// parents of this term, up to root node
+		for (VocabChild p : disease.getVocabTerm().getParentEdges() ) {
+			disFactory.addEdge(p.getParent().getPrimaryID(), disease.getPrimaryID());
+			disFactory.addNodeLabel(p.getParent().getPrimaryID(), p.getParent().getTerm());
+		}
+		
 		// add objects to mav, and return to display 
 		mav.addObject("disease", disease);
 		mav.addObject("dotInputStr", disFactory.getDotInputStr());
