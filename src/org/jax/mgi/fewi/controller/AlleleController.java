@@ -1012,7 +1012,9 @@ public class AlleleController {
 					if (out.length() > 0) {
 						out.append (", ");
 					}
-					out.append (formatMutantCellLines (mcLines, lastProvider, idToLink, kompID));
+//					out.append (formatMutantCellLines (mcLines, lastProvider, idToLink, kompID));
+// suppress MCL links now, as many are no longer working:
+					out.append (formatMutantCellLines (mcLines, lastProvider, null, null));
 					idToLink = name;
 					lastProvider = provider;
 					mcLines = new ArrayList<String>();
@@ -1023,7 +1025,9 @@ public class AlleleController {
 				if (out.length() > 0) {
 					out.append (", ");
 				}
-				out.append (formatMutantCellLines (mcLines, lastProvider, idToLink, kompID));
+//				out.append (formatMutantCellLines (mcLines, lastProvider, idToLink, kompID));
+// suppress MCL links now, as many are no longer working:
+				out.append (formatMutantCellLines (mcLines, lastProvider, null, null));
 			}
 
 			// mixed alleles need a special message
@@ -1641,7 +1645,11 @@ public class AlleleController {
 		String link = "";
 
 		if (kompID == null) {
-			link = idLinker.getLink (provider, idToLink, provider);
+			if (idToLink != null) {
+				link = idLinker.getLink (provider, idToLink, provider);
+			} else {
+				link = provider;
+			}
 		} else {
 			link = idLinker.getLink ("KOMP-CSD-Project", kompID.getAccID(),"PROVIDER_HERE");
 			if(provider!=null) link = link.replace("PROVIDER_HERE", provider);
