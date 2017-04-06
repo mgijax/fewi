@@ -127,8 +127,8 @@ public class NotesTagConverter
 
 			// GO
 			tagConversionList.add(new TagConversion("\\\\GO\\((.*?[|].*?[|].*?)\\)",
-					String.format ("<a class=\"%s\" href=\"%ssearches/GO.cgi?id=%s\" %s>%s</a>",
-							"%s", pywiURL, "%s", "%s", "%s")));
+					String.format ("<a class=\"%s\" href=\"%svocab/gene_ontology/%s\" %s>%s</a>",
+							"%s", fewiURL, "%s", "%s", "%s")));
 
 			// Reference
 			tagConversionList.add(new TagConversion("\\\\Ref\\((.*?[|].*?[|].*?)\\)",

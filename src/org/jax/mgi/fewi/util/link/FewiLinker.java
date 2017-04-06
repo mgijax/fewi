@@ -35,9 +35,9 @@ public class FewiLinker {
 		idUrlMap.put(ObjectTypes.MARKER_CLUSTER, baseUrl +"homology/%s");
 		idUrlMap.put(ObjectTypes.DISEASE, baseUrl +"disease/%s");
 		idUrlMap.put(ObjectTypes.GENE, javaWiUrl +"?page=markerDetail&id=%s");
-		idUrlMap.put(ObjectTypes.GO_BP, pythonWiUrl +"searches/GO.cgi?id=%s");
-		idUrlMap.put(ObjectTypes.GO_MF, pythonWiUrl +"searches/GO.cgi?id=%s");
-		idUrlMap.put(ObjectTypes.GO_CC, pythonWiUrl +"searches/GO.cgi?id=%s");
+		idUrlMap.put(ObjectTypes.GO_BP, baseUrl +"vocab/gene_ontology/%s");
+		idUrlMap.put(ObjectTypes.GO_MF, baseUrl +"vocab/gene_ontology/%s");
+		idUrlMap.put(ObjectTypes.GO_CC, baseUrl +"vocab/gene_ontology/%s");
 		idUrlMap.put(ObjectTypes.MP, baseUrl +"vocab/mp_ontology/%s");
 		idUrlMap.put(ObjectTypes.ASSAY, baseUrl +"assay/%s");
 		idUrlMap.put(ObjectTypes.GENOTYPE, baseUrl +"allele/genoview/%s");

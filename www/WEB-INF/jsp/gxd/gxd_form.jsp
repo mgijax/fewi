@@ -149,7 +149,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 					<div class="bd">
 						<p>You can find sets of genes associated with terms in MGI's vocabularies and ontologies:</p>
 						<ul>
-							<li>Function - Gene Ontology (<a href="${configBean.WI_URL}searches/GO_form.shtml">GO</a>)</li>
+							<li>Function - Gene Ontology (<a href="${configBean.FEWI_URL}vocab/gene_ontology">GO</a>)</li>
 							<li>Phenotype - Mammalian Phenotype Ontology (<a href="${configBean.FEWI_URL}vocab/mp_ontology">MP</a>)</li>
 							<li>Disease - Disease Ontology (<a href="${configBean.FEWI_URL}disease">DO</a>)</li>
 						</ul>

@@ -98,7 +98,7 @@ public class GOSummaryRow {
 	}
 
 	public String getTerm() {
-		String termText = "<a href='"+ this.wiUrl +"searches/GO.cgi?id=" + annot.getTermID() + "'> " + annot.getTerm() + "</a>";
+		String termText = "<a href='"+ fewiUrl +"vocab/gene_ontology/" + annot.getTermID() + "'> " + annot.getTerm() + "</a>";
 		if (annot.getQualifier() != null) {
 			return "<b>" + annot.getQualifier() + "</b> " + termText;
 		}

@@ -158,7 +158,7 @@ td.top { vertical-align: top; }
 		    </span>
 	      </dd>
 	    </dl>
-	    <span class="vocabLink">Browse <a href="${configBean.WI_URL}searches/GO_form.shtml">Gene Ontology (GO)</a></span>
+	    <span class="vocabLink">Browse <a href="${configBean.FEWI_URL}vocab/gene_ontology">Gene Ontology (GO)</a></span>
 	  </td>
 	  <td class="padded top">
 	    <span style="line-height: 150%">

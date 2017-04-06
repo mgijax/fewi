@@ -107,7 +107,7 @@ public class GOGraphConverter
 	
 		    // GO term detail page
 		    if ("GOTerm".equals (tagType)) {
-			rep = pythonWI + "searches/GO.cgi?id=" + id;
+			rep = fewi + "vocab/gene_ontology/" + id;
 	
 		    // marker detail page
 		    } else if ("Marker".equals (tagType)) {
