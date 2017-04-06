@@ -31,7 +31,8 @@
       Image
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
-      <img src='${configBean.PIXELDB_URL}${image.pixeldbNumericID}'> 
+      <img id="myImage" src='${configBean.PIXELDB_URL}${image.pixeldbNumericID}'> 
+      <div id="player"></div>
     </td>
   </tr>
 
@@ -121,4 +122,15 @@
   
 <!-- close structural table and page template-->
 </table>
+
+<script>
+      // This code loads the IFrame Player API code asynchronously.
+      // from -- https://developers.google.com/youtube/iframe_api_reference
+      console.log('adding script element');
+      var tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      console.log('done adding script element');
+</script>
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
