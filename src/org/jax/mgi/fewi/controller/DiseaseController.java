@@ -139,6 +139,17 @@ public class DiseaseController {
 		// success - we have a single object
 		Disease disease = diseaseList.get(0);
 		
+		String getDotInputStr = this.getDotInputStr(disease);
+		
+		// add objects to mav, and return to display 
+		mav.addObject("disease", disease);
+		mav.addObject("dotInputStr", getDotInputStr);
+		return mav;
+	}
+	
+	
+	private String getDotInputStr (Disease disease) {
+
 		// prep input to dot graph generation
 		DotInputStrFactory disFactory = new DotInputStrFactory();
 
@@ -151,17 +162,30 @@ public class DiseaseController {
 			disFactory.addNodeLabel(vc.getChildPrimaryId(), vc.getChildTerm());
 		}
 
-		// parents of this term, up to root node
-		for (VocabChild p : disease.getVocabTerm().getParentEdges() ) {
-			disFactory.addEdge(p.getParent().getPrimaryID(), disease.getPrimaryID());
+		// parents of this term
+		VocabTerm diseaseVocabTerm = disease.getVocabTerm();
+		disFactory = this.handleDiseaseParents(diseaseVocabTerm, disFactory);
+
+		return disFactory.getDotInputStr();
+	}	
+	
+	private DotInputStrFactory handleDiseaseParents (VocabTerm vocabTerm, DotInputStrFactory disFactory) {
+
+		// for each parent of this term...
+		for (VocabChild p : vocabTerm.getParentEdges() ) {
+
+			// recursion to handle if this term had parents 
+			handleDiseaseParents(p.getParent(), disFactory);
+						
+			disFactory.addEdge(p.getParent().getPrimaryID(), vocabTerm.getPrimaryID());
 			disFactory.addNodeLabel(p.getParent().getPrimaryID(), p.getParent().getTerm());
+			
 		}
 		
-		// add objects to mav, and return to display 
-		mav.addObject("disease", disease);
-		mav.addObject("dotInputStr", disFactory.getDotInputStr());
-		return mav;
+		return disFactory;
 	}
+	
+	
 	@RequestMapping(value="/geneTab/{diseaseID:.+}", method = RequestMethod.GET)
 	public ModelAndView getGeneTab(@PathVariable("diseaseID") String diseaseID) {
 
