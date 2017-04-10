@@ -931,7 +931,7 @@ public class VocabularyController {
     	eitherFilters.add(Filter.and(synonymFilters));
 
     	sp.setFilter(Filter.or(eitherFilters));
-    	sp.addSort(new Sort(SortConstants.VB_SEQUENCE_NUM));
+    	sp.addSort(new Sort(SortConstants.SCORE, true));		// descending score
     	sp.setPageSize(maxToReturn + 1);
 
     	SearchResults<BrowserTerm> sr = vocabFinder.getBrowserTerms(sp);
@@ -1031,7 +1031,7 @@ public class VocabularyController {
     			other.add(match);
     		}
     	}
-
+    	
     	termExact.addAll(synonymExact);
     	termExact.addAll(termBegins);
     	termExact.addAll(synonymBegins);

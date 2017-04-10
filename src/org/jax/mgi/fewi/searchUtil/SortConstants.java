@@ -96,6 +96,7 @@ public class SortConstants {
 
 	// general...
 	public static final String SEQUENCE_NUM = "sequenceNum";
+	public static final String SCORE		= "score";			// Solr score
 	
 	// gxd image panes
 
