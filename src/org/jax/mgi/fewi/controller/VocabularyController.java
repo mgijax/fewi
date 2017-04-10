@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import mgi.frontend.datamodel.VocabTerm;
 import mgi.frontend.datamodel.sort.VocabTermComparator;
@@ -890,49 +891,62 @@ public class VocabularyController {
     protected List<VocabBrowserSearchResult> getSharedBrowserSearchResults(String term, String vocabName,
     		int maxToReturn) {
 
-    	// clean up the term a little by:
-    	// 1. converting hyphens to spaces
-    	// 2. stripping non-alphanumerics and non-whitespace
-
-    	String cleanTerm = term.replaceAll("-", " ");
-    	cleanTerm = cleanTerm.replaceAll(",", " ");
-    	cleanTerm = cleanTerm.replaceAll("/", " ");
-    	cleanTerm = cleanTerm.replaceAll("[^A-Za-z0-9\\s]", "");
-    	cleanTerm = cleanTerm.replaceAll("\\s\\s+", " ");
-
+   		ArrayList<String> tokens = new ArrayList<String>();		// search tokens
+   		
     	SearchParams sp = new SearchParams();
+    	sp.addSort(new Sort(SortConstants.SCORE, true));		// sort by descending score
+    	sp.setPageSize(maxToReturn + 1);
 
-    	// need to AND the requested tokens together, then OR the searches of terms and synonyms
+    	// short-circuit for searches by ID
+    	if (Pattern.matches("[A-Za-z]+:[A-Za-z0-9]+", term.trim())) {
+    		ArrayList<Filter> idFilters = new ArrayList<Filter>();
+    		idFilters.add(new Filter(SearchConstants.VB_VOCAB_NAME, vocabName));
+    		idFilters.add(new Filter(SearchConstants.VB_ACC_ID, term.trim()));
+    		sp.setFilter(Filter.and(idFilters));
 
-    	ArrayList<Filter> termFilters = new ArrayList<Filter>();
-    	ArrayList<Filter> synonymFilters = new ArrayList<Filter>();
-    	ArrayList<String> tokens = new ArrayList<String>();
-
-    	termFilters.add(new Filter(SearchConstants.VB_VOCAB_NAME, vocabName));
-    	synonymFilters.add(new Filter(SearchConstants.VB_VOCAB_NAME, vocabName));
+    	} else {
+    		// not an ID search, so we do a little more work on cleansing term and synonym searches
     	
-    	for (String token : cleanTerm.split("\\s")) {
-    		/* odd hack...  Solr is not recognizing certain short words when ending with a wildcard; these
-    		 * must be matched by exact match.  So, adjust the operator as needed...
-    		 */
-    		if (noWildcards.contains(token)) {
-    			termFilters.add(new Filter(SearchConstants.VB_TERM, token, Filter.Operator.OP_EQUAL));
-    			synonymFilters.add(new Filter(SearchConstants.VB_SYNONYM, token, Filter.Operator.OP_EQUAL));
-    		} else {
-    			termFilters.add(new Filter(SearchConstants.VB_TERM, token, Filter.Operator.OP_BEGINS));
-    			synonymFilters.add(new Filter(SearchConstants.VB_SYNONYM, token, Filter.Operator.OP_BEGINS));
+    		// clean up the term a little by:
+    		// 1. converting hyphens to spaces
+    		// 2. stripping non-alphanumerics and non-whitespace
+
+    		String cleanTerm = term.replaceAll("-", " ");
+    		cleanTerm = cleanTerm.replaceAll(",", " ");
+    		cleanTerm = cleanTerm.replaceAll("/", " ");
+    		cleanTerm = cleanTerm.replaceAll("[^A-Za-z0-9\\s]", "");
+    		cleanTerm = cleanTerm.replaceAll("\\s\\s+", " ");
+
+    		// need to AND the requested tokens together, then OR the searches of terms and synonyms
+
+    		ArrayList<Filter> termFilters = new ArrayList<Filter>();
+    		ArrayList<Filter> synonymFilters = new ArrayList<Filter>();
+
+    		termFilters.add(new Filter(SearchConstants.VB_VOCAB_NAME, vocabName));
+    		synonymFilters.add(new Filter(SearchConstants.VB_VOCAB_NAME, vocabName));
+    	
+    		for (String token : cleanTerm.split("\\s")) {
+    			/* odd hack...  Solr is not recognizing certain short words when ending with a wildcard; these
+    			 * must be matched by exact match.  So, adjust the operator as needed...
+    			 */
+    			if (noWildcards.contains(token)) {
+    				termFilters.add(new Filter(SearchConstants.VB_TERM, token, Filter.Operator.OP_EQUAL));
+    				synonymFilters.add(new Filter(SearchConstants.VB_SYNONYM, token, Filter.Operator.OP_EQUAL));
+    			} else {
+    				termFilters.add(new Filter(SearchConstants.VB_TERM, token, Filter.Operator.OP_BEGINS));
+    				synonymFilters.add(new Filter(SearchConstants.VB_SYNONYM, token, Filter.Operator.OP_BEGINS));
+    			}
+    			tokens.add(token);
     		}
-    		tokens.add(token);
+
+    		ArrayList<Filter> eitherFilters = new ArrayList<Filter>();
+
+    		eitherFilters.add(Filter.and(termFilters));
+    		eitherFilters.add(Filter.and(synonymFilters));
+
+    		sp.setFilter(Filter.or(eitherFilters));
     	}
 
-    	ArrayList<Filter> eitherFilters = new ArrayList<Filter>();
-
-    	eitherFilters.add(Filter.and(termFilters));
-    	eitherFilters.add(Filter.and(synonymFilters));
-
-    	sp.setFilter(Filter.or(eitherFilters));
-    	sp.addSort(new Sort(SortConstants.SCORE, true));		// descending score
-    	sp.setPageSize(maxToReturn + 1);
 
     	SearchResults<BrowserTerm> sr = vocabFinder.getBrowserTerms(sp);
 
