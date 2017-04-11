@@ -1641,24 +1641,6 @@ public class AlleleController {
 			s.append("<b>").append(StringUtils.join(mcLines,"</b>, <b>")).append("</b>");
 		}
 
-		// link to provider, if possible.  provider name if not.
-		String link = "";
-
-		if (kompID == null) {
-			if (idToLink != null) {
-				link = idLinker.getLink (provider, idToLink, provider);
-			} else {
-				link = provider;
-			}
-		} else {
-			link = idLinker.getLink ("KOMP-CSD-Project", kompID.getAccID(),"PROVIDER_HERE");
-			if(provider!=null) link = link.replace("PROVIDER_HERE", provider);
-		}
-
-		if (link.equals(idToLink)) link = provider;
-
-		s.append (" (").append (link.replace(">", " CLASS='MP'>")).append (")");
-
 		return s.toString();
 	}
 
