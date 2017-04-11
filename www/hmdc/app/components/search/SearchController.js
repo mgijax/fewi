@@ -104,10 +104,10 @@
 					ysf += 'Genes matching <b>"' + input + '"</b>';
 
 				} else if (field == 'tsDid') {
-					ysf += 'Phenotype or Disease IDs matching <b>' + input + '</b>';
+					ysf += 'Disease or Phenotype IDs matching <b>' + input + '</b>';
 
 				} else if (field == 'tsDtext') {
-					ysf += 'Phenotypes or Diseases matching <b>"' + input + '"</b>';
+					ysf += 'Diseases or Phenotypes matching <b>"' + input + '"</b>';
 
 				} else if (field == 'location') {
 					if (isHuman) {
@@ -280,8 +280,8 @@
 									{ value: '', name: 'Please select a field' },
 									{ value: 'miS', name: 'Gene Symbol(s) or ID(s)' },
 									{ value: 'mnS', name: 'Gene Name' },
-									{ value: 'tsDtext', name: 'Phenotype or Disease Name' },
-									{ value: 'tsDid', name: 'Phenotype or Disease ID(s)' },
+									{ value: 'tsDtext', name: 'Disease or Phenotype Name' },
+									{ value: 'tsDid', name: 'Disease or Phenotype ID(s)' },
 									{ value: 'location', name: 'Genome Location' },
 									{ value: 'gene_upload', name: 'Gene File Upload'},
 									//{ value: 'vcd_upload', name: 'VCF file (v4.0 or later)' }
