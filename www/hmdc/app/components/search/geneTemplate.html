@@ -43,7 +43,7 @@
 						<nobr>Disease Relevant: <a target="_blank" href="{{FEWI_URL}}reference/diseaseRelevantMarker/{{ row.mgiId }}?typeFilter=Literature">{{ row.diseaseRefCount }}</a></nobr>
 					</div>
 				</td>
-				<td><a ng-if="row.imsrCount > 0" target="_blank" href="http://www.findmice.org/summary?states=ES+Cell&states=embryo&states=live&states=ovaries&states=sperm&gaccid={{ row.mgiId }}"><div ng-bind-html="row.imsrCount"></div></a></td>
+				<td><a ng-if="row.imsrCount > 0" target="_blank" href="http://www.findmice.org/summary?states=Any&gaccid={{ row.mgiId }}"><div ng-bind-html="row.imsrCount"></div></a></td>
 			</tr>
 		</tbody>
 		<tfoot>

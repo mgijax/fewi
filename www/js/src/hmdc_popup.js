@@ -25,20 +25,20 @@ var imsrUrl = '';
   	if (imsrCount == 0) {
   		s = s + imsrCount + " available)";
   	} else {
-  		s = s + "<a target='_blank' class='findMice' href='" + imsrUrl + "summary?states=embryo&states=live"
-			+ "&states=ovaries&states=sperm" + optionalParms + "&gaccid=" + accID + "'>" + imsrCount + " available)</a>";
+  		s = s + "<a target='_blank' class='findMice' href='" + imsrUrl + "summary?"
+			+ optionalParms + "&gaccid=" + accID + "'>" + imsrCount + " available)</a>";
   	}
   	return s;
   };
   
   // format the turn allele ID and IMSR count into a link to get corresponding data from IMSR
   var alleleImsrLink = function(accID, imsrCount) {
-  	return makeImsrLink(accID, imsrCount, '');
+  	return makeImsrLink(accID, imsrCount, 'states=embryo&states=live&states=ovaries&states=sperm');
   };
 
   // format the turn marker ID and IMSR count into a link to get corresponding data from IMSR
   var markerImsrLink = function(accID, imsrCount) {
-  	return makeImsrLink(accID, imsrCount, '&states=ES+Cell');
+  	return makeImsrLink(accID, imsrCount, 'states=Any');
   };
   
   // show the popup with IMSR info when the user clicks a Find Mice button

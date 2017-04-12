@@ -111,7 +111,7 @@
 						<li>
 							<div class="label">Find Mice (IMSR)</div>
 							<div class="value">
-								<a href="${configBean.IMSRURL}summary?gaccid=${marker.primaryID}&states=ES+Cell&states=embryo&states=live&states=ovaries&states=sperm">${marker.countForImsr} strains or lines available</a> 
+								<a href="${configBean.IMSRURL}summary?gaccid=${marker.primaryID}&states=Any">${marker.countForImsr} strains or lines available</a> 
 							</div>
 						</li>
 

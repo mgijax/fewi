@@ -88,7 +88,7 @@
 								(0 available)
 								</c:if>
 								<c:if test="${allele.imsrCountForMarker > 0}">
-								(<a href="${imsrUrl}&states=ES+Cell&gaccid=${allele.marker.primaryID}" target="_blank">${allele.imsrCountForMarker} available</a>)
+								(<a href="${configBean.IMSRURL}summary?states=Any&gaccid=${allele.marker.primaryID}" target="_blank">${allele.imsrCountForMarker} available</a>)
 								</c:if>
 								</c:if>
 								<br/>
