@@ -267,7 +267,7 @@ function show (i)
           0 strains available
        </c:if>
        <c:if test="${not empty allele.imsrStrainCount and allele.imsrStrainCount!='0'}">
-          <a href='${configBean.IMSRURL}summary?gaccid=${allele.primaryID}&states=embryo&states=live&states=ovaries&states=sperm' 
+          <a href='${configBean.IMSRURL}summary?gaccid=${allele.primaryID}&states=archived&states=embryo&states=live&states=ovaries&states=sperm' 
             target="_blank">
           ${allele.imsrStrainCount} <fewi:plural value="strain" size="${allele.imsrStrainCount}"/> available
           </a>
@@ -280,7 +280,7 @@ function show (i)
           0 lines available
        </c:if>
        <c:if test="${not empty allele.imsrCellLineCount and allele.imsrCellLineCount!='0'}">
-          <a href='${configBean.IMSRURL}summary?gaccid=${allele.primaryID}&states=ES+Cell' target="_blank">
+          <a href='${configBean.IMSRURL}summary?gaccid=${allele.primaryID}&states=ES+Cell&states=archived' target="_blank">
           ${allele.imsrCellLineCount} <fewi:plural value="line" size="${allele.imsrCellLineCount}"/> available
           </a>
        </c:if>

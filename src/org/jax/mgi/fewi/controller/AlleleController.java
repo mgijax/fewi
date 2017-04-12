@@ -1166,13 +1166,13 @@ public class AlleleController {
 		String imsrUrl = ContextLoader.getConfigBean().getProperty("IMSRURL");
 
 		if (imsrCellLineCount > 0) {
-			imsrCellLines = "<a href='" + imsrUrl + "summary?gaccid=" + allele.getPrimaryID() + "&states=ES+Cell' class='MP'>" + imsrCellLines + "</a>";
+			imsrCellLines = "<a href='" + imsrUrl + "summary?gaccid=" + allele.getPrimaryID() + "&states=archived&states=ES+Cell' class='MP'>" + imsrCellLines + "</a>";
 		}
 		if (imsrStrainCount > 0) {
-			imsrStrains = "<a href='" + imsrUrl + "summary?gaccid=" + allele.getPrimaryID() + "&states=embryo&states=live&states=ovaries&states=sperm'" + " class='MP'>" + imsrStrains + "</a>";
+			imsrStrains = "<a href='" + imsrUrl + "summary?gaccid=" + allele.getPrimaryID() + "&states=archived&states=embryo&states=live&states=ovaries&states=sperm'" + " class='MP'>" + imsrStrains + "</a>";
 		}
 		if (imsrForMarkerCount > 0) {
-			imsrForMarker = "<a href='" + imsrUrl + "summary?gaccid=" + marker.getPrimaryID() + "&states=Any' class='MP'>" + imsrForMarker + "</a>";
+			imsrForMarker = "<a href='" + imsrUrl + "summary?gaccid=" + marker.getPrimaryID() + "' class='MP'>" + imsrForMarker + "</a>";
 		}
 
 		mav.addObject("imsrCellLines", imsrCellLines);

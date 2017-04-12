@@ -33,12 +33,12 @@ var imsrUrl = '';
   
   // format the turn allele ID and IMSR count into a link to get corresponding data from IMSR
   var alleleImsrLink = function(accID, imsrCount) {
-  	return makeImsrLink(accID, imsrCount, 'states=embryo&states=live&states=ovaries&states=sperm');
+  	return makeImsrLink(accID, imsrCount, 'states=archived&states=embryo&states=live&states=ovaries&states=sperm');
   };
 
   // format the turn marker ID and IMSR count into a link to get corresponding data from IMSR
   var markerImsrLink = function(accID, imsrCount) {
-  	return makeImsrLink(accID, imsrCount, 'states=Any');
+  	return makeImsrLink(accID, imsrCount, '');
   };
   
   // show the popup with IMSR info when the user clicks a Find Mice button

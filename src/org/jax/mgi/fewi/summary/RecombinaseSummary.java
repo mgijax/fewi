@@ -137,7 +137,7 @@ public class RecombinaseSummary {
     	sb.append(ContextLoader.getConfigBean().getProperty("IMSRURL"));
     	sb.append("summary?gaccid=");
     	sb.append(this.allele.getPrimaryID());
-    	sb.append("&states=embryo&states=live&states=ovaries&states=sperm' target='_blank'>");
+    	sb.append("&states=archived&states=embryo&states=live&states=ovaries&states=sperm' target='_blank'>");
     	sb.append(this.allele.getImsrStrainCount());
     	sb.append("</a>");
     	
