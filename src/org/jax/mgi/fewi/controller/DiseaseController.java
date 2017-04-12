@@ -117,6 +117,7 @@ public class DiseaseController {
 	// Disease Browser Tab Handling -- tab contents
 	//-----------------------------------------------------------------------
 
+	// term tab
 	@RequestMapping(value="/termTab/{diseaseID:.+}", method = RequestMethod.GET)
 	public ModelAndView getTermTab(@PathVariable("diseaseID") String diseaseID) {
 
@@ -139,53 +140,16 @@ public class DiseaseController {
 		// success - we have a single object
 		Disease disease = diseaseList.get(0);
 		
-		String getDotInputStr = this.getDotInputStr(disease);
+		String dotInputStr = this.getDotInputStr(disease);
+		logger.info(dotInputStr);
 		
 		// add objects to mav, and return to display 
 		mav.addObject("disease", disease);
-		mav.addObject("dotInputStr", getDotInputStr);
+		mav.addObject("dotInputStr", dotInputStr);
 		return mav;
 	}
-	
-	
-	private String getDotInputStr (Disease disease) {
-
-		// prep input to dot graph generation
-		DotInputStrFactory disFactory = new DotInputStrFactory();
-
-		// add label to disease we're displaying
-		disFactory.addNodeLabel(disease.getPrimaryID(), disease.getDisease());
-
-		// children of this term
-		for (VocabChild vc : disease.getVocabTerm().getVocabChildren() ) {
-			disFactory.addEdge(disease.getPrimaryID(), vc.getChildPrimaryId());
-			disFactory.addNodeLabel(vc.getChildPrimaryId(), vc.getChildTerm());
-		}
-
-		// parents of this term
-		VocabTerm diseaseVocabTerm = disease.getVocabTerm();
-		disFactory = this.handleDiseaseParents(diseaseVocabTerm, disFactory);
-
-		return disFactory.getDotInputStr();
-	}	
-	
-	private DotInputStrFactory handleDiseaseParents (VocabTerm vocabTerm, DotInputStrFactory disFactory) {
-
-		// for each parent of this term...
-		for (VocabChild p : vocabTerm.getParentEdges() ) {
-
-			// recursion to handle if this term had parents 
-			handleDiseaseParents(p.getParent(), disFactory);
-						
-			disFactory.addEdge(p.getParent().getPrimaryID(), vocabTerm.getPrimaryID());
-			disFactory.addNodeLabel(p.getParent().getPrimaryID(), p.getParent().getTerm());
-			
-		}
 		
-		return disFactory;
-	}
-	
-	
+	// genes tab
 	@RequestMapping(value="/geneTab/{diseaseID:.+}", method = RequestMethod.GET)
 	public ModelAndView getGeneTab(@PathVariable("diseaseID") String diseaseID) {
 
@@ -193,6 +157,8 @@ public class DiseaseController {
 
 		return prepareDiseaseTab(diseaseID, "disease_browser_genetab");
 	}
+	
+	// models tab
 	@RequestMapping(value="/modelTab/{diseaseID:.+}", method = RequestMethod.GET)
 	public ModelAndView getModelTab(@PathVariable("diseaseID") String diseaseID) {
 
@@ -201,9 +167,7 @@ public class DiseaseController {
 		return prepareDiseaseTab(diseaseID, "disease_browser_modeltab");
 	}
 
-	/*
-	 * code shared to send back a disease browser tab content
-	 */
+	// shared code to generate disease browser tab content
 	private ModelAndView prepareDiseaseTab (String diseaseID, String view) {
 
 		List<Disease> diseaseList = diseaseFinder.getDiseaseByID(diseaseID);
@@ -254,7 +218,48 @@ public class DiseaseController {
 		return mav;
 	}
 
+	//-------------------------------------------------------	
+	// DOT graph generation
+	//-------------------------------------------------------
+	
+	// responsible for generating the dot input string
+	private String getDotInputStr (Disease disease) {
 
+		// prep input to dot graph generation
+		DotInputStrFactory disFactory = new DotInputStrFactory();
+
+		// add label to disease we're displaying
+		disFactory.addNodeLabel(disease.getPrimaryID(), disease.getDisease());
+
+		// children of this term
+		for (VocabChild vc : disease.getVocabTerm().getVocabChildren() ) {
+			disFactory.addEdge(disease.getPrimaryID(), vc.getChildPrimaryId());
+			disFactory.addNodeLabel(vc.getChildPrimaryId(), vc.getChildTerm());
+		}
+
+		// parents of this term
+		VocabTerm diseaseVocabTerm = disease.getVocabTerm();
+		disFactory = this.handleDiseaseParents(diseaseVocabTerm, disFactory);
+
+		return disFactory.getDotInputStr();
+	}	
+	
+	// recursive method to gather ancestor nodes up to root node
+	private DotInputStrFactory handleDiseaseParents (VocabTerm vocabTerm, DotInputStrFactory disFactory) {
+
+		// for each parent of this term...
+		for (VocabChild p : vocabTerm.getParentEdges() ) {
+
+			// recursion to handle if this term had parents 
+			handleDiseaseParents(p.getParent(), disFactory);
+						
+			disFactory.addEdge(p.getParent().getPrimaryID(), vocabTerm.getPrimaryID());
+			disFactory.addNodeLabel(p.getParent().getPrimaryID(), p.getParent().getTerm());
+			
+		}
+		
+		return disFactory;
+	}
 
 
 
