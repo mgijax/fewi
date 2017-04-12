@@ -617,7 +617,7 @@ public class VocabularyController {
     	mav.addObject("searchPaneTitle", "Anatomy Search");
     	mav.addObject("termPaneTitle", "Adult Anatomy Term Detail");
     	mav.addObject("treePaneTitle", "Anatomy Tree View");
-    	mav.addObject("helpDoc", "VOCAB_amad_browser_help.shtml#td_page");
+    	mav.addObject("helpDoc", "VOCAB_amad_browser_help.shtml");
     	mav.addObject("branding", "GXD");
     	mav.addObject("seoDescription", "The Adult Mouse Anatomy Ontology organizes anatomical structures "
     		+ "for the postnatal mouse (Theiler stage 28) spatially and functionally, using 'is a' and "
