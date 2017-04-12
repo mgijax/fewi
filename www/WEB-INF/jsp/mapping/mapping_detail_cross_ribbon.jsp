@@ -53,7 +53,7 @@
 						<div class="value">
 							<c:choose>
 								<c:when test="${not empty cross.panelFilename}">
-									<a href="${configBean.FTP_URL}${cross.panelFilename}" target="_blank">${cross.panelName}</a>
+									<a href="${configBean.PUB_REPORTS_URL}${cross.panelFilename}" target="_blank">${cross.panelName}</a>
 								</c:when>
 								<c:otherwise>
 									${cross.panelName}
