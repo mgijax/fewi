@@ -1138,7 +1138,7 @@ public class AlleleController {
 				company = "Deltagen, Inc.";
 			}
 
-			knockoutNote = "See also, <a href='" + ContextLoader.getConfigBean().getProperty("WI_URL") + "external/ko/" + allele.getHolder().toLowerCase() + "/" + allele.getCompanyID() + ".html' class='MP'>data</a> as provided by " + company;
+			knockoutNote = "See also, <a href='http://" + ContextLoader.getConfigBean().getProperty("PY_HOST") + "/knockout_mice/" + allele.getHolder().toLowerCase() + "/" + allele.getCompanyID() + ".html' class='MP'>data</a> as provided by " + company;
 
 			mav.addObject("knockoutNote", knockoutNote);
 		}
