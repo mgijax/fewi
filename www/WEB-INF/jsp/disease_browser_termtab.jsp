@@ -56,7 +56,7 @@
        </div>
       </div>
       <div class="col-sm-4">
-      <span class='bubbleHeading'>Child terms(s)</span>
+      <span class='bubbleHeading'>Child term(s)</span>
       <div class="termWrapper" id="termTabChildWrapper">
         <c:forEach var="child" items="${disease.vocabTerm.vocabChildren}" varStatus="status">
           <img src="${configBean.WEBSHARE_URL}images/is-a.gif" alt="is-a" height="12" width="12" border="0">
