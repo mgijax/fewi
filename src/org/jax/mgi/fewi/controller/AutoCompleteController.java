@@ -659,6 +659,18 @@ public class AutoCompleteController {
 		return getSharedVocabBrowserAutocomplete(query, VocabularyController.GO_VOCAB);
 	}
 	
+	/*-------------------- Human Phenotype Ontology (HPO) methods --------------------*/
+
+	/* autocomplete for the Human Phenotype Ontology browser's search pane
+	 */
+	@RequestMapping("/hp_ontology")
+	public @ResponseBody SearchResults<VocabBrowserACResult> getHPAutocomplete(
+			HttpServletResponse response, @RequestParam("query") String query) {
+		logger.debug("autoCompleteController.getHPAutocomplete(" + query + ")");
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getSharedVocabBrowserAutocomplete(query, VocabularyController.HPO_VOCAB);
+	}
+	
 	/*-------------------- shared vocab browser methods --------------------*/
 
 	private SearchResults<VocabBrowserACResult> getSharedVocabBrowserAutocomplete (String query, String vocabName) {

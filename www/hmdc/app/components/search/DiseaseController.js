@@ -43,6 +43,8 @@
 
 		$rootScope.$on("CallSearchMethod", function(event, data) {
 			vm.model = data;
+			console.log("DiseaseController.CallSearchMethod");
+			console.log(data);
 
 			vm.loading = true;
 

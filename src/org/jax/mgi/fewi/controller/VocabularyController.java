@@ -58,6 +58,7 @@ public class VocabularyController {
     public static String MA_VOCAB = "Adult Mouse Anatomy";
     public static String MP_VOCAB = "Mammalian Phenotype";
     public static String GO_VOCAB = "GO";
+    public static String HPO_VOCAB = "Human Phenotype Ontology";
     
     // set of special words that must be matched exactly, rather than using wildcards
     private static Set<String> noWildcards = null;
@@ -851,6 +852,98 @@ public class VocabularyController {
     public @ResponseBody String getGOTreeChildren(@RequestParam("id") String id,
     		@RequestParam("nodeID") String nodeID, @RequestParam("edgeType") String edgeType) {
     	return this.getSharedBrowserTreeChildren(id, nodeID, edgeType, GO_VOCAB);
+    }
+    
+    /*--- HPO browser ----------------------------------------------------------------*/
+
+    /* Human Phenotype Ontology (HPO) browser home page
+     */
+    @RequestMapping("/hp_ontology")
+    public ModelAndView getHPDetail() {
+    	logger.debug("->getHPDetail() started");
+
+    	// start with the phenotypic abnormality node as a default
+    	return getHPDetail("HP:0000118");
+    }
+    
+    /* fill in the standard URLs for the HPO browser
+     */
+    private ModelAndView fillHPUrls(ModelAndView mav) {
+    	String baseUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "vocab/hp_ontology/";
+    	mav.addObject("browserUrl", baseUrl);
+    	mav.addObject("termPaneUrl", baseUrl + "termPane/");
+    	mav.addObject("searchPaneUrl", baseUrl + "/search?term=");
+    	mav.addObject("treeInitialUrl", baseUrl + "treeInitial");
+    	mav.addObject("treeChildrenUrl", baseUrl + "treeChildren");
+    	mav.addObject("autocompleteUrl", ContextLoader.getConfigBean().getProperty("FEWI_URL") + "autocomplete/hp_ontology?query=");
+    	return mav;
+    }
+    
+    /* get the browser title string for a term in the HPO browser
+     */
+    private String getHPTitle(BrowserTerm term) {
+    	if (term == null) { return "Human Phenotype Ontology Browser"; }
+    	return term.getTerm() + " Human Phenotype Ontology Term (" + term.getPrimaryID().getAccID() + ")";
+    }
+
+    /* HPO browser for a specified HP ID */
+
+    @RequestMapping("/hp_ontology/{id}")
+    public ModelAndView getHPDetail(@PathVariable("id") String id) {
+    	logger.debug("->getHPDetail(" + id + ") started");
+    	ModelAndView mav = getSharedBrowserDetail(id, HPO_VOCAB);
+    	mav.addObject("pageTitle", "Human Phenotype Ontology Browser");
+    	mav.addObject("searchPaneTitle", "HPO Search");
+    	mav.addObject("termPaneTitle", "HPO Term Detail");
+    	mav.addObject("treePaneTitle", "HPO Tree View");
+    	mav.addObject("helpDoc", "VOCAB_hpo_browser_help.shtml");
+    	mav.addObject("branding", "HPO");
+    	mav.addObject("seoDescription", "The Human Phenotype Ontology (HPO) aims to provide a standardized "
+    		+ "vocabulary of phenotypic abnormalities encountered in human disease."
+   			+ "You can use this browser to view terms, definitions, and term relationships in a hierarchical "
+   			+ "display. Links to diseases with gene annotations at MGI are provided in Term Detail reports.");
+    	mav.addObject("title", getHPTitle((BrowserTerm) mav.getModel().get("term")));
+    	fillHPUrls(mav);
+    	return mav;
+    }
+    
+    /* HPO term detail pane
+     */
+    @RequestMapping("/hp_ontology/termPane/{id}")
+    public ModelAndView getHPTermPane(@PathVariable("id") String id) {
+    	logger.debug("->getHPTermPane(" + id + ") started");
+    	ModelAndView mav = getSharedBrowserTermPane(id, HPO_VOCAB);
+    	mav.addObject("title", getHPTitle((BrowserTerm) mav.getModel().get("term")));
+    	fillHPUrls(mav);
+    	return mav;
+    }
+    
+    /* HPO search pane
+     */
+    @RequestMapping("/hp_ontology/search")
+    public ModelAndView getHPSearchPane(@RequestParam("term") String term) {
+    	ModelAndView mav = getSharedBrowserSearchPane(term, HPO_VOCAB);
+    	fillHPUrls(mav);
+    	return mav;
+    }
+
+    /* HPO browser - initial load of terms for tree view, for the term with the given ID.  Rules:
+     * 1. retrieve specified node
+     * 2. retrieve its children
+     * 3. retrieve its default parent and its children
+     * 4. repeat #3 all the way up to the root node
+     */
+    @RequestMapping("/hp_ontology/treeInitial")
+    public @ResponseBody String getHPTreeInitial(@RequestParam("id") String id) {
+    	return this.getSharedBrowserTreeInitial(id, HPO_VOCAB);
+    }
+
+    /* HPO browser - load children of the term with the given ID
+     */
+    @RequestMapping("/hp_ontology/treeChildren")
+    public @ResponseBody String getHPTreeChildren(@RequestParam("id") String id,
+    		@RequestParam("nodeID") String nodeID, @RequestParam("edgeType") String edgeType) {
+    	return this.getSharedBrowserTreeChildren(id, nodeID, edgeType, HPO_VOCAB);
     }
     
     /*--- shared vocab browser -------------------------------------------------------*/

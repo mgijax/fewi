@@ -5,8 +5,10 @@
     'hmdc.config',
     'hmdc.services',
     'hmdc.search',
-    'hmdc.style',
-  ]);
+    'hmdc.style'
+  ]).config(function($locationProvider) {
+  	$locationProvider.html5Mode(true);
+  });
 
 // define root modules & dependencies
   angular.module('hmdc.config', ['formly', 'formlyBootstrap', 'ui.bootstrap']);

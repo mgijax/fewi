@@ -4,10 +4,11 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 
 <%@ include file="header.jsp" %>
-
 <title>Human - Mouse Disease Connection</title>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
+<base href="${configBean.FEWI_URL}diseasePortal"/>
+
 <%@ include file="bodystart.jsp" %>
 
 		<div class="container">
@@ -15,7 +16,6 @@
 				<span style="font-size:30px;color:black;">Human - Mouse: Disease Connection</span>
 			</div>
 		</div>
-
 		<div ng-include="'${configBean.FEWI_URL}/assets/hmdc/app/components/search/searchTemplate.html'"></div>
 
 		<div class="container searchViewBox">

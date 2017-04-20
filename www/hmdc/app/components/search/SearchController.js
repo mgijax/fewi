@@ -2,7 +2,7 @@
 	'use strict';
 	angular.module('hmdc.search').controller('SearchController', SearchController);
 
-	function SearchController($rootScope, $scope, $log, $http, AutoComplete, $sce, FEWI_URL) {
+	function SearchController($rootScope, $scope, $log, $http, AutoComplete, $sce, FEWI_URL, $location) {
 		var vm = $scope.vm = {};
 
 		vm.onSubmit = onSubmit;
@@ -155,7 +155,11 @@
 			}
 
 			$rootScope.displayTabs = true;
-			$rootScope.$emit("CallSearchMethod", vm.queryModel);
+			setTimeout(function() {
+				$rootScope.$emit("CallSearchMethod", vm.queryModel);
+				vm.tabs.gridTab.active = false;
+				vm.tabs.diseaseTab.active = false;
+			}, 500);
 			vm.hideQueryForm = true;
 			$rootScope.jsonEncodedQuery = encodeURIComponent(angular.toJson(vm.queryModel));
 			showYouSearchedFor(vm.model);
@@ -209,11 +213,20 @@
 
 		}
 
+		var gridTabActive = true;
+		var diseaseTabActive = false;
+		
+	    if (($location.search().termID !== undefined) && ($location.search().termID !== null)) {
+	    	console.log("trying to switch tabs");
+			gridTabActive = false;
+			diseaseTabActive = true
+	    }
+	    
 		vm.tabs = {
 			"gridTab": {
 				"count": 0,
 				"heading": "Gene Homologs x Phenotypes/Diseases",
-				"active": true,
+				"active": gridTabActive,
 				"template": FEWI_URL+"assets/hmdc/app/components/search/gridTemplate.html"
 			},
 			"geneTab": {
@@ -225,7 +238,7 @@
 			"diseaseTab": {
 				"count": 0,
 				"heading": "Diseases",
-				"active": false,
+				"active": diseaseTabActive,
 				"template": FEWI_URL+"assets/hmdc/app/components/search/diseaseTemplate.html"
 			}
 
@@ -488,5 +501,21 @@
 			}
 	];
 
+    if (($location.search().termID !== undefined) && ($location.search().termID !== null)) {
+    	var data = {
+			operator: 'AND',
+			queries: [
+				{
+					field: 'tsDid',
+					condition: {
+						parameters: [],
+						input: $location.search().termID
+					}
+				}
+			]
+		};
+		vm.model = data;
+		onSubmit();
+	}
 	}
 })();
