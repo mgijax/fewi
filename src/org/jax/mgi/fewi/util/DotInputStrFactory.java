@@ -102,7 +102,7 @@ public class DotInputStrFactory {
 	}
 
 	public String getDotInputStr() {
-		StringBuffer  sb = new StringBuffer("digraph {");
+		StringBuffer  sb = new StringBuffer("strict digraph {");
 		sb.append(" graph [bgcolor=\"#ffffff\"] size=15 ratio=compress ");
 		sb.append(" node [URL=\"").append(this.fewiURL).append("disease/\\\\N\" fontname=\"Helvetica\" fontsize=\"12\" shape=\"box\" style=\"rounded,filled\" color=\"#54709B\" fillcolor=\"#DFEFFF\" ] ");
 		sb.append(" edge [color=\"#54709B\" penwidth=\"1.5\" dir=\"back\"]"); 
