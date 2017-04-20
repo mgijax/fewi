@@ -91,7 +91,7 @@ body {
 
 <tr>
 	<td> 
-		<%=FormatHelper.newline2HTMLBR(ntc.convertNotes(model.getAllelePairs(), '|'))%>
+		<%=FormatHelper.newline2HTMLBR(ntc.useNewWindows(ntc.convertNotes(model.getAllelePairs(), '|')))%>
 	</td>
 	<td>
 		<%=FormatHelper.superscript(model.getBackgroundStrain())%>
