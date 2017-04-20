@@ -13,22 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import mgi.frontend.datamodel.VocabChild;
 
-/*
- * Example Usage
- 
-	GraphvizCreator graph = new GraphvizCreator("Graph Name");
-
-digraph {
-	graph [bgcolor="#ffffff"] 
-	node [fontname="Helvetica" fontsize="10" shape="box" style="rounded,filled" color="black" fillcolor="#0099cc" URL="http://www.informatics.jax.org/disease/\N"] 
-	edge [color="black" penwidth="2.0" ] "DOID:4" [label="disease"] "DOID:7" [label="disease of anatomical entity"] 
-	"DOID:4" -> "DOID:7" "DOID:7" -> "DOID:10"
-;}
-
-
-digraph {graph [bgcolor="#ffffff"] node [fontname="Helvetica" fontsize="10" shape="box" style="rounded,filled" color="black" fillcolor="#0099cc" URL="http://www.informatics.jax.org/disease/\N"] edge [color="black" penwidth="2.0" ] "DOID:4" [label="disease"] "DOID:7" [label="disease of anatomical entity"] "DOID:4" -> "DOID:7" "DOID:7" -> "DOID:10";}
-
-
+/**  The DotInputStrFactory class contains methods which encapsulate
+ *   knowledge of generating a .dot input string for graphviz to render
  */
 
 public class DotInputStrFactory {
@@ -44,7 +30,12 @@ public class DotInputStrFactory {
 
 	// storage of labels
 	Map<String, String> labels = new HashMap<String, String>();
-	
+
+
+	/////////////////////////////
+	//  Getters / Setters
+	/////////////////////////////
+
 	// add an individual edge
 	public void addEdge(String parent, String child) {
 		if(parent != null && child != null) {
@@ -62,6 +53,7 @@ public class DotInputStrFactory {
 		}
 	}
 	
+	// get a label for a given node
 	public String getNodeLabel(String node) {
 		
 		String nodeLabel = node;
