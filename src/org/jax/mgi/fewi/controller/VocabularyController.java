@@ -691,6 +691,11 @@ public class VocabularyController {
     	mav.addObject("treeInitialUrl", baseUrl + "treeInitial");
     	mav.addObject("treeChildrenUrl", baseUrl + "treeChildren");
     	mav.addObject("autocompleteUrl", ContextLoader.getConfigBean().getProperty("FEWI_URL") + "autocomplete/mp_ontology?query=");
+    	mav.addObject("message", "Your input is welcome. Additional terms or revisions may be requested through "
+    		+ "our <a href='https://github.com/obophenotype/mammalian-phenotype-ontology/issues'>issue tracker</a> "
+   			+ "at GitHub. Please <a href='mailto:pheno@jax.org'>contact us</a> with any other questions about the "
+    		+ "Mammalian Phenotype Ontology.<P>This ontology is also used by the "
+   			+ "<a href='http://rgd.mcw.edu/rgdweb/ontology/search.html?term'>Rat Genome Database</a>.");
     	return mav;
     }
     
@@ -876,6 +881,10 @@ public class VocabularyController {
     	mav.addObject("treeInitialUrl", baseUrl + "treeInitial");
     	mav.addObject("treeChildrenUrl", baseUrl + "treeChildren");
     	mav.addObject("autocompleteUrl", ContextLoader.getConfigBean().getProperty("FEWI_URL") + "autocomplete/hp_ontology?query=");
+    	mav.addObject("message", "The Human Phenotype Ontology is developed by "
+    		+ "<a href='http://human-phenotype-ontology.github.io/'>Peter Robinson's</a> group. Additional "
+    		+ "terms or revisions may be requested through their "
+    		+ "<a href='https://github.com/obophenotype/human-phenotype-ontology/issues'>issue tracker</a> at GitHub.");
     	return mav;
     }
     

@@ -137,6 +137,10 @@ td.padTop { padding-top: 2px }
 </table>
 </div>
 
+<c:if test="${not empty message}">
+<div id="message">${message}</div>
+</c:if>
+
 <script type="text/javascript">
 	fetchTermPane("${termID}");
 	setInitialTermID("${termID}");
