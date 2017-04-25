@@ -600,6 +600,11 @@ public class VocabularyController {
     	mav.addObject("treeInitialUrl", baseUrl + "treeInitial");
     	mav.addObject("treeChildrenUrl", baseUrl + "treeChildren");
     	mav.addObject("autocompleteUrl", ContextLoader.getConfigBean().getProperty("FEWI_URL") + "autocomplete/ma_ontology?query=");
+    	mav.addObject("message", "Your input is welcome. Please "
+    		+ "<a href='mailto:MAontology@jax.org'>contact</a> us with suggestions, additions, or questions "
+    		+ "about the Adult Mouse Anatomy Ontology.<p>The Adult Mouse Anatomy Ontology was originally described in "
+    		+ "<a href='https://genomebiology.biomedcentral.com/articles/10.1186/gb-2005-6-3-r29' target='_blank'>Hayamizu et al., 2005</a> "
+    		+ "and continues to be maintained, expanded, and refined by the GXD project.");
     	return mav;
     }
     
