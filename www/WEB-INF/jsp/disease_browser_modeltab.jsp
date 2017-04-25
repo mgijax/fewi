@@ -38,6 +38,7 @@ DiseaseModelFilter dmFilter = new DiseaseModelFilter();
 %>
 
 <style type="text/css">
+.tableHeaderText {height:1.8em;}
 </style>
 
 <div class="tabContainer">
@@ -60,7 +61,13 @@ DiseaseModelFilter dmFilter = new DiseaseModelFilter();
 	<td style="">&nbsp;</td>
 	<td style="">&nbsp;</td>
 	<td style="">&nbsp;</td>
-	<td colspan="5" style="">All mouse models of ${disease.disease} with phenotypic similarity to the human disease</td>
+	<td colspan="5" style="">
+	  <div class='tableHeaderText'>
+	  <a href="${configBean.FEWI_URL}/disease/models/report.xlsx?doid=${disease.primaryID}" id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Excel File</a>
+	  <a href="${configBean.FEWI_URL}/disease/models/report.txt?doid=${disease.primaryID}" id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
+	  All mouse models of ${disease.disease} with phenotypic similarity to the human disease
+	  </div>
+	</td>
 	</tr>
 
 	<!-- heading row -->
