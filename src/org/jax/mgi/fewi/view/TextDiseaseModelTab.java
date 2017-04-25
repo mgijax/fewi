@@ -39,8 +39,9 @@ public class TextDiseaseModelTab extends AbstractTextView {
 		String mouseAndHuman = "MouseAndHuman";
 		String mouseOnly     = "MouseOnly";
 		String humanOnly     = "HumanOnly";
-		String transgenes    = "Transgenes";
+		String transgenes    = "TransgenesAndOtherMutations";
 		String complexModels = "AdditionalComplexModels";
+		String notModels     = "NotModels";
 
 		// order to display
 		List<String> groupIdentifiers = new ArrayList<String>();
@@ -49,6 +50,7 @@ public class TextDiseaseModelTab extends AbstractTextView {
 		groupIdentifiers.add(humanOnly);
 		groupIdentifiers.add(transgenes);
 		groupIdentifiers.add(complexModels);
+		groupIdentifiers.add(notModels);
 		
 		// map group identifiers to list of disease models for this disease
 		Map<String, List<DiseaseModel>> groupDiseaseModels = new HashMap<String, List<DiseaseModel>>();
@@ -57,9 +59,10 @@ public class TextDiseaseModelTab extends AbstractTextView {
 		groupDiseaseModels.put(humanOnly, dmFilter.filter(disease.getHumanOnlyModels()));
 		groupDiseaseModels.put(transgenes, dmFilter.filter(disease.getOtherModels()));
 		groupDiseaseModels.put(complexModels, dmFilter.filter(disease.getAdditionalModels()));
+		groupDiseaseModels.put(notModels, dmFilter.filter(disease.getNotModels()));
 
 		// write the headers out to the file
-		writer.write("NeedColumnHeading\tDisease Term\tAllele Composition\tGenetic Background\tReference\r\n");		
+		writer.write("ModelCategory\tDisease Term\tAllele Composition\tGenetic Background\tReference\r\n");		
 		
 		// loop though ordered list of groups
 		for (String groupIdentifier : groupIdentifiers) {

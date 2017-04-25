@@ -48,8 +48,9 @@ public class ExcelDiseaseModelTab extends AbstractBigExcelView {
 		String mouseAndHuman = "MouseAndHuman";
 		String mouseOnly     = "MouseOnly";
 		String humanOnly     = "HumanOnly";
-		String transgenes    = "Transgenes";
+		String transgenes    = "TransgenesAndOtherMutations";
 		String complexModels = "AdditionalComplexModels";
+		String notModels     = "NotModels";
 
 		// order to display
 		List<String> groupIdentifiers = new ArrayList<String>();
@@ -58,6 +59,7 @@ public class ExcelDiseaseModelTab extends AbstractBigExcelView {
 		groupIdentifiers.add(humanOnly);
 		groupIdentifiers.add(transgenes);
 		groupIdentifiers.add(complexModels);
+		groupIdentifiers.add(notModels);
 		
 		// map group identifiers to list of disease models for this disease
 		Map<String, List<DiseaseModel>> groupDiseaseModels = new HashMap<String, List<DiseaseModel>>();
@@ -66,10 +68,11 @@ public class ExcelDiseaseModelTab extends AbstractBigExcelView {
 		groupDiseaseModels.put(humanOnly, dmFilter.filter(disease.getHumanOnlyModels()));
 		groupDiseaseModels.put(transgenes, dmFilter.filter(disease.getOtherModels()));
 		groupDiseaseModels.put(complexModels, dmFilter.filter(disease.getAdditionalModels()));
+		groupDiseaseModels.put(notModels, dmFilter.filter(disease.getNotModels()));
 
 		
 		Sheet sheet = workbook.createSheet();
-		String[] headerTitles = {"NeedColumnHeading",
+		String[] headerTitles = {"ModelCategory",
 				"Disease Term",
 				"Allele Composition",
 				"Genetic Background",
