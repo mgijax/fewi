@@ -50,7 +50,11 @@
 	    	</tr>
 	    </c:if>
 	    <tr><th class="rightBorderThinGray padded label top">ID: </th>
-	      <td class="padded top">${term.primaryID.accID}</td>
+	      <td class="padded top">${term.primaryID.accID}
+	      <c:if test="${fn:startsWith(term.primaryID.accID, 'DOID:')}">
+	        <span id="doLink"><a href="${configBean.FEWI_URL}disease/${term.primaryID.accID}">(DO detail page)</a></span>
+	      </c:if>
+	      </td>
 	    </tr>
 		<c:if test="${not empty term.secondaryIDs}">
 	        <tr><th class="rightBorderThinGray padded label top">Other IDs: </th>
