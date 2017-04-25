@@ -59,6 +59,7 @@ public class VocabularyController {
     public static String MP_VOCAB = "Mammalian Phenotype";
     public static String GO_VOCAB = "GO";
     public static String HPO_VOCAB = "Human Phenotype Ontology";
+    public static String DO_VOCAB = "Disease Ontology";
     
     // set of special words that must be matched exactly, rather than using wildcards
     private static Set<String> noWildcards = null;
@@ -69,6 +70,7 @@ public class VocabularyController {
     	noWildcards.add("to");
     	noWildcards.add("or");
     	noWildcards.add("for");
+    	noWildcards.add("on");
     }
 
     //--------------------//
@@ -953,6 +955,98 @@ public class VocabularyController {
     public @ResponseBody String getHPTreeChildren(@RequestParam("id") String id,
     		@RequestParam("nodeID") String nodeID, @RequestParam("edgeType") String edgeType) {
     	return this.getSharedBrowserTreeChildren(id, nodeID, edgeType, HPO_VOCAB);
+    }
+    
+    /*--- DO browser ----------------------------------------------------------------*/
+
+    /* Disease Ontology (DO) browser home page
+     */
+    @RequestMapping("/disease_ontology")
+    public ModelAndView getDODetail() {
+    	logger.debug("->getDODetail() started");
+
+    	// start with the disease node as a default
+    	return getDODetail("DOID:4");
+    }
+    
+    /* fill in the standard URLs for the DO browser
+     */
+    private ModelAndView fillDOUrls(ModelAndView mav) {
+    	String baseUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "vocab/disease_ontology/";
+    	mav.addObject("browserUrl", baseUrl);
+    	mav.addObject("termPaneUrl", baseUrl + "termPane/");
+    	mav.addObject("searchPaneUrl", baseUrl + "/search?term=");
+    	mav.addObject("treeInitialUrl", baseUrl + "treeInitial");
+    	mav.addObject("treeChildrenUrl", baseUrl + "treeChildren");
+    	mav.addObject("autocompleteUrl", ContextLoader.getConfigBean().getProperty("FEWI_URL") + "autocomplete/disease_ontology?query=");
+    	return mav;
+    }
+    
+    /* get the browser title string for a term in the DO browser
+     */
+    private String getDOTitle(BrowserTerm term) {
+    	if (term == null) { return "Disease Ontology Browser"; }
+    	return term.getTerm() + " Disease Ontology Term (" + term.getPrimaryID().getAccID() + ")";
+    }
+
+    /* DO browser for a specified DO ID */
+
+    @RequestMapping("/disease_ontology/{id}")
+    public ModelAndView getDODetail(@PathVariable("id") String id) {
+    	logger.debug("->getDODetail(" + id + ") started");
+    	ModelAndView mav = getSharedBrowserDetail(id, DO_VOCAB);
+    	mav.addObject("pageTitle", "Disease Ontology Browser");
+    	mav.addObject("searchPaneTitle", "DO Search");
+    	mav.addObject("termPaneTitle", "DO Term Detail");
+    	mav.addObject("treePaneTitle", "DO Tree View");
+    	mav.addObject("helpDoc", "VOCAB_do_browser_help.shtml");
+    	mav.addObject("branding", "DO");
+    	mav.addObject("seoDescription", "The Disease Ontology (DO) aims to provide a standardized "
+    		+ "vocabulary of human diseases."
+   			+ "You can use this browser to view terms, definitions, and term relationships in a hierarchical "
+   			+ "display. Links to diseases with gene annotations at MGI are provided in Term Detail reports.");
+    	mav.addObject("title", getDOTitle((BrowserTerm) mav.getModel().get("term")));
+    	fillDOUrls(mav);
+    	return mav;
+    }
+    
+    /* DO term detail pane
+     */
+    @RequestMapping("/disease_ontology/termPane/{id}")
+    public ModelAndView getDOTermPane(@PathVariable("id") String id) {
+    	logger.debug("->getDOTermPane(" + id + ") started");
+    	ModelAndView mav = getSharedBrowserTermPane(id, DO_VOCAB);
+    	mav.addObject("title", getDOTitle((BrowserTerm) mav.getModel().get("term")));
+    	fillDOUrls(mav);
+    	return mav;
+    }
+    
+    /* DO search pane
+     */
+    @RequestMapping("/disease_ontology/search")
+    public ModelAndView getDOSearchPane(@RequestParam("term") String term) {
+    	ModelAndView mav = getSharedBrowserSearchPane(term, DO_VOCAB);
+    	fillDOUrls(mav);
+    	return mav;
+    }
+
+    /* DO browser - initial load of terms for tree view, for the term with the given ID.  Rules:
+     * 1. retrieve specified node
+     * 2. retrieve its children
+     * 3. retrieve its default parent and its children
+     * 4. repeat #3 all the way up to the root node
+     */
+    @RequestMapping("/disease_ontology/treeInitial")
+    public @ResponseBody String getDOTreeInitial(@RequestParam("id") String id) {
+    	return this.getSharedBrowserTreeInitial(id, DO_VOCAB);
+    }
+
+    /* DO browser - load children of the term with the given ID
+     */
+    @RequestMapping("/disease_ontology/treeChildren")
+    public @ResponseBody String getDOTreeChildren(@RequestParam("id") String id,
+    		@RequestParam("nodeID") String nodeID, @RequestParam("edgeType") String edgeType) {
+    	return this.getSharedBrowserTreeChildren(id, nodeID, edgeType, DO_VOCAB);
     }
     
     /*--- shared vocab browser -------------------------------------------------------*/
