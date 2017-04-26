@@ -31,6 +31,8 @@ public class DotInputStrFactory {
 	// storage of labels
 	Map<String, String> labels = new HashMap<String, String>();
 
+	// name of graph - will appear on-hover of graph
+	private String graphName = "Directional Graph";
 
 	/////////////////////////////
 	//  Getters / Setters
@@ -63,10 +65,18 @@ public class DotInputStrFactory {
 		return nodeLabel;
 	}
 
+	// graph name
+	public String getGraphName() {
+		return graphName;
+	}
+	public void setGraphName(String graphName) {
+		this.graphName = graphName;
+	}
 	
 	/////////////////////////////
 	//  Dot String Generation
 	/////////////////////////////
+
 
 	public String getDotEdgesStr() {
 
@@ -94,8 +104,8 @@ public class DotInputStrFactory {
 	}
 
 	public String getDotInputStr() {
-		StringBuffer  sb = new StringBuffer("strict digraph {");
-		sb.append(" graph [bgcolor=\"#ffffff\"] size=15 ratio=compress ");
+		StringBuffer  sb = new StringBuffer("strict digraph \"" + getGraphName() + "\" {");
+		sb.append(" graph [bgcolor=\"#ffffff\" size=15 ratio=compress] ");
 		sb.append(" node [URL=\"").append(this.fewiURL).append("disease/\\\\N\" fontname=\"Helvetica\" fontsize=\"12\" shape=\"box\" style=\"rounded,filled\" color=\"#54709B\" fillcolor=\"#DFEFFF\" ] ");
 		sb.append(" edge [color=\"#54709B\" penwidth=\"1.5\" dir=\"back\"]"); 
 		sb.append( getDotNodeLabels() );
