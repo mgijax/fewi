@@ -250,8 +250,11 @@ public class DiseaseController {
 	// responsible for generating the dot input string
 	private String getDotInputStr (Disease disease) {
 
-		// prep input to dot graph generation
+		// factory for generating the dot input string
 		DotInputStrFactory disFactory = new DotInputStrFactory();
+		
+		// name of graph
+		disFactory.setGraphName("Directional Graph of " + disease.getPrimaryID());
 
 		// add label to disease we're displaying
 		disFactory.addNodeLabel(disease.getPrimaryID(), disease.getDisease());
