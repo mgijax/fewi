@@ -57,7 +57,7 @@ public class TextDiseaseGeneTab extends AbstractTextView {
 		}
 
 		// write the headers out to the file
-		writer.write("ModelCategory\tDisease Term\tHuman Homologs\tMouse Homologs\tTransgenes And Other Features\tMouse Models\tHomology Source\r\n");		
+		writer.write("GeneCategory\tDisease Term\tHuman Homologs\tMouse Homologs\tTransgenes And Other Features\tMouse Models\tHomology Source\r\n");		
 
 
 		// loop though ordered list of groups (non-transgenes -- they have a different display)
