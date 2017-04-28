@@ -119,6 +119,7 @@ public class TextDiseaseGeneTab extends AbstractTextView {
 		}
 
 		// transgene rows fill different columns
+		if (disease.getOtherGroup() != null) {
 		for (DiseaseGroupRow dgRow : disease.getOtherGroup().getDiseaseGroupRows()) {
 			
 			DiseaseRow dRow = dgRow.getDiseaseRow();
@@ -151,6 +152,7 @@ public class TextDiseaseGeneTab extends AbstractTextView {
 
 			// close this row
 			writer.write("\r\n");
+		}
 		}
 
 	

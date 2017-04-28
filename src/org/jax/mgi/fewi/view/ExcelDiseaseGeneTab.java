@@ -142,6 +142,7 @@ public class ExcelDiseaseGeneTab extends AbstractBigExcelView {
 		}
 
 		// transgene rows fill different columns
+		if (disease.getOtherGroup() != null) {
 		for (DiseaseGroupRow dgRow : disease.getOtherGroup().getDiseaseGroupRows()) {
 			
 			DiseaseRow dRow = dgRow.getDiseaseRow();
@@ -176,6 +177,7 @@ public class ExcelDiseaseGeneTab extends AbstractBigExcelView {
 			}
 			row.createCell(6).setCellValue(" ");
 
+		}
 		}
 				
 	} // buildExcelDocument class
