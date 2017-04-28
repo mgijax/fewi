@@ -46,9 +46,15 @@ public class TextDiseaseGeneTab extends AbstractTextView {
 		
 		// map group identifiers to list of disease models for this disease
 		Map<String, List<DiseaseGroupRow>> diseaseGroupRows = new HashMap<String, List<DiseaseGroupRow>>();
-		diseaseGroupRows.put(mouseAndHuman, disease.getMouseHumanGroup().getDiseaseGroupRows());
-		diseaseGroupRows.put(mouseOnly,     disease.getMouseOnlyGroup().getDiseaseGroupRows());
-		diseaseGroupRows.put(humanOnly,     disease.getHumanOnlyGroup().getDiseaseGroupRows());
+		if (disease.getMouseHumanGroup() != null) {
+			diseaseGroupRows.put(mouseAndHuman, disease.getMouseHumanGroup().getDiseaseGroupRows());
+		}
+		if (disease.getMouseOnlyGroup() != null) {
+			diseaseGroupRows.put(mouseOnly,     disease.getMouseOnlyGroup().getDiseaseGroupRows());
+		}
+		if (disease.getHumanOnlyGroup() != null) {
+			diseaseGroupRows.put(humanOnly,     disease.getHumanOnlyGroup().getDiseaseGroupRows());
+		}
 
 		// write the headers out to the file
 		writer.write("ModelCategory\tDisease Term\tHuman Homologs\tMouse Homologs\tTransgenes And Other Features\tMouse Models\tHomology Source\r\n");		
