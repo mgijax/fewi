@@ -104,10 +104,10 @@
 
 	</table>
 
+  </c:if>
 
   <c:if test="${not empty disease.otherGroup}">
 
-    <br/>
     <hr id='tableSeparater'>
 
 	<c:set var="rowCount" value="0"/>
@@ -136,9 +136,6 @@
     </tr>
   </c:if>
 
-
- 
-  </c:if>
 <br/>
 
 
