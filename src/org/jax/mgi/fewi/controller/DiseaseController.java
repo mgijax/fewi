@@ -222,6 +222,23 @@ public class DiseaseController {
 	//-------------------------------------------------------	
 	// Disease File Downloads
 	//-------------------------------------------------------
+
+	@RequestMapping("genes/report*")
+	public ModelAndView geneTabExport(HttpServletRequest request) {
+
+		logger.info("in geneTabExport");
+		
+		// get the disease id from URL
+		String diseaseID = request.getParameter("doid");
+
+		List<Disease> diseaseList = diseaseFinder.getDiseaseByID(diseaseID);
+		Disease disease = diseaseList.get(0);
+
+		ModelAndView mav = new ModelAndView("diseaseGeneTabReport");
+		mav.addObject("disease", disease);
+		return mav;
+
+	}	
 	
 	@RequestMapping("models/report*")
 	public ModelAndView modelTabExport(HttpServletRequest request) {
@@ -232,16 +249,14 @@ public class DiseaseController {
 		String diseaseID = request.getParameter("doid");
 
 		List<Disease> diseaseList = diseaseFinder.getDiseaseByID(diseaseID);
-		logger.info("--" + diseaseList.size());
-
 		Disease disease = diseaseList.get(0);
-
 
 		ModelAndView mav = new ModelAndView("diseaseModelTabReport");
 		mav.addObject("disease", disease);
 		return mav;
 
 	}	
+
 	
 	//-------------------------------------------------------	
 	// DOT graph generation
