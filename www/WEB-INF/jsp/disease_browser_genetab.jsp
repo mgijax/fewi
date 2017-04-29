@@ -22,6 +22,7 @@
 %>
 
 <style type="text/css">
+.tableHeaderText {height:1.8em;}
 </style>
 
 <div class="tabContainer">
@@ -43,7 +44,12 @@
 	<td style="">&nbsp;</td>
 	<td style="">&nbsp;</td>
 	<td style="">&nbsp;</td>
-	<td colspan="5" style="">${asterisk}<font size="-1">Disease is associated/modeled with this <b>Gene</b> or a homolog. <a onclick="javascript:openUserhelpWindow('VOCAB_do_browser_detail_help.shtml#how_interpret'); return false;" href="${configBean.USERHELP_URL}VOCAB_do_browser_detail_help.shtml#how_interpret">More...</a></td>
+	<td colspan="5" style="">
+		<div class='tableHeaderText'>
+		<a href="${configBean.FEWI_URL}/disease/genes/report.xlsx?doid=${disease.primaryID}" id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Excel File</a>
+		<a href="${configBean.FEWI_URL}/disease/genes/report.txt?doid=${disease.primaryID}" id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
+		${asterisk}<font size="-1">Disease is associated/modeled with this <b>Gene</b> or a homolog. <a onclick="javascript:openUserhelpWindow('VOCAB_do_browser_detail_help.shtml#how_interpret'); return false;" href="${configBean.USERHELP_URL}VOCAB_do_browser_detail_help.shtml#how_interpret">More...</a></td>
+		</div>
 	</tr>
 	
 	<!-- heading row -->
@@ -98,10 +104,10 @@
 
 	</table>
 
+  </c:if>
 
   <c:if test="${not empty disease.otherGroup}">
 
-    <br/>
     <hr id='tableSeparater'>
 
 	<c:set var="rowCount" value="0"/>
@@ -130,9 +136,6 @@
     </tr>
   </c:if>
 
-
- 
-  </c:if>
 <br/>
 
 

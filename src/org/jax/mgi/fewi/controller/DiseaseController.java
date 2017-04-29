@@ -3,11 +3,15 @@ package org.jax.mgi.fewi.controller;
 import java.util.List;
 
 import mgi.frontend.datamodel.Disease; 
+import mgi.frontend.datamodel.DiseaseRow; 
+import mgi.frontend.datamodel.VocabTerm; 
+import mgi.frontend.datamodel.VocabChild; 
 
 import org.jax.mgi.fewi.finder.DiseaseFinder;
 import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.util.link.IDLinker;
+import org.jax.mgi.fewi.util.DotInputStrFactory;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -113,13 +117,39 @@ public class DiseaseController {
 	// Disease Browser Tab Handling -- tab contents
 	//-----------------------------------------------------------------------
 
+	// term tab
 	@RequestMapping(value="/termTab/{diseaseID:.+}", method = RequestMethod.GET)
 	public ModelAndView getTermTab(@PathVariable("diseaseID") String diseaseID) {
 
 		logger.debug("->getTermTab started");
 
-		return prepareDiseaseTab(diseaseID, "disease_browser_termtab");
+		ModelAndView mav = new ModelAndView("disease_browser_termtab");
+
+		List<Disease> diseaseList = diseaseFinder.getDiseaseByID(diseaseID);
+		// there can be only one...
+		if (diseaseList.size() < 1) { // none found
+			ModelAndView errorMav = new ModelAndView("error");
+			logger.info("No Disease Found");
+			errorMav.addObject("errorMsg", "No Disease Found");
+			return errorMav;
+		} else if (diseaseList.size() > 1) { // dupe found
+			ModelAndView errorMav = new ModelAndView("error");
+			errorMav.addObject("errorMsg", "Duplicate Disease ID");
+			return errorMav;
+		}
+		// success - we have a single object
+		Disease disease = diseaseList.get(0);
+		
+		String dotInputStr = this.getDotInputStr(disease);
+		logger.info(dotInputStr);
+		
+		// add objects to mav, and return to display 
+		mav.addObject("disease", disease);
+		mav.addObject("dotInputStr", dotInputStr);
+		return mav;
 	}
+		
+	// genes tab
 	@RequestMapping(value="/geneTab/{diseaseID:.+}", method = RequestMethod.GET)
 	public ModelAndView getGeneTab(@PathVariable("diseaseID") String diseaseID) {
 
@@ -127,6 +157,8 @@ public class DiseaseController {
 
 		return prepareDiseaseTab(diseaseID, "disease_browser_genetab");
 	}
+	
+	// models tab
 	@RequestMapping(value="/modelTab/{diseaseID:.+}", method = RequestMethod.GET)
 	public ModelAndView getModelTab(@PathVariable("diseaseID") String diseaseID) {
 
@@ -135,7 +167,7 @@ public class DiseaseController {
 		return prepareDiseaseTab(diseaseID, "disease_browser_modeltab");
 	}
 
-	// code shared to send back a disease browser tab content
+	// shared code to generate disease browser tab content
 	private ModelAndView prepareDiseaseTab (String diseaseID, String view) {
 
 		List<Disease> diseaseList = diseaseFinder.getDiseaseByID(diseaseID);
@@ -163,28 +195,114 @@ public class DiseaseController {
 	}
 
 	//-------------------------------------------------------	
-	// REMOVE BELOW WHEN TESTING DONE
+	// Disease Models Popup
 	//-------------------------------------------------------
 
+	@RequestMapping(value="/modelsPopup/{diseaseRowKey:.+}", method = RequestMethod.GET)
+	public ModelAndView diseaseBrowserModelsPopup(
+			@PathVariable("diseaseRowKey") String diseaseRowKey,
+			HttpServletRequest request) {
+				
+		logger.debug("->diseaseBrowserModelsPopup started");
+		
+		// get the disease from which this popup was triggered
+		String disease = request.getParameter("disease");
+
+		// generate ModelAndView object to be passed to detail page
+		ModelAndView mav = new ModelAndView("disease_browser_models_popup");
+		
+		DiseaseRow diseaseRow = diseaseFinder.getDiseaseRowByKey(Integer.parseInt(diseaseRowKey));
+		mav.addObject("diseaseRow", diseaseRow);
+		mav.addObject("disease", disease);
+
+		return mav;
+	}
+
+
+	//-------------------------------------------------------	
+	// Disease File Downloads
+	//-------------------------------------------------------
+
+	@RequestMapping("genes/report*")
+	public ModelAndView geneTabExport(HttpServletRequest request) {
+
+		logger.info("in geneTabExport");
+		
+		// get the disease id from URL
+		String diseaseID = request.getParameter("doid");
+
+		List<Disease> diseaseList = diseaseFinder.getDiseaseByID(diseaseID);
+		Disease disease = diseaseList.get(0);
+
+		ModelAndView mav = new ModelAndView("diseaseGeneTabReport");
+		mav.addObject("disease", disease);
+		return mav;
+
+	}	
 	
-////////// TODO - remove this; using old jsp of detail page; using for testing new browser
-	@RequestMapping(value="/old/{diseaseID:.+}", method = RequestMethod.GET)
-	public ModelAndView oldDiseaseDetailByID(@PathVariable("diseaseID") String diseaseID) {
+	@RequestMapping("models/report*")
+	public ModelAndView modelTabExport(HttpServletRequest request) {
 
-		logger.debug("->diseaseDetailByID started");
+		logger.info("in modelTabExport");
+		
+		// get the disease id from URL
+		String diseaseID = request.getParameter("doid");
 
-		return prepareDisease(diseaseID, "disease_detail", "");
+		List<Disease> diseaseList = diseaseFinder.getDiseaseByID(diseaseID);
+		Disease disease = diseaseList.get(0);
+
+		ModelAndView mav = new ModelAndView("diseaseModelTabReport");
+		mav.addObject("disease", disease);
+		return mav;
+
+	}	
+
+	
+	//-------------------------------------------------------	
+	// DOT graph generation
+	//-------------------------------------------------------
+	
+	// responsible for generating the dot input string
+	private String getDotInputStr (Disease disease) {
+
+		// factory for generating the dot input string
+		DotInputStrFactory disFactory = new DotInputStrFactory();
+		
+		// name of graph
+		disFactory.setGraphName("Directional Graph of " + disease.getPrimaryID());
+
+		// add label to disease we're displaying
+		disFactory.addNodeLabel(disease.getPrimaryID(), disease.getDisease());
+
+		// children of this term
+		for (VocabChild vc : disease.getVocabTerm().getVocabChildren() ) {
+			disFactory.addEdge(disease.getPrimaryID(), vc.getChildPrimaryId());
+			disFactory.addNodeLabel(vc.getChildPrimaryId(), vc.getChildTerm());
+		}
+
+		// parents of this term
+		VocabTerm diseaseVocabTerm = disease.getVocabTerm();
+		disFactory = this.handleDiseaseParents(diseaseVocabTerm, disFactory);
+
+		return disFactory.getDotInputStr();
+	}	
+	
+	// recursive method to gather ancestor nodes up to root node
+	private DotInputStrFactory handleDiseaseParents (VocabTerm vocabTerm, DotInputStrFactory disFactory) {
+
+		// for each parent of this term...
+		for (VocabChild p : vocabTerm.getParentEdges() ) {
+
+			// recursion to handle if this term had parents 
+			handleDiseaseParents(p.getParent(), disFactory);
+						
+			disFactory.addEdge(p.getParent().getPrimaryID(), vocabTerm.getPrimaryID());
+			disFactory.addNodeLabel(p.getParent().getPrimaryID(), p.getParent().getTerm());
+			
+		}
+		
+		return disFactory;
 	}
-
-	@RequestMapping(value="/models/{diseaseID:.+}", method = RequestMethod.GET)
-	public ModelAndView diseaseModelsByID(@PathVariable("diseaseID") String diseaseID) {
-
-		logger.debug("->diseaseModelsByID started");
-
-		return prepareDisease(diseaseID, "disease_models", "");
-	}
-
-
 
 
 

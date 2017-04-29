@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import mgi.frontend.datamodel.Disease;
+import mgi.frontend.datamodel.DiseaseRow;
 import mgi.frontend.datamodel.VocabTermID;
 import org.jax.mgi.fewi.hunter.SolrDiseaseHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
@@ -41,6 +42,9 @@ public class DiseaseFinder {
 
     @Autowired
     private HibernateObjectGatherer<VocabTermID> termGatherer;
+
+    @Autowired
+    private HibernateObjectGatherer<DiseaseRow> diseaseRowGatherer;
 
     /*-----------------------------------------*/
     /* Retrieval of a disease, for a given ID
@@ -110,11 +114,14 @@ public class DiseaseFinder {
         return diseaseList;
     }
     
-//    // convenience wrapper
-//    public SearchResults<Disease> getDiseaseByID(String id) {
-//        SearchParams searchParams = new SearchParams();
-//        searchParams.setFilter(new Filter(SearchConstants.DISEASE_ID,id,Filter.OP_EQUAL));
-//        return getDiseaseByID(searchParams);
-//    }
+    /*---------------------------------------------*/
+    /* Retrieval of a 'disease row', for a given key
+    /*---------------------------------------------*/
+    
+    public DiseaseRow getDiseaseRowByKey(int dbKey) {
+
+        logger.debug("->getDiseaseRowByKey()");
+        return diseaseRowGatherer.get( DiseaseRow.class, "" + dbKey);
+      }
     
 }

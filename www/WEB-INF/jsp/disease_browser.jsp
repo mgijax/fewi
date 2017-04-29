@@ -43,6 +43,8 @@
 <!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/external/viz.js"></script>
+
 <style type="text/css">
 
   #diseaseHeader { 
@@ -196,9 +198,9 @@
     <li><a href="${configBean.FEWI_URL}disease/termTab/${disease.primaryID}" 
     	data-target="#termTabContent" id="termTabButton" data-toggle="tabajax" class="active">Term Browser</a></li>
     <li><a href="${configBean.FEWI_URL}disease/geneTab/${disease.primaryID}" 
-    	data-target="#geneTabContent" id="genesTabButton" data-toggle="tabajax">Genes</a></li>
+    	data-target="#geneTabContent" id="genesTabButton" data-toggle="tabajax">Genes (${disease.genesTabCount})</a></li>
     <li><a href="${configBean.FEWI_URL}disease/modelTab/${disease.primaryID}" 
-    	data-target="#modelTabContent" id="modelsTabButton" data-toggle="tabajax">Models</a></li>
+    	data-target="#modelTabContent" id="modelsTabButton" data-toggle="tabajax">Models (${disease.modelsTabCount})</a></li>
   </ul>
 
   <!-- TAB CONTENT - filled dynamically via subsequent request -->
@@ -213,19 +215,12 @@
   </div>
 
 
-
   <!-- Include reference link -->
-
   <c:if test="${disease.diseaseReferenceCount > 0}">
     Disease References using Mouse Models 
     <a href="${configBean.FEWI_URL}reference/disease/${disease.primaryID}?typeFilter=Literature">(${diseaseRefCount})</a>
    </c:if>
 
-
-
-
-
-  
 </div>
 
 
