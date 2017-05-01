@@ -966,7 +966,7 @@ public class VocabularyController {
 
     /* Disease Ontology (DO) browser home page
      */
-    @RequestMapping("/disease_ontology")
+    @RequestMapping("/mmxvii_disease_ontology")
     public ModelAndView getDODetail() {
     	logger.debug("->getDODetail() started");
 
@@ -977,7 +977,7 @@ public class VocabularyController {
     /* fill in the standard URLs for the DO browser
      */
     private ModelAndView fillDOUrls(ModelAndView mav) {
-    	String baseUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "vocab/disease_ontology/";
+    	String baseUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "vocab/mmxvii_disease_ontology/";
     	mav.addObject("browserUrl", baseUrl);
     	mav.addObject("termPaneUrl", baseUrl + "termPane/");
     	mav.addObject("searchPaneUrl", baseUrl + "/search?term=");
@@ -996,7 +996,7 @@ public class VocabularyController {
 
     /* DO browser for a specified DO ID */
 
-    @RequestMapping("/disease_ontology/{id}")
+    @RequestMapping("/mmxvii_disease_ontology/{id}")
     public ModelAndView getDODetail(@PathVariable("id") String id) {
     	logger.debug("->getDODetail(" + id + ") started");
     	ModelAndView mav = getSharedBrowserDetail(id, DO_VOCAB);
@@ -1017,7 +1017,7 @@ public class VocabularyController {
     
     /* DO term detail pane
      */
-    @RequestMapping("/disease_ontology/termPane/{id}")
+    @RequestMapping("/mmxvii_disease_ontology/termPane/{id}")
     public ModelAndView getDOTermPane(@PathVariable("id") String id) {
     	logger.debug("->getDOTermPane(" + id + ") started");
     	ModelAndView mav = getSharedBrowserTermPane(id, DO_VOCAB);
@@ -1028,7 +1028,7 @@ public class VocabularyController {
     
     /* DO search pane
      */
-    @RequestMapping("/disease_ontology/search")
+    @RequestMapping("/mmxvii_disease_ontology/search")
     public ModelAndView getDOSearchPane(@RequestParam("term") String term) {
     	ModelAndView mav = getSharedBrowserSearchPane(term, DO_VOCAB);
     	fillDOUrls(mav);
@@ -1041,14 +1041,14 @@ public class VocabularyController {
      * 3. retrieve its default parent and its children
      * 4. repeat #3 all the way up to the root node
      */
-    @RequestMapping("/disease_ontology/treeInitial")
+    @RequestMapping("/mmxvii_disease_ontology/treeInitial")
     public @ResponseBody String getDOTreeInitial(@RequestParam("id") String id) {
     	return this.getSharedBrowserTreeInitial(id, DO_VOCAB);
     }
 
     /* DO browser - load children of the term with the given ID
      */
-    @RequestMapping("/disease_ontology/treeChildren")
+    @RequestMapping("/mmxvii_disease_ontology/treeChildren")
     public @ResponseBody String getDOTreeChildren(@RequestParam("id") String id,
     		@RequestParam("nodeID") String nodeID, @RequestParam("edgeType") String edgeType) {
     	return this.getSharedBrowserTreeChildren(id, nodeID, edgeType, DO_VOCAB);
