@@ -116,7 +116,15 @@
 	<tbody>
 	<tr>
 	<td style="">&nbsp;</td>
-	<td colspan="3" style="">Transgenes and other genome features developed in mice to model this disease.</td>
+	<td colspan="3" style="">
+		<div class='tableHeaderText'>
+		<c:if test="${empty disease.mouseHumanGroup and empty disease.mouseOnlyGroup and empty disease.humanOnlyGroup}">
+		  <a href="${configBean.FEWI_URL}/disease/genes/report.xlsx?doid=${disease.primaryID}" id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Excel File</a>
+		  <a href="${configBean.FEWI_URL}/disease/genes/report.txt?doid=${disease.primaryID}" id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
+		</c:if>
+		Transgenes and other genome features developed in mice to model this disease.
+		</div>
+	</td>
 	</tr>
 	<tr>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>

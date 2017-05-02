@@ -179,7 +179,15 @@ DiseaseModelFilter dmFilter = new DiseaseModelFilter();
 	<td style="">&nbsp;</td>
 	<td style="">&nbsp;</td>
 	<td style="">&nbsp;</td>
-	<td colspan="5" style="">No similarity to the expected human disease phenotype was found.</td>
+	<td colspan="5" style="">
+	  <div class='tableHeaderText'>
+	  <c:if test="${empty disease.mouseAndHumanModels and empty disease.mouseOnlyModels and empty disease.humanOnlyModels and empty disease.otherModels and empty disease.additionalModels}">
+	  <a href="${configBean.FEWI_URL}/disease/models/report.xlsx?doid=${disease.primaryID}" id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Excel File</a>
+	  <a href="${configBean.FEWI_URL}/disease/models/report.txt?doid=${disease.primaryID}" id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
+	  </c:if>
+	  No similarity to the expected human disease phenotype was found.
+	  </div>
+	</td>
 	</tr>
 
 	<!-- heading row -->
