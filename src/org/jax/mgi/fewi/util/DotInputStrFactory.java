@@ -30,6 +30,8 @@ public class DotInputStrFactory {
 
 	// storage of labels
 	Map<String, String> labels = new HashMap<String, String>();
+	String homeNode = "";
+	String homeNodeLabel = "";
 
 	// name of graph - will appear on-hover of graph
 	private String graphName = "Directional Graph";
@@ -72,12 +74,29 @@ public class DotInputStrFactory {
 	public void setGraphName(String graphName) {
 		this.graphName = graphName;
 	}
-	
+
+	// home node
+	public String getHomeNode() {
+		return homeNode;
+	}
+	public void setHomeNode(String homeNode) {
+		this.homeNode = homeNode;
+	}
+
+	// home node label
+	public String getHomeNodeLabel() {
+		return homeNodeLabel.replace("'", "");
+	}
+	public void setHomeNodeLabel(String homeNodeLabel) {
+		this.homeNodeLabel = homeNodeLabel;
+	}
+
 	/////////////////////////////
 	//  Dot String Generation
 	/////////////////////////////
 
 
+	// generate the edges in dot notation
 	public String getDotEdgesStr() {
 
 		StringBuffer  sb = new StringBuffer(" ");
@@ -89,6 +108,7 @@ public class DotInputStrFactory {
 		return sb.toString();
 	}
 
+	// generate the labels in dot notation
 	public String getDotNodeLabels() {
 
 		StringBuffer  sb = new StringBuffer(" ");
@@ -98,11 +118,13 @@ public class DotInputStrFactory {
 			String nodeLabel = label.getValue().replace(" ", "\\n").replace("'", "");
 			sb.append(" \"").append(node).append("\" [label=\"").append(nodeLabel).append("\"] ");
 		}
+		sb.append(" \"").append(getHomeNode()).append("\" [label=\"").append(getHomeNodeLabel()).append("\" fillcolor=\"#FFFFE0\"] ");
 		sb.append(" ");
 		//logger.info(sb.toString());
 		return sb.toString();
 	}
 
+	// pull the whole things together...
 	public String getDotInputStr() {
 		StringBuffer  sb = new StringBuffer("strict digraph \"" + getGraphName() + "\" {");
 		sb.append(" graph [bgcolor=\"#ffffff\" size=15 ratio=compress] ");
