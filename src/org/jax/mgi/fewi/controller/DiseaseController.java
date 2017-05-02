@@ -141,7 +141,7 @@ public class DiseaseController {
 		Disease disease = diseaseList.get(0);
 		
 		String dotInputStr = this.getDotInputStr(disease);
-		logger.info(dotInputStr);
+		//logger.info(dotInputStr);
 		
 		// add objects to mav, and return to display 
 		mav.addObject("disease", disease);
@@ -272,7 +272,8 @@ public class DiseaseController {
 		disFactory.setGraphName("Directional Graph of " + disease.getPrimaryID());
 
 		// add label to disease we're displaying
-		disFactory.addNodeLabel(disease.getPrimaryID(), disease.getDisease());
+		disFactory.setHomeNode(disease.getPrimaryID());
+		disFactory.setHomeNodeLabel(disease.getDisease());
 
 		// children of this term
 		for (VocabChild vc : disease.getVocabTerm().getVocabChildren() ) {
