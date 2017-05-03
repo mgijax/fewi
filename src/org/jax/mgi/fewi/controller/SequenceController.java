@@ -388,14 +388,10 @@ public class SequenceController {
 		}
         params.setFilter(containerFilter);
 
-        logger.info("about to search");
-
         // perform query, and pull out the sequences requested
         SearchResults<SimpleSequence> searchResults = sequenceFinder.getSequences(params);
         List<SimpleSequence> seqList = searchResults.getResultObjects();
         
-        logger.info("got " + seqList.size() + " sequences");
-
         // create/load the list of SeqSummaryRow wrapper objects
         List<SeqSummaryRow> summaryRows = new ArrayList<SeqSummaryRow> ();
         Iterator<SimpleSequence> it = seqList.iterator();
@@ -408,8 +404,6 @@ public class SequenceController {
             }
         }
 
-        logger.info("produced " + summaryRows.size() + " summary rows");
-
         // The JSON return object will be serialized to a JSON response for YUI table.
         JsonSummaryResponse<SeqSummaryRow> jsonResponse
           = new JsonSummaryResponse<SeqSummaryRow>();
@@ -417,7 +411,6 @@ public class SequenceController {
         // place data into JSON response, and return
         jsonResponse.setSummaryRows(summaryRows);
         jsonResponse.setTotalCount(searchResults.getTotalCount());
-        logger.info("about to return");
         return jsonResponse;
     }
 
