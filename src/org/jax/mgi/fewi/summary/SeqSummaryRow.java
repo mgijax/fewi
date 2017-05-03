@@ -134,7 +134,7 @@ public class SeqSummaryRow {
     }
 
     public String getMarkerSymbol() {
-    	if (this.seq.getMarkers() == null) { return "None"; }
+    	if (this.seq.getMarkers() == null) { return ""; }
     	
         StringBuffer markerLinks = new StringBuffer();
 
