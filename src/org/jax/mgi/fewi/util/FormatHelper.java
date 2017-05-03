@@ -269,7 +269,7 @@ public class FormatHelper {
 
 		// if genomic location, include coordinates
 
-		if ("mousegenome".equals(seq.getProvider()) && !locList.isEmpty()) {
+		if ("mousegenome".equals(getSeqProviderForward(seq.getProvider())) && !locList.isEmpty()) {
 			SequenceLocation loc = locList.get(0);
 			return getSeqForwardValue(seq.getProvider(), seq.getPrimaryID(), loc.getChromosome(),
 				String.valueOf(loc.getStartCoordinate().intValue()),
@@ -291,7 +291,7 @@ public class FormatHelper {
 	public static String getSeqForwardValue (SimpleSequence seq) {
 		// if genomic location, include coordinates
 	
-		if ("mousegenome".equals(seq.getProvider()) && (seq.getLocation() != null)) {
+		if ("mousegenome".equals(getSeqProviderForward(seq.getProvider())) && (seq.getLocation() != null)) {
 			GenomicLocation loc = seq.getLocation();
 			return getSeqForwardValue(seq.getProvider(), seq.getPrimaryID(), loc.getChromosome(),
 				loc.getStartCoordinate(), loc.getEndCoordinate(), "+");
