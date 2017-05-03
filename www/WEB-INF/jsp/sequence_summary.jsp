@@ -3,6 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <% Marker marker = (Marker)request.getAttribute("marker"); %>
+<% Reference reference = (Reference)request.getAttribute("reference"); %>
 
 <%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
@@ -25,6 +26,7 @@
 <!-- header table -->
 <table class="summaryHeader">
 	<tr >
+	<c:if test="${not empty marker}">
 	  <td class="summaryHeaderCat1">
 	       <div style="padding-top:7px;">Symbol</div>
 	       <div style="padding-top:3px;">Name</div>
@@ -38,6 +40,17 @@
 	    <br/>
 	    <span style="">${marker.primaryID}</span>
 	  </td>
+	</c:if>
+	<c:if test="${empty marker and not empty reference}">
+	  <td class="summaryHeaderCat1">
+	    <b>Reference</b>
+	  </td>
+	  <td class="summaryHeaderData1">
+	    <a style="font-size:x-large;  font-weight: bold; padding-bottom:10px;"
+	      href="${configBean.FEWI_URL}reference/${reference.jnumID}">${reference.jnumID}</a>
+	    <div style="padding:4px;"> </div>${reference.shortCitation}
+	  </td>
+	</c:if>
 	</tr>
 </table>
 

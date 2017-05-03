@@ -254,7 +254,7 @@ public class SequenceController {
     }
     
     private ModelAndView seqSummaryByRef(List<Reference> refList, String refKey){
-        ModelAndView mav = new ModelAndView("sequence_summary_reference");
+        ModelAndView mav = new ModelAndView("sequence_summary");
 
         // there can be only one...
         if (refList.size() < 1) {
@@ -319,7 +319,7 @@ public class SequenceController {
     }
     
     private ModelAndView seqSummeryByMarker(List<Marker> markerList, String markerKey, String provider){
-        ModelAndView mav = new ModelAndView("sequence_summary_marker");
+        ModelAndView mav = new ModelAndView("sequence_summary");
         
         // there can be only one...
         if (markerList.size() < 1) {
