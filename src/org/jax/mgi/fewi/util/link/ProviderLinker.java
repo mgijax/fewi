@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.util.link;
 
 import org.jax.mgi.fewi.util.DBConstants;
+import org.jax.mgi.shr.jsonmodel.SimpleSequence;
 
 import mgi.frontend.datamodel.Sequence;
 import mgi.frontend.datamodel.SequenceID;
@@ -40,21 +41,30 @@ public class ProviderLinker
     /**
      *  Generates the provider links for a given sequence
      */
-    public static String getSeqProviderLinks (Sequence sequence)
-    {
+    public static String getSeqProviderLinks (Sequence sequence) {
+    	if (sequence.getPreferredGenBankID() != null) {
+    		return getSeqProviderLinks(sequence.getProvider(), sequence.getPrimaryID(),
+    				sequence.getPreferredGenBankID().getAccID());
+    	}
+    	return getSeqProviderLinks(sequence.getProvider(), sequence.getPrimaryID(), null);
+    }
+    
+    /**
+     *  Generates the provider links for a given sequence
+     */
+    public static String getSeqProviderLinks (SimpleSequence sequence) {
+    	return getSeqProviderLinks(sequence.getProvider(), sequence.getPrimaryID(),
+    		sequence.getPreferredGenbankID());
+    }
+    
+    public static String getSeqProviderLinks (String seqProvider, String seqID, String genbankID) {
 
         StringBuffer links = new StringBuffer();
-        String seqProvider = sequence.getProvider();
-        String seqID       = sequence.getPrimaryID();
 
         // all genbank
         if (seqProvider.startsWith(DBConstants.PROVIDER_SEQUENCEDB)) {
-        	String genbankID = seqID;
-        	for (SequenceID otherId: sequence.getIds()){
-        		if (otherId.getLogicalDB().equalsIgnoreCase("Sequence DB")
-        				&& !otherId.getAccID().equalsIgnoreCase(seqID)) {
-        			genbankID = otherId.getAccID();
-        		}
+        	if (genbankID == null) {
+        		genbankID = seqID;
         	}
 
 			links.append("<a href='" + genBankUrl + genbankID + "'>GenBank</a> | ");

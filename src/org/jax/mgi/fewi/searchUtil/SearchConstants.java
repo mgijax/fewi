@@ -27,6 +27,8 @@ public class SearchConstants {
     public static final String SEQ_ID               = "sequence_id";
     public static final String SEQ_KEY              = "sequence_key";
     public static final String SEQ_PROVIDER         = "provider";
+    public static final String SEQ_TYPE             = "sequence_type";
+    public static final String SEQ_STRAIN           = "strain";
 
     // marker constants
     public static final String MRK_KEY              = "marker_key";

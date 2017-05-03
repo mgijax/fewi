@@ -21,6 +21,8 @@ import mgi.frontend.datamodel.util.DatamodelUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.shr.fe.util.TextFormat;
+import org.jax.mgi.shr.jsonmodel.GenomicLocation;
+import org.jax.mgi.shr.jsonmodel.SimpleSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.util.HtmlUtils;
@@ -263,55 +265,71 @@ public class FormatHelper {
 	 * retrieval too, or mouse blast select-a-sequence report
 	 */
 	public static String getSeqForwardValue (Sequence seq) {
+		List<SequenceLocation> locList = seq.getLocations();
+
+		// if genomic location, include coordinates
+
+		if ("mousegenome".equals(seq.getProvider()) && !locList.isEmpty()) {
+			SequenceLocation loc = locList.get(0);
+			return getSeqForwardValue(seq.getProvider(), seq.getPrimaryID(), loc.getChromosome(),
+				String.valueOf(loc.getStartCoordinate().intValue()),
+				String.valueOf(loc.getEndCoordinate().intValue()), "+");
+		}
+
+		// no genomic location, so use genbank ID if we have one, primary ID if not
+		
+		String seqID = seq.getPrimaryID();
+		if (seq.getPreferredGenBankID() != null) {
+			seqID = seq.getPreferredGenBankID().getAccID();
+		}
+		return getSeqForwardValue(seq.getProvider(), seqID, "", "", "", "");
+	}
+	
+	/** returns value used to forward a sequence to either the sequence
+	 * retrieval tool, or mouse blast select-a-sequence report
+	 */
+	public static String getSeqForwardValue (SimpleSequence seq) {
+		// if genomic location, include coordinates
+	
+		if ("mousegenome".equals(seq.getProvider()) && (seq.getLocation() != null)) {
+			GenomicLocation loc = seq.getLocation();
+			return getSeqForwardValue(seq.getProvider(), seq.getPrimaryID(), loc.getChromosome(),
+				loc.getStartCoordinate(), loc.getEndCoordinate(), "+");
+		}
+
+		// no genomic location, so use genbank ID if we have one, primary ID if not
+		
+		String seqID = seq.getPrimaryID();
+		if (seq.getPreferredGenbankID() != null) {
+			seqID = seq.getPreferredGenbankID();
+		}
+		return getSeqForwardValue(seq.getProvider(), seqID, "", "", "", "");
+	}
+	
+	public static String getSeqForwardValue (String seqProvider, String seqID, String chromosome, String startCoord,
+		String endCoord, String strand) {
 		// buffer to collect/build value
 		StringBuffer seqForwardValue = new StringBuffer();
+		String provider = getSeqProviderForward(seqProvider);
 
-		// sequence info
-		String provider = getSeqProviderForward(seq);
-
-		//coords
-		List<SequenceLocation> locList = seq.getLocations();
-		if (provider.equals("mousegenome") && !locList.isEmpty()) {
-
-			// first location is the primary loc to be used
-			SequenceLocation seqLoc = locList.get(0);
-
-			seqForwardValue.append (provider);
-			seqForwardValue.append ("!");
-			seqForwardValue.append (seq.getPrimaryID());
-			seqForwardValue.append ("!");
-			seqForwardValue.append (seqLoc.getChromosome());
-			seqForwardValue.append ("!");
-			seqForwardValue.append (String.valueOf(seqLoc.getStartCoordinate().intValue()));
-			seqForwardValue.append ("!");
-			seqForwardValue.append (String.valueOf(seqLoc.getEndCoordinate().intValue()));
-			seqForwardValue.append ("!");
-			seqForwardValue.append ("+");
-			seqForwardValue.append ("!"); // offset may be appended later.
-		}
-		else {
-			seqForwardValue.append (provider);
-			seqForwardValue.append ("!");
-
-			if (seq.getPreferredGenBankID() != null) {
-				seqForwardValue.append (seq.getPreferredGenBankID().getAccID());
-			} else {
-				seqForwardValue.append (seq.getPrimaryID());
-			}
-
-			seqForwardValue.append ("!");
-			seqForwardValue.append ("!");
-			seqForwardValue.append ("!");
-			seqForwardValue.append ("!");
-			seqForwardValue.append ("!"); // offset may be appended later.
-		}
+		seqForwardValue.append (provider);
+		seqForwardValue.append ("!");
+		seqForwardValue.append (seqID);
+		seqForwardValue.append ("!");
+		seqForwardValue.append (chromosome);
+		seqForwardValue.append ("!");
+		seqForwardValue.append (startCoord);
+		seqForwardValue.append ("!");
+		seqForwardValue.append (endCoord);
+		seqForwardValue.append ("!");
+		seqForwardValue.append (strand);
+		seqForwardValue.append ("!"); // offset may be appended later.
 
 		return seqForwardValue.toString();
 	}
 
-	public static String getSeqProviderForward(Sequence seq) {
+	public static String getSeqProviderForward(String seqProvider) {
 		// the primary key identifying the logical database
-		String seqProvider = seq.getProvider();
 		String providerForward = "";
 
 		if (seqProvider.startsWith(DBConstants.PROVIDER_SEQUENCEDB)) {

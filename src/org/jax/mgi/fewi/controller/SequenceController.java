@@ -34,6 +34,7 @@ import org.jax.mgi.fewi.summary.SeqSummaryRow;
 import org.jax.mgi.fewi.util.BlastableSequence;
 import org.jax.mgi.fewi.util.StyleAlternator;
 import org.jax.mgi.fewi.util.link.IDLinker;
+import org.jax.mgi.shr.jsonmodel.SimpleSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -387,23 +388,27 @@ public class SequenceController {
 		}
         params.setFilter(containerFilter);
 
+        logger.info("about to search");
 
         // perform query, and pull out the sequences requested
-        SearchResults<Sequence> searchResults
-          = sequenceFinder.getSequences(params);
-        List<Sequence> seqList = searchResults.getResultObjects();
+        SearchResults<SimpleSequence> searchResults = sequenceFinder.getSequences(params);
+        List<SimpleSequence> seqList = searchResults.getResultObjects();
+        
+        logger.info("got " + seqList.size() + " sequences");
 
         // create/load the list of SeqSummaryRow wrapper objects
         List<SeqSummaryRow> summaryRows = new ArrayList<SeqSummaryRow> ();
-        Iterator<Sequence> it = seqList.iterator();
+        Iterator<SimpleSequence> it = seqList.iterator();
         while (it.hasNext()) {
-            Sequence sequence = it.next();
+            SimpleSequence sequence = it.next();
             if (sequence == null) {
                 logger.debug("--> Null Sequence Object");
             }else {
                 summaryRows.add(new SeqSummaryRow(sequence));
             }
         }
+
+        logger.info("produced " + summaryRows.size() + " summary rows");
 
         // The JSON return object will be serialized to a JSON response for YUI table.
         JsonSummaryResponse<SeqSummaryRow> jsonResponse
@@ -412,6 +417,7 @@ public class SequenceController {
         // place data into JSON response, and return
         jsonResponse.setSummaryRows(summaryRows);
         jsonResponse.setTotalCount(searchResults.getTotalCount());
+        logger.info("about to return");
         return jsonResponse;
     }
 
@@ -786,14 +792,9 @@ public class SequenceController {
 
         logger.debug("->genSorts started");
 
-        Sort typeSort = new Sort(SortConstants.SEQUENCE_TYPE);
-        Sort provSort = new Sort(SortConstants.SEQUENCE_PROVIDER);
-        Sort lenSort  = new Sort(SortConstants.SEQUENCE_LENGTH, true);
-
+        Sort typeSort = new Sort(SortConstants.BY_DEFAULT);
         List<Sort> sorts = new ArrayList<Sort>();
         sorts.add(typeSort);
-        sorts.add(provSort);
-        sorts.add(lenSort);
         return sorts;
     }
 

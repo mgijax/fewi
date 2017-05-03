@@ -4,11 +4,13 @@ import java.util.List;
 import mgi.frontend.datamodel.Sequence;
 
 import org.jax.mgi.fewi.hunter.HibernateSequenceHunter;
+import org.jax.mgi.fewi.hunter.SolrSequenceHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.shr.jsonmodel.SimpleSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +36,11 @@ public class SequenceFinder {
     @Autowired 
     private HibernateSequenceHunter hibernateSequenceHunter;
 
+    @Autowired 
+    private SolrSequenceHunter solrSequenceHunter;
+
     @Autowired
     private HibernateObjectGatherer<Sequence> sequenceGatherer;
-
 
 	/*-----------------------------------------*/
 	/* Retrieval of a sequence, for a given ID (submitted as a String)
@@ -99,22 +103,14 @@ public class SequenceFinder {
 	/* Retrieval of multiple sequence
 	/*---------------------------------*/
 
-    public SearchResults<Sequence> getSequences(SearchParams searchParams) {
-
-    	return getSequencesByHibernate(searchParams);
-    }
-
-    
-    
-    public SearchResults<Sequence> getSequencesByHibernate(SearchParams searchParams) {
-
+    public SearchResults<SimpleSequence> getSequences(SearchParams searchParams) {
         logger.debug("->SequenceFinder.getSequences()");
 
         // result object to be returned
-        SearchResults<Sequence> searchResults = new SearchResults<Sequence>();
+        SearchResults<SimpleSequence> searchResults = new SearchResults<SimpleSequence>();
 
         // ask the hunter to identify which objects to return
-        hibernateSequenceHunter.hunt(searchParams, searchResults);
+        solrSequenceHunter.hunt(searchParams, searchResults);
         logger.debug("->hunter found these resultKeys - "+ searchResults.getResultKeys());
 
         return searchResults;

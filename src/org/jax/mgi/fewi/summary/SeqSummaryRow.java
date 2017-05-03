@@ -5,16 +5,12 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.List;
 
-import mgi.frontend.datamodel.Marker;
-import mgi.frontend.datamodel.Probe;
-import mgi.frontend.datamodel.ProbeCloneCollection;
-import mgi.frontend.datamodel.Sequence;
-import mgi.frontend.datamodel.SequenceSource;
-
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.DBConstants;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.link.ProviderLinker;
+import org.jax.mgi.shr.jsonmodel.SimpleMarker;
+import org.jax.mgi.shr.jsonmodel.SimpleSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +27,7 @@ public class SeqSummaryRow {
     private final Logger logger = LoggerFactory.getLogger(SeqSummaryRow.class);
 
 	// encapsulated row object
-	private Sequence seq;
+	private SimpleSequence seq;
 
 	// config values
     String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
@@ -42,10 +38,9 @@ public class SeqSummaryRow {
 	//-------------
 	// constructors
 	//-------------
-    public SeqSummaryRow (Sequence seq) {
+    public SeqSummaryRow (SimpleSequence seq) {
     	this.seq = seq;
-    	logger.debug("SeqSummaryRow wrapping sequence w/ key - "
-    	  + seq.getSequenceKey());
+    	logger.debug("SeqSummaryRow wrapping sequence w/ key - " + seq.getSequenceKey());
     	return;
     }
 
@@ -66,13 +61,13 @@ public class SeqSummaryRow {
     }
 
 
-
     public String getSeqInfo() {
 
         StringBuffer seqInfo = new StringBuffer();
         seqInfo.append(this.seq.getPrimaryID());
         seqInfo.append("<br/>&nbsp;&nbsp;");
         seqInfo.append(ProviderLinker.getSeqProviderLinks(this.seq));
+ //       seqInfo.append("Links");
         seqInfo.append("<br/>&nbsp;&nbsp;");
         seqInfo.append("<a href='" + fewiUrl + "sequence/"
           + seq.getPrimaryID() + "'>MGI Sequence Detail </a>");
@@ -82,32 +77,34 @@ public class SeqSummaryRow {
 
 
     public String getSeqType() {
+    	if (this.seq.getSequenceType() == null) { return ""; }
     	return this.seq.getSequenceType();
     }
 
 
     public String getLength() {
     	if (this.seq.getLength() != null){
-    		return this.seq.getLength().toString();
+    		return this.seq.getLength();
     	}
     	return "";
     }
 
 
     public String getStrainSpecies() {
-
-		SequenceSource ss = seq.getSources().get(0);
-		if (ss != null) {
-			return ss.getStrain();
-		}
+    	if (this.seq.getStrain() != null) {
+    		return this.seq.getStrain();
+    	}
+    	if (this.seq.getSpecies() != null) {
+    		return this.seq.getSpecies();
+    	}
     	return "";
     }
 
 
     public String getDescription() {
+    	if (this.seq.getDescription() == null) { return ""; }
     	return this.seq.getDescription();
     }
-
 
     public String getCloneCollection() {
 
@@ -117,59 +114,36 @@ public class SeqSummaryRow {
         String seqProvider = seq.getProvider();
 
         // for these providers, clone collections are not applicable
-        if (seqProvider.equals(DBConstants.PROVIDER_REFSEQ) ||
+        if ( (seqProvider != null) && (
+        	seqProvider.equals(DBConstants.PROVIDER_REFSEQ) ||
             seqProvider.equals(DBConstants.PROVIDER_TREMBL) ||
-            seqProvider.equals(DBConstants.PROVIDER_SWISSPROT) )
+            seqProvider.equals(DBConstants.PROVIDER_SWISSPROT) ) )
         {
             probeSB.append("Not Applicable");
         }
         else // otherwise, derive the clone collections, if any
         {
-			Set<Probe> probeSet = seq.getProbes();
-			Set<String> cloneCollections = new HashSet<String>();
-
-			// collect unique clone collection values
-			if (probeSet.size() > 0 ) {
-
-                // iterate over probes
-                Probe probe;
-                ProbeCloneCollection pcc;
-                Iterator<Probe> probeIter = probeSet.iterator();
-				while (probeIter.hasNext()) {
-	                probe = probeIter.next();
-	                List<ProbeCloneCollection> pccList = probe.getProbeCloneCollection();
-                    Iterator<ProbeCloneCollection> pccIter = pccList.iterator();
-                    while (pccIter.hasNext()) {
-						pcc = pccIter.next();
-						cloneCollections.add(pcc.getCollection() + "<br/>");
-					}
-				}
-                // generate actual string value
-                Iterator<String> ccIter = cloneCollections.iterator();
-				while (ccIter.hasNext()) {
-					probeSB.append(ccIter.next());
-				}
-		    }
+        	if (this.seq.getCloneCollections() != null) {
+        		for (String collection : this.seq.getCloneCollections()) {
+        			probeSB.append(collection);
+        			probeSB.append("<br/>");
+        		}
+        	}
 		}
         return probeSB.toString();
     }
 
-
     public String getMarkerSymbol() {
-
+    	if (this.seq.getMarkers() == null) { return "None"; }
+    	
         StringBuffer markerLinks = new StringBuffer();
-		Set<Marker> markerSet = seq.getMarkers();
-        Iterator<Marker> markerIter = markerSet.iterator();
 
         // for each marker, make a marker link
-        Marker marker;
-        while (markerIter.hasNext()) {
-			marker = markerIter.next();
+        for (SimpleMarker marker : this.seq.getMarkers()) {
             markerLinks.append("<div><a href='" + fewiUrl + "marker/"
               + marker.getPrimaryID() + "'>" + marker.getSymbol()
               + "</a></br></div>");
 		}
     	return markerLinks.toString();
     }
-
 }
