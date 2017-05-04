@@ -191,8 +191,13 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		<td class="cat2Gxd">Genome location</td>
 		<td>
 		    <div style='vertical-align:top; height:40px;padding-left:5px;'>
+		      <div style='float: left'>
 		        <form:textarea path="locations" id="locations" style="" cols="26" rows="2" />
-		        <div style='float:left; padding-left: 5px;'>Find expression data for a set of genes defined by </br>genomic interval(s) (genome build ${configBean.ASSEMBLY_VERSION}).</div>
+				<form:select multiple="false" path="locationUnit" size="1" items="${gxdQueryForm.locationUnits}" style='margin-left: 3px'>
+                	<form:options items="${locationUnits}" />
+                </form:select>
+              </div>
+	          <div style='float:left; padding-left: 5px;'>Find expression data for a set of genes defined by </br>genomic interval(s) (genome build ${configBean.ASSEMBLY_VERSION}).</div>
 		    </div>
 		    <div style='font-size: 10px; font-style: italic;'>e.g., Chr12:3000000-10000000 </div>
 		</td>

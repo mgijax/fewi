@@ -20,6 +20,10 @@ public class GxdQueryForm implements Cloneable {
 	private List<Integer> theilerStage = new ArrayList<Integer>();
 	public static Integer ANY_STAGE = 0;
 
+	private List<String> locationUnits = new ArrayList<String>();
+	public final static String BP = "bp";
+	public final static String MBP = "Mbp";
+	
 	private Map<String, String> ages = new LinkedHashMap<String, String>();
 	private List<String> age = new ArrayList<String>();
 	public final static String ANY_AGE = "ANY";
@@ -39,6 +43,7 @@ public class GxdQueryForm implements Cloneable {
 	private String structureKey = "";
 	private String annotatedStructureKey = "";
 	private String locations = "";
+	private String locationUnit = "";
 	private String detected = ANY_DETECTED;
 	private String annotationId = "";
 	private String isWildType = "";
@@ -232,9 +237,25 @@ public class GxdQueryForm implements Cloneable {
 		this.populateDifferentialFields();
 		this.populateIdTypes();
 
+		this.locationUnits.add(MBP);
+		this.locationUnits.add(BP);
+		this.locationUnit = BP;
+
 		// set default values
 		age.add(ANY_AGE);
 		theilerStage.add(ANY_STAGE);
+	}
+
+	public String getLocationUnit() {
+		return locationUnit;
+	}
+
+	public void setLocationUnit(String locationUnit) {
+		this.locationUnit = locationUnit;
+	}
+
+	public List<String> getLocationUnits() {
+		return locationUnits;
 	}
 
 	public List<String> getAssayType() {

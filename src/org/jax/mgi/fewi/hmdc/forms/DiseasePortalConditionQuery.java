@@ -48,7 +48,7 @@ public class DiseasePortalConditionQuery {
 			}
 			return Filter.or(filterList);
 		} else if(field.equals(DiseasePortalFields.LOCATION)) {
-			String locationQuery = SolrLocationTranslator.getQueryValue(condition.getInput());
+			String locationQuery = SolrLocationTranslator.getQueryValue(condition.getInput(), null);
 			
 			if(condition.getParameters().contains("mouse")) {
 				return new Filter(DiseasePortalFields.MOUSE_COORDINATE, locationQuery, Operator.OP_HAS_WORD);
