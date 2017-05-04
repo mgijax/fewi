@@ -21,12 +21,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolrSequenceHunter extends SolrSequenceBaseHunter {
+public class SolrSequenceStrainFacetHunter extends SolrSequenceBaseHunter {
 
 //	private ObjectMapper mapper = new ObjectMapper();
 
-    public SolrSequenceHunter() {
+    public SolrSequenceStrainFacetHunter() {
     	super();
+        facetString = IndexConstants.SEQ_STRAIN;
     }
 
 //    @Value("${solr.sequence.url}")

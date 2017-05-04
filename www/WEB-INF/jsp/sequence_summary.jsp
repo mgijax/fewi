@@ -27,6 +27,7 @@
 <table class="summaryHeader">
 	<tr >
 	<c:if test="${not empty marker}">
+	  <c:set var="urlPiece" value="marker/${marker.primaryID}"/>
 	  <td class="summaryHeaderCat1">
 	       <div style="padding-top:7px;">Symbol</div>
 	       <div style="padding-top:3px;">Name</div>
@@ -42,6 +43,7 @@
 	  </td>
 	</c:if>
 	<c:if test="${empty marker and not empty reference}">
+	  <c:set var="urlPiece" value="reference/${reference.jnumID}"/>
 	  <td class="summaryHeaderCat1">
 	    <b>Reference</b>
 	  </td>
@@ -54,9 +56,27 @@
 	</tr>
 </table>
 
+<div class="facetFilter">
+	<div id="facetDialog">
+		<div class="hd">Filter</div>
+		<div class="bd" style="width: 285px">
+			<form:form method="GET" action="${configBean.FEWI_URL}sequence/${urlPiece}">
+				<img src="${configBean.FEWI_URL}assets/images/loading.gif">
+			</form:form>
+		</div>
+	</div>
+</div>
 
 <div id="summary" style="width:1150px;">
 	<div id="breadbox">
+		<div id="filterDiv" style="width: 260px; padding-top: 20px;">
+			<span id="filterLabel" class="label">Filter sequences by:</span>
+			<a id="strainFilter" class="filterButton">Strain&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
+			<a id="typeFilter" class="filterButton">Type&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
+		</div><br />
+		<div id="filterSummary" class="filters" style="display: none">
+			<span class="label">Filtered by:</span>&nbsp; <span id="defaultText" style="display: none;">No filters selected.</span> <span id="filterList"></span><br />
+		</div>
 		<div id="contentcolumn">
 			<div class="innertube">
 			</div>
@@ -83,6 +103,22 @@
 	var fewiurl = "${configBean.FEWI_URL}";
 	var querystring = "${queryString}";
 </script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/filters.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/sequence_summary.js"></script>
+
+<script type="text/javascript">
+	function getQuerystring() {
+		return querystring + filters.getUrlFragment();
+	}
+	filters.setFewiUrl(fewiurl);
+	filters.setQueryStringFunction(getQuerystring);
+	filters.setSummaryNames('filterSummary', 'filterList');
+	filters.setHistoryManagement("myDataTable", handleHistoryNavigation);
+    filters.setGeneratePageRequestFunction(generateRequest);
+	filters.setDataTable(myDataTable);
+	filters.addFilter('strainFilter', 'Strain', 'strainFilter', 'strain', '${configBean.FEWI_URL}sequence/facet/strain');
+	filters.addFilter('typeFilter', 'Type', 'typeFilter', 'type', '${configBean.FEWI_URL}sequence/facet/type');
+	filters.registerCallback('scrollAfterFilter', scrollUp);
+</script>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

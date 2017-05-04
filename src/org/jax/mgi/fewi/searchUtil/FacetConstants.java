@@ -33,4 +33,8 @@ public class FacetConstants {
 
 	public static final String CRE_INDUCER = "inducer";
 
+	// sequence facets
+
+	public static final String SEQ_TYPE = "sequenceType";
+	public static final String SEQ_STRAIN = "strain"; 
 }

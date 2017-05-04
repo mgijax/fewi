@@ -837,7 +837,13 @@ filters.addHistoryEntry = function() {
 	if (filters.dataTable) {
 		var state = filters.dataTable.getState();
 		if(filters.generatePageRequest) {
-			var newState = filters.generatePageRequest(0, state.sortedBy.key, state.sortedBy.dir, filters.dataTable.get("paginator").getRowsPerPage());
+			var sortKey = '';
+			var sortDir = '';
+			if (state.sortedBy) {
+				sortKey = state.sortedBy.key;
+				sortDir = state.sortedBy.dir;
+			}
+			var newState = filters.generatePageRequest(0, sortKey, sortDir, filters.dataTable.get("paginator").getRowsPerPage());
 			if (filters.historyModule) {
 				YAHOO.util.History.navigate(filters.historyModule, newState);
 			} else if (filters.navigateFn) {
@@ -858,56 +864,54 @@ filters.addHistoryEntry = function() {
  */
 filters.buildDialogBox = function() {
     if (filters.dialogBox) {
-	filters.log("using existing dialogBox");
-	return;
+		filters.log("using existing dialogBox");
+		return;
     }
     filters.log("building new dialogBox");
 
     // function to be called when submit button is clicked
     var handleSubmit = function() {
-	filters.log("entered handleSubmit()");
+		filters.log("entered handleSubmit()");
 
-	var selections = this.getData();
-	filters.log('selections: ' + selections);
+		var selections = this.getData();
+		filters.log('selections: ' + selections);
 
-	var list = [];
-	var filterName;
+		var list = [];
+		var filterName;
 
-	for (var i in selections) {
-	    filterName = filters.fieldnameToFilterName[i];
+		for (var i in selections) {
+		    filterName = filters.fieldnameToFilterName[i];
 
-	    var selectionValue = selections[i];
-	    if (typeof(selectionValue) === 'string') {
-		selectionValue = [ selectionValue ];
-	    }
+	    	var selectionValue = selections[i];
+	    	if (typeof(selectionValue) === 'string') {
+				selectionValue = [ selectionValue ];
+	    	}
 
-	    // special case -- YUI treats a set of only one checkbox
-	    // differently than it does a set with two or more possibilities
+		    // special case -- YUI treats a set of only one checkbox
+		    // differently than it does a set with two or more possibilities
 
-	    if (selectionValue === true) {
-		selectionValue = document.getElementsByName(i)[0].value;
-	    } else if (selectionValue === false) {
-		selectionValue = null;
-	    }
+	    	if (selectionValue === true) {
+				selectionValue = document.getElementsByName(i)[0].value;
+	    	} else if (selectionValue === false) {
+				selectionValue = null;
+	    	}
 
-	    if (selectionValue !== null) {
-	        filters.filtersByName[filterName]['values'][i] = selectionValue;
-	        filters.log('set filtersByName[' + filterName + ']["values"]['
-		    + i + '] = ' + selectionValue + '');
-	    } else {
-	        filters.filtersByName[filterName]['values'][i] = [];
-		filters.log('skipped selectionValue = null');
-		filters.log('set filters.filtersByName[' + filterName + '].values[' + i + '] = []');
-		filters.log('confirmation: ' + filters.filtersByName[filterName]['values'][i]);
-	    }
-	}
+		    if (selectionValue !== null) {
+		        filters.filtersByName[filterName]['values'][i] = selectionValue;
+	    	    filters.log('set filtersByName[' + filterName + ']["values"][' + i + '] = ' + selectionValue + '');
+	    	} else {
+	        	filters.filtersByName[filterName]['values'][i] = [];
+				filters.log('set filters.filtersByName[' + filterName + '].values[' + i + '] = []');
+				filters.log('confirmation: ' + filters.filtersByName[filterName]['values'][i]);
+	    	}
+		} // end - for loop
 
-	filters.addHistoryEntry();
+		filters.addHistoryEntry();
         filters.dialogBox.hide();
-	filters.issueCallbacks();
+		filters.issueCallbacks();
 
         filters.populateFilterSummary();
-	this.submit(); 
+		this.submit(); 
     };
 
     // function to be called on successful submission
