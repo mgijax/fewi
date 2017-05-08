@@ -74,8 +74,10 @@
 			<a id="strainFilter" class="filterButton">Strain&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
 			<a id="typeFilter" class="filterButton">Type&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
 		</div><br />
-		<div id="filterSummary" class="filters" style="display: none">
-			<span class="label">Filtered by:</span>&nbsp; <span id="defaultText" style="display: none;">No filters selected.</span> <span id="filterList"></span><br />
+		<div id="filterSummaryWrapper" style="width: 500px; display: inline-block;">
+			<div id="filterSummary" class="filters" style="display: none">
+				<span class="label">Filtered by:</span>&nbsp; <span id="defaultText" style="display: none;">No filters selected.</span> <span id="filterList"></span><br />
+			</div>
 		</div>
 		<div id="contentcolumn">
 			<div class="innertube">
