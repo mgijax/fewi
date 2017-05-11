@@ -55,6 +55,9 @@ body {
 .bold {
   font-weight: bold;
 }
+
+a {text-decoration: none;}
+
 </style>
 
 <body>
