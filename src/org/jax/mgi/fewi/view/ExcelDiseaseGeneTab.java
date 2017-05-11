@@ -67,8 +67,8 @@ public class ExcelDiseaseGeneTab extends AbstractBigExcelView {
 		Sheet sheet = workbook.createSheet();
 		String[] headerTitles = {"GeneCategory",
 				"Disease Term",
-				"Human Homologs",
 				"Mouse Homologs",
+				"Human Homologs",
 				"Transgenes And Other Features",
 				"Mouse Models",
 				"Homology Source"};
