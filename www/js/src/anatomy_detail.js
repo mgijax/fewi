@@ -2,7 +2,7 @@
 
 function log(msg) {
     // log a message to the browser console
-    setTimeout(function() { throw new Error(msg); }, 0);
+    console.log("anatomy_detail.js: " + msg);
 }
 
 //GXD tooltips
@@ -67,58 +67,68 @@ function tsRange(startStage, endStage) {
     return ts;
 }
 
-/*
- * Anatomical Dictionary Auto Complete Section (modified from gxd_query.js)
- */
+var gq_disableColor = "#CCC";	// color to use for disabled structures
+
 function makeStructureAC(inputID,containerID){
-    // disable the autocomplete for now
-
-    // Use an XHRDataSource
-    var oDS = new YAHOO.util.XHRDataSource(fewiurl + "autocomplete/emapa");
-    // Set the responseType
-    oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
-    // Define the schema of the JSON results
-    oDS.responseSchema = {resultsList: "resultObjects", fields:["structure", "synonym","isStrictSynonym"]};
-
-    //oDS.maxCacheEntries = 10;
-    oDS.connXhrMode = "cancelStaleRequests";
-
-    // Instantiate the AutoCompletes
-    var oAC = new YAHOO.widget.AutoComplete(inputID, containerID, oDS);
-
-    // Throttle requests sent
-    oAC.queryDelay = .03;
-    oAC.minQueryLength = 2;
-    oAC.maxResultsDisplayed = 500;
-    oAC.forceSelection = true;
-
-    // try to set the input field after itemSelect event
-    oAC.suppressInputUpdate = true;
-    var selectionHandler = function(sType, aArgs) { 
-	    //log("selectionHandler() called");
-	    var myAC = aArgs[0]; // reference back to the AC instance 
-	    var elLI = aArgs[1]; // reference to the selected LI element 
-	    var oData = aArgs[2]; // object literal of selected item's result data 
-	    //populate input box with another value (the base structure name)
-	    var structure = oData[1]; // 0 = term, 1 = ACtext
-	    var inputBox = YAHOO.util.Dom.get(inputID);
-	    inputBox.value = structure;
-	    refreshSearchPane();
-    }; 
-    oAC.itemSelectEvent.subscribe(selectionHandler); 
-
-    oAC.formatResult = function(oResultData, sQuery, sResultMatch) {
-    	   // some other piece of data defined by schema
-    	   var synonym = oResultData[1];
-    	   var isStrictSynonym = oResultData[2];
-    	  var value = synonym;
-    	  if(isStrictSynonym) value += " <span style=\"color:#222; font-size:0.8em; font-style:normal;\">[synonym]</span>";
-
-    	  return (value);
-    	}; 
-    	
-    return {
-        oDS: oDS,
-        oAC: oAC
+    var structureAC = $("#" + inputID).autocomplete({
+		source: function( request, response ) {
+			$.ajax({
+				url: fewiurl + "autocomplete/gxdEmapa?query=" + request.term,
+				dataType: "json",
+				success: function( data ) {
+					response($.map(data["resultObjects"], function( item ) {
+						return {synonym: item.synonym, 
+							isStrictSynonym: item.isStrictSynonym, label: item.structure,
+							original: item.structure};
+					}));
+				}
+			});
+		},
+		minLength: 2,					// start making autocomplete suggestions at 2 characters
+		autoFocus: true,				// automatically select first item on Enter
+		select: function (event, ui) {
+			$("#" + inputID).val(ui.item.label);
+			$('[name=vocabBrowserSearchForm]').submit();
+		}
+    }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+		var value = highlight(inputID, item.original);
+		if (item.isStrictSynonym) {
+			value = highlight(inputID, item.synonym);
+			var synonymColor = item.hasCre ? "#222" : gq_disableColor;
+			value += " <span style=\"color:"+synonymColor+"; font-size:0.9em; font-style:normal;\">[<span style=\"font-size:0.8em;\">syn. of</span> "+item.original+"]</span> ";
+		}
+		return $('<li class="ui-menu-item"></li>')
+			.data("item.autocomplete", item)
+			.append('<span>'+value+'</span>')
+			.appendTo(ul);
     };
+};
+
+// highlights occurrences of the search tokens in 'term'
+function highlight(inputID, term) {
+	var tokens = $('#' + inputID).val().trim().split(/\s/);	// split search string into tokens by whitespace
+	var words = term.split(/\s/);							// words of term split by whitespace
+	
+	// sort tokens by length then alpha, so we match longer ones first
+	tokens.sort(function(a,b) { return a.length - b.length || a.localeCompare(b); })
+	
+	var wordCount = words.length;
+	var tokenCount = tokens.length;
+	
+	for (var w = 0; w < wordCount; w++) {
+		var originalWord = words[w];
+		for (var t = 0; t < tokenCount; t++) {
+			var newWord = boldPrefix(originalWord, tokens[t]);
+			if (newWord != originalWord) {
+				words[w] = newWord;
+				break;			// found a token that matched, so move on to next word
+			}
+		}
+	}
+	return words.join(' ');
+};
+
+// if 'prefix' occurs at the start of 'word' (case insensitive), then bold it in the return string
+function boldPrefix(word, prefix) {
+    return word.replace(new RegExp('^(' + prefix + ')(.*)','ig'), '<b>$1</b>$2');
 };

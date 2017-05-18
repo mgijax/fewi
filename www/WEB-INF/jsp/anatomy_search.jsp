@@ -10,7 +10,7 @@
 
 
 <div style="padding-bottom: 8px;">
-<form name="anatomySearchForm" onSubmit="refreshSearchPane(); return false;">
+<form id="vocabBrowserSearchForm" name="vocabBrowserSearchForm" onSubmit="refreshSearchPane(); return false;">
 	<input type="text" size="35" id="searchTerm" name="searchTerm" value="${searchTerm}" style="width: auto; position: relative;">
     <div id="structureContainer" style="width: 250px; text-align: left; display: inline;"></div>
     <input type="button" value="Clear" name="Clear" onClick="resetSearch()">

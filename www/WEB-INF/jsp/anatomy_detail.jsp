@@ -32,7 +32,6 @@
 var fewiurl = "${configBean.FEWI_URL}";
 </script>
 <SCRIPT TYPE="text/javascript" SRC='${configBean.WEBSHARE_URL}js/hideshow.js'></SCRIPT>
-<script type="text/javascript" src='${configBean.FEWI_URL}assets/js/ie_hack.js'></script>
 <script type="text/javascript" src='${configBean.FEWI_URL}assets/js/anatomy_detail.js'></script>
     
 <script language="Javascript">
@@ -57,6 +56,42 @@ td.padTop { padding-top: 2px }
 .ygtv-highlight0 { background-color: white }
 .ygtv-highlight1 { background-color: white }
 .ygtv-highlight2 { background-color: white }
+
+.ui-autocomplete {
+	max-height: 250px;
+	overflow-y: auto;
+	/* prevent horizontal scrollbar */
+	overflow-x: hidden;
+	border: 1px solid gray;
+	max-width: 400px;
+}
+.ui-menu {
+	list-style-type: none;
+	color: black;
+	background-color: white;
+}
+.ui-menu .ui-menu-item a {
+	padding: 0px;
+	line-height: 1;
+	color: black;
+	list-style-type: none;
+}
+ul.ui-autocomplete {
+	padding: 0px;
+	list-style-type: none;
+	color: black;
+}
+.ui-autocomplete li {
+	list-style-type: none;
+	list-style-position: inherit;
+	margin-left: 5px;
+	padding-bottom: 3px;
+}
+
+.ui-autocomplete li :hover {
+	background-color: #426FD9;
+	color: #FFFFFF;
+}
 </style>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
