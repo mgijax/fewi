@@ -102,6 +102,13 @@
 
 <script type="text/javascript">
 	var fewiurl = "${configBean.FEWI_URL}";
+	// populate stats div
+	$.ajax({
+		url: fewiurl + 'home/statistics/recombinase_mini_home',
+		success: function(data) {
+			$('#statsDiv').html(data);
+		}
+	});
 </script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/recombinase/recombinase_form.js"></script>
 

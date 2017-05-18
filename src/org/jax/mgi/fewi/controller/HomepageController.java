@@ -2,11 +2,16 @@ package org.jax.mgi.fewi.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jax.mgi.fewi.finder.DbInfoFinder;
 import org.jax.mgi.fewi.finder.StatisticFinder;
 import org.jax.mgi.fewi.forms.DiseasePortalQueryForm;
 import org.jax.mgi.fewi.forms.RecombinaseQueryForm;
+import org.jax.mgi.fewi.util.AjaxUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +22,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import mgi.frontend.datamodel.Statistic;
+
 /*
  * This controller maps all /home/ URIs
- * Access to all the mini-home pages
+ * Access to all the mini-home pages and related statistics about MGI data.
  */
 @Controller
 @RequestMapping(value="/home")
@@ -116,7 +123,7 @@ public class HomepageController {
 		recombinaseQueryForm.setNotDetected("true");
 		mav.addObject(recombinaseQueryForm);
 		setDatabaseDate(mav);
-		mav.addObject("statistics", statisticFinder.getStatisticsByGroup("Cre Mini Home") );
+		mav.addObject("statistics", statisticFinder.getStatisticsByGroup("Recombinase Mini Home") );
 
 		return mav;
 	}
@@ -143,4 +150,39 @@ public class HomepageController {
 		mav.addObject("databaseDate", dt.format(databaseDate));
 	}
 
+	// allow Ajax access to tables of database statistics (groupName should be like group_name in database, but
+	// with underscores substituted for spaces
+	@RequestMapping("/statistics/{groupName:.+}")
+	public ModelAndView getStatisticTable (HttpServletRequest request, HttpServletResponse response,
+			@PathVariable("groupName") String groupName) {
+		AjaxUtils.prepareAjaxHeaders(response);
+		ModelAndView mav = new ModelAndView("statistic_table");
+		mav.addObject("statistics", statisticFinder.getStatisticsByGroup(groupName.replaceAll("_", " ")));
+		return mav;
+	}
+
+	// provide tab-delimited page of all statistics (mirrors the "All Statistics" page)
+	@RequestMapping("/statistics_report.txt")
+	public ModelAndView getStatisticsReport (HttpServletRequest request, HttpServletResponse response) {
+		logger.info("in getStatisticsReport");
+		List<Statistic> allStats = statisticFinder.getStatisticsByGroup("stats page markers");
+		allStats.addAll(statisticFinder.getStatisticsByGroup("stats page phenotypes"));
+		allStats.addAll(statisticFinder.getStatisticsByGroup("stats page gxd"));
+		allStats.addAll(statisticFinder.getStatisticsByGroup("stats page recombinase"));
+		allStats.addAll(statisticFinder.getStatisticsByGroup("stats page go"));
+		allStats.addAll(statisticFinder.getStatisticsByGroup("stats page pathways"));
+		allStats.addAll(statisticFinder.getStatisticsByGroup("stats page polymorphisms"));
+		allStats.addAll(statisticFinder.getStatisticsByGroup("stats page orthology"));
+		allStats.addAll(statisticFinder.getStatisticsByGroup("stats page sequences"));
+		allStats.addAll(statisticFinder.getStatisticsByGroup("references"));
+		logger.info("got " + allStats.size() + " statistics");
+
+		ModelAndView mav = new ModelAndView("statisticsReport");
+		logger.info("got mav");
+		setDatabaseDate(mav);
+		logger.info("added date");
+		mav.addObject("statistics", allStats);
+		logger.info("added statistics");
+		return mav;
+	}
 }
