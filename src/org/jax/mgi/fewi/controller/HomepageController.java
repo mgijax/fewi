@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -164,8 +165,8 @@ public class HomepageController {
 	// provide tab-delimited page of all statistics (mirrors the "All Statistics" page)
 	@RequestMapping("/statistics_report.txt")
 	public ModelAndView getStatisticsReport (HttpServletRequest request, HttpServletResponse response) {
-		logger.info("in getStatisticsReport");
-		List<Statistic> allStats = statisticFinder.getStatisticsByGroup("stats page markers");
+		List<Statistic> allStats = new ArrayList<Statistic>();
+		allStats.addAll(statisticFinder.getStatisticsByGroup("stats page markers"));
 		allStats.addAll(statisticFinder.getStatisticsByGroup("stats page phenotypes"));
 		allStats.addAll(statisticFinder.getStatisticsByGroup("stats page gxd"));
 		allStats.addAll(statisticFinder.getStatisticsByGroup("stats page recombinase"));
@@ -175,14 +176,10 @@ public class HomepageController {
 		allStats.addAll(statisticFinder.getStatisticsByGroup("stats page orthology"));
 		allStats.addAll(statisticFinder.getStatisticsByGroup("stats page sequences"));
 		allStats.addAll(statisticFinder.getStatisticsByGroup("references"));
-		logger.info("got " + allStats.size() + " statistics");
 
 		ModelAndView mav = new ModelAndView("statisticsReport");
-		logger.info("got mav");
 		setDatabaseDate(mav);
-		logger.info("added date");
 		mav.addObject("statistics", allStats);
-		logger.info("added statistics");
 		return mav;
 	}
 }
