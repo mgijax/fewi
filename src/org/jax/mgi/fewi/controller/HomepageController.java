@@ -151,6 +151,14 @@ public class HomepageController {
 		mav.addObject("databaseDate", dt.format(databaseDate));
 	}
 
+	@RequestMapping("/database_date")
+	public ModelAndView getDatabaseDate (HttpServletRequest request, HttpServletResponse response) {
+		AjaxUtils.prepareAjaxHeaders(response);
+		ModelAndView mav = new ModelAndView("database_date");
+		setDatabaseDate(mav);
+		return mav;
+	}
+
 	// allow Ajax access to tables of database statistics (groupName should be like group_name in database, but
 	// with underscores substituted for spaces
 	@RequestMapping("/statistics/{groupName:.+}")
