@@ -1760,6 +1760,10 @@ public class MarkerController {
 		if(notEmpty(refKey)) {
 			queryFilters.add(new Filter(SearchConstants.REF_KEY,refKey,Filter.Operator.OP_EQUAL));
 		}
+		String markerID = query.getMarkerID();
+		if(notEmpty(markerID)) {
+			queryFilters.add(new Filter(SearchConstants.MLD_MARKER_ID,markerID,Filter.Operator.OP_EQUAL));
+		}
 
 		if(queryFilters.size()<1) return nullFilter();
 		return Filter.and(queryFilters);
