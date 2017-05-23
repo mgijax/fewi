@@ -4,9 +4,5 @@
 
 <span class="headerDate">${databaseDate}</span>
 
-<table class="statsTable small">
-	<c:forEach var="statistic" items="${statistics}">
-	  <tr><td>${statistic.value}</td><td>${statistic.name}</td></tr>
-	</c:forEach>
-</table>
+<div id="statsDiv"></div>
 <a class="small homeLink" href="${configBean.MGIHOME_URL}homepages/stats/all_stats.shtml#allstats_cre">More...</a>

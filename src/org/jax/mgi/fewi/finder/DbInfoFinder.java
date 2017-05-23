@@ -34,6 +34,8 @@ public class DbInfoFinder {
     /*--------------------*/
     private final Logger logger = LoggerFactory.getLogger(DbInfoFinder.class);
     
+    // cache the database date once retrieved, as it doesn't change during the life of the webapp
+    private Date dbDate = null;
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -43,6 +45,8 @@ public class DbInfoFinder {
      */
     @SuppressWarnings("unchecked")
 	public Date getSourceDatabaseDate() {
+    	if (dbDate != null) { return dbDate; }
+    	
     	Session s = sessionFactory.getCurrentSession();
     	Criteria query = s.createCriteria(DatabaseInfo.class);
     	query.add(Restrictions.eq("name", "built from mgd database date"));
@@ -52,7 +56,8 @@ public class DbInfoFinder {
     		DatabaseInfo info = infos.get(0);
     		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
 			try {
-				return df.parse(info.getValue());
+				dbDate = df.parse(info.getValue());
+				return dbDate;
 			} catch (ParseException e) {
 				logger.error("Could not convert database date", e);
 				e.printStackTrace();

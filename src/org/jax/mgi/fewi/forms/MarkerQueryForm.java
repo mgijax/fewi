@@ -34,6 +34,7 @@ public class MarkerQueryForm
     private String cm;
     private String startMarker;
     private String endMarker;
+    private String markerID;
     
     // for links
     private String refKey;
@@ -115,6 +116,9 @@ public class MarkerQueryForm
     //--------------------//
     // accessors
     //--------------------//
+	public String getMarkerID() {
+		return markerID;
+	}
 	public String getNomen() {
 		return nomen;
 	}
@@ -132,6 +136,9 @@ public class MarkerQueryForm
 	}
 	public String getCm() {
 		return cm;
+	}
+	public void setMarkerID(String markerID) {
+		this.markerID = markerID;
 	}
 	public void setNomen(String nomen) {
 		this.nomen = nomen;
