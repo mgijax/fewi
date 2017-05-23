@@ -118,9 +118,6 @@ public class GXDController {
 
 	private final Logger logger = LoggerFactory.getLogger(GXDController.class);
 
-	//@Autowired
-	//private SolrMarkerKeyHunter mrkKeyHunter;
-
 	@Autowired
 	private BatchFinder batchFinder;
 
@@ -1866,7 +1863,7 @@ public class GXDController {
 			List<String> tokens = QueryParser.tokeniseOnWhitespaceAndComma(query.getLocations());
 			List<Filter> locationFilters = new ArrayList<Filter>();
 			for(String token : tokens){
-				String spatialQueryString = SolrLocationTranslator.getQueryValue(token);
+				String spatialQueryString = SolrLocationTranslator.getQueryValue(token, query.getLocationUnit());
 				if(spatialQueryString !=null && !spatialQueryString.equals("")) {
 					locationFilters.add(new Filter(SearchConstants.MOUSE_COORDINATE,spatialQueryString,Filter.Operator.OP_HAS_WORD));
 				}

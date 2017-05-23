@@ -487,8 +487,10 @@ var updateQuerySummary = function() {
 			// Create a bold
 			var b = new YAHOO.util.Element(document.createElement('b'));
 			var newContent = document.createTextNode(YAHOO.util.Dom.get('locations').value);
+			var units = document.createTextNode(" " + YAHOO.util.Dom.get('locationUnit').value);
 			// Build and append the nomenclature query parameter section
 			b.appendChild(newContent);
+			b.appendChild(units);
 			el.appendChild(b);
 
 			el.appendChild(new YAHOO.util.Element(document.createElement('br')));

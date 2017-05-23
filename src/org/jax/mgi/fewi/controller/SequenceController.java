@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Probe;
@@ -22,6 +23,8 @@ import mgi.frontend.datamodel.SequenceLocation;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.SequenceFinder;
+import org.jax.mgi.fewi.forms.SequenceQueryForm;
+import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -31,6 +34,7 @@ import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.SeqSummaryRow;
+import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.BlastableSequence;
 import org.jax.mgi.fewi.util.StyleAlternator;
 import org.jax.mgi.fewi.util.link.IDLinker;
@@ -38,7 +42,9 @@ import org.jax.mgi.shr.jsonmodel.SimpleSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,6 +64,15 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(value="/sequence")
 public class SequenceController {
 
+    //--------------------//
+    // static variables
+    //--------------------//
+
+	// sort facet values alphabetically
+	private static String ALPHA = "alpha";
+
+	// keep facet values sorted as returned by Solr
+	private static String RAW = "raw";	
 
     //--------------------//
     // instance variables
@@ -65,6 +80,9 @@ public class SequenceController {
 
     private final Logger logger
       = LoggerFactory.getLogger(SequenceController.class);
+
+	@Value("${solr.factetNumberDefault}")
+	private Integer facetLimit; 
 
     @Autowired
     private IDLinker idLinker;
@@ -254,7 +272,7 @@ public class SequenceController {
     }
     
     private ModelAndView seqSummaryByRef(List<Reference> refList, String refKey){
-        ModelAndView mav = new ModelAndView("sequence_summary_reference");
+        ModelAndView mav = new ModelAndView("sequence_summary");
 
         // there can be only one...
         if (refList.size() < 1) {
@@ -319,7 +337,7 @@ public class SequenceController {
     }
     
     private ModelAndView seqSummeryByMarker(List<Marker> markerList, String markerKey, String provider){
-        ModelAndView mav = new ModelAndView("sequence_summary_marker");
+        ModelAndView mav = new ModelAndView("sequence_summary");
         
         // there can be only one...
         if (markerList.size() < 1) {
@@ -350,26 +368,15 @@ public class SequenceController {
         return mav;	
     }
 
-    /*
-     * JSON summary results
+    /* generate the Filters for Solr based on the input parameters (wrapped in QF object)
      */
-    @RequestMapping("/json")
-    public @ResponseBody JsonSummaryResponse<SeqSummaryRow> seqSummaryJson(
-            HttpServletRequest request,
-            @ModelAttribute Paginator page) {
-
-        logger.debug("->JsonSummaryResponse started");
-
-        // generate search parms object to pass to finders
-        SearchParams params = new SearchParams();
-        params.setSorts(genSorts(request));
-        params.setPaginator(page);
-
-        // parameter parsing
+    private Filter genFilters(SequenceQueryForm qf) {
         List<Filter> filterList = new ArrayList<Filter>();
-        String refKey = request.getParameter("refKey");
-        String mrkKey = request.getParameter("mrkKey");
-        String provider = request.getParameter("provider");
+        String refKey = qf.getRefKey();
+        String mrkKey = qf.getMrkKey();
+        String provider = qf.getProvider();
+        List<String> strains = qf.getStrain();
+        List<String> types = qf.getType();
 
         if (refKey != null) {
             filterList.add(new Filter(SearchConstants.REF_KEY, refKey));
@@ -380,13 +387,35 @@ public class SequenceController {
         if (provider != null) {
             filterList.add(new Filter(SearchConstants.SEQ_PROVIDER, provider));
 	    }
+        if (types != null) {
+            filterList.add(new Filter(SearchConstants.SEQ_TYPE, types, Filter.Operator.OP_IN));
+	    }
+        if (strains != null) {
+            filterList.add(new Filter(SearchConstants.SEQ_STRAIN, strains, Filter.Operator.OP_IN));
+	    }
 
         Filter containerFilter = new Filter();
         if (filterList.size() > 0){
             containerFilter.setFilterJoinClause(Filter.JoinClause.FC_AND);
             containerFilter.setNestedFilters(filterList);
 		}
-        params.setFilter(containerFilter);
+        return containerFilter;
+    }
+    
+    /*
+     * JSON summary results
+     */
+    @RequestMapping("/json")
+    public @ResponseBody JsonSummaryResponse<SeqSummaryRow> seqSummaryJson(@ModelAttribute SequenceQueryForm qf,
+            @ModelAttribute Paginator page) {
+
+        logger.debug("->JsonSummaryResponse started");
+
+        // generate search parms object to pass to finders
+        SearchParams params = new SearchParams();
+        params.setSorts(genSorts());
+        params.setPaginator(page);
+        params.setFilter(genFilters(qf));
 
         // perform query, and pull out the sequences requested
         SearchResults<SimpleSequence> searchResults = sequenceFinder.getSequences(params);
@@ -781,7 +810,7 @@ public class SequenceController {
     }
 
     // generate the sorts
-    private List<Sort> genSorts(HttpServletRequest request) {
+    private List<Sort> genSorts() {
 
         logger.debug("->genSorts started");
 
@@ -790,5 +819,70 @@ public class SequenceController {
         sorts.add(typeSort);
         return sorts;
     }
+
+	/* parse the response from Solr for a facet query and return it as a
+	 * Map with two possible keys (error and resultFacets).
+	 */
+	private Map<String, List<String>> parseFacetResponse (SearchResults<SimpleSequence> results, String order) {
+
+		Map<String, List<String>> m = new HashMap<String, List<String>>();
+		List<String> l = new ArrayList<String>();
+
+		if (results.getResultFacets().size() >= facetLimit) {
+			l.add("Too many results to display.  Modify your search or try another filter first.");
+			m.put("error", l);
+		} else if (results.getResultFacets().size() == 0) {
+			l.add("No values in results to filter.");
+			m.put("error", l);
+		} else if (ALPHA.equals(order)) {
+			m.put("resultFacets", results.getSortedResultFacets());
+		} else if (RAW.equals(order)) {
+			m.put("resultFacets", results.getResultFacets());
+		} else {
+			// fallback on alpha if unknown ordering
+			m.put("resultFacets", results.getSortedResultFacets());
+		}
+		return m;
+	}
+
+	// -----------------------
+	// handle facets (filters)
+	// -----------------------
+
+	public Map<String, List<String>> facetGeneric (SequenceQueryForm qf, BindingResult result, String facetType) {
+
+		logger.debug(qf.toString());
+		String order = ALPHA;
+
+		SearchParams params = new SearchParams();
+		params.setFilter(genFilters(qf));
+
+		SearchResults<SimpleSequence> facetResults = null;
+
+		if (FacetConstants.SEQ_TYPE.equals(facetType)) {
+			facetResults = sequenceFinder.getTypeFacet(params);
+		} else if (FacetConstants.SEQ_STRAIN.equals(facetType)) {
+			facetResults = sequenceFinder.getStrainFacet(params);
+		} else {
+			facetResults = new SearchResults<SimpleSequence>();
+		}
+		return parseFacetResponse(facetResults, order);
+	}
+
+	/* get a list of strain values for the strain facet list, returned as JSON
+	 */
+	@RequestMapping("/facet/strain")
+	public @ResponseBody Map<String, List<String>> facetStrain (@ModelAttribute SequenceQueryForm qf, BindingResult result, HttpServletResponse response) {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return facetGeneric (qf, result, FacetConstants.SEQ_STRAIN);
+	}
+
+	/* get a list of sequence types for the type facet list, returned as JSON
+	 */
+	@RequestMapping("/facet/type")
+	public @ResponseBody Map<String, List<String>> facetType (@ModelAttribute SequenceQueryForm qf, BindingResult result, HttpServletResponse response) {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return facetGeneric (qf, result, FacetConstants.SEQ_TYPE);
+	}
 
 }

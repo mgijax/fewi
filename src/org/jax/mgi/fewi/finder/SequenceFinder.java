@@ -5,6 +5,8 @@ import mgi.frontend.datamodel.Sequence;
 
 import org.jax.mgi.fewi.hunter.HibernateSequenceHunter;
 import org.jax.mgi.fewi.hunter.SolrSequenceHunter;
+import org.jax.mgi.fewi.hunter.SolrSequenceStrainFacetHunter;
+import org.jax.mgi.fewi.hunter.SolrSequenceTypeFacetHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -38,6 +40,12 @@ public class SequenceFinder {
 
     @Autowired 
     private SolrSequenceHunter solrSequenceHunter;
+
+    @Autowired 
+    private SolrSequenceTypeFacetHunter typeFacetHunter;
+
+    @Autowired 
+    private SolrSequenceStrainFacetHunter strainFacetHunter;
 
     @Autowired
     private HibernateObjectGatherer<Sequence> sequenceGatherer;
@@ -115,4 +123,20 @@ public class SequenceFinder {
 
         return searchResults;
     }
+    
+    /* retrieval of strain facet
+     */
+	public SearchResults<SimpleSequence> getStrainFacet(SearchParams params) {
+		SearchResults<SimpleSequence> results = new SearchResults<SimpleSequence>();
+		strainFacetHunter.hunt (params, results);
+		return results;
+	}
+
+    /* retrieval of type facet
+     */
+	public SearchResults<SimpleSequence> getTypeFacet(SearchParams params) {
+		SearchResults<SimpleSequence> results = new SearchResults<SimpleSequence>();
+		typeFacetHunter.hunt (params, results);
+		return results;
+	}
 }

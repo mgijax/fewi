@@ -1,3 +1,8 @@
+var myDataTable = null;
+var myDataSource = null;
+var handleHistoryNavigation = null;
+var generateRequest = null;
+
 function main() {
     // Column definitions -- sortable:true enables sorting
     // These are our actual columns, in the default ordering.
@@ -37,10 +42,8 @@ function main() {
             width:100}
     ];
 
-    // DataSource instance
-    var myDataSource = new YAHOO.util.XHRDataSource(fewiurl + "sequence/json?" + querystring + "&");
-	//var myDataSource = new YAHOO.util.DataSource("http://faramir.informatics.jax.org/sequence/json?refKey=110841&");
-	//var myDataSource = new YAHOO.util.DataSource("../json?refKey=110841&");
+    // DataSource instance (global)
+    myDataSource = new YAHOO.util.XHRDataSource(fewiurl + "sequence/json?" + querystring + "&");
 
     myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
     myDataSource.responseSchema = {
@@ -79,9 +82,8 @@ function main() {
         initialLoad : false
     };  
     
-    // DataTable instance
-    var myDataTable = new YAHOO.widget.DataTable("dynamicdata", myColumnDefs, 
-    	    myDataSource, myConfigs);
+    // DataTable instance (global)
+    myDataTable = new YAHOO.widget.DataTable("dynamicdata", myColumnDefs, myDataSource, myConfigs);
     
     // Show loading message while page is being rendered
     myDataTable.showTableMessage(myDataTable.get("MSG_LOADING"), 
@@ -134,26 +136,21 @@ function main() {
             rowsPerPage: Number(pRequest['results']) || 25,
             recordOffset: Number(pRequest['startIndex']) || 0
         };
-//        oPayload.sortedBy = {
-//            key: pRequest['sort'] || "seqType",
-//            dir: pRequest['dir'] ? "yui-dt-" + pRequest['dir'] : "yui-dt-asc" // Convert from server value to DataTable format
-//        };
 
         return true;
     };
 
-    // Returns a request string for consumption by the DataSource
-    var generateRequest = function(startIndex,sortKey,dir,results) {
+    // Returns a request string for consumption by the DataSource (global)
+    generateRequest = function(startIndex,sortKey,dir,results) {
     	startIndex = startIndex || 0;
         sortKey   = sortKey || "seqType";
         dir   = (dir) ? dir.substring(7) : "asc"; // Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
         results   = results || 25;
-        return "results="+results+"&startIndex="+startIndex+"&sort="+sortKey+"&dir="+dir;
+        return "results="+results+"&startIndex="+startIndex+"&sort="+sortKey+"&dir="+dir + filters.getUrlFragment();
     };
 
-    // Called by Browser History Manager to trigger a new state
-    var handleHistoryNavigation = function (request) {
-    	
+    // Called by Browser History Manager to trigger a new state (global)
+    handleHistoryNavigation = function (request) {
     	myDataTable.showTableMessage(myDataTable.get("MSG_LOADING"), YAHOO.widget.DataTable.CLASS_LOADING);
     	
     	// Sends a new request to the DataSource
@@ -163,7 +160,7 @@ function main() {
             scope : myDataTable,
             argument : {} // Pass in container for population at runtime via doBeforeLoadData
         });
-
+	    filters.populateFilterSummary();
     };
 
     // Calculate the first request
@@ -196,3 +193,9 @@ function parseRequest(request){
 	return reply;
 }
 
+/* not sure why filtering causes the screen to scoll down toward the bottom of the results table, but
+ * we use this function to bring it back up
+ */
+function scrollUp() {
+	setTimeout(function() { window.scrollTo(0, $('#titleBarWrapper').offset().top); }, 250);
+}
