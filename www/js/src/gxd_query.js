@@ -1372,6 +1372,7 @@ var resetQF = function (e) {
 	form.theilerStage.selectedIndex = 0;
 	form.age.selectedIndex = 0;
 	form.locations.value = "";
+	$('#locationUnit').val('bp');
 	selectTheilerStage();
 	allAssayTypesBox.checked = true;
 	for(var key in assayTypesBoxes)
