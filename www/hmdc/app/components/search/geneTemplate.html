@@ -1,6 +1,12 @@
+<script>
+function downloadGeneFile(obj) {
+	window.location = obj.getAttribute("href");
+	return false;
+}
+</script>
 <div ng-controller="GeneController">
 	<div ng-show="vm.filteredResults.length > 0">
-	Export: <a href="{{FEWI_URL}}diseasePortal/marker/report.txt?jsonEncodedInput={{ jsonEncodedQuery }}"><img src="{{WEBSHARE_URL}}images/text.png" width="12" height="12">Text File</a> 
+	Export: <a href="{{FEWI_URL}}diseasePortal/marker/report.txt?jsonEncodedInput={{ jsonEncodedQuery }}" onClick="downloadGeneFile(this);"><img src="{{WEBSHARE_URL}}images/text.png" width="12" height="12">Text File</a> 
 	</div>
 	<div ng-hide="vm.filteredResults.length > 0">
 		No Matching Genes

@@ -3,7 +3,7 @@
 	<body id="body">
 		<div id="headerContainer">
 			<div class="hmdcbox">
-				<a href="${configBean.FEWI_URL}diseasePortal"><img src="${configBean.FEWI_URL}assets/images/HMDC_logo.jpg" height=40 /></a>
+				<a href="${configBean.FEWI_URL}diseasePortal" onClick="window.location='${configBean.FEWI_URL}diseasePortal'"><img src="${configBean.FEWI_URL}assets/images/HMDC_logo.jpg" height=40 /></a>
 			</div>	
 			<div class="links floatleft">
 				<a target="_blank" href="${configBean.MGIHOME_URL}projects/aboutHMDC.shtml">About</a>
