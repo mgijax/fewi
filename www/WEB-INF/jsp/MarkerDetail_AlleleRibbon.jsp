@@ -17,22 +17,22 @@
 								</div>
 								<div class="value">
 									<c:if test="${marker.countOfAllelesMP > 0}">
-										<a href="${configBean.FEWI_URL}marker/phenotypes/${marker.primaryID}">${marker.countOfAnnotationsMP}</a> phenotype<c:if test="${marker.countOfAnnotationsMP > 1}">s</c:if>
+										<a href="${configBean.FEWI_URL}marker/phenotypes/${marker.primaryID}" id="phenoAnnotationLink">${marker.countOfAnnotationsMP}</a> phenotype<c:if test="${marker.countOfAnnotationsMP > 1}">s</c:if>
 										from ${marker.countOfAllelesMP} allele<c:if test="${marker.countOfAllelesMP > 1}">s</c:if>
 										<c:if test="${marker.countOfBackgroundStrains > 0}">in ${marker.countOfBackgroundStrains} genetic background<c:if test="${marker.countOfBackgroundStrains > 1}">s</c:if></c:if>
 										<br/>
 									</c:if>
 									<c:if test="${marker.countOfOtherPhenotypeAnnotations > 0}">
-										<a href="${configBean.FEWI_URL}marker/phenotypes/${marker.primaryID}?multigenic=1">${marker.countOfOtherPhenotypeAnnotations}</a> phenotype<c:if test="${marker.countOfOtherPhenotypeAnnotations > 1}">s</c:if> from multigenic genotypes
+										<a href="${configBean.FEWI_URL}marker/phenotypes/${marker.primaryID}?multigenic=1" id="phenoMultigenicLink">${marker.countOfOtherPhenotypeAnnotations}</a> phenotype<c:if test="${marker.countOfOtherPhenotypeAnnotations > 1}">s</c:if> from multigenic genotypes
 										<br/>
 									</c:if>
 
 									<c:if test="${marker.countOfPhenotypeImages > 0}">
-										<a href="${configBean.FEWI_URL}image/phenoSummary/marker/${marker.primaryID}">${marker.countOfPhenotypeImages}</a> images
+										<a href="${configBean.FEWI_URL}image/phenoSummary/marker/${marker.primaryID}" id="phenoImageLink">${marker.countOfPhenotypeImages}</a> images
 										<br/>
 									</c:if>
 									<c:if test="${marker.countOfPhenotypeReferences > 0}">
-										<a href="${configBean.FEWI_URL}reference/phenotype/marker/${marker.primaryID}?typeFilter=Literature">${marker.countOfPhenotypeReferences}</a> phenotype reference<c:if test="${marker.countOfPhenotypeReferences > 1}">s</c:if>
+										<a href="${configBean.FEWI_URL}reference/phenotype/marker/${marker.primaryID}?typeFilter=Literature" id="phenoRefLink">${marker.countOfPhenotypeReferences}</a> phenotype reference<c:if test="${marker.countOfPhenotypeReferences > 1}">s</c:if>
 										<br/>
 									</c:if>
 								</div>
@@ -74,15 +74,16 @@
 							<li>
 								<div class="label">All Mutations and Alleles</div>
 								<div class="value">
-									<a href="${alleleUrl}">${marker.countOfAlleles}</a>
+									<a href="${alleleUrl}" id="phenoMutationLink">${marker.countOfAlleles}</a>
 								</div>
 							</li>
 
 							<c:forEach var="item" items="${marker.alleleCountsByType}">
+								<c:set var="myID" value="${fn:replace(fn:replace(fn:replace(fn:replace(item.countType, '-', ''), '(', ''), ')', ''), ' ', '')}Link"/>
 								<li>
 									<div class="label unbold">${item.countType}</div>
 									<div class="value">
-										<a href="${alleleUrl}&alleleType=${item.countType}">${item.count}</a>
+										<a href="${alleleUrl}&alleleType=${item.countType}" id="${myID}">${item.count}</a>
 									</div>
 								</li>
 							</c:forEach>
@@ -92,7 +93,7 @@
 							<li>
 								<div class="label">Genomic Mutations</div>
 								<div class="value">
-									<a href="${alleleUrl}&mutationInvolves=1">${marker.countOfMutationInvolves}</a> involving ${marker.symbol}
+									<a href="${alleleUrl}&mutationInvolves=1" id="GenomicMutationsLink">${marker.countOfMutationInvolves}</a> involving ${marker.symbol}
 								</div>
 							</li>
 						</c:if>
@@ -111,7 +112,7 @@
 						<li>
 							<div class="label">Find Mice (IMSR)</div>
 							<div class="value">
-								<a href="${configBean.IMSRURL}summary?gaccid=${marker.primaryID}">${marker.countForImsr} strains or lines available</a> 
+								<a href="${configBean.IMSRURL}summary?gaccid=${marker.primaryID}" id="imsrLink">${marker.countForImsr} strains or lines available</a> 
 							</div>
 						</li>
 

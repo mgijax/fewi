@@ -17,7 +17,7 @@
 									<div class="label">
 										All GO Annotations
 									</div>
-									<div class="value"><a href="${configBean.FEWI_URL}go/marker/${marker.primaryID}">${marker.countOfGOTerms}</a></div>
+									<div class="value"><a href="${configBean.FEWI_URL}go/marker/${marker.primaryID}" id="goAnnotLink">${marker.countOfGOTerms}</a></div>
 								</li>
 							</c:if>
 
@@ -26,7 +26,7 @@
 									<div class="label">
 										GO References
 									</div>
-									<div class="value"><a href="${configBean.FEWI_URL}reference/go/marker/${marker.primaryID}?typeFilter=Literature">${marker.countOfGOReferences}</a></div>
+									<div class="value"><a href="${configBean.FEWI_URL}reference/go/marker/${marker.primaryID}?typeFilter=Literature" id="goRefLink">${marker.countOfGOReferences}</a></div>
 								</li>
 							</c:if>
 

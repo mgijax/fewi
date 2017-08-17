@@ -114,7 +114,7 @@
 							<ul>
 								<li>
 									<div class="label">Mutations/Alleles</div>
-									<div class="value"><a href="${configBean.FEWI_URL}allele/summary?markerId=${marker.primaryID}&hasDO=1">${marker.countOfAllelesWithHumanDiseases}</a> with disease annotations</div>
+									<div class="value"><a href="${configBean.FEWI_URL}allele/summary?markerId=${marker.primaryID}&hasDO=1" id="diseaseMutationLink">${marker.countOfAllelesWithHumanDiseases}</a> with disease annotations</div>
 								</li>
 							</ul>
 						</section>
@@ -124,7 +124,7 @@
 							<ul>
 								<li>
 									<div class="label">References</div>
-									<div class="value"><a href="${configBean.FEWI_URL}reference/diseaseRelevantMarker/${marker.primaryID}">${diseaseRefCount}</a> with disease annotations</div>
+									<div class="value"><a href="${configBean.FEWI_URL}reference/diseaseRelevantMarker/${marker.primaryID}" id="diseaseRefLink">${diseaseRefCount}</a> with disease annotations</div>
 								</li>
 							</ul>
 						</section>

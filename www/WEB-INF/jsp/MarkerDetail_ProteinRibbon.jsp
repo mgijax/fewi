@@ -15,7 +15,7 @@
 					<c:if test='${marker.countOfUniProtSequences > 0}'>
 						<li>
 							<div class="label">UniProt</div>
-							<div class="value"><a href='${configBean.FEWI_URL}sequence/marker/${marker.primaryID}?provider=UniProt'>${marker.countOfUniProtSequences}</a> Sequence<c:if test="${marker.countOfUniProtSequences > 1}">s</c:if></div>
+							<div class="value"><a href='${configBean.FEWI_URL}sequence/marker/${marker.primaryID}?provider=UniProt' id='uniprotLink'>${marker.countOfUniProtSequences}</a> Sequence<c:if test="${marker.countOfUniProtSequences > 1}">s</c:if></div>
 						</li>
 					</c:if>
 					<c:if test='${not empty marker.proteinOntologyAnnotations}'>

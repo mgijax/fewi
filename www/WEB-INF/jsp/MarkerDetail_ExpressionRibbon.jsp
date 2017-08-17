@@ -53,28 +53,28 @@
 									<c:if test="${marker.countOfGxdResults > 0}">
 										<li>
 											<div class="label">Assay Results</div>
-											<div class="value"><a href="${configBean.FEWI_URL}gxd/marker/${marker.primaryID}">${marker.countOfGxdResults}</a></div>
+											<div class="value"><a href="${configBean.FEWI_URL}gxd/marker/${marker.primaryID}" id="gxdAssayLink">${marker.countOfGxdResults}</a></div>
 										</li>
 									</c:if>
 
 									<c:if test="${marker.countOfGxdTissues > 0}">
 										<li>
 											<div class="label">Tissues</div>
-											<div class="value"><a href="${configBean.FEWI_URL}tissue/marker/${marker.primaryID}">${marker.countOfGxdTissues}</a></div>
+											<div class="value"><a href="${configBean.FEWI_URL}tissue/marker/${marker.primaryID}" id="gxdTissueLink">${marker.countOfGxdTissues}</a></div>
 										</li>
 									</c:if>
 
 									<c:if test="${marker.countOfCdnaSources > 0}">
 										<li>
 											<div class="label">cDNA Data</div>
-											<div class="value"><a href="${configBean.FEWI_URL}gxd/cdna/marker/${marker.primaryID}">${marker.countOfCdnaSources}</a></div>
+											<div class="value"><a href="${configBean.FEWI_URL}gxd/cdna/marker/${marker.primaryID}" id="gxdCdnaLink">${marker.countOfCdnaSources}</a></div>
 										</li>
 									</c:if>
 
 									<c:if test="${marker.countOfGxdLiterature > 0}">
 										<li>
 											<div class="label">Literature Summary</div>
-											<div class="value"><a href="${configBean.FEWI_URL}gxdlit/marker/${marker.primaryID}">${marker.countOfGxdLiterature}</a></div>
+											<div class="value"><a href="${configBean.FEWI_URL}gxdlit/marker/${marker.primaryID}" id="gxdLitLink">${marker.countOfGxdLiterature}</a></div>
 										</li>
 									</c:if>
 								</ul>

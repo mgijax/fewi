@@ -28,11 +28,11 @@
 											<c:set var="reagentType" value=""/>
 										</c:when>
 									</c:choose>
-									<div style="float: left; padding-right: 25px;">${item.countType} <a href="${reagentUrl}${reagentType}">${item.count}</a></div>
+									<div style="float: left; padding-right: 25px;">${item.countType} <a href="${reagentUrl}${reagentType}" id="${fn:replace(item.countType, ' ', '')}Link">${item.count}</a></div>
 								</c:forEach>
 								<c:if test="${marker.countOfMicroarrayProbesets > 0}">
 									<br/>
-									<div style="float: left; padding-right: 25px;">Microarray probesets <a href="${configBean.FEWI_URL}marker/probeset/${marker.primaryID}">${marker.countOfMicroarrayProbesets}</a></div>
+									<div style="float: left; padding-right: 25px;">Microarray probesets <a href="${configBean.FEWI_URL}marker/probeset/${marker.primaryID}" id="microarrayLink">${marker.countOfMicroarrayProbesets}</a></div>
 								</c:if>
 							</div>
 						</li>

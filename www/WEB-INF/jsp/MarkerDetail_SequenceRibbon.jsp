@@ -17,19 +17,19 @@
 					<c:if test="${marker.countOfSequences > 0}">
 					<li>
 					<div class="label">All Sequences</div>
-					<div class="value"><a href="${configBean.FEWI_URL}sequence/marker/${marker.primaryID}">${marker.countOfSequences}</a></div>
+					<div class="value"><a href="${configBean.FEWI_URL}sequence/marker/${marker.primaryID}" id="allSeqLink">${marker.countOfSequences}</a></div>
 					</li>
 					</c:if>
 					<c:if test="${marker.countOfRefSeqSequences > 0}">
 					<li>
 					<div class="label" style="font-weight: normal">RefSeq</div>
-					<div class="value"><a href="${configBean.FEWI_URL}sequence/marker/${marker.primaryID}?provider=RefSeq">${marker.countOfRefSeqSequences}</a></div>
+					<div class="value"><a href="${configBean.FEWI_URL}sequence/marker/${marker.primaryID}?provider=RefSeq" id="refseqLink">${marker.countOfRefSeqSequences}</a></div>
 					</li>
 					</c:if>
 					<c:if test="${marker.countOfUniProtSequences > 0}">
 					<li>
 					<div class="label" style="font-weight: normal">UniProt</div>
-					<div class="value"><a href="${configBean.FEWI_URL}sequence/marker/${marker.primaryID}?provider=UniProt">${marker.countOfUniProtSequences}</a></div>
+					<div class="value"><a href="${configBean.FEWI_URL}sequence/marker/${marker.primaryID}?provider=UniProt" id="uniprotSeqLink">${marker.countOfUniProtSequences}</a></div>
 					</li>
 					</c:if>
 					<c:if test="${not empty marker.ccdsIDs}">

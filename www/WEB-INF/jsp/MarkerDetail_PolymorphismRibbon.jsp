@@ -22,7 +22,7 @@
 									<li>
 									<c:set var="polyUrl" value="${configBean.FEWI_URL}snp/marker/${marker.primaryID}"/>
 										<div class="label" style="white-space: normal;">${item.countType}</div>
-										<div class="value"><a href="${polyUrl}">${item.count}</a>
+										<div class="value"><a href="${polyUrl}" id="snpLink">${item.count}</a>
 											<c:if test="${not empty snpBuildNumber}"><span style="font-size: smaller; font-weight: normal;">from ${snpBuildNumber}</span></c:if>
 										</div>
 									</li>
@@ -39,7 +39,7 @@
 								<li>
 									<c:set var="polyUrl" value="${configBean.FEWI_URL}marker/polymorphisms/${fn:toLowerCase(item.countType)}/${marker.primaryID}"/>
 									<div class="label" style="white-space: normal;">${item.countType}</div>
-									<div class="value"><a href="${polyUrl}">${item.count}</a></div>
+									<div class="value"><a href="${polyUrl}" id="${item.countType}Link">${item.count}</a></div>
 								</li>
 							</c:if>
 						</c:forEach>
