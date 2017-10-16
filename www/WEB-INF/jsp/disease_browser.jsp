@@ -150,6 +150,10 @@
     <span class="diseaseHeaderDisease">
       <span id="diseaseNameID">${disease.disease} (<%= idLinker.getLink("Disease Ontology", disease.getPrimaryID()) %>)</span>
     </span><br/>  
+    <span class="bold">Alliance:</span>
+    <span id="allianceLink">
+      <a href="${fn:replace(externalUrls.AGR_Disease, '@@@@', disease.primaryID)}" target="_blank">disease page</a>
+    </span><br/>
     <c:if test="${not empty disease.diseaseSynonyms}">
       <span class="bold">Synonyms:</span>
       <span id="diseaseSynonym">
