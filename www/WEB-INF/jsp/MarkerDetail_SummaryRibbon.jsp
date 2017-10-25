@@ -99,12 +99,14 @@
 							</div>
 						</li>
 					</c:if>
-					<li>
-						<div class="label">Alliance</div>
-						<div class="value">
-							<a id="allianceLink" href="${fn:replace(externalUrls.AGR_Gene, '@@@@', marker.primaryID)}" target="_blank">gene page</a>
-						</div>
-					</li>
+					<c:if test="${(marker.markerType == 'Gene') or (marker.markerType == 'Pseudogene')}">
+						<li>
+							<div class="label">Alliance</div>
+							<div class="value">
+								<a id="allianceLink" href="${fn:replace(externalUrls.AGR_Gene, '@@@@', marker.primaryID)}" target="_blank">gene page</a>
+							</div>
+						</li>
+					</c:if>
 				</ul>
 			</section>
 
