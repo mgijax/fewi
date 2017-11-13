@@ -1101,8 +1101,11 @@ public class VocabularyController {
     	// short-circuit for searches by ID
     	if (Pattern.matches("[A-Za-z]+:[A-Za-z0-9]+", term.trim())) {
     		ArrayList<Filter> idFilters = new ArrayList<Filter>();
+    		ArrayList<Filter> subFilters = new ArrayList<Filter>();
     		idFilters.add(new Filter(SearchConstants.VB_VOCAB_NAME, vocabName));
-    		idFilters.add(new Filter(SearchConstants.VB_ACC_ID, term.trim()));
+    		subFilters.add(new Filter(SearchConstants.VB_ACC_ID, term.trim()));
+    		subFilters.add(new Filter(SearchConstants.VB_CROSSREF, term.trim()));
+    		idFilters.add(Filter.or(subFilters));
     		sp.setFilter(Filter.and(idFilters));
 
     	} else {

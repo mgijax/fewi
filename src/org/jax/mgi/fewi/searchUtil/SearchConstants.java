@@ -264,4 +264,5 @@ public class SearchConstants {
 	public static final String VB_SEQUENCE_NUM = "sequenceNum";
 	public static final String VB_VOCAB_NAME = "vocabName";
 	public static final String VB_DAG_NAME = "dagName";
+	public static final String VB_CROSSREF = "crossRef";
 }
