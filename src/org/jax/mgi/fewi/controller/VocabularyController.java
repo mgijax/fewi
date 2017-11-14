@@ -203,21 +203,23 @@ public class VocabularyController {
 	
 	String cleanTerm = term.replaceAll("-", " ");
 	cleanTerm = cleanTerm.replaceAll(",", " ");
-	cleanTerm = cleanTerm.replaceAll("[^A-Za-z0-9\\s]", "");
+	cleanTerm = cleanTerm.replaceAll("[^A-Za-z0-9:\\s]", "");
 	cleanTerm = cleanTerm.replaceAll("\\s\\s+", " ");
 
 	SearchParams sp = new SearchParams();
 
 	// need to AND the requested tokens together, then OR the searches of
-	// structure and synonyms
+	// structure, synonyms, and crossRefs
 
 	ArrayList<Filter> structureFilters = new ArrayList<Filter>();
 	ArrayList<Filter> synonymFilters = new ArrayList<Filter>();
+	ArrayList<Filter> crossRefFilters = new ArrayList<Filter>();
 	ArrayList<String> tokens = new ArrayList<String>();
 
 	for (String token : cleanTerm.split("\\s")) {
 	    structureFilters.add(new Filter(SearchConstants.STRUCTURE, token));
 	    synonymFilters.add(new Filter(SearchConstants.SYNONYM, token));
+	    crossRefFilters.add(new Filter(SearchConstants.CROSS_REF, token));
 	    tokens.add(token);
 	}
 
@@ -225,6 +227,7 @@ public class VocabularyController {
 
 	eitherFilters.add(Filter.and(structureFilters));
 	eitherFilters.add(Filter.and(synonymFilters));
+	eitherFilters.add(Filter.and(crossRefFilters));
 
 	sp.setFilter(Filter.or(eitherFilters));
 
@@ -521,6 +524,32 @@ public class VocabularyController {
 
 	mav.addObject("dropdown", dropdown.toString()); 
 	mav.addObject("dropdownMsg", dropdownMsg);
+
+	return mav;
+    }
+
+    /* GXD Anatomy browser with terms that have specified crossReference ID (MP) */
+
+    @SuppressWarnings("unchecked")
+	@RequestMapping("/gxd/anatomy/by_phenotype/{id}")
+    public ModelAndView getAnatomyDetailByPhenotype(@PathVariable("id") String id) {
+	logger.debug("->getAnatomyDetailByPhenotype(" + id + ") started");
+
+	List<SolrAnatomyTerm> results = (List<SolrAnatomyTerm>) getAnatomySearchPane(id).getModel().get("results");
+	if (results.size() == 0) {
+		return errorMav("ID not recognized for anatomy cross-references: " + id);
+	}
+	
+	List<VocabTerm> terms = vocabFinder.getTermByID(results.get(0).getAccID());
+
+	if (terms.size() < 1) { return errorMav("No Anatomy term found"); }
+	else if (terms.size() > 1) { return errorMav("Duplicate ID"); }
+
+	VocabTerm term = terms.get(0);
+
+	ModelAndView mav = new ModelAndView("anatomy_detail");
+	mav.addObject("term", term);
+	mav.addObject("searchTerm", id);
 
 	return mav;
     }

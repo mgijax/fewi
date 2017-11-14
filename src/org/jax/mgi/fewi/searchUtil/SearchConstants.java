@@ -123,6 +123,7 @@ public class SearchConstants {
     public static final String VOC_RESTRICTION      = "qualifier";
     public static final String TERM_ID		    = "termID";
     public static final String ANNOTATION_KEY	    = "annotationKey";
+    public static final String CROSS_REF		    = "crossRef";
 
     // Images
 
