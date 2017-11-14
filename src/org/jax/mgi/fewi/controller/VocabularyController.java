@@ -713,6 +713,37 @@ public class VocabularyController {
     	return term.getTerm() + " Mammalian Phenotype Term (" + term.getPrimaryID().getAccID() + ")";
     }
 
+    /* Mammalian Phenotype browser for a specified EMAPA ID */
+
+   	@SuppressWarnings("unchecked")
+    @RequestMapping("/mp_ontology/by_anatomy/{id}")
+    public ModelAndView getMPAnatomySearch(@PathVariable("id") String id) {
+    	logger.debug("->getMPAnatomySearch(" + id + ") started");
+
+    	ModelAndView tempMav = getSharedBrowserSearchPane(id, MP_VOCAB);
+		List<VocabBrowserSearchResult> results = (List<VocabBrowserSearchResult>) tempMav.getModel().get("results");
+    	String topID = "MP:0000001";
+    	if (results.size() > 0) {
+    		topID = results.get(0).getAccID();
+    	}
+
+    	ModelAndView mav = getSharedBrowserDetail(topID, MP_VOCAB);
+    	mav.addObject("searchTerm", id);
+    	mav.addObject("pageTitle", "Mammalian Phenotype Browser");
+    	mav.addObject("searchPaneTitle", "Phenotype Search");
+    	mav.addObject("termPaneTitle", "Phenotype Term Detail");
+    	mav.addObject("treePaneTitle", "Phenotype Tree View");
+    	mav.addObject("helpDoc", "VOCAB_mp_browser_help.shtml");
+    	mav.addObject("branding", "MGI");
+    	mav.addObject("seoDescription", "The Mammalian Phenotype (MP) Ontology is a community effort to "
+    		+ "provide standard terms for annotating phenotypic data. You can use this browser to view terms, "
+    		+ "definitions, and term relationships in a hierarchical display. Links to summary annotated "
+    		+ "phenotype data at MGI are provided in Term Detail reports.");
+    	mav.addObject("title", getMPTitle((BrowserTerm) mav.getModel().get("term")));
+    	fillMPUrls(mav);
+    	return mav;
+    }
+    
     /* Mammalian Phenotype browser for a specified MP ID */
 
     @RequestMapping("/mp_ontology/{id}")
