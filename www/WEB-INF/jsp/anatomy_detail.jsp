@@ -27,7 +27,6 @@
       = new StyleAlternator("detailListBg1","detailListBg2");
     VocabTerm term = (VocabTerm) request.getAttribute("term");
 %>
-
 <script type="text/javascript">
 var fewiurl = "${configBean.FEWI_URL}";
 </script>
@@ -135,6 +134,7 @@ ul.ui-autocomplete {
 </div>
 
 <script type="text/javascript">
+var crossRef = "${crossRef}";
 var treeView = null;	// global for the YUI tree itself
 var defaultPath = null;	// list of IDs on path from root to selected node
 var waitForPath = true;	// are we waiting for defaultPath to load?
@@ -605,17 +605,19 @@ function fillSearchPane(contents) {
     return;
 }
 
-function refreshSearchPane() {
+function refreshSearchPane(initialSearch) {
     // refresh the search pane
 
-    var searchTerm = "";
+    var searchTerm = initialSearch;
+    if ((searchTerm == null) || (searchTerm == undefined)) {
+    	searchTerm = "";
+    }
     var searchTermBox = document.getElementById("searchTerm");
     if (searchTermBox) {
-	searchTerm = searchTermBox.value;
+		searchTerm = searchTermBox.value;
     }
 
-    var sUrl = "${configBean.FEWI_URL}vocab/gxd/anatomySearch?term=" +
-	searchTerm;
+    var sUrl = "${configBean.FEWI_URL}vocab/gxd/anatomySearch?term=" + searchTerm;
     fetchAndCall (sUrl, fillSearchPane);
 }
 
@@ -623,7 +625,7 @@ function resetSearch() {
     // reset button for the search form; clear the text and the search results
 
     document.getElementById("searchTerm").value = "";
-    refreshSearchPane();
+    refreshSearchPane("");
 }
 
 function resetPanes(accID, rebuildTree) {
@@ -730,7 +732,7 @@ resizePanes();
 YAHOO.namespace("example.container");
 YAHOO.util.Event.onDOMReady(function () {	
 	resetPanes("${term.primaryId}", true);
-	refreshSearchPane();
+	refreshSearchPane(crossRef);
 	resizePanes();
 });
 

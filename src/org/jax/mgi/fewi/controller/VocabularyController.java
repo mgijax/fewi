@@ -533,11 +533,11 @@ public class VocabularyController {
     @SuppressWarnings("unchecked")
 	@RequestMapping("/gxd/anatomy/by_phenotype/{id}")
     public ModelAndView getAnatomyDetailByPhenotype(@PathVariable("id") String id) {
-	logger.debug("->getAnatomyDetailByPhenotype(" + id + ") started");
+	logger.info("->getAnatomyDetailByPhenotype(" + id + ") started");
 
 	List<SolrAnatomyTerm> results = (List<SolrAnatomyTerm>) getAnatomySearchPane(id).getModel().get("results");
 	if (results.size() == 0) {
-		return errorMav("ID not recognized for anatomy cross-references: " + id);
+		return errorMav("Phenotype ID has no anatomy cross-references: " + id);
 	}
 	
 	List<VocabTerm> terms = vocabFinder.getTermByID(results.get(0).getAccID());
@@ -549,7 +549,7 @@ public class VocabularyController {
 
 	ModelAndView mav = new ModelAndView("anatomy_detail");
 	mav.addObject("term", term);
-	mav.addObject("searchTerm", id);
+	mav.addObject("crossRef", id);
 
 	return mav;
     }
@@ -558,7 +558,7 @@ public class VocabularyController {
 
     @RequestMapping("/gxd/anatomy")
     public ModelAndView getAnatomyDetail() {
-	logger.debug("->getAnatomyDetail() started");
+	logger.info("->getAnatomyDetail() started");
 
 	// start with 'embryo' as a default
 	List<VocabTerm> terms = vocabFinder.getTermByID("EMAPA:16039");
