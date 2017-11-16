@@ -5,7 +5,6 @@ import java.util.List;
 public class SolrMPAnnotation
 {
 	String annotationKey;
-	String searchTermID;
 	String genotypeKey;
 	String allelePairs;
 	String backgroundStrain;
@@ -18,13 +17,6 @@ public class SolrMPAnnotation
 	}
 	public void setAnnotationKey(String annotationKey) {
 		this.annotationKey = annotationKey;
-	}
-
-	public String getSearchTermID() {
-		return searchTermID;
-	}
-	public void setSearchTermID(String searchTermID) {
-		this.searchTermID = searchTermID;
 	}
 
 	public String getGenotypeKey() {

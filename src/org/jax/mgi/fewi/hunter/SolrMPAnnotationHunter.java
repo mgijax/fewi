@@ -73,8 +73,6 @@ public class SolrMPAnnotationHunter extends SolrHunter<SolrMPAnnotation> {
 
 	    annot.setAnnotationKey ((String)
 		doc.getFieldValue(IndexConstants.ANNOTATION_KEY));
-	    annot.setSearchTermID((String)
-		doc.getFieldValue(IndexConstants.TERM_ID));
 	    annot.setGenotypeKey ((String)
 		doc.getFieldValue(IndexConstants.GENOTYPE_KEY));
 	    annot.setAllelePairs ((String)
