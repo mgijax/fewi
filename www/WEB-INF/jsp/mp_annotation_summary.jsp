@@ -82,7 +82,12 @@ span.tall { line-height: 150%; }
 <!-- row 2 : searched term with link to MP browser -->
 <tr class="pageInfo">
   <td colspan="3" class="mpAnnot">
+	<c:if test="${not empty mpID}">
 	  <b>Searched Term:</b> <a href="${configBean.FEWI_URL}vocab/mp_ontology/${term.primaryID}">${term.term}</a>
+	</c:if>
+	<c:if test="${not empty emapaID}">
+	  <b>Searched Anatomy Term:</b> <a href="${configBean.FEWI_URL}vocab/gxd/anatomy/${term.primaryID}">${term.term}</a>
+	</c:if>
   </td>
 </tr>
 

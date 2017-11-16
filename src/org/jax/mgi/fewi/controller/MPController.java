@@ -180,6 +180,74 @@ public class MPController {
 	return mav;
     }
 
+    //---------------------------------------------//
+    // MP annotation summary by EMAPA anatomy term
+    //---------------------------------------------//
+    @RequestMapping(value="/annotations/by_anatomy/{emapaID}")
+    public ModelAndView mpAnnotationsByAnatomyTerm (@PathVariable("emapaID") String emapaID) {
+        logger.debug("->mpAnnotationsByAnatomyTerm started");
+
+        // 1. begin building the MAV, assuming a successful return
+        ModelAndView mav = new ModelAndView("mp_annotation_summary");
+        mav.addObject("emapaID", emapaID);
+
+        // 2. get the Term object for the given ID (we need the text of the term for display)
+	
+        List<Term> termList = termFinder.getTermsByID(emapaID);
+
+        if (termList.size() < 1) {
+        	// forward to error page
+        	mav = new ModelAndView("error");
+        	mav.addObject("errorMsg", "No term found for " + emapaID);
+        	return mav;
+        }
+
+        if (termList.size() > 1) {
+        	// forward to error page
+        	mav = new ModelAndView("error");
+        	mav.addObject("errorMsg", "Two terms found for ID " + emapaID);
+        	return mav;
+        }
+
+        Term term = termList.get(0);
+        mav.addObject("term", term);
+
+        // At this point, we have an anatomy Term object.  We need to find phenotype annotations for MP terms
+        // that are associated with that term or its descendants.
+
+        // 3. set up our filters for EMAPA ID (a cross-reference)
+	
+        SearchParams searchParams = new SearchParams();
+        Filter emapaFilter = new Filter(SearchConstants.CROSS_REF, emapaID);
+	    searchParams.setFilter(emapaFilter);
+
+	    // 4. set up our sorting
+	
+	    List<Sort> sorts = new ArrayList<Sort>();
+	    Sort sort = new Sort(SortConstants.GENOTYPE_TERM, false);
+	    sorts.add(sort);
+	    searchParams.setSorts(sorts);
+
+	    // 5. get our annotations
+	
+	    searchParams.setPageSize(10000000);
+	    SearchResults<SolrMPAnnotation> searchResults = mpAnnotationFinder.getAnnotations (searchParams);
+
+	    List<SolrMPAnnotation> annotList = searchResults.getResultObjects();
+	    mav.addObject("annotationCount", annotList.size());
+
+	    // 6. bundle into MPSummaryRow objects
+
+	    List<MPSummaryRow> rows = buildSummaryRows(annotList); 
+	    mav.addObject("genotypeCount", rows.size());
+
+	    // 7. add the rows to the MAV and proceed to the JSP for formatting
+
+	    mav.addObject("rows", rows);
+	    mav.addObject("logger", logger);
+	    return mav;
+    }
+
     /* group annotations by genotype into MPSummaryRow objects
      */
     private List<MPSummaryRow> buildSummaryRows (
