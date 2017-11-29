@@ -7,11 +7,15 @@
     pageEncoding="ISO-8859-1"%>
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
-
+<!-- We want to hide the search term for links coming in via MP ID. -->
+<c:set var="searchFieldValue" value="${searchTerm}" />
+<c:if test="${fn:startsWith(searchTerm, 'MP:')}">
+	<c:set var="searchFieldValue" value="" />
+</c:if>
 
 <div style="padding-bottom: 8px;">
 <form id="vocabBrowserSearchForm" name="vocabBrowserSearchForm" onSubmit="refreshSearchPane(); return false;">
-	<input type="text" size="35" id="searchTerm" name="searchTerm" value="${searchTerm}" style="width: auto; position: relative;">
+	<input type="text" size="35" id="searchTerm" name="searchTerm" value="${searchFieldValue}" style="width: auto; position: relative;">
     <div id="structureContainer" style="width: 250px; text-align: left; display: inline;"></div>
     <input type="button" value="Clear" name="Clear" onClick="resetSearch()">
 </form>
