@@ -525,6 +525,10 @@ public class VocabularyController {
 	mav.addObject("dropdown", dropdown.toString()); 
 	mav.addObject("dropdownMsg", dropdownMsg);
 
+//	logger.info("related term count: " + emapaTerm.getRelatedTerms("EMAPA to MP").size());
+	if (emapaTerm.getRelatedTerms("EMAPA to MP").size() > 0) {
+		mav.addObject("hasPhenotypeAssociations", 1);
+	}
 	return mav;
     }
 

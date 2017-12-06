@@ -62,5 +62,11 @@
 		    </c:forEach>
 		  </td>
 		</tr>
-		</c:if>
+	  </c:if>
+	  <c:if test="${not empty hasPhenotypeAssociations}">
+        <tr><th class="rightBorderThinGray padded label top">Phenotype: </th>
+	        <td class="padded top" colspan="2"><a href="${configBean.FEWI_URL}vocab/mp_ontology/by_anatomy/${term.primaryId}">phenotype terms</a> associated with this structure (with links to phenotype data)
+	        </td>
+	    </tr>
+	  </c:if>
       </table>
