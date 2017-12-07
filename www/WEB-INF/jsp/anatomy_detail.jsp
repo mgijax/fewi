@@ -44,6 +44,8 @@ td.bordered { border: 1px solid black }
 td.top { vertical-align: top }
 td.padded { padding: 4px }
 td.padTop { padding-top: 2px }
+th.topDots { border-top: dotted gray 1px }
+td.topDots { border-top: dotted gray 1px }
 .highlight { background-color: #EBCA6D }
 .bold { font-weight: bold }
 .ygtvlabel { background-color: white; color: black; }
