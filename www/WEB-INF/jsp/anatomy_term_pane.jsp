@@ -63,7 +63,7 @@
 		  </td>
 		</tr>
 	  </c:if>
-	  <c:if test="${not empty hasPhenotypeAssociations}">
+	  <c:if test="${term.isEmapa and (not empty hasPhenotypeAssociations)}">
         <tr><th class="rightBorderThinGray padded label top topDots">Phenotype: </th>
 	        <td class="padded top topDots" colspan="2"><a href="${configBean.FEWI_URL}vocab/mp_ontology/by_anatomy/${term.primaryId}">phenotype terms</a> associated with this structure (with links to phenotype data)
 	        </td>
