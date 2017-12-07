@@ -125,7 +125,7 @@ public class SolrAnatomyTerm
 		
 		for (String t : this.tokens) {
 			if (t.matches("[Mm][pP]:[0-9]+")) {
-				return "cross-reference";
+				return "";
 			}
 		}
 
