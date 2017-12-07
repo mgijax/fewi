@@ -144,6 +144,7 @@ var pathCheck = null;	// ID of interval-based check for defaultPath
 var selectedNodeID = null;	// ID of the currently highlighted node
 var alreadyScrolled = false;	// have we already scrolled for this term?
 var gxdResultCount = null;	// count of GXD results for selectedNodeID
+var phenotypeAnnotationCount = null;	// count of phenotype annotations for selectedNodeID
 var logging = false;		// enable logging to browser console?
 
 function numberWithCommas(x) {
@@ -216,6 +217,17 @@ function fetchDetailDiv(selectedNodeID) {
 
     fetchAndCall(sUrl, setDetailDiv);
     return;
+}
+
+function setPhenotypeAnnotationCount(s) {
+    phenotypeAnnotationCount = s;
+    highlightSelectedTerm();
+    return
+}
+
+function fetchPhenotypeAnnotationCount(selectedNodeID) {
+    var sUrl = "${configBean.FEWI_URL}mp/annotations/count_by_anatomy/" + selectedNodeID;
+    fetchAndCall(sUrl, setPhenotypeAnnotationCount);
 }
 
 function setGxdResultCount(s) {
@@ -300,6 +312,7 @@ function resetTree(snID, fullRebuild) {
     selectedNodeID = snID;
 //    setSelectedNode(snID);
     gxdResultCount = null;
+    phenotypeAnnotationCount = null;
     if ((treeView === null) || (fullRebuild === true)) {
 		log(' - in if');
     	treeView = new YAHOO.widget.TreeView("treeViewDiv");
@@ -322,6 +335,19 @@ function resetTree(snID, fullRebuild) {
     }
 }
 
+// format and return a link for phenotype annotations, if the count is > 0
+function phenotypeLink() {
+	if ((phenotypeAnnotationCount === null) || (phenotypeAnnotationCount == '0')) { return '' }
+
+    var phenoText = 'phenotype annotation';
+    if (phenotypeAnnotationCount != '1') {
+		phenoText = phenoText + 's';
+    }
+    var url = '${configBean.FEWI_URL}mp/annotations/by_anatomy/' + selectedNodeID;
+
+	return '<a href="' + url + '">' + phenotypeAnnotationCount + '</a> ' + phenoText;
+}
+
 var lastHighlightedNodes = null;	// set of nodes from last highlighting operation
 var originalTerms = {};				// map of ID -> original term (before highlighting)
 
@@ -340,9 +366,6 @@ function highlightSelectedTerm () {
 	}
     });
 
-    // need special handling for "mouse" node; not sure why, seems to be a
-    // YUI quirk
- 
     var countStr = null;
     var plural = true;
     var linked = true;
@@ -370,36 +393,18 @@ function highlightSelectedTerm () {
  
     var spaces = '&nbsp;&nbsp;&nbsp;&nbsp;';
 
+    var phenoLink = phenotypeLink();
+    if (phenoLink != '') {
+    	phenoLink = ', ' + phenoLink;	
+    }
+    
     var link = '</a>' + spaces + '(<a href="' + url + '">' + countStr + '</a> '
-	+ resultText + ')';
+		+ resultText + phenoLink + ')';
 
     if (!linked) {
-        link = '</a>' + spaces + '(' + countStr + ' ' + resultText + ')';
+        link = '</a>' + spaces + '(' + countStr + ' ' + resultText + phenoLink + ')';
     }
 
-/*
-    if ((selectedNodeID == 'EMAPA:25765') || (selectedNodeID.indexOf("EMAPS:25765") == 0)) {
-		var mouseNodes = treeView.getNodesBy(function (node) { return true; });
-		if (mouseNodes) {
-		    var mouseNode;
-	    	for (var j = 0; j < mouseNodes.length; j++) {
-	    	    mouseNode = mouseNodes[j];
-				if ((mouseNode.data.accID == 'EMAPA:25765') ||
-			    	(mouseNode.data.accID.indexOf('EMAPS:25765') == 0)) {
-			  		if (!mouseNode.data.highlighted) {
-			    		if (!(mouseNode.data.accID in originalTerms)) {
-			    			originalTerms[mouseNode.data.accID] = mouseNode.label;
-			    		}
-	    	        	mouseNode.data.highlighted = true;
-			    		mouseNode.label = '<span class="highlight bold">' + mouseNode.label + '</span>' + link;
-			  		}
-				}
-	    	}
-	    	treeView.render();
-	    	return;
-		}
-    }
-*/
 	// remove highights from previously selected nodes
 	if (lastHighlightedNodes != null) {
 		var pNode = null;
@@ -649,6 +654,7 @@ function resetPanes(accID, rebuildTree) {
     selectedNode = null;
     selectedNodeID = accID;
     fetchResultCount(accID);
+    fetchPhenotypeAnnotationCount(accID);
     fetchDetailDiv(accID);
     resetTree(accID, rebuildTree);
     setBrowserTitle(accID);
