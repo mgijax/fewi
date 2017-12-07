@@ -1131,9 +1131,8 @@ public class VocabularyController {
 
     	logger.debug("->getSharedBrowserSearchPane(" + term + ", " + vocabName + ") started");
 
-    	// We need to get 51 results, so we know if the count should display
-    	// as 50 or as 50+
-    	int maxToReturn = 50;
+    	// biggest vocab is GO with 47k terms, so this is an unlimited search
+    	int maxToReturn = 50000;
 
     	List<VocabBrowserSearchResult> sortedResults = getSharedBrowserSearchResults(term, vocabName, maxToReturn);
 
@@ -1160,7 +1159,7 @@ public class VocabularyController {
    		
     	SearchParams sp = new SearchParams();
     	sp.addSort(new Sort(SortConstants.SCORE, true));		// sort by descending score
-    	sp.setPageSize(maxToReturn + 1);
+    	sp.setPageSize(maxToReturn + 1);						// use 1 more, so know to display like "50+"
 
     	// short-circuit for searches by ID
     	if (Pattern.matches("[A-Za-z]+:[A-Za-z0-9]+", term.trim())) {
