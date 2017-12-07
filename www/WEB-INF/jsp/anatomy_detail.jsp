@@ -343,7 +343,7 @@ function phenotypeLink() {
     }
     var url = '${configBean.FEWI_URL}mp/annotations/by_anatomy/' + selectedNodeID;
 
-	return '<a href="' + url + '">' + phenotypeAnnotationCount + '</a> ' + phenoText;
+	return '<a href="' + url + '">' + numberWithCommas(phenotypeAnnotationCount) + '</a> ' + phenoText;
 }
 
 var lastHighlightedNodes = null;	// set of nodes from last highlighting operation
