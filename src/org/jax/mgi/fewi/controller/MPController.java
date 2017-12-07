@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 /*-------*/
@@ -215,25 +216,7 @@ public class MPController {
         // At this point, we have an anatomy Term object.  We need to find phenotype annotations for MP terms
         // that are associated with that term or its descendants.
 
-        // 3. set up our filters for EMAPA ID (a cross-reference)
-	
-        SearchParams searchParams = new SearchParams();
-        Filter emapaFilter = new Filter(SearchConstants.CROSS_REF, emapaID);
-	    searchParams.setFilter(emapaFilter);
-
-	    // 4. set up our sorting
-	
-	    List<Sort> sorts = new ArrayList<Sort>();
-	    Sort sort = new Sort(SortConstants.GENOTYPE_TERM, false);
-	    sorts.add(sort);
-	    searchParams.setSorts(sorts);
-
-	    // 5. get our annotations
-	
-	    searchParams.setPageSize(10000000);
-	    SearchResults<SolrMPAnnotation> searchResults = mpAnnotationFinder.getAnnotations (searchParams);
-
-	    List<SolrMPAnnotation> annotList = searchResults.getResultObjects();
+	    List<SolrMPAnnotation> annotList = this.getAnnotationsByAnatomy(term.getPrimaryID());
 	    mav.addObject("annotationCount", annotList.size());
 
 	    // 6. bundle into MPSummaryRow objects
@@ -248,6 +231,39 @@ public class MPController {
 	    return mav;
     }
 
+    //---------------------------------------------//
+    // count of MP annotations by EMAPA anatomy term
+    //---------------------------------------------//
+    @RequestMapping(value="/annotations/count_by_anatomy/{emapaID}")
+    public @ResponseBody Integer mpAnnotationCountByAnatomyTerm (@PathVariable("emapaID") String emapaID) {
+        logger.debug("->mpAnnotationCountByAnatomyTerm started");
+	    return this.getAnnotationsByAnatomy(emapaID).size();
+    }
+
+    /* return a list of annotations, given an EMAPA ID
+     */
+    private List<SolrMPAnnotation> getAnnotationsByAnatomy (String emapaID) {
+        // set up our filters for EMAPA ID (a cross-reference)
+	
+        SearchParams searchParams = new SearchParams();
+        Filter emapaFilter = new Filter(SearchConstants.CROSS_REF, emapaID);
+	    searchParams.setFilter(emapaFilter);
+
+	    // set up our sorting
+	
+	    List<Sort> sorts = new ArrayList<Sort>();
+	    Sort sort = new Sort(SortConstants.GENOTYPE_TERM, false);
+	    sorts.add(sort);
+	    searchParams.setSorts(sorts);
+
+	    // get our annotations
+	
+	    searchParams.setPageSize(10000000);
+	    SearchResults<SolrMPAnnotation> searchResults = mpAnnotationFinder.getAnnotations (searchParams);
+
+	    return searchResults.getResultObjects();
+    }
+    
     /* group annotations by genotype into MPSummaryRow objects
      */
     private List<MPSummaryRow> buildSummaryRows (
