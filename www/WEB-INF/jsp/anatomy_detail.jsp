@@ -393,7 +393,7 @@ function highlightSelectedTerm () {
 
     var phenoLink = phenotypeLink();
     if (phenoLink != '') {
-    	phenoLink = ', ' + phenoLink;	
+    	phenoLink = '; ' + phenoLink;	
     }
     
     var link = '</a>' + spaces + '(<a href="' + url + '">' + countStr + '</a> '
