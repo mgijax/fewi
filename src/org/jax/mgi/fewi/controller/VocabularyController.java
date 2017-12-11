@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import mgi.frontend.datamodel.VocabTerm;
+import mgi.frontend.datamodel.sort.SmartAlphaComparator;
 import mgi.frontend.datamodel.sort.VocabTermComparator;
 
 import org.hibernate.SessionFactory;
@@ -237,6 +238,12 @@ public class VocabularyController {
 	sp.setPageSize(maxToReturn + 1);
 
 	SearchResults<SolrAnatomyTerm> sr = vocabFinder.getAnatomyTerms(sp);
+	List<SolrAnatomyTerm> resultObjects = sr.getResultObjects();
+	
+    boolean searchedByID = Pattern.matches("[A-Za-z]+:[0-9]+", term.trim());
+	if (searchedByID) {
+		Collections.sort(resultObjects, new SolrAnatomyTermComparator());
+	}
 
 	// each matching term needs to know the search tokens, so it can use
 	// them for highlighting
@@ -1161,6 +1168,8 @@ public class VocabularyController {
     	sp.addSort(new Sort(SortConstants.SCORE, true));		// sort by descending score
     	sp.setPageSize(maxToReturn + 1);						// use 1 more, so know to display like "50+"
 
+    	boolean searchedByID = false;		// is the user searching by an ID?
+    	
     	// short-circuit for searches by ID
     	if (Pattern.matches("[A-Za-z]+:[A-Za-z0-9]+", term.trim())) {
     		ArrayList<Filter> idFilters = new ArrayList<Filter>();
@@ -1170,6 +1179,7 @@ public class VocabularyController {
     		subFilters.add(new Filter(SearchConstants.VB_CROSSREF, term.trim()));
     		idFilters.add(Filter.or(subFilters));
     		sp.setFilter(Filter.and(idFilters));
+    		searchedByID = true;
 
     	} else {
     		// not an ID search, so we do a little more work on cleansing term and synonym searches
@@ -1216,12 +1226,17 @@ public class VocabularyController {
 
 
     	SearchResults<BrowserTerm> sr = vocabFinder.getBrowserTerms(sp);
-
+    	List<BrowserTerm> resultObjects = sr.getResultObjects();
+    	
+    	if (searchedByID) {
+    		Collections.sort(resultObjects, new BrowserTermComparator());
+    	}
+    	
     	// need to wrap each resulting BrowserTerm in a VocabBrowserSearchResults, then pass it the
     	// list of search tokens (needed for highlighting)
 
     	List<VocabBrowserSearchResult> results = new ArrayList<VocabBrowserSearchResult>();
-    	for (BrowserTerm matchedTerm : sr.getResultObjects()) {
+    	for (BrowserTerm matchedTerm : resultObjects) {
     		VocabBrowserSearchResult result = new VocabBrowserSearchResult(matchedTerm);
     		result.setTokens(tokens);
     		results.add(result);
@@ -1416,5 +1431,34 @@ public class VocabularyController {
     		return terms.get(0);
     	}
     	return null;
+    }
+    
+    /***--- special comparators for smart-alpha sorting vocab browser results (shared and EMAPA-specific) ---***/
+    
+    private class BrowserTermComparator extends SmartAlphaComparator<BrowserTerm> {
+    	public int compare(BrowserTerm t1, BrowserTerm t2) {
+    		// smart-alpha sort of BrowserTerm objects by term (fall back on ID sorting, if terms match)
+    		
+    		int i = super.compare(t1.getTerm(), t2.getTerm());
+    		if (i == 0) {
+    			i = super.compare(t1.getPrimaryID().getAccID(), t2.getPrimaryID().getAccID());
+    		}
+    		return i;
+    	}
+    }
+
+    private class SolrAnatomyTermComparator extends SmartAlphaComparator<SolrAnatomyTerm> {
+    	public int compare(SolrAnatomyTerm t1, SolrAnatomyTerm t2) {
+    		// smart-alpha sort of SolrAnatomyTerm objects by term (fall back on stage range, then ID sorting)
+    		
+    		int i = super.compare(t1.getStructure(), t2.getStructure());
+    		if (i == 0) {
+    			i = super.compare(t1.getStageRange(), t2.getStageRange());
+    		}
+    		if (i == 0) {
+    			i = super.compare(t1.getAccID(), t2.getAccID());
+    		}
+    		return i;
+    	}
     }
 }
