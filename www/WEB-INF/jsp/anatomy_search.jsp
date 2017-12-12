@@ -9,8 +9,10 @@
 
 <!-- We want to hide the search term for links coming in via MP ID. -->
 <c:set var="searchFieldValue" value="${searchTerm}" />
+<c:set var="bestMatch" value=", sorted by best match" />
 <c:if test="${fn:startsWith(searchTerm, 'MP:')}">
 	<c:set var="searchFieldValue" value="" />
+	<c:set var="bestMatch" value="" />
 </c:if>
 
 <div style="padding-bottom: 8px;">
@@ -26,7 +28,7 @@
 no matching terms
 </c:if>
 <c:if test="${not empty results}">
-${resultCount} term<c:if test="${fn:length(results) > 1}">s</c:if>, sorted by best match
+${resultCount} term<c:if test="${fn:length(results) > 1}">s</c:if>${bestMatch}
 </c:if>
 </div>
 
