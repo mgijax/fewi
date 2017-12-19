@@ -1172,6 +1172,25 @@ public class GXDController {
 		return jsonResponse;
 			}
 
+	/*
+	 * GXD Tissue by Gene/Phenotypes grid
+	 */
+	@RequestMapping(value="/phenogrid/{mrkID}")
+	public ModelAndView gxdPhenoGrid(
+			HttpServletRequest request,
+			@PathVariable("mrkID") String mrkID) {
+
+		logger.debug("->gxdPhenoGrid started");
+
+		// setup view object
+		ModelAndView mav = new ModelAndView("gxd/gxd_phenogrid");
+		mav.addObject("mrkID", mrkID);
+		mav.addObject("queryString", request.getQueryString());
+
+		logger.debug("gxdPhenoGrid routing to view ");
+		return mav;
+	}
+
 
 	// -----------------------------------------------------------------//
 	// Methods for getting query counts
