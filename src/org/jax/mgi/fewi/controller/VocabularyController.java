@@ -582,14 +582,28 @@ public class VocabularyController {
 		return errorMav("Allele ID has no related anatomy terms: " + id);
 	}
 	
+	// pick up the first vocabulary term for the matches
+	
+	List<VocabTerm> terms = vocabFinder.getTermByID(results.get(0).getAccID());
+
+	if (terms.size() < 1) { return errorMav("No Anatomy term found"); }
+	else if (terms.size() > 1) { return errorMav("Duplicate ID"); }
+
+	VocabTerm term = terms.get(0);
+
+	// pick up the allele, in case we want to add context info to the page in the future
+	
 	List<Allele> alleles = alleleFinder.getAlleleByID(id);
 
 	if (alleles.size() < 1) { return errorMav("No Allele found"); }
 	else if (alleles.size() > 1) { return errorMav("Duplicate ID"); }
 
 	Allele allele = alleles.get(0);
+	
+	// compose the mav
 
 	ModelAndView mav = new ModelAndView("anatomy_detail");
+	mav.addObject("term", term);
 	mav.addObject("allele", allele);
 	mav.addObject("crossRef", id);
 
