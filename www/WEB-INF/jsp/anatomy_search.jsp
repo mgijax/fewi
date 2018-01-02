@@ -7,10 +7,10 @@
     pageEncoding="ISO-8859-1"%>
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
-<!-- We want to hide the search term for links coming in via MP ID. -->
+<!-- We want to hide the search term for links coming in via MP ID or (allele) MGI ID. -->
 <c:set var="searchFieldValue" value="${searchTerm}" />
 <c:set var="bestMatch" value=", sorted by best match" />
-<c:if test="${fn:startsWith(searchTerm, 'MP:')}">
+<c:if test="${fn:startsWith(searchTerm, 'MP:') or fn:startsWith(searchTerm, 'MGI:')}">
 	<c:set var="searchFieldValue" value="" />
 	<c:set var="bestMatch" value="" />
 </c:if>
@@ -36,7 +36,7 @@ ${resultCount} term<c:if test="${fn:length(results) > 1}">s</c:if>${bestMatch}
 <c:forEach var="result" items="${results}">
 <div style="padding-bottom: 8px">
 <a href="${configBean.FEWI_URL}vocab/gxd/anatomy/${result.accID}" onClick="resetPanes('${result.accID}', true); return false;">${result.highlightedStructure}</a>
-<c:if test="${(not result.matchedStructure) and (result.highlightedSynonym != '')}">(${result.highlightedSynonym})</c:if>
+<c:if test="${(searchFieldValue != '') and (not result.matchedStructure) and (result.highlightedSynonym != '')}">(${result.highlightedSynonym})</c:if>
 <span class="small">${result.stageRange}</span>
 </div>
 </c:forEach>
