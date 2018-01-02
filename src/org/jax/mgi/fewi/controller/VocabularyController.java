@@ -8,12 +8,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.VocabTerm;
 import mgi.frontend.datamodel.sort.SmartAlphaComparator;
 import mgi.frontend.datamodel.sort.VocabTermComparator;
 
 import org.hibernate.SessionFactory;
 import org.jax.mgi.fewi.config.ContextLoader;
+import org.jax.mgi.fewi.finder.AlleleFinder;
 import org.jax.mgi.fewi.finder.VocabularyFinder;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -80,6 +82,9 @@ public class VocabularyController {
 
     private final Logger logger = LoggerFactory.getLogger(VocabularyController.class);
 
+    @Autowired
+    private AlleleFinder alleleFinder;
+    
     @Autowired
     private VocabularyFinder vocabFinder;
     
@@ -560,6 +565,32 @@ public class VocabularyController {
 
 	ModelAndView mav = new ModelAndView("anatomy_detail");
 	mav.addObject("term", term);
+	mav.addObject("crossRef", id);
+
+	return mav;
+    }
+
+    /* GXD Anatomy browser with terms that can be tied to a specified allele */
+
+    @SuppressWarnings("unchecked")
+	@RequestMapping("/gxd/anatomy/by_allele/{id}")
+    public ModelAndView getAnatomyDetailByAllele(@PathVariable("id") String id) {
+	logger.info("->getAnatomyDetailByAllele(" + id + ") started");
+
+	List<SolrAnatomyTerm> results = (List<SolrAnatomyTerm>) getAnatomySearchPane(id).getModel().get("results");
+	if (results.size() == 0) {
+		return errorMav("Allele ID has no related anatomy terms: " + id);
+	}
+	
+	List<Allele> alleles = alleleFinder.getAlleleByID(id);
+
+	if (alleles.size() < 1) { return errorMav("No Allele found"); }
+	else if (alleles.size() > 1) { return errorMav("Duplicate ID"); }
+
+	Allele allele = alleles.get(0);
+
+	ModelAndView mav = new ModelAndView("anatomy_detail");
+	mav.addObject("allele", allele);
 	mav.addObject("crossRef", id);
 
 	return mav;
