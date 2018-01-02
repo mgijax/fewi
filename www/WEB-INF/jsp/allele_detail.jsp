@@ -689,9 +689,15 @@ function formatFastaArgs() {
     <td class="<%=rightTdStyles.getNext() %>">
       ${fixedDivOpen}
       <table id="expressionTable">
-      <tr><td class="rightBorderThinGray padded" align="right" width="1%" nowrap="nowrap"><font class="label">In Mice Carrying this Mutation: </font></td>
-      <td class='padded'><a href="${configBean.FEWI_URL}gxd/allele/${allele.primaryID}" class="MP">${allele.countOfExpressionAssayResults} assay results</a></td>
-      </tr></table>
+	  <c:if test="${allele.countOfExpressionAssayResults > 0}">
+      	<tr><td class="rightBorderThinGray padded" align="right" width="1%" nowrap="nowrap"><font class="label">In Mice Carrying this Mutation: </font></td>
+      	<td class='padded'><a href="${configBean.FEWI_URL}gxd/allele/${allele.primaryID}" class="MP">${allele.countOfExpressionAssayResults} assay results</a></td></tr>
+	  </c:if>
+	  <c:if test="${anatomyTermCount > 0}">
+      	<tr><td class="rightBorderThinGray padded" align="right" width="1%" nowrap="nowrap"><font class="label">Anatomical structures affected by this mutation: </font></td>
+      	<td class='padded'><a href="${configBean.FEWI_URL}vocab/gxd/anatomy/by_allele/${allele.primaryID}" class="MP">${anatomyTermCount} structures</a></td></tr>
+	  </c:if>
+	  </table>
       ${fixedDivClose}
     </td>
   </tr>

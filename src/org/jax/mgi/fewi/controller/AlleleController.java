@@ -49,6 +49,7 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.searchUtil.entities.SolrAnatomyTerm;
 import org.jax.mgi.fewi.summary.AlleleSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.MutationInvolvesSummaryRow;
@@ -121,6 +122,9 @@ public class AlleleController {
 	@Autowired
 	private SessionFactory sessionFactory;
 
+	@Autowired
+	private VocabularyController vocabularyController;
+	
 	//--------------------------------------------------------------------//
 	// public methods
 	//--------------------------------------------------------------------//
@@ -1334,13 +1338,17 @@ public class AlleleController {
 			}
 		}
 
+		List<SolrAnatomyTerm> results = (List<SolrAnatomyTerm>) vocabularyController.getAnatomySearchPane(allele.getPrimaryID()).getModel().get("results");
+		boolean hasAnatomyTerms = results.size() > 0;
+
 		// identify which sections will appear, based on what data is present
 		// (needed for table of contents)
 
 		// create an alleleDetail object for determining page logic
-		AlleleDetail alleleDetail = new AlleleDetail(allele);
+		AlleleDetail alleleDetail = new AlleleDetail(allele, hasAnatomyTerms);
 
 		mav.addObject("alleleDetail",alleleDetail);
+		mav.addObject("anatomyTermCount", results.size());
 
 		if(allele.getPhenotypeImages().size() > 0 && allele.getPrimaryImage()!=null) {
 			mav.addObject("imageCount",allele.getPhenotypeImages().size());
