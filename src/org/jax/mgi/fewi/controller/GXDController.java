@@ -1078,7 +1078,7 @@ public class GXDController {
 
 		logger.debug("sending json response");
 		return jsonResponse;
-			}
+	}
 
 	@RequestMapping("/genegrid/json")
 	public @ResponseBody GxdStageGridJsonResponse gxdGeneGridJson(
@@ -1170,7 +1170,7 @@ public class GXDController {
 
 		logger.debug("sending json response");
 		return jsonResponse;
-			}
+	}
 
 	/*
 	 * GXD Tissue by Gene/Phenotypes grid
