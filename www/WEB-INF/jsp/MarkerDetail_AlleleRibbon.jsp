@@ -116,6 +116,12 @@
 							</div>
 						</li>
 
+						<c:if test="${marker.hasPhenotypesRelatedToAnatomy and marker.hasWildTypeExpressionData}">
+							<li>
+								<div class="label">Correlation Matrix</div>
+								<div class="value"><a onClick="alert('Location TBD'); return false;" href="${configBean.FEWI_URL}" target="_new">Gene Expression + Phenotype</a></div>
+							</li>
+						</c:if>
 					</c:if>
 
 				</section>
