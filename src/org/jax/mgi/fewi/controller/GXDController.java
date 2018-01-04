@@ -1092,6 +1092,10 @@ public class GXDController {
 			HttpSession session) throws CloneNotSupportedException
 			{
 		logger.debug("gxdPhenoGridJson() started");
+		
+		// We only want wild-type expression data for this grid.
+		query.setIsWildType("true");
+		
 		populateMarkerIDs(session, query);
 
 		boolean isFirstPage = page.getStartIndex() == 0;
