@@ -44,7 +44,7 @@ var phenoSuperGrid = function()
 			// the datasource allows supergrid to make ajax calls for the initial data,
 			// 	as well as subsequent calls for expanding rows
 			dataSource: {
-				url: fewiurl + "gxd/genegrid/json?" + querystringWithFilters,
+				url: fewiurl + "gxd/phenogrid/json?" + querystringWithFilters,
 				batchSize: 50000,
 				offsetField: "startIndex",
 				limitField: "results",
