@@ -54,6 +54,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDagEdge;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdAssay;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdGeneMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdPhenoMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMatrixResult;
@@ -1063,6 +1064,95 @@ public class GXDController {
 			logger.debug("adding stages to mapper: stages=" + stagesInMatrix);
 			mapper.setStagesInMatrix(stagesInMatrix);
 		}
+		List<GxdMatrixCell> gxdMatrixCells = mapper.mapCells(flatRows, resultList);
+
+		// only generate row relationships on first page/batch
+		if (isFirstPage)
+		{
+			gxdMatrixHandler.assignOpenCloseState(parentTerms,query,edges);
+		}
+
+		// add to the response object
+		GxdStageGridJsonResponse jsonResponse = new GxdStageGridJsonResponse();
+		jsonResponse.setParentTerms(parentTerms);
+		jsonResponse.setGxdMatrixCells(gxdMatrixCells);
+
+		logger.debug("sending json response");
+		return jsonResponse;
+	}
+
+	// serve up data for the phenogrid, aka the correlation matrix
+	@RequestMapping("/phenogrid/json")
+	public @ResponseBody GxdStageGridJsonResponse gxdPhenoGridJson(
+			HttpServletRequest request,
+			@ModelAttribute GxdQueryForm query,
+			@ModelAttribute Paginator page,
+			@RequestParam(value="mapChildrenOf",required=false) String childrenOf,
+			@RequestParam(value="pathToOpen",required=false) List<String> pathsToOpen,
+			HttpSession session) throws CloneNotSupportedException
+			{
+		logger.debug("gxdPhenoGridJson() started");
+		populateMarkerIDs(session, query);
+
+		boolean isFirstPage = page.getStartIndex() == 0;
+		boolean isChildrenOfQuery = childrenOf!=null && !childrenOf.equals("");
+
+		// save original query in case we are expanding a row
+		GxdQueryForm originalQuery = (GxdQueryForm) query.clone();
+		String sessionQueryString = originalQuery.toString();
+
+		// check if we have a totalCount set (if so, we return early to indicate end of data)
+		String totalCountSessionId = "GxdPhenoMatrixTotalCount_"+sessionQueryString;
+		Integer totalCount = (Integer) session.getAttribute(totalCountSessionId);
+		if(totalCount!=null && totalCount<page.getStartIndex())
+		{
+			logger.debug("reached end of result set");
+			return new GxdStageGridJsonResponse();
+		}
+
+		// if we have a mapChildrenOf query, we filter by structureIds of the child rows of this parentId
+		if(isChildrenOfQuery)
+		{
+			gxdMatrixHandler.addMapChildrenOfFilterForMatrix(query,childrenOf);
+			pathsToOpen = null;
+		}
+
+		// get the matrix results for this page
+		SearchParams params = new SearchParams();
+		params.setPaginator(page);
+		params.setFilter(parseGxdQueryForm(query));
+		SearchResults<SolrGxdPhenoMatrixResult> searchResults = gxdFinder.searchPhenoMatrixResults(params);
+		logger.debug("got pheno matrix results");
+		List<SolrGxdPhenoMatrixResult> resultList = searchResults.getResultObjects();
+
+		// cache total count of assay results
+		session.setAttribute(totalCountSessionId,searchResults.getTotalCount());
+
+		// get the parent rows to be displayed
+		List<GxdMatrixRow> parentTerms = gxdMatrixHandler.getParentTermsToDisplay(query,childrenOf,pathsToOpen);
+
+		List<GxdMatrixRow> flatRows = gxdMatrixHandler.getFlatTermList(parentTerms);
+
+		// this gets all edges, but we only need all of them for the first page
+		List<SolrDagEdge> edges = getDAGDescendentRelationships(query,flatRows).getResultObjects();
+
+		// prune empty data rows
+		if(isFirstPage)
+		{
+			Set<String> rowsWithChildren = new HashSet<String>();
+			for(SolrDagEdge edge : edges)
+			{
+				rowsWithChildren.add(edge.getParentId());
+			}
+			Set<String> idsWithData = getExactStructureIds(query);
+			idsWithData.addAll(rowsWithChildren);
+
+			parentTerms = gxdMatrixHandler.pruneEmptyRows(parentTerms,idsWithData);
+		}
+
+		// get matrix cells; add stages to mapper if this is a row-expansion
+		GxdMatrixMapper mapper = new GxdMatrixMapper(edges);
+
 		List<GxdMatrixCell> gxdMatrixCells = mapper.mapCells(flatRows, resultList);
 
 		// only generate row relationships on first page/batch

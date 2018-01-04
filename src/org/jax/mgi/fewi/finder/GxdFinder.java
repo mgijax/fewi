@@ -21,6 +21,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrGxdGeneMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdPhenoMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdStageMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrString;
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
@@ -205,6 +206,18 @@ public class GxdFinder {
 		return srMR;
 	}
 	
+	/*
+	 * Group by the tissue x gene relevant fields for the pheno grid
+	 */
+	public SearchResults<SolrGxdPhenoMatrixResult> searchPhenoMatrixResults(SearchParams params) {
+		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
+		gxdMatrixResultHunter.hunt(params, results, SearchConstants.GENE_MATRIX_GROUP);
+
+		SearchResults<SolrGxdPhenoMatrixResult> srMR = new SearchResults<SolrGxdPhenoMatrixResult>();
+		srMR.cloneFrom(results, SolrGxdPhenoMatrixResult.class);
+		return srMR;
+	}
+
 	/*
 	 * Group by the tissue x gene relevant fields
 	 */
