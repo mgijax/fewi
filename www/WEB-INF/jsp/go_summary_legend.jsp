@@ -27,6 +27,10 @@ div.indented { margin-left: 15px; }
 <B>Experimental:</B>
 <dl class="inline indented">
 	<dt>EXP</dt><dd>Inferred from experiment</dd>
+	<dt>HMP</dt><dd>Inferred from high throughput mutant phenotype</dd>
+	<dt>HGI</dt><dd>Inferred from high throughput genetic interaction</dd>
+	<dt>HDA</dt><dd>Inferred from high throughput direct assay</dd>
+	<dt>HEP</dt><dd>Inferred from high throughput expression pattern</dd>
 	<dt>IDA</dt><dd>Inferred from direct assay</dd>
 	<dt>IEP</dt><dd>Inferred from expression pattern</dd>
 	<dt>IGI</dt><dd>Inferred from genetic interaction</dd>
