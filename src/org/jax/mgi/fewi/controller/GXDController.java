@@ -39,6 +39,8 @@ import org.jax.mgi.fewi.matrix.GxdGeneMatrixPopup;
 import org.jax.mgi.fewi.matrix.GxdMatrixCell;
 import org.jax.mgi.fewi.matrix.GxdMatrixMapper;
 import org.jax.mgi.fewi.matrix.GxdMatrixRow;
+import org.jax.mgi.fewi.matrix.GxdPhenoMatrixCell;
+import org.jax.mgi.fewi.matrix.GxdPhenoMatrixMapper;
 import org.jax.mgi.fewi.matrix.GxdStageGridJsonResponse;
 import org.jax.mgi.fewi.matrix.GxdStageMatrixMapper;
 import org.jax.mgi.fewi.matrix.GxdStageMatrixPopup;
@@ -973,7 +975,7 @@ public class GXDController {
 
 
 	@RequestMapping("/stagegrid/json")
-	public @ResponseBody GxdStageGridJsonResponse gxdStageGridJson(
+	public @ResponseBody GxdStageGridJsonResponse<GxdMatrixCell> gxdStageGridJson(
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query,
 			@ModelAttribute Paginator page,
@@ -997,7 +999,7 @@ public class GXDController {
 		if(totalCount!=null && totalCount<page.getStartIndex())
 		{
 			logger.debug("reached end of result set");
-			return new GxdStageGridJsonResponse();
+			return new GxdStageGridJsonResponse<GxdMatrixCell>();
 		}
 
 		// if we have a mapChildrenOf query, we filter by structureIds of the child rows of this parentId
@@ -1073,7 +1075,7 @@ public class GXDController {
 		}
 
 		// add to the response object
-		GxdStageGridJsonResponse jsonResponse = new GxdStageGridJsonResponse();
+		GxdStageGridJsonResponse<GxdMatrixCell> jsonResponse = new GxdStageGridJsonResponse<GxdMatrixCell>();
 		jsonResponse.setParentTerms(parentTerms);
 		jsonResponse.setGxdMatrixCells(gxdMatrixCells);
 
@@ -1083,7 +1085,7 @@ public class GXDController {
 
 	// serve up data for the phenogrid, aka the correlation matrix
 	@RequestMapping("/phenogrid/json")
-	public @ResponseBody GxdStageGridJsonResponse gxdPhenoGridJson(
+	public @ResponseBody GxdStageGridJsonResponse<GxdPhenoMatrixCell> gxdPhenoGridJson(
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query,
 			@ModelAttribute Paginator page,
@@ -1111,7 +1113,7 @@ public class GXDController {
 		if(totalCount!=null && totalCount<page.getStartIndex())
 		{
 			logger.debug("reached end of result set");
-			return new GxdStageGridJsonResponse();
+			return new GxdStageGridJsonResponse<GxdPhenoMatrixCell>();
 		}
 
 		// if we have a mapChildrenOf query, we filter by structureIds of the child rows of this parentId
@@ -1155,9 +1157,9 @@ public class GXDController {
 		}
 
 		// get matrix cells; add stages to mapper if this is a row-expansion
-		GxdMatrixMapper mapper = new GxdMatrixMapper(edges);
+		GxdPhenoMatrixMapper mapper = new GxdPhenoMatrixMapper(edges);
 
-		List<GxdMatrixCell> gxdMatrixCells = mapper.mapCells(flatRows, resultList);
+		List<GxdPhenoMatrixCell> gxdMatrixCells = mapper.mapPhenoGridCells(flatRows, resultList);
 
 		// only generate row relationships on first page/batch
 		if (isFirstPage)
@@ -1166,7 +1168,7 @@ public class GXDController {
 		}
 
 		// add to the response object
-		GxdStageGridJsonResponse jsonResponse = new GxdStageGridJsonResponse();
+		GxdStageGridJsonResponse<GxdPhenoMatrixCell> jsonResponse = new GxdStageGridJsonResponse<GxdPhenoMatrixCell>();
 		jsonResponse.setParentTerms(parentTerms);
 		jsonResponse.setGxdMatrixCells(gxdMatrixCells);
 
@@ -1175,7 +1177,7 @@ public class GXDController {
 	}
 
 	@RequestMapping("/genegrid/json")
-	public @ResponseBody GxdStageGridJsonResponse gxdGeneGridJson(
+	public @ResponseBody GxdStageGridJsonResponse<GxdMatrixCell> gxdGeneGridJson(
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query,
 			@ModelAttribute Paginator page,
@@ -1199,7 +1201,7 @@ public class GXDController {
 		if(totalCount!=null && totalCount<page.getStartIndex())
 		{
 			logger.debug("reached end of result set");
-			return new GxdStageGridJsonResponse();
+			return new GxdStageGridJsonResponse<GxdMatrixCell>();
 		}
 
 		// if we have a mapChildrenOf query, we filter by structureIds of the child rows of this parentId
@@ -1258,7 +1260,7 @@ public class GXDController {
 		}
 
 		// add to the response object
-		GxdStageGridJsonResponse jsonResponse = new GxdStageGridJsonResponse();
+		GxdStageGridJsonResponse<GxdMatrixCell> jsonResponse = new GxdStageGridJsonResponse<GxdMatrixCell>();
 		jsonResponse.setParentTerms(parentTerms);
 		jsonResponse.setGxdMatrixCells(gxdMatrixCells);
 
