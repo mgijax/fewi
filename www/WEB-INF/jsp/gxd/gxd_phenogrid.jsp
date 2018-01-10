@@ -13,6 +13,8 @@
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary_matrix.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_pheno_matrix.js"></script>
 
+
+
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/gxd/gxd_summary.css" />
 <style>
 </style>
@@ -24,3 +26,19 @@
 </div>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
+
+<!-- Patterns for matrix sash icon -->
+<svg height="0" width="0" xmlns="http://www.w3.org/2000/svg" version="1.1">
+  <defs>
+    <pattern id="sash28" patternUnits="userSpaceOnUse" width="28" height="28">
+      <image xlink:href="${configBean.FEWI_URL}assets/images/sash.png"
+        x="-3" y="-3" width="33" height="32">
+      </image>
+    </pattern>    
+    <pattern id="sash24" patternUnits="userSpaceOnUse" width="24" height="24">
+      <image xlink:href="${configBean.FEWI_URL}assets/images/sash.png"
+        x="-3" y="-3" width="29" height="28">
+      </image>
+    </pattern>
+  </defs>
+</svg>
