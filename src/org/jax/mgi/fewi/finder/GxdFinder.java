@@ -1,5 +1,6 @@
 package org.jax.mgi.fewi.finder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -37,8 +38,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class GxdFinder {
 
-	private final Logger logger = LoggerFactory
-			.getLogger(AutocompleteFinder.class);
+	private final Logger logger = LoggerFactory.getLogger(GxdFinder.class);
 
 	@Autowired
 	private SolrGxdResultHunter gxdResultHunter;
@@ -215,6 +215,15 @@ public class GxdFinder {
 
 		SearchResults<SolrGxdPhenoMatrixResult> srMR = new SearchResults<SolrGxdPhenoMatrixResult>();
 		srMR.cloneFrom(results, SolrGxdPhenoMatrixResult.class);
+		
+		// Default behavior of cloneFrom is giving a list that's still underlying as SolrGxdGeneMatrixResult objects.
+		// Gotta clean it up...
+		
+		List<SolrGxdPhenoMatrixResult> phenoResults = new ArrayList<SolrGxdPhenoMatrixResult>();
+		for (SolrGxdEntity geneResult : results.getResultObjects()) {
+			phenoResults.add(new SolrGxdPhenoMatrixResult((SolrGxdGeneMatrixResult) geneResult));
+		}
+		srMR.setResultObjects(phenoResults);
 		return srMR;
 	}
 

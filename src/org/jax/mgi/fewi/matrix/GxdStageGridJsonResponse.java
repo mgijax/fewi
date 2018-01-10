@@ -7,7 +7,7 @@ import java.util.List;
  * JSON Response Object; the purpose of this object is to be serialized into a
  * JSON response for GXD's stage grid
  */
-public class GxdStageGridJsonResponse {
+public class GxdStageGridJsonResponse<T> {
 
 	// ////////////////////////////////////////////////////////////////////////
 	// INTERNAL FIELDS
@@ -17,7 +17,7 @@ public class GxdStageGridJsonResponse {
 	protected List<GxdMatrixRow> parentTerms = new ArrayList<GxdMatrixRow>();
 
 	// cells of the matrix
-	protected List<GxdMatrixCell> gxdMatrixCells = new ArrayList<GxdMatrixCell>();
+	protected List<T> gxdMatrixCells = new ArrayList<T>();
 
 	// ////////////////////////////////////////////////////////////////////////
 	// BASIC ACCESSORS
@@ -40,14 +40,14 @@ public class GxdStageGridJsonResponse {
 	/**
 	 * Get the parent terms
 	 */
-	public List<GxdMatrixCell> getData() {
+	public List<T> getData() {
 		return gxdMatrixCells;
 	}
 
 	/**
 	 * Set the parent terms
 	 */
-	public void setGxdMatrixCells(List<GxdMatrixCell> gxdMatrixCells) {
+	public void setGxdMatrixCells(List<T> gxdMatrixCells) {
 		this.gxdMatrixCells = gxdMatrixCells;
 	}
 

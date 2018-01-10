@@ -2,13 +2,23 @@ package org.jax.mgi.fewi.searchUtil.entities;
 
 public class SolrGxdPhenoMatrixResult extends SolrGxdGeneMatrixResult {
 	// This type of grid has two types of cells:  GXD cells (gene x tissue) and PHENO cells (genocluster x tissue)
-	protected static final String GXD = "GXD";
-	protected static final String PHENO = "Pheno";
+	public static final String GXD = "GXD";
+	public static final String PHENO = "Pheno";
 	
 	protected String cellType;				// type of matrix cell:  GXD or PHENO
 	protected String allelePairs;			// allele pairs for the genocluster (for PHENO cells)
 	protected String genoclusterKey;		// key of the genocluster (for PHENO cells)
 	protected String phenoAnnotationCount;	// annotation count for this cell (for PHENO cells)
+	
+	public SolrGxdPhenoMatrixResult (SolrGxdGeneMatrixResult r) {
+		this.cellType = GXD;
+		this.printname = r.printname;
+		this.structureId = r.structureId;
+		this.theilerStage = r.theilerStage;
+		this.detectionLevel = r.detectionLevel;
+		this.geneSymbol = r.geneSymbol;
+		this.count = r.count;
+	}
 	
 	/***--- overrides for standard MatrixResult methods ---***/
 	

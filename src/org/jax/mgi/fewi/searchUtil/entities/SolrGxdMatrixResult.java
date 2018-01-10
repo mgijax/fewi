@@ -10,7 +10,7 @@ public class SolrGxdMatrixResult implements SolrGxdEntity {
 	protected String detectionLevel;
 	protected String geneSymbol;
 
-	private Integer count;
+	protected Integer count;
 
 	public String getPrintname() {
 		return printname;
