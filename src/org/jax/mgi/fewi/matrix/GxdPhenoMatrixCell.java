@@ -14,6 +14,7 @@ public class GxdPhenoMatrixCell extends GridDataCell {
 	protected String allelePairs;			// allele pairs for the genocluster (for Pheno cells)
 	protected String genoclusterKey;		// key of the genocluster (for Pheno cells)
 	protected int phenoAnnotationCount = 0;	// annotation count for this cell (for Pheno cells)
+	protected int byGenocluster = 0;		// sequence number for sorting by genocluster
 	
 	// TODO: need to figure out how to handle expression vs. phenotype cells -- constructors?  setters?
 
@@ -63,6 +64,14 @@ public class GxdPhenoMatrixCell extends GridDataCell {
 		return (detectedCount + notDetectedCount + ambiguousCount + childCount) + "";
 	}
 
+	public int getByGenocluster() {
+		return byGenocluster;
+	}
+
+	public void setByGenocluster(int byGenocluster) {
+		this.byGenocluster = byGenocluster;
+	}
+
 	public int getDetected() {
 		return detectedCount;
 	}
@@ -98,6 +107,30 @@ public class GxdPhenoMatrixCell extends GridDataCell {
 	public String getTermId()
 	{
 		return this.getRid();
+	}
+
+	public String getAllelePairs() {
+		return allelePairs;
+	}
+
+	public void setAllelePairs(String allelePairs) {
+		this.allelePairs = allelePairs;
+	}
+
+	public String getGenoclusterKey() {
+		return genoclusterKey;
+	}
+
+	public void setGenoclusterKey(String genoclusterKey) {
+		this.genoclusterKey = genoclusterKey;
+	}
+
+	public int getPhenoAnnotationCount() {
+		return phenoAnnotationCount;
+	}
+
+	public void setPhenoAnnotationCount(int phenoAnnotationCount) {
+		this.phenoAnnotationCount = phenoAnnotationCount;
 	}
 
 	public String getCellType() {

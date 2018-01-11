@@ -1122,8 +1122,9 @@ public class GXDController {
 		}
 
 		// pull in phenotype cells for the marker/childrenOf pair
+		List<SolrMPCorrelationMatrixCell> mpCells = null;
 		if ((query.getMarkerMgiId() != null) && !"".equals(query.getMarkerMgiId().trim())) {
-			List<SolrMPCorrelationMatrixCell> mpCells = this.getMPCells(query.getMarkerMgiId(), childrenOf);
+			mpCells = this.getMPCells(query.getMarkerMgiId(), childrenOf);
 			logger.info("Got " + mpCells.size() + " MP cells");
 		}
 		
@@ -1163,6 +1164,12 @@ public class GXDController {
 			}
 			Set<String> idsWithData = getExactStructureIds(query);
 			idsWithData.addAll(rowsWithChildren);
+			
+			if (mpCells != null) {
+				for (SolrMPCorrelationMatrixCell cell : mpCells) {
+					idsWithData.add(cell.getAnatomyID());
+				}
+			}
 
 			parentTerms = gxdMatrixHandler.pruneEmptyRows(parentTerms,idsWithData);
 		}
@@ -1171,6 +1178,18 @@ public class GXDController {
 		GxdPhenoMatrixMapper mapper = new GxdPhenoMatrixMapper(edges);
 		List<GxdPhenoMatrixCell> gxdMatrixCells = mapper.mapPhenoGridCells(flatRows, resultList);
 
+		// add phenotype cells to the expression ones just built
+		if (mpCells != null) {
+			for (SolrMPCorrelationMatrixCell cell : mpCells) {
+				GxdPhenoMatrixCell gpm = new GxdPhenoMatrixCell("Pheno", cell.getAnatomyID(), "" + cell.getGenoclusterKey(), false);
+				gpm.setAllelePairs(cell.getAllelePairs());
+				gpm.setGenoclusterKey("" + cell.getGenoclusterKey());
+				gpm.setPhenoAnnotationCount(cell.getAnnotationCount());
+				gpm.setByGenocluster(cell.getByGenocluster());
+				gxdMatrixCells.add(gpm);
+			}
+		}
+		
 		// only generate row relationships on first page/batch
 		if (isFirstPage)
 		{
