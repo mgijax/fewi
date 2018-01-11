@@ -22,7 +22,7 @@
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <div id="phenoGridWrapper">
-  <div id="ggTarget" class=""></div>
+  <div id="ggTarget" class="matrixContainer"></div>
 </div>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
