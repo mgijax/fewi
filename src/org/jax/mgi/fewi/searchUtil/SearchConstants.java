@@ -179,6 +179,7 @@ public class SearchConstants {
 	public static final String ANTIBODY_KEY = "antibodyKey";
 	public static final String POS_STRUCTURE = "posStructure";
 	public static final String ANATOMICAL_SYSTEM = "anatomicalSystem";
+	public static final String ANATOMY_ID = "anatomyID";
 
 	public static final String PRIMARY_KEY = "pKey";
 
@@ -266,4 +267,8 @@ public class SearchConstants {
 	public static final String VB_VOCAB_NAME = "vocabName";
 	public static final String VB_DAG_NAME = "dagName";
 	public static final String VB_CROSSREF = "crossRef";
+	
+	// correlation matrix fields
+	public static final String CM_MARKER_ID = "markerID";
+	public static final String CM_PARENT_ANATOMY_ID = "parentAnatomyID";
 }
