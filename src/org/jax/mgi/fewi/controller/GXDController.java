@@ -1186,6 +1186,8 @@ public class GXDController {
 				gpm.setGenoclusterKey("" + cell.getGenoclusterKey());
 				gpm.setPhenoAnnotationCount(cell.getAnnotationCount());
 				gpm.setByGenocluster(cell.getByGenocluster());
+				gpm.setHasBackgroundSensitivity(cell.getHasBackgroundSensitivity());
+				gpm.setIsNormal(cell.getIsNormal());
 				gxdMatrixCells.add(gpm);
 			}
 		}

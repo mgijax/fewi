@@ -15,6 +15,8 @@ public class GxdPhenoMatrixCell extends GridDataCell {
 	protected String genoclusterKey;		// key of the genocluster (for Pheno cells)
 	protected int phenoAnnotationCount = 0;	// annotation count for this cell (for Pheno cells)
 	protected int byGenocluster = 0;		// sequence number for sorting by genocluster
+	private int isNormal = 0;					// do all MP annotations in this cell have a "normal" qualifier (1) or not (0)?
+	private int hasBackgroundSensitivity = 0;	// is at least 1 MP annotation in this cell flagged for background sensitivity?
 	
 	// TODO: need to figure out how to handle expression vs. phenotype cells -- constructors?  setters?
 
@@ -115,6 +117,22 @@ public class GxdPhenoMatrixCell extends GridDataCell {
 
 	public void setAllelePairs(String allelePairs) {
 		this.allelePairs = allelePairs;
+	}
+
+	public int getIsNormal() {
+		return isNormal;
+	}
+
+	public void setIsNormal(int isNormal) {
+		this.isNormal = isNormal;
+	}
+
+	public int getHasBackgroundSensitivity() {
+		return hasBackgroundSensitivity;
+	}
+
+	public void setHasBackgroundSensitivity(int hasBackgroundSensitivity) {
+		this.hasBackgroundSensitivity = hasBackgroundSensitivity;
 	}
 
 	public String getGenoclusterKey() {
