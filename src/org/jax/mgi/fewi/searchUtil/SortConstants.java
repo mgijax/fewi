@@ -95,6 +95,7 @@ public class SortConstants {
 	public static final String ALL_BY_DISEASE = "byDisease";
 
 	// general...
+	public static final String BY_GENOCLUSTER = "byGenocluster";
 	public static final String SEQUENCE_NUM = "sequenceNum";
 	public static final String SCORE		= "score";			// Solr score
 	

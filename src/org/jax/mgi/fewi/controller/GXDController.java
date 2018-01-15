@@ -27,6 +27,7 @@ import org.jax.mgi.fewi.finder.BatchFinder;
 import org.jax.mgi.fewi.finder.CdnaFinder;
 import org.jax.mgi.fewi.finder.GxdBatchFinder;
 import org.jax.mgi.fewi.finder.GxdFinder;
+import org.jax.mgi.fewi.finder.MPCorrelationMatrixCellFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.VocabularyFinder;
@@ -39,6 +40,8 @@ import org.jax.mgi.fewi.matrix.GxdGeneMatrixPopup;
 import org.jax.mgi.fewi.matrix.GxdMatrixCell;
 import org.jax.mgi.fewi.matrix.GxdMatrixMapper;
 import org.jax.mgi.fewi.matrix.GxdMatrixRow;
+import org.jax.mgi.fewi.matrix.GxdPhenoMatrixCell;
+import org.jax.mgi.fewi.matrix.GxdPhenoMatrixMapper;
 import org.jax.mgi.fewi.matrix.GxdStageGridJsonResponse;
 import org.jax.mgi.fewi.matrix.GxdStageMatrixMapper;
 import org.jax.mgi.fewi.matrix.GxdStageMatrixPopup;
@@ -59,6 +62,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdStageMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.SolrMPCorrelationMatrixCell;
 import org.jax.mgi.fewi.searchUtil.entities.SolrString;
 import org.jax.mgi.fewi.summary.GxdAssayResultSummaryRow;
 import org.jax.mgi.fewi.summary.GxdAssaySummaryRow;
@@ -135,6 +139,9 @@ public class GXDController {
 
 	@Autowired
 	private VocabularyFinder vocabFinder;
+
+	@Autowired
+	private MPCorrelationMatrixCellFinder mpCorrelationMatrixCellFinder;
 
 	@Autowired
 	private GXDLitController gxdLitController;
@@ -973,7 +980,7 @@ public class GXDController {
 
 
 	@RequestMapping("/stagegrid/json")
-	public @ResponseBody GxdStageGridJsonResponse gxdStageGridJson(
+	public @ResponseBody GxdStageGridJsonResponse<GxdMatrixCell> gxdStageGridJson(
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query,
 			@ModelAttribute Paginator page,
@@ -997,7 +1004,7 @@ public class GXDController {
 		if(totalCount!=null && totalCount<page.getStartIndex())
 		{
 			logger.debug("reached end of result set");
-			return new GxdStageGridJsonResponse();
+			return new GxdStageGridJsonResponse<GxdMatrixCell>();
 		}
 
 		// if we have a mapChildrenOf query, we filter by structureIds of the child rows of this parentId
@@ -1073,7 +1080,7 @@ public class GXDController {
 		}
 
 		// add to the response object
-		GxdStageGridJsonResponse jsonResponse = new GxdStageGridJsonResponse();
+		GxdStageGridJsonResponse<GxdMatrixCell> jsonResponse = new GxdStageGridJsonResponse<GxdMatrixCell>();
 		jsonResponse.setParentTerms(parentTerms);
 		jsonResponse.setGxdMatrixCells(gxdMatrixCells);
 
@@ -1083,7 +1090,7 @@ public class GXDController {
 
 	// serve up data for the phenogrid, aka the correlation matrix
 	@RequestMapping("/phenogrid/json")
-	public @ResponseBody GxdStageGridJsonResponse gxdPhenoGridJson(
+	public @ResponseBody GxdStageGridJsonResponse<GxdPhenoMatrixCell> gxdPhenoGridJson(
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query,
 			@ModelAttribute Paginator page,
@@ -1111,9 +1118,16 @@ public class GXDController {
 		if(totalCount!=null && totalCount<page.getStartIndex())
 		{
 			logger.debug("reached end of result set");
-			return new GxdStageGridJsonResponse();
+			return new GxdStageGridJsonResponse<GxdPhenoMatrixCell>();
 		}
 
+		// pull in phenotype cells for the marker/childrenOf pair
+		List<SolrMPCorrelationMatrixCell> mpCells = null;
+		if ((query.getMarkerMgiId() != null) && !"".equals(query.getMarkerMgiId().trim())) {
+			mpCells = this.getMPCells(query.getMarkerMgiId(), childrenOf);
+			logger.info("Got " + mpCells.size() + " MP cells");
+		}
+		
 		// if we have a mapChildrenOf query, we filter by structureIds of the child rows of this parentId
 		if(isChildrenOfQuery)
 		{
@@ -1150,15 +1164,32 @@ public class GXDController {
 			}
 			Set<String> idsWithData = getExactStructureIds(query);
 			idsWithData.addAll(rowsWithChildren);
+			
+			if (mpCells != null) {
+				for (SolrMPCorrelationMatrixCell cell : mpCells) {
+					idsWithData.add(cell.getAnatomyID());
+				}
+			}
 
 			parentTerms = gxdMatrixHandler.pruneEmptyRows(parentTerms,idsWithData);
 		}
 
-		// get matrix cells; add stages to mapper if this is a row-expansion
-		GxdMatrixMapper mapper = new GxdMatrixMapper(edges);
+		// get matrix cells
+		GxdPhenoMatrixMapper mapper = new GxdPhenoMatrixMapper(edges);
+		List<GxdPhenoMatrixCell> gxdMatrixCells = mapper.mapPhenoGridCells(flatRows, resultList);
 
-		List<GxdMatrixCell> gxdMatrixCells = mapper.mapCells(flatRows, resultList);
-
+		// add phenotype cells to the expression ones just built
+		if (mpCells != null) {
+			for (SolrMPCorrelationMatrixCell cell : mpCells) {
+				GxdPhenoMatrixCell gpm = new GxdPhenoMatrixCell("Pheno", cell.getAnatomyID(), "" + cell.getGenoclusterKey(), false);
+				gpm.setAllelePairs(cell.getAllelePairs());
+				gpm.setGenoclusterKey("" + cell.getGenoclusterKey());
+				gpm.setPhenoAnnotationCount(cell.getAnnotationCount());
+				gpm.setByGenocluster(cell.getByGenocluster());
+				gxdMatrixCells.add(gpm);
+			}
+		}
+		
 		// only generate row relationships on first page/batch
 		if (isFirstPage)
 		{
@@ -1166,7 +1197,7 @@ public class GXDController {
 		}
 
 		// add to the response object
-		GxdStageGridJsonResponse jsonResponse = new GxdStageGridJsonResponse();
+		GxdStageGridJsonResponse<GxdPhenoMatrixCell> jsonResponse = new GxdStageGridJsonResponse<GxdPhenoMatrixCell>();
 		jsonResponse.setParentTerms(parentTerms);
 		jsonResponse.setGxdMatrixCells(gxdMatrixCells);
 
@@ -1174,8 +1205,44 @@ public class GXDController {
 		return jsonResponse;
 	}
 
+	/* Get a list of MP cells for a correlation matrix for the given marker.  If non-null childrenOf
+	 * will specify a single EMAPA ID whose child rows we want to retrieve.  Assumes markerID is not null.
+	 */
+	private List<SolrMPCorrelationMatrixCell> getMPCells (String markerID, String childrenOf) {
+		List<Filter> queryFilters = new ArrayList<Filter>();
+		Filter markerIDFilter = new Filter(SearchConstants.CM_MARKER_ID, markerID);
+		queryFilters.add(markerIDFilter);
+		
+		if ((childrenOf != null) && (childrenOf.trim().length() > 0)) {
+			// subsequent searches will always request the children of a particular parent ID
+			List<Filter> parentFilters = new ArrayList<Filter>();
+			for (String parentID : childrenOf.split(",")) {
+				parentFilters.add(new Filter(SearchConstants.CM_PARENT_ANATOMY_ID, parentID));
+			}
+			queryFilters.add(Filter.or(parentFilters));
+		} else {
+			// initial search should include cells for mouse, child terms of mouse, and child terms of organ system
+			String mouseId = "EMAPA:25765";
+			String organSystemId = "EMAPA:16103";
+			List<Filter> termFilters = new ArrayList<Filter>();
+			List<Filter> parentFilters = new ArrayList<Filter>();
+			parentFilters.add(new Filter(SearchConstants.CM_PARENT_ANATOMY_ID, mouseId));
+			parentFilters.add(new Filter(SearchConstants.CM_PARENT_ANATOMY_ID, organSystemId));
+			termFilters.add(new Filter(SearchConstants.ANATOMY_ID, mouseId));
+			termFilters.add(Filter.or(parentFilters));
+			queryFilters.add(Filter.or(termFilters));
+		}
+
+		SearchParams params = new SearchParams();
+		params.setPaginator(new Paginator(100000));
+		params.setFilter(Filter.and(queryFilters));
+
+		SearchResults<SolrMPCorrelationMatrixCell> searchResults = mpCorrelationMatrixCellFinder.getCells(params);
+		return searchResults.getResultObjects();
+	}
+	
 	@RequestMapping("/genegrid/json")
-	public @ResponseBody GxdStageGridJsonResponse gxdGeneGridJson(
+	public @ResponseBody GxdStageGridJsonResponse<GxdMatrixCell> gxdGeneGridJson(
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query,
 			@ModelAttribute Paginator page,
@@ -1199,7 +1266,7 @@ public class GXDController {
 		if(totalCount!=null && totalCount<page.getStartIndex())
 		{
 			logger.debug("reached end of result set");
-			return new GxdStageGridJsonResponse();
+			return new GxdStageGridJsonResponse<GxdMatrixCell>();
 		}
 
 		// if we have a mapChildrenOf query, we filter by structureIds of the child rows of this parentId
@@ -1258,7 +1325,7 @@ public class GXDController {
 		}
 
 		// add to the response object
-		GxdStageGridJsonResponse jsonResponse = new GxdStageGridJsonResponse();
+		GxdStageGridJsonResponse<GxdMatrixCell> jsonResponse = new GxdStageGridJsonResponse<GxdMatrixCell>();
 		jsonResponse.setParentTerms(parentTerms);
 		jsonResponse.setGxdMatrixCells(gxdMatrixCells);
 
