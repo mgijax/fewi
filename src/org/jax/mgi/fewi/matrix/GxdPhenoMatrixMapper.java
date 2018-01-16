@@ -52,8 +52,8 @@ public class GxdPhenoMatrixMapper extends DagMatrixMapper {
 				if (isChild || isParent) {
 					String columnId = result.getColumnId();
 					columnsWithData.add(columnId);
-					insertNewGxdPhenoCell(columnMap, parentRow.getRowId(), columnId,
-							result, isParent, isChild);
+					insertNewGxdPhenoCell(columnMap, parentRow.getRowId(), "0",
+							result, isParent, isChild, columnId);
 				}
 			}
 		}
@@ -75,7 +75,7 @@ public class GxdPhenoMatrixMapper extends DagMatrixMapper {
 	 */
 	protected void insertNewGxdPhenoCell(Map<String, GxdPhenoMatrixCell> columnMap,
 			String rowId, String columnId, MatrixResult result,
-			boolean isParent, boolean isChild) {
+			boolean isParent, boolean isChild, String symbol) {
 
 		SolrGxdPhenoMatrixResult gxdResult = (SolrGxdPhenoMatrixResult) result;
 		GxdPhenoMatrixCell cell;			// the cell we're inserting (or aggregating)
@@ -86,6 +86,7 @@ public class GxdPhenoMatrixMapper extends DagMatrixMapper {
 			if (!columnMap.containsKey(columnId)) {
 				cell = new GxdPhenoMatrixCell(SolrGxdPhenoMatrixResult.GXD, rowId, columnId, !isParent);
 				cell.initializeGxd(gxdResult.getDetectionLevel(), gxdResult.getCount());
+				cell.setSymbol(symbol);
 				columnMap.put(columnId, cell);
 			} else {
 				cell = (GxdPhenoMatrixCell) columnMap.get(columnId);

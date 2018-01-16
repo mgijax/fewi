@@ -1182,7 +1182,7 @@ public class GXDController {
 		// add phenotype cells to the expression ones just built
 		if (mpCells != null) {
 			for (SolrMPCorrelationMatrixCell cell : mpCells) {
-				GxdPhenoMatrixCell gpm = new GxdPhenoMatrixCell("Pheno", cell.getAnatomyID(), "" + cell.getGenoclusterKey(), false);
+				GxdPhenoMatrixCell gpm = new GxdPhenoMatrixCell("Pheno", cell.getAnatomyID(), "" + cell.getByGenocluster(), false);
 				gpm.setAllelePairs(cell.getAllelePairs());
 				gpm.setGenoclusterKey("" + cell.getGenoclusterKey());
 				gpm.setPhenoAnnotationCount(cell.getAnnotationCount());
