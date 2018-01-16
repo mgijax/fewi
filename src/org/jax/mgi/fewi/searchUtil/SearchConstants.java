@@ -124,6 +124,7 @@ public class SearchConstants {
     public static final String TERM_ID		    = "termID";
     public static final String ANNOTATION_KEY	    = "annotationKey";
     public static final String CROSS_REF		    = "crossRef";
+    public static final String GENOCLUSTER_KEY		= "genoclusterKey";
 
     // Images
 
@@ -180,6 +181,7 @@ public class SearchConstants {
 	public static final String POS_STRUCTURE = "posStructure";
 	public static final String ANATOMICAL_SYSTEM = "anatomicalSystem";
 	public static final String ANATOMY_ID = "anatomyID";
+	public static final String ANCESTOR_ANATOMY_KEY	= "ancestorAnatomyKey";
 
 	public static final String PRIMARY_KEY = "pKey";
 

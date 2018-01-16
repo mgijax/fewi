@@ -15,10 +15,12 @@ import javax.servlet.http.HttpSession;
 
 import mgi.frontend.datamodel.Genotype;
 import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.VocabTerm;
 import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.jax.mgi.fewi.finder.MarkerFinder;
+import org.jax.mgi.fewi.finder.VocabularyFinder;
 import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.hmdc.forms.DiseasePortalConditionGroup;
 import org.jax.mgi.fewi.hmdc.forms.DiseasePortalConditionQuery;
@@ -60,6 +62,9 @@ public class DiseasePortalController {
 	@Autowired
 	private DiseasePortalFinder hdpFinder;
 
+	@Autowired
+	private VocabularyFinder vocabFinder;
+	
 	@Autowired
 	private MarkerFinder markerFinder;
 	
@@ -214,7 +219,8 @@ public class DiseasePortalController {
 	}
 	
     @RequestMapping(value="genoCluster/view/{genoClusterKey:.+}", method = RequestMethod.GET)
-    public ModelAndView genoClusterView(@PathVariable("genoClusterKey") String genoClusterKey)
+    public ModelAndView genoClusterView(@PathVariable("genoClusterKey") String genoClusterKey,
+    	@RequestParam(value="structureID", required=false) String structureID)
     {
     	List<HdpGenoCluster> genoClusters = hdpFinder.getGenoClusterByKey(genoClusterKey);
     	// there can be only one...
@@ -241,6 +247,14 @@ public class DiseasePortalController {
         mav.addObject("plainPairs", plainPairs);
         mav.addObject("superscriptPairs", superscriptPairs);
         mav.addObject("strains", strains);
+        if ((structureID != null) && (structureID.trim().length() > 0)) {
+        	List<VocabTerm> terms = vocabFinder.getTermByID(structureID);
+        	if ((terms != null) && (terms.size() > 0)) {
+        		mav.addObject("genoClusterKey",genoClusterKey);
+        		mav.addObject("structureID", structureID);
+        		mav.addObject("structureTerm", terms.get(0).getTerm());
+        	}
+        }
     	return mav;
     }
 

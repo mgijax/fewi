@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import mgi.frontend.datamodel.Allele;
+import mgi.frontend.datamodel.RelatedTermBackward;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.VocabTerm;
@@ -1243,6 +1244,69 @@ public class GXDController {
 		return searchResults.getResultObjects();
 	}
 	
+	/* Retrieves the list of MP IDs we should highlight for the given structureID / genoclusterKey pair.
+	 * This includes MP IDs mapped to either structureID or its descendants, as they contribute 
+	 * annotations to the grid cell defined by structureID and genoclusterKey.
+	 */
+	@RequestMapping("/phenogrid/annotated_pheno_ids")
+	public @ResponseBody String phenoGridAnnotatedPhenoIDs(
+		@RequestParam(value="genoclusterKey") String genoclusterKey,
+		@RequestParam(value="structureID") String structureID) {
+
+		// get the anatomy term, so we can pick up the structure key
+		List<VocabTerm> structureTerms = vocabFinder.getTermByID(structureID);
+		if (structureTerms == null || structureTerms.size() == 0) {
+			return "";
+		}
+		Integer structureKey = structureTerms.get(0).getTermKey();
+		
+		// build filters based on input parameters
+		List<Filter> queryFilters = new ArrayList<Filter>();
+		queryFilters.add(new Filter(SearchConstants.GENOCLUSTER_KEY, genoclusterKey));
+
+		List<Filter> termFilters = new ArrayList<Filter>();
+		termFilters.add(new Filter(SearchConstants.ANCESTOR_ANATOMY_KEY, structureKey.toString()));
+		termFilters.add(new Filter(SearchConstants.ANATOMY_ID, structureID));
+		queryFilters.add(Filter.or(termFilters));
+
+		// execute the search to bring back all grid cells that would have contributed to that one
+		// (searching by parentAnatomyID will bring back all cells of descendants of the structureID)
+		SearchParams params = new SearchParams();
+		params.setPaginator(new Paginator(100000));
+		params.setFilter(Filter.and(queryFilters));
+		SearchResults<SolrMPCorrelationMatrixCell> searchResults = mpCorrelationMatrixCellFinder.getCells(params);
+
+		// build a set of all structure IDs that contributed annotations to the cell
+		Set<String> emapaIDs = new HashSet<String>();
+		emapaIDs.add(structureID);
+		for (SolrMPCorrelationMatrixCell cell : searchResults.getResultObjects()) {
+			emapaIDs.add(cell.getAnatomyID());
+		}
+		
+		// now build a set of all MP IDs that are mapped to those structure IDs
+		Set<String> mpIDs = new HashSet<String>();
+		for (String emapaID : emapaIDs) {
+			for (VocabTerm emapaTerm : vocabFinder.getTermByID(emapaID)) {
+				for (RelatedTermBackward relationship : emapaTerm.getRelatedTermsBackward()) {
+					if ("MP to EMAPA".equals(relationship.getRawRelationshipType())) {
+						mpIDs.add(relationship.getRelatedTerm().getPrimaryId());
+					}
+				}
+			}
+		}
+
+		// compose our output string
+		StringBuffer sb = new StringBuffer();
+		boolean first = true;
+		for (String mpID : mpIDs) {
+			if (!first) { sb.append(","); }
+			else { first = false; }
+			sb.append(mpID);
+		}
+	
+		return sb.toString();
+	}
+
 	@RequestMapping("/genegrid/json")
 	public @ResponseBody GxdStageGridJsonResponse<GxdMatrixCell> gxdGeneGridJson(
 			HttpServletRequest request,

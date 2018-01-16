@@ -34,6 +34,7 @@ public class SolrMPCorrelationMatrixCellHunter extends SolrHunter<SolrMPCorrelat
          */
         propertyMap.put(SearchConstants.CM_MARKER_ID, new SolrPropertyMapper(IndexConstants.MRK_ID));
         propertyMap.put(SearchConstants.CM_PARENT_ANATOMY_ID, new SolrPropertyMapper(IndexConstants.PARENT_ANATOMY_ID));
+        propertyMap.put(SearchConstants.GENOCLUSTER_KEY, new SolrPropertyMapper(IndexConstants.GENOCLUSTER_KEY));
 
         /*
          * The name of the field we want to iterate through the documents for
