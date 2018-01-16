@@ -335,11 +335,16 @@ function resetTree(snID, fullRebuild) {
 
 // format and return a link for phenotype annotations, if the count is > 0
 function phenotypeLink() {
-	if ((phenotypeAnnotationCount === null) || (phenotypeAnnotationCount == '0')) { return '' }
+	if ((phenotypeAnnotationCount === null) || (phenotypeAnnotationCount == '-1')) { return '' }
 
     var phenoText = 'phenotype annotation';
     if (phenotypeAnnotationCount != '1') {
 		phenoText = phenoText + 's';
+		
+		// no need for link if count is zero
+	    if (phenotypeAnnotationCount == '0') {
+    		return '0 ' + phenoText;
+    	}
     }
     var url = '${configBean.FEWI_URL}mp/annotations/by_anatomy/' + selectedNodeID;
 
