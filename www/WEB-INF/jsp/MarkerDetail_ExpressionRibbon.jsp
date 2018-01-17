@@ -99,18 +99,20 @@
 								</div>
 							</div>
 						</c:if>
+
+						<c:if test="${marker.hasPhenotypesRelatedToAnatomy and marker.hasWildTypeExpressionData}">
+							<div class="item" style="clear: both; padding-top: 5px;">
+							<li style="padding-top: 5px;">
+								<div class="label">Correlation Matrix</div>
+								<div class="value"><a href="${configBean.FEWI_URL}gxd/phenogrid/${marker.primaryID}" target="_new">Gene Expression + Phenotype</a></div>
+							</li>
+							</div>
+						</c:if>
 					</section>
 				</c:if>
 
 				<section class="summarySec2 extra">
 					<ul>
-						<c:if test="${marker.hasPhenotypesRelatedToAnatomy and marker.hasWildTypeExpressionData}">
-							<li>
-								<div class="label">Correlation Matrix</div>
-								<div class="value"><a href="${configBean.FEWI_URL}gxd/phenogrid/${marker.primaryID}" target="_new">Gene Expression + Phenotype</a></div>
-							</li>
-						</c:if>
-
 						<c:if test="${not (empty marker.allenBrainAtlasID.accID and empty marker.gensatID.accID and empty marker.geoID.accID and empty marker.arrayExpressID.accID)}">
 							<li>
 								<div class="label">Other Mouse Links</div>
