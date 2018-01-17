@@ -68,7 +68,8 @@
     <c:if test="${not empty structureTerm}">
     	<br/>
 		<span class='highlight'>Highlighted</span> phenotype terms are associated with the anatomy term
-			<span class="label"><a href="${configBean.FEWI_URL}vocab/gxd/anatomy/${structureID}" class="MP" target="_blank">${structureTerm}</a></span>.
+			<span class="label"><a href="${configBean.FEWI_URL}vocab/gxd/anatomy/${structureID}" class="MP" target="_blank">${structureTerm}</a></span>
+			and/or its substructures.
     </c:if>
   </td>
 </tr>
