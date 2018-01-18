@@ -168,6 +168,13 @@ public class GxdPhenoMatrixCell extends GridDataCell {
 		this.cellType = cellType;
 	}
 
+	public String getColDisplay() {
+		if ("GXD".equals(this.cellType)) {
+			return this.symbol;
+		}
+		return this.allelePairs;
+	}
+	
 	@Override
 	public String toString() {
 		return "GxdPhenoMatrixCell [detectedCount=" + detectedCount + ", notDetectedCount=" + notDetectedCount
