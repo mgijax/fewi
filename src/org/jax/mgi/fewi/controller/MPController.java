@@ -15,6 +15,7 @@ import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.TermFinder;
 import org.jax.mgi.fewi.finder.VocabularyFinder;
 import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
@@ -191,7 +192,7 @@ public class MPController {
     // MP annotation summary by EMAPA anatomy term
     //---------------------------------------------//
     @RequestMapping(value="/annotations/by_anatomy/{emapaID}")
-    public ModelAndView mpAnnotationsByAnatomyTerm (@PathVariable("emapaID") String emapaID) {
+    public ModelAndView mpAnnotationsByAnatomyTerm (HttpServletRequest request, @PathVariable("emapaID") String emapaID) {
         logger.debug("->mpAnnotationsByAnatomyTerm started");
 
         // 1. begin building the MAV, assuming a successful return
@@ -220,7 +221,7 @@ public class MPController {
         mav.addObject("term", term);
 
         // At this point, we have an anatomy Term object.  We need to find phenotype annotations for MP terms
-        // that are associated with that term or its descendants.
+        // that are associated with that term or its descendants.  (excluding normal annotations)
 
 	    List<SolrMPAnnotation> annotList = this.getAnnotationsByAnatomy(term.getPrimaryID());
 	    mav.addObject("annotationCount", annotList.size());
@@ -238,7 +239,7 @@ public class MPController {
     }
 
     //---------------------------------------------//
-    // count of MP annotations by EMAPA anatomy term
+    // count of MP annotations by EMAPA anatomy term (excluding those with a normal qualifier)
     // special values:
     //		0 = mapped to MP, but with no annotations; -1 = bad ID or not mapped to MP
     //---------------------------------------------//
@@ -263,14 +264,16 @@ public class MPController {
 	    return annotationCount;
     }
 
-    /* return a list of annotations, given an EMAPA ID
+    /* return a list of annotations, given an EMAPA ID (excluding annotations with a normal qualifier)
      */
     private List<SolrMPAnnotation> getAnnotationsByAnatomy (String emapaID) {
         // set up our filters for EMAPA ID (a cross-reference)
 	
         SearchParams searchParams = new SearchParams();
-        Filter emapaFilter = new Filter(SearchConstants.CROSS_REF, emapaID);
-	    searchParams.setFilter(emapaFilter);
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter(SearchConstants.CROSS_REF, emapaID));
+        filters.add(new Filter(SearchConstants.VOC_RESTRICTION, "normal", Operator.OP_NOT_EQUAL));
+	    searchParams.setFilter(Filter.and(filters));
 
 	    // set up our sorting
 	
