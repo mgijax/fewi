@@ -120,7 +120,7 @@ function main() {
 			key:"headers",
 			label:"Category",
 			width:150,
-			sortable:false
+			sortable:true
 		}, {
 			key:"term",
 			label:"Classification Term",
@@ -135,7 +135,7 @@ function main() {
 			key:"isoforms",
 			label:"Proteoform",
 			width:130,
-			sortable:false
+			sortable:true
 		}, {
 			key:"evidence",
 			label:"Evidence",
@@ -150,7 +150,7 @@ function main() {
 			key:"references",
 			label:"Reference(s)",
 			width:200,
-			sortable:false
+			sortable:true
 		}
 	];
 

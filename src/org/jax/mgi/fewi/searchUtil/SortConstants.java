@@ -53,6 +53,7 @@ public class SortConstants {
 	public static final String MRK_BY_EVIDENCE_CODE				= "byEvidenceCode";
 	public static final String MRK_BY_EVIDENCE_TERM				= "byEvidenceTerm";
 	public static final String BY_ISOFORM						= "byIsoform";
+	public static final String BY_CATEGORY						= "byCategory";
 
 	// Sequence Summary page
 	public static final String SEQUENCE_TYPE       = "sequenceType";
