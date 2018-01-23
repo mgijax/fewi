@@ -28,7 +28,8 @@ public class SolrMarkerAnnotationSummaryHunter extends SolrHunter<Annotation> {
 		sortMap.put(SortConstants.VOC_DAG_NAME, new SolrSortMapper(IndexConstants.VOC_DAG_NAME));
 		sortMap.put(SortConstants.MRK_BY_EVIDENCE_CODE, new SolrSortMapper(IndexConstants.BY_EVIDENCE_CODE));
 		sortMap.put(SortConstants.MRK_BY_EVIDENCE_TERM, new SolrSortMapper(IndexConstants.BY_EVIDENCE_TERM));
-		sortMap.put(SortConstants.BY_REFERENCE, new SolrSortMapper(IndexConstants.REF_KEY));
+		sortMap.put(SortConstants.BY_CATEGORY, new SolrSortMapper(IndexConstants.BY_CATEGORY));
+		sortMap.put(SortConstants.BY_REFERENCE, new SolrSortMapper(IndexConstants.BY_REFERENCE));
 		sortMap.put(SortConstants.MRK_BY_SYMBOL, new SolrSortMapper(IndexConstants.MRK_BY_SYMBOL));
 		sortMap.put(SortConstants.BY_ISOFORM, new SolrSortMapper(IndexConstants.BY_ISOFORM));
 
