@@ -30,12 +30,14 @@ import org.jax.mgi.fewi.finder.GxdBatchFinder;
 import org.jax.mgi.fewi.finder.GxdFinder;
 import org.jax.mgi.fewi.finder.MPCorrelationMatrixCellFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
+import org.jax.mgi.fewi.finder.RecombinaseFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.VocabularyFinder;
 import org.jax.mgi.fewi.forms.BatchQueryForm;
 import org.jax.mgi.fewi.forms.GxdHtQueryForm;
 import org.jax.mgi.fewi.forms.GxdLitQueryForm;
 import org.jax.mgi.fewi.forms.GxdQueryForm;
+import org.jax.mgi.fewi.forms.RecombinaseQueryForm;
 import org.jax.mgi.fewi.handler.GxdMatrixHandler;
 import org.jax.mgi.fewi.matrix.GxdGeneMatrixPopup;
 import org.jax.mgi.fewi.matrix.GxdMatrixCell;
@@ -43,6 +45,8 @@ import org.jax.mgi.fewi.matrix.GxdMatrixMapper;
 import org.jax.mgi.fewi.matrix.GxdMatrixRow;
 import org.jax.mgi.fewi.matrix.GxdPhenoMatrixCell;
 import org.jax.mgi.fewi.matrix.GxdPhenoMatrixMapper;
+import org.jax.mgi.fewi.matrix.GxdRecombinaseMatrixCell;
+import org.jax.mgi.fewi.matrix.GxdRecombinaseMatrixMapper;
 import org.jax.mgi.fewi.matrix.GxdStageGridJsonResponse;
 import org.jax.mgi.fewi.matrix.GxdStageMatrixMapper;
 import org.jax.mgi.fewi.matrix.GxdStageMatrixPopup;
@@ -59,6 +63,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrDagEdge;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdAssay;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdGeneMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdPhenoMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRecombinaseMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMatrixResult;
@@ -133,6 +138,9 @@ public class GXDController {
 	@Autowired
 	private ReferenceFinder referenceFinder;
 
+	@Autowired
+	private RecombinaseFinder recombinaseFinder;
+
 	@Autowired AlleleFinder alleleFinder;
 
 	@Autowired
@@ -149,6 +157,9 @@ public class GXDController {
 
 	@Autowired
 	private BatchController batchController;
+
+	@Autowired
+	private RecombinaseController recombinaseController;
 
 	@Autowired
 	private GXDHTController gxdhtController;
@@ -1082,6 +1093,149 @@ public class GXDController {
 
 		// add to the response object
 		GxdStageGridJsonResponse<GxdMatrixCell> jsonResponse = new GxdStageGridJsonResponse<GxdMatrixCell>();
+		jsonResponse.setParentTerms(parentTerms);
+		jsonResponse.setGxdMatrixCells(gxdMatrixCells);
+
+		logger.debug("sending json response");
+		return jsonResponse;
+	}
+
+	// serve up data for the recombinase grid
+	@RequestMapping("/recombinasegrid/json")
+	public @ResponseBody GxdStageGridJsonResponse<GxdRecombinaseMatrixCell> gxdRecombinaseGridJson(
+			HttpServletRequest request,
+			@ModelAttribute GxdQueryForm query,
+			@ModelAttribute Paginator page,
+			@RequestParam(value="mapChildrenOf",required=false) String childrenOf,
+			@RequestParam(value="pathToOpen",required=false) List<String> pathsToOpen,
+			HttpSession session) throws CloneNotSupportedException
+			{
+		logger.debug("gxdRecombinaseGridJson() started");
+		
+		boolean isFirstPage = page.getStartIndex() == 0;
+		boolean isChildrenOfQuery = childrenOf!=null && !childrenOf.equals("");
+
+		if (query.getMarkerMgiId() == null) {
+			logger.debug("no marker ID specified");
+			return new GxdStageGridJsonResponse<GxdRecombinaseMatrixCell>();
+		}
+		
+		// determine if the marker is a driver for any recombinases; if not, bail out
+		SearchResults<Marker> markers = markerFinder.getMarkerByID(query.getMarkerMgiId());
+		if (markers.getTotalCount() == 0) {
+			logger.debug("cannot find marker for ID " + query.getMarkerMgiId());
+			return new GxdStageGridJsonResponse<GxdRecombinaseMatrixCell>();
+		}
+		
+		Marker marker = markers.getResultObjects().get(0);
+		RecombinaseQueryForm recombinaseForm = new RecombinaseQueryForm();
+		recombinaseForm.setDriver(marker.getSymbol().toLowerCase());
+		SearchParams recombinaseParams = new SearchParams();
+        recombinaseParams.setFilter(recombinaseController.parseRecombinaseQueryForm(recombinaseForm));
+        recombinaseParams.setPageSize(1);
+		
+		SearchResults<Allele> recombinaseAlleles = recombinaseFinder.searchRecombinases(recombinaseParams);
+		if (recombinaseAlleles.getTotalCount() == 0) {
+			logger.debug("no recombinase alleles for ID " + query.getMarkerMgiId());
+			return new GxdStageGridJsonResponse<GxdRecombinaseMatrixCell>();
+		}
+		
+		// We only want wild-type expression data for this grid.
+		query.setIsWildType("true");
+		
+		// save original query in case we are expanding a row
+		GxdQueryForm originalQuery = (GxdQueryForm) query.clone();
+		String sessionQueryString = originalQuery.toString();
+
+		// check if we have a totalCount set (if so, we return early to indicate end of data)
+		String totalCountSessionId = "GxdRecombinaseMatrixTotalCount_"+sessionQueryString;
+		Integer totalCount = (Integer) session.getAttribute(totalCountSessionId);
+		if(totalCount!=null && totalCount<page.getStartIndex())
+		{
+			logger.debug("reached end of result set");
+			return new GxdStageGridJsonResponse<GxdRecombinaseMatrixCell>();
+		}
+
+/*
+		// pull in phenotype cells for the marker/childrenOf pair
+		List<SolrMPCorrelationMatrixCell> mpCells = null;
+		if ((query.getMarkerMgiId() != null) && !"".equals(query.getMarkerMgiId().trim())) {
+			mpCells = this.getMPCells(query.getMarkerMgiId(), childrenOf);
+			logger.info("Got " + mpCells.size() + " MP cells");
+		}
+*/		
+		// if we have a mapChildrenOf query, we filter by structureIds of the child rows of this parentId
+		if(isChildrenOfQuery)
+		{
+			gxdMatrixHandler.addMapChildrenOfFilterForMatrix(query,childrenOf);
+			pathsToOpen = null;
+		}
+
+		// get the matrix results for this page
+		SearchParams params = new SearchParams();
+		params.setPaginator(page);
+		params.setFilter(parseGxdQueryForm(query));
+		SearchResults<SolrGxdRecombinaseMatrixResult> searchResults = gxdFinder.searchRecombinaseMatrixResults(params);
+		logger.debug("got recombinase matrix results");
+		List<SolrGxdRecombinaseMatrixResult> resultList = searchResults.getResultObjects();
+
+		// cache total count of assay results
+		session.setAttribute(totalCountSessionId,searchResults.getTotalCount());
+
+		// get the parent rows to be displayed
+		List<GxdMatrixRow> parentTerms = gxdMatrixHandler.getParentTermsToDisplay(query,childrenOf,pathsToOpen);
+
+		List<GxdMatrixRow> flatRows = gxdMatrixHandler.getFlatTermList(parentTerms);
+
+		// this gets all edges, but we only need all of them for the first page
+		List<SolrDagEdge> edges = getDAGDescendentRelationships(query,flatRows).getResultObjects();
+
+		// prune empty data rows
+		if(isFirstPage)
+		{
+			Set<String> rowsWithChildren = new HashSet<String>();
+			for(SolrDagEdge edge : edges)
+			{
+				rowsWithChildren.add(edge.getParentId());
+			}
+			Set<String> idsWithData = getExactStructureIds(query);
+			idsWithData.addAll(rowsWithChildren);
+/*			
+			if (mpCells != null) {
+				for (SolrMPCorrelationMatrixCell cell : mpCells) {
+					idsWithData.add(cell.getAnatomyID());
+				}
+			}
+*/
+			parentTerms = gxdMatrixHandler.pruneEmptyRows(parentTerms,idsWithData);
+		}
+
+		// get matrix cells
+		GxdRecombinaseMatrixMapper mapper = new GxdRecombinaseMatrixMapper(edges);
+		List<GxdRecombinaseMatrixCell> gxdMatrixCells = mapper.mapRecombinaseGridCells(flatRows, resultList);
+/*
+		// add phenotype cells to the expression ones just built
+		if (mpCells != null) {
+			for (SolrMPCorrelationMatrixCell cell : mpCells) {
+				GxdPhenoMatrixCell gpm = new GxdPhenoMatrixCell("Pheno", cell.getAnatomyID(), "" + cell.getByGenocluster(), false);
+				gpm.setAllelePairs(cell.getAllelePairs());
+				gpm.setGenoclusterKey("" + cell.getGenoclusterKey());
+				gpm.setPhenoAnnotationCount(cell.getAnnotationCount());
+				gpm.setByGenocluster(cell.getByGenocluster());
+				gpm.setHasBackgroundSensitivity(cell.getHasBackgroundSensitivity());
+				gpm.setIsNormal(cell.getIsNormal());
+				gxdMatrixCells.add(gpm);
+			}
+		}
+*/		
+		// only generate row relationships on first page/batch
+		if (isFirstPage)
+		{
+			gxdMatrixHandler.assignOpenCloseState(parentTerms,query,edges);
+		}
+
+		// add to the response object
+		GxdStageGridJsonResponse<GxdRecombinaseMatrixCell> jsonResponse = new GxdStageGridJsonResponse<GxdRecombinaseMatrixCell>();
 		jsonResponse.setParentTerms(parentTerms);
 		jsonResponse.setGxdMatrixCells(gxdMatrixCells);
 

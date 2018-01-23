@@ -528,7 +528,7 @@ public class RecombinaseController {
 
 
     // method to parse query parameters into filters
-    private Filter parseRecombinaseQueryForm(RecombinaseQueryForm query){
+    public Filter parseRecombinaseQueryForm(RecombinaseQueryForm query){
 
         // start filter list to add filters to
         List<Filter> filterList = new ArrayList<Filter>();
