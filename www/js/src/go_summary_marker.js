@@ -1,4 +1,4 @@
-var pageSortKey = "category";
+var pageSortKey = "isoforms";
 var pageSortDir = "yui-dt-desc";
 var pageDataTable = null;
 var pageDataSource = null;
