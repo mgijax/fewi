@@ -273,4 +273,7 @@ public class SearchConstants {
 	// correlation matrix fields
 	public static final String CM_MARKER_ID = "markerID";
 	public static final String CM_PARENT_ANATOMY_ID = "parentAnatomyID";
+
+	// general
+	public static final String COLUMN_ID = "columnID";
 }
