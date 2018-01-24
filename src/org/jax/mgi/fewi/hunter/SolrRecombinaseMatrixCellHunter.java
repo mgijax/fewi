@@ -71,6 +71,7 @@ public class SolrRecombinaseMatrixCellHunter extends SolrHunter<SolrRecombinaseM
     		cell.setOrganism((String) doc.getFieldValue(IndexConstants.ORGANISM));
     		cell.setSymbol((String) doc.getFieldValue(IndexConstants.SYMBOL));
     		cell.setByColumn((Integer) doc.getFieldValue(IndexConstants.BY_COLUMN));
+    		cell.setChildren((Integer) doc.getFieldValue(IndexConstants.CHILDREN));
 
 	    	cells.add(cell);
     	}

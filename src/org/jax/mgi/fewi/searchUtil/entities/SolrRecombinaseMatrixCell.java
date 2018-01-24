@@ -15,6 +15,7 @@ public class SolrRecombinaseMatrixCell
 	private int notDetectedResults = 0;
 	private int anyAmbiguous = 0;
 	private int byColumn = 0;
+	private int children = 0;
 	
 	/***--- getters ---***/
 	
@@ -35,6 +36,9 @@ public class SolrRecombinaseMatrixCell
 	}
 	public String getCellType() {
 		return cellType;
+	}
+	public int getChildren() {
+		return children;
 	}
 	public String getColumnID() {
 		return columnID;
@@ -74,6 +78,9 @@ public class SolrRecombinaseMatrixCell
 	}
 	public void setCellType(String cellType) {
 		this.cellType = cellType;
+	}
+	public void setChildren(int children) {
+		this.children = children;
 	}
 	public void setColumnID(String columnID) {
 		this.columnID = columnID;

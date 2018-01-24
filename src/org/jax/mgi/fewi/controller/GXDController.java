@@ -1209,7 +1209,6 @@ public class GXDController {
 					idsWithData.add(cell.getAnatomyID());
 				}
 			}
-
 			parentTerms = gxdMatrixHandler.pruneEmptyRows(parentTerms,idsWithData);
 		}
 
@@ -1219,6 +1218,7 @@ public class GXDController {
 
 		// add phenotype cells to the expression ones just built
 		if (recombinaseCells != null) {
+			Set<String> idsWithChildren = new HashSet<String>();
 			for (SolrRecombinaseMatrixCell cell : recombinaseCells) {
 				GxdRecombinaseMatrixCell gpm = new GxdRecombinaseMatrixCell("Recombinase", cell.getAnatomyID(), "" + cell.getByColumn(), false);
 				gpm.setAmbiguous(cell.getAnyAmbiguous());
@@ -1227,10 +1227,21 @@ public class GXDController {
 				gpm.setDetected(cell.getDetectedResults());
 				gpm.setNotDetected(cell.getNotDetectedResults());
 				gpm.setSymbol(cell.getSymbol());
+				gpm.setChildren(cell.getChildren());
 				gxdMatrixCells.add(gpm);
+				
+				if (cell.getChildren() > 0) {
+					idsWithChildren.add(cell.getAnatomyID());
+				}
+			}
+			
+			if (idsWithChildren.size() > 0) {
+				for (GxdMatrixRow row : parentTerms) {
+					setExForRecombinases(row, idsWithChildren);
+				}
 			}
 		}
-		
+
 		// only generate row relationships on first page/batch
 		if (isFirstPage)
 		{
@@ -1246,6 +1257,17 @@ public class GXDController {
 		return jsonResponse;
 	}
 
+	// set the ex flag appropriately for 'row' and its children, if corresponding ids are in 'idsWithChildren'
+	private GxdMatrixRow setExForRecombinases (GxdMatrixRow row, Set<String> idsWithChildren) {
+		if (idsWithChildren.contains(row.getRid())) {
+			row.setEx(true);
+		}
+		for (GxdMatrixRow childRow : row.getChildren()) {
+			setExForRecombinases(childRow, idsWithChildren);
+		}
+		return row;
+	}
+	
 	// serve up data for the phenogrid, aka the correlation matrix
 	@RequestMapping("/phenogrid/json")
 	public @ResponseBody GxdStageGridJsonResponse<GxdPhenoMatrixCell> gxdPhenoGridJson(
