@@ -71,6 +71,7 @@ public class SolrMPCorrelationMatrixCellHunter extends SolrHunter<SolrMPCorrelat
     		cell.setHasBackgroundSensitivity((Integer) doc.getFieldValue(IndexConstants.HAS_BACKGROUND_SENSITIVITY));
     		cell.setIsNormal((Integer) doc.getFieldValue(IndexConstants.IS_NORMAL));
     		cell.setMarkerSymbol((String) doc.getFieldValue(IndexConstants.MRK_SYMBOL));
+    		cell.setChildren((Integer) doc.getFieldValue(IndexConstants.CHILDREN));
 
 	    	cells.add(cell);
     	}

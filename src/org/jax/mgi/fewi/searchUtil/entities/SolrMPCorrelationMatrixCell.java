@@ -15,6 +15,7 @@ public class SolrMPCorrelationMatrixCell
 	private Integer isNormal;
 	private Integer hasBackgroundSensitivity;
 	private Integer byGenocluster;
+	private Integer children;
 
 	/***--- getters ---***/
 	
@@ -29,6 +30,9 @@ public class SolrMPCorrelationMatrixCell
 	}
 	public Integer getAnnotationCount() {
 		return annotationCount;
+	}
+	public Integer getChildren() {
+		return children;
 	}
 	public Integer getByGenocluster() {
 		return byGenocluster;
@@ -62,6 +66,9 @@ public class SolrMPCorrelationMatrixCell
 	}
 	public void setAnnotationCount(Integer annotationCount) {
 		this.annotationCount = annotationCount;
+	}
+	public void setChildren(Integer children) {
+		this.children = children;
 	}
 	public void setByGenocluster(Integer byGenocluster) {
 		this.byGenocluster = byGenocluster;
