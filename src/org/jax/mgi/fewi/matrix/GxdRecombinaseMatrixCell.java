@@ -59,9 +59,9 @@ public class GxdRecombinaseMatrixCell extends GridDataCell {
 		return cellType;
 	}
 
-	public int getChildren() {
-		return childCount;
-	}
+//	public int getChildren() {
+//		return childCount;
+//	}
 
 	public String getColDisplay() {
 		return this.symbol;
