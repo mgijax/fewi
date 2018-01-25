@@ -17,12 +17,13 @@
 
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/gxd/gxd_summary.css" />
 <style>
+
 </style>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <div id="phenoGridWrapper">
-  <div id="ggTarget" class="matrixContainer"></div>
+  <div id="phenoGridTarget" class="matrixContainer"></div>
 </div>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

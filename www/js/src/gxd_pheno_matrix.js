@@ -27,7 +27,7 @@ function getQueryStringWithFilters() {
 
 
 
-function resolveGridColorClass(cell)
+function resolveGxdGridColorClass(cell)
 {
 	var cc = "gold";
 	if(cell.detected>0)
@@ -66,39 +66,78 @@ function resolveGridColorClass(cell)
 	return cc;
 }
 
+function resolvePhenoGridColorClass(cell)
+{
+	var cc = '';
+	if(cell.phenoAnnotationCount>0)
+	{
+		if(cell.phenoAnnotationCount < 2)
+		{
+			cc = "phenoBlue1";
+		}
+		else if(cell.phenoAnnotationCount < 6)
+		{
+			cc = "phenoBlue2";
+		}
+		else if(cell.phenoAnnotationCount < 100)
+		{
+			cc = "phenoBlue3";
+		}
+		else
+		{
+			cc = "phenoBlue4";
+		}
+	}
+	return cc;
+}
+
+
 //rendering function for grid cells
 function StructurePhenoCellRenderer(d3Target,cellSize,cell){
 
 	var g = d3Target;
-	var fillClass = resolveGridColorClass(cell);
 
-	if ( fillClass == "gold" ) {
-		var points = [(cellSize - (cellSize/1.5))+","+0,
-	    	(cellSize)+","+0,
-	    	(cellSize)+","+(cellSize/1.5)];
-		g.append("polygon")
-			.attr("points",points.join(" "))
-			.attr("class",fillClass);
-		g.append("rect")
-			.attr("x",0)
-			.attr("y",0)
-			.attr("width",cellSize)
-			.attr("height",cellSize)
-			.style("fill","transparent");
+	if (cell.cellType=="GXD") {
+		var fillClass = resolveGxdGridColorClass(cell);
+		if ( fillClass == "gold" ) {
+			var points = [(cellSize - (cellSize/1.5))+","+0,
+		    	(cellSize)+","+0,
+		    	(cellSize)+","+(cellSize/1.5)];
+			g.append("polygon")
+				.attr("points",points.join(" "))
+				.attr("class",fillClass);
+			g.append("rect")
+				.attr("x",0)
+				.attr("y",0)
+				.attr("width",cellSize)
+				.attr("height",cellSize)
+				.style("fill","transparent");
+		}
+		else {
+			g.append("rect")
+				.attr("x",0)
+				.attr("y",0)
+				.attr("width",cellSize)
+				.attr("height",cellSize)
+				.style("stroke","#ccc")
+				.style("stroke-width","1px")
+				.attr("class",fillClass);
+	
+			if(indicateNegativeMatrixResultsConflict(cell)){
+				addNegativeResultConflictIndicator(g,cellSize);
+			}
+		}
 	}
 	else {
+		var fillClass = resolvePhenoGridColorClass(cell);
 		g.append("rect")
-			.attr("x",0)
-			.attr("y",0)
-			.attr("width",cellSize)
-			.attr("height",cellSize)
-			.style("stroke","#ccc")
-			.style("stroke-width","1px")
-			.attr("class",fillClass);
-
-		if(indicateNegativeMatrixResultsConflict(cell)){
-			addNegativeResultConflictIndicator(g,cellSize);
-		}
+		.attr("x",0)
+		.attr("y",0)
+		.attr("width",cellSize)
+		.attr("height",cellSize)
+		.style("stroke","#ccc")
+		.style("stroke-width","1px")
+		.attr("class",fillClass);
 	}
 
 	return g;
@@ -156,7 +195,7 @@ var phenoSuperGrid = function()
 		if (typeof getQueryString == 'function') window.querystring = getQueryString().replace('&idFile=&','&');
 
 		currentGeneGrid = GxdTissueMatrix({
-			target : "ggTarget",
+			target : "phenoGridTarget",
 			// the datasource allows supergrid to make ajax calls for the initial data,
 			// 	as well as subsequent calls for expanding rows
 			dataSource: {
@@ -186,12 +225,12 @@ var phenoSuperGrid = function()
 				return 0;
 			},
 			verticalColumnLabels: true,
-	        openCloseStateKey: "gg_"+querystring,
+	        openCloseStateKey: "phenoGrid_"+querystring,
 	        legendClickHandler: function(e){ geneMatrixLegendPopupPanel.show(); },
 	        renderCompletedFunction: function()
 	        {
 	        	//When matrix is drawn/redrawn we resize it with margins, to fit the browser window
-	        	makeMatrixResizable("ggTarget",40,40);
+	        	makeMatrixResizable("phenoGridTarget",40,40);
 	        	if (SHOW_MATRIX_LEGENDS) {
 	        		geneMatrixLegendPopupPanel.show();
 	        	}
