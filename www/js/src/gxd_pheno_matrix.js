@@ -144,19 +144,6 @@ function StructurePhenoCellRenderer(d3Target,cellSize,cell){
 };
 
 
-function StructurePhenoColumnHeaderRenderer(d3Target,cellSize)
-{
-	var labelPaddingLeft = 4;
-	var labelPaddingBottom = 4;
-    return  d3Target.append("text")
-    	.attr("x", 0)
-    	.attr("y",cellSize-labelPaddingBottom)
-    	.text(function(d){ return d.cid;})
-    	.style("font-size",_self.columnHeaderFontSize+"px")
-    	.style("font-weight","bold");
-}
-
-
 window.PhenoMatrixRender = new function()
 {
 	/*
@@ -208,16 +195,6 @@ var phenoSuperGrid = function()
 			},
 			cellSize: 24,
 			columnRenderer: PhenoMatrixRender.StructurePhenoColumnHeaderRenderer,
-//			columnRenderer: function(d3Target,cellSize){ 
-//				var labelPaddingLeft = 4;
-//				var labelPaddingBottom = 4;
-//			    return  d3Target.append("text")
-//			    	.attr("x", 0)
-//			    	.attr("y",cellSize-labelPaddingBottom)
-//			    	.text(function(d){ return d.cid;})
-//			    	.style("font-size",_self.columnHeaderFontSize+"px")
-//			    	.style("font-weight","bold");
-//			},
 			cellRenderer: StructurePhenoCellRenderer,
 			columnSort: function(a,b){ 
 				if(a.cid>b.cid) return 1;
