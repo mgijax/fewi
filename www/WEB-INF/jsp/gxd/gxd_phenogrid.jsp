@@ -1,5 +1,7 @@
 <%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
+<title>${marker.symbol} Expression / Phenotype Grid </title>
+
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
 <script type="text/javascript">
