@@ -1360,6 +1360,7 @@ public class GXDController {
 
 		// add phenotype cells to the expression ones just built
 		if (mpCells != null) {
+			Set<String> idsWithChildren = new HashSet<String>();
 			for (SolrMPCorrelationMatrixCell cell : mpCells) {
 				GxdPhenoMatrixCell gpm = new GxdPhenoMatrixCell("Pheno", cell.getAnatomyID(), "" + cell.getByGenocluster(), false);
 				gpm.setAllelePairs(cell.getAllelePairs());
@@ -1368,7 +1369,18 @@ public class GXDController {
 				gpm.setByGenocluster(cell.getByGenocluster());
 				gpm.setHasBackgroundSensitivity(cell.getHasBackgroundSensitivity());
 				gpm.setIsNormal(cell.getIsNormal());
+				gpm.setChildren(cell.getChildren());
 				gxdMatrixCells.add(gpm);
+				
+				if (cell.getChildren() > 0) {
+					idsWithChildren.add(cell.getAnatomyID());
+				}
+			}
+			
+			if (idsWithChildren.size() > 0) {
+				for (GxdMatrixRow row : parentTerms) {
+					setExForRecombinases(row, idsWithChildren);
+				}
 			}
 		}
 		

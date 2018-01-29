@@ -107,9 +107,9 @@ public class GxdPhenoMatrixCell extends GridDataCell {
 		this.ambiguousCount = ambiguousCount;
 	}
 
-	public int getChildren() {
-		return childCount;
-	}
+//	public int getChildren() {
+//		return childCount;
+//	}
 
 	public void setChildren(int childCount) {
 		this.childCount = childCount;
