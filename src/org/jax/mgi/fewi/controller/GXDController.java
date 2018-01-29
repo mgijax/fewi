@@ -1624,8 +1624,24 @@ public class GXDController {
 
 		logger.debug("->gxdPhenoGrid started");
 
-		// setup view object
 		ModelAndView mav = new ModelAndView("gxd/gxd_phenogrid");
+		
+        // find the requested marker
+        List<Marker> markerList = markerFinder.getMarkerByPrimaryId(mrkID);
+        if (markerList.size() < 1) {
+            // forward to error page
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Marker Found");
+            return mav;
+        } else if (markerList.size() > 1) {
+            // forward to error page
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "Duplicate ID");
+            return mav;
+        }
+        mav.addObject("marker", markerList.get(0));		
+		
+		// setup view object
 		mav.addObject("mrkID", mrkID);
 		mav.addObject("queryString", request.getQueryString());
 
