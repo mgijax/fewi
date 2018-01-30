@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
-<title>${marker.symbol} Expression / Phenotype Grid </title>
+<title>${marker.symbol} Expression Phenotype Matrix </title>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
