@@ -903,8 +903,8 @@ var interceptSubmit = function(e) {
 
 YAHOO.util.Event.addListener("gxdQueryForm", "submit", interceptSubmit);
 YAHOO.util.Event.addListener("gxdBatchQueryForm1", "submit", interceptSubmit);
-YAHOO.util.Event.addListener("gxdDifferentialQueryForm1","submit",interceptSubmit);
-YAHOO.util.Event.addListener("gxdDifferentialQueryForm2","submit",interceptSubmit);
+//YAHOO.util.Event.addListener("gxdDifferentialQueryForm1","submit",interceptSubmit);
+//YAHOO.util.Event.addListener("gxdDifferentialQueryForm2","submit",interceptSubmit);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm3","submit",interceptSubmit);
 
 /*
@@ -1353,8 +1353,8 @@ function makeStructureAC(inputID,containerID){
     };
 };
 makeStructureAC("structure","structureContainer");
-makeStructureAC("difStructure1","difStructureContainer1");
-makeStructureAC("difStructure2","difStructureContainer2");
+//makeStructureAC("difStructure1","difStructureContainer1");
+//makeStructureAC("difStructure2","difStructureContainer2");
 makeStructureAC("difStructure3","difStructureContainer3");
 makeStructureAC("difStructure4","difStructureContainer4");
 

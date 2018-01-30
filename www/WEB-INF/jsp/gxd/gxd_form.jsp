@@ -353,32 +353,6 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			<div id="difStructOpen">
 			<table class="noborder">
 			<tr><td colspan="2">
-				Find genes where expression is detected in<br/>
-				<div style="padding:2px 0px 12px 20px; width:300px;text-align:left;" id="difStructureAutoComplete1">
-				<input id="difStructure1" name="structure" style="width:270px;"></input>
-				<input type="hidden" id="difStructure1ID" name="structureID" value=""/>
-				<div id="difStructureContainer1"></div>
-				</div>
-			</td></tr>
-			<tr><td colspan="2">
-				and expression is <span class="redNot">NOT</span> detected or analyzed in
-				<img id="gxdDifStruct1HelpImage" src="${configBean.WEBSHARE_URL}images/help_icon.png" />
-				<div id="gxdDifStruct1Help">
-					<div class="hd"><b>NOT</b> detected or analyzed in...</div>
-					<div class="bd">
-						<p>The search will return genes whose expression was absent (not detected),
-						as well as genes whose expression has not been analyzed or recorded in the database for the specified structure.</p>
-					</div>
-				</div>
-			</td></tr>
-			<tr><td colspan="2">
-				<div style="padding:2px 0px 12px 20px;width:300px;text-align:left;" id="difStructureAutoComplete2">
-				<input id="difStructure2" name="difStructure" style="width:270px;"></input>
-				<input type="hidden" id="difStructure2ID" name="difStructureID" value=""/>
-				<div id="difStructureContainer2"></div>
-				</div>
-			</td></tr>
-			<tr><td colspan="2">
 				<div id="difStructureError" class="small error" style="display:none; white-space:nowrap;padding-bottom:4px;">
 				*Please enter a structure in <i>both</i> search boxes.</div>
 				<input class="buttonLabel" value="Search" type="submit" id="submit3">
@@ -397,9 +371,9 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			<td colspan="2" style="vertical-align:top;">
 			Find genes where expression is detected in<br/>
 			<div class="anatomyAC" id="difStructureAutoComplete3">
-				<input id="difStructure3" name="structure" style="width:270px;"></input>
-				<input type="hidden" id="difStructure3ID" name="structureID" value=""/>
-				<div id="difStructureContainer3"></div>
+				<input id="difStructure4" name="structure" style="width:270px;"></input>
+				<input type="hidden" id="difStructure4ID" name="structureID" value=""/>
+				<div id="difStructureContainer4"></div>
 			</td>
 			<td>
 				<div style="padding-left:40px;">
@@ -416,6 +390,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		<div id="difStageOpen" class="hide">
 		<table class="noborder">
 			<tr>
+		<br/><br/>
 			<td colspan="2" style="vertical-align:top;">
 			Find genes where expression is detected at
 			</td>
@@ -492,20 +467,15 @@ span.smallGrey { font-size: 75%; color: #999999; }
 	<tr class="stripe1">
 		<td class="cat1Gxd">Structure and Stage</td>
 		<td>
-		<div id="difStructStageClosed" style="cursor:pointer;">
-		<img src="http://www.informatics.jax.org/webshare/images/rightArrow.gif"/> Search for genes expressed in <b>some anatomical structures and stages</b> but not others.
-		</div>
 		<div id="difStructStageOpen" class="hide">
-		<img src="http://www.informatics.jax.org/webshare/images/downArrow.gif"/> Search for genes expressed in <b>some anatomical structures and stages</b> but not others.
-		<br/><br/>
 		<table class="noborder">
 			<tr>
 			<td colspan="2" style="vertical-align:top;">
 			Find genes where expression is detected in<br/>
 			<div class="anatomyAC" id="difStructureAutoComplete3">
-				<input id="difStructure3" name="structure" style="width:270px;"></input>
-				<input type="hidden" id="difStructure3ID" name="structureID" value=""/>
-				<div id="difStructureContainer3"></div>
+				<input id="difStructurey" name="structure" style="width:270px;"></input>
+				<input type="hidden" id="difStructureyID" name="structureID" value=""/>
+				<div id="difStructureContainery"></div>
 			</td>
 			<td>
 				<div style="padding-left:40px;">
@@ -531,7 +501,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 					</div>
 				</div>
 				<div class="anatomyAC" id="difStructureAutoComplete4">
-				<input id="difStructure4" name="difStructure" style="width:270px;"></input>
+				<input id="difStructurex" name="difStructure" style="width:270px;"></input>
 				<input type="hidden" id="difStructure4ID" name="difStructureID" value=""/>
 				<div id="difStructureContainer4"></div>
 			</td>
