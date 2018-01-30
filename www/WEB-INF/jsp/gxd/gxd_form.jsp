@@ -324,17 +324,38 @@ span.smallGrey { font-size: 75%; color: #999999; }
 </form:form>
 </div>
 <div id="differential-qf">
+<form:form commandName="gxdDifferentialQueryForm" id="gxdDifferentialQueryForm3" class="gxdQf">
 <table class="pad5 borderedTable" width="100%">
 	<tr class="stripe1">
-		<td class="cat1Gxd">Anatomical Structure</td>
+		<td class="cat1Gxd">Expressed</td>
 		<td>
+			<table class="noborder">
+			<tr>
+			<td colspan="2" style="vertical-align:top;">
+			Find genes where expression is detected in<br/>
+			<div class="anatomyAC" id="difStructureAutoComplete3">
+				<input id="difStructure3" name="structure" style="width:270px;"></input>
+				<input type="hidden" id="difStructure3ID" name="structureID" value=""/>
+				<div id="difStructureContainer3"></div>
+			</td>
+			<td>
+				<div style="padding-left:40px;">
+				at<br/>
+				<div id="ageStage4">
+							<form:select multiple="true" path="theilerStage" id="difTheilerStage3" size="7" items="${gxdQueryForm.theilerStages}">
+	                        <form:options items="${theilerStages}" />
+	                        </form:select>
+		        </div>
+				</div>
+			</td>
+			</tr>
+			</table>
 			<div id="difStructClosed" style="cursor:pointer;" class="hide">
 			<img src="http://www.informatics.jax.org/webshare/images/rightArrow.gif"/> Search for genes expressed in some <b>anatomical structures</b> but not others.
 			</div>
 			<div id="difStructOpen">
 			<img src="http://www.informatics.jax.org/webshare/images/downArrow.gif"/> Search for genes expressed in some <b>anatomical structures</b> but not others.
 			<br/><br/>
-			<form:form commandName="gxdDifferentialQueryForm"  id="gxdDifferentialQueryForm1" class="gxdQf">
 			<table class="noborder">
 			<tr><td colspan="2">
 				Find genes where expression is detected in<br/>
@@ -370,20 +391,39 @@ span.smallGrey { font-size: 75%; color: #999999; }
 				<input type="reset" id="reset3">
 			</td></tr>
 			</table>
-			</form:form>
 			</div>
 		</td>
 	</tr>
 	<tr class="stripe2">
-		<td class="cat2Gxd">Developmental Stage</td>
+		<td class="cat2Gxd">Not Expressed</td>
 		<td>
+			<table class="noborder">
+			<tr>
+			<td colspan="2" style="vertical-align:top;">
+			Find genes where expression is detected in<br/>
+			<div class="anatomyAC" id="difStructureAutoComplete3">
+				<input id="difStructure3" name="structure" style="width:270px;"></input>
+				<input type="hidden" id="difStructure3ID" name="structureID" value=""/>
+				<div id="difStructureContainer3"></div>
+			</td>
+			<td>
+				<div style="padding-left:40px;">
+				at<br/>
+				<div id="ageStage4">
+							<form:select multiple="true" path="theilerStage" id="difTheilerStage3" size="7" items="${gxdQueryForm.theilerStages}">
+	                        <form:options items="${theilerStages}" />
+	                        </form:select>
+		        </div>
+				</div>
+			</td>
+			</tr>
+			</table>
 		<div id="difStageClosed" style="cursor:pointer;">
 		<img src="http://www.informatics.jax.org/webshare/images/rightArrow.gif"/> Search for genes expressed at some <b>developmental stages</b> but not others.
 		</div>
 		<div id="difStageOpen" class="hide">
 		<img src="http://www.informatics.jax.org/webshare/images/downArrow.gif"/> Search for genes expressed at some <b>developmental stages</b> but not others.
 		<br/><br/>
-		<form:form commandName="gxdDifferentialQueryForm" id="gxdDifferentialQueryForm2" class="gxdQf">
 		<table class="noborder">
 			<tr>
 			<td colspan="2" style="vertical-align:top;">
@@ -456,7 +496,6 @@ span.smallGrey { font-size: 75%; color: #999999; }
 				<input type="reset" id="reset4">
 		</td></tr>
 		</table>
-		</form:form>
 		</div>
 		</td>
 	</tr>
@@ -469,7 +508,6 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		<div id="difStructStageOpen" class="hide">
 		<img src="http://www.informatics.jax.org/webshare/images/downArrow.gif"/> Search for genes expressed in <b>some anatomical structures and stages</b> but not others.
 		<br/><br/>
-		<form:form commandName="gxdDifferentialQueryForm" id="gxdDifferentialQueryForm3" class="gxdQf">
 		<table class="noborder">
 			<tr>
 			<td colspan="2" style="vertical-align:top;">
@@ -528,11 +566,11 @@ span.smallGrey { font-size: 75%; color: #999999; }
 				<input type="reset" id="reset5">
 		</td></tr>
 		</table>
-		</form:form>
 		</div>
 		</td>
 	</tr>
 </table>
+</form:form>
 </div>
 <div id="batch-qf">
 <%@ include file="gxd_form_batch.jsp" %>
