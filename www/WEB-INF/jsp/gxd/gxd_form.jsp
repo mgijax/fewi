@@ -413,12 +413,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			</td>
 			</tr>
 			</table>
-		<div id="difStageClosed" style="cursor:pointer;">
-		<img src="http://www.informatics.jax.org/webshare/images/rightArrow.gif"/> Search for genes expressed at some <b>developmental stages</b> but not others.
-		</div>
 		<div id="difStageOpen" class="hide">
-		<img src="http://www.informatics.jax.org/webshare/images/downArrow.gif"/> Search for genes expressed at some <b>developmental stages</b> but not others.
-		<br/><br/>
 		<table class="noborder">
 			<tr>
 			<td colspan="2" style="vertical-align:top;">
