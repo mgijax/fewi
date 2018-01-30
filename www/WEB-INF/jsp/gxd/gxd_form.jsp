@@ -350,12 +350,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			</td>
 			</tr>
 			</table>
-			<div id="difStructClosed" style="cursor:pointer;" class="hide">
-			<img src="http://www.informatics.jax.org/webshare/images/rightArrow.gif"/> Search for genes expressed in some <b>anatomical structures</b> but not others.
-			</div>
 			<div id="difStructOpen">
-			<img src="http://www.informatics.jax.org/webshare/images/downArrow.gif"/> Search for genes expressed in some <b>anatomical structures</b> but not others.
-			<br/><br/>
 			<table class="noborder">
 			<tr><td colspan="2">
 				Find genes where expression is detected in<br/>
