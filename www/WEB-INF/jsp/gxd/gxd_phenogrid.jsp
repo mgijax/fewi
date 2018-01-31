@@ -30,7 +30,7 @@
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="GENE_summary_help.shtml">    
         <span class="titleBarMainTitle">
-        ${marker.symbol} Gene Expression + Phenotype Correlation Matrix
+        Gene Expression + Phenotype Correlation Matrix
         </span>
 </div>
 
