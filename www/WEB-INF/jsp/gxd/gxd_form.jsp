@@ -366,6 +366,11 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			<tr>
 			<td colspan="2" style="vertical-align:top;">
 			And where expression is <b>not detected or analyzed</b> in<br/>
+			<div style="padding-left:20px; padding-top:3px;">
+			<label id="anyOtherLabel"><input type="checkbox" id="anyOther" name="anyOther" style="padding-bottom: 3px; padding-left: 20px" checked="true"/>
+				any other structure</label>
+			</div>
+			or in a specific structure:
 			<div class="anatomyAC" id="difStructureAutoComplete3">
 				<input id="difStructure4" name="structure" style="width:270px;"></input>
 				<input type="hidden" id="difStructure4ID" name="structureID" value=""/>
@@ -375,8 +380,8 @@ span.smallGrey { font-size: 75%; color: #999999; }
 				<div style="padding-left:40px;">
 				at<br/>
 				<div id="ageStage4">
-							<form:select multiple="true" path="theilerStage" id="difTheilerStage3" size="7" items="${gxdQueryForm.theilerStages}">
-	                        <form:options items="${theilerStages}" />
+							<form:select multiple="true" path="difTheilerStage" id="difTheilerStage4" size="7" items="${gxdQueryForm.difTheilerStages}">
+	                        <form:options items="${difTheilerStages}" />
 	                        </form:select>
 		        </div>
 				</div>
@@ -469,6 +474,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 	</tr>
 </table>
 </form:form>
+<script>$('#difTheilerStage4 option')[0].selected = true;</script>
 </div>
 <div id="batch-qf">
 <%@ include file="gxd_form_batch.jsp" %>
