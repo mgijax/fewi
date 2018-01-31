@@ -30,7 +30,7 @@
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="GENE_summary_help.shtml">    
+<div id="titleBarWrapper" userdoc="EXPRESSION_correlation_matrix_help.shtml">    
         <span class="titleBarMainTitle">
         Gene Expression + Phenotype Correlation Matrix
         </span>
