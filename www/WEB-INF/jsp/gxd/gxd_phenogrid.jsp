@@ -24,6 +24,13 @@
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
+<!-- header bar -->
+<div id="titleBarWrapper" userdoc="GENE_summary_help.shtml">    
+        <span class="titleBarMainTitle">
+        ${marker.symbol} Gene Expression + Phenotype Correlation Matrix
+        </span>
+</div>
+
 <div id="phenoGridWrapper">
   <div id="phenoGridTarget" class="matrixContainer"></div>
 </div>
