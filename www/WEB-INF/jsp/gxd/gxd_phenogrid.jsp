@@ -4,6 +4,8 @@
 
 <meta name="description" content="View normal gene expression alongside the tissues where mutations in that gene have phenotype effects.">
 <meta name="keywords" content="MGI, GXD, expression, phenotype, tissue, mutation, EMAPA, MP, mice, mouse, murine, mus musculus">
+<meta name="robots" content="NOODP">
+<meta name="robots" content="NOYDIR">
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
