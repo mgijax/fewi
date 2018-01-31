@@ -326,13 +326,20 @@ span.smallGrey { font-size: 75%; color: #999999; }
 <div id="differential-qf">
 <form:form commandName="gxdDifferentialQueryForm" id="gxdDifferentialQueryForm3" class="gxdQf">
 <table class="pad5 borderedTable" width="100%">
+	<tr>
+		<td colspan="3" align="left">
+			<input class="buttonLabel" value="Search" type="submit"  id="submit3">
+			&nbsp;&nbsp;
+			<input type="reset" id="reset3">
+		</td>
+	</tr>
 	<tr class="stripe1">
 		<td class="cat1Gxd">Expressed</td>
 		<td>
 			<table class="noborder">
 			<tr>
 			<td colspan="2" style="vertical-align:top;">
-			Find genes where expression is detected in<br/>
+			Find genes where expression is <b>detected</b> in<br/>
 			<div class="anatomyAC" id="difStructureAutoComplete3">
 				<input id="difStructure3" name="structure" style="width:270px;"></input>
 				<input type="hidden" id="difStructure3ID" name="structureID" value=""/>
@@ -350,17 +357,6 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			</td>
 			</tr>
 			</table>
-			<div id="difStructOpen">
-			<table class="noborder">
-			<tr><td colspan="2">
-				<div id="difStructureError" class="small error" style="display:none; white-space:nowrap;padding-bottom:4px;">
-				*Please enter a structure in <i>both</i> search boxes.</div>
-				<input class="buttonLabel" value="Search" type="submit" id="submit3">
-				&nbsp;&nbsp;
-				<input type="reset" id="reset3">
-			</td></tr>
-			</table>
-			</div>
 		</td>
 	</tr>
 	<tr class="stripe2">
@@ -369,7 +365,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			<table class="noborder">
 			<tr>
 			<td colspan="2" style="vertical-align:top;">
-			And where expression is not detected or analyzed in<br/>
+			And where expression is <b>not detected or analyzed</b> in<br/>
 			<div class="anatomyAC" id="difStructureAutoComplete3">
 				<input id="difStructure4" name="structure" style="width:270px;"></input>
 				<input type="hidden" id="difStructure4ID" name="structureID" value=""/>
@@ -462,6 +458,13 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		</td></tr>
 		</table>
 		</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="3" align="left">
+			<input class="buttonLabel" value="Search" type="submit"  id="submit4">
+			&nbsp;&nbsp;
+			<input type="reset" id="reset4">
 		</td>
 	</tr>
 </table>
