@@ -74,10 +74,14 @@ span.smallGrey { font-size: 75%; color: #999999; }
 
 .redNot{ font-size:110%; color:red; font-weight:bold; }
 .hide { display:none; }
-.anatomyAC
-{
+.anatomyAC {
 	padding:2px 0px 12px 20px;
 	width:300px;
+	text-align:left;
+}
+.anatomyAC2 {
+	padding:2px 0px 12px 20px;
+	width:230px;
 	text-align:left;
 }
 #ageStage
@@ -331,6 +335,8 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			<input class="buttonLabel" value="Search" type="submit"  id="submit3">
 			&nbsp;&nbsp;
 			<input type="reset" id="reset3">
+			&nbsp;&nbsp;
+			Search for genes expressed in some anatomical structures and/or developmental stages but not others.
 		</td>
 	</tr>
 	<tr class="stripe1">
@@ -338,16 +344,21 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		<td>
 			<table class="noborder">
 			<tr>
+			<td colspan="3" style="vertical-align:top;">
+			Specify structure or stages(s) or both to find genes <b>where expression is detected in/at</b>.
+			</td>
+			</tr><tr>
 			<td colspan="2" style="vertical-align:top;">
-			Find genes where expression is <b>detected</b> in<br/>
+			<span class="label">Anatomical Structure:</span>
 			<div class="anatomyAC" id="difStructureAutoComplete3">
 				<input id="difStructure3" name="structure" style="width:270px;"></input>
 				<input type="hidden" id="difStructure3ID" name="structureID" value=""/>
 				<div id="difStructureContainer3"></div>
+			</div>
 			</td>
 			<td>
 				<div style="padding-left:40px;">
-				at<br/>
+				<span class="label">Developmental Stage(s):</span><br/>
 				<div id="ageStage4">
 							<form:select multiple="true" path="theilerStage" id="difTheilerStage3" size="7" items="${gxdQueryForm.theilerStages}">
 	                        <form:options items="${theilerStages}" />
@@ -364,21 +375,25 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		<td>
 			<table class="noborder">
 			<tr>
+			<td colspan="3" style="vertical-align:top;">
+			Specify structure or stages(s) or both to find genes <b>where expression is not detected or analyzed in/at</b>.
+			</td>
+			</tr><tr>
 			<td colspan="2" style="vertical-align:top;">
-			And where expression is <b>not detected or analyzed</b> in<br/>
-			<div style="padding-left:20px; padding-top:3px;">
-			<label id="anyOtherLabel"><input type="checkbox" id="anyOther" name="anyOther" style="padding-bottom: 3px; padding-left: 20px" checked="true"/>
+			<span class="label">Anatomical Structure:</span>
+			<div style="padding-left:20px; padding-top:3px; padding-bottom: 8px;">
+			<label id="anyOtherLabel"><input type="checkbox" id="anyOther" name="anyOther" style="padding-bottom: 3px; padding-left: 20px" checked="true" onClick="anyOtherClick()"/>
 				any other structure</label>
 			</div>
-			or in a specific structure:
-			<div class="anatomyAC" id="difStructureAutoComplete3">
+			<span class="label" style="padding-left: 20px">Specify Structure:</span>
+			<div class="anatomyAC2" id="difStructureAutoComplete3">
 				<input id="difStructure4" name="structure" style="width:270px;"></input>
 				<input type="hidden" id="difStructure4ID" name="structureID" value=""/>
 				<div id="difStructureContainer4"></div>
 			</td>
 			<td>
-				<div style="padding-left:40px;">
-				at<br/>
+				<div id="stageContainer4">
+				<span class="label">Developmental Stage(s):</span><br/>
 				<div id="ageStage4">
 							<form:select multiple="true" path="difTheilerStage" id="difTheilerStage4" size="7" items="${gxdQueryForm.difTheilerStages}">
 	                        <form:options items="${difTheilerStages}" />

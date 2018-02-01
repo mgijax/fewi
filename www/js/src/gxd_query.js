@@ -1280,6 +1280,9 @@ function makeStructureAC(inputID,containerID){
     	{
 		    var idBox = YAHOO.util.Dom.get(hiddenID);
 	 	    idBox.value = "";
+	 	    if ($('#anyOther').length > 0) {
+	 	    	$('#anyOther')[0].checked = true;			// re-enable the default checkbox (any other structure)
+	 	    }
     	}
     };
     oAC.textboxChangeEvent.subscribe(removeSelectedID);
@@ -1312,7 +1315,9 @@ function makeStructureAC(inputID,containerID){
 	    var accID = oData[3];
 	    var idBox = YAHOO.util.Dom.get(hiddenID);
 	    idBox.value = accID;
-
+ 	    if ($('#anyOther').length > 0) {
+ 	    	$('#anyOther')[0].checked = false;			// uncheck the default checkbox (any other structure)
+ 	    }
     };
     oAC.itemSelectEvent.subscribe(selectionHandler);
 
@@ -1612,4 +1617,15 @@ var readFile = function(e) {
 		msg.style.display = 'inline-block';
 	};
 	reader.readAsText(input.files[0]);
+};
+
+// if the 'any other structure' button is clicked and will be checked, then we'll need to
+// blank out the 'specify structure' box.
+var anyOtherClick = function() {
+	if ($('#anyOther').length > 0) {
+		if ($('#anyOther')[0].checked) {
+			$('#difStructure4')[0].value = '';
+			$('#difStructure4ID')[0].value = '';
+		}
+	}
 };
