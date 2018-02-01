@@ -165,20 +165,10 @@ function reverseEngineerFormInput(request)
 	}
 	// make sure correct form is visible
 	// this code allows for flexibility to add third ribbon
-	if(foundDifStruct && foundDifStage)
+	if(foundDifStruct || foundDifStage)
 	{
 		formID = "#gxdDifferentialQueryForm3";
-		showDifBothQF();
-	}
-	else if (foundDifStruct)
-	{
-		formID = "#gxdDifferentialQueryForm1";
-		showDifStructuresQF();
-	}
-	else if (foundDifStage)
-	{
-		formID = "#gxdDifferentialQueryForm2";
-		showDifStagesQF();
+		showDifferentialForm();
 	} else if (foundBatch)
 	{
 		formID = "#gxdBatchQueryForm1";
