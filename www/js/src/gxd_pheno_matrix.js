@@ -22,11 +22,6 @@ function getQueryStringWithFilters() {
 	return querystringWithFilters;
 }
 
-
-
-
-
-
 function resolveGxdGridColorClass(cell)
 {
 	var cc = "gold";
@@ -138,6 +133,27 @@ function StructurePhenoCellRenderer(d3Target,cellSize,cell){
 		.style("stroke","#ccc")
 		.style("stroke-width","1px")
 		.attr("class",fillClass);
+		
+		if (cell.isNormal == 1) {
+			g.append("text")
+			.attr("x", 5)
+			.attr("y", 16)
+			.text("N")
+			.style("font-size","12px")
+			.style("font-weight","bold");
+		}
+
+		if (cell.hasBackgroundSensitivity == 1) {
+			g.append("text")
+			.attr("x", 14)
+			.attr("y", 16)
+			.text("!")
+			.style("fill","red")
+			.style("font-size","12px")
+			.style("font-weight","bold");
+		}
+
+		
 	}
 
 	return g;
