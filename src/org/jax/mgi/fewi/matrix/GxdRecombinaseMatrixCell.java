@@ -13,6 +13,7 @@ public class GxdRecombinaseMatrixCell extends GridDataCell {
 	protected String cellType;				// type of matrix cell:  GXD or Recombinase
 	protected String symbol;				// gene/allele symbol (ID is stored in colid)
 	protected int byRecombinase = 0;		// sequence number for sorting by recombinase
+	protected int ambiguousOrNotDetectedChildren = 0;
 	
 	public GxdRecombinaseMatrixCell(String cellType, String rowId, String colId, boolean isChild) {
 		super("", rowId, colId);
@@ -63,6 +64,10 @@ public class GxdRecombinaseMatrixCell extends GridDataCell {
 //		return childCount;
 //	}
 
+	public int getAmbiguousOrNotDetectedChildren() {
+		return ambiguousOrNotDetectedChildren;
+	}
+
 	public String getColDisplay() {
 		return this.symbol;
 	}
@@ -103,6 +108,10 @@ public class GxdRecombinaseMatrixCell extends GridDataCell {
 
 	public void setAmbiguous(int ambiguousCount) {
 		this.ambiguousCount = ambiguousCount;
+	}
+
+	public void setAmbiguousOrNotDetectedChildren(int ambiguousOrNotDetectedChildren) {
+		this.ambiguousOrNotDetectedChildren = ambiguousOrNotDetectedChildren;
 	}
 
 	public void setByRecombinase(int byRecombinase) {

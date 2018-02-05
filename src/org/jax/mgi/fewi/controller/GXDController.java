@@ -1222,6 +1222,7 @@ public class GXDController {
 			for (SolrRecombinaseMatrixCell cell : recombinaseCells) {
 				GxdRecombinaseMatrixCell gpm = new GxdRecombinaseMatrixCell("Recombinase", cell.getAnatomyID(), "" + cell.getByColumn(), false);
 				gpm.setAmbiguous(cell.getAnyAmbiguous());
+				gpm.setAmbiguousOrNotDetectedChildren(cell.getAmbiguousOrNotDetectedChildren());
 				gpm.setByRecombinase(cell.getByColumn());
 				gpm.setCellType(cell.getCellType());
 				gpm.setDetected(cell.getDetectedResults());

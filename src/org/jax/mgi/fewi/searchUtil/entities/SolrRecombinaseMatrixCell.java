@@ -16,6 +16,7 @@ public class SolrRecombinaseMatrixCell
 	private int anyAmbiguous = 0;
 	private int byColumn = 0;
 	private int children = 0;
+	private int ambiguousOrNotDetectedChildren = 0;
 	
 	/***--- getters ---***/
 	
@@ -27,6 +28,9 @@ public class SolrRecombinaseMatrixCell
 	}
 	public String getAnatomyTerm() {
 		return anatomyTerm;
+	}
+	public int getAmbiguousOrNotDetectedChildren() {
+		return ambiguousOrNotDetectedChildren;
 	}
 	public int getAnyAmbiguous() {
 		return anyAmbiguous;
@@ -63,6 +67,9 @@ public class SolrRecombinaseMatrixCell
 	
 	public void setAllResults(int allResults) {
 		this.allResults = allResults;
+	}
+	public void setAmbiguousOrNotDetectedChildren(int ambiguousOrNotDetectedChildren) {
+		this.ambiguousOrNotDetectedChildren = ambiguousOrNotDetectedChildren;
 	}
 	public void setAnatomyID(String anatomyID) {
 		this.anatomyID = anatomyID;
