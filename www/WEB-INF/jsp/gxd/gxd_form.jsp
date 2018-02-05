@@ -104,6 +104,15 @@ span.smallGrey { font-size: 75%; color: #999999; }
 #ageStage3 {
 	padding-left: 15px;
 }
+#ageStage4 {
+	padding-left: 15px;
+}
+#difTheilerStage4 {
+	width: 190px;
+}
+#difTheilerStage3 {
+	width: 190px;
+}
 #difStructure3 {
 	width: 270px;
 	margin-left: 5px;
@@ -359,7 +368,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		<td>
 		<div class="floatLeft">
 			Find genes where expression is detected<br/>
-			<div class="anatomyAC" id="difStructureAutoComplete3" style="padding-top: 10px">
+			<div class="anatomyAC" id="difStructureAutoComplete3" style="padding-top: 10px; width: 317.22px;">
 				in
 				<input id="difStructure3" name="structure" placeholder="anatomical structure"></input>
 				<input type="hidden" id="difStructure3ID" name="structureID" value=""/>
