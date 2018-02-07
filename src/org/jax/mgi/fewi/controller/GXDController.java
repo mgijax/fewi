@@ -1996,8 +1996,52 @@ public class GXDController {
 	private boolean isDifferentialQuery(GxdQueryForm query)
 	{
 		return (query.getDifStructureID()!=null && !query.getDifStructureID().equals(""))
-				||
-				(query.getDifTheilerStage().size() > 0);
+				|| (query.getDifTheilerStage().size() > 0)
+				|| (query.getAnywhereElse() != "" && query.getAnywhereElse().trim().length() > 0);
+	}
+
+	/* This method creates the differential part 1 filters (used by resolveDifferentialMarkers() below)
+	 * for cases where the "NOT anywhere else" checkbox has been checked.  It seemed simpler and more
+	 * maintainable than trying to work it into the existing complex code.
+	 */
+	private void buildNowhereElseFilters(List<Filter> queryFilters, String structureID, List<Integer> stages) {
+		/* If we got here, we have one of three cases:
+		 * 1. user specified a single structure and checked "AND NOT anywhere else"
+		 * 2. user specified 1+ Theiler stages and checked "AND NOT anywhere else"
+		 * 3. user specified both a structure and 1+ Theiler stages and checked "AND NOT anywhere else"
+		 */
+		logger.info("entering buildNowhereElseFilters() with " + queryFilters.size() + " filters");
+		boolean hasStructure = (structureID != null) && (structureID.trim().length() > 0);
+		boolean hasStages = (stages != null) && (stages.size() > 0);
+		
+		List<Filter> diffFilters = new ArrayList<Filter>();
+		
+		// Look for the single specified structure (by key) in the exclusive structures field.
+		if (hasStructure) {
+			List<VocabTerm> structureList = vocabFinder.getTermByID(structureID);
+			if (structureList.size() > 0) {
+				diffFilters.add(new Filter(GxdResultFields.DIFF_EXCLUSIVE_STRUCTURES, 
+					structureList.get(0).getTermKey(), Filter.Operator.OP_EQUAL));
+			} else {
+				logger.error("Cannot find key of EMAPA ID: " + structureID);
+			}
+		} 
+		
+		// Ensure that no other stages (other than those specified) appear in the exclusive stages field.
+		if (hasStages && !stages.contains(GxdQueryForm.ANY_STAGE)) {
+			for (int stage = 1; stage <= 28; stage++) {
+				if (!stages.contains(stage)) {
+					diffFilters.add(new Filter(GxdResultFields.DIFF_EXCLUSIVE_STAGES, stage, Filter.Operator.OP_NOT_HAS));
+				}
+			}
+		}
+		
+		if (diffFilters.size() > 1) {
+			queryFilters.add(Filter.and(diffFilters));
+		} else if (diffFilters.size() == 1) {
+			queryFilters.add(diffFilters.get(0));
+		}
+		logger.info("exiting with " + queryFilters.size() + " filters");
 	}
 
 	/*
@@ -2021,9 +2065,23 @@ public class GXDController {
 				&& difStructure!=null && !difStructure.equals(""));
 		boolean hasStages = (stages.size() > 0 && difStages.size()>0
 				&& !(stages.contains(GxdQueryForm.ANY_STAGE) && difStages.contains(GxdQueryForm.ANY_STAGE_NOT_ABOVE)));
+		boolean nowhereElse = (query.getAnywhereElse() != null) && (query.getAnywhereElse().trim().length() > 0);
 
+		if (!nowhereElse) {
+			if (query.getAnywhereElse() == null) {
+				logger.info("anywhereElse is null");
+			} else if (query.getAnywhereElse().trim().length() == 0) {
+				logger.info("anywhereElse is empty string");
+			}
+		}
+		// handle the case on the differential form where the "AND NOT anywhere else" checkbox is checked
+		if (nowhereElse) {
+			logger.info("building nowhereElse filters");
+			buildNowhereElseFilters(queryFilters, structure, stages);
+			logger.info("returned from building nowhereElse filters");
+		}
 		// perform structure diff
-		if(hasStructures && !hasStages)
+		else if(hasStructures && !hasStages)
 		{
 			Filter sFilter = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,structure);
 			Filter dsFilter = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,difStructure);
@@ -2093,6 +2151,71 @@ public class GXDController {
 
 		return gxdFinder.searchDifferential(difSP);
 	}
+	
+	/* For differential searches where the 'AND NOT anywhere else' checkbox was checked...  Creates the
+	 * differential part 2 filters that goes against the gxdResult index.  Split out into a separate method
+	 * to make more maintainable in the future.
+	 */
+	private void buildNowhereElsePart2Filters(List<Filter> queryFilters, String structureID, List<Integer> stages) {
+		// Need to return a set of positive results and a set of negative results.  Positive results should
+		// match by structure, stage, or both, depending on whether either or both were specified.
+
+		List<Filter> myFilters = new ArrayList<Filter>();
+		
+		// Create the positive results filter based on structure and/or stages specified.  This should return
+		// all the "detected" results for each of the genes in the set selected by the part1 filters.
+
+		List<Filter> posFilters = new ArrayList<Filter>();
+
+		if ((structureID != null) && (structureID.trim().length() > 0)) {
+			posFilters.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID, structureID));
+		}
+			
+		if ((stages != null) && (stages.size() > 0)) {
+			if (!stages.contains(GxdQueryForm.ANY_STAGE)) {
+				List<Filter> stageFilters = new ArrayList<Filter>();
+				for(Integer stage : stages) {
+					stageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE, stage, Filter.Operator.OP_HAS_WORD));
+				}
+				// OR the stages together
+				posFilters.add(Filter.or(stageFilters));
+			}
+		}
+			
+		if (posFilters.size() > 0) {
+			posFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));
+			myFilters.add(Filter.and(posFilters));
+		}
+
+		// Create the negative results filter based on structure and/or stages specified.  This should return
+		// the "not detected" results for each of the genes in the set selected by the part1 filters.
+		
+		List<Filter> negFilters = new ArrayList<Filter>();
+
+		if ((structureID != null) && (structureID.trim().length() > 0)) {
+			// Structure ID field also has ancestor IDs, so this should ensure that we avoid the specified
+			// structure and its descendants.
+			negFilters.add(new Filter(SearchConstants.STRUCTURE_ID, structureID, Filter.Operator.OP_NOT_HAS));
+		}
+			
+		if ((stages != null) && (stages.size() > 0)) {
+			if (!stages.contains(GxdQueryForm.ANY_STAGE)) {
+				// User specified 1+ stages, so we need to make sure that the results are outside those stages.
+				for(Integer stage : stages) {
+					negFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE, stage, Filter.Operator.OP_NOT_HAS));
+				}
+			}
+		}
+		
+		if (negFilters.size() > 0) {
+			negFilters.add(new Filter(SearchConstants.GXD_DETECTED, "No", Filter.Operator.OP_EQUAL));
+			myFilters.add(Filter.and(negFilters));
+		}
+		
+		// Find results matching either the positive criteria or the negative criteria.
+		queryFilters.add(Filter.or(myFilters));
+	}
+	
 	/*
 	 * Creates the differential part 2 filter that goes against the gxdResult index
 	 */
@@ -2110,9 +2233,14 @@ public class GXDController {
 				&& difStructure!=null && !difStructure.equals(""));
 		boolean hasStages = (stages.size() > 0 && difStages.size()>0
 				&& !(stages.contains(GxdQueryForm.ANY_STAGE) && difStages.contains(GxdQueryForm.ANY_STAGE_NOT_ABOVE)));
+		boolean nowhereElse = (query.getAnywhereElse() != null) && (query.getAnywhereElse().trim().length() > 0);
 
+		// if user checked 'AND NOT anywhere else' checkbox, handle that separately
+		if (nowhereElse) {
+			buildNowhereElsePart2Filters(queryFilters, structure, stages);
+		}
 		// perform structure diff
-		if(hasStructures && !hasStages)
+		else if(hasStructures && !hasStages)
 		{
 			// create the positive results filter
 			List<Filter> posFilters = new ArrayList<Filter>();
@@ -2307,9 +2435,11 @@ public class GXDController {
 		// the first this we need to check is if we have differential params
 		if(isDifferentialQuery(query))
 		{
+			logger.info("In differential form processing");
 			// Process DIFFERENTIAL QUERY FORM params
 			// Do part 1 of the differential (I.e. find out what markers to bring back)
 			List<String> markerKeys = resolveDifferentialMarkers(query);
+			logger.info("Found marker keys: " + markerKeys.toString());
 			if(markerKeys !=null && markerKeys.size()>0)
 			{
 				queryFilters.add( new Filter(SearchConstants.MRK_KEY,markerKeys,Filter.Operator.OP_IN));

@@ -403,12 +403,12 @@ span.smallGrey { font-size: 75%; color: #999999; }
 					</div>
 				</div>
 			<div style="padding-top: 10px;">
-				<input type="checkbox" id="anywhereElse" name="anywhereElse" style="padding-bottom: 3px;" onClick="anywhereElseClick()"/>
+				<input type="checkbox" class="anywhereElse" id="anywhereElse" name="anywhereElse" value="true" style="padding-bottom: 3px;" onClick="anywhereElseClick()"/>
 					anywhere else
 			</div>
 			<div style="padding-top:10px; padding-bottom: 8px;">
 				<div class="floatLeft">
-					<input type="checkbox" id="inCheckbox" name="inCheckbox" style="padding-bottom: 3px;" onClick="inCheckboxClick()"/>
+					<input type="checkbox" class="inCheckbox" id="inCheckbox" name="inCheckbox" style="padding-bottom: 3px;" onClick="inCheckboxClick()"/>
 				</div>
 				<div class="floatLeft anatomyAC" style="padding-left: 5px" id="difStructureAutoComplete4">
 					in

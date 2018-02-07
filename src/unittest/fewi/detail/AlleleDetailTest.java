@@ -165,10 +165,7 @@ public class AlleleDetailTest {
 	@Test
 	public void testRecombinaseRibbonHasDriver() {
 		Allele allele = mockEmptyAllele();
-		AlleleNote driverNote = new AlleleNote();
-		driverNote.setNoteType("Driver");
-		driverNote.setNote("test");
-		allele.setNotes(Arrays.asList(driverNote));
+		allele.setDriver("Mario Andretti");
 		AlleleDetail detail = new AlleleDetail(allele);
 		Assert.assertTrue(detail.getHasRecombinaseData());
 	}
