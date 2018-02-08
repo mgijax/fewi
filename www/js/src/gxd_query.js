@@ -294,13 +294,20 @@ var updateQuerySummary = function() {
 			notDetectedStagesText += " ("+notDetectedStages.join(", ")+")";
 		}
 
-		el.set('innerHTML',"Detected in <b>"+YAHOO.util.Dom.get('difStructure3').value+"</b>" +
+		if (YAHOO.util.Dom.get("anywhereElse").checked) {
+			el.set('innerHTML',"Detected in <b>"+YAHOO.util.Dom.get('difStructure3').value+"</b>" +
+				"<span class=\"smallGrey\"> includes synonyms & substructures</span>"+
+				"<br/>at "+detectedStagesText+
+				"<br/>but not detected or assayed <b>anywhere else</b>");
+		} else {
+			el.set('innerHTML',"Detected in <b>"+YAHOO.util.Dom.get('difStructure3').value+"</b>" +
 				"<span class=\"smallGrey\"> includes synonyms & substructures</span>"+
 				"<br/>at "+detectedStagesText+
 				"<br/>but not detected or assayed in <b>"+
 					YAHOO.util.Dom.get('difStructure4').value+"</b>"+
 				"<span class=\"smallGrey\"> includes synonyms & substructures</span>"+
 				"<br/>in any of the "+notDetectedStagesText);
+		}
 		el.appendTo(searchParams);
 	}
 	else if (currentQF == 'batch') {
@@ -1461,6 +1468,7 @@ var anywhereElseClick = function() {
 			$('#difStructure4')[0].value = '';
 			$('#difStructure4ID')[0].value = '';
 			$('#inCheckbox')[0].checked = false;
+			$('#difTheilerStage4')[0].selectedIndex = 0;
 		}
 	}
 };
