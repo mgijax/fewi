@@ -2195,21 +2195,31 @@ public class GXDController {
 		if ((structureID != null) && (structureID.trim().length() > 0)) {
 			// Structure ID field also has ancestor IDs, so this should ensure that we avoid the specified
 			// structure and its descendants.
-			negFilters.add(new Filter(SearchConstants.STRUCTURE_ID, structureID, Filter.Operator.OP_NOT_HAS));
+			negFilters.add(new Filter(SearchConstants.STRUCTURE_ID, structureID, Filter.Operator.OP_EQUAL));
 		}
 			
 		if ((stages != null) && (stages.size() > 0)) {
 			if (!stages.contains(GxdQueryForm.ANY_STAGE)) {
+				List<Filter> stageFilters = new ArrayList<Filter>();
 				// User specified 1+ stages, so we need to make sure that the results are outside those stages.
 				for(Integer stage : stages) {
-					negFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE, stage, Filter.Operator.OP_NOT_HAS));
+					stageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE, stage, Filter.Operator.OP_HAS_WORD));
 				}
+				negFilters.add(Filter.or(stageFilters));
 			}
 		}
 		
 		if (negFilters.size() > 0) {
-			negFilters.add(new Filter(SearchConstants.GXD_DETECTED, "No", Filter.Operator.OP_EQUAL));
-			myFilters.add(Filter.and(negFilters));
+			// 1. We always want detected=No for these negative results.
+			// 2. If both structure and stage are filled in, then we should OR those together, since if
+			//		either is different, we would want to return the record.
+
+			List<Filter> combinedNegFilters = new ArrayList<Filter>();
+			combinedNegFilters.add(new Filter(SearchConstants.GXD_DETECTED, "No", Filter.Operator.OP_EQUAL));
+			Filter poolFilter = Filter.and(negFilters);
+			poolFilter.negate();
+			combinedNegFilters.add(poolFilter);
+			myFilters.add(Filter.and(combinedNegFilters));
 		}
 		
 		// Find results matching either the positive criteria or the negative criteria.
