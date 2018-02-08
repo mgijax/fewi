@@ -22,66 +22,38 @@ function getQueryStringWithFilters() {
 	return querystringWithFilters;
 }
 
+// determine the color scheme of the gxd cells
 function resolveGxdGridColorClass(cell)
 {
 	var cc = "gold";
 	if(cell.detected>0)
 	{
 		// apply the detected bin
-		if(cell.detected < 5)
-		{
-			cc = "blue1";
-		}
-		else if(cell.detected < 51)
-		{
-			cc = "blue2";
-		}
-		else
-		{
-			cc = "blue3";
-		}
+		if(cell.detected < 5) {	cc = "blue1"; }
+		else if(cell.detected < 51) { cc = "blue2";	}
+		else { cc = "blue3"; }
 	}
-	else if(cell.ambiguous>0) cc = "gray";
+	else if(cell.ambiguous>0) { cc = "gray"; }
 	else if(cell.notDetected>0)
 	{
 		// apply the not detected bin
-		if(cell.notDetected < 5)
-		{
-			cc = "red1";
-		}
-		else if(cell.notDetected < 21)
-		{
-			cc = "red2";
-		}
-		else
-		{
-			cc = "red3";
-		}
+		if(cell.notDetected < 5) { cc = "red1"; }
+		else if(cell.notDetected < 21) { cc = "red2"; }
+		else { cc = "red3"; }
 	}
 	return cc;
 }
 
+//determine the color scheme of the pheno cells
 function resolvePhenoGridColorClass(cell)
 {
 	var cc = '';
 	if(cell.phenoAnnotationCount>0)
 	{
-		if(cell.phenoAnnotationCount < 2)
-		{
-			cc = "phenoBlue1";
-		}
-		else if(cell.phenoAnnotationCount < 6)
-		{
-			cc = "phenoBlue2";
-		}
-		else if(cell.phenoAnnotationCount < 100)
-		{
-			cc = "phenoBlue3";
-		}
-		else
-		{
-			cc = "phenoBlue4";
-		}
+		if(cell.phenoAnnotationCount < 2) { cc = "phenoBlue1"; }
+		else if(cell.phenoAnnotationCount < 6) { cc = "phenoBlue2"; }
+		else if(cell.phenoAnnotationCount < 100) { cc = "phenoBlue3"; }
+		else { cc = "phenoBlue4"; }
 	}
 	return cc;
 }
@@ -92,7 +64,7 @@ function StructurePhenoCellRenderer(d3Target,cellSize,cell){
 
 	var g = d3Target;
 
-	if (cell.cellType=="GXD") {
+	if (cell.cellType=="GXD") { // left-most column cells need GXD display 
 		var fillClass = resolveGxdGridColorClass(cell);
 		if ( fillClass == "gold" ) {
 			var points = [(cellSize - (cellSize/1.5))+","+0,
@@ -123,7 +95,7 @@ function StructurePhenoCellRenderer(d3Target,cellSize,cell){
 			}
 		}
 	}
-	else {
+	else { // other cells are pheno cells
 		var fillClass = resolvePhenoGridColorClass(cell);
 		g.append("rect")
 		.attr("x",0)
@@ -159,11 +131,14 @@ function StructurePhenoCellRenderer(d3Target,cellSize,cell){
 	return g;
 };
 
+/**
+ * Matrix Specific render functions
+ */
 
 window.PhenoMatrixRender = new function()
 {
 	/*
-	 * Renderer for Theiler Stage columns
+	 * Renderer for column headers
 	 */
 	this.StructurePhenoColumnHeaderRenderer = function(d3Target,cellSize,startX,startY)
 	{
@@ -179,13 +154,11 @@ window.PhenoMatrixRender = new function()
 }
 
 
-
 /**
  * Configure the structure by gene/phenotype matrix
  *
  * Some rendering and logic details are in gxd_summary_matrix.js
  */
-
 var phenoSuperGrid = function()
 {
 	// gather query string and store in window scope 
@@ -194,7 +167,7 @@ var phenoSuperGrid = function()
 
 	var buildGrid = function()
 	{
-		// TODO -- figure out if this is still needed
+		// TODO -- figure out if filtering is still needed
 		if (typeof getQueryString == 'function') window.querystring = getQueryString().replace('&idFile=&','&');
 
 		currentGeneGrid = GxdTissueMatrix({

@@ -20,14 +20,14 @@
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary_matrix.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_pheno_matrix.js"></script>
 
-
-
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/gxd/gxd_summary.css" />
 <style>
 
 </style>
 
+
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
+
 
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="EXPRESSION_correlation_matrix_help.shtml">    
@@ -36,11 +36,24 @@
         </span>
 </div>
 
+<!-- Gene/Pheno grid injected into this element -->
 <div id="phenoGridWrapper">
   <div id="phenoGridTarget" class="matrixContainer"></div>
 </div>
 
+<!-- Gene/Pheno grid cell popup injected into this element -->
+<div id="structGenePopup" class="visHidden facetFilter structPopup">
+  <div id="structGenePopupContents"> </div>
+</div>
+
+<!-- Gene/Pheno grid cell popup legend injected into this element -->
+<div id="structLegendPopupPanel" class="visHidden facetFilter">
+  <jsp:include page="gxd_legend_popup.jsp"></jsp:include>
+</div>
+
+
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
+
 
 <!-- Patterns for matrix sash icon -->
 <svg height="0" width="0" xmlns="http://www.w3.org/2000/svg" version="1.1">
