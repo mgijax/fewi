@@ -1662,6 +1662,40 @@ public class GXDController {
 		return mav;
 	}
 
+	/*
+	 * GXD Tissue by Gene/Recombinase grid
+	 */
+	@RequestMapping(value="/recombinasegrid/{mrkID}")
+	public ModelAndView gxdGeneRecomGrid(
+			HttpServletRequest request,
+			@PathVariable("mrkID") String mrkID) {
+
+		logger.debug("->gxdGeneRecomGrid started");
+
+		ModelAndView mav = new ModelAndView("gxd/gxd_recombinasegrid");
+		
+        // find the requested marker
+        List<Marker> markerList = markerFinder.getMarkerByPrimaryId(mrkID);
+        if (markerList.size() < 1) {
+            // forward to error page
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Marker Found");
+            return mav;
+        } else if (markerList.size() > 1) {
+            // forward to error page
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "Duplicate ID");
+            return mav;
+        }
+        mav.addObject("marker", markerList.get(0));		
+		
+		// setup view object
+		mav.addObject("mrkID", mrkID);
+		mav.addObject("queryString", request.getQueryString());
+
+		logger.debug("gxdGeneRecomGrid routing to view ");
+		return mav;
+	}
 
 	// -----------------------------------------------------------------//
 	// Methods for getting query counts
