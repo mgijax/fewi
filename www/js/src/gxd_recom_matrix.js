@@ -45,22 +45,23 @@ function resolveGxdGridColorClass(cell)
 }
 
 //determine the color scheme of the pheno cells
-function resolvePhenoGridColorClass(cell)
+function resolveRecomGridColorClass(cell)
 {
-	var cc = '';
-	if(cell.phenoAnnotationCount>0)
-	{
-		if(cell.phenoAnnotationCount < 2) { cc = "phenoBlue1"; }
-		else if(cell.phenoAnnotationCount < 6) { cc = "phenoBlue2"; }
-		else if(cell.phenoAnnotationCount < 100) { cc = "phenoBlue3"; }
-		else { cc = "phenoBlue4"; }
-	}
+	var cc = 'phenoBlue1';
+//	var cc = '';
+//	if(cell.phenoAnnotationCount>0)
+//	{
+//		if(cell.phenoAnnotationCount < 2) { cc = "phenoBlue1"; }
+//		else if(cell.phenoAnnotationCount < 6) { cc = "phenoBlue2"; }
+//		else if(cell.phenoAnnotationCount < 100) { cc = "phenoBlue3"; }
+//		else { cc = "phenoBlue4"; }
+//	}
 	return cc;
 }
 
 
 //rendering function for grid cells
-function StructurePhenoCellRenderer(d3Target,cellSize,cell){
+function StructureGeneRecomCellRenderer(d3Target,cellSize,cell){
 
 	var g = d3Target;
 
@@ -95,8 +96,8 @@ function StructurePhenoCellRenderer(d3Target,cellSize,cell){
 			}
 		}
 	}
-	else { // other cells are pheno cells
-		var fillClass = resolvePhenoGridColorClass(cell);
+	else { // other cells are recombinase cells
+		var fillClass = resolveRecomGridColorClass(cell);
 		g.append("rect")
 		.attr("x",0)
 		.attr("y",0)
@@ -105,27 +106,6 @@ function StructurePhenoCellRenderer(d3Target,cellSize,cell){
 		.style("stroke","#ccc")
 		.style("stroke-width","1px")
 		.attr("class",fillClass);
-		
-		if (cell.isNormal == 1) {
-			g.append("text")
-			.attr("x", 5)
-			.attr("y", 16)
-			.text("N")
-			.style("font-size","12px")
-			.style("font-weight","bold");
-		}
-
-		if (cell.hasBackgroundSensitivity == 1) {
-			g.append("text")
-			.attr("x", 14)
-			.attr("y", 16)
-			.text("!")
-			.style("fill","red")
-			.style("font-size","12px")
-			.style("font-weight","bold");
-		}
-
-		
 	}
 
 	return g;
@@ -135,12 +115,12 @@ function StructurePhenoCellRenderer(d3Target,cellSize,cell){
  * Matrix Specific render functions
  */
 
-window.PhenoMatrixRender = new function()
+window.GeneRecomMatrixRender = new function()
 {
 	/*
 	 * Renderer for column headers
 	 */
-	this.StructurePhenoColumnHeaderRenderer = function(d3Target,cellSize,startX,startY)
+	this.StructureGeneRecomColumnHeaderRenderer = function(d3Target,cellSize,startX,startY)
 	{
 		var labelPaddingLeft = 4;
 		var labelPaddingBottom = 4;
@@ -155,15 +135,15 @@ window.PhenoMatrixRender = new function()
 
 
 /**
- * Configure the structure by gene/phenotype matrix
+ * Configure the structure by gene/recombinase matrix
  *
  * Some rendering and logic details are in gxd_summary_matrix.js
  */
-var phenoSuperGrid = function()
+var geneRecomSuperGrid = function()
 {
 	// gather query string and store in window scope 
 	var querystringWithFilters = getQueryStringWithFilters();
-	window.prevPhenoGridQuery=querystringWithFilters;
+	window.prevGeneRecomGridQuery=querystringWithFilters;
 
 	var buildGrid = function()
 	{
@@ -171,11 +151,11 @@ var phenoSuperGrid = function()
 		if (typeof getQueryString == 'function') window.querystring = getQueryString().replace('&idFile=&','&');
 
 		currentGeneGrid = GxdTissueMatrix({
-			target : "phenoGridTarget",
+			target : "geneRecomGridTarget",
 			// the datasource allows supergrid to make ajax calls for the initial data,
 			// 	as well as subsequent calls for expanding rows
 			dataSource: {
-				url: fewiurl + "gxd/phenogrid/json?" + querystringWithFilters,
+				url: fewiurl + "gxd/recombinasegrid/json?" + querystringWithFilters,
 				batchSize: 50000,
 				offsetField: "startIndex",
 				limitField: "results",
@@ -183,20 +163,20 @@ var phenoSuperGrid = function()
 				MSG_EMPTY: 'No results found.'
 			},
 			cellSize: 24,
-			columnRenderer: PhenoMatrixRender.StructurePhenoColumnHeaderRenderer,
-			cellRenderer: StructurePhenoCellRenderer,
+			columnRenderer: GeneRecomMatrixRender.StructureGeneRecomColumnHeaderRenderer,
+			cellRenderer: StructureGeneRecomCellRenderer,
 			columnSort: function(a,b){ 
 				if(a.cid>b.cid) return 1;
 				else if (a.cid<b.cid) return -1;
 				return 0;
 			},
 			verticalColumnLabels: true,
-	        openCloseStateKey: "phenoGrid_"+querystring,
+	        openCloseStateKey: "geneRecomGrid_"+querystring,
 	        legendClickHandler: function(e){ geneMatrixLegendPopupPanel.show(); },
 	        renderCompletedFunction: function()
 	        {
 	        	//When matrix is drawn/redrawn we resize it with margins, to fit the browser window
-	        	makeMatrixResizable("phenoGridTarget",40,40);
+	        	makeMatrixResizable("geneRecomGridTarget",40,40);
 	        	if (SHOW_MATRIX_LEGENDS) {
 	        		geneMatrixLegendPopupPanel.show();
 	        	}
@@ -207,7 +187,7 @@ var phenoSuperGrid = function()
 
 }
 
-phenoSuperGrid();
+geneRecomSuperGrid();
 
 
 //popup for structure matrix legend

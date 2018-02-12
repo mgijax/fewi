@@ -164,7 +164,7 @@ border-collapse: collapse;
 	background-color: white;
 }
 
-#sgTarget line, #ggTarget line, #phenoGridTarget line {
+#sgTarget line, #ggTarget line, #phenoGridTarget line, #geneRecomGridTarget line {
     stroke: #aaa;
     stroke-width: 1px;
 }
@@ -184,42 +184,42 @@ border-collapse: collapse;
 #phenoGridTarget .phenoBlue4 {
 	fill: #002255;
 }
-#sgTarget .blue1, #ggTarget .blue1, #phenoGridTarget .blue1 {
+#sgTarget .blue1, #ggTarget .blue1, #phenoGridTarget .blue1, #geneRecomGridTarget .blue1 {
 	fill: rgb(215,228,255);
 }
-#sgTarget .blue2, #ggTarget .blue2, #phenoGridTarget .blue2 {
+#sgTarget .blue2, #ggTarget .blue2, #phenoGridTarget .blue2, #geneRecomGridTarget .blue2 {
 	fill: rgb(102,153,255);
 }
-#sgTarget .blue3, #ggTarget .blue3, #phenoGridTarget .blue3 {
+#sgTarget .blue3, #ggTarget .blue3, #phenoGridTarget .blue3, #geneRecomGridTarget .blue3 {
 	fill: rgb(0,64,192);
 }
-#sgTarget .red1, #ggTarget .red1, #phenoGridTarget .red1 {
+#sgTarget .red1, #ggTarget .red1, #phenoGridTarget .red1, #geneRecomGridTarget .red1 {
 	fill: rgb(255,215,215);
 }
-#sgTarget .red2, #ggTarget .red2, #phenoGridTarget .red2 {
+#sgTarget .red2, #ggTarget .red2, #phenoGridTarget .red2, #geneRecomGridTarget .red2 {
 	fill: rgb(255,103,103);
 }
-#sgTarget .red3, #ggTarget .red3, #phenoGridTarget .red3 {
+#sgTarget .red3, #ggTarget .red3, #phenoGridTarget .red3, #geneRecomGridTarget .red3 {
 	fill: rgb(192,0,0);
 }
 #sgTarget .gray {
 	/* fill: rgb(191,191,191); */
 	fill: url(#sash28);
 }
-#ggTarget .gray, #phenoGridTarget .gray {
+#ggTarget .gray, #phenoGridTarget .gray, #geneRecomGridTarget .gray {
 	/* fill: rgb(191,191,191); */
 	fill: url(#sash24);
 }
-#sgTarget .gold, #ggTarget .gold, #phenoGridTarget .gold {
+#sgTarget .gold, #ggTarget .gold, #phenoGridTarget .gold, #geneRecomGridTarget .gold {
 	fill: rgb(255,219,103);
 	/*fill: rgb(243,223,157);*/
 }
 
-#sgTarget .matrixButtonText, #ggTarget .matrixButtonText, #phenoGridTarget .matrixButtonText {
+#sgTarget .matrixButtonText, #ggTarget .matrixButtonText, #phenoGridTarget .matrixButtonText, #geneRecomGridTarget .matrixButtonText {
 	font-weight: bold;
 }
 
-#sgTarget .matrixFilterButton, #ggTarget .matrixFilterButton, #phenoGridTarget .matrixFilterButton {
+#sgTarget .matrixFilterButton, #ggTarget .matrixFilterButton, #phenoGridTarget .matrixFilterButton, #geneRecomGridTarget .matrixFilterButton {
 		padding-bottom: 20px;
 		margin-bottom: 20px;
 }

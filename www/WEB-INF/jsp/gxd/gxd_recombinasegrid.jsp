@@ -1,9 +1,9 @@
 <%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
-<title>${marker.symbol} Expression Phenotype Matrix </title>
+<title>${marker.symbol} Expression Recombinase Matrix </title>
 
-<meta name="description" content="View normal gene expression alongside the tissues where mutations in that gene have phenotype effects.">
-<meta name="keywords" content="MGI, GXD, expression, phenotype, tissue, mutation, EMAPA, MP, mice, mouse, murine, mus musculus">
+<meta name="description" content="">
+<meta name="keywords" content="">
 <meta name="robots" content="NOODP">
 <meta name="robots" content="NOYDIR">
 
@@ -18,7 +18,7 @@
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/widgets/SuperGrid.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/fewi_utils.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary_matrix.js"></script>
-<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_pheno_matrix.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_recom_matrix.js"></script>
 
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/gxd/gxd_summary.css" />
 <style>
@@ -32,23 +32,13 @@
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="EXPRESSION_correlation_matrix_help.shtml">    
         <span class="titleBarMainTitle">
-        Gene Expression + Phenotype Correlation Matrix
+        Gene Expression + Recombinase Correlation Matrix
         </span>
 </div>
 
-<!-- Gene/Pheno grid injected into this element -->
-<div id="phenoGridWrapper">
-  <div id="phenoGridTarget" class="matrixContainer"></div>
-</div>
-
-<!-- Gene/Pheno grid cell popup injected into this element -->
-<div id="structGenePopup" class="visHidden facetFilter structPopup">
-  <div id="structGenePopupContents"> </div>
-</div>
-
-<!-- Gene/Pheno grid cell popup legend injected into this element -->
-<div id="structLegendPopupPanel" class="visHidden facetFilter">
-  <jsp:include page="gxd_legend_popup.jsp"></jsp:include>
+<!-- Gene/Recom grid injected into this element -->
+<div id="geneRecomGridWrapper">
+  <div id="geneRecomGridTarget" class="matrixContainer"></div>
 </div>
 
 
