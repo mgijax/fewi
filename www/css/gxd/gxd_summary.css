@@ -164,7 +164,7 @@ border-collapse: collapse;
 	background-color: white;
 }
 
-#sgTarget line, #ggTarget line, #phenoGridTarget line {
+#sgTarget line, #ggTarget line, #phenoGridTarget line, #geneRecomGridTarget line {
     stroke: #aaa;
     stroke-width: 1px;
 }
