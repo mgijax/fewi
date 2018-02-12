@@ -885,13 +885,56 @@ var mutationRestriction  = function() {
 
 var differentialRestriction  = function()
 {
+	// For a valid search we need...
+	// 1. either a structure or stage for 'detected in'
+	// 2. either a structure, a stage, or not 'anywhere else' for 'not detected in'
+	
 	var form = YAHOO.util.Dom.get("gxdDifferentialQueryForm3");
+
 	var structure = form.structure.value;
 	var difStructure = form.difStructure.value;
+	var hasStructure = (structure != null) && (structure.trim().length > 0);
+	var hasDifStructure = (difStructure != null) && (difStructure.trim().length > 0);
 
-	var setVisible = structure == '' || (difStructure == '' && !form.anywhereElse.checked);
+	var stage = form.theilerStage;
+	var difStage = form.difTheilerStage;
 
+	// For the 'detected in' developmental stage, we need a choice other than "any" for it to count.
+	var hasTS = (stage.selectedOptions.length > 1);
+	if (!hasTS) {
+		for (var i in stage.selectedOptions) {
+			if (stage.selectedOptions[i].value != '0' && stage.selectedOptions[i].value != undefined) {
+				hasTS = true;
+				break;
+			}
+		}
+	}
+
+	var hasDifTS = (difStage.selectedOptions.length >= 1);
+	var anywhereElseChecked = form.anywhereElse.checked;
+	
+	// If we have 'any' structure for the detected TS choice, then 'any other' doesn't make sense as a
+	// NOT detected TS choice.
+	if (!hasTS) {
+		if ((difStage.selectedOptions.length == 1) && (difStage.selectedOptions[0].value == '-1')) {
+			hasDifTS = false;
+		}
+	}
+
+	var errors = [];
+	
+	if (!(hasStructure || hasTS)) {
+		errors.push('In the top ribbon, please specify an anatomical structure or developmental stage or both.');
+	}
+	if (!(hasDifStructure || hasDifTS || anywhereElseChecked)) {
+		errors.push('In the bottom ribbon, please specify an anatomical structure or developmental stage or both or check "anywhere else".');
+	}
+
+	console.log('errors = ' + errors);
+	var setVisible = (errors.length > 0);
 	setVisibility('differentialError', setVisible);
+	$('#differentialError').html(errors.join('<br/>'));
+	
 	return setVisible;
 };
 

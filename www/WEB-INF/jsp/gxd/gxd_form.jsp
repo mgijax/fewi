@@ -360,7 +360,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			&nbsp;&nbsp;
 			Search for genes expressed in an anatomical structure and/or developmental stage(s) but not in others.
 			<div id="differentialError" class="small error" style="display:none; white-space:nowrap;padding-bottom:4px;padding-top:4px;">
-				* Please enter a structure in <i>both</i> search boxes.</div>
+			</div>
 		</td>
 	</tr>
 	<tr class="stripe1">
