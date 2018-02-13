@@ -207,6 +207,25 @@ public class FormatHelper {
 		return TextFormat.superscript(s);
 	}
 
+	/** take an allele combination string (with MGI markup for alleles) and render it as
+	 * superscripted HTML, but without making the alleles into links
+	 */
+	public static String formatUnlinkedAlleles (String s) {
+		Pattern p = Pattern.compile("\\\\Allele\\(.*?[|](.*?)[|].*?\\)");
+		Matcher m = p.matcher(s);
+		String t = s;
+		
+		while (m.find()) {
+			t = m.replaceFirst(m.group(1));
+			m = p.matcher(t);
+		}
+		t = t.replaceAll("\\n", "<br/>");		// convert newlines to line breaks, remove last one
+		if (t.endsWith("<br/>")) {
+			t = t.substring(0, t.length() - 5);
+		}
+		return t;
+	}
+	
 	/** returns the correct plural/singular form of the given 'singular'
 	 * string, based on the given 'count'.
 	 * @assumes that we make 'singular' plural by appending an 's'

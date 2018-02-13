@@ -83,6 +83,7 @@ import org.jax.mgi.fewi.summary.GxdImageSummaryRow;
 import org.jax.mgi.fewi.summary.GxdMarkerSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.FilterUtil;
+import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.shr.fe.query.SolrLocationTranslator;
@@ -1046,7 +1047,7 @@ public class GXDController {
 			if (genoclusters.size() > 0) {
 				Genotype genotype = genoclusters.get(0).getGenotype();
 				if (genotype != null) {
-					phenoMatrixPopup.setAlleles(genotype.getCombination1());
+					phenoMatrixPopup.setAlleles(FormatHelper.formatUnlinkedAlleles(genotype.getCombination1()));
 				}
 				phenoMatrixPopup.setGenoclusterLink(fewiURL + "diseasePortal/genoCluster/view/" + genoclusterKey + "?structureID=" + rowId);
 			} else {
