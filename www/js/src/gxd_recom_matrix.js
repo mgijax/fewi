@@ -44,68 +44,40 @@ function resolveGxdGridColorClass(cell)
 	return cc;
 }
 
-//determine the color scheme of the pheno cells
-function resolveRecomGridColorClass(cell)
-{
-	var cc = 'phenoBlue1';
-//	var cc = '';
-//	if(cell.phenoAnnotationCount>0)
-//	{
-//		if(cell.phenoAnnotationCount < 2) { cc = "phenoBlue1"; }
-//		else if(cell.phenoAnnotationCount < 6) { cc = "phenoBlue2"; }
-//		else if(cell.phenoAnnotationCount < 100) { cc = "phenoBlue3"; }
-//		else { cc = "phenoBlue4"; }
-//	}
-	return cc;
-}
-
 
 //rendering function for grid cells
 function StructureGeneRecomCellRenderer(d3Target,cellSize,cell){
 
 	var g = d3Target;
+	var fillClass = resolveGxdGridColorClass(cell);
 
-	if (cell.cellType=="GXD") { // left-most column cells need GXD display 
-		var fillClass = resolveGxdGridColorClass(cell);
-		if ( fillClass == "gold" ) {
-			var points = [(cellSize - (cellSize/1.5))+","+0,
-		    	(cellSize)+","+0,
-		    	(cellSize)+","+(cellSize/1.5)];
-			g.append("polygon")
-				.attr("points",points.join(" "))
-				.attr("class",fillClass);
-			g.append("rect")
-				.attr("x",0)
-				.attr("y",0)
-				.attr("width",cellSize)
-				.attr("height",cellSize)
-				.style("fill","transparent");
-		}
-		else {
-			g.append("rect")
-				.attr("x",0)
-				.attr("y",0)
-				.attr("width",cellSize)
-				.attr("height",cellSize)
-				.style("stroke","#ccc")
-				.style("stroke-width","1px")
-				.attr("class",fillClass);
-	
-			if(indicateNegativeMatrixResultsConflict(cell)){
-				addNegativeResultConflictIndicator(g,cellSize);
-			}
-		}
-	}
-	else { // other cells are recombinase cells
-		var fillClass = resolveRecomGridColorClass(cell);
+	if ( fillClass == "gold" ) {
+		var points = [(cellSize - (cellSize/1.5))+","+0,
+	    	(cellSize)+","+0,
+	    	(cellSize)+","+(cellSize/1.5)];
+		g.append("polygon")
+			.attr("points",points.join(" "))
+			.attr("class",fillClass);
 		g.append("rect")
-		.attr("x",0)
-		.attr("y",0)
-		.attr("width",cellSize)
-		.attr("height",cellSize)
-		.style("stroke","#ccc")
-		.style("stroke-width","1px")
-		.attr("class",fillClass);
+			.attr("x",0)
+			.attr("y",0)
+			.attr("width",cellSize)
+			.attr("height",cellSize)
+			.style("fill","transparent");
+	}
+	else {
+		g.append("rect")
+			.attr("x",0)
+			.attr("y",0)
+			.attr("width",cellSize)
+			.attr("height",cellSize)
+			.style("stroke","#ccc")
+			.style("stroke-width","1px")
+			.attr("class",fillClass);
+
+		if(indicateNegativeMatrixResultsConflict(cell)){
+			addNegativeResultConflictIndicator(g,cellSize);
+		}
 	}
 
 	return g;
