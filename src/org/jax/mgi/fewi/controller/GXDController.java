@@ -16,10 +16,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import mgi.frontend.datamodel.Allele;
+import mgi.frontend.datamodel.Genotype;
 import mgi.frontend.datamodel.RelatedTermBackward;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.VocabTerm;
+import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
@@ -40,6 +42,7 @@ import org.jax.mgi.fewi.forms.GxdLitQueryForm;
 import org.jax.mgi.fewi.forms.GxdQueryForm;
 import org.jax.mgi.fewi.forms.RecombinaseQueryForm;
 import org.jax.mgi.fewi.handler.GxdMatrixHandler;
+import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.matrix.GxdGeneMatrixPopup;
 import org.jax.mgi.fewi.matrix.GxdMatrixCell;
 import org.jax.mgi.fewi.matrix.GxdMatrixMapper;
@@ -51,6 +54,7 @@ import org.jax.mgi.fewi.matrix.GxdRecombinaseMatrixMapper;
 import org.jax.mgi.fewi.matrix.GxdStageGridJsonResponse;
 import org.jax.mgi.fewi.matrix.GxdStageMatrixMapper;
 import org.jax.mgi.fewi.matrix.GxdStageMatrixPopup;
+import org.jax.mgi.fewi.matrix.PhenoMatrixPopup;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
@@ -173,6 +177,9 @@ public class GXDController {
 
 	@Autowired
 	private CdnaFinder cdnaFinder;
+
+	@Autowired
+	private DiseasePortalFinder diseasePortalFinder;
 
 	@Value("${solr.factetNumberDefault}")
 	private Integer facetLimit;
@@ -994,6 +1001,61 @@ public class GXDController {
 		return gxdGeneMatrixPopup;
 	}
 
+	/* handle request for JSON data from the expression x phenotype grid.  Cells can be either for expression
+	 * data (for a marker, indicated by colId = 0) or phenotype data (for a genocluster, indicated by colId > 0).
+	 */
+	@RequestMapping("/phenogridPopup/json")
+	public @ResponseBody PhenoMatrixPopup phenoMatrixPopupJson(
+			HttpSession session,
+			HttpServletRequest request,
+			@ModelAttribute GxdQueryForm query,
+			@RequestParam(value="rowId") String rowId,
+			@RequestParam(value="colId") String colId,
+			@RequestParam(value="genoclusterKey", required=false) String genoclusterKey
+			) {
+		logger.debug("phenoMatrixPopupJson() started");
+		
+		// find the requested marker, so we can get the symbol
+		List<Marker> markerList = markerFinder.getMarkerByPrimaryId(query.getMarkerMgiId());
+		Marker marker = markerList.get(0); 
+
+		// If we are seeking wild-type expression data for the gene, use the existing gene grid's method
+		// to do the basic retrieval.  If column 0 is desired, that's our indicator.
+		if (colId.equals("0")) {
+			// then get the relevant cell from the existing endpoint and convert it to a popup for this endpoint
+			PhenoMatrixPopup popup = new PhenoMatrixPopup(gxdGeneMatrixPopupJson(session, request, query, rowId, marker.getSymbol())); 
+			popup.setSymbol(marker.getSymbol());
+			return popup;
+		}
+		
+		// If we got here, we're instead looking for a popup for a phenotype cell.
+
+		// find the requested structure
+		List<VocabTerm> structureList = vocabFinder.getTermByID(rowId);
+		VocabTerm structure = structureList.get(0);
+
+		// the object to return as a JSON object
+		PhenoMatrixPopup phenoMatrixPopup = new PhenoMatrixPopup(structure.getPrimaryID(), structure.getTerm());
+		phenoMatrixPopup.setSymbol(marker.getSymbol());
+
+		// build data for this for the marker/structure pair
+		if ((query.getMarkerMgiId() != null) && !"".equals(query.getMarkerMgiId().trim())) {
+			String fewiURL = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+
+			List<HdpGenoCluster> genoclusters = diseasePortalFinder.getGenoClusterByKey(genoclusterKey);
+			if (genoclusters.size() > 0) {
+				Genotype genotype = genoclusters.get(0).getGenotype();
+				if (genotype != null) {
+					phenoMatrixPopup.setAlleles(genotype.getCombination1());
+				}
+				phenoMatrixPopup.setGenoclusterLink(fewiURL + "diseasePortal/genoCluster/view/" + genoclusterKey + "?structureID=" + rowId);
+			} else {
+				phenoMatrixPopup.setGenoclusterLink(fewiURL + "diseasePortal/genoCluster/view/" + genoclusterKey);
+			}
+		}
+		
+		return phenoMatrixPopup;
+	}
 
 	@RequestMapping("/stagegrid/json")
 	public @ResponseBody GxdStageGridJsonResponse<GxdMatrixCell> gxdStageGridJson(
