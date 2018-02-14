@@ -1649,7 +1649,6 @@ public class GXDController {
 
 		List<GxdMatrixRow> flatRows = gxdMatrixHandler.getFlatTermList(parentTerms);
 
-
 		// this gets all edges, but we only need all of them for the first page
 		List<SolrDagEdge> edges = getDAGDescendentRelationships(query,flatRows).getResultObjects();
 

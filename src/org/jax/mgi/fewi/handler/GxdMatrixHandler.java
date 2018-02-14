@@ -113,7 +113,13 @@ public class GxdMatrixHandler {
 
 		List<GxdMatrixRow> parentTerms = new ArrayList<GxdMatrixRow>();
 
-		if(mapChildren)
+		// added for the 'and nowhere else' differential query, where we want to show the default set of
+		// high level terms in the matrix display
+		if ( ((childrenOf == null) || (childrenOf.trim().length() == 0))
+				&& (query.getAnywhereElse() != null) && (query.getAnywhereElse().trim().length() > 0) ) {
+			mapHighLevelTerms = true;
+		}
+		else if(mapChildren)
 		{
 			// need to map query to VocabTerm object
 			List<VocabTerm> terms = vocabFinder.getTermByID(childrenOf.toUpperCase());
