@@ -423,7 +423,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			<br/>
 			<div id="stageContainer4">
 				<div id="ageStage4">
-					<form:select multiple="true" path="difTheilerStage" id="difTheilerStage4" size="7" items="${gxdQueryForm.difTheilerStages}">
+					<form:select multiple="true" path="difTheilerStage" id="difTheilerStage4" size="7" items="${gxdQueryForm.difTheilerStages}" onClick="difTSClick()">
 	                    <form:options items="${difTheilerStages}" />
 	                </form:select>
 		        </div>

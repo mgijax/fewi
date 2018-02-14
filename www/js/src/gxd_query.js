@@ -883,11 +883,22 @@ var mutationRestriction  = function() {
 	return selectVisible || geneVisible;
 };
 
+var difTSClick = function() {
+	// if we have a click in the differential Theiler stage box, we need to blank out the
+	// "anywhere else" checkbox
+
+	if ($('#anywhereElse').length > 0) {
+		$('#anywhereElse')[0].checked = false;
+	}
+}
+
 var differentialRestriction  = function()
 {
 	// For a valid search we need...
 	// 1. either a structure or stage for 'detected in'
 	// 2. either a structure, a stage, or not 'anywhere else' for 'not detected in'
+	// 3. if choosing both structure & stage (top or bottom ribbon), then you can't
+	//		select just one in the other ribbon
 	
 	var form = YAHOO.util.Dom.get("gxdDifferentialQueryForm3");
 
@@ -901,11 +912,15 @@ var differentialRestriction  = function()
 
 	// For the 'detected in' developmental stage, we need a choice other than "any" for it to count.
 	var hasTS = (stage.selectedOptions.length > 1);
+	var hasAnyTS = (stage.selectedOptions.length > 1);		// includes Any as a valid choice
 	if (!hasTS) {
 		for (var i in stage.selectedOptions) {
 			if (stage.selectedOptions[i].value != '0' && stage.selectedOptions[i].value != undefined) {
 				hasTS = true;
+				hasAnyTS = true;
 				break;
+			} else if (stage.selectedOptions[i].value == '0') {
+				hasAnyTS = true;
 			}
 		}
 	}
@@ -928,6 +943,18 @@ var differentialRestriction  = function()
 	}
 	if (!(hasDifStructure || hasDifTS || anywhereElseChecked)) {
 		errors.push('In the bottom ribbon, please specify an anatomical structure or developmental stage or both or check "anywhere else".');
+	}
+	if (hasStructure && !hasDifStructure && !anywhereElseChecked) {
+		errors.push('If you specify a structure in the top ribbon, then you must either specify a structure in the bottom ribbon or check "anywhere else".');
+	}
+	if (hasTS && !hasDifTS && !anywhereElseChecked) {
+		errors.push('If you specify a stage in the top ribbon, then you must either specify a stage in the bottom ribbon or check "anywhere else".');
+	}
+	if (!hasStructure && hasDifStructure) {
+		errors.push('If you specify a structure in the bottom ribbon, then you must also specify a structure in the top ribbon.');
+	}
+	if (!hasTS && hasDifTS) {
+		errors.push('If you specify a stage in the bottom ribbon, then you must also specify a stage in the top ribbon.');
 	}
 
 	console.log('errors = ' + errors);
