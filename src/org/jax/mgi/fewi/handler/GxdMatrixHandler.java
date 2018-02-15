@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.handler;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +34,13 @@ public class GxdMatrixHandler {
 	@Autowired
 	private DagMatrixRowOpener rowOpener;
 	
+	// sort the list of VocabTerms alphanumerically
+	private List<VocabTerm> sortTerms(List<VocabTerm> terms) {
+		if ((terms != null) && (terms.size() > 0)) {
+			Collections.sort(terms, terms.get(0).getEmapsComparator());
+		}
+		return terms;
+	}
 
 	public GxdMatrixRow makeGxdMatrixRow(VocabTerm term)
 	{
@@ -56,10 +64,10 @@ public class GxdMatrixHandler {
 					logger.debug("found "+terms.size()+" terms for \"mouse\" ID: "+mouseId);
 					// go one level deep
 					highLevelEmapaTerms = new ArrayList<VocabTerm>();
-					for(VocabTerm topTerm : terms)
+					for(VocabTerm topTerm : sortTerms(terms))
 					{
 						highLevelEmapaTerms.add(topTerm);
-						for(VocabTerm secondLevelTerm : topTerm.getChildren())
+						for(VocabTerm secondLevelTerm : sortTerms(topTerm.getChildren()))
 						{
 							if(secondLevelTerm.getPrimaryId().equals(organSystemId))
 							{
@@ -88,7 +96,7 @@ public class GxdMatrixHandler {
 				{
 					secondLevelTerm.setOc(OpenCloseState.OPEN);
 					List<VocabTerm> organSystemTerms = child.getChildren();
-					for(VocabTerm organSystemTerm : organSystemTerms)
+					for(VocabTerm organSystemTerm : sortTerms(organSystemTerms))
 					{
 						GxdMatrixRow thirdLevelTerm = makeGxdMatrixRow(organSystemTerm);
 						secondLevelTerm.addChild(thirdLevelTerm);
@@ -135,7 +143,7 @@ public class GxdMatrixHandler {
 					logger.warn("Could not find children for structure ID: "+childrenOf);
 				}
 
-				for(VocabTerm child : term.getChildren())
+				for(VocabTerm child : sortTerms(term.getChildren()))
 				{
 					parentTerms.add(makeGxdMatrixRow(child));
 				}
@@ -152,7 +160,7 @@ public class GxdMatrixHandler {
 			}
 			else
 			{
-				for(VocabTerm term : terms)
+				for(VocabTerm term : sortTerms(terms))
 				{
 					parentTerms.add(makeGxdMatrixRow(term));
 				}
@@ -187,7 +195,7 @@ public class GxdMatrixHandler {
 			}
 			else
 			{
-				for(VocabTerm term : terms)
+				for(VocabTerm term : sortTerms(terms))
 				{
 					if("EMAPS".equalsIgnoreCase(term.getVocabName()))
 					{
@@ -200,7 +208,7 @@ public class GxdMatrixHandler {
 					{
 						parentRow.setOc(OpenCloseState.OPEN);
 						// for structure only queries we expand the children one level
-						for(VocabTerm child : term.getChildren())
+						for(VocabTerm child : sortTerms(term.getChildren()))
 						{
 							parentRow.addChild(makeGxdMatrixRow(child));
 						}
@@ -218,7 +226,7 @@ public class GxdMatrixHandler {
 					}
 					else
 					{
-						for(VocabTerm difTerm : difTerms)
+						for(VocabTerm difTerm : sortTerms(difTerms))
 						{
 							parentTerms.add(makeGxdMatrixRow(difTerm));
 						}
