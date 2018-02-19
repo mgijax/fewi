@@ -60,10 +60,11 @@ function resolvePhenoGridColorClass(cell)
 
 
 //rendering function for grid cells
-function StructurePhenoCellRenderer(d3Target,cellSize,cell){
+function drawMatrixCell(d3Target,cellSize,cell){
 
+	console.log("inside drawCell");
 	var g = d3Target;
-
+	
 	if (cell.cellType=="GXD") { // left-most column cells need GXD display 
 		var fillClass = resolveGxdGridColorClass(cell);
 		if ( fillClass == "gold" ) {
@@ -124,8 +125,6 @@ function StructurePhenoCellRenderer(d3Target,cellSize,cell){
 			.style("font-size","12px")
 			.style("font-weight","bold");
 		}
-
-		
 	}
 
 	return g;
@@ -151,6 +150,16 @@ window.PhenoMatrixRender = new function()
 	    	.style("font-size","12px")
 	    	.style("font-weight","bold");
 	};
+
+    this.StructureStageCellRenderer = function(d3Target,cellSize,cell){
+    	var g = d3Target;
+
+    	drawMatrixCell(g,cellSize,cell);
+
+    	//g.on("click", structStagePopupHandler).style("cursor","pointer");
+    	
+    	return g;
+    };
 }
 
 
@@ -184,7 +193,7 @@ var phenoSuperGrid = function()
 			},
 			cellSize: 24,
 			columnRenderer: PhenoMatrixRender.StructurePhenoColumnHeaderRenderer,
-			cellRenderer: StructurePhenoCellRenderer,
+			cellRenderer: PhenoMatrixRender.StructureStageCellRenderer,
 			columnSort: function(a,b){ 
 				if(a.cid>b.cid) return 1;
 				else if (a.cid<b.cid) return -1;
