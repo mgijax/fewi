@@ -1542,3 +1542,13 @@ var anywhereElseClick = function() {
 		}
 	}
 };
+
+// if the 'in this structure' checkbox is clicked and will be checked, then we'll need to
+// blank out the 'anywhere else' checkbox
+var inCheckboxClick = function() {
+	if ($('#inCheckbox').length > 0) {
+		if ($('#inCheckbox')[0].checked) {
+			$('#anywhereElse')[0].checked = false;
+		}
+	}
+};
