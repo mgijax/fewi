@@ -8,6 +8,7 @@ public class PhenoMatrixPopup {
 
 	private String term = new String("");
 	private String termId = new String("");
+	private String markerId = null;
 	private String symbol = new String("");
 	private boolean hasImage = true;
 	private Integer countPosResults = new Integer(0);
@@ -36,6 +37,14 @@ public class PhenoMatrixPopup {
 		this.term = term;
 		this.cellType = "Pheno";
 		this.hasImage = false;
+	}
+
+	public String getMarkerId() {
+		return markerId;
+	}
+
+	public void setMarkerId(String markerId) {
+		this.markerId = markerId;
 	}
 
 	public String getAlleles() {

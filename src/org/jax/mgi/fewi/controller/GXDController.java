@@ -1026,6 +1026,7 @@ public class GXDController {
 			// then get the relevant cell from the existing endpoint and convert it to a popup for this endpoint
 			PhenoMatrixPopup popup = new PhenoMatrixPopup(gxdGeneMatrixPopupJson(session, request, query, rowId, marker.getSymbol())); 
 			popup.setSymbol(marker.getSymbol());
+			popup.setMarkerId(marker.getPrimaryID());
 			return popup;
 		}
 		
