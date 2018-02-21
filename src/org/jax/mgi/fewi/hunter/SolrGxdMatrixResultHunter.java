@@ -257,7 +257,7 @@ public class SolrGxdMatrixResultHunter extends SolrGxdSummaryBaseHunter {
 						GxdResultFields.STRUCTURE_EXACT, "edgeType:direct"));
 
 		this.joinIndices.put("dagDescendentEdge", new SolrJoinMapper(
-				vocabTermChildUrl, DagEdgeFields.CHILD_ID, "gxdResult",
-				GxdResultFields.STRUCTURE_EXACT, "edgeType:descendent"));
+				vocabTermChildUrl, DagEdgeFields.EMAPS_ID, "gxdResult",
+				GxdResultFields.EMAPS_ID, "edgeType:descendent"));
 	}
 }
