@@ -1275,11 +1275,16 @@ public class GXDController {
 			parentTerms = gxdMatrixHandler.pruneEmptyRows(parentTerms,idsWithData);
 		}
 
-		// get matrix cells
+		// get matrix cells and set the marker ID, as appropriate
 		GxdRecombinaseMatrixMapper mapper = new GxdRecombinaseMatrixMapper(edges);
 		List<GxdRecombinaseMatrixCell> gxdMatrixCells = mapper.mapRecombinaseGridCells(flatRows, resultList);
+		if ((query.getMarkerMgiId() != null) && (query.getMarkerMgiId().trim().length() > 0)) {
+			for (GxdRecombinaseMatrixCell cell : gxdMatrixCells) {
+				cell.setMgiId(query.getMarkerMgiId());
+			}
+		}
 
-		// add phenotype cells to the expression ones just built
+		// add recombinase cells to the expression ones just built
 		if (recombinaseCells != null) {
 			Set<String> idsWithChildren = new HashSet<String>();
 			for (SolrRecombinaseMatrixCell cell : recombinaseCells) {
@@ -1292,6 +1297,7 @@ public class GXDController {
 				gpm.setNotDetected(cell.getNotDetectedResults());
 				gpm.setSymbol(cell.getSymbol());
 				gpm.setChildren(cell.getChildren());
+				gpm.setMgiId(cell.getColumnID());		// set allele ID
 				gxdMatrixCells.add(gpm);
 				
 				if (cell.getChildren() > 0) {
