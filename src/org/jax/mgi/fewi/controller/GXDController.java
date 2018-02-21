@@ -1196,14 +1196,7 @@ public class GXDController {
 		}
 		
 		Marker marker = markers.getResultObjects().get(0);
-		RecombinaseQueryForm recombinaseForm = new RecombinaseQueryForm();
-		recombinaseForm.setDriver(marker.getSymbol().toLowerCase());
-		SearchParams recombinaseParams = new SearchParams();
-        recombinaseParams.setFilter(recombinaseController.parseRecombinaseQueryForm(recombinaseForm));
-        recombinaseParams.setPageSize(1);
-		
-		SearchResults<Allele> recombinaseAlleles = recombinaseFinder.searchRecombinases(recombinaseParams);
-		if (recombinaseAlleles.getTotalCount() == 0) {
+		if (!marker.isDriver()) {
 			logger.debug("no recombinase alleles for ID " + query.getMarkerMgiId());
 			return new GxdStageGridJsonResponse<GxdRecombinaseMatrixCell>();
 		}
