@@ -1418,9 +1418,14 @@ public class GXDController {
 			parentTerms = gxdMatrixHandler.pruneEmptyRows(parentTerms,idsWithData);
 		}
 
-		// get matrix cells
+		// get matrix cells and set the marker ID, if available
 		GxdPhenoMatrixMapper mapper = new GxdPhenoMatrixMapper(edges);
 		List<GxdPhenoMatrixCell> gxdMatrixCells = mapper.mapPhenoGridCells(flatRows, resultList);
+		if ((query.getMarkerMgiId() != null) && (query.getMarkerMgiId().trim().length() > 0)) {
+			for (GxdPhenoMatrixCell cell : gxdMatrixCells) {
+				cell.setMarkerId(query.getMarkerMgiId());
+			}
+		}
 
 		// add phenotype cells to the expression ones just built
 		if (mpCells != null) {

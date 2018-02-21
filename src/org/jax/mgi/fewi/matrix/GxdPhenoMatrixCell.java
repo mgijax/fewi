@@ -11,6 +11,7 @@ public class GxdPhenoMatrixCell extends GridDataCell {
 	protected boolean isChild = false;
 
 	protected String cellType;				// type of matrix cell:  GXD or Pheno
+	protected String markerId;				// gene's primary ID (for GXD cells)
 	protected String symbol;				// gene symbol (for GXD cells)
 	protected String allelePairs;			// allele pairs for the genocluster (for Pheno cells)
 	protected String genoclusterKey;		// key of the genocluster (for Pheno cells)
@@ -41,6 +42,14 @@ public class GxdPhenoMatrixCell extends GridDataCell {
 
 	public void aggregateGxd(String detectionLevel, Integer countToAdd, boolean isChild) {
 		addNewGxdCount(detectionLevel, countToAdd, isChild);
+	}
+
+	public String getMarkerId() {
+		return markerId;
+	}
+
+	public void setMarkerId(String markerId) {
+		this.markerId = markerId;
 	}
 
 	public String getSymbol() {
