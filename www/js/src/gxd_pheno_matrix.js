@@ -62,7 +62,6 @@ function resolvePhenoGridColorClass(cell)
 //rendering function for grid cells
 function drawMatrixCell(d3Target,cellSize,cell){
 
-	console.log("inside drawCell");
 	var g = d3Target;
 	
 	if (cell.cellType=="GXD") { // left-most column cells need GXD display 
@@ -130,6 +129,80 @@ function drawMatrixCell(d3Target,cellSize,cell){
 	return g;
 };
 
+
+//function to create / place / show the pheno grid popup
+YAHOO.namespace("phenoGridNS.container");
+function showGridPopup(x,y) {
+	// Instantiate a Panel from markup
+	YAHOO.phenoGridNS.container.panel1 = new YAHOO.widget.Panel("phenoGridPopup", { width:"320px", visible:false, constraintoviewport:true } );
+	YAHOO.phenoGridNS.container.panel1.render();
+	YAHOO.phenoGridNS.container.panel1.moveTo(x, y);
+	YAHOO.phenoGridNS.container.panel1.show();
+}
+
+// handler for the popup
+function phenoGridPopupHandler(d, i) {
+
+	// generate the popup at location of user click
+	var newX = d3.event.pageX;
+	var newY = d3.event.pageY;
+	showGridPopup(newX, newY);
+	
+	var popupContents = $( "#phenoGridPopupContents" );
+
+	// gather data needed for popup
+	var querystringWithFilters = getQueryStringWithFilters();
+	var requestUrl = fewiurl + "gxd/phenogridPopup/json?" + querystringWithFilters
+		+ "&rowId=" + d.termId
+		+ "&colId=" + d.cid;
+
+	// gather values for popup
+	$.getJSON(requestUrl, function(data){
+		var countPosResults = data.countPosResults;
+		var countNegResults = data.countNegResults;
+		var countAmbResults = data.countAmbResults;
+		var markerId = data.markerId;
+		var symbol = data.symbol;
+
+		// generate the small data table
+		var popupHtml = "";
+		popupHtml +=  "<div class='' style='margin-bottom:5px;'><table id='stagePopupTable' style=''>";
+		popupHtml +=  "<div style='height:5px;'></div>";
+		if (countPosResults > 0 || countNegResults > 0 || countAmbResults > 0) {
+			popupHtml +=  "<tr><th>Detected?</th><th># of Results</th></tr>";
+			if (countPosResults > 0) {
+				popupHtml +=  "<tr><td>Yes</td><td>" + countPosResults + "</td></tr>";
+			}
+			if (countNegResults > 0) {
+				popupHtml +=  "<tr><td>No</td><td>" + countNegResults + "</td></tr>";
+			}
+			if (countAmbResults > 0) {
+				popupHtml +=  "<tr><td>Ambiguous</td><td>" + countAmbResults + "</td></tr>";
+			}
+			popupHtml +=  "</table>";
+		}
+		else {
+			popupHtml +=  "<div style='height:4em; padding:5px;'>Absent or ambiguous results are in substructures.</div>";
+		}
+
+		// add the buttons
+		popupHtml +=  "<div id='matrixPopupButtonWrapper' >";
+		popupHtml +=  "<a href='" + fewiurl + "gxd/marker/" + markerId + "?tab=resultstab'><button id='matrixPopupResultsButton'>View These Results</button></a>";
+		if (data.hasImage){
+			popupHtml +=  "<a href='" + fewiurl + "gxd/marker/" + markerId + "?tab=imagestab'><button id='matrixPopupImagesButton'>View These Images</button></a>";
+		}
+		popupHtml +=  "</div>";
+		popupHtml +=  "</div>";
+
+		// clear and fill the popup
+		popupContents.empty();
+		popupContents.append( "<div class='' style='text-align:center; background-color:#EBCA6D; font-size: 110%; line-height: 2; font-weight: bold; margin-botton:5px;'>" + symbol + " Expression in Mouse</div>" );
+		popupContents.append(popupHtml);
+	});
+}
+
+
+
 /**
  * Matrix Specific render functions
  */
@@ -156,7 +229,8 @@ window.PhenoMatrixRender = new function()
 
     	drawMatrixCell(g,cellSize,cell);
 
-    	//g.on("click", structStagePopupHandler).style("cursor","pointer");
+    	// adding onClick popup
+    	g.on("click", phenoGridPopupHandler).style("cursor","pointer");
     	
     	return g;
     };
