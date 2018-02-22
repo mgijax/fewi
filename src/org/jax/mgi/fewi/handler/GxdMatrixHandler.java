@@ -121,11 +121,26 @@ public class GxdMatrixHandler {
 
 		List<GxdMatrixRow> parentTerms = new ArrayList<GxdMatrixRow>();
 
-		// added for the 'and nowhere else' differential query, where we want to show the default set of
-		// high level terms in the matrix display
+		// added for the 'and nowhere else' differential query
 		if ( ((childrenOf == null) || (childrenOf.trim().length() == 0))
 				&& (query.getAnywhereElse() != null) && (query.getAnywhereElse().trim().length() > 0) ) {
-			mapHighLevelTerms = true;
+
+			// If the user asks for 'structure A and not anywhere else', then just show a single matrix row
+			// for structure A.  Unless this search has a Detected filter, in which case show the set of 
+			// (default) high level terms.
+			if ((query.getStructureID() != null) && (query.getStructureID().trim().length() > 0)) {
+				List<VocabTerm> terms = vocabFinder.getTermByID(query.getStructureID());
+				if ((terms != null) && (terms.size() > 0) && ((query.getDetectedFilter() == null) || (query.getDetectedFilter().size() == 0))) {
+					parentTerms.add(makeGxdMatrixRow(terms.get(0)));
+				} else {
+					// can't find term for structure A -- should not happen, but fall back on the set of
+					// high level terms just in case
+					mapHighLevelTerms = true;
+				}
+			} else {
+				// no structure specified; show the default set of high level terms in the matrix display
+				mapHighLevelTerms = true;
+			}
 		}
 		else if(mapChildren)
 		{

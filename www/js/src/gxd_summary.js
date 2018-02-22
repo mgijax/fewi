@@ -463,14 +463,28 @@ function buildSummary(request,tabState)
 	if(doStageGrid)
 	{
 		structureStageGrid();
+		showNowhereElseMessage(request, 'Tissue x Stage Matrix');
 	}
 	else if(doGeneGrid)
 	{
 		structureGeneGrid();
+		showNowhereElseMessage(request, 'Tissue x Gene Matrix');
 	}
 	else
 	{
 		loadDatatable(dataTableInitFunction,request);
+		$('#nowhereElseMessage').hide();
+	}
+}
+
+// if the 'request' includes the 'anywhereElse' checkbox, show the corresponding message div
+function showNowhereElseMessage(request, matrixType) {
+	var params = parseRequest(request);
+	if ('anywhereElse' in params) {
+		var prefix = 'If you searched for expression detected in a particular structure and not anywhere else, then the ';
+		var suffix = ' will show the results for that structure and its substructures first. If you would like to see structures where expression was analyzed and not detected, click the button for the Detected filter and choose No.';
+		$('#nowhereElseMessage').html(prefix + matrixType + suffix);
+		$('#nowhereElseMessage').css('display', 'block');
 	}
 }
 
