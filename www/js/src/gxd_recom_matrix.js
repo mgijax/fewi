@@ -137,11 +137,7 @@ var geneRecomSuperGrid = function()
 			cellSize: 24,
 			columnRenderer: GeneRecomMatrixRender.StructureGeneRecomColumnHeaderRenderer,
 			cellRenderer: StructureGeneRecomCellRenderer,
-			columnSort: function(a,b){ 
-				if(a.cid>b.cid) return 1;
-				else if (a.cid<b.cid) return -1;
-				return 0;
-			},
+			columnSort: function(a,b){ return FewiUtil.SortSmartAlpha(a.cid,b.cid);},
 			verticalColumnLabels: true,
 	        openCloseStateKey: "geneRecomGrid_"+querystring,
 	        legendClickHandler: function(e){ geneMatrixLegendPopupPanel.show(); },
