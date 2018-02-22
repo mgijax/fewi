@@ -92,6 +92,12 @@ border-collapse: collapse;
 	width:100%;
 	background-color: #FFFFFF;
 }
+#phenoGridPopupContents
+{
+	width:100%;
+	background-color: #FFFFFF;
+}
+
 
 #stagePopupTable
 {
@@ -124,6 +130,13 @@ border-collapse: collapse;
 	background:	#EEE;
 }
 #structGenePopup_h
+{
+	cursor: move;
+	border-width:0px;
+	line-height:2.5;
+	background:	#EEE;
+}
+#phenoGridPopup_h
 {
 	cursor: move;
 	border-width:0px;

@@ -21,8 +21,13 @@
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_pheno_matrix.js"></script>
 
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/gxd/gxd_summary.css" />
-<style>
 
+<style>
+  body.yui-skin-sam .yui-panel .hd,
+  body.yui-skin-sam .yui-ac-hd { background:none; background-color:#025; color:#fff; font-weight: bold;}
+  body.yui-skin-sam .yui-ac-hd {padding: 5px;}
+  body.yui-skin-sam div#outerGxd {overflow:visible;}
+  .yui-dt table {width: 100%;}
 </style>
 
 
@@ -42,13 +47,8 @@
 </div>
 
 <!-- Gene/Pheno grid cell popup injected into this element -->
-<div id="structGenePopup" class="visHidden facetFilter structPopup">
-  <div id="structGenePopupContents"> </div>
-</div>
-
-<!-- Gene/Pheno grid cell popup legend injected into this element -->
-<div id="structLegendPopupPanel" class="visHidden facetFilter">
-  <jsp:include page="gxd_legend_popup.jsp"></jsp:include>
+<div id="phenoGridPopup" class="visHidden facetFilter structPopup">
+  <div id="phenoGridPopupContents"></div>
 </div>
 
 
