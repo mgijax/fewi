@@ -611,6 +611,13 @@ function formatFastaArgs() {
 	    <span class='small'>Summary of all recombinase alleles
 	      <a class='MP' href='${configBean.FEWI_URL}recombinase/summary?driver=${allele.driverNote}'>driven by ${allele.driverNote}</a>.
 	    </span>
+		<c:set var="driverMarker" value="${allele.driverMarker}"/>
+		<c:if test="${(not empty driverMarker) and (driverMarker.organism == 'mouse') and (driverMarker.countOfRecombinaseAllelesWithExpressionData > 0)}">
+		  <span class='small' style='padding-left: 20px'>
+			<a class='MP' href="${configBean.FEWI_URL}gxd/recombinasegrid/${driverMarker.primaryID}">Comparative matrix view
+				of recombinase activities</a>
+		  </span>
+		</c:if>
 	  </td>
 	</tr>
 
