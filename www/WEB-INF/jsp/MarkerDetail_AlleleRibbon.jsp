@@ -118,8 +118,15 @@
 
 						<c:if test="${marker.hasPhenotypesRelatedToAnatomy and marker.hasWildTypeExpressionData}">
 							<li>
-								<div class="label">Correlation Matrix</div>
+								<div class="label">Comparison Matrix</div>
 								<div class="value"><a href="${configBean.FEWI_URL}gxd/phenogrid/${marker.primaryID}" target="_new">Gene Expression + Phenotype</a></div>
+							</li>
+						</c:if>
+
+						<c:if test="${marker.hasWildTypeExpressionData and (marker.countOfRecombinaseAllelesWithExpressionData > 0)}">
+							<li>
+								<div class="label">Recombinase Activity</div>
+								<div class="value"><a href="${configBean.FEWI_URL}gxd/recombinasegrid/${marker.primaryID}" target="_new">${marker.countOfRecombinaseAllelesWithExpressionData}</a></div>
 							</li>
 						</c:if>
 					</c:if>

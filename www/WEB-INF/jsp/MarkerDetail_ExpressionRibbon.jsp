@@ -103,7 +103,7 @@
 						<c:if test="${marker.hasPhenotypesRelatedToAnatomy and marker.hasWildTypeExpressionData}">
 							<div class="item" style="clear: both; padding-top: 5px;">
 							<li style="padding-top: 5px;">
-								<div class="label">Correlation Matrix</div>
+								<div class="label">Comparison Matrix</div>
 								<div class="value"><a href="${configBean.FEWI_URL}gxd/phenogrid/${marker.primaryID}" target="_new">Gene Expression + Phenotype</a></div>
 							</li>
 							</div>

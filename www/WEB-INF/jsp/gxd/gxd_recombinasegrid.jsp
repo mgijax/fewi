@@ -32,7 +32,7 @@
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="EXPRESSION_correlation_matrix_help.shtml">    
         <span class="titleBarMainTitle">
-        Gene Expression + Recombinase Correlation Matrix
+        Gene Expression + Recombinase Comparison Matrix
         </span>
 </div>
 

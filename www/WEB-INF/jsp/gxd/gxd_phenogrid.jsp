@@ -37,7 +37,7 @@
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="EXPRESSION_correlation_matrix_help.shtml">    
         <span class="titleBarMainTitle">
-        Gene Expression + Phenotype Correlation Matrix
+        Gene Expression + Phenotype Comparison Matrix
         </span>
 </div>
 
