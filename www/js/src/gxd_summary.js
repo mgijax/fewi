@@ -477,13 +477,44 @@ function buildSummary(request,tabState)
 	}
 }
 
+// Works with clickNotDetectedFilter() to allow easy, programmatic removal of the auto-added Not Detected filter.
+function removeNotDetectedFilter() {
+	$('#detectedFilter\\:No')[0].click();
+	showNowhereElseMessage();
+}
+
+// Works with addNotDetectedFilter() to wait for the filter box to pop up and then click it.
+// It takes time to retrieve the data to pop up the filter box, so allow the given number
+// of 'retries' to wait for it to be available before giving up.
+function clickNotDetectedFilter(retries) {
+	if ($('[name=detectedFilter][value=No]').length > 0) {
+		$('[name=detectedFilter][value=No]').click();
+		$('#yui-gen0-button').click(); 
+
+	} else if (retries > 0) {
+		// wait 100ms and try again
+		setTimeout(function() {
+			clickNotDetectedFilter(retries - 1);
+		}, 100);
+	}
+}
+
+// programmatically select the 'Detected' filter, choose the 'No' option, and apply it
+function addNotDetectedFilter(secondCall) {
+	$('#nowhereElseMessage').css('display', 'none');
+	$('#detectedFilter')[0].click();
+	clickNotDetectedFilter(30);
+}
+
 // if the 'request' includes the 'anywhereElse' checkbox, show the corresponding message div
 function showNowhereElseMessage(request, matrixType) {
 	var params = parseRequest(request);
 	if ('anywhereElse' in params) {
-		var prefix = 'If you searched for expression detected in a particular structure and not anywhere else, then the ';
-		var suffix = ' will show the results for that structure and its substructures first. If you would like to see structures where expression was analyzed and not detected, click the button for the Detected filter and choose No.';
-		$('#nowhereElseMessage').html(prefix + matrixType + suffix);
+		var message = "View the <a class='autofilter' onClick='addNotDetectedFilter(); return false;'>Not Detected data</a> for this gene set";
+		if ('detectedFilter' in params) {
+			message = "View the <a class='autofilter' onClick='removeNotDetectedFilter(); return false;'>Detected data</a> for this gene set";
+		} 
+		$('#nowhereElseMessage').html(message);
 		$('#nowhereElseMessage').css('display', 'block');
 	}
 }

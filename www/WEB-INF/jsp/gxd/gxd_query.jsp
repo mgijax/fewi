@@ -15,6 +15,9 @@
 .left { float: left; }
 .right { float: right; }
 
+.autofilter { text-decoration: underline; color: blue; cursor: pointer; }
+.autofilter:hover { text-decoration: none; color: #c00; background-color: #C7E3FE; }
+
 #resultSummary {border:0;padding-left:5px; text-align: left; font-size: 12px;}
 #resultSummary .selected a,
 #resultSummary .selected a:focus,
