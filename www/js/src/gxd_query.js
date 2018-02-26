@@ -1322,6 +1322,7 @@ var resetQF = function (e) {
 		difForm3.difTheilerStage.selectedIndex=0;
 		difForm3.inCheckbox.checked = false;
 		difForm3.anywhereElse.checked = false;
+		setVisibility('differentialError', false);
 	}
 	var batchForm = YAHOO.util.Dom.get("gxdBatchQueryForm1");
 	if (batchForm) {
