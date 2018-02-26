@@ -947,7 +947,7 @@ var differentialRestriction  = function()
 	} else if (hasTS && !hasDifTS && !anywhereElseChecked) {
 		error = 'If you specify a stage in the top ribbon, then you must either specify a stage in the bottom ribbon or check "anywhere else".';
 
-	} else if (!hasTS && hasDifTS) {
+	} else if (!hasTS && hasDifTS && !(hasAnyTS && hasStructure && hasDifStructure)) {
 		error = 'If you specify a stage in the bottom ribbon, then you must also specify a stage in the top ribbon.';
 
 	} else if (!(hasStructure || hasTS)) {
