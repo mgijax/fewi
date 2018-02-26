@@ -509,7 +509,9 @@ function addNotDetectedFilter(secondCall) {
 // if the 'request' includes the 'anywhereElse' checkbox, show the corresponding message div
 function showNowhereElseMessage(request, matrixType) {
 	var params = parseRequest(request);
-	if ('anywhereElse' in params) {
+	var resultCount = YAHOO.util.Dom.get("totalResultsCount").innerHTML;
+
+	if (('anywhereElse' in params) && ( (!resultCount || (parseInt(resultCount) > 0)) ) ) {
 		var message = "View the <a class='autofilter' onClick='addNotDetectedFilter(); return false;'>Not Detected data</a> for this gene set";
 		if ('detectedFilter' in params) {
 			message = "View the <a class='autofilter' onClick='removeNotDetectedFilter(); return false;'>Detected data</a> for this gene set";
@@ -584,7 +586,13 @@ function refreshTabCounts()
 	{
 		if(o.responseText == "-1") o.responseText = "0"; // set count to zero if errors
 		// resolve the request ID to its appropriate handler
-		if(o.tId==resultsRq.tId) YAHOO.util.Dom.get("totalResultsCount").innerHTML = o.responseText;
+		if(o.tId==resultsRq.tId) {
+			YAHOO.util.Dom.get("totalResultsCount").innerHTML = o.responseText;
+			// no results = no message
+			if (parseInt(o.responseText) == 0) {
+				$('#nowhereElseMessage').css('display', 'none');
+			}
+		}
 		else if(o.tId==assaysRq.tId) YAHOO.util.Dom.get("totalAssaysCount").innerHTML = o.responseText;
 		else if(o.tId==genesRq.tId) {
 			log('handling gene count');
