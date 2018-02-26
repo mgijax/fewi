@@ -936,33 +936,31 @@ var differentialRestriction  = function()
 		}
 	}
 
-	var errors = [];
+	var error = '';
 	
-	if (!(hasStructure || hasTS)) {
-		errors.push('In the top ribbon, please specify an anatomical structure or developmental stage or both.');
-	}
-	if (!(hasDifStructure || hasDifTS || anywhereElseChecked)) {
-		errors.push('In the bottom ribbon, please specify an anatomical structure or developmental stage or both or check "anywhere else".');
-	}
 	if (hasStructure && !hasDifStructure && !anywhereElseChecked) {
-		errors.push('If you specify a structure in the top ribbon, then you must either specify a structure in the bottom ribbon or check "anywhere else".');
-	}
-	if (hasTS && !hasDifTS && !anywhereElseChecked) {
-		errors.push('If you specify a stage in the top ribbon, then you must either specify a stage in the bottom ribbon or check "anywhere else".');
-	}
-	if (!hasStructure && hasDifStructure) {
-		errors.push('If you specify a structure in the bottom ribbon, then you must also specify a structure in the top ribbon.');
-	}
-	if (!hasTS && hasDifTS) {
-		errors.push('If you specify a stage in the bottom ribbon, then you must also specify a stage in the top ribbon.');
+		error = 'If you specify a structure in the top ribbon, then you must either specify a structure in the bottom ribbon or check "anywhere else".';
+
+	} else if (!hasStructure && hasDifStructure) {
+		error = 'If you specify a structure in the bottom ribbon, then you must also specify a structure in the top ribbon.';
+
+	} else if (hasTS && !hasDifTS && !anywhereElseChecked) {
+		error = 'If you specify a stage in the top ribbon, then you must either specify a stage in the bottom ribbon or check "anywhere else".';
+
+	} else if (!hasTS && hasDifTS) {
+		error = 'If you specify a stage in the bottom ribbon, then you must also specify a stage in the top ribbon.';
+
+	} else if (!(hasStructure || hasTS)) {
+		error = 'In the top ribbon, please specify an anatomical structure or developmental stage or both.';
+
+	} else if (!(hasDifStructure || hasDifTS || anywhereElseChecked)) {
+		error = 'In the bottom ribbon, please specify an anatomical structure or developmental stage or both or check "anywhere else".';
 	}
 
-	console.log('errors = ' + errors);
-	var setVisible = (errors.length > 0);
-	setVisibility('differentialError', setVisible);
-	$('#differentialError').html(errors.join('<br/>'));
+	setVisibility('differentialError', error.length > 0);
+	$('#differentialError').html(error);
 	
-	return setVisible;
+	return error.length > 0;
 };
 
 /* returns false if there are NO validation errors, true if there are some
