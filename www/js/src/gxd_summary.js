@@ -473,6 +473,7 @@ function buildSummary(request,tabState)
 	else
 	{
 		loadDatatable(dataTableInitFunction,request);
+		// not showing a grid, so hide the "nowhere else" message (that applies only to the grids)
 		$('#nowhereElseMessage').hide();
 	}
 }
@@ -500,10 +501,34 @@ function clickNotDetectedFilter(retries) {
 }
 
 // programmatically select the 'Detected' filter, choose the 'No' option, and apply it
-function addNotDetectedFilter(secondCall) {
+function addNotDetectedFilter() {
+	// hide the grid-specific message
 	$('#nowhereElseMessage').css('display', 'none');
+
+	// click to bring up the filter box, then wait for it to appear
 	$('#detectedFilter')[0].click();
 	clickNotDetectedFilter(30);
+}
+
+// check the 'Detected' filter values to see if any are 'No'.  If so, show the given 'message' below
+// the grid
+function showGridMessage(message, request) {
+	$.get('/gxd/facet/detected?' + request,
+		function(response) {
+			var showIt = false;
+			if ('resultFacets' in response) {
+				if (response['resultFacets'].indexOf('No') >= 0) {
+					showIt = true;
+				}
+			}
+			if (showIt) {
+				$('#nowhereElseMessage').html(message);
+				$('#nowhereElseMessage').css('display', 'block');
+			} else {
+				$('#nowhereElseMessage').css('display', 'none');
+			}
+		}
+	);
 }
 
 // if the 'request' includes the 'anywhereElse' checkbox, show the corresponding message div
@@ -516,8 +541,7 @@ function showNowhereElseMessage(request, matrixType) {
 		if ('detectedFilter' in params) {
 			message = "View the <a class='autofilter' onClick='removeNotDetectedFilter(); return false;'>Detected data</a> for this gene set";
 		} 
-		$('#nowhereElseMessage').html(message);
-		$('#nowhereElseMessage').css('display', 'block');
+		showGridMessage(message, request);
 	}
 }
 
@@ -588,7 +612,7 @@ function refreshTabCounts()
 		// resolve the request ID to its appropriate handler
 		if(o.tId==resultsRq.tId) {
 			YAHOO.util.Dom.get("totalResultsCount").innerHTML = o.responseText;
-			// no results = no message
+			// if no results, we don't need the grid-specific message for 'nowhere else' queries
 			if (parseInt(o.responseText) == 0) {
 				$('#nowhereElseMessage').css('display', 'none');
 			}
