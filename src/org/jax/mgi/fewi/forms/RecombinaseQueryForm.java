@@ -11,6 +11,7 @@ public class RecombinaseQueryForm {
 	private String system;
 	private String systemKey;
 	private String structure;
+	private String nowhereElse;
 
 	private String detected;
 	private String notDetected;
@@ -18,6 +19,14 @@ public class RecombinaseQueryForm {
 	private List<String> inducer = new ArrayList<String>();
 	private List<String> systemDetected = new ArrayList<String>();
 	private List<String> systemNotDetected = new ArrayList<String>();
+
+	// nowhere else (checkbox)
+	public String getNowhereElse() {
+		return nowhereElse;
+	}
+	public void setNowhereElse(String nowhereElse) {
+		this.nowhereElse = nowhereElse;
+	}
 
 	// driver
 	public String getDriver() {

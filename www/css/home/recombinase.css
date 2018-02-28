@@ -41,6 +41,11 @@
 	content: ":";
 }
 
+#creForm input[type="checkbox"] {
+	display: inline;
+	margin-left: 20px;
+}
+
 #creForm input[type="text"] {
 	display: block;
 	margin-left: 20px;
