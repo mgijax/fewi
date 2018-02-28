@@ -536,6 +536,9 @@ function showNowhereElseMessage(request, matrixType) {
 	var params = parseRequest(request);
 	var resultCount = YAHOO.util.Dom.get("totalResultsCount").innerHTML;
 
+	// turn the message off by default, and only display it if appropriate
+	$('#nowhereElseMessage').css('display', 'none');
+
 	if (('anywhereElse' in params) && ( (!resultCount || (parseInt(resultCount) > 0)) ) ) {
 		var message = "View the <a class='autofilter' onClick='addNotDetectedFilter(); return false;'>Not Detected data</a> for this gene set";
 		if ('detectedFilter' in params) {
