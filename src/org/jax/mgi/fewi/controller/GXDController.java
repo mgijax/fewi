@@ -1176,6 +1176,7 @@ public class GXDController {
 			@ModelAttribute Paginator page,
 			@RequestParam(value="mapChildrenOf",required=false) String childrenOf,
 			@RequestParam(value="pathToOpen",required=false) List<String> pathsToOpen,
+			@RequestParam(value="alleleID",required=false) String alleleID,
 			HttpSession session) throws CloneNotSupportedException
 			{
 		logger.debug("gxdRecombinaseGridJson() started");
@@ -1292,6 +1293,9 @@ public class GXDController {
 				gpm.setSymbol(cell.getSymbol());
 				gpm.setChildren(cell.getChildren());
 				gpm.setMgiId(cell.getColumnID());		// set allele ID
+				if ( (alleleID != null) && (alleleID.equals(cell.getColumnID())) ) {
+					gpm.setHighlightColumn(true);
+				}
 				gxdMatrixCells.add(gpm);
 				
 				if (cell.getChildren() > 0) {
@@ -1735,7 +1739,8 @@ public class GXDController {
 	@RequestMapping(value="/recombinasegrid/{mrkID}")
 	public ModelAndView gxdGeneRecomGrid(
 			HttpServletRequest request,
-			@PathVariable("mrkID") String mrkID) {
+			@PathVariable("mrkID") String mrkID,
+			@RequestParam(value="alleleID", required=false) String alleleID) {
 
 		logger.debug("->gxdGeneRecomGrid started");
 
@@ -1758,6 +1763,7 @@ public class GXDController {
 		
 		// setup view object
 		mav.addObject("mrkID", mrkID);
+		mav.addObject("alleleID", alleleID);
 		mav.addObject("queryString", request.getQueryString());
 
 		logger.debug("gxdGeneRecomGrid routing to view ");

@@ -1,6 +1,10 @@
 // setup initial query string for requested marker
 var querystring = "markerMgiId=" + mrkID;
 
+if (alleleID != '') {
+	querystring = querystring + "&alleleID=" + alleleID;
+}
+
 // constants
 var LOADING_IMG_SRC = "/fewi/mgi/assets/images/loading.gif";
 var LOADING_IMG = "<img src=\""+LOADING_IMG_SRC+"\" height=\"24\" width=\"24\">";

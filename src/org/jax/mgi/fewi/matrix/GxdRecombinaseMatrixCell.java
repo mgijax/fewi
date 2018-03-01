@@ -15,6 +15,7 @@ public class GxdRecombinaseMatrixCell extends GridDataCell {
 	protected String symbol;				// gene/allele symbol (ID is stored in colid)
 	protected int byRecombinase = 0;		// sequence number for sorting by recombinase
 	protected int ambiguousOrNotDetectedChildren = 0;
+	protected boolean highlightColumn = false;	// should this column be highlighted (in the header)?
 	
 	public GxdRecombinaseMatrixCell(String cellType, String rowId, String colId, boolean isChild) {
 		super("", rowId, colId);
@@ -22,6 +23,14 @@ public class GxdRecombinaseMatrixCell extends GridDataCell {
 		this.isChild = isChild;
 	}
 	
+	public boolean isHighlightColumn() {
+		return highlightColumn;
+	}
+
+	public void setHighlightColumn(boolean highlightColumn) {
+		this.highlightColumn = highlightColumn;
+	}
+
 	protected void addNewGxdCount(String detectionLevel, Integer countToAdd, boolean isChild) {
 		if (countToAdd == null || countToAdd <= 0)
 			countToAdd = 1;

@@ -12,6 +12,7 @@
 <script type="text/javascript">
         var fewiurl = "${configBean.FEWI_URL}";
         var mrkID = "${mrkID}";
+        var alleleID = "${alleleID}";
 </script>
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/external/d3.min.js"></script>
