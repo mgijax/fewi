@@ -12,6 +12,7 @@ public class RecombinaseQueryForm {
 	private String systemKey;
 	private String structure;
 	private String nowhereElse;
+	private String structureOperator;
 
 	private String detected;
 	private String notDetected;
@@ -19,6 +20,14 @@ public class RecombinaseQueryForm {
 	private List<String> inducer = new ArrayList<String>();
 	private List<String> systemDetected = new ArrayList<String>();
 	private List<String> systemNotDetected = new ArrayList<String>();
+
+	// operator for structure search (assayed or detected)
+	public String getStructureOperator() {
+		return structureOperator;
+	}
+	public void setStructureOperator(String structureOperator) {
+		this.structureOperator = structureOperator;
+	}
 
 	// nowhere else (checkbox)
 	public String getNowhereElse() {
