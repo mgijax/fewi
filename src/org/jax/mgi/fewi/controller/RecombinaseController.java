@@ -556,6 +556,10 @@ public class RecombinaseController {
                 Filter.Operator.OP_EQUAL));
         }
 
+        // structure operator (detected vs. assayed) and 'nowhere else' checkbox
+        boolean detectedOperator = "detected".equalsIgnoreCase(query.getStructureOperator());
+        boolean nowhereElse = "true".equalsIgnoreCase(query.getNowhereElse());
+        
         // Structure queries
         String structure = query.getStructure();
 
@@ -574,6 +578,18 @@ public class RecombinaseController {
 				// surround with double quotes to make a solr phrase. added a slop of 100 (longest name is 62 chars)
 				String sToken = "\""+phraseSearch+"\"~100";
 				filterList.add(new Filter(SearchConstants.CRE_STRUCTURE ,sToken,Filter.Operator.OP_HAS_WORD));
+				
+				// nowhere else operator -- search exclusiveStructures field to see if the specified structure is one
+				// that contains ALL the 'detected' results for the particular allele
+				if (nowhereElse) {
+					filterList.add(new Filter(SearchConstants.CRE_EXCLUSIVE_STRUCTURES,sToken,Filter.Operator.OP_HAS_WORD));
+				}
+
+				// structure operator is 'detected', so ensure that we're seeking 'detected' resulst in the
+				// specified structures
+				if (detectedOperator) {
+					filterList.add(new Filter(SearchConstants.CRE_DETECTED, "true", Filter.Operator.OP_HAS_WORD));
+				} 
 			}
         }
 

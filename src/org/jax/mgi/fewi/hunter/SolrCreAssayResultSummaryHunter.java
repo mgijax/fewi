@@ -52,6 +52,8 @@ public class SolrCreAssayResultSummaryHunter extends SolrHunter<RecombinaseEntit
           		new SolrPropertyMapper(CreFields.STRUCTURE_SEARCH));
         propertyMap.put(SearchConstants.CRE_DETECTED,
           		new SolrPropertyMapper(CreFields.DETECTED));
+        propertyMap.put(SearchConstants.CRE_EXCLUSIVE_STRUCTURES,
+          		new SolrPropertyMapper(CreFields.ALL_EXCLUSIVE_STRUCTURES));
 
         // structure key
         propertyMap.put(SearchConstants.STRUCTURE_KEY,
