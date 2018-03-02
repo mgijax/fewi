@@ -130,24 +130,23 @@ function drawMatrixCell(d3Target,cellSize,cell){
 };
 
 
-//function to create / place / show the pheno grid popup
-YAHOO.namespace("phenoGridNS.container");
-function showGridPopup(x,y) {
-	// Instantiate a Panel from markup
-	YAHOO.phenoGridNS.container.panel1 = new YAHOO.widget.Panel("phenoGridPopup", { width:"320px", visible:false, constraintoviewport:true } );
-	YAHOO.phenoGridNS.container.panel1.render();
-	YAHOO.phenoGridNS.container.panel1.moveTo(x, y);
-	YAHOO.phenoGridNS.container.panel1.show();
-}
-
 // handler for the popup
+YAHOO.namespace("phenoGridNS.container");
+window.firstPopup=true;
 function phenoGridPopupHandler(d, i) {
 
 	// generate the popup at location of user click
 	var newX = d3.event.pageX;
 	var newY = d3.event.pageY;
-	showGridPopup(newX, newY);
-	
+
+	if(window.firstPopup){
+		YAHOO.phenoGridNS.container.panel1 = new YAHOO.widget.Panel("phenoGridPopup", { width:"320px", visible:false, constraintoviewport:true } );
+		YAHOO.phenoGridNS.container.panel1.render();
+		window.firstPopup=false;		
+	} 
+	YAHOO.phenoGridNS.container.panel1.moveTo(newX, newY);
+	YAHOO.phenoGridNS.container.panel1.show();
+
 	var popupContents = $( "#phenoGridPopupContents" );
 
 	// gather data needed for popup
@@ -163,6 +162,11 @@ function phenoGridPopupHandler(d, i) {
 		var countAmbResults = data.countAmbResults;
 		var markerId = data.markerId;
 		var symbol = data.symbol;
+		var term = data.term;
+		var termId = data.termId;
+	
+		var resultsURL = fewiurl + "gxd/marker/" + markerId + "?tab=#gxd=" + encodeURIComponent("structureIDFilter=" + termId);
+		var imagesURL = fewiurl + "gxd/marker/" + markerId + "?tab=imagestab#gxd=" + encodeURIComponent("structureIDFilter=" + termId + "&results=25&startIndex=0&sort=&dir=asc&tab=imagestab");
 
 		// generate the small data table
 		var popupHtml = "";
@@ -187,16 +191,17 @@ function phenoGridPopupHandler(d, i) {
 
 		// add the buttons
 		popupHtml +=  "<div id='matrixPopupButtonWrapper' >";
-		popupHtml +=  "<a href='" + fewiurl + "gxd/marker/" + markerId + "?tab=resultstab'><button id='matrixPopupResultsButton'>View These Results</button></a>";
+		popupHtml +=  "<a href='" + resultsURL + "'><button id='matrixPopupResultsButton'>View These Results</button></a>";
+		
 		if (data.hasImage){
-			popupHtml +=  "<a href='" + fewiurl + "gxd/marker/" + markerId + "?tab=imagestab'><button id='matrixPopupImagesButton'>View These Images</button></a>";
+			popupHtml +=  "<a href='" + imagesURL + "'><button id='matrixPopupImagesButton'>View These Images</button></a>";
 		}
 		popupHtml +=  "</div>";
 		popupHtml +=  "</div>";
 
 		// clear and fill the popup
 		popupContents.empty();
-		popupContents.append( "<div class='' style='text-align:center; background-color:#EBCA6D; font-size: 110%; line-height: 2; font-weight: bold; margin-botton:5px;'>" + symbol + " Expression in Mouse</div>" );
+		popupContents.append( "<div class='' style='text-align:center; background-color:#EBCA6D; font-size: 110%; line-height: 2; font-weight: bold; margin-botton:5px;'>" + symbol + " Expression in " + term + "</div>" );
 		popupContents.append(popupHtml);
 	});
 }
