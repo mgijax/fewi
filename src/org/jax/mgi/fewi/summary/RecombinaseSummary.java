@@ -140,7 +140,9 @@ public class RecombinaseSummary {
 
 			String link = fewiUrl + "gxd/recombinasegrid/" + driver.getPrimaryID() + "?alleleID=" + this.allele.getPrimaryID();
 			String image = fewiUrl + "assets/images/gxd_matrix_icon.png";
-			gridLink = "<a href='" + link + "' target='_blank'><img src='" + image + "' class='matrixIcon'/></a>";
+			gridLink = "<a href='" + link + "' target='_blank'><img src='" + image
+				+ "' class='matrixIcon' title='See a matrix showing expression data for mouse "
+				+ driver.getSymbol() + " with its recombinase activity data.'/></a>";
 		}
 		return gridLink;
 	}
