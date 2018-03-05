@@ -81,6 +81,14 @@ border-collapse: collapse;
 	background-color:#EBCA6D;
 	float:right;
 }
+#matrixPopupPhenotypesButton
+{
+	padding: 3px;
+	margin-top: 8px;
+	margin-left: 80px;
+	background-color:#C6D6E8;
+	float:left;
+}
 
 #structStagePopupContents
 {
