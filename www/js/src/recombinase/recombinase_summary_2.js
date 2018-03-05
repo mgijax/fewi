@@ -49,6 +49,10 @@ function main() {
         {key:"driver",
             label:"Driver",
             sortable:true},
+        {key:"gridLink",
+            label:"Matrix<br/>View",
+			sortable:false,
+			width:35},
         {key:"nomenclature",
             label:"Allele Symbol<br/>Gene; Allele Name",
 			sortable:true,
@@ -90,6 +94,7 @@ function main() {
         resultsList: "summaryRows",
         fields: [
 			{key:"driver"},
+			{key:"gridLink"},
 			{key:"nomenclature"},
             {key:"detectedSystems"},
             {key:"notDetectedSystems"},

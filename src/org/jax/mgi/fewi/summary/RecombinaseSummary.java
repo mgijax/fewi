@@ -9,6 +9,7 @@ import java.util.Set;
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.AlleleSynonym;
 import mgi.frontend.datamodel.AlleleSystem;
+import mgi.frontend.datamodel.Marker;
 
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
@@ -126,6 +127,23 @@ public class RecombinaseSummary {
 		String driver = this.allele.getDriver();
     	return driver;
     }
+	
+	/* if we have a mouse driver with expression data and having at least one allele with recombinase
+	 * activity data, then we need to return a link to the recombinase grid
+	 */
+	public String getGridLink() {
+		String gridLink = null;
+		Marker driver = this.allele.getDriverMarker();
+		if ("mouse".equalsIgnoreCase(driver.getOrganism())
+				&& (driver.getCountOfGxdResults() > 0)
+				&& (driver.getCountOfRecombinaseAllelesWithExpressionData() > 0)) {
+
+			String link = fewiUrl + "gxd/recombinasegrid/" + driver.getPrimaryID() + "?alleleID=" + this.allele.getPrimaryID();
+			String image = fewiUrl + "assets/images/gxd_matrix_icon.png";
+			gridLink = "<a href='" + link + "' target='_blank'><img src='" + image + "' class='matrixIcon'/></a>";
+		}
+		return gridLink;
+	}
 
     public String getImsrCount()
     {
