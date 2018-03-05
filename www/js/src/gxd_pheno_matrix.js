@@ -6,6 +6,16 @@ var LOADING_IMG_SRC = "/fewi/mgi/assets/images/loading.gif";
 var LOADING_IMG = "<img src=\""+LOADING_IMG_SRC+"\" height=\"24\" width=\"24\">";
 var SHOW_MATRIX_LEGENDS = false;
 
+// convert MGI superscript notation <...> to HTML superscript tags
+var findTag = function(c, s) {
+      if (s.indexOf(c) < 0) { return c; }
+      return findTag(c + c[0], s);
+};
+var superscript = function(s) {
+  var openTag = findTag('{', s);
+      return s.split('<').join(openTag).split('>').join('</sup>').split(openTag).join('<sup>');
+};
+
 
 // TODO - remove this if filters aren't needed;  refactor calls to this function 
 function getQueryStringWithFilters() {
@@ -130,75 +140,117 @@ function drawMatrixCell(d3Target,cellSize,cell){
 };
 
 
-//function to create / place / show the pheno grid popup
-YAHOO.namespace("phenoGridNS.container");
-function showGridPopup(x,y) {
-	// Instantiate a Panel from markup
-	YAHOO.phenoGridNS.container.panel1 = new YAHOO.widget.Panel("phenoGridPopup", { width:"320px", visible:false, constraintoviewport:true } );
-	YAHOO.phenoGridNS.container.panel1.render();
-	YAHOO.phenoGridNS.container.panel1.moveTo(x, y);
-	YAHOO.phenoGridNS.container.panel1.show();
-}
-
 // handler for the popup
+YAHOO.namespace("phenoGridNS.container");
+window.firstPopup=true;
 function phenoGridPopupHandler(d, i) {
 
 	// generate the popup at location of user click
 	var newX = d3.event.pageX;
 	var newY = d3.event.pageY;
-	showGridPopup(newX, newY);
-	
+
+	if(window.firstPopup){
+		YAHOO.phenoGridNS.container.panel1 = new YAHOO.widget.Panel("phenoGridPopup", { width:"320px", visible:false, constraintoviewport:true } );
+		YAHOO.phenoGridNS.container.panel1.render();
+		window.firstPopup=false;		
+	} 
+	YAHOO.phenoGridNS.container.panel1.moveTo(newX, newY);
+	YAHOO.phenoGridNS.container.panel1.show();
+
 	var popupContents = $( "#phenoGridPopupContents" );
 
-	// gather data needed for popup
-	var querystringWithFilters = getQueryStringWithFilters();
-	var requestUrl = fewiurl + "gxd/phenogridPopup/json?" + querystringWithFilters
-		+ "&rowId=" + d.termId
-		+ "&colId=" + d.cid;
+	if (d.cellType=='GXD') {
 
-	// gather values for popup
-	$.getJSON(requestUrl, function(data){
-		var countPosResults = data.countPosResults;
-		var countNegResults = data.countNegResults;
-		var countAmbResults = data.countAmbResults;
-		var markerId = data.markerId;
-		var symbol = data.symbol;
-
-		// generate the small data table
-		var popupHtml = "";
-		popupHtml +=  "<div class='' style='margin-bottom:5px;'><table id='stagePopupTable' style=''>";
-		popupHtml +=  "<div style='height:5px;'></div>";
-		if (countPosResults > 0 || countNegResults > 0 || countAmbResults > 0) {
-			popupHtml +=  "<tr><th>Detected?</th><th># of Results</th></tr>";
-			if (countPosResults > 0) {
-				popupHtml +=  "<tr><td>Yes</td><td>" + countPosResults + "</td></tr>";
+		// gather data needed for popup
+		var querystringWithFilters = getQueryStringWithFilters();
+		var requestUrl = fewiurl + "gxd/phenogridPopup/json?" + querystringWithFilters
+			+ "&rowId=" + d.termId
+			+ "&colId=" + d.cid;
+		
+		// gather values for popup
+		$.getJSON(requestUrl, function(data){
+			var countPosResults = data.countPosResults;
+			var countNegResults = data.countNegResults;
+			var countAmbResults = data.countAmbResults;
+			var markerId = data.markerId;
+			var symbol = data.symbol;
+			var term = data.term;
+			var termId = data.termId;
+		
+			var resultsURL = fewiurl + "gxd/marker/" + markerId + "?tab=#gxd=" + encodeURIComponent("structureIDFilter=" + termId);
+			var imagesURL = fewiurl + "gxd/marker/" + markerId + "?tab=imagestab#gxd=" + encodeURIComponent("structureIDFilter=" + termId + "&results=25&startIndex=0&sort=&dir=asc&tab=imagestab");
+	
+			// generate the small data table
+			var popupHtml = "";
+			popupHtml +=  "<div class='' style='margin-bottom:5px;'><table id='stagePopupTable' style=''>";
+			popupHtml +=  "<div style='height:5px;'></div>";
+			if (countPosResults > 0 || countNegResults > 0 || countAmbResults > 0) {
+				popupHtml +=  "<tr><th>Detected?</th><th># of Results</th></tr>";
+				if (countPosResults > 0) {
+					popupHtml +=  "<tr><td>Yes</td><td>" + countPosResults + "</td></tr>";
+				}
+				if (countNegResults > 0) {
+					popupHtml +=  "<tr><td>No</td><td>" + countNegResults + "</td></tr>";
+				}
+				if (countAmbResults > 0) {
+					popupHtml +=  "<tr><td>Ambiguous</td><td>" + countAmbResults + "</td></tr>";
+				}
+				popupHtml +=  "</table>";
 			}
-			if (countNegResults > 0) {
-				popupHtml +=  "<tr><td>No</td><td>" + countNegResults + "</td></tr>";
+			else {
+				popupHtml +=  "<div style='height:4em; padding:5px;'>Absent or ambiguous results are in substructures.</div>";
 			}
-			if (countAmbResults > 0) {
-				popupHtml +=  "<tr><td>Ambiguous</td><td>" + countAmbResults + "</td></tr>";
+	
+			// add the buttons
+			popupHtml +=  "<div id='matrixPopupButtonWrapper' >";
+			popupHtml +=  "<a href='" + resultsURL + "'><button id='matrixPopupResultsButton'>View These Results</button></a>";
+			
+			if (data.hasImage){
+				popupHtml +=  "<a href='" + imagesURL + "'><button id='matrixPopupImagesButton'>View These Images</button></a>";
 			}
-			popupHtml +=  "</table>";
-		}
-		else {
-			popupHtml +=  "<div style='height:4em; padding:5px;'>Absent or ambiguous results are in substructures.</div>";
-		}
+			popupHtml +=  "</div>";
+			popupHtml +=  "</div>";
+	
+			// clear and fill the popup
+			popupContents.empty();
+			popupContents.append( "<div class='' style='text-align:center; background-color:#EBCA6D; font-size: 110%; line-height: 2; font-weight: bold; margin-botton:5px;'>" + symbol + " Expression in " + term + "</div>" );
+			popupContents.append(popupHtml);
+		});
+	}
+	else {  // we have a pheno cell
 
-		// add the buttons
-		popupHtml +=  "<div id='matrixPopupButtonWrapper' >";
-		popupHtml +=  "<a href='" + fewiurl + "gxd/marker/" + markerId + "?tab=resultstab'><button id='matrixPopupResultsButton'>View These Results</button></a>";
-		if (data.hasImage){
-			popupHtml +=  "<a href='" + fewiurl + "gxd/marker/" + markerId + "?tab=imagestab'><button id='matrixPopupImagesButton'>View These Images</button></a>";
-		}
-		popupHtml +=  "</div>";
-		popupHtml +=  "</div>";
+		// gather data needed for popup
+		var querystringWithFilters = getQueryStringWithFilters();
+		var requestUrl = fewiurl + "gxd/phenogridPopup/json?" + querystringWithFilters
+			+ "&rowId=" + d.termId
+			+ "&colId=" + d.cid
+			+ "&genoclusterKey=" + d.genoclusterKey;
+		
+		// gather values for popup
+		$.getJSON(requestUrl, function(data){
+			var alleles = data.alleles;
+			var genoclusterLink = data.genoclusterLink;
+			var term = data.term;
+	
+			// generate the small data table
+			var popupHtml = "";
+			popupHtml +=  "<div class='' style='margin-bottom:5px;'><table id='stagePopupTable' style=''>";
+			popupHtml +=  "<div style='height:5px;'></div>";
 
-		// clear and fill the popup
-		popupContents.empty();
-		popupContents.append( "<div class='' style='text-align:center; background-color:#EBCA6D; font-size: 110%; line-height: 2; font-weight: bold; margin-botton:5px;'>" + symbol + " Expression in Mouse</div>" );
-		popupContents.append(popupHtml);
-	});
+			// add the buttons
+			popupHtml +=  "<div id='matrixPopupButtonWrapper' >";
+			popupHtml +=  "<a href='" + genoclusterLink + "'><button id='matrixPopupPhenotypesButton'>View Phenotype Details</button></a>";
+		
+			popupHtml +=  "</div>";
+			popupHtml +=  "</div>";
+	
+			// clear and fill the popup
+			popupContents.empty();
+			popupContents.append( "<div class='' style='text-align:center; background-color:#C6D6E8; font-size: 110%; line-height: 2; font-weight: bold; margin-botton:5px;'>" + superscript(alleles) + " phenotypes in " + term + "</div>" );
+			popupContents.append(popupHtml);
+		});
+
+	}
 }
 
 
