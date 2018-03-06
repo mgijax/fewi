@@ -279,6 +279,12 @@ window.PhenoMatrixRender = new function()
 	    	.attr("x", 0)
 	    	.attr("y",cellSize-labelPaddingBottom)
 	    	.text(function(d){ return d.colDisplay;})
+	    	.style("fill",function(d){ 
+	    		var isHighlightCol = d.highlightColumn;
+	    		if (isHighlightCol) {
+	    			return "#49648B";
+	    			}
+	    		return "#000000"})
 	    	.style("font-size","12px")
 	    	.style("font-weight","bold");
 	};
