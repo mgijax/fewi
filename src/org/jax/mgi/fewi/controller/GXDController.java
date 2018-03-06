@@ -1344,6 +1344,7 @@ public class GXDController {
 			@ModelAttribute Paginator page,
 			@RequestParam(value="mapChildrenOf",required=false) String childrenOf,
 			@RequestParam(value="pathToOpen",required=false) List<String> pathsToOpen,
+			@RequestParam(value="genoclusterKey",required=false) String genoclusterKey,
 			HttpSession session) throws CloneNotSupportedException
 			{
 		logger.debug("gxdPhenoGridJson() started");
@@ -1372,7 +1373,7 @@ public class GXDController {
 		// pull in phenotype cells for the marker/childrenOf pair
 		List<SolrMPCorrelationMatrixCell> mpCells = null;
 		if ((query.getMarkerMgiId() != null) && !"".equals(query.getMarkerMgiId().trim())) {
-			mpCells = this.getMPCells(query.getMarkerMgiId(), childrenOf);
+			mpCells = this.getMPCells(query.getMarkerMgiId(), childrenOf, genoclusterKey);
 			logger.info("Got " + mpCells.size() + " MP cells");
 		}
 		
@@ -1511,7 +1512,7 @@ public class GXDController {
 	/* Get a list of MP cells for a correlation matrix for the given marker.  If non-null childrenOf
 	 * will specify a single EMAPA ID whose child rows we want to retrieve.  Assumes markerID is not null.
 	 */
-	private List<SolrMPCorrelationMatrixCell> getMPCells (String markerID, String childrenOf) {
+	private List<SolrMPCorrelationMatrixCell> getMPCells (String markerID, String childrenOf, String genoclusterKey) {
 		List<Filter> queryFilters = new ArrayList<Filter>();
 		Filter markerIDFilter = new Filter(SearchConstants.CM_MARKER_ID, markerID);
 		queryFilters.add(markerIDFilter);
@@ -1536,6 +1537,11 @@ public class GXDController {
 			queryFilters.add(Filter.or(termFilters));
 		}
 
+		// if we need to restrict the values to a single column (a single genocluster), do so
+		if ((genoclusterKey != null) && (genoclusterKey.trim().length() > 0)) {
+			queryFilters.add(new Filter(SearchConstants.GENOCLUSTER_KEY, genoclusterKey));
+		}
+		
 		SearchParams params = new SearchParams();
 		params.setPaginator(new Paginator(100000));
 		params.setFilter(Filter.and(queryFilters));
@@ -1704,7 +1710,8 @@ public class GXDController {
 	@RequestMapping(value="/phenogrid/{mrkID}")
 	public ModelAndView gxdPhenoGrid(
 			HttpServletRequest request,
-			@PathVariable("mrkID") String mrkID) {
+			@PathVariable("mrkID") String mrkID,
+			@RequestParam(value="genoclusterKey", required=false) String genoclusterKey) {
 
 		logger.debug("->gxdPhenoGrid started");
 
@@ -1727,6 +1734,7 @@ public class GXDController {
 		
 		// setup view object
 		mav.addObject("mrkID", mrkID);
+		mav.addObject("genoclusterKey", genoclusterKey);
 		mav.addObject("queryString", request.getQueryString());
 
 		logger.debug("gxdPhenoGrid routing to view ");
