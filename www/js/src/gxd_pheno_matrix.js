@@ -146,6 +146,10 @@ function drawMatrixCell(d3Target,cellSize,cell){
 	return g;
 };
 
+// if a genoclusterKey field is specified in the 'url', remove it
+function stripGenoclusterKey(url) {
+	return url.replace(/&genoclusterKey=[0-9]+/, '');
+}
 
 // handler for the popup
 YAHOO.namespace("phenoGridNS.container");
@@ -226,9 +230,10 @@ function phenoGridPopupHandler(d, i) {
 	}
 	else {  // we have a pheno cell
 
-		// gather data needed for popup
+		// gather data needed for popup -- If we came from a genocluster detail page, the querystring will have
+		// that genocluster key; we need to remove that before adding the genocluster key for the cell clicked.
 		var querystringWithFilters = getQueryStringWithFilters();
-		var requestUrl = fewiurl + "gxd/phenogridPopup/json?" + querystringWithFilters
+		var requestUrl = fewiurl + "gxd/phenogridPopup/json?" + stripGenoclusterKey(querystringWithFilters)
 			+ "&rowId=" + d.termId
 			+ "&colId=" + d.cid
 			+ "&genoclusterKey=" + d.genoclusterKey;
