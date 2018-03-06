@@ -1,5 +1,8 @@
 // setup initial query string for requested marker
 var querystring = "markerMgiId=" + mrkID;
+if ((genoclusterKey != null) && (genoclusterKey.trim().length > 0)) {
+	querystring = querystring + "&genoclusterKey=" + genoclusterKey;
+}
 
 // constants
 var LOADING_IMG_SRC = "/fewi/mgi/assets/images/loading.gif";

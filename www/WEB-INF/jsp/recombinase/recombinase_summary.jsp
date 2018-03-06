@@ -52,6 +52,9 @@
 	margin-left: 4px;
 	font-size: 10px;
 }
+.matrixIcon {
+	width: 25px;
+}
 </style>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
