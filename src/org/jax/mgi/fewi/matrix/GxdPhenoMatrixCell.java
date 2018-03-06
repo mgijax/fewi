@@ -19,9 +19,8 @@ public class GxdPhenoMatrixCell extends GridDataCell {
 	protected int byGenocluster = 0;		// sequence number for sorting by genocluster
 	private int isNormal = 0;					// do all MP annotations in this cell have a "normal" qualifier (1) or not (0)?
 	private int hasBackgroundSensitivity = 0;	// is at least 1 MP annotation in this cell flagged for background sensitivity?
+	protected boolean highlightColumn = false;	// should this column be highlighted (in the header)?
 	
-	// TODO: need to figure out how to handle expression vs. phenotype cells -- constructors?  setters?
-
 	public GxdPhenoMatrixCell(String cellType, String rowId, String colId, boolean isChild) {
 		super("", rowId, colId);
 		this.cellType = cellType;
@@ -42,6 +41,14 @@ public class GxdPhenoMatrixCell extends GridDataCell {
 
 	public void aggregateGxd(String detectionLevel, Integer countToAdd, boolean isChild) {
 		addNewGxdCount(detectionLevel, countToAdd, isChild);
+	}
+
+	public boolean isHighlightColumn() {
+		return highlightColumn;
+	}
+
+	public void setHighlightColumn(boolean highlightColumn) {
+		this.highlightColumn = highlightColumn;
 	}
 
 	public String getMarkerId() {
