@@ -422,7 +422,7 @@ function SGData(config)
     	_self.rows[cell.ri]._d=true;
 
         // make sure column is unique
-        cell.ci = _self.addColumn({cid:cell.cid, colDisplay: cell.colDisplay});
+        cell.ci = _self.addColumn({cid:cell.cid, colDisplay: cell.colDisplay, highlightColumn: cell.highlightColumn});
 
         // set master lookup with row/col indices
         _self.registerCell(cell);

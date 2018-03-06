@@ -15,8 +15,12 @@ var findTag = function(c, s) {
       return findTag(c + c[0], s);
 };
 var superscript = function(s) {
-  var openTag = findTag('{', s);
-      return s.split('<').join(openTag).split('>').join('</sup>').split(openTag).join('<sup>');
+	//var s = s.replace("<br/>", "LINE_BREAK");
+	var s = s.split("<br/>").join("LINE_BREAK")
+	var openTag = findTag('{', s);
+	s = s.split('<').join(openTag).split('>').join('</sup>').split(openTag).join('<sup>');
+	s = s.split("LINE_BREAK").join("<br/>")
+	return s;
 };
 
 
@@ -249,7 +253,7 @@ function phenoGridPopupHandler(d, i) {
 	
 			// clear and fill the popup
 			popupContents.empty();
-			popupContents.append( "<div class='' style='text-align:center; background-color:#C6D6E8; font-size: 110%; line-height: 2; font-weight: bold; margin-botton:5px;'>" + superscript(alleles) + " phenotypes in " + term + "</div>" );
+			popupContents.append( "<div class='' style='text-align:center; background-color:#C6D6E8; font-size: 110%; line-height: 2; font-weight: bold; margin-botton:5px;'>" + superscript(alleles) + "<br/>phenotypes in " + term + "</div>" );
 			popupContents.append(popupHtml);
 		});
 
