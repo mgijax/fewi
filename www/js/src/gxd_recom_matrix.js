@@ -107,13 +107,18 @@ window.GeneRecomMatrixRender = new function()
 	    	.text(function(d){ 
 	    		return d.colDisplay;})
 	    	.style("fill",function(d){ 
-	    		var isHighlightCol = d.highlightColumn;
-	    		if (isHighlightCol) {
-	    			return "#49648B";
+	    		//var isHighlightCol = d.highlightColumn;
+	    		if (d.highlightColumn) {
+	    			return "#0000FF";
 	    			}
 	    		return "#000000"})
-			.style("font-size","12px")
-	    	.style("font-weight","bold");
+	    	.style("font-size",function(d){ 
+	    		//var isHighlightCol = d.highlightColumn;
+	    		if (d.highlightColumn) {
+	    			return "14px";
+	    			}
+	    		return "12px"})
+	    	.style("font-weight","700");
 	};
 }
 
