@@ -1024,6 +1024,7 @@ public class GXDController {
 		// to do the basic retrieval.  If column 0 is desired, that's our indicator.
 		if (colId.equals("0")) {
 			// then get the relevant cell from the existing endpoint and convert it to a popup for this endpoint
+			query.setWildtypeFilter(Arrays.asList("wild type"));
 			PhenoMatrixPopup popup = new PhenoMatrixPopup(gxdGeneMatrixPopupJson(session, request, query, rowId, marker.getSymbol())); 
 			popup.setSymbol(marker.getSymbol());
 			popup.setMarkerId(marker.getPrimaryID());
