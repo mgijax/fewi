@@ -132,9 +132,10 @@ public class RecombinaseSummary {
 	 * activity data, then we need to return a link to the recombinase grid
 	 */
 	public String getGridLink() {
-		String gridLink = null;
+		String gridLink = "";
 		Marker driver = this.allele.getDriverMarker();
-		if ("mouse".equalsIgnoreCase(driver.getOrganism())
+		if (driver != null 
+				&& "mouse".equalsIgnoreCase(driver.getOrganism())
 				&& (driver.getCountOfGxdResults() > 0)
 				&& (driver.getCountOfRecombinaseAllelesWithExpressionData() > 0)) {
 
