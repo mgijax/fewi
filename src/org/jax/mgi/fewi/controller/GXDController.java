@@ -55,6 +55,7 @@ import org.jax.mgi.fewi.matrix.GxdStageGridJsonResponse;
 import org.jax.mgi.fewi.matrix.GxdStageMatrixMapper;
 import org.jax.mgi.fewi.matrix.GxdStageMatrixPopup;
 import org.jax.mgi.fewi.matrix.PhenoMatrixPopup;
+import org.jax.mgi.fewi.matrix.RecombinaseMatrixPopup;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
@@ -1060,6 +1061,73 @@ public class GXDController {
 		return phenoMatrixPopup;
 	}
 
+	/* handle request for JSON data from the expression x recombinase grid.  Cells can be either for expression
+	 * data (for a marker, indicated by colId = 0) or recombinase data (for an allele, indicated by colId > 0).
+	 */
+	@RequestMapping("/recombinasegridPopup/json")
+	public @ResponseBody RecombinaseMatrixPopup recombinaseMatrixPopupJson(
+			HttpSession session,
+			HttpServletRequest request,
+			@ModelAttribute GxdQueryForm query,
+			@RequestParam(value="rowId") String rowId,
+			@RequestParam(value="colId") String colId,
+			@RequestParam(value="alleleId", required=false) String alleleId
+			) {
+		logger.debug("recombinaseMatrixPopupJson() started");
+		logger.info("mgiMarkerId: " + query.getMarkerMgiId());
+		logger.info("alleleId: " + alleleId);
+		logger.info("colId: " + colId);
+		logger.info("rowId: " + rowId);
+		
+		// find the requested marker, so we can get the symbol
+		List<Marker> markerList = markerFinder.getMarkerByPrimaryId(query.getMarkerMgiId());
+		Marker marker = markerList.get(0); 
+
+		Allele allele = null;
+		if ((alleleId != null) && (alleleId.trim().length() > 0)) {
+			List<Allele> alleleList = alleleFinder.getAlleleByID(alleleId);
+			allele = alleleList.get(0);
+		}
+		
+		// If we are seeking wild-type expression data for the gene, use the existing gene grid's method
+		// to do the basic retrieval.  If column 0 is desired, that's our indicator.
+		if (colId.equals("0")) {
+			// then get the relevant cell from the existing endpoint and convert it to a popup for this endpoint
+			query.setWildtypeFilter(Arrays.asList("wild type"));
+			RecombinaseMatrixPopup popup = new RecombinaseMatrixPopup(gxdGeneMatrixPopupJson(session, request, query, rowId, marker.getSymbol())); 
+			popup.setSymbol(marker.getSymbol());
+			popup.setMarkerId(marker.getPrimaryID());
+			return popup;
+		}
+		
+		// If we got here, we're instead looking for a popup for a recombinase cell.
+
+		// find the requested structure
+		List<VocabTerm> structureList = vocabFinder.getTermByID(rowId.trim());
+		VocabTerm structure = structureList.get(0);
+
+		// the object to return as a JSON object
+		RecombinaseMatrixPopup matrixPopup = new RecombinaseMatrixPopup(structure.getPrimaryID(), structure.getTerm());
+		matrixPopup.setSymbol(marker.getSymbol());
+
+		// build data for this for the marker/structure/allele trio
+		if ((query.getMarkerMgiId() != null) && !"".equals(query.getMarkerMgiId().trim())) {
+			String fewiURL = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+
+			SolrRecombinaseMatrixCell solrCell = this.getRecombinaseCell(marker.getPrimaryID(), rowId, alleleId);
+			matrixPopup.setCountNegResults(solrCell.getNotDetectedResults());
+			matrixPopup.setCountAmbResults(solrCell.getAnyAmbiguous());
+			matrixPopup.setCountPosResults(solrCell.getDetectedResults());
+
+			if (allele != null) {
+				matrixPopup.setAllele(allele.getSymbol());
+				matrixPopup.setAlleleLink(fewiURL + "allele/" + allele.getPrimaryID() + "?recomRibbon=open");
+			}
+		}
+		
+		return matrixPopup;
+	}
+
 	@RequestMapping("/stagegrid/json")
 	public @ResponseBody GxdStageGridJsonResponse<GxdMatrixCell> gxdStageGridJson(
 			HttpServletRequest request,
@@ -1514,6 +1582,32 @@ public class GXDController {
 
 		SearchResults<SolrRecombinaseMatrixCell> searchResults = recombinaseMatrixCellFinder.getCells(params);
 		return searchResults.getResultObjects();
+	}
+	
+	// Retrieve the data for a single recombinase cell in an expression x recombinase activity matrix.
+	private SolrRecombinaseMatrixCell getRecombinaseCell(String markerID, String anatomyID, String alleleID) {
+		List<Filter> queryFilters = new ArrayList<Filter>();
+		if ((markerID != null) && (markerID.trim().length() > 0)) {
+			queryFilters.add(new Filter(SearchConstants.CM_MARKER_ID, markerID));
+		}
+		if ((anatomyID != null) && (anatomyID.trim().length() > 0)) {
+			queryFilters.add(new Filter(SearchConstants.ANATOMY_ID, anatomyID));
+		}
+		if ((alleleID != null) && (alleleID.trim().length() > 0)) {
+			queryFilters.add(new Filter(SearchConstants.COLUMN_ID, alleleID));
+		}
+		
+		SearchParams params = new SearchParams();
+		params.setPaginator(new Paginator(100000));
+		params.setFilter(Filter.and(queryFilters));
+
+		SearchResults<SolrRecombinaseMatrixCell> searchResults = recombinaseMatrixCellFinder.getCells(params);
+		if (searchResults.getTotalCount() > 1) {
+			logger.error("getRecombinaseCell(" + markerID + "," + anatomyID + "," + alleleID + ") expected 1 cell, got " + searchResults.getTotalCount());
+		} else if (searchResults.getTotalCount() == 0) {
+			return null;
+		}
+		return searchResults.getResultObjects().get(0);
 	}
 
 	/* Get a list of MP cells for a correlation matrix for the given marker.  If non-null childrenOf
