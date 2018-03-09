@@ -1345,6 +1345,7 @@ public class GXDController {
 		if ((query.getMarkerMgiId() != null) && (query.getMarkerMgiId().trim().length() > 0)) {
 			for (GxdRecombinaseMatrixCell cell : gxdMatrixCells) {
 				cell.setMgiId(query.getMarkerMgiId());
+				cell.setSymbol(cell.getSymbol() + " - gene expression");
 			}
 		}
 
@@ -1498,6 +1499,7 @@ public class GXDController {
 		if ((query.getMarkerMgiId() != null) && (query.getMarkerMgiId().trim().length() > 0)) {
 			for (GxdPhenoMatrixCell cell : gxdMatrixCells) {
 				cell.setMarkerId(query.getMarkerMgiId());
+				cell.setSymbol(cell.getSymbol() + " - gene expression");
 			}
 		}
 
