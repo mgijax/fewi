@@ -193,6 +193,10 @@ border-collapse: collapse;
     stroke: black !important;
     stroke-width: 4px !important;
 }
+#geneRecomGridTarget line.col.col0 {
+    stroke: black !important;
+    stroke-width: 4px !important;
+}
 #phenoGridTarget .phenoBlue1 {
 	fill: #C6D6E8;
 }
