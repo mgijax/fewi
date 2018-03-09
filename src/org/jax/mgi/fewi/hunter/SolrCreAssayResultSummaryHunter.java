@@ -99,6 +99,8 @@ public class SolrCreAssayResultSummaryHunter extends SolrHunter<RecombinaseEntit
         sortMap.put(SortConstants.CRE_BY_SEX, new SolrSortMapper(CreFields.BY_SEX));
         sortMap.put(SortConstants.CRE_BY_SPECIMEN_NOTE, new SolrSortMapper(CreFields.BY_SPECIMEN_NOTE));
         sortMap.put(SortConstants.CRE_BY_RESULT_NOTE, new SolrSortMapper(CreFields.BY_RESULT_NOTE));
+        sortMap.put(SortConstants.CRE_BY_DETECTED, new SolrSortMapper(CreFields.BY_DETECTED));
+        sortMap.put(SortConstants.CRE_BY_NOT_DETECTED, new SolrSortMapper(CreFields.BY_NOT_DETECTED));
 
         /*
          * Setup the property map.  This maps from the properties of the incoming

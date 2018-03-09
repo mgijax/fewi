@@ -42,6 +42,8 @@ public class SortConstants {
 	public static final String CRE_BY_SEX                       = "bySex";
 	public static final String CRE_BY_SPECIMEN_NOTE             = "bySpecimenNote";
 	public static final String CRE_BY_RESULT_NOTE               = "byResultNote";
+	public static final String CRE_BY_DETECTED					= "detectedSystems";
+	public static final String CRE_BY_NOT_DETECTED				= "notDetectedSystems";
 
     // Default sort
 	public static final String BY_DEFAULT						= "byDefaultSort";
