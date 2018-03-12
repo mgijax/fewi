@@ -2154,6 +2154,8 @@ function SuperGrid(config)
 		if(_self.verticalColumnLabels)
 		{
 			_self.colGroup.selectAll(".colText text").attr("y",verticalHeight);
+			_self.colGroup.selectAll(".colText rect").attr("y",verticalHeight - 10);
+			_self.colGroup.selectAll(".colText rect").attr("width", verticalHeight)
 
 			// adjust the rotate origin
 			_self.colGroup.selectAll(".colLine").each(function(d,i){

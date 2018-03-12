@@ -258,7 +258,7 @@ function phenoGridPopupHandler(d, i) {
 	
 			// clear and fill the popup
 			popupContents.empty();
-			popupContents.append( "<div class='' style='text-align:center; background-color:#C6D6E8; font-size: 110%; line-height: 2; font-weight: bold; margin-botton:5px;'>" + superscript(alleles) + "<br/>phenotypes in " + term + "</div>" );
+			popupContents.append( "<div class='' style='overflow-wrap: break-word; word-wrap: break-word; text-align:center; background-color:#C6D6E8; font-size: 110%; line-height: 2; font-weight: bold; margin-botton:5px;'>" + superscript(alleles) + "<br/>phenotypes in " + term + "</div>" );
 			popupContents.append(popupHtml);
 		});
 
