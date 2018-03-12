@@ -100,8 +100,22 @@ window.GeneRecomMatrixRender = new function()
 	{
 		var labelPaddingLeft = 4;
 		var labelPaddingBottom = 4;
-	
-		return  d3Target.append("text")
+
+		d3Target.append("rect")
+		.attr("x", 2)
+		.attr("y", cellSize-labelPaddingBottom)
+		.attr("width", 150)
+		.attr("height", 14)
+		//.attr("fill", "red");
+		.attr("fill",function(d){ 
+   		var isHighlightCol = d.highlightColumn;
+    		if (isHighlightCol) {
+    			return "yellow";
+    			}
+    		return "transparent"})
+		
+		
+		d3Target.append("text")
 	    	.attr("x", 0)
 	    	.attr("y",cellSize-labelPaddingBottom)
 	    	.text(function(d){ 
@@ -119,6 +133,8 @@ window.GeneRecomMatrixRender = new function()
 	    			}
 	    		return "12px"})
 	    	.style("font-weight","700");
+		
+		return  d3Target
 	};
 }
 
