@@ -124,7 +124,7 @@
 						<li>
 							<div class="label">Note</div>
 							<div class="value">
-								<fewi:super value="${probe.probeNote}"/>
+								${probe.probeNote}
 							</div>
 						</li>
 					</c:if>
