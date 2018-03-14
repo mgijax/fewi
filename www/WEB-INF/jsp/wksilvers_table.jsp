@@ -37,8 +37,8 @@ tbody tr:nth-child(odd) {
 	<c:forEach var="marker" items="${markers}">
 	  <tr>
 	  	<td><a href="${configBean.WKSILVERS_URL}${marker.silversUrlFragment}"><fewi:super value="${marker.silversSymbol}"/></a></td>
-	  	<td><a href="${configBean.FEWI_URL}marker/${marker.markerID}"><fewi:super value="${marker.markerSymbol}"/></a></td>
-	  	<td><a href="${configBean.FEWI_URL}allele/summary?markerId=${marker.markerID}"><fewi:super value="${marker.markerSymbol}"/> allele(s)</a></td>
+	  	<td><a href="${configBean.FEWI_URL}marker/${marker.markerID}" target="_blank"><fewi:super value="${marker.markerSymbol}"/></a></td>
+	  	<td><a href="${configBean.FEWI_URL}allele/summary?markerId=${marker.markerID}" target="_blank"><fewi:super value="${marker.markerSymbol}"/> allele(s)</a></td>
 	  </tr>
 	</c:forEach>
 </table>
