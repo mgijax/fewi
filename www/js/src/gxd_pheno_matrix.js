@@ -188,7 +188,7 @@ function phenoGridPopupHandler(d, i) {
 			var term = data.term;
 			var termId = data.termId;
 		
-			var resultsURL = fewiurl + "gxd/marker/" + markerId + "?tab=#gxd=" + encodeURIComponent("structureIDFilter=" + termId + "&wildtypeFilter=wild type");
+			var resultsURL = fewiurl + "gxd/marker/" + markerId + "?tab=#gxd=" + encodeURIComponent("markerMgiId=" + markerId + "&structureIDFilter=" + termId + "&wildtypeFilter=wild type");
 			var imagesURL = fewiurl + "gxd/marker/" + markerId + "?tab=imagestab#gxd=" + encodeURIComponent("structureIDFilter=" + termId + "&results=25&startIndex=0&sort=&dir=asc&tab=imagestab");
 	
 			// generate the small data table
@@ -362,12 +362,47 @@ var phenoSuperGrid = function()
 
 phenoSuperGrid();
 
-
-//popup for structure matrix legend
-window.structMatrixLegendPopupPanel = new YAHOO.widget.Panel("structLegendPopupPanel",
+//popup for gene matrix legend
+window.geneMatrixLegendPopupPanel = new YAHOO.widget.Panel("geneLegendPopupPanel",
 		{ width:"260px", visible:false, constraintoviewport:true,
 			context:['tabSummaryContent', 'tl', 'tr',['beforeShow','windowResize']]
 });
-window.structMatrixLegendPopupPanel.render();
+window.geneMatrixLegendPopupPanel.render();
+window.geneMatrixLegendPopupPanel.show();
+
+
+YAHOO.phenoGridNS.container.panel1 = new YAHOO.widget.Panel("phenoGridPopup", { width:"320px", visible:false, constraintoviewport:true } );
+YAHOO.phenoGridNS.container.panel1.render();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
