@@ -128,7 +128,7 @@ function recomGridPopupHandler(d, i) {
 			var term = data.term;
 			var termId = data.termId;
 		
-			var resultsURL = fewiurl + "gxd/marker/" + markerId + "?tab=#gxd=" + encodeURIComponent("structureIDFilter=" + termId + "&wildtypeFilter=wild type");
+			var resultsURL = fewiurl + "gxd/marker/" + markerId + "?tab=#gxd=" + encodeURIComponent("markerMgiId=" + markerId + "&structureIDFilter=" + termId + "&wildtypeFilter=wild type");
 			var imagesURL = fewiurl + "gxd/marker/" + markerId + "?tab=imagestab#gxd=" + encodeURIComponent("structureIDFilter=" + termId + "&results=25&startIndex=0&sort=&dir=asc&tab=imagestab");
 	
 			// generate the small data table

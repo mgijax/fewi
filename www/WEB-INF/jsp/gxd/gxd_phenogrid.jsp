@@ -52,6 +52,10 @@
   <div id="phenoGridPopupContents"></div>
 </div>
 
+<!-- Gene/Pheno grid legend injected into this element -->
+<div id="geneLegendPopupPanel" style="visibility: hidden;" class="facetFilter">
+  <jsp:include page="gxd_legend_popup.jsp"></jsp:include>
+</div>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
 
