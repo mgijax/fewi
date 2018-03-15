@@ -31,7 +31,7 @@
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="EXPRESSION_correlation_matrix_help.shtml">    
+<div id="titleBarWrapper" userdoc="RECOMBINASE_matrix_help.shtml">    
         <span class="titleBarMainTitle">
         Gene Expression + Recombinase Comparison Matrix
         </span>
@@ -42,6 +42,10 @@
   <div id="geneRecomGridTarget" class="matrixContainer"></div>
 </div>
 
+<!-- Gene/Recom grid cell popup injected into this element -->
+<div id="recomGridPopup" class="visHidden facetFilter structPopup">
+  <div id="recomGridPopupContents"></div>
+</div>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
 

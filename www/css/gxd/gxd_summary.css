@@ -105,7 +105,11 @@ border-collapse: collapse;
 	width:100%;
 	background-color: #FFFFFF;
 }
-
+#recomGridPopupContents
+{
+	width:100%;
+	background-color: #FFFFFF;
+}
 
 #stagePopupTable
 {
@@ -125,6 +129,29 @@ border-collapse: collapse;
 	border:3px;
 }
 #stagePopupTable td
+{
+	padding:10px;
+	text-align: center;
+	border:1px;
+}
+#recomPopupTable
+{
+	border-collapse: separate;
+	border-spacing: 2px;
+	width:100%;
+	background-color: #FFFFFF;
+	margin: 0 auto;
+	border:1px;
+}
+
+#recomPopupTable th
+{
+	background-color: #C6D6E8;
+	padding:10px;
+	text-align: center;
+	border:3px;
+}
+#recomPopupTable td
 {
 	padding:10px;
 	text-align: center;
