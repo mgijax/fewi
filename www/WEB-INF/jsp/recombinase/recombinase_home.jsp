@@ -46,7 +46,9 @@
     
     <div class="wrapper">
 	    <section>
-	      <h3>Find recombinase-carrying alleles</h3>
+	      <h3>Find recombinase-carrying alleles
+	      	<a href="${configBean.USERHELP_URL}RECOMBINASE_search_help.shtml" target="_blank"><img src="${configBean.WEBSHARE_URL}images/help_icon.png"/></a>
+	      </h3>
 	      <%@ include file="/WEB-INF/jsp/recombinase/sub_recombinase_form.jsp" %>
 	    </section>
 	    
