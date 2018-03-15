@@ -191,7 +191,7 @@ function recomGridPopupHandler(d, i) {
 	
 			// generate the small data table
 			var popupHtml = "";
-			popupHtml +=  "<div class='' style='margin-bottom:5px;'><table id='stagePopupTable' style=''>";
+			popupHtml +=  "<div class='' style='margin-bottom:5px;'><table id='recomPopupTable' style=''>";
 			popupHtml +=  "<div style='height:5px;'></div>";
 			if (countPosResults > 0 || countNegResults > 0 || countAmbResults > 0) {
 				popupHtml +=  "<tr><th>Detected?</th><th># of Results</th></tr>";
@@ -212,7 +212,7 @@ function recomGridPopupHandler(d, i) {
 	
 			// add the buttons
 			popupHtml +=  "<div id='matrixPopupButtonWrapper' >";
-			popupHtml +=  "<a href='" + alleleLink + "'><button id='matrixPopupResultsButton'>View These Results</button></a>";
+			popupHtml +=  "<a href='" + alleleLink + "'><button id='matrixPopupPhenotypesButton'>View These Results</button></a>";
 			popupHtml +=  "</div>";
 			popupHtml +=  "</div>";
 	
