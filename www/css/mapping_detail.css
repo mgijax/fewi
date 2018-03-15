@@ -563,3 +563,5 @@ border-bottom: 1px solid gray;
 		margin-left: 4px;
 		padding-bottom: 4px;
 	}
+
+    sup { vertical-align: top; position: relative; top: -0.3em; font-size:60%;}
