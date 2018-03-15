@@ -356,10 +356,6 @@ var localQueryString = function() {
 var prepFilters = function(qfRequest) {
 
     gsfLog("prepFilters() : entered");
-    var qs = qfRequest;
-    if (!qs) {
-        qs = localQueryString();
-    }
     buildFacetDialog();
 
     var oCallback = {
@@ -368,16 +364,25 @@ var prepFilters = function(qfRequest) {
 	scope : this
     };
 
+    /* get the query string, ready to be appended to
+     */
+    var getQS = function(qfRequest) {
+    	var qs = qfRequest;
+    	if (!qs) {
+    		qs = localQueryString();
+    	}
+    	if (qs) {
+    		qs = qs + '&';
+    	}
+    	return qs;
+    };
+
     var buildFacetDataSource = function (name) {
 	gsfLog("facet data source name : " + name);
-	gsfLog("facet data source qs : " + qs);
 
-	var url = fewiurl + "gxd/facet/" + name + "?" + qs;
-	if (qs) {
-	    url = url + '&';
-	}
+	var url = fewiurl + "gxd/facet/" + name;
 
-	var facetDS = new YAHOO.util.DataSource (url);
+	var facetDS = new YAHOO.util.DataSource (url, { 'connMethodPost' : true });
 	gsfLog("facetDataSource url : " + url);
 
 	facetDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
@@ -436,35 +441,35 @@ var prepFilters = function(qfRequest) {
     var populateSystemDialog = function() {
 	gsfLog("populateSystemDialog() : 1");
 	facetSystemDS.flushCache();
-	facetSystemDS.sendRequest(getFilterCriteria(), systemCallback);
+	facetSystemDS.sendRequest(getQS() + getFilterCriteria(), systemCallback);
 	gsfLog("populateSystemDialog() : 2");
     };
 
     var populateAssayTypeDialog = function() {
 	gsfLog("populateAssayTypeDialog() : 1");
 	facetAssayTypeDS.flushCache();
-	facetAssayTypeDS.sendRequest(getFilterCriteria(), assayTypeCallback);
+	facetAssayTypeDS.sendRequest(getQS() + getFilterCriteria(), assayTypeCallback);
 	gsfLog("populateAssayTypeDialog() : 2");
     };
 
     var populateDetectedDialog = function() {
 	gsfLog("populateDetectedDialog() : 1");
 	facetDetectedDS.flushCache();
-	facetDetectedDS.sendRequest(getFilterCriteria(), detectedCallback);
+	facetDetectedDS.sendRequest(getQS() + getFilterCriteria(), detectedCallback);
 	gsfLog("populateDetectedDialog() : 2");
     };
 
     var populateWildtypeDialog = function() {
 	gsfLog("populateWildtypeDialog() : 1");
 	facetWildtypeDS.flushCache();
-	facetWildtypeDS.sendRequest(getFilterCriteria(), wildtypeCallback);
+	facetWildtypeDS.sendRequest(getQS() + getFilterCriteria(), wildtypeCallback);
 	gsfLog("populateWildtypeDialog() : 2");
     };
 
     var populateTheilerStageDialog = function() {
 	gsfLog("populateTheilerStageDialog() : 1");
 	facetTheilerStageDS.flushCache();
-	facetTheilerStageDS.sendRequest(getFilterCriteria(), theilerStageCallback);
+	facetTheilerStageDS.sendRequest(getQS() + getFilterCriteria(), theilerStageCallback);
 	gsfLog("populateTheilerStageDialog() : 2");
     };
 
