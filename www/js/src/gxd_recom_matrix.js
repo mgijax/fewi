@@ -50,7 +50,7 @@ function resolveGxdGridColorClass(cell)
 
 
 //rendering function for grid cells
-function StructureGeneRecomCellRenderer(d3Target,cellSize,cell){
+function drawMatrixCell(d3Target,cellSize,cell){
 
 	var g = d3Target;
 	var fillClass = resolveGxdGridColorClass(cell);
@@ -91,6 +91,140 @@ function StructureGeneRecomCellRenderer(d3Target,cellSize,cell){
  * Matrix Specific render functions
  */
 
+//handler for the popup
+YAHOO.namespace("recomGridNS.container");
+window.firstPopup=true;
+function recomGridPopupHandler(d, i) {
+
+	// generate the popup at location of user click
+	var newX = d3.event.pageX;
+	var newY = d3.event.pageY;
+
+	if(window.firstPopup){
+		YAHOO.recomGridNS.container.panel1 = new YAHOO.widget.Panel("recomGridPopup", { width:"320px", visible:false, constraintoviewport:true } );
+		YAHOO.recomGridNS.container.panel1.render();
+		window.firstPopup=false;		
+	} 
+	YAHOO.recomGridNS.container.panel1.moveTo(newX, newY);
+	YAHOO.recomGridNS.container.panel1.show();
+
+	var popupContents = $( "#recomGridPopupContents" );
+
+	if (d.cellType=='GXD') {
+
+		// gather data needed for popup
+		var querystringWithFilters = getQueryStringWithFilters();
+		var requestUrl = fewiurl + "gxd/recombinasegridPopup/json?" + querystringWithFilters
+			+ "&rowId=" + d.termId
+			+ "&colId=" + d.cid;
+		
+		// gather values for popup
+		$.getJSON(requestUrl, function(data){
+			var countPosResults = data.countPosResults;
+			var countNegResults = data.countNegResults;
+			var countAmbResults = data.countAmbResults;
+			var markerId = data.markerId;
+			var symbol = data.symbol;
+			var term = data.term;
+			var termId = data.termId;
+		
+			var resultsURL = fewiurl + "gxd/marker/" + markerId + "?tab=#gxd=" + encodeURIComponent("structureIDFilter=" + termId + "&wildtypeFilter=wild type");
+			var imagesURL = fewiurl + "gxd/marker/" + markerId + "?tab=imagestab#gxd=" + encodeURIComponent("structureIDFilter=" + termId + "&results=25&startIndex=0&sort=&dir=asc&tab=imagestab");
+	
+			// generate the small data table
+			var popupHtml = "";
+			popupHtml +=  "<div class='' style='margin-bottom:5px;'><table id='stagePopupTable' style=''>";
+			popupHtml +=  "<div style='height:5px;'></div>";
+			if (countPosResults > 0 || countNegResults > 0 || countAmbResults > 0) {
+				popupHtml +=  "<tr><th>Detected?</th><th># of Results</th></tr>";
+				if (countPosResults > 0) {
+					popupHtml +=  "<tr><td>Yes</td><td>" + countPosResults + "</td></tr>";
+				}
+				if (countNegResults > 0) {
+					popupHtml +=  "<tr><td>No</td><td>" + countNegResults + "</td></tr>";
+				}
+				if (countAmbResults > 0) {
+					popupHtml +=  "<tr><td>Ambiguous</td><td>" + countAmbResults + "</td></tr>";
+				}
+				popupHtml +=  "</table>";
+			}
+			else {
+				popupHtml +=  "<div style='height:4em; padding:5px;'>Absent or ambiguous results are in substructures.</div>";
+			}
+	
+			// add the buttons
+			popupHtml +=  "<div id='matrixPopupButtonWrapper' >";
+			popupHtml +=  "<a href='" + resultsURL + "'><button id='matrixPopupResultsButton'>View These Results</button></a>";
+			if (data.hasImage){
+				popupHtml +=  "<a href='" + imagesURL + "'><button id='matrixPopupImagesButton'>View These Images</button></a>";
+			}
+			popupHtml +=  "</div>";
+			popupHtml +=  "</div>";
+	
+			// clear and fill the popup
+			popupContents.empty();
+			popupContents.append( "<div class='' style='text-align:center; background-color:#EBCA6D; font-size: 110%; line-height: 2; font-weight: bold; margin-botton:5px;'>" + symbol + " Expression in " + term + "</div>" );
+			popupContents.append(popupHtml);
+		});
+	} else { // recombinase cell
+		
+		// gather data needed for popup
+		var querystringWithFilters = getQueryStringWithFilters();
+		var requestUrl = fewiurl + "gxd/recombinasegridPopup/json?" + querystringWithFilters
+			+ "&rowId=" + d.termId
+			+ "&colId=" + d.cid
+			+ "&alleleId=" + d.mgiId;
+		
+		// gather values for popup
+		$.getJSON(requestUrl, function(data){
+			var countPosResults = data.countPosResults;
+			var countNegResults = data.countNegResults;
+			var countAmbResults = data.countAmbResults;
+			var markerId = data.markerId;
+			var symbol = data.symbol;
+			var term = data.term;
+			var termId = data.termId;
+			var allele = data.allele;
+			var alleleLink = data.alleleLink;
+		
+			var resultsURL = fewiurl + "gxd/marker/" + markerId + "?tab=#gxd=" + encodeURIComponent("structureIDFilter=" + termId);
+	
+			// generate the small data table
+			var popupHtml = "";
+			popupHtml +=  "<div class='' style='margin-bottom:5px;'><table id='stagePopupTable' style=''>";
+			popupHtml +=  "<div style='height:5px;'></div>";
+			if (countPosResults > 0 || countNegResults > 0 || countAmbResults > 0) {
+				popupHtml +=  "<tr><th>Detected?</th><th># of Results</th></tr>";
+				if (countPosResults > 0) {
+					popupHtml +=  "<tr><td>Yes</td><td>" + countPosResults + "</td></tr>";
+				}
+				if (countNegResults > 0) {
+					popupHtml +=  "<tr><td>No</td><td>" + countNegResults + "</td></tr>";
+				}
+				if (countAmbResults > 0) {
+					popupHtml +=  "<tr><td>Ambiguous</td><td>" + countAmbResults + "</td></tr>";
+				}
+				popupHtml +=  "</table>";
+			}
+			else {
+				popupHtml +=  "<div style='height:4em; padding:5px;'>Absent or ambiguous results are in substructures.</div>";
+			}
+	
+			// add the buttons
+			popupHtml +=  "<div id='matrixPopupButtonWrapper' >";
+			popupHtml +=  "<a href='" + alleleLink + "'><button id='matrixPopupResultsButton'>View These Results</button></a>";
+			popupHtml +=  "</div>";
+			popupHtml +=  "</div>";
+	
+			// clear and fill the popup
+			popupContents.empty();
+			popupContents.append( "<div class='' style='text-align:center; background-color:#C6D6E8; font-size: 110%; line-height: 2; font-weight: bold; margin-botton:5px;'>" + allele + " recombinase activity in " + term + "</div>" );
+			popupContents.append(popupHtml);
+		});		
+	}
+}
+
+
 window.GeneRecomMatrixRender = new function()
 {
 	/*
@@ -106,7 +240,6 @@ window.GeneRecomMatrixRender = new function()
 		.attr("y", cellSize-labelPaddingBottom)
 		.attr("width", 150)
 		.attr("height", 14)
-		//.attr("fill", "red");
 		.attr("fill",function(d){ 
    		var isHighlightCol = d.highlightColumn;
     		if (isHighlightCol) {
@@ -114,20 +247,17 @@ window.GeneRecomMatrixRender = new function()
     			}
     		return "transparent"})
 		
-		
 		d3Target.append("text")
 	    	.attr("x", 0)
 	    	.attr("y",cellSize-labelPaddingBottom)
 	    	.text(function(d){ 
 	    		return d.colDisplay;})
 	    	.style("fill",function(d){ 
-	    		//var isHighlightCol = d.highlightColumn;
 	    		if (d.highlightColumn) {
 	    			return "#0000FF";
 	    			}
 	    		return "#000000"})
 	    	.style("font-size",function(d){ 
-	    		//var isHighlightCol = d.highlightColumn;
 	    		if (d.highlightColumn) {
 	    			return "14px";
 	    			}
@@ -136,6 +266,17 @@ window.GeneRecomMatrixRender = new function()
 		
 		return  d3Target
 	};
+
+    this.StructureGeneRecomCellRenderer = function(d3Target,cellSize,cell){
+    	var g = d3Target;
+
+    	drawMatrixCell(g,cellSize,cell);
+
+    	// adding onClick popup
+    	g.on("click", recomGridPopupHandler).style("cursor","pointer");
+    	
+    	return g;
+    };
 }
 
 
@@ -169,7 +310,7 @@ var geneRecomSuperGrid = function()
 			},
 			cellSize: 24,
 			columnRenderer: GeneRecomMatrixRender.StructureGeneRecomColumnHeaderRenderer,
-			cellRenderer: StructureGeneRecomCellRenderer,
+			cellRenderer: GeneRecomMatrixRender.StructureGeneRecomCellRenderer,
 			columnSort: function(a,b){ return FewiUtil.SortSmartAlpha(a.cid,b.cid);},
 			verticalColumnLabels: true,
 	        openCloseStateKey: "geneRecomGrid_"+querystring,

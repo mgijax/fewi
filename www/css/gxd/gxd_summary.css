@@ -105,7 +105,11 @@ border-collapse: collapse;
 	width:100%;
 	background-color: #FFFFFF;
 }
-
+#recomGridPopupContents
+{
+	width:100%;
+	background-color: #FFFFFF;
+}
 
 #stagePopupTable
 {

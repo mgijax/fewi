@@ -42,6 +42,10 @@
   <div id="geneRecomGridTarget" class="matrixContainer"></div>
 </div>
 
+<!-- Gene/Recom grid cell popup injected into this element -->
+<div id="recomGridPopup" class="visHidden facetFilter structPopup">
+  <div id="recomGridPopupContents"></div>
+</div>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
 
