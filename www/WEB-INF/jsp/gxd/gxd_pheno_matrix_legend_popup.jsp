@@ -8,7 +8,7 @@
 	<div class='legendSection'>
 	
 		<h4>Gene Expression</h4>
-		<h4>Number of expression results annotated as</h4>
+		<h6>Number of expression results annotated as</h6>
 		</br>
 		
 		<div>present in structure and/or substructures</div>

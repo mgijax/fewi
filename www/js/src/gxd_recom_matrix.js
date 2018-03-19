@@ -314,7 +314,7 @@ var geneRecomSuperGrid = function()
 			columnSort: function(a,b){ return FewiUtil.SortSmartAlpha(a.cid,b.cid);},
 			verticalColumnLabels: true,
 	        openCloseStateKey: "geneRecomGrid_"+querystring,
-	        legendClickHandler: function(e){ geneMatrixLegendPopupPanel.show(); },
+	        legendClickHandler: function(e){ YAHOO.recomGridNS.container.legendPanel.show(); },
 	        renderCompletedFunction: function()
 	        {
 	        	//When matrix is drawn/redrawn we resize it with margins, to fit the browser window
