@@ -42,6 +42,10 @@
         </span>
 </div>
 
+<%@ include file="/WEB-INF/jsp/marker_header.jsp" %>
+
+<br/>
+
 <!-- Gene/Recom grid injected into this element -->
 <div id="geneRecomGridWrapper">
   <div id="geneRecomGridTarget" class="matrixContainer"></div>
