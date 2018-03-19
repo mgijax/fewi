@@ -2,8 +2,8 @@
 
 <title>${marker.symbol} Expression Recombinase Matrix </title>
 
-<meta name="description" content="">
-<meta name="keywords" content="">
+<meta name="description" content="View normal gene expression alongside the tissues where recombinase activities driven by that gene have been demonstrated.">
+<meta name="keywords" content="MGI, GXD, expression, recombinase activity, cre, tissue, EMAPA, , mice, mouse, murine, mus musculus">
 <meta name="robots" content="NOODP">
 <meta name="robots" content="NOYDIR">
 
