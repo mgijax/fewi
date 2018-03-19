@@ -319,9 +319,13 @@ var geneRecomSuperGrid = function()
 	        {
 	        	//When matrix is drawn/redrawn we resize it with margins, to fit the browser window
 	        	makeMatrixResizable("geneRecomGridTarget",40,40);
-	        	if (SHOW_MATRIX_LEGENDS) {
-	        		geneMatrixLegendPopupPanel.show();
-	        	}
+
+	        	// create the legend after grid has completed rendering
+	        	YAHOO.recomGridNS.container.legendPanel = new YAHOO.widget.Panel("recomLegendPopupPanel", { width:"260px", visible:false, constraintoviewport:true, context:['geneRecomGridWrapper', 'tl', 'tr',['beforeShow','windowResize']] });
+	        	YAHOO.recomGridNS.container.legendPanel.render();
+	        	YAHOO.recomGridNS.container.legendPanel.show();
+	        	
+	        	
 	        }
 	    });
 	}
@@ -331,12 +335,5 @@ var geneRecomSuperGrid = function()
 
 geneRecomSuperGrid();
 
-
-//popup for structure matrix legend
-window.structMatrixLegendPopupPanel = new YAHOO.widget.Panel("structLegendPopupPanel",
-		{ width:"260px", visible:false, constraintoviewport:true,
-			context:['tabSummaryContent', 'tl', 'tr',['beforeShow','windowResize']]
-});
-window.structMatrixLegendPopupPanel.render();
 
 

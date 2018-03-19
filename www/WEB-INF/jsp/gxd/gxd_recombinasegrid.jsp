@@ -22,8 +22,13 @@
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_recom_matrix.js"></script>
 
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/gxd/gxd_summary.css" />
-<style>
 
+<style>
+  body.yui-skin-sam .yui-panel .hd,
+  body.yui-skin-sam .yui-ac-hd { background:none; background-color:#025; color:#fff; font-weight: bold;}
+  body.yui-skin-sam .yui-ac-hd {padding: 5px;}
+  body.yui-skin-sam div#outerGxd {overflow:visible;}
+  .yui-dt table {width: 100%;}
 </style>
 
 
@@ -33,7 +38,7 @@
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="RECOMBINASE_matrix_help.shtml">    
         <span class="titleBarMainTitle">
-        Gene Expression + Recombinase Comparison Matrix
+        Gene Expression + Recombinase Activity Comparison Matrix
         </span>
 </div>
 
@@ -45,6 +50,11 @@
 <!-- Gene/Recom grid cell popup injected into this element -->
 <div id="recomGridPopup" class="visHidden facetFilter structPopup">
   <div id="recomGridPopupContents"></div>
+</div>
+
+<!-- Gene/Recom grid legend injected into this element -->
+<div id="recomLegendPopupPanel" style="visibility: hidden;" class="facetFilter">
+  <jsp:include page="gxd_recom_matrix_legend_popup.jsp"></jsp:include>
 </div>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
