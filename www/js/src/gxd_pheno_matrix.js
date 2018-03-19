@@ -345,14 +345,21 @@ var phenoSuperGrid = function()
 			},
 			verticalColumnLabels: true,
 	        openCloseStateKey: "phenoGrid_"+querystring,
-	        legendClickHandler: function(e){ geneMatrixLegendPopupPanel.show(); },
+	        legendClickHandler: function(e){ 
+
+	        	YAHOO.phenoGridNS.container.legendPanel.show();
+	        	
+	        },
 	        renderCompletedFunction: function()
 	        {
 	        	//When matrix is drawn/redrawn we resize it with margins, to fit the browser window
 	        	makeMatrixResizable("phenoGridTarget",40,40);
-	        	if (SHOW_MATRIX_LEGENDS) {
-	        		geneMatrixLegendPopupPanel.show();
-	        	}
+
+	        	// create the legend after grid has completed rendering
+	        	YAHOO.phenoGridNS.container.legendPanel = new YAHOO.widget.Panel("geneLegendPopupPanel", { width:"530px", visible:false, constraintoviewport:true, context:['phenoGridWrapper', 'tl', 'tr',['beforeShow','windowResize']] });
+	        	YAHOO.phenoGridNS.container.legendPanel.render();
+	        	YAHOO.phenoGridNS.container.legendPanel.show();
+
 	        }
 	    });
 	}
@@ -361,35 +368,6 @@ var phenoSuperGrid = function()
 }
 
 phenoSuperGrid();
-
-//popup for gene matrix legend
-window.geneMatrixLegendPopupPanel = new YAHOO.widget.Panel("geneLegendPopupPanel",
-		{ width:"260px", visible:false, constraintoviewport:true,
-			context:['tabSummaryContent', 'tl', 'tr',['beforeShow','windowResize']]
-});
-window.geneMatrixLegendPopupPanel.render();
-window.geneMatrixLegendPopupPanel.show();
-
-
-YAHOO.phenoGridNS.container.panel1 = new YAHOO.widget.Panel("phenoGridPopup", { width:"320px", visible:false, constraintoviewport:true } );
-YAHOO.phenoGridNS.container.panel1.render();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

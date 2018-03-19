@@ -197,6 +197,18 @@ border-collapse: collapse;
 	padding-bottom: 1px;
 	font-size:160%
 }
+.noResultsIndicator {
+	padding-left: 5px;
+	padding-bottom: 1px;
+	font-size:120%
+}
+.backgroundSensativeIndicator {
+	color:red;
+	padding-left: 6px;
+	padding-bottom: 1px;
+	font-size:120%
+}
+
 *:focus {
     outline: 0;
 }
@@ -387,6 +399,34 @@ border-collapse: collapse;
 	background-color: rgb(192,0,0);
 	margin-left: 10px;
 }
+
+
+
+
+
+.legendExampleCell.phenoBlue4 {
+	background-color: #002255;
+	margin-left: 10px;
+}
+.legendExampleCell.phenoBlue3 {
+	background-color: #49648B;
+	margin-left: 30px;
+}
+.legendExampleCell.phenoBlue2 {
+	background-color: #879EBA;
+	margin-left: 50px;
+}
+.legendExampleCell.phenoBlue1 {
+	background-color: #C6D6E8;
+	margin-left: 70px;
+}
+
+
+
+
+
+
+
 
 /* adjust some cell positions in legend */
 .legendExampleCell.posNegCell,
