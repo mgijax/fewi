@@ -283,7 +283,13 @@ window.PhenoMatrixRender = new function()
 	    return  d3Target.append("text")
 	    	.attr("x", 0)
 	    	.attr("y",cellSize-labelPaddingBottom)
-	    	.text(function(d){ return d.colDisplay;})
+	    	.text(function(d){ 
+	    		var displayValue = d.colDisplay.trim();
+	    		if (displayValue.length > 33){
+	    			displayValue = displayValue.substring(0,32) + "...";
+	    		}
+	    		return displayValue;
+	    	})
 	    	.style("fill",function(d){ 
 	    		var isHighlightCol = d.highlightColumn;
 	    		if (isHighlightCol) {
@@ -291,7 +297,10 @@ window.PhenoMatrixRender = new function()
 	    			}
 	    		return "#000000"})
 	    	.style("font-size","12px")
-	    	.style("font-weight","bold");
+	    	.style("font-weight","bold")
+	    	.style("cursor","pointer")
+	    	.append("svg:title")
+	    	.text(function(d) { return d.colDisplay; });	
 	};
 
     this.StructureStageCellRenderer = function(d3Target,cellSize,cell){
