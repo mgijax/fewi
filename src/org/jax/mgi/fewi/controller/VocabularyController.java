@@ -74,6 +74,7 @@ public class VocabularyController {
     	noWildcards.add("or");
     	noWildcards.add("for");
     	noWildcards.add("on");
+    	noWildcards.add("the");
     }
 
     //--------------------//
