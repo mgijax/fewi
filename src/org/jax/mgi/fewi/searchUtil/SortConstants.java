@@ -42,6 +42,8 @@ public class SortConstants {
 	public static final String CRE_BY_SEX                       = "bySex";
 	public static final String CRE_BY_SPECIMEN_NOTE             = "bySpecimenNote";
 	public static final String CRE_BY_RESULT_NOTE               = "byResultNote";
+	public static final String CRE_BY_DETECTED					= "detectedSystems";
+	public static final String CRE_BY_NOT_DETECTED				= "notDetectedSystems";
 
     // Default sort
 	public static final String BY_DEFAULT						= "byDefaultSort";
@@ -53,6 +55,7 @@ public class SortConstants {
 	public static final String MRK_BY_EVIDENCE_CODE				= "byEvidenceCode";
 	public static final String MRK_BY_EVIDENCE_TERM				= "byEvidenceTerm";
 	public static final String BY_ISOFORM						= "byIsoform";
+	public static final String BY_CATEGORY						= "byCategory";
 
 	// Sequence Summary page
 	public static final String SEQUENCE_TYPE       = "sequenceType";
@@ -95,8 +98,10 @@ public class SortConstants {
 	public static final String ALL_BY_DISEASE = "byDisease";
 
 	// general...
-	public static final String SEQUENCE_NUM = "sequenceNum";
-	public static final String SCORE		= "score";			// Solr score
+	public static final String BY_GENOCLUSTER	= "byGenocluster";
+	public static final String BY_COLUMN	 	= "byColumn";
+	public static final String SEQUENCE_NUM 	= "sequenceNum";
+	public static final String SCORE			= "score";			// Solr score
 	
 	// gxd image panes
 

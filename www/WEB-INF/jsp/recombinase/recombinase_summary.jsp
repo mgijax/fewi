@@ -52,6 +52,9 @@
 	margin-left: 4px;
 	font-size: 10px;
 }
+.matrixIcon {
+	width: 25px;
+}
 </style>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
@@ -69,6 +72,11 @@
 
 <br/>
 
+<c:set var="operator" value="${recombinaseQueryForm.structureOperator}"/>
+<c:if test="${empty operator}">
+	<c:set var="operator" value="assayed"/>
+</c:if>
+
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/recombinase/recombinase_summary_1.js"></script>
 <div id="summary" style="width:1150px;">
 	<div id="breadbox">
@@ -82,7 +90,10 @@
 				<c:if test="${not empty recombinaseQueryForm.driver}"><span class="label">Driver</span> equals
 					<span class="label">${fn:replace(recombinaseQueryForm.driver,";", ",") }</span><br/></c:if>
 				<c:if test="${not empty recombinaseQueryForm.structure}">
-					<b>Activity assayed</b> in <b>${recombinaseQueryForm.structure}</b>
+					<b>Activity ${operator}</b> in <b>${recombinaseQueryForm.structure}</b>
+					<c:if test="${not empty recombinaseQueryForm.nowhereElse}">
+						and <b>nowhere else</b>
+					</c:if>
 					<span class="smallGrey"> includes synonyms &amp; substructures</span>
 					<br/>
 					<span>System(s) in bold contain matching search terms.</span>

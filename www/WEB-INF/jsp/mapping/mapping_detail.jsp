@@ -43,5 +43,8 @@
 	<%@ include file="mapping_detail_insitu_ribbon.jsp" %>
 </div>
 
+<script>
+$('sup').css({'font-size' : '80%'});
+</script>
 <!--	close page template -->
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

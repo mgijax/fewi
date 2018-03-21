@@ -82,6 +82,7 @@ public class SearchConstants {
 	public static final String CRE_STRUCTURE 			= "structure";
 	public static final String CRE_DETECTED 			= "detected";
 	public static final String CRE_SYSTEM_HL_GROUP		= "systemHlGroup";
+	public static final String CRE_EXCLUSIVE_STRUCTURES	= "exclusiveStructures";
 
 	public static final String CRE_SYSTEM_DETECTED		= "alleleSystemDetected";
 	public static final String CRE_SYSTEM_NOT_DETECTED	= "alleleSystemNotDetected";
@@ -123,6 +124,8 @@ public class SearchConstants {
     public static final String VOC_RESTRICTION      = "qualifier";
     public static final String TERM_ID		    = "termID";
     public static final String ANNOTATION_KEY	    = "annotationKey";
+    public static final String CROSS_REF		    = "crossRef";
+    public static final String GENOCLUSTER_KEY		= "genoclusterKey";
 
     // Images
 
@@ -178,6 +181,8 @@ public class SearchConstants {
 	public static final String ANTIBODY_KEY = "antibodyKey";
 	public static final String POS_STRUCTURE = "posStructure";
 	public static final String ANATOMICAL_SYSTEM = "anatomicalSystem";
+	public static final String ANATOMY_ID = "anatomyID";
+	public static final String ANCESTOR_ANATOMY_KEY	= "ancestorAnatomyKey";
 
 	public static final String PRIMARY_KEY = "pKey";
 
@@ -264,4 +269,12 @@ public class SearchConstants {
 	public static final String VB_SEQUENCE_NUM = "sequenceNum";
 	public static final String VB_VOCAB_NAME = "vocabName";
 	public static final String VB_DAG_NAME = "dagName";
+	public static final String VB_CROSSREF = "crossRef";
+	
+	// correlation matrix fields
+	public static final String CM_MARKER_ID = "markerID";
+	public static final String CM_PARENT_ANATOMY_ID = "parentAnatomyID";
+
+	// general
+	public static final String COLUMN_ID = "columnID";
 }

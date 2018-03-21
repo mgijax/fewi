@@ -122,6 +122,12 @@ public class SolrAnatomyTerm
 		if (this.tokensMatched(sb.toString())) {
 		    return "matches across multiple synonyms";
 		}
+		
+		for (String t : this.tokens) {
+			if (t.matches("[Mm][pP]:[0-9]+")) {
+				return "";
+			}
+		}
 
 		return "no matching synonym";
 	}

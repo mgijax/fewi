@@ -6,12 +6,16 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.RelatedTermBackward;
 import mgi.frontend.datamodel.Term;
+import mgi.frontend.datamodel.VocabTerm;
 
 import org.jax.mgi.fewi.finder.MPAnnotationFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.TermFinder;
+import org.jax.mgi.fewi.finder.VocabularyFinder;
 import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
@@ -25,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 /*-------*/
@@ -53,6 +58,9 @@ public class MPController {
 
     @Autowired
     private TermFinder termFinder;
+
+    @Autowired
+    private VocabularyFinder vocabTermFinder;
 
     //-------------------------------//
     // MP annotation summary by term (and, optionally, marker ID)
@@ -180,6 +188,108 @@ public class MPController {
 	return mav;
     }
 
+    //---------------------------------------------//
+    // MP annotation summary by EMAPA anatomy term
+    //---------------------------------------------//
+    @RequestMapping(value="/annotations/by_anatomy/{emapaID}")
+    public ModelAndView mpAnnotationsByAnatomyTerm (HttpServletRequest request, @PathVariable("emapaID") String emapaID) {
+        logger.debug("->mpAnnotationsByAnatomyTerm started");
+
+        // 1. begin building the MAV, assuming a successful return
+        ModelAndView mav = new ModelAndView("mp_annotation_summary");
+        mav.addObject("emapaID", emapaID);
+
+        // 2. get the Term object for the given ID (we need the text of the term for display)
+	
+        List<Term> termList = termFinder.getTermsByID(emapaID);
+
+        if (termList.size() < 1) {
+        	// forward to error page
+        	mav = new ModelAndView("error");
+        	mav.addObject("errorMsg", "No term found for " + emapaID);
+        	return mav;
+        }
+
+        if (termList.size() > 1) {
+        	// forward to error page
+        	mav = new ModelAndView("error");
+        	mav.addObject("errorMsg", "Two terms found for ID " + emapaID);
+        	return mav;
+        }
+
+        Term term = termList.get(0);
+        mav.addObject("term", term);
+
+        // At this point, we have an anatomy Term object.  We need to find phenotype annotations for MP terms
+        // that are associated with that term or its descendants.  (excluding normal annotations)
+
+	    List<SolrMPAnnotation> annotList = this.getAnnotationsByAnatomy(term.getPrimaryID());
+	    mav.addObject("annotationCount", annotList.size());
+
+	    // 6. bundle into MPSummaryRow objects
+
+	    List<MPSummaryRow> rows = buildSummaryRows(annotList); 
+	    mav.addObject("genotypeCount", rows.size());
+
+	    // 7. add the rows to the MAV and proceed to the JSP for formatting
+
+	    mav.addObject("rows", rows);
+	    mav.addObject("logger", logger);
+	    return mav;
+    }
+
+    //---------------------------------------------//
+    // count of MP annotations by EMAPA anatomy term (excluding those with a normal qualifier)
+    // special values:
+    //		0 = mapped to MP, but with no annotations; -1 = bad ID or not mapped to MP
+    //---------------------------------------------//
+    @RequestMapping(value="/annotations/count_by_anatomy/{emapaID}")
+    public @ResponseBody Integer mpAnnotationCountByAnatomyTerm (@PathVariable("emapaID") String emapaID) {
+        logger.debug("->mpAnnotationCountByAnatomyTerm started");
+	    int annotationCount = this.getAnnotationsByAnatomy(emapaID).size();
+	    
+	    // If the count from the index is 0, that could be a mapped term with no annotations, or it could be
+	    // an unmapped term.  We need different behavior in the display layer, so we need to determine which.
+	    if (annotationCount == 0) {
+	    	List<VocabTerm> terms = vocabTermFinder.getTermByID(emapaID);
+	    	if (terms.size() == 0) {
+	    		return -1;
+	    	} else {
+	    		List<RelatedTermBackward> mpTerms = terms.get(0).getRelatedTermsBackward();
+	    		if ((mpTerms == null) || (mpTerms.size() == 0)) {
+	    			return -1;
+	    		}
+	    	}
+	    }
+	    return annotationCount;
+    }
+
+    /* return a list of annotations, given an EMAPA ID (excluding annotations with a normal qualifier)
+     */
+    private List<SolrMPAnnotation> getAnnotationsByAnatomy (String emapaID) {
+        // set up our filters for EMAPA ID (a cross-reference)
+	
+        SearchParams searchParams = new SearchParams();
+        List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new Filter(SearchConstants.CROSS_REF, emapaID));
+        filters.add(new Filter(SearchConstants.VOC_RESTRICTION, "normal", Operator.OP_NOT_EQUAL));
+	    searchParams.setFilter(Filter.and(filters));
+
+	    // set up our sorting
+	
+	    List<Sort> sorts = new ArrayList<Sort>();
+	    Sort sort = new Sort(SortConstants.GENOTYPE_TERM, false);
+	    sorts.add(sort);
+	    searchParams.setSorts(sorts);
+
+	    // get our annotations
+	
+	    searchParams.setPageSize(10000000);
+	    SearchResults<SolrMPAnnotation> searchResults = mpAnnotationFinder.getAnnotations (searchParams);
+
+	    return searchResults.getResultObjects();
+    }
+    
     /* group annotations by genotype into MPSummaryRow objects
      */
     private List<MPSummaryRow> buildSummaryRows (

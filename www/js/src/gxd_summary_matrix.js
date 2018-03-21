@@ -245,12 +245,14 @@ function structStagePopupHandler(d, i) {
 
 	// gather data needed for popup
 	var querystringWithFilters = getQueryStringWithFilters();
-	var requestUrl = fewiurl + "gxd/stageMatrixPopup/json?" + querystringWithFilters
-		+ "&rowId=" + d.termId
-		+ "&colId=" + d.cid;
+//	var requestUrl = fewiurl + "gxd/stageMatrixPopup/json?" + querystringWithFilters
+//		+ "&rowId=" + d.termId
+//		+ "&colId=" + d.cid;
+	var postRequestUrl = fewiurl + "gxd/stageMatrixPopup/json";
+	var postParameters = querystringWithFilters + "&rowId=" + d.termId + "&colId=" + d.cid;
 
 	// gather values for popup
-	$.getJSON(requestUrl, function(data){
+	$.post(postRequestUrl, postParameters, function(data){
 		var countPosGenes = data.countPosGenes;
 		var countNegGenes = data.countNegGenes;
 		var countAmbGenes = data.countAmbGenes;
@@ -331,12 +333,14 @@ function structGenePopupHandler(d, i) {
 
 	// gather data needed for popup
 	var querystringWithFilters = getQueryStringWithFilters();
-	var requestUrl = fewiurl + "gxd/geneMatrixPopup/json?" + querystringWithFilters
-		+ "&rowId=" + d.termId
-		+ "&colId=" + d.cid;
+//	var requestUrl = fewiurl + "gxd/geneMatrixPopup/json?" + querystringWithFilters
+//		+ "&rowId=" + d.termId
+//		+ "&colId=" + d.cid;
 
+	var postRequestUrl = fewiurl + "gxd/geneMatrixPopup/json";
+	var postParameters =  querystringWithFilters + "&rowId=" + d.termId + "&colId=" + d.cid;
 	// gather values for popup
-	$.getJSON(requestUrl, function(data){
+	$.post(postRequestUrl, postParameters, function(data){
 		var countPosResults = data.countPosResults;
 		var countNegResults = data.countNegResults;
 		var countAmbResults = data.countAmbResults;

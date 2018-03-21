@@ -444,6 +444,21 @@ public class GOController {
 			sorts.add(new Sort(SortConstants.VOC_TERM, desc));
 			sorts.add(new Sort(SortConstants.MRK_BY_EVIDENCE_CODE, desc));
 		}
+		else if ("category".equalsIgnoreCase(sortRequested)) {
+			sorts.add(new Sort(SortConstants.VOC_DAG_NAME, desc));
+			sorts.add(new Sort(SortConstants.BY_CATEGORY, desc));
+			sorts.add(new Sort(SortConstants.VOC_TERM, desc));
+		}
+		else if ("headers".equalsIgnoreCase(sortRequested)) {
+			sorts.add(new Sort(SortConstants.BY_CATEGORY, desc));
+			sorts.add(new Sort(SortConstants.VOC_TERM, desc));
+			sorts.add(new Sort(SortConstants.BY_REFERENCE, desc));
+		}
+		else if ("references".equalsIgnoreCase(sortRequested)) {
+			sorts.add(new Sort(SortConstants.BY_REFERENCE, desc));
+			sorts.add(new Sort(SortConstants.BY_CATEGORY, desc));
+			sorts.add(new Sort(SortConstants.VOC_TERM, desc));
+		}
 		else {
 			// Original Default
 			sorts.add(new Sort(SortConstants.MRK_BY_SYMBOL, desc));

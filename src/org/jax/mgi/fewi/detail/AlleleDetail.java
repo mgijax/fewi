@@ -7,9 +7,17 @@ import mgi.frontend.datamodel.Allele;
  */
 public class AlleleDetail {
 	Allele allele;
+	boolean hasAnatomyTerms = false;
+	
 	public AlleleDetail(Allele allele)
 	{
 		this.allele = allele;
+	}
+	
+	public AlleleDetail(Allele allele, boolean hasAnatomyTerms)
+	{
+		this.allele = allele;
+		this.hasAnatomyTerms = hasAnatomyTerms;
 	}
 	
 	/**
@@ -34,7 +42,7 @@ public class AlleleDetail {
 	}
 	public boolean getHasExpression()
 	{
-		return allele.getCountOfExpressionAssayResults() > 0;
+		return (allele.getCountOfExpressionAssayResults() > 0) || this.hasAnatomyTerms;
 	}
 	public boolean getHasReferences()
 	{
@@ -51,8 +59,9 @@ public class AlleleDetail {
 	}
 	public boolean getHasRecombinaseData()
 	{
-		return allele.getDriverNote() != null &&
-				!allele.getDriverNote().equals("");
+//		return allele.getDriverNote() != null &&
+//				!allele.getDriverNote().equals("");
+		return allele.getDriver() != null && !allele.getDriver().trim().equals("");
 	}
 	public boolean getHasNotes()
 	{

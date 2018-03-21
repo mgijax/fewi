@@ -8,11 +8,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.VocabTerm;
+import mgi.frontend.datamodel.sort.SmartAlphaComparator;
 import mgi.frontend.datamodel.sort.VocabTermComparator;
 
 import org.hibernate.SessionFactory;
 import org.jax.mgi.fewi.config.ContextLoader;
+import org.jax.mgi.fewi.finder.AlleleFinder;
 import org.jax.mgi.fewi.finder.VocabularyFinder;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -79,6 +82,9 @@ public class VocabularyController {
 
     private final Logger logger = LoggerFactory.getLogger(VocabularyController.class);
 
+    @Autowired
+    private AlleleFinder alleleFinder;
+    
     @Autowired
     private VocabularyFinder vocabFinder;
     
@@ -203,21 +209,23 @@ public class VocabularyController {
 	
 	String cleanTerm = term.replaceAll("-", " ");
 	cleanTerm = cleanTerm.replaceAll(",", " ");
-	cleanTerm = cleanTerm.replaceAll("[^A-Za-z0-9\\s]", "");
+	cleanTerm = cleanTerm.replaceAll("[^A-Za-z0-9:\\s]", "");
 	cleanTerm = cleanTerm.replaceAll("\\s\\s+", " ");
 
 	SearchParams sp = new SearchParams();
 
 	// need to AND the requested tokens together, then OR the searches of
-	// structure and synonyms
+	// structure, synonyms, and crossRefs
 
 	ArrayList<Filter> structureFilters = new ArrayList<Filter>();
 	ArrayList<Filter> synonymFilters = new ArrayList<Filter>();
+	ArrayList<Filter> crossRefFilters = new ArrayList<Filter>();
 	ArrayList<String> tokens = new ArrayList<String>();
 
 	for (String token : cleanTerm.split("\\s")) {
 	    structureFilters.add(new Filter(SearchConstants.STRUCTURE, token));
 	    synonymFilters.add(new Filter(SearchConstants.SYNONYM, token));
+	    crossRefFilters.add(new Filter(SearchConstants.CROSS_REF, token));
 	    tokens.add(token);
 	}
 
@@ -225,6 +233,7 @@ public class VocabularyController {
 
 	eitherFilters.add(Filter.and(structureFilters));
 	eitherFilters.add(Filter.and(synonymFilters));
+	eitherFilters.add(Filter.and(crossRefFilters));
 
 	sp.setFilter(Filter.or(eitherFilters));
 
@@ -234,6 +243,12 @@ public class VocabularyController {
 	sp.setPageSize(maxToReturn + 1);
 
 	SearchResults<SolrAnatomyTerm> sr = vocabFinder.getAnatomyTerms(sp);
+	List<SolrAnatomyTerm> resultObjects = sr.getResultObjects();
+	
+    boolean searchedByID = Pattern.matches("[A-Za-z]+:[0-9]+", term.trim());
+	if (searchedByID) {
+		Collections.sort(resultObjects, new SolrAnatomyTermComparator());
+	}
 
 	// each matching term needs to know the search tokens, so it can use
 	// them for highlighting
@@ -522,6 +537,76 @@ public class VocabularyController {
 	mav.addObject("dropdown", dropdown.toString()); 
 	mav.addObject("dropdownMsg", dropdownMsg);
 
+//	logger.info("related term count: " + emapaTerm.getRelatedTerms("EMAPA to MP").size());
+	if (emapaTerm.getRelatedTerms("EMAPA to MP").size() > 0) {
+		mav.addObject("hasPhenotypeAssociations", 1);
+	}
+	return mav;
+    }
+
+    /* GXD Anatomy browser with terms that have specified crossReference ID (MP) */
+
+    @SuppressWarnings("unchecked")
+	@RequestMapping("/gxd/anatomy/by_phenotype/{id}")
+    public ModelAndView getAnatomyDetailByPhenotype(@PathVariable("id") String id) {
+	logger.info("->getAnatomyDetailByPhenotype(" + id + ") started");
+
+	List<SolrAnatomyTerm> results = (List<SolrAnatomyTerm>) getAnatomySearchPane(id).getModel().get("results");
+	if (results.size() == 0) {
+		return errorMav("Phenotype ID has no anatomy cross-references: " + id);
+	}
+	
+	List<VocabTerm> terms = vocabFinder.getTermByID(results.get(0).getAccID());
+
+	if (terms.size() < 1) { return errorMav("No Anatomy term found"); }
+	else if (terms.size() > 1) { return errorMav("Duplicate ID"); }
+
+	VocabTerm term = terms.get(0);
+
+	ModelAndView mav = new ModelAndView("anatomy_detail");
+	mav.addObject("term", term);
+	mav.addObject("crossRef", id);
+
+	return mav;
+    }
+
+    /* GXD Anatomy browser with terms that can be tied to a specified allele */
+
+    @SuppressWarnings("unchecked")
+	@RequestMapping("/gxd/anatomy/by_allele/{id}")
+    public ModelAndView getAnatomyDetailByAllele(@PathVariable("id") String id) {
+	logger.info("->getAnatomyDetailByAllele(" + id + ") started");
+
+	List<SolrAnatomyTerm> results = (List<SolrAnatomyTerm>) getAnatomySearchPane(id).getModel().get("results");
+	if (results.size() == 0) {
+		return errorMav("Allele ID has no related anatomy terms: " + id);
+	}
+	
+	// pick up the first vocabulary term for the matches
+	
+	List<VocabTerm> terms = vocabFinder.getTermByID(results.get(0).getAccID());
+
+	if (terms.size() < 1) { return errorMav("No Anatomy term found"); }
+	else if (terms.size() > 1) { return errorMav("Duplicate ID"); }
+
+	VocabTerm term = terms.get(0);
+
+	// pick up the allele, in case we want to add context info to the page in the future
+	
+	List<Allele> alleles = alleleFinder.getAlleleByID(id);
+
+	if (alleles.size() < 1) { return errorMav("No Allele found"); }
+	else if (alleles.size() > 1) { return errorMav("Duplicate ID"); }
+
+	Allele allele = alleles.get(0);
+	
+	// compose the mav
+
+	ModelAndView mav = new ModelAndView("anatomy_detail");
+	mav.addObject("term", term);
+	mav.addObject("allele", allele);
+	mav.addObject("crossRef", id);
+
 	return mav;
     }
 
@@ -529,7 +614,7 @@ public class VocabularyController {
 
     @RequestMapping("/gxd/anatomy")
     public ModelAndView getAnatomyDetail() {
-	logger.debug("->getAnatomyDetail() started");
+	logger.info("->getAnatomyDetail() started");
 
 	// start with 'embryo' as a default
 	List<VocabTerm> terms = vocabFinder.getTermByID("EMAPA:16039");
@@ -713,6 +798,37 @@ public class VocabularyController {
     	return term.getTerm() + " Mammalian Phenotype Term (" + term.getPrimaryID().getAccID() + ")";
     }
 
+    /* Mammalian Phenotype browser for a specified EMAPA ID */
+
+   	@SuppressWarnings("unchecked")
+    @RequestMapping("/mp_ontology/by_anatomy/{id}")
+    public ModelAndView getMPAnatomySearch(@PathVariable("id") String id) {
+    	logger.debug("->getMPAnatomySearch(" + id + ") started");
+
+    	ModelAndView tempMav = getSharedBrowserSearchPane(id, MP_VOCAB);
+		List<VocabBrowserSearchResult> results = (List<VocabBrowserSearchResult>) tempMav.getModel().get("results");
+    	String topID = "MP:0000001";
+    	if (results.size() > 0) {
+    		topID = results.get(0).getAccID();
+    	}
+
+    	ModelAndView mav = getSharedBrowserDetail(topID, MP_VOCAB);
+    	mav.addObject("searchTerm", id);
+    	mav.addObject("pageTitle", "Mammalian Phenotype Browser");
+    	mav.addObject("searchPaneTitle", "Phenotype Search");
+    	mav.addObject("termPaneTitle", "Phenotype Term Detail");
+    	mav.addObject("treePaneTitle", "Phenotype Tree View");
+    	mav.addObject("helpDoc", "VOCAB_mp_browser_help.shtml");
+    	mav.addObject("branding", "MGI");
+    	mav.addObject("seoDescription", "The Mammalian Phenotype (MP) Ontology is a community effort to "
+    		+ "provide standard terms for annotating phenotypic data. You can use this browser to view terms, "
+    		+ "definitions, and term relationships in a hierarchical display. Links to summary annotated "
+    		+ "phenotype data at MGI are provided in Term Detail reports.");
+    	mav.addObject("title", getMPTitle((BrowserTerm) mav.getModel().get("term")));
+    	fillMPUrls(mav);
+    	return mav;
+    }
+    
     /* Mammalian Phenotype browser for a specified MP ID */
 
     @RequestMapping("/mp_ontology/{id}")
@@ -1067,9 +1183,8 @@ public class VocabularyController {
 
     	logger.debug("->getSharedBrowserSearchPane(" + term + ", " + vocabName + ") started");
 
-    	// We need to get 51 results, so we know if the count should display
-    	// as 50 or as 50+
-    	int maxToReturn = 50;
+    	// biggest vocab is GO with 47k terms, so this is an unlimited search
+    	int maxToReturn = 50000;
 
     	List<VocabBrowserSearchResult> sortedResults = getSharedBrowserSearchResults(term, vocabName, maxToReturn);
 
@@ -1096,14 +1211,20 @@ public class VocabularyController {
    		
     	SearchParams sp = new SearchParams();
     	sp.addSort(new Sort(SortConstants.SCORE, true));		// sort by descending score
-    	sp.setPageSize(maxToReturn + 1);
+    	sp.setPageSize(maxToReturn + 1);						// use 1 more, so know to display like "50+"
 
+    	boolean searchedByID = false;		// is the user searching by an ID?
+    	
     	// short-circuit for searches by ID
     	if (Pattern.matches("[A-Za-z]+:[A-Za-z0-9]+", term.trim())) {
     		ArrayList<Filter> idFilters = new ArrayList<Filter>();
+    		ArrayList<Filter> subFilters = new ArrayList<Filter>();
     		idFilters.add(new Filter(SearchConstants.VB_VOCAB_NAME, vocabName));
-    		idFilters.add(new Filter(SearchConstants.VB_ACC_ID, term.trim()));
+    		subFilters.add(new Filter(SearchConstants.VB_ACC_ID, term.trim()));
+    		subFilters.add(new Filter(SearchConstants.VB_CROSSREF, term.trim()));
+    		idFilters.add(Filter.or(subFilters));
     		sp.setFilter(Filter.and(idFilters));
+    		searchedByID = true;
 
     	} else {
     		// not an ID search, so we do a little more work on cleansing term and synonym searches
@@ -1150,12 +1271,17 @@ public class VocabularyController {
 
 
     	SearchResults<BrowserTerm> sr = vocabFinder.getBrowserTerms(sp);
-
+    	List<BrowserTerm> resultObjects = sr.getResultObjects();
+    	
+    	if (searchedByID) {
+    		Collections.sort(resultObjects, new BrowserTermComparator());
+    	}
+    	
     	// need to wrap each resulting BrowserTerm in a VocabBrowserSearchResults, then pass it the
     	// list of search tokens (needed for highlighting)
 
     	List<VocabBrowserSearchResult> results = new ArrayList<VocabBrowserSearchResult>();
-    	for (BrowserTerm matchedTerm : sr.getResultObjects()) {
+    	for (BrowserTerm matchedTerm : resultObjects) {
     		VocabBrowserSearchResult result = new VocabBrowserSearchResult(matchedTerm);
     		result.setTokens(tokens);
     		results.add(result);
@@ -1350,5 +1476,34 @@ public class VocabularyController {
     		return terms.get(0);
     	}
     	return null;
+    }
+    
+    /***--- special comparators for smart-alpha sorting vocab browser results (shared and EMAPA-specific) ---***/
+    
+    private class BrowserTermComparator extends SmartAlphaComparator<BrowserTerm> {
+    	public int compare(BrowserTerm t1, BrowserTerm t2) {
+    		// smart-alpha sort of BrowserTerm objects by term (fall back on ID sorting, if terms match)
+    		
+    		int i = super.compare(t1.getTerm(), t2.getTerm());
+    		if (i == 0) {
+    			i = super.compare(t1.getPrimaryID().getAccID(), t2.getPrimaryID().getAccID());
+    		}
+    		return i;
+    	}
+    }
+
+    private class SolrAnatomyTermComparator extends SmartAlphaComparator<SolrAnatomyTerm> {
+    	public int compare(SolrAnatomyTerm t1, SolrAnatomyTerm t2) {
+    		// smart-alpha sort of SolrAnatomyTerm objects by term (fall back on stage range, then ID sorting)
+    		
+    		int i = super.compare(t1.getStructure(), t2.getStructure());
+    		if (i == 0) {
+    			i = super.compare(t1.getStageRange(), t2.getStageRange());
+    		}
+    		if (i == 0) {
+    			i = super.compare(t1.getAccID(), t2.getAccID());
+    		}
+    		return i;
+    	}
     }
 }

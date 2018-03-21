@@ -13,6 +13,7 @@ import java.util.Properties;
 import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.HomologyCluster;
@@ -46,6 +47,7 @@ import org.jax.mgi.fewi.finder.DbInfoFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.QueryFormOptionFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
+import org.jax.mgi.fewi.finder.WKSilversMarkerFinder;
 import org.jax.mgi.fewi.forms.AlleleQueryForm;
 import org.jax.mgi.fewi.forms.BatchQueryForm;
 import org.jax.mgi.fewi.forms.MarkerQueryForm;
@@ -61,6 +63,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrSummaryMarker;
 import org.jax.mgi.fewi.summary.GxdImageSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.MarkerSummaryRow;
+import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.GOGraphConverter;
@@ -100,6 +103,9 @@ public class MarkerController {
 
 	@Autowired
 	private MarkerFinder markerFinder;
+
+	@Autowired
+	private WKSilversMarkerFinder wkSilversMarkerFinder;
 
 	@Autowired
 	private DbInfoFinder dbInfoFinder;
@@ -1876,5 +1882,20 @@ public class MarkerController {
 	@SuppressWarnings("rawtypes")
 	private boolean notEmpty(List l) {
 		return l!=null && l.size()>0;
+	}
+	
+	/* Serve up the Rosetta table for the W.K. Silvers book via Ajax
+	 */
+	@RequestMapping(value="/wksilversTable")
+	public ModelAndView wksilversTable(HttpServletRequest request, HttpServletResponse response) {
+		logger.debug("->wksilversTable() started");
+
+		// need to add headers to allow AJAX access
+		AjaxUtils.prepareAjaxHeaders(response);
+
+		// setup view object
+		ModelAndView mav = new ModelAndView("wksilvers_table");
+		mav.addObject("markers", wkSilversMarkerFinder.getWKSilversMarkers());
+		return mav;
 	}
 }

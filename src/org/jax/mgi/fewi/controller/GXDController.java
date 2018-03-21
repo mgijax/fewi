@@ -16,9 +16,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import mgi.frontend.datamodel.Allele;
+import mgi.frontend.datamodel.Genotype;
+import mgi.frontend.datamodel.RelatedTermBackward;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.VocabTerm;
+import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
@@ -27,21 +30,32 @@ import org.jax.mgi.fewi.finder.BatchFinder;
 import org.jax.mgi.fewi.finder.CdnaFinder;
 import org.jax.mgi.fewi.finder.GxdBatchFinder;
 import org.jax.mgi.fewi.finder.GxdFinder;
+import org.jax.mgi.fewi.finder.MPCorrelationMatrixCellFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
+import org.jax.mgi.fewi.finder.RecombinaseFinder;
+import org.jax.mgi.fewi.finder.RecombinaseMatrixCellFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.VocabularyFinder;
 import org.jax.mgi.fewi.forms.BatchQueryForm;
 import org.jax.mgi.fewi.forms.GxdHtQueryForm;
 import org.jax.mgi.fewi.forms.GxdLitQueryForm;
 import org.jax.mgi.fewi.forms.GxdQueryForm;
+import org.jax.mgi.fewi.forms.RecombinaseQueryForm;
 import org.jax.mgi.fewi.handler.GxdMatrixHandler;
+import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.matrix.GxdGeneMatrixPopup;
 import org.jax.mgi.fewi.matrix.GxdMatrixCell;
 import org.jax.mgi.fewi.matrix.GxdMatrixMapper;
 import org.jax.mgi.fewi.matrix.GxdMatrixRow;
+import org.jax.mgi.fewi.matrix.GxdPhenoMatrixCell;
+import org.jax.mgi.fewi.matrix.GxdPhenoMatrixMapper;
+import org.jax.mgi.fewi.matrix.GxdRecombinaseMatrixCell;
+import org.jax.mgi.fewi.matrix.GxdRecombinaseMatrixMapper;
 import org.jax.mgi.fewi.matrix.GxdStageGridJsonResponse;
 import org.jax.mgi.fewi.matrix.GxdStageMatrixMapper;
 import org.jax.mgi.fewi.matrix.GxdStageMatrixPopup;
+import org.jax.mgi.fewi.matrix.PhenoMatrixPopup;
+import org.jax.mgi.fewi.matrix.RecombinaseMatrixPopup;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
@@ -54,10 +68,14 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDagEdge;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdAssay;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdGeneMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdPhenoMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRecombinaseMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdStageMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.SolrMPCorrelationMatrixCell;
+import org.jax.mgi.fewi.searchUtil.entities.SolrRecombinaseMatrixCell;
 import org.jax.mgi.fewi.searchUtil.entities.SolrString;
 import org.jax.mgi.fewi.summary.GxdAssayResultSummaryRow;
 import org.jax.mgi.fewi.summary.GxdAssaySummaryRow;
@@ -66,8 +84,8 @@ import org.jax.mgi.fewi.summary.GxdImageSummaryRow;
 import org.jax.mgi.fewi.summary.GxdMarkerSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.FilterUtil;
+import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.QueryParser;
-import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.shr.fe.query.SolrLocationTranslator;
 import org.jax.mgi.shr.jsonmodel.Clone;
@@ -127,6 +145,9 @@ public class GXDController {
 	@Autowired
 	private ReferenceFinder referenceFinder;
 
+	@Autowired
+	private RecombinaseFinder recombinaseFinder;
+
 	@Autowired AlleleFinder alleleFinder;
 
 	@Autowired
@@ -136,10 +157,19 @@ public class GXDController {
 	private VocabularyFinder vocabFinder;
 
 	@Autowired
+	private MPCorrelationMatrixCellFinder mpCorrelationMatrixCellFinder;
+
+	@Autowired
+	private RecombinaseMatrixCellFinder recombinaseMatrixCellFinder;
+
+	@Autowired
 	private GXDLitController gxdLitController;
 
 	@Autowired
 	private BatchController batchController;
+
+	@Autowired
+	private RecombinaseController recombinaseController;
 
 	@Autowired
 	private GXDHTController gxdhtController;
@@ -149,6 +179,9 @@ public class GXDController {
 
 	@Autowired
 	private CdnaFinder cdnaFinder;
+
+	@Autowired
+	private DiseasePortalFinder diseasePortalFinder;
 
 	@Value("${solr.factetNumberDefault}")
 	private Integer facetLimit;
@@ -970,9 +1003,133 @@ public class GXDController {
 		return gxdGeneMatrixPopup;
 	}
 
+	/* handle request for JSON data from the expression x phenotype grid.  Cells can be either for expression
+	 * data (for a marker, indicated by colId = 0) or phenotype data (for a genocluster, indicated by colId > 0).
+	 */
+	@RequestMapping("/phenogridPopup/json")
+	public @ResponseBody PhenoMatrixPopup phenoMatrixPopupJson(
+			HttpSession session,
+			HttpServletRequest request,
+			@ModelAttribute GxdQueryForm query,
+			@RequestParam(value="rowId") String rowId,
+			@RequestParam(value="colId") String colId,
+			@RequestParam(value="genoclusterKey", required=false) String genoclusterKey
+			) {
+		logger.debug("phenoMatrixPopupJson() started");
+		
+		// find the requested marker, so we can get the symbol
+		List<Marker> markerList = markerFinder.getMarkerByPrimaryId(query.getMarkerMgiId());
+		Marker marker = markerList.get(0); 
+
+		// If we are seeking wild-type expression data for the gene, use the existing gene grid's method
+		// to do the basic retrieval.  If column 0 is desired, that's our indicator.
+		if (colId.equals("0")) {
+			// then get the relevant cell from the existing endpoint and convert it to a popup for this endpoint
+			query.setWildtypeFilter(Arrays.asList("wild type"));
+			PhenoMatrixPopup popup = new PhenoMatrixPopup(gxdGeneMatrixPopupJson(session, request, query, rowId, marker.getSymbol())); 
+			popup.setSymbol(marker.getSymbol());
+			popup.setMarkerId(marker.getPrimaryID());
+			return popup;
+		}
+		
+		// If we got here, we're instead looking for a popup for a phenotype cell.
+
+		// find the requested structure
+		List<VocabTerm> structureList = vocabFinder.getTermByID(rowId);
+		VocabTerm structure = structureList.get(0);
+
+		// the object to return as a JSON object
+		PhenoMatrixPopup phenoMatrixPopup = new PhenoMatrixPopup(structure.getPrimaryID(), structure.getTerm());
+		phenoMatrixPopup.setSymbol(marker.getSymbol());
+
+		// build data for this for the marker/structure pair
+		if ((query.getMarkerMgiId() != null) && !"".equals(query.getMarkerMgiId().trim())) {
+			String fewiURL = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+
+			List<HdpGenoCluster> genoclusters = diseasePortalFinder.getGenoClusterByKey(genoclusterKey);
+			if (genoclusters.size() > 0) {
+				Genotype genotype = genoclusters.get(0).getGenotype();
+				if (genotype != null) {
+					phenoMatrixPopup.setAlleles(FormatHelper.formatUnlinkedAlleles(genotype.getCombination1()));
+				}
+				phenoMatrixPopup.setGenoclusterLink(fewiURL + "diseasePortal/genoCluster/view/" + genoclusterKey + "?structureID=" + rowId);
+			} else {
+				phenoMatrixPopup.setGenoclusterLink(fewiURL + "diseasePortal/genoCluster/view/" + genoclusterKey);
+			}
+		}
+		
+		return phenoMatrixPopup;
+	}
+
+	/* handle request for JSON data from the expression x recombinase grid.  Cells can be either for expression
+	 * data (for a marker, indicated by colId = 0) or recombinase data (for an allele, indicated by colId > 0).
+	 */
+	@RequestMapping("/recombinasegridPopup/json")
+	public @ResponseBody RecombinaseMatrixPopup recombinaseMatrixPopupJson(
+			HttpSession session,
+			HttpServletRequest request,
+			@ModelAttribute GxdQueryForm query,
+			@RequestParam(value="rowId") String rowId,
+			@RequestParam(value="colId") String colId,
+			@RequestParam(value="alleleId", required=false) String alleleId
+			) {
+		logger.debug("recombinaseMatrixPopupJson() started");
+		logger.info("mgiMarkerId: " + query.getMarkerMgiId());
+		logger.info("alleleId: " + alleleId);
+		logger.info("colId: " + colId);
+		logger.info("rowId: " + rowId);
+		
+		// find the requested marker, so we can get the symbol
+		List<Marker> markerList = markerFinder.getMarkerByPrimaryId(query.getMarkerMgiId());
+		Marker marker = markerList.get(0); 
+
+		Allele allele = null;
+		if ((alleleId != null) && (alleleId.trim().length() > 0)) {
+			List<Allele> alleleList = alleleFinder.getAlleleByID(alleleId);
+			allele = alleleList.get(0);
+		}
+		
+		// If we are seeking wild-type expression data for the gene, use the existing gene grid's method
+		// to do the basic retrieval.  If column 0 is desired, that's our indicator.
+		if (colId.equals("0")) {
+			// then get the relevant cell from the existing endpoint and convert it to a popup for this endpoint
+			query.setWildtypeFilter(Arrays.asList("wild type"));
+			RecombinaseMatrixPopup popup = new RecombinaseMatrixPopup(gxdGeneMatrixPopupJson(session, request, query, rowId, marker.getSymbol())); 
+			popup.setSymbol(marker.getSymbol());
+			popup.setMarkerId(marker.getPrimaryID());
+			return popup;
+		}
+		
+		// If we got here, we're instead looking for a popup for a recombinase cell.
+
+		// find the requested structure
+		List<VocabTerm> structureList = vocabFinder.getTermByID(rowId.trim());
+		VocabTerm structure = structureList.get(0);
+
+		// the object to return as a JSON object
+		RecombinaseMatrixPopup matrixPopup = new RecombinaseMatrixPopup(structure.getPrimaryID(), structure.getTerm());
+		matrixPopup.setSymbol(marker.getSymbol());
+
+		// build data for this for the marker/structure/allele trio
+		if ((query.getMarkerMgiId() != null) && !"".equals(query.getMarkerMgiId().trim())) {
+			String fewiURL = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+
+			SolrRecombinaseMatrixCell solrCell = this.getRecombinaseCell(marker.getPrimaryID(), rowId, alleleId);
+			matrixPopup.setCountNegResults(solrCell.getNotDetectedResults());
+			matrixPopup.setCountAmbResults(solrCell.getAnyAmbiguous());
+			matrixPopup.setCountPosResults(solrCell.getDetectedResults());
+
+			if (allele != null) {
+				matrixPopup.setAllele(allele.getSymbol());
+				matrixPopup.setAlleleLink(fewiURL + "allele/" + allele.getPrimaryID() + "?recomRibbon=open");
+			}
+		}
+		
+		return matrixPopup;
+	}
 
 	@RequestMapping("/stagegrid/json")
-	public @ResponseBody GxdStageGridJsonResponse gxdStageGridJson(
+	public @ResponseBody GxdStageGridJsonResponse<GxdMatrixCell> gxdStageGridJson(
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query,
 			@ModelAttribute Paginator page,
@@ -996,7 +1153,7 @@ public class GXDController {
 		if(totalCount!=null && totalCount<page.getStartIndex())
 		{
 			logger.debug("reached end of result set");
-			return new GxdStageGridJsonResponse();
+			return new GxdStageGridJsonResponse<GxdMatrixCell>();
 		}
 
 		// if we have a mapChildrenOf query, we filter by structureIds of the child rows of this parentId
@@ -1072,16 +1229,490 @@ public class GXDController {
 		}
 
 		// add to the response object
-		GxdStageGridJsonResponse jsonResponse = new GxdStageGridJsonResponse();
+		GxdStageGridJsonResponse<GxdMatrixCell> jsonResponse = new GxdStageGridJsonResponse<GxdMatrixCell>();
 		jsonResponse.setParentTerms(parentTerms);
 		jsonResponse.setGxdMatrixCells(gxdMatrixCells);
 
 		logger.debug("sending json response");
 		return jsonResponse;
+	}
+
+	// serve up data for the recombinase grid
+	@RequestMapping("/recombinasegrid/json")
+	public @ResponseBody GxdStageGridJsonResponse<GxdRecombinaseMatrixCell> gxdRecombinaseGridJson(
+			HttpServletRequest request,
+			@ModelAttribute GxdQueryForm query,
+			@ModelAttribute Paginator page,
+			@RequestParam(value="mapChildrenOf",required=false) String childrenOf,
+			@RequestParam(value="pathToOpen",required=false) List<String> pathsToOpen,
+			@RequestParam(value="alleleID",required=false) String alleleID,
+			HttpSession session) throws CloneNotSupportedException
+			{
+		logger.debug("gxdRecombinaseGridJson() started");
+		
+		boolean isFirstPage = page.getStartIndex() == 0;
+		boolean isChildrenOfQuery = childrenOf!=null && !childrenOf.equals("");
+
+		if (query.getMarkerMgiId() == null) {
+			logger.debug("no marker ID specified");
+			return new GxdStageGridJsonResponse<GxdRecombinaseMatrixCell>();
+		}
+		
+		// determine if the marker is a driver for any recombinases; if not, bail out
+		SearchResults<Marker> markers = markerFinder.getMarkerByID(query.getMarkerMgiId());
+		if (markers.getTotalCount() == 0) {
+			logger.debug("cannot find marker for ID " + query.getMarkerMgiId());
+			return new GxdStageGridJsonResponse<GxdRecombinaseMatrixCell>();
+		}
+		
+		Marker marker = markers.getResultObjects().get(0);
+		if (!marker.isDriver()) {
+			logger.debug("no recombinase alleles for ID " + query.getMarkerMgiId());
+			return new GxdStageGridJsonResponse<GxdRecombinaseMatrixCell>();
+		}
+		
+		// We only want wild-type expression data for this grid.
+		query.setIsWildType("true");
+		
+		// save original query in case we are expanding a row
+		GxdQueryForm originalQuery = (GxdQueryForm) query.clone();
+		String sessionQueryString = originalQuery.toString();
+
+		// check if we have a totalCount set (if so, we return early to indicate end of data)
+		String totalCountSessionId = "GxdRecombinaseMatrixTotalCount_"+sessionQueryString;
+		Integer totalCount = (Integer) session.getAttribute(totalCountSessionId);
+		if(totalCount!=null && totalCount<page.getStartIndex())
+		{
+			logger.debug("reached end of result set");
+			return new GxdStageGridJsonResponse<GxdRecombinaseMatrixCell>();
+		}
+
+		// pull in phenotype cells for the marker/childrenOf pair
+		List<SolrRecombinaseMatrixCell> recombinaseCells = null;
+		if ((query.getMarkerMgiId() != null) && !"".equals(query.getMarkerMgiId().trim())) {
+			recombinaseCells = this.getRecombinaseCells(query.getMarkerMgiId(), childrenOf);
+			logger.info("Got " + recombinaseCells.size() + " recombinase cells");
+		}
+		
+		// if we have a mapChildrenOf query, we filter by structureIds of the child rows of this parentId
+		if(isChildrenOfQuery)
+		{
+			gxdMatrixHandler.addMapChildrenOfFilterForMatrix(query,childrenOf);
+			pathsToOpen = null;
+		}
+
+		// get the matrix results for this page
+		SearchParams params = new SearchParams();
+		params.setPaginator(page);
+		params.setFilter(parseGxdQueryForm(query));
+		SearchResults<SolrGxdRecombinaseMatrixResult> searchResults = gxdFinder.searchRecombinaseMatrixResults(params);
+		logger.debug("got recombinase matrix results");
+		List<SolrGxdRecombinaseMatrixResult> resultList = searchResults.getResultObjects();
+
+		// cache total count of assay results
+		session.setAttribute(totalCountSessionId,searchResults.getTotalCount());
+
+		// get the parent rows to be displayed
+		List<GxdMatrixRow> parentTerms = gxdMatrixHandler.getParentTermsToDisplay(query,childrenOf,pathsToOpen);
+
+		List<GxdMatrixRow> flatRows = gxdMatrixHandler.getFlatTermList(parentTerms);
+
+		// this gets all edges, but we only need all of them for the first page
+		List<SolrDagEdge> edges = getDAGDescendentRelationships(query,flatRows).getResultObjects();
+
+		// prune empty data rows
+		if(isFirstPage)
+		{
+			Set<String> rowsWithChildren = new HashSet<String>();
+			for(SolrDagEdge edge : edges)
+			{
+				rowsWithChildren.add(edge.getParentId());
+			}
+			Set<String> idsWithData = getExactStructureIds(query);
+			idsWithData.addAll(rowsWithChildren);
+
+			if (recombinaseCells != null) {
+				for (SolrRecombinaseMatrixCell cell : recombinaseCells) {
+					idsWithData.add(cell.getAnatomyID());
+				}
+			}
+			parentTerms = gxdMatrixHandler.pruneEmptyRows(parentTerms,idsWithData);
+		}
+
+		// get matrix cells and set the marker ID, as appropriate
+		GxdRecombinaseMatrixMapper mapper = new GxdRecombinaseMatrixMapper(edges);
+		List<GxdRecombinaseMatrixCell> gxdMatrixCells = mapper.mapRecombinaseGridCells(flatRows, resultList);
+		if ((query.getMarkerMgiId() != null) && (query.getMarkerMgiId().trim().length() > 0)) {
+			for (GxdRecombinaseMatrixCell cell : gxdMatrixCells) {
+				cell.setMgiId(query.getMarkerMgiId());
+				cell.setSymbol(cell.getSymbol() + " - gene expression");
+			}
+		}
+
+		// add recombinase cells to the expression ones just built
+		if (recombinaseCells != null) {
+			Set<String> idsWithChildren = new HashSet<String>();
+			for (SolrRecombinaseMatrixCell cell : recombinaseCells) {
+				GxdRecombinaseMatrixCell gpm = new GxdRecombinaseMatrixCell("Recombinase", cell.getAnatomyID(), "" + cell.getByColumn(), false);
+				gpm.setAmbiguous(cell.getAnyAmbiguous());
+				gpm.setAmbiguousOrNotDetectedChildren(cell.getAmbiguousOrNotDetectedChildren());
+				gpm.setByRecombinase(cell.getByColumn());
+				gpm.setCellType(cell.getCellType());
+				gpm.setDetected(cell.getDetectedResults());
+				gpm.setNotDetected(cell.getNotDetectedResults());
+				gpm.setSymbol(cell.getSymbol());
+				gpm.setChildren(cell.getChildren());
+				gpm.setMgiId(cell.getColumnID());		// set allele ID
+				if ( (alleleID != null) && (alleleID.equals(cell.getColumnID())) ) {
+					gpm.setHighlightColumn(true);
+				}
+				gxdMatrixCells.add(gpm);
+				
+				if (cell.getChildren() > 0) {
+					idsWithChildren.add(cell.getAnatomyID());
+				}
+			}
+			
+			if (idsWithChildren.size() > 0) {
+				for (GxdMatrixRow row : parentTerms) {
+					setExForRecombinases(row, idsWithChildren);
+				}
+			}
+		}
+
+		// only generate row relationships on first page/batch
+		if (isFirstPage)
+		{
+			gxdMatrixHandler.assignOpenCloseState(parentTerms,query,edges);
+		}
+
+		// add to the response object
+		GxdStageGridJsonResponse<GxdRecombinaseMatrixCell> jsonResponse = new GxdStageGridJsonResponse<GxdRecombinaseMatrixCell>();
+		jsonResponse.setParentTerms(parentTerms);
+		jsonResponse.setGxdMatrixCells(gxdMatrixCells);
+
+		logger.debug("sending json response");
+		return jsonResponse;
+	}
+
+	// set the ex flag appropriately for 'row' and its children, if corresponding ids are in 'idsWithChildren'
+	private GxdMatrixRow setExForRecombinases (GxdMatrixRow row, Set<String> idsWithChildren) {
+		if (idsWithChildren.contains(row.getRid())) {
+			row.setEx(true);
+		}
+		for (GxdMatrixRow childRow : row.getChildren()) {
+			setExForRecombinases(childRow, idsWithChildren);
+		}
+		return row;
+	}
+	
+	// serve up data for the phenogrid, aka the correlation matrix
+	@RequestMapping("/phenogrid/json")
+	public @ResponseBody GxdStageGridJsonResponse<GxdPhenoMatrixCell> gxdPhenoGridJson(
+			HttpServletRequest request,
+			@ModelAttribute GxdQueryForm query,
+			@ModelAttribute Paginator page,
+			@RequestParam(value="mapChildrenOf",required=false) String childrenOf,
+			@RequestParam(value="pathToOpen",required=false) List<String> pathsToOpen,
+			@RequestParam(value="genoclusterKey",required=false) String genoclusterKey,
+			HttpSession session) throws CloneNotSupportedException
+			{
+		logger.debug("gxdPhenoGridJson() started");
+		
+		// We only want wild-type expression data for this grid.
+		query.setIsWildType("true");
+		
+		populateMarkerIDs(session, query);
+
+		boolean isFirstPage = page.getStartIndex() == 0;
+		boolean isChildrenOfQuery = childrenOf!=null && !childrenOf.equals("");
+
+		// save original query in case we are expanding a row
+		GxdQueryForm originalQuery = (GxdQueryForm) query.clone();
+		String sessionQueryString = originalQuery.toString();
+
+		// check if we have a totalCount set (if so, we return early to indicate end of data)
+		String totalCountSessionId = "GxdPhenoMatrixTotalCount_"+sessionQueryString;
+		Integer totalCount = (Integer) session.getAttribute(totalCountSessionId);
+		if(totalCount!=null && totalCount<page.getStartIndex())
+		{
+			logger.debug("reached end of result set");
+			return new GxdStageGridJsonResponse<GxdPhenoMatrixCell>();
+		}
+
+		// pull in phenotype cells for the marker/childrenOf pair
+		List<SolrMPCorrelationMatrixCell> mpCells = null;
+		if ((query.getMarkerMgiId() != null) && !"".equals(query.getMarkerMgiId().trim())) {
+			mpCells = this.getMPCells(query.getMarkerMgiId(), childrenOf);
+			logger.info("Got " + mpCells.size() + " MP cells");
+		}
+		
+		// if we have a mapChildrenOf query, we filter by structureIds of the child rows of this parentId
+		if(isChildrenOfQuery)
+		{
+			gxdMatrixHandler.addMapChildrenOfFilterForMatrix(query,childrenOf);
+			pathsToOpen = null;
+		}
+
+		// get the matrix results for this page
+		SearchParams params = new SearchParams();
+		params.setPaginator(page);
+		params.setFilter(parseGxdQueryForm(query));
+		SearchResults<SolrGxdPhenoMatrixResult> searchResults = gxdFinder.searchPhenoMatrixResults(params);
+		logger.debug("got pheno matrix results");
+		List<SolrGxdPhenoMatrixResult> resultList = searchResults.getResultObjects();
+
+		// cache total count of assay results
+		session.setAttribute(totalCountSessionId,searchResults.getTotalCount());
+
+		// get the parent rows to be displayed
+		List<GxdMatrixRow> parentTerms = gxdMatrixHandler.getParentTermsToDisplay(query,childrenOf,pathsToOpen);
+
+		List<GxdMatrixRow> flatRows = gxdMatrixHandler.getFlatTermList(parentTerms);
+
+		// this gets all edges, but we only need all of them for the first page
+		List<SolrDagEdge> edges = getDAGDescendentRelationships(query,flatRows).getResultObjects();
+
+		// prune empty data rows
+		if(isFirstPage)
+		{
+			Set<String> rowsWithChildren = new HashSet<String>();
+			for(SolrDagEdge edge : edges)
+			{
+				rowsWithChildren.add(edge.getParentId());
+			}
+			Set<String> idsWithData = getExactStructureIds(query);
+			idsWithData.addAll(rowsWithChildren);
+			
+			if (mpCells != null) {
+				for (SolrMPCorrelationMatrixCell cell : mpCells) {
+					idsWithData.add(cell.getAnatomyID());
+				}
 			}
 
+			parentTerms = gxdMatrixHandler.pruneEmptyRows(parentTerms,idsWithData);
+		}
+
+		// get matrix cells and set the marker ID, if available
+		GxdPhenoMatrixMapper mapper = new GxdPhenoMatrixMapper(edges);
+		List<GxdPhenoMatrixCell> gxdMatrixCells = mapper.mapPhenoGridCells(flatRows, resultList);
+		if ((query.getMarkerMgiId() != null) && (query.getMarkerMgiId().trim().length() > 0)) {
+			for (GxdPhenoMatrixCell cell : gxdMatrixCells) {
+				cell.setMarkerId(query.getMarkerMgiId());
+				cell.setSymbol(cell.getSymbol() + " - gene expression");
+			}
+		}
+
+		// add phenotype cells to the expression ones just built
+		if (mpCells != null) {
+			Set<String> idsWithChildren = new HashSet<String>();
+			for (SolrMPCorrelationMatrixCell cell : mpCells) {
+				GxdPhenoMatrixCell gpm = new GxdPhenoMatrixCell("Pheno", cell.getAnatomyID(), "" + cell.getByGenocluster(), false);
+				gpm.setAllelePairs(cell.getAllelePairs());
+				gpm.setGenoclusterKey("" + cell.getGenoclusterKey());
+				gpm.setPhenoAnnotationCount(cell.getAnnotationCount());
+				gpm.setByGenocluster(cell.getByGenocluster());
+				gpm.setHasBackgroundSensitivity(cell.getHasBackgroundSensitivity());
+				gpm.setIsNormal(cell.getIsNormal());
+				gpm.setChildren(cell.getChildren());
+				
+				if ((genoclusterKey != null) && (genoclusterKey.trim().length() > 0)) {
+					if (genoclusterKey.equals(gpm.getGenoclusterKey())) {
+						gpm.setHighlightColumn(true);
+					}
+				}
+				gxdMatrixCells.add(gpm);
+				
+				if (cell.getChildren() > 0) {
+					idsWithChildren.add(cell.getAnatomyID());
+				}
+			}
+			
+			if (idsWithChildren.size() > 0) {
+				for (GxdMatrixRow row : parentTerms) {
+					setExForRecombinases(row, idsWithChildren);
+				}
+			}
+		}
+		
+		// only generate row relationships on first page/batch
+		if (isFirstPage)
+		{
+			gxdMatrixHandler.assignOpenCloseState(parentTerms,query,edges);
+		}
+
+		// add to the response object
+		GxdStageGridJsonResponse<GxdPhenoMatrixCell> jsonResponse = new GxdStageGridJsonResponse<GxdPhenoMatrixCell>();
+		jsonResponse.setParentTerms(parentTerms);
+		jsonResponse.setGxdMatrixCells(gxdMatrixCells);
+
+		logger.debug("sending json response");
+		return jsonResponse;
+	}
+
+	/* Get a list of recombinase cells for a recombinase matrix for the given marker.  If non-null childrenOf
+	 * will specify a single EMAPA ID whose child rows we want to retrieve.  Assumes markerID is not null.
+	 */
+	private List<SolrRecombinaseMatrixCell> getRecombinaseCells (String markerID, String childrenOf) {
+		List<Filter> queryFilters = new ArrayList<Filter>();
+		Filter markerIDFilter = new Filter(SearchConstants.CM_MARKER_ID, markerID);
+		queryFilters.add(markerIDFilter);
+		
+		if ((childrenOf != null) && (childrenOf.trim().length() > 0)) {
+			// subsequent searches will always request the children of a particular parent ID
+			List<Filter> parentFilters = new ArrayList<Filter>();
+			for (String parentID : childrenOf.split(",")) {
+				parentFilters.add(new Filter(SearchConstants.CM_PARENT_ANATOMY_ID, parentID));
+			}
+			queryFilters.add(Filter.or(parentFilters));
+		} else {
+			// initial search should include cells for mouse, child terms of mouse, and child terms of organ system
+			String mouseId = "EMAPA:25765";
+			String organSystemId = "EMAPA:16103";
+			List<Filter> termFilters = new ArrayList<Filter>();
+			List<Filter> parentFilters = new ArrayList<Filter>();
+			parentFilters.add(new Filter(SearchConstants.CM_PARENT_ANATOMY_ID, mouseId));
+			parentFilters.add(new Filter(SearchConstants.CM_PARENT_ANATOMY_ID, organSystemId));
+			termFilters.add(new Filter(SearchConstants.ANATOMY_ID, mouseId));
+			termFilters.add(Filter.or(parentFilters));
+			queryFilters.add(Filter.or(termFilters));
+		}
+
+		SearchParams params = new SearchParams();
+		params.setPaginator(new Paginator(100000));
+		params.setFilter(Filter.and(queryFilters));
+
+		SearchResults<SolrRecombinaseMatrixCell> searchResults = recombinaseMatrixCellFinder.getCells(params);
+		return searchResults.getResultObjects();
+	}
+	
+	// Retrieve the data for a single recombinase cell in an expression x recombinase activity matrix.
+	private SolrRecombinaseMatrixCell getRecombinaseCell(String markerID, String anatomyID, String alleleID) {
+		List<Filter> queryFilters = new ArrayList<Filter>();
+		if ((markerID != null) && (markerID.trim().length() > 0)) {
+			queryFilters.add(new Filter(SearchConstants.CM_MARKER_ID, markerID));
+		}
+		if ((anatomyID != null) && (anatomyID.trim().length() > 0)) {
+			queryFilters.add(new Filter(SearchConstants.ANATOMY_ID, anatomyID));
+		}
+		if ((alleleID != null) && (alleleID.trim().length() > 0)) {
+			queryFilters.add(new Filter(SearchConstants.COLUMN_ID, alleleID));
+		}
+		
+		SearchParams params = new SearchParams();
+		params.setPaginator(new Paginator(100000));
+		params.setFilter(Filter.and(queryFilters));
+
+		SearchResults<SolrRecombinaseMatrixCell> searchResults = recombinaseMatrixCellFinder.getCells(params);
+		if (searchResults.getTotalCount() > 1) {
+			logger.error("getRecombinaseCell(" + markerID + "," + anatomyID + "," + alleleID + ") expected 1 cell, got " + searchResults.getTotalCount());
+		} else if (searchResults.getTotalCount() == 0) {
+			return null;
+		}
+		return searchResults.getResultObjects().get(0);
+	}
+
+	/* Get a list of MP cells for a correlation matrix for the given marker.  If non-null childrenOf
+	 * will specify a single EMAPA ID whose child rows we want to retrieve.  Assumes markerID is not null.
+	 */
+	private List<SolrMPCorrelationMatrixCell> getMPCells (String markerID, String childrenOf) {
+		List<Filter> queryFilters = new ArrayList<Filter>();
+		Filter markerIDFilter = new Filter(SearchConstants.CM_MARKER_ID, markerID);
+		queryFilters.add(markerIDFilter);
+		
+		if ((childrenOf != null) && (childrenOf.trim().length() > 0)) {
+			// subsequent searches will always request the children of a particular parent ID
+			List<Filter> parentFilters = new ArrayList<Filter>();
+			for (String parentID : childrenOf.split(",")) {
+				parentFilters.add(new Filter(SearchConstants.CM_PARENT_ANATOMY_ID, parentID));
+			}
+			queryFilters.add(Filter.or(parentFilters));
+		} else {
+			// initial search should include cells for mouse, child terms of mouse, and child terms of organ system
+			String mouseId = "EMAPA:25765";
+			String organSystemId = "EMAPA:16103";
+			List<Filter> termFilters = new ArrayList<Filter>();
+			List<Filter> parentFilters = new ArrayList<Filter>();
+			parentFilters.add(new Filter(SearchConstants.CM_PARENT_ANATOMY_ID, mouseId));
+			parentFilters.add(new Filter(SearchConstants.CM_PARENT_ANATOMY_ID, organSystemId));
+			termFilters.add(new Filter(SearchConstants.ANATOMY_ID, mouseId));
+			termFilters.add(Filter.or(parentFilters));
+			queryFilters.add(Filter.or(termFilters));
+		}
+
+		SearchParams params = new SearchParams();
+		params.setPaginator(new Paginator(100000));
+		params.setFilter(Filter.and(queryFilters));
+
+		SearchResults<SolrMPCorrelationMatrixCell> searchResults = mpCorrelationMatrixCellFinder.getCells(params);
+		return searchResults.getResultObjects();
+	}
+	
+	/* Retrieves the list of MP IDs we should highlight for the given structureID / genoclusterKey pair.
+	 * This includes MP IDs mapped to either structureID or its descendants, as they contribute 
+	 * annotations to the grid cell defined by structureID and genoclusterKey.
+	 */
+	@RequestMapping("/phenogrid/annotated_pheno_ids")
+	public @ResponseBody String phenoGridAnnotatedPhenoIDs(
+		@RequestParam(value="genoclusterKey") String genoclusterKey,
+		@RequestParam(value="structureID") String structureID) {
+
+		// get the anatomy term, so we can pick up the structure key
+		List<VocabTerm> structureTerms = vocabFinder.getTermByID(structureID);
+		if (structureTerms == null || structureTerms.size() == 0) {
+			return "";
+		}
+		Integer structureKey = structureTerms.get(0).getTermKey();
+		
+		// build filters based on input parameters
+		List<Filter> queryFilters = new ArrayList<Filter>();
+		queryFilters.add(new Filter(SearchConstants.GENOCLUSTER_KEY, genoclusterKey));
+
+		List<Filter> termFilters = new ArrayList<Filter>();
+		termFilters.add(new Filter(SearchConstants.ANCESTOR_ANATOMY_KEY, structureKey.toString()));
+		termFilters.add(new Filter(SearchConstants.ANATOMY_ID, structureID));
+		queryFilters.add(Filter.or(termFilters));
+
+		// execute the search to bring back all grid cells that would have contributed to that one
+		// (searching by parentAnatomyID will bring back all cells of descendants of the structureID)
+		SearchParams params = new SearchParams();
+		params.setPaginator(new Paginator(100000));
+		params.setFilter(Filter.and(queryFilters));
+		SearchResults<SolrMPCorrelationMatrixCell> searchResults = mpCorrelationMatrixCellFinder.getCells(params);
+
+		// build a set of all structure IDs that contributed annotations to the cell
+		Set<String> emapaIDs = new HashSet<String>();
+		emapaIDs.add(structureID);
+		for (SolrMPCorrelationMatrixCell cell : searchResults.getResultObjects()) {
+			emapaIDs.add(cell.getAnatomyID());
+		}
+		
+		// now build a set of all MP IDs that are mapped to those structure IDs
+		Set<String> mpIDs = new HashSet<String>();
+		for (String emapaID : emapaIDs) {
+			for (VocabTerm emapaTerm : vocabFinder.getTermByID(emapaID)) {
+				for (RelatedTermBackward relationship : emapaTerm.getRelatedTermsBackward()) {
+					if ("MP to EMAPA".equals(relationship.getRawRelationshipType())) {
+						mpIDs.add(relationship.getRelatedTerm().getPrimaryId());
+					}
+				}
+			}
+		}
+
+		// compose our output string
+		StringBuffer sb = new StringBuffer();
+		boolean first = true;
+		for (String mpID : mpIDs) {
+			if (!first) { sb.append(","); }
+			else { first = false; }
+			sb.append(mpID);
+		}
+	
+		return sb.toString();
+	}
+
 	@RequestMapping("/genegrid/json")
-	public @ResponseBody GxdStageGridJsonResponse gxdGeneGridJson(
+	public @ResponseBody GxdStageGridJsonResponse<GxdMatrixCell> gxdGeneGridJson(
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query,
 			@ModelAttribute Paginator page,
@@ -1105,7 +1736,7 @@ public class GXDController {
 		if(totalCount!=null && totalCount<page.getStartIndex())
 		{
 			logger.debug("reached end of result set");
-			return new GxdStageGridJsonResponse();
+			return new GxdStageGridJsonResponse<GxdMatrixCell>();
 		}
 
 		// if we have a mapChildrenOf query, we filter by structureIds of the child rows of this parentId
@@ -1130,7 +1761,6 @@ public class GXDController {
 		List<GxdMatrixRow> parentTerms = gxdMatrixHandler.getParentTermsToDisplay(query,childrenOf,pathsToOpen);
 
 		List<GxdMatrixRow> flatRows = gxdMatrixHandler.getFlatTermList(parentTerms);
-
 
 		// this gets all edges, but we only need all of them for the first page
 		List<SolrDagEdge> edges = getDAGDescendentRelationships(query,flatRows).getResultObjects();
@@ -1164,14 +1794,87 @@ public class GXDController {
 		}
 
 		// add to the response object
-		GxdStageGridJsonResponse jsonResponse = new GxdStageGridJsonResponse();
+		GxdStageGridJsonResponse<GxdMatrixCell> jsonResponse = new GxdStageGridJsonResponse<GxdMatrixCell>();
 		jsonResponse.setParentTerms(parentTerms);
 		jsonResponse.setGxdMatrixCells(gxdMatrixCells);
 
 		logger.debug("sending json response");
 		return jsonResponse;
-			}
+	}
 
+	/*
+	 * GXD Tissue by Gene/Phenotypes grid
+	 */
+	@RequestMapping(value="/phenogrid/{mrkID}")
+	public ModelAndView gxdPhenoGrid(
+			HttpServletRequest request,
+			@PathVariable("mrkID") String mrkID,
+			@RequestParam(value="genoclusterKey", required=false) String genoclusterKey) {
+
+		logger.debug("->gxdPhenoGrid started");
+
+		ModelAndView mav = new ModelAndView("gxd/gxd_phenogrid");
+		
+        // find the requested marker
+        List<Marker> markerList = markerFinder.getMarkerByPrimaryId(mrkID);
+        if (markerList.size() < 1) {
+            // forward to error page
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Marker Found");
+            return mav;
+        } else if (markerList.size() > 1) {
+            // forward to error page
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "Duplicate ID");
+            return mav;
+        }
+        mav.addObject("marker", markerList.get(0));		
+		
+		// setup view object
+		mav.addObject("mrkID", mrkID);
+		mav.addObject("genoclusterKey", genoclusterKey);
+		mav.addObject("queryString", request.getQueryString());
+
+		logger.debug("gxdPhenoGrid routing to view ");
+		return mav;
+	}
+
+	/*
+	 * GXD Tissue by Gene/Recombinase grid
+	 */
+	@RequestMapping(value="/recombinasegrid/{mrkID}")
+	public ModelAndView gxdGeneRecomGrid(
+			HttpServletRequest request,
+			@PathVariable("mrkID") String mrkID,
+			@RequestParam(value="alleleID", required=false) String alleleID) {
+
+		logger.debug("->gxdGeneRecomGrid started");
+
+		ModelAndView mav = new ModelAndView("gxd/gxd_recombinasegrid");
+		
+        // find the requested marker
+        List<Marker> markerList = markerFinder.getMarkerByPrimaryId(mrkID);
+        if (markerList.size() < 1) {
+            // forward to error page
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Marker Found");
+            return mav;
+        } else if (markerList.size() > 1) {
+            // forward to error page
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "Duplicate ID");
+            return mav;
+        }
+        mav.addObject("marker", markerList.get(0));		
+		
+		// setup view object
+		mav.addObject("mrkID", mrkID);
+		mav.addObject("alleleID", alleleID);
+		mav.addObject("queryString", request.getQueryString());
+
+		logger.debug("gxdGeneRecomGrid routing to view ");
+		return mav;
+	}
 
 	// -----------------------------------------------------------------//
 	// Methods for getting query counts
@@ -1506,8 +2209,52 @@ public class GXDController {
 	private boolean isDifferentialQuery(GxdQueryForm query)
 	{
 		return (query.getDifStructureID()!=null && !query.getDifStructureID().equals(""))
-				||
-				(query.getDifTheilerStage().size() > 0);
+				|| (query.getDifTheilerStage().size() > 0)
+				|| (query.getAnywhereElse() != "" && query.getAnywhereElse().trim().length() > 0);
+	}
+
+	/* This method creates the differential part 1 filters (used by resolveDifferentialMarkers() below)
+	 * for cases where the "NOT anywhere else" checkbox has been checked.  It seemed simpler and more
+	 * maintainable than trying to work it into the existing complex code.
+	 */
+	private void buildNowhereElseFilters(List<Filter> queryFilters, String structureID, List<Integer> stages) {
+		/* If we got here, we have one of three cases:
+		 * 1. user specified a single structure and checked "AND NOT anywhere else"
+		 * 2. user specified 1+ Theiler stages and checked "AND NOT anywhere else"
+		 * 3. user specified both a structure and 1+ Theiler stages and checked "AND NOT anywhere else"
+		 */
+		logger.info("entering buildNowhereElseFilters() with " + queryFilters.size() + " filters");
+		boolean hasStructure = (structureID != null) && (structureID.trim().length() > 0);
+		boolean hasStages = (stages != null) && (stages.size() > 0);
+		
+		List<Filter> diffFilters = new ArrayList<Filter>();
+		
+		// Look for the single specified structure (by key) in the exclusive structures field.
+		if (hasStructure) {
+			List<VocabTerm> structureList = vocabFinder.getTermByID(structureID);
+			if (structureList.size() > 0) {
+				diffFilters.add(new Filter(GxdResultFields.DIFF_EXCLUSIVE_STRUCTURES, 
+					structureList.get(0).getTermKey(), Filter.Operator.OP_EQUAL));
+			} else {
+				logger.error("Cannot find key of EMAPA ID: " + structureID);
+			}
+		} 
+		
+		// Ensure that no other stages (other than those specified) appear in the exclusive stages field.
+		if (hasStages && !stages.contains(GxdQueryForm.ANY_STAGE)) {
+			for (int stage = 1; stage <= 28; stage++) {
+				if (!stages.contains(stage)) {
+					diffFilters.add(new Filter(GxdResultFields.DIFF_EXCLUSIVE_STAGES, stage, Filter.Operator.OP_NOT_HAS));
+				}
+			}
+		}
+		
+		if (diffFilters.size() > 1) {
+			queryFilters.add(Filter.and(diffFilters));
+		} else if (diffFilters.size() == 1) {
+			queryFilters.add(diffFilters.get(0));
+		}
+		logger.info("exiting with " + queryFilters.size() + " filters");
 	}
 
 	/*
@@ -1531,9 +2278,23 @@ public class GXDController {
 				&& difStructure!=null && !difStructure.equals(""));
 		boolean hasStages = (stages.size() > 0 && difStages.size()>0
 				&& !(stages.contains(GxdQueryForm.ANY_STAGE) && difStages.contains(GxdQueryForm.ANY_STAGE_NOT_ABOVE)));
+		boolean nowhereElse = (query.getAnywhereElse() != null) && (query.getAnywhereElse().trim().length() > 0);
 
+		if (!nowhereElse) {
+			if (query.getAnywhereElse() == null) {
+				logger.info("anywhereElse is null");
+			} else if (query.getAnywhereElse().trim().length() == 0) {
+				logger.info("anywhereElse is empty string");
+			}
+		}
+		// handle the case on the differential form where the "AND NOT anywhere else" checkbox is checked
+		if (nowhereElse) {
+			logger.info("building nowhereElse filters");
+			buildNowhereElseFilters(queryFilters, structure, stages);
+			logger.info("returned from building nowhereElse filters");
+		}
 		// perform structure diff
-		if(hasStructures && !hasStages)
+		else if(hasStructures && !hasStages)
 		{
 			Filter sFilter = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,structure);
 			Filter dsFilter = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,difStructure);
@@ -1603,6 +2364,81 @@ public class GXDController {
 
 		return gxdFinder.searchDifferential(difSP);
 	}
+	
+	/* For differential searches where the 'AND NOT anywhere else' checkbox was checked...  Creates the
+	 * differential part 2 filters that goes against the gxdResult index.  Split out into a separate method
+	 * to make more maintainable in the future.
+	 */
+	private void buildNowhereElsePart2Filters(List<Filter> queryFilters, String structureID, List<Integer> stages) {
+		// Need to return a set of positive results and a set of negative results.  Positive results should
+		// match by structure, stage, or both, depending on whether either or both were specified.
+
+		List<Filter> myFilters = new ArrayList<Filter>();
+		
+		// Create the positive results filter based on structure and/or stages specified.  This should return
+		// all the "detected" results for each of the genes in the set selected by the part1 filters.
+
+		List<Filter> posFilters = new ArrayList<Filter>();
+
+		if ((structureID != null) && (structureID.trim().length() > 0)) {
+			posFilters.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID, structureID));
+		}
+			
+		if ((stages != null) && (stages.size() > 0)) {
+			if (!stages.contains(GxdQueryForm.ANY_STAGE)) {
+				List<Filter> stageFilters = new ArrayList<Filter>();
+				for(Integer stage : stages) {
+					stageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE, stage, Filter.Operator.OP_HAS_WORD));
+				}
+				// OR the stages together
+				posFilters.add(Filter.or(stageFilters));
+			}
+		}
+			
+		if (posFilters.size() > 0) {
+			posFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));
+			myFilters.add(Filter.and(posFilters));
+		}
+
+		// Create the negative results filter based on structure and/or stages specified.  This should return
+		// the "not detected" results for each of the genes in the set selected by the part1 filters.
+		
+		List<Filter> negFilters = new ArrayList<Filter>();
+
+		if ((structureID != null) && (structureID.trim().length() > 0)) {
+			// Structure ID field also has ancestor IDs, so this should ensure that we avoid the specified
+			// structure and its descendants.
+			negFilters.add(new Filter(SearchConstants.STRUCTURE_ID, structureID, Filter.Operator.OP_EQUAL));
+		}
+			
+		if ((stages != null) && (stages.size() > 0)) {
+			if (!stages.contains(GxdQueryForm.ANY_STAGE)) {
+				List<Filter> stageFilters = new ArrayList<Filter>();
+				// User specified 1+ stages, so we need to make sure that the results are outside those stages.
+				for(Integer stage : stages) {
+					stageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE, stage, Filter.Operator.OP_HAS_WORD));
+				}
+				negFilters.add(Filter.or(stageFilters));
+			}
+		}
+		
+		if (negFilters.size() > 0) {
+			// 1. We always want detected=No for these negative results.
+			// 2. If both structure and stage are filled in, then we should OR those together, since if
+			//		either is different, we would want to return the record.
+
+			List<Filter> combinedNegFilters = new ArrayList<Filter>();
+			combinedNegFilters.add(new Filter(SearchConstants.GXD_DETECTED, "No", Filter.Operator.OP_EQUAL));
+			Filter poolFilter = Filter.and(negFilters);
+			poolFilter.negate();
+			combinedNegFilters.add(poolFilter);
+			myFilters.add(Filter.and(combinedNegFilters));
+		}
+		
+		// Find results matching either the positive criteria or the negative criteria.
+		queryFilters.add(Filter.or(myFilters));
+	}
+	
 	/*
 	 * Creates the differential part 2 filter that goes against the gxdResult index
 	 */
@@ -1620,9 +2456,14 @@ public class GXDController {
 				&& difStructure!=null && !difStructure.equals(""));
 		boolean hasStages = (stages.size() > 0 && difStages.size()>0
 				&& !(stages.contains(GxdQueryForm.ANY_STAGE) && difStages.contains(GxdQueryForm.ANY_STAGE_NOT_ABOVE)));
+		boolean nowhereElse = (query.getAnywhereElse() != null) && (query.getAnywhereElse().trim().length() > 0);
 
+		// if user checked 'AND NOT anywhere else' checkbox, handle that separately
+		if (nowhereElse) {
+			buildNowhereElsePart2Filters(queryFilters, structure, stages);
+		}
 		// perform structure diff
-		if(hasStructures && !hasStages)
+		else if(hasStructures && !hasStages)
 		{
 			// create the positive results filter
 			List<Filter> posFilters = new ArrayList<Filter>();
@@ -1817,9 +2658,11 @@ public class GXDController {
 		// the first this we need to check is if we have differential params
 		if(isDifferentialQuery(query))
 		{
+			logger.info("In differential form processing");
 			// Process DIFFERENTIAL QUERY FORM params
 			// Do part 1 of the differential (I.e. find out what markers to bring back)
 			List<String> markerKeys = resolveDifferentialMarkers(query);
+			logger.info("Found marker keys: " + markerKeys.toString());
 			if(markerKeys !=null && markerKeys.size()>0)
 			{
 				queryFilters.add( new Filter(SearchConstants.MRK_KEY,markerKeys,Filter.Operator.OP_IN));

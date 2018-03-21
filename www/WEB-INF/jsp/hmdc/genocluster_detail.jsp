@@ -28,6 +28,7 @@
 .allBorders { border: 1px solid black }
 .left { text-align: left }
 .white { background-color: white }
+.highlight { background-color: yellow }
 </style>
 
 <!-- summary table at page top -->
@@ -64,6 +65,12 @@
       </c:forEach>
     </table>
     </div>
+    <c:if test="${not empty structureTerm}">
+    	<br/>
+		<span class='highlight'>Highlighted</span> phenotype terms are associated with the anatomy term
+			<span class="label"><a href="${configBean.FEWI_URL}vocab/gxd/anatomy/${structureID}" class="MP" target="_blank">${structureTerm}</a></span>
+			and/or its substructures.
+    </c:if>
   </td>
 </tr>
 </table>
@@ -92,4 +99,17 @@
 	</div>
     <br/>
 </c:forEach>
+<c:if test="${not empty structureID}">
+	<script>
+	// if we were given a structureID parameter, we need to find the MP IDs to highlight and do so
+	$.get('${configBean.FEWI_URL}gxd/phenogrid/annotated_pheno_ids',
+		'genoclusterKey=${genoClusterKey}&structureID=${structureID}',
+		function(data) {
+			var mpIDs = data.replace(/:/g,'').split(',');
+			mpIDs.forEach(function(s) {
+				$('.' + s).addClass('highlight');
+			});
+		});
+	</script>
+</c:if>
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

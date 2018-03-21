@@ -1,5 +1,6 @@
 package org.jax.mgi.fewi.finder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -21,6 +22,8 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrGxdGeneMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdPhenoMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRecombinaseMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdStageMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrString;
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
@@ -36,8 +39,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class GxdFinder {
 
-	private final Logger logger = LoggerFactory
-			.getLogger(AutocompleteFinder.class);
+	private final Logger logger = LoggerFactory.getLogger(GxdFinder.class);
 
 	@Autowired
 	private SolrGxdResultHunter gxdResultHunter;
@@ -205,6 +207,48 @@ public class GxdFinder {
 		return srMR;
 	}
 	
+	/*
+	 * Group by the tissue x gene relevant fields for the recombinase grid
+	 */
+	public SearchResults<SolrGxdRecombinaseMatrixResult> searchRecombinaseMatrixResults(SearchParams params) {
+		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
+		gxdMatrixResultHunter.hunt(params, results, SearchConstants.GENE_MATRIX_GROUP);
+
+		SearchResults<SolrGxdRecombinaseMatrixResult> srMR = new SearchResults<SolrGxdRecombinaseMatrixResult>();
+		srMR.cloneFrom(results, SolrGxdRecombinaseMatrixResult.class);
+		
+		// Default behavior of cloneFrom is giving a list that's still underlying as SolrGxdGeneMatrixResult objects.
+		// Need to clean it up...
+		
+		List<SolrGxdRecombinaseMatrixResult> phenoResults = new ArrayList<SolrGxdRecombinaseMatrixResult>();
+		for (SolrGxdEntity geneResult : results.getResultObjects()) {
+			phenoResults.add(new SolrGxdRecombinaseMatrixResult((SolrGxdGeneMatrixResult) geneResult));
+		}
+		srMR.setResultObjects(phenoResults);
+		return srMR;
+	}
+
+	/*
+	 * Group by the tissue x gene relevant fields for the pheno grid
+	 */
+	public SearchResults<SolrGxdPhenoMatrixResult> searchPhenoMatrixResults(SearchParams params) {
+		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
+		gxdMatrixResultHunter.hunt(params, results, SearchConstants.GENE_MATRIX_GROUP);
+
+		SearchResults<SolrGxdPhenoMatrixResult> srMR = new SearchResults<SolrGxdPhenoMatrixResult>();
+		srMR.cloneFrom(results, SolrGxdPhenoMatrixResult.class);
+		
+		// Default behavior of cloneFrom is giving a list that's still underlying as SolrGxdGeneMatrixResult objects.
+		// Gotta clean it up...
+		
+		List<SolrGxdPhenoMatrixResult> phenoResults = new ArrayList<SolrGxdPhenoMatrixResult>();
+		for (SolrGxdEntity geneResult : results.getResultObjects()) {
+			phenoResults.add(new SolrGxdPhenoMatrixResult((SolrGxdGeneMatrixResult) geneResult));
+		}
+		srMR.setResultObjects(phenoResults);
+		return srMR;
+	}
+
 	/*
 	 * Group by the tissue x gene relevant fields
 	 */

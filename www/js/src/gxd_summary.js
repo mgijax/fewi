@@ -165,20 +165,10 @@ function reverseEngineerFormInput(request)
 	}
 	// make sure correct form is visible
 	// this code allows for flexibility to add third ribbon
-	if(foundDifStruct && foundDifStage)
+	if(foundDifStruct || foundDifStage)
 	{
 		formID = "#gxdDifferentialQueryForm3";
-		showDifBothQF();
-	}
-	else if (foundDifStruct)
-	{
-		formID = "#gxdDifferentialQueryForm1";
-		showDifStructuresQF();
-	}
-	else if (foundDifStage)
-	{
-		formID = "#gxdDifferentialQueryForm2";
-		showDifStagesQF();
+		showDifferentialForm();
 	} else if (foundBatch)
 	{
 		formID = "#gxdBatchQueryForm1";
@@ -473,14 +463,88 @@ function buildSummary(request,tabState)
 	if(doStageGrid)
 	{
 		structureStageGrid();
+		showNowhereElseMessage(request, 'Tissue x Stage Matrix');
 	}
 	else if(doGeneGrid)
 	{
 		structureGeneGrid();
+		showNowhereElseMessage(request, 'Tissue x Gene Matrix');
 	}
 	else
 	{
 		loadDatatable(dataTableInitFunction,request);
+		// not showing a grid, so hide the "nowhere else" message (that applies only to the grids)
+		$('#nowhereElseMessage').hide();
+	}
+}
+
+// Works with clickNotDetectedFilter() to allow easy, programmatic removal of the auto-added Not Detected filter.
+function removeNotDetectedFilter() {
+	$('#detectedFilter\\:No')[0].click();
+	showNowhereElseMessage();
+}
+
+// Works with addNotDetectedFilter() to wait for the filter box to pop up and then click it.
+// It takes time to retrieve the data to pop up the filter box, so allow the given number
+// of 'retries' to wait for it to be available before giving up.
+function clickNotDetectedFilter(retries) {
+	if ($('[name=detectedFilter][value=No]').length > 0) {
+		$('[name=detectedFilter][value=No]').click();
+		$('#yui-gen0-button').click(); 
+
+	} else if (retries > 0) {
+		// wait 100ms and try again
+		setTimeout(function() {
+			clickNotDetectedFilter(retries - 1);
+		}, 100);
+	}
+}
+
+// programmatically select the 'Detected' filter, choose the 'No' option, and apply it
+function addNotDetectedFilter() {
+	// hide the grid-specific message
+	$('#nowhereElseMessage').css('display', 'none');
+
+	// click to bring up the filter box, then wait for it to appear
+	$('#detectedFilter')[0].click();
+	clickNotDetectedFilter(30);
+}
+
+// check the 'Detected' filter values to see if any are 'No'.  If so, show the given 'message' below
+// the grid
+function showGridMessage(message, request) {
+	$.get('/gxd/facet/detected?' + request,
+		function(response) {
+			var showIt = false;
+			if ('resultFacets' in response) {
+				if (response['resultFacets'].indexOf('No') >= 0) {
+					showIt = true;
+				}
+			}
+			if (showIt) {
+				$('#nowhereElseMessage').html(message);
+				$('#nowhereElseMessage').css('display', 'block');
+			} else {
+				$('#nowhereElseMessage').css('display', 'none');
+			}
+		}
+	);
+}
+
+// if the 'request' includes the 'anywhereElse' checkbox, show the corresponding message div
+function showNowhereElseMessage(request, matrixType) {
+	var params = parseRequest(request);
+	var resultCount = YAHOO.util.Dom.get("totalResultsCount").innerHTML;
+
+	// turn the message off by default, and only display it if appropriate
+	$('#nowhereElseMessage').css('display', 'none');
+
+	if (('anywhereElse' in params) && ( (!resultCount || (parseInt(resultCount) > 0)) ) ) {
+		var message = "View the <a class='autofilter' onClick='addNotDetectedFilter(); return false;'>Not Detected data</a> for this gene set";
+		if ('detectedFilter' in params) {
+			message = "View the <a class='autofilter' onClick='removeNotDetectedFilter(); return false;'>Detected data</a> for this gene set";
+		} 
+		showGridMessage(message, request);
 	}
 }
 
@@ -549,7 +613,13 @@ function refreshTabCounts()
 	{
 		if(o.responseText == "-1") o.responseText = "0"; // set count to zero if errors
 		// resolve the request ID to its appropriate handler
-		if(o.tId==resultsRq.tId) YAHOO.util.Dom.get("totalResultsCount").innerHTML = o.responseText;
+		if(o.tId==resultsRq.tId) {
+			YAHOO.util.Dom.get("totalResultsCount").innerHTML = o.responseText;
+			// if no results, we don't need the grid-specific message for 'nowhere else' queries
+			if (parseInt(o.responseText) == 0) {
+				$('#nowhereElseMessage').css('display', 'none');
+			}
+		}
 		else if(o.tId==assaysRq.tId) YAHOO.util.Dom.get("totalAssaysCount").innerHTML = o.responseText;
 		else if(o.tId==genesRq.tId) {
 			log('handling gene count');

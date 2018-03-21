@@ -54,7 +54,7 @@ public class GxdQueryForm implements Cloneable {
 	private String alleleId = "";
 	private String probeKey = "";
 	private String antibodyKey = "";
-
+	
 	// differential specific fields
 	private String difStructure = "";
 	private String difStructureID = "";
@@ -67,6 +67,9 @@ public class GxdQueryForm implements Cloneable {
 	private Map<String, String> difAges = new LinkedHashMap<String, String>();
 	private List<String> difAge = new ArrayList<String>();
 	public final static String ANY_AGE_NOT_ABOVE = "NOT_ABOVE";
+
+	private String anywhereElse = "";		// differential form:  AND NOT anywhere else
+	private String inCheckbox = "";			// differential form:  AND NOT IN this other structure/stage 
 
 	// filters for a result set
 	private List<String> systemFilter = new ArrayList<String>();
@@ -256,6 +259,22 @@ public class GxdQueryForm implements Cloneable {
 
 	public List<String> getLocationUnits() {
 		return locationUnits;
+	}
+
+	public String getAnywhereElse() {
+		return anywhereElse;
+	}
+
+	public void setAnywhereElse(String anywhereElse) {
+		this.anywhereElse = anywhereElse;
+	}
+
+	public String getInCheckbox() {
+		return inCheckbox;
+	}
+
+	public void setInCheckbox(String inCheckbox) {
+		this.inCheckbox = inCheckbox;
 	}
 
 	public List<String> getAssayType() {

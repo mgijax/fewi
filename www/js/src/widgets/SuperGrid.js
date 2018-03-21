@@ -422,7 +422,7 @@ function SGData(config)
     	_self.rows[cell.ri]._d=true;
 
         // make sure column is unique
-        cell.ci = _self.addColumn({cid:cell.cid});
+        cell.ci = _self.addColumn({cid:cell.cid, colDisplay: cell.colDisplay, highlightColumn: cell.highlightColumn});
 
         // set master lookup with row/col indices
         _self.registerCell(cell);
@@ -2154,6 +2154,8 @@ function SuperGrid(config)
 		if(_self.verticalColumnLabels)
 		{
 			_self.colGroup.selectAll(".colText text").attr("y",verticalHeight);
+			_self.colGroup.selectAll(".colText rect").attr("y",verticalHeight - 10);
+			_self.colGroup.selectAll(".colText rect").attr("width", verticalHeight)
 
 			// adjust the rotate origin
 			_self.colGroup.selectAll(".colLine").each(function(d,i){

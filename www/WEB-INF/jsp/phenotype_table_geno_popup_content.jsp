@@ -34,7 +34,7 @@
 
 	<div class="termDiv" id="${mpSystem.cssId}_${term.cssId}">
       <div class="mpTerm" style="margin-left:${term.displayIndent}px;">
-        <a class='MP' target="_blank" href='${configBean.FEWI_URL}vocab/mp_ontology/${term.termId}'>
+        <a class='MP ${fn:replace(term.termId, ":", "")}' target="_blank" href='${configBean.FEWI_URL}vocab/mp_ontology/${term.termId}'>
         ${term.term}</a>
 
         (

@@ -611,6 +611,13 @@ function formatFastaArgs() {
 	    <span class='small'>Summary of all recombinase alleles
 	      <a class='MP' href='${configBean.FEWI_URL}recombinase/summary?driver=${allele.driverNote}'>driven by ${allele.driverNote}</a>.
 	    </span>
+		<c:set var="driverMarker" value="${allele.driverMarker}"/>
+		<c:if test="${(not empty driverMarker) and (driverMarker.organism == 'mouse') and (driverMarker.countOfRecombinaseAllelesWithExpressionData > 0)}">
+		  <span class='small' style='padding-left: 20px'>
+			<a class='MP' href="${configBean.FEWI_URL}gxd/recombinasegrid/${driverMarker.primaryID}?alleleID=${allele.primaryID}">Comparative matrix view
+				of recombinase activities</a>
+		  </span>
+		</c:if>
 	  </td>
 	</tr>
 
@@ -689,9 +696,15 @@ function formatFastaArgs() {
     <td class="<%=rightTdStyles.getNext() %>">
       ${fixedDivOpen}
       <table id="expressionTable">
-      <tr><td class="rightBorderThinGray padded" align="right" width="1%" nowrap="nowrap"><font class="label">In Mice Carrying this Mutation: </font></td>
-      <td class='padded'><a href="${configBean.FEWI_URL}gxd/allele/${allele.primaryID}" class="MP">${allele.countOfExpressionAssayResults} assay results</a></td>
-      </tr></table>
+	  <c:if test="${allele.countOfExpressionAssayResults > 0}">
+      	<tr><td class="rightBorderThinGray padded" align="right" width="1%" nowrap="nowrap"><font class="label">In Mice Carrying this Mutation: </font></td>
+      	<td class='padded'><a href="${configBean.FEWI_URL}gxd/allele/${allele.primaryID}" class="MP">${allele.countOfExpressionAssayResults} assay results</a></td></tr>
+	  </c:if>
+	  <c:if test="${anatomyTermCount > 0}">
+      	<tr><td class="rightBorderThinGray padded" align="right" width="1%" nowrap="nowrap"><font class="label">In Structures Affected by this Mutation: </font></td>
+      	<td class='padded'><a href="${configBean.FEWI_URL}vocab/gxd/anatomy/by_allele/${allele.primaryID}" class="MP">${anatomyTermCount} anatomical structures</a></td></tr>
+	  </c:if>
+	  </table>
       ${fixedDivClose}
     </td>
   </tr>

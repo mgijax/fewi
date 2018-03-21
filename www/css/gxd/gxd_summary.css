@@ -81,6 +81,14 @@ border-collapse: collapse;
 	background-color:#EBCA6D;
 	float:right;
 }
+#matrixPopupPhenotypesButton
+{
+	padding: 3px;
+	margin-top: 8px;
+	margin-left: 80px;
+	background-color:#C6D6E8;
+	float:left;
+}
 
 #structStagePopupContents
 {
@@ -88,6 +96,16 @@ border-collapse: collapse;
 	background-color: #FFFFFF;
 }
 #structGenePopupContents
+{
+	width:100%;
+	background-color: #FFFFFF;
+}
+#phenoGridPopupContents
+{
+	width:100%;
+	background-color: #FFFFFF;
+}
+#recomGridPopupContents
 {
 	width:100%;
 	background-color: #FFFFFF;
@@ -116,6 +134,29 @@ border-collapse: collapse;
 	text-align: center;
 	border:1px;
 }
+#recomPopupTable
+{
+	border-collapse: separate;
+	border-spacing: 2px;
+	width:100%;
+	background-color: #FFFFFF;
+	margin: 0 auto;
+	border:1px;
+}
+
+#recomPopupTable th
+{
+	background-color: #C6D6E8;
+	padding:10px;
+	text-align: center;
+	border:3px;
+}
+#recomPopupTable td
+{
+	padding:10px;
+	text-align: center;
+	border:1px;
+}
 #structStagePopup_h
 {
 	cursor: move;
@@ -124,6 +165,13 @@ border-collapse: collapse;
 	background:	#EEE;
 }
 #structGenePopup_h
+{
+	cursor: move;
+	border-width:0px;
+	line-height:2.5;
+	background:	#EEE;
+}
+#phenoGridPopup_h
 {
 	cursor: move;
 	border-width:0px;
@@ -149,6 +197,18 @@ border-collapse: collapse;
 	padding-bottom: 1px;
 	font-size:160%
 }
+.noResultsIndicator {
+	padding-left: 5px;
+	padding-bottom: 1px;
+	font-size:120%
+}
+.backgroundSensativeIndicator {
+	color:red;
+	padding-left: 6px;
+	padding-bottom: 1px;
+	font-size:120%
+}
+
 *:focus {
     outline: 0;
 }
@@ -164,46 +224,66 @@ border-collapse: collapse;
 	background-color: white;
 }
 
-#sgTarget line, #ggTarget line {
+#sgTarget line, #ggTarget line, #phenoGridTarget line, #geneRecomGridTarget line {
     stroke: #aaa;
     stroke-width: 1px;
 }
-#sgTarget .blue1, #ggTarget .blue1 {
+#phenoGridTarget line.col.col0 {
+    stroke: black !important;
+    stroke-width: 4px !important;
+}
+#geneRecomGridTarget line.col.col0 {
+    stroke: black !important;
+    stroke-width: 4px !important;
+}
+#phenoGridTarget .phenoBlue1 {
+	fill: #C6D6E8;
+}
+#phenoGridTarget .phenoBlue2 {
+	fill: #879EBA;
+}
+#phenoGridTarget .phenoBlue3 {
+	fill: #49648B;
+}
+#phenoGridTarget .phenoBlue4 {
+	fill: #002255;
+}
+#sgTarget .blue1, #ggTarget .blue1, #phenoGridTarget .blue1, #geneRecomGridTarget .blue1 {
 	fill: rgb(215,228,255);
 }
-#sgTarget .blue2, #ggTarget .blue2 {
+#sgTarget .blue2, #ggTarget .blue2, #phenoGridTarget .blue2, #geneRecomGridTarget .blue2 {
 	fill: rgb(102,153,255);
 }
-#sgTarget .blue3, #ggTarget .blue3 {
+#sgTarget .blue3, #ggTarget .blue3, #phenoGridTarget .blue3, #geneRecomGridTarget .blue3 {
 	fill: rgb(0,64,192);
 }
-#sgTarget .red1, #ggTarget .red1 {
+#sgTarget .red1, #ggTarget .red1, #phenoGridTarget .red1, #geneRecomGridTarget .red1 {
 	fill: rgb(255,215,215);
 }
-#sgTarget .red2, #ggTarget .red2 {
+#sgTarget .red2, #ggTarget .red2, #phenoGridTarget .red2, #geneRecomGridTarget .red2 {
 	fill: rgb(255,103,103);
 }
-#sgTarget .red3, #ggTarget .red3 {
+#sgTarget .red3, #ggTarget .red3, #phenoGridTarget .red3, #geneRecomGridTarget .red3 {
 	fill: rgb(192,0,0);
 }
 #sgTarget .gray {
 	/* fill: rgb(191,191,191); */
 	fill: url(#sash28);
 }
-#ggTarget .gray {
+#ggTarget .gray, #phenoGridTarget .gray, #geneRecomGridTarget .gray {
 	/* fill: rgb(191,191,191); */
 	fill: url(#sash24);
 }
-#sgTarget .gold, #ggTarget .gold {
+#sgTarget .gold, #ggTarget .gold, #phenoGridTarget .gold, #geneRecomGridTarget .gold {
 	fill: rgb(255,219,103);
 	/*fill: rgb(243,223,157);*/
 }
 
-#sgTarget .matrixButtonText, #ggTarget .matrixButtonText {
+#sgTarget .matrixButtonText, #ggTarget .matrixButtonText, #phenoGridTarget .matrixButtonText, #geneRecomGridTarget .matrixButtonText {
 	font-weight: bold;
 }
 
-#sgTarget .matrixFilterButton, #ggTarget .matrixFilterButton {
+#sgTarget .matrixFilterButton, #ggTarget .matrixFilterButton, #phenoGridTarget .matrixFilterButton, #geneRecomGridTarget .matrixFilterButton {
 		padding-bottom: 20px;
 		margin-bottom: 20px;
 }
@@ -319,6 +399,34 @@ border-collapse: collapse;
 	background-color: rgb(192,0,0);
 	margin-left: 10px;
 }
+
+
+
+
+
+.legendExampleCell.phenoBlue4 {
+	background-color: #002255;
+	margin-left: 10px;
+}
+.legendExampleCell.phenoBlue3 {
+	background-color: #49648B;
+	margin-left: 30px;
+}
+.legendExampleCell.phenoBlue2 {
+	background-color: #879EBA;
+	margin-left: 50px;
+}
+.legendExampleCell.phenoBlue1 {
+	background-color: #C6D6E8;
+	margin-left: 70px;
+}
+
+
+
+
+
+
+
 
 /* adjust some cell positions in legend */
 .legendExampleCell.posNegCell,

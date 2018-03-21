@@ -56,6 +56,13 @@
 	      </c:if>
 	      </td>
 	    </tr>
+		<c:if test="${term.relatedToTissues}">
+	        <tr><th class="rightBorderThinGray padded label top">Anatomy: </th>
+			  <td class="padded top">
+			  	<a href="${configBean.FEWI_URL}vocab/gxd/anatomy/by_phenotype/${term.primaryID.accID}">tissues</a> associated with this phenotype (with links to expression data)
+			  </td>
+			</tr>
+		</c:if>
 		<c:if test="${not empty term.secondaryIDs}">
 	        <tr><th class="rightBorderThinGray padded label top">Other IDs: </th>
 			  <td class="padded top">

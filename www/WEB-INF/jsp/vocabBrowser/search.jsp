@@ -6,11 +6,19 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
+<!-- We want to hide the search term for links coming in via EMAPA ID. -->
+<c:set var="searchFieldValue" value="${searchTerm}" />
+<c:set var="bestMatch" value=", sorted by best match" />
+<c:if test="${fn:startsWith(searchTerm, 'EMAPA:')}">
+	<c:set var="searchFieldValue" value="" />
+	<c:set var="bestMatch" value="" />
+</c:if>
+ 
 <div style="padding-bottom: 8px;">
 <form name="vocabBrowserSearchForm" onSubmit="refreshSearchPane(); return false;">
 	<div id="searchWrapper">
 		<div id="searchBoxDiv" style="float: left; padding-left: 10px;">
-			<input type="text" size="35" id="searchTerm" name="term" value="${searchTerm}" style="width: auto; position: relative;">
+			<input type="text" size="35" id="searchTerm" name="term" value="${searchFieldValue}" style="width: auto; position: relative;">
 		</div>
 		<div id="clearButtonDiv" style="padding-top: 4px">
     		<input type="button" id="clearButton" value="Clear" name="Clear" onClick="resetSearch()">
@@ -24,7 +32,7 @@
 no matching terms
 </c:if>
 <c:if test="${not empty results}">
-${resultCount} term<c:if test="${fn:length(results) > 1}">s</c:if>, sorted by best match
+${resultCount} term<c:if test="${fn:length(results) > 1}">s</c:if>${bestMatch}
 </c:if>
 </div>
 

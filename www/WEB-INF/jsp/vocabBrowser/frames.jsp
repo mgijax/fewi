@@ -144,7 +144,7 @@ td.padTop { padding-top: 2px }
 <script type="text/javascript">
 	fetchTermPane("${termID}");
 	setInitialTermID("${termID}");
-	fetchSearchPane();
+	fetchSearchPane("${searchTerm}");
 	initializeTreeView("${termID}");
 </script>
 

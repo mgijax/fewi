@@ -27,7 +27,6 @@
       = new StyleAlternator("detailListBg1","detailListBg2");
     VocabTerm term = (VocabTerm) request.getAttribute("term");
 %>
-
 <script type="text/javascript">
 var fewiurl = "${configBean.FEWI_URL}";
 </script>
@@ -135,6 +134,7 @@ ul.ui-autocomplete {
 </div>
 
 <script type="text/javascript">
+var crossRef = "${crossRef}";
 var treeView = null;	// global for the YUI tree itself
 var defaultPath = null;	// list of IDs on path from root to selected node
 var waitForPath = true;	// are we waiting for defaultPath to load?
@@ -142,6 +142,7 @@ var pathCheck = null;	// ID of interval-based check for defaultPath
 var selectedNodeID = null;	// ID of the currently highlighted node
 var alreadyScrolled = false;	// have we already scrolled for this term?
 var gxdResultCount = null;	// count of GXD results for selectedNodeID
+var phenotypeAnnotationCount = null;	// count of phenotype annotations for selectedNodeID
 var logging = false;		// enable logging to browser console?
 
 function numberWithCommas(x) {
@@ -214,6 +215,17 @@ function fetchDetailDiv(selectedNodeID) {
 
     fetchAndCall(sUrl, setDetailDiv);
     return;
+}
+
+function setPhenotypeAnnotationCount(s) {
+    phenotypeAnnotationCount = s;
+    highlightSelectedTerm();
+    return
+}
+
+function fetchPhenotypeAnnotationCount(selectedNodeID) {
+    var sUrl = "${configBean.FEWI_URL}mp/annotations/count_by_anatomy/" + selectedNodeID;
+    fetchAndCall(sUrl, setPhenotypeAnnotationCount);
 }
 
 function setGxdResultCount(s) {
@@ -298,6 +310,7 @@ function resetTree(snID, fullRebuild) {
     selectedNodeID = snID;
 //    setSelectedNode(snID);
     gxdResultCount = null;
+    phenotypeAnnotationCount = null;
     if ((treeView === null) || (fullRebuild === true)) {
 		log(' - in if');
     	treeView = new YAHOO.widget.TreeView("treeViewDiv");
@@ -320,6 +333,24 @@ function resetTree(snID, fullRebuild) {
     }
 }
 
+// format and return a link for phenotype annotations, if the count is > 0
+function phenotypeLink() {
+	if ((phenotypeAnnotationCount === null) || (phenotypeAnnotationCount == '-1')) { return '' }
+
+    var phenoText = 'phenotype annotation';
+    if (phenotypeAnnotationCount != '1') {
+		phenoText = phenoText + 's';
+		
+		// no need for link if count is zero
+	    if (phenotypeAnnotationCount == '0') {
+    		return '0 ' + phenoText;
+    	}
+    }
+    var url = '${configBean.FEWI_URL}mp/annotations/by_anatomy/' + selectedNodeID;
+
+	return '<a href="' + url + '"><span class="phenotypeAnnotationCount">' + numberWithCommas(phenotypeAnnotationCount) + '</span></a> ' + phenoText;
+}
+
 var lastHighlightedNodes = null;	// set of nodes from last highlighting operation
 var originalTerms = {};				// map of ID -> original term (before highlighting)
 
@@ -338,9 +369,6 @@ function highlightSelectedTerm () {
 	}
     });
 
-    // need special handling for "mouse" node; not sure why, seems to be a
-    // YUI quirk
- 
     var countStr = null;
     var plural = true;
     var linked = true;
@@ -368,36 +396,18 @@ function highlightSelectedTerm () {
  
     var spaces = '&nbsp;&nbsp;&nbsp;&nbsp;';
 
-    var link = '</a>' + spaces + '(<a href="' + url + '">' + countStr + '</a> '
-	+ resultText + ')';
+    var phenoLink = phenotypeLink();
+    if (phenoLink != '') {
+    	phenoLink = '; ' + phenoLink;	
+    }
+    
+    var link = '</a>' + spaces + '(<a href="' + url + '"><span class="expressionResultCount">' + countStr + '</span></a> '
+		+ resultText + phenoLink + ')';
 
     if (!linked) {
-        link = '</a>' + spaces + '(' + countStr + ' ' + resultText + ')';
+        link = '</a>' + spaces + '(' + countStr + ' ' + resultText + phenoLink + ')';
     }
 
-/*
-    if ((selectedNodeID == 'EMAPA:25765') || (selectedNodeID.indexOf("EMAPS:25765") == 0)) {
-		var mouseNodes = treeView.getNodesBy(function (node) { return true; });
-		if (mouseNodes) {
-		    var mouseNode;
-	    	for (var j = 0; j < mouseNodes.length; j++) {
-	    	    mouseNode = mouseNodes[j];
-				if ((mouseNode.data.accID == 'EMAPA:25765') ||
-			    	(mouseNode.data.accID.indexOf('EMAPS:25765') == 0)) {
-			  		if (!mouseNode.data.highlighted) {
-			    		if (!(mouseNode.data.accID in originalTerms)) {
-			    			originalTerms[mouseNode.data.accID] = mouseNode.label;
-			    		}
-	    	        	mouseNode.data.highlighted = true;
-			    		mouseNode.label = '<span class="highlight bold">' + mouseNode.label + '</span>' + link;
-			  		}
-				}
-	    	}
-	    	treeView.render();
-	    	return;
-		}
-    }
-*/
 	// remove highights from previously selected nodes
 	if (lastHighlightedNodes != null) {
 		var pNode = null;
@@ -605,17 +615,19 @@ function fillSearchPane(contents) {
     return;
 }
 
-function refreshSearchPane() {
+function refreshSearchPane(initialSearch) {
     // refresh the search pane
 
-    var searchTerm = "";
+    var searchTerm = initialSearch;
+    if ((searchTerm == null) || (searchTerm == undefined)) {
+    	searchTerm = "";
+    }
     var searchTermBox = document.getElementById("searchTerm");
     if (searchTermBox) {
-	searchTerm = searchTermBox.value;
+		searchTerm = searchTermBox.value;
     }
 
-    var sUrl = "${configBean.FEWI_URL}vocab/gxd/anatomySearch?term=" +
-	searchTerm;
+    var sUrl = "${configBean.FEWI_URL}vocab/gxd/anatomySearch?term=" + searchTerm;
     fetchAndCall (sUrl, fillSearchPane);
 }
 
@@ -623,7 +635,7 @@ function resetSearch() {
     // reset button for the search form; clear the text and the search results
 
     document.getElementById("searchTerm").value = "";
-    refreshSearchPane();
+    refreshSearchPane("");
 }
 
 function resetPanes(accID, rebuildTree) {
@@ -645,6 +657,7 @@ function resetPanes(accID, rebuildTree) {
     selectedNode = null;
     selectedNodeID = accID;
     fetchResultCount(accID);
+    fetchPhenotypeAnnotationCount(accID);
     fetchDetailDiv(accID);
     resetTree(accID, rebuildTree);
     setBrowserTitle(accID);
@@ -730,7 +743,7 @@ resizePanes();
 YAHOO.namespace("example.container");
 YAHOO.util.Event.onDOMReady(function () {	
 	resetPanes("${term.primaryId}", true);
-	refreshSearchPane();
+	refreshSearchPane(crossRef);
 	resizePanes();
 });
 

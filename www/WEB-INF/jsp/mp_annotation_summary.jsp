@@ -50,7 +50,7 @@ span.tall { line-height: 150%; }
 	link to marker detail page -->
 
 <c:if test="${not empty marker}">
-<table class="results" style="width:100%">
+<table id="markerTable" class="results" style="width:100%">
   <tr align="left" valign="top">
 	  <td class="mpAnnot" style="vertical-align: bottom; text-align: right; width:8%; background-color:#DFEFFF"><font face="Arial,Helvetica">
       <b>Symbol</b><br/>
@@ -68,12 +68,12 @@ span.tall { line-height: 150%; }
 <p/>
 </c:if>
 
-<table style="width:100%">
+<table id="resultsTable" style="width:100%">
 
 <!-- row 1 : counts of genotypes and annotations -->
 <tr class="pageInfo">
   <td colspan="3" class="mpAnnot">
-    ${genotypeCount} genotypes with ${annotationCount} annotations displayed
+    <span id="genotypeCount">${genotypeCount}</span> genotypes with <span id="annotationCount">${annotationCount}</span> annotations displayed
     of selected term and subterms
     <c:if test="${not empty marker}">for ${marker.symbol}</c:if>
   </td>
@@ -82,7 +82,12 @@ span.tall { line-height: 150%; }
 <!-- row 2 : searched term with link to MP browser -->
 <tr class="pageInfo">
   <td colspan="3" class="mpAnnot">
+	<c:if test="${not empty mpID}">
 	  <b>Searched Term:</b> <a href="${configBean.FEWI_URL}vocab/mp_ontology/${term.primaryID}">${term.term}</a>
+	</c:if>
+	<c:if test="${not empty emapaID}">
+	  <b>Searched Anatomy Term:</b> <a href="${configBean.FEWI_URL}vocab/gxd/anatomy/${term.primaryID}">${term.term}</a>
+	</c:if>
   </td>
 </tr>
 
