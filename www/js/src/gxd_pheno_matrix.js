@@ -321,6 +321,7 @@ window.PhenoMatrixRender = new function()
  *
  * Some rendering and logic details are in gxd_summary_matrix.js
  */
+window.firstLegend=true;
 var phenoSuperGrid = function()
 {
 	// gather query string and store in window scope 
@@ -365,10 +366,12 @@ var phenoSuperGrid = function()
 	        	makeMatrixResizable("phenoGridTarget",40,40);
 
 	        	// create the legend after grid has completed rendering
-	        	YAHOO.phenoGridNS.container.legendPanel = new YAHOO.widget.Panel("geneLegendPopupPanel", { width:"530px", visible:false, constraintoviewport:true, context:['phenoGridWrapper', 'tl', 'tr',['beforeShow','windowResize']] });
-	        	YAHOO.phenoGridNS.container.legendPanel.render();
-	        	YAHOO.phenoGridNS.container.legendPanel.show();
-
+	        	if(window.firstLegend){
+		        	YAHOO.phenoGridNS.container.legendPanel = new YAHOO.widget.Panel("geneLegendPopupPanel", { width:"530px", visible:false, constraintoviewport:true, context:['phenoGridWrapper', 'tl', 'tr',['beforeShow','windowResize']] });
+		        	YAHOO.phenoGridNS.container.legendPanel.render();
+		        	YAHOO.phenoGridNS.container.legendPanel.show();
+	        		window.firstLegend=false;		
+	        	} 
 	        }
 	    });
 	}
