@@ -1346,6 +1346,7 @@ public class GXDController {
 			for (GxdRecombinaseMatrixCell cell : gxdMatrixCells) {
 				cell.setMgiId(query.getMarkerMgiId());
 				cell.setSymbol(cell.getSymbol() + " - gene expression");
+				cell.setHighlightColumn(true);
 			}
 		}
 
@@ -1500,6 +1501,7 @@ public class GXDController {
 			for (GxdPhenoMatrixCell cell : gxdMatrixCells) {
 				cell.setMarkerId(query.getMarkerMgiId());
 				cell.setSymbol(cell.getSymbol() + " - gene expression");
+				cell.setHighlightColumn(true);
 			}
 		}
 
