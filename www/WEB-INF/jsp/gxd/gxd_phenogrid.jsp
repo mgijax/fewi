@@ -43,6 +43,7 @@
 </div>
 
 <%@ include file="/WEB-INF/jsp/marker_header.jsp" %>
+<br/>
 
 <!-- Gene/Pheno grid injected into this element -->
 <div id="phenoGridWrapper">
