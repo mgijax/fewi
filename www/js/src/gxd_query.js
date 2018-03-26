@@ -283,7 +283,7 @@ var updateQuerySummary = function() {
 		}
 		var selectedDifStages = parseStageOptions("difTheilerStage4","-1");
 		var notDetectedStages = [];
-		var notDetectedStagesText = "developmental stage(s):";
+		var notDetectedStagesText = " any of the developmental stage(s):";
 		if(selectedDifStages=="Any") notDetectedStagesText = "<b>Any developmental stage not selected above</b>";
 		else
 		{
@@ -293,21 +293,44 @@ var updateQuerySummary = function() {
 			}
 			notDetectedStagesText += " ("+notDetectedStages.join(", ")+")";
 		}
+		
+		// if structure on top, then must have structure (or nowhere else checked) on bottom.
+		// may or may not have a stage on top and/or bottom.
+		
+		var topStructure = YAHOO.util.Dom.get('difStructure3').value;
+		var bottomStructure = YAHOO.util.Dom.get('difStructure4').value;
+		var nowhereElse = YAHOO.util.Dom.get('anywhereElse').checked;
 
-		if (YAHOO.util.Dom.get("anywhereElse").checked) {
-			el.set('innerHTML',"Detected in <b>"+YAHOO.util.Dom.get('difStructure3').value+"</b>" +
-				"<span class=\"smallGrey\"> includes synonyms & substructures</span>"+
-				"<br/>at "+detectedStagesText+
-				"<br/>but not detected or assayed <b>anywhere else</b>");
+		if (topStructure != '') {
+			if (nowhereElse) {
+				el.set('innerHTML',"Detected in <b>" + topStructure + "</b>" +
+					"<span class=\"smallGrey\"> includes substructures</span>"+
+					"<br/>at "+detectedStagesText+
+					"<br/>but not detected or assayed <b>anywhere else</b>");
+			} else {
+				el.set('innerHTML',"Detected in <b>"+YAHOO.util.Dom.get('difStructure3').value+"</b>" +
+					"<span class=\"smallGrey\"> includes substructures</span>"+
+					"<br/>at "+detectedStagesText+
+					"<br/>but not detected or assayed in <b>"+
+						YAHOO.util.Dom.get('difStructure4').value+"</b>"+
+					"<span class=\"smallGrey\"> includes substructures</span>"+
+					"<br/>in " + notDetectedStagesText);
+			}
 		} else {
-			el.set('innerHTML',"Detected in <b>"+YAHOO.util.Dom.get('difStructure3').value+"</b>" +
-				"<span class=\"smallGrey\"> includes synonyms & substructures</span>"+
-				"<br/>at "+detectedStagesText+
-				"<br/>but not detected or assayed in <b>"+
-					YAHOO.util.Dom.get('difStructure4').value+"</b>"+
-				"<span class=\"smallGrey\"> includes synonyms & substructures</span>"+
-				"<br/>in any of the "+notDetectedStagesText);
+			// no structures to consider, so we have either:
+			// 1. stage vs. nowhere else, or
+			// 2. stage vs. stage
+
+			if (nowhereElse) {
+				el.set('innerHTML',"Detected at " + detectedStagesText +
+					"<br/>but not detected or assayed <b>anywhere else</b>");
+			} else {
+				el.set('innerHTML',"Detected at " + detectedStagesText +
+					"<br/>but not detected or assayed " +
+					"<br/>in " + notDetectedStagesText);
+			}
 		}
+		
 		el.appendTo(searchParams);
 	}
 	else if (currentQF == 'batch') {
@@ -463,7 +486,7 @@ var updateQuerySummary = function() {
 
 			var sp = new YAHOO.util.Element(document.createElement('span'));
 			sp.addClass("smallGrey");
-			sp.appendChild(document.createTextNode(" includes synonyms & substructures"));
+			sp.appendChild(document.createTextNode(" includes substructures"));
 			el.appendChild(sp);
 
 			el.appendChild(new YAHOO.util.Element(document.createElement('br')));
