@@ -280,7 +280,21 @@ window.PhenoMatrixRender = new function()
 	{
 		var labelPaddingLeft = 4;
 		var labelPaddingBottom = 4;
-	    return  d3Target.append("text")
+
+		// supergrid may resize this rect, as needed
+		d3Target.append("rect")
+		.attr("x", 2)
+		.attr("y", cellSize-labelPaddingBottom)
+		.attr("width", 150)
+		.attr("height", 14)
+		.attr("fill",function(d){ 
+   		var isHighlightCol = d.highlightColumn;
+    		if (isHighlightCol) {
+    			return "#E2ac00";
+    			}
+    		return "transparent"})
+		
+		d3Target.append("text")
 	    	.attr("x", 0)
 	    	.attr("y",cellSize-labelPaddingBottom)
 	    	.text(function(d){ 
@@ -288,19 +302,22 @@ window.PhenoMatrixRender = new function()
 	    		if (displayValue.length > 33){
 	    			displayValue = displayValue.substring(0,32) + "...";
 	    		}
-	    		return displayValue;
-	    	})
+	    		return displayValue;})	    	
 	    	.style("fill",function(d){ 
-	    		var isHighlightCol = d.highlightColumn;
-	    		if (isHighlightCol) {
-	    			return "#49648B";
+	    		if (d.highlightColumn) {
+	    			return "#000000";
 	    			}
-	    		return "#000000"})
+	    		return "#49648B"})
+	    	.style("font-weight",function(d){ 
+	    		if (d.highlightColumn) {
+	    			return "700";
+	    			}
+	    		return "500"})
 	    	.style("font-size","12px")
-	    	.style("font-weight","bold")
 	    	.style("cursor","pointer")
-	    	.append("svg:title")
-	    	.text(function(d) { return d.colDisplay; });	
+			.append("svg:title").text(function(d) { return d.colDisplay; });	
+		
+		return  d3Target
 	};
 
     this.StructureStageCellRenderer = function(d3Target,cellSize,cell){
