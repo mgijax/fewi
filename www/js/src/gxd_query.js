@@ -314,7 +314,7 @@ var updateQuerySummary = function() {
 					"<br/>but not detected or assayed in <b>"+
 						YAHOO.util.Dom.get('difStructure4').value+"</b>"+
 					"<span class=\"smallGrey\"> includes substructures</span>"+
-					"<br/>in " + notDetectedStagesText);
+					"<br/>at " + notDetectedStagesText);
 			}
 		} else {
 			// no structures to consider, so we have either:
@@ -327,7 +327,7 @@ var updateQuerySummary = function() {
 			} else {
 				el.set('innerHTML',"Detected at " + detectedStagesText +
 					"<br/>but not detected or assayed " +
-					"<br/>in " + notDetectedStagesText);
+					"<br/>at " + notDetectedStagesText);
 			}
 		}
 		
