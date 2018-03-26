@@ -142,7 +142,7 @@
 	<span class='noResultsIndicator' >N</span>
 	</div>
 	</div>
-	<span class='legendExampleRange'> No abnormalities detected, </span> <br/>
+	<span class='legendExampleRange'> no abnormalities detected, </span> <br/>
 	<span class='legendExampleRange'> contrary to expectations</span>
   </div>
 
@@ -152,9 +152,21 @@
 	<span class='backgroundSensativeIndicator' >!</span>
 	</div>
 	</div>
-	<span class='legendExampleRange'> Phenotype varies with </span> <br/>
+	<span class='legendExampleRange'> phenotype varies with </span> <br/>
 	<span class='legendExampleRange'> strain background</span>
   </div>
+
+	<div class='legendSection geneOnly' >
+		<div class='legendExampleCell'>
+		  <div class='inSubStructIndicatorWrapper'>
+		  </div>
+		</div>
+		<span class='legendExampleRange'> no annotations mapped to this </span>
+		<br/>
+		<span class='legendExampleRange'> structure or substructure </span>
+	</div>
+
+
 
 </div>
 
