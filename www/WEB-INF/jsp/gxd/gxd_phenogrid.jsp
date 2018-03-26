@@ -42,6 +42,8 @@
         </span>
 </div>
 
+<%@ include file="/WEB-INF/jsp/marker_header.jsp" %>
+
 <!-- Gene/Pheno grid injected into this element -->
 <div id="phenoGridWrapper">
   <div id="phenoGridTarget" class="matrixContainer"></div>
