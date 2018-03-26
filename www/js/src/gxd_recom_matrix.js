@@ -235,6 +235,7 @@ window.GeneRecomMatrixRender = new function()
 		var labelPaddingLeft = 4;
 		var labelPaddingBottom = 4;
 
+		// supergrid may resize this rect, as needed
 		d3Target.append("rect")
 		.attr("x", 2)
 		.attr("y", cellSize-labelPaddingBottom)
@@ -243,7 +244,7 @@ window.GeneRecomMatrixRender = new function()
 		.attr("fill",function(d){ 
    		var isHighlightCol = d.highlightColumn;
     		if (isHighlightCol) {
-    			return "yellow";
+    			return "#E2ac00";
     			}
     		return "transparent"})
 		
@@ -251,18 +252,24 @@ window.GeneRecomMatrixRender = new function()
 	    	.attr("x", 0)
 	    	.attr("y",cellSize-labelPaddingBottom)
 	    	.text(function(d){ 
-	    		return d.colDisplay;})
+	    		var displayValue = d.colDisplay.trim();
+	    		if (displayValue.length > 33){
+	    			displayValue = displayValue.substring(0,32) + "...";
+	    		}
+	    		return displayValue;})	    	
 	    	.style("fill",function(d){ 
 	    		if (d.highlightColumn) {
-	    			return "#0000FF";
+	    			return "#000000";
 	    			}
-	    		return "#000000"})
-	    	.style("font-size",function(d){ 
+	    		return "#49648B"})
+	    	.style("font-weight",function(d){ 
 	    		if (d.highlightColumn) {
-	    			return "14px";
+	    			return "700";
 	    			}
-	    		return "12px"})
-	    	.style("font-weight","700");
+	    		return "500"})
+	    	.style("font-size","12px")
+	    	.style("cursor","pointer")
+			.append("svg:title").text(function(d) { return d.colDisplay; });	
 		
 		return  d3Target
 	};
@@ -285,6 +292,7 @@ window.GeneRecomMatrixRender = new function()
  *
  * Some rendering and logic details are in gxd_summary_matrix.js
  */
+window.firstLegend=true;
 var geneRecomSuperGrid = function()
 {
 	// gather query string and store in window scope 
@@ -320,12 +328,13 @@ var geneRecomSuperGrid = function()
 	        	//When matrix is drawn/redrawn we resize it with margins, to fit the browser window
 	        	makeMatrixResizable("geneRecomGridTarget",40,40);
 
-	        	// create the legend after grid has completed rendering
-	        	YAHOO.recomGridNS.container.legendPanel = new YAHOO.widget.Panel("recomLegendPopupPanel", { width:"260px", visible:false, constraintoviewport:true, context:['geneRecomGridWrapper', 'tl', 'tr',['beforeShow','windowResize']] });
-	        	YAHOO.recomGridNS.container.legendPanel.render();
-	        	YAHOO.recomGridNS.container.legendPanel.show();
-	        	
-	        	
+	        	if(window.firstLegend){
+	        		// create the legend after grid has completed rendering
+	        		YAHOO.recomGridNS.container.legendPanel = new YAHOO.widget.Panel("recomLegendPopupPanel", { width:"260px", visible:false, constraintoviewport:true, context:['geneRecomGridWrapper', 'tl', 'tr',['beforeShow','windowResize']] });
+	        		YAHOO.recomGridNS.container.legendPanel.render();
+	        		YAHOO.recomGridNS.container.legendPanel.show();
+	        		window.firstLegend=false;		
+	        	}
 	        }
 	    });
 	}
