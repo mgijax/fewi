@@ -98,9 +98,14 @@
 					<br/>
 					<span>System(s) in bold contain matching search terms.</span>
 					<br/></c:if>
-    <span class="pageAdvice" style="height: 20px;">
-	    Click column headings to sort table data.
-    </span>
+    	<div class="pageAdvice" style="height: 20px;">
+	    	Click column headings to sort table data.
+    	</div>
+    	<div class="pageAdvice" style="height: 20px;">
+	    	Matrix view is not available for all alleles. Please see 
+	    	<a href="" onclick="javascript:openUserhelpWindow('RECOMBINASE_summary_help.shtml'); return false;">Help</a> 
+			for details.
+    	</div>
 		</div>
 	</div>
 	<div id="rightcolumn">
