@@ -103,7 +103,7 @@
     	</div>
     	<div class="pageAdvice" style="height: 20px;">
 	    	Matrix view is not available for all alleles. Please see 
-	    	<a href="" onclick="javascript:openUserhelpWindow('RECOMBINASE_summary_help.shtml'); return false;">Help</a> 
+	    	<a href="" onclick="javascript:openUserhelpWindow('RECOMBINASE_summary_help.shtml#nomatrix'); return false;">Help</a> 
 			for details.
     	</div>
 		</div>
