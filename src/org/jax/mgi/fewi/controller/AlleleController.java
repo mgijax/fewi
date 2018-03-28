@@ -135,11 +135,13 @@ public class AlleleController {
 
 		initQFCache();
 		List<String> collectionValues = AlleleQueryForm.getCollectionValues();
+		List<String> mutationValues = AlleleQueryForm.getMutationValues();
 
 		// package data, and send to display layer
 		mav.addObject("alleleQueryForm", query);
 		mav.addObject("sort", new Paginator());
 		mav.addObject("collectionValues", collectionValues);
+		mav.addObject("mutationValues", mutationValues);
 		return mav;
 	}
 
@@ -171,10 +173,12 @@ public class AlleleController {
 
 		initQFCache();
 		List<String> collectionValues = AlleleQueryForm.getCollectionValues();
+		List<String> mutationValues = AlleleQueryForm.getMutationValues();
 		mav.addObject("alleleQueryForm",query);
 		mav.addObject("queryString", request.getQueryString());
 		mav.addObject("collectionValues", collectionValues);
-
+		mav.addObject("mutationValues", mutationValues);
+		
 		// add a flag if the request was for alleles related to a
 		// marker via a 'mutation involves' relationship
 		if (query.getMutationInvolves() != null) {
@@ -487,6 +491,10 @@ public class AlleleController {
 		// Allele Collection
 		Filter collectionFilter = makeListFilter(query.getCollection(),SearchConstants.ALL_COLLECTION, false);
 		if(collectionFilter!=null) filters.add(collectionFilter);
+
+		// Allele Mutation
+		Filter mutationFilter = makeListFilter(query.getMutation(), SearchConstants.ALL_MUTATION, false);
+		if(mutationFilter!=null) filters.add(mutationFilter);
 
 		// Phenotypes
 		String phenotype = query.getPhenotype();
@@ -1672,9 +1680,14 @@ public class AlleleController {
 			SearchParams sp = new SearchParams();
 			sp.setPageSize(0);
 			sp.setFilter(new Filter(SearchConstants.ALL_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD));
+
 			SearchResults<String> sr = alleleFinder.getCollectionFacet(sp);
 			List<String> collectionValues = sr.getResultFacets();
 			AlleleQueryForm.setCollectionValues(collectionValues);
+
+			SearchResults<String> sr2 = alleleFinder.getMutationFacet(sp);
+			List<String> mutationValues = sr2.getResultFacets();
+			AlleleQueryForm.setMutationValues(mutationValues);
 		}
 	}
 

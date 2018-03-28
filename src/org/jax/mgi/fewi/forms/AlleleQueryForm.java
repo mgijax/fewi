@@ -28,6 +28,7 @@ public class AlleleQueryForm
     private List<String> alleleSubType;
     private List<String> collection;
     private List<String> chromosome;
+    private List<String> mutation;
     private String coordinate;
     private String coordUnit;
     private String cm;
@@ -37,6 +38,9 @@ public class AlleleQueryForm
     // Form Widget Values
     // collection will be set once dynamically and cached
     private static List<String> collectionValues=null;
+
+    // molecular mutation types -- collection will be set once dynamically and cached
+    private static List<String> mutationValues=null;
 
     // Constants
     public static String COORDINATE_ANY="any";
@@ -211,6 +215,13 @@ public class AlleleQueryForm
 		this.collection = collection;
 	}
 
+	public List<String> getMutation() {
+		return mutation;
+	}
+	public void setMutation(List<String> mutation) {
+		this.mutation = mutation;
+	}
+
 	public String getPhenotype() {
 		return phenotype;
 	}
@@ -279,6 +290,13 @@ public class AlleleQueryForm
 		AlleleQueryForm.collectionValues = collectionValues;
 	}
 
+	public static List<String> getMutationValues() {
+		return AlleleQueryForm.mutationValues;
+	}
+	public static void setMutationValues(List<String> mutationValues) {
+		AlleleQueryForm.mutationValues = mutationValues;
+	}
+
 	// boolean accessors
 	public boolean getHasChromosome()
 	{
@@ -297,6 +315,6 @@ public class AlleleQueryForm
 				+ ", alleleSubType=" + alleleSubType + ", collection="
 				+ collection + ", chromosome=" + chromosome + ", coordinate="
 				+ coordinate + ", coordUnit=" + coordUnit + ", cm=" + cm
-				+ ", cyto=" + cyto + "]";
+				+ ", mutation=" + mutation + ", cyto=" + cyto + "]";
 	}
 }
