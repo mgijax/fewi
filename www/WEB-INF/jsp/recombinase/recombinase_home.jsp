@@ -54,7 +54,7 @@
 	    
 	    <hr class="hrblue"/>
 	    
-	    <section>
+	    <section style="clear: both">
 	      <h3>Retrieve all alleles</h3>
 	      <%@ include file="/WEB-INF/jsp/static/home/recombinase_access_data_section2.html" %>
 	    </section>
