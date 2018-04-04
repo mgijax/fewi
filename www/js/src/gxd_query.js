@@ -268,6 +268,10 @@ var updateQuerySummary = function() {
 	// handle the differential stuff first
 	if(currentQF == 'differential') {
 		var el = new YAHOO.util.Element(document.createElement('span'));
+		// parse the structures input
+		var structure = YAHOO.util.Dom.get('difStructure3').value;
+		var notStructure = YAHOO.util.Dom.get('difStructure4').value;
+		
 		// parse the stages input
 		var selectedStages = parseStageOptions("difTheilerStage3","0");
 		var detectedStages = [];
@@ -283,10 +287,23 @@ var updateQuerySummary = function() {
 		}
 		var selectedDifStages = parseStageOptions("difTheilerStage4","-1");
 		var notDetectedStages = [];
-		var notDetectedStagesText = "developmental stage(s):";
-		if(selectedDifStages=="Any") notDetectedStagesText = "<b>Any developmental stage not selected above</b>";
-		else
-		{
+		var notDetectedStagesText = "any of the developmental stage(s):";
+		if(selectedDifStages=="Any") {
+			// cases:
+			// 1. structure & notStructure, no selectedStages
+			// 2. structure & selectedStages & (structure == notStructure)
+			// 3. structure & selectedStages & notStructure
+			// 4. other
+			if ((structure != '') && (notStructure != '') && (selectedStages == 'Any')) {
+				notDetectedStagesText = "<b>Any developmental stage</b>";
+			} else if ((structure != '') && (selectedStages != 'Any') && (selectedStages != '') && (structure == notStructure)) {
+				notDetectedStagesText = "<b>Any developmental stage not selected above</b>";
+			} else if ((structure != '') && (selectedStages != 'Any') && (selectedStages != '') && (notStructure != '')) {
+				notDetectedStagesText = "<b>Any developmental stage</b>";
+			} else {
+				notDetectedStagesText = "<b>Any developmental stage not selected above</b>";
+			}
+		} else {
 			for(var i=0;i<selectedDifStages.length;i++)
 			{
 				notDetectedStages.push("<b>TS:"+selectedDifStages[i]+"</b>");
@@ -295,18 +312,17 @@ var updateQuerySummary = function() {
 		}
 
 		if (YAHOO.util.Dom.get("anywhereElse").checked) {
-			el.set('innerHTML',"Detected in <b>"+YAHOO.util.Dom.get('difStructure3').value+"</b>" +
+			el.set('innerHTML',"Detected in <b>" + structure + "</b>" +
 				"<span class=\"smallGrey\"> includes synonyms & substructures</span>"+
 				"<br/>at "+detectedStagesText+
 				"<br/>but not detected or assayed <b>anywhere else</b>");
 		} else {
-			el.set('innerHTML',"Detected in <b>"+YAHOO.util.Dom.get('difStructure3').value+"</b>" +
+			el.set('innerHTML',"Detected in <b>" + structure + "</b>" +
 				"<span class=\"smallGrey\"> includes synonyms & substructures</span>"+
 				"<br/>at "+detectedStagesText+
-				"<br/>but not detected or assayed in <b>"+
-					YAHOO.util.Dom.get('difStructure4').value+"</b>"+
+				"<br/>but not detected or assayed in <b>" + notStructure + "</b>" + 
 				"<span class=\"smallGrey\"> includes synonyms & substructures</span>"+
-				"<br/>in any of the "+notDetectedStagesText);
+				"<br/>at "+notDetectedStagesText);
 		}
 		el.appendTo(searchParams);
 	}
