@@ -283,9 +283,9 @@ function structStagePopupHandler(d, i) {
 
 		// add the buttons
 		popupHtml +=  "<div id='matrixPopupButtonWrapper' >";
-		popupHtml +=  "<button id='matrixPopupResultsButton' onClick='handleStageMatrixResultsButton(\"" + d.cid + "\", \"" + d.termId + "\");'>View These Results</button>";
+		popupHtml +=  "<button id='matrixPopupResultsButton' onClick='handleStageMatrixResultsButton(\"" + d.cid + "\", \"" + d.termId + "\");'>View All Results</button>";
 		if (data.hasImage){
-			popupHtml +=  "<button id='matrixPopupImagesButton' onClick='handleStageMatrixImagesButton(\"" + d.cid + "\", \"" + d.termId + "\");'>View The Images</button>";
+			popupHtml +=  "<button id='matrixPopupImagesButton' onClick='handleStageMatrixImagesButton(\"" + d.cid + "\", \"" + d.termId + "\");'>View Images</button>";
 		}
 		popupHtml +=  "</div>";
 		popupHtml +=  "</div>";
@@ -367,9 +367,9 @@ function structGenePopupHandler(d, i) {
 		}
 		// add the buttons
 		popupHtml +=  "<div id='matrixPopupButtonWrapper' >";
-		popupHtml +=  "<button id='matrixPopupResultsButton' onClick='handleGeneMatrixResultsButton(\"" + d.cid + "\", \"" + d.termId + "\");'>View These Results</button>";
+		popupHtml +=  "<button id='matrixPopupResultsButton' onClick='handleGeneMatrixResultsButton(\"" + d.cid + "\", \"" + d.termId + "\");'>View All Results</button>";
 		if (data.hasImage){
-			popupHtml +=  "<button id='matrixPopupImagesButton' onClick='handleGeneMatrixImagesButton(\"" + d.cid + "\", \"" + d.termId + "\");'>View The Images</button>";
+			popupHtml +=  "<button id='matrixPopupImagesButton' onClick='handleGeneMatrixImagesButton(\"" + d.cid + "\", \"" + d.termId + "\");'>View Images</button>";
 		}
 		popupHtml +=  "</div>";
 		popupHtml +=  "</div>";

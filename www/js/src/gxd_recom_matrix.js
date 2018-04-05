@@ -101,7 +101,7 @@ function recomGridPopupHandler(d, i) {
 	var newY = d3.event.pageY;
 
 	if(window.firstPopup){
-		YAHOO.recomGridNS.container.panel1 = new YAHOO.widget.Panel("recomGridPopup", { width:"320px", visible:false, constraintoviewport:true } );
+		YAHOO.recomGridNS.container.panel1 = new YAHOO.widget.Panel("recomGridPopup", { width:"320px", visible:false, constraintoviewport:true, zIndex:5 } );
 		YAHOO.recomGridNS.container.panel1.render();
 		window.firstPopup=false;		
 	} 
@@ -154,9 +154,9 @@ function recomGridPopupHandler(d, i) {
 	
 			// add the buttons
 			popupHtml +=  "<div id='matrixPopupButtonWrapper' >";
-			popupHtml +=  "<a href='" + resultsURL + "'><button id='matrixPopupResultsButton'>View These Results</button></a>";
+			popupHtml +=  "<a href='" + resultsURL + "'><button id='matrixPopupResultsButton'>View All Results</button></a>";
 			if (data.hasImage){
-				popupHtml +=  "<a href='" + imagesURL + "'><button id='matrixPopupImagesButton'>View These Images</button></a>";
+				popupHtml +=  "<a href='" + imagesURL + "'><button id='matrixPopupImagesButton'>View Images</button></a>";
 			}
 			popupHtml +=  "</div>";
 			popupHtml +=  "</div>";
@@ -212,7 +212,7 @@ function recomGridPopupHandler(d, i) {
 	
 			// add the buttons
 			popupHtml +=  "<div id='matrixPopupButtonWrapper' >";
-			popupHtml +=  "<a href='" + alleleLink + "'><button id='matrixPopupPhenotypesButton'>View These Results</button></a>";
+			popupHtml +=  "<a href='" + alleleLink + "'><button id='matrixPopupPhenotypesButton'>View All Results</button></a>";
 			popupHtml +=  "</div>";
 			popupHtml +=  "</div>";
 	
@@ -268,7 +268,6 @@ window.GeneRecomMatrixRender = new function()
 	    			}
 	    		return "500"})
 	    	.style("font-size","12px")
-	    	.style("cursor","pointer")
 			.append("svg:title").text(function(d) { return d.colDisplay; });	
 		
 		return  d3Target
