@@ -10,6 +10,7 @@ import mgi.frontend.datamodel.AllelePhenoSummary;
 import org.jax.mgi.fewi.hunter.SolrAlleleCollectionFacetHunter;
 import org.jax.mgi.fewi.hunter.HibernateAlleleMutationInvolvesHunter;
 import org.jax.mgi.fewi.hunter.SolrAlleleKeyHunter;
+import org.jax.mgi.fewi.hunter.SolrAlleleMutationFacetHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
@@ -28,6 +29,9 @@ public class AlleleFinder {
     
     @Autowired
     private SolrAlleleCollectionFacetHunter alleleCollectionFacetHunter;
+
+    @Autowired
+    private SolrAlleleMutationFacetHunter alleleMutationFacetHunter;
 
     @Autowired
     private HibernateObjectGatherer<Allele> alleleGatherer;
@@ -97,6 +101,12 @@ public class AlleleFinder {
     public SearchResults<String> getCollectionFacet(SearchParams params) {
 		SearchResults<String> results = new SearchResults<String>();
 		alleleCollectionFacetHunter.hunt(params, results);
+		return results;
+	}
+
+    public SearchResults<String> getMutationFacet(SearchParams params) {
+		SearchResults<String> results = new SearchResults<String>();
+		alleleMutationFacetHunter.hunt(params, results);
 		return results;
 	}
 

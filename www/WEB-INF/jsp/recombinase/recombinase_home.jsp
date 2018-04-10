@@ -52,14 +52,12 @@
 	      <%@ include file="/WEB-INF/jsp/recombinase/sub_recombinase_form.jsp" %>
 	    </section>
 	    
-	    <hr class="hrblue"/>
-	    
-	    <section>
+	    <section style="clear: both">
+		  <hr class="hrblue"/>
 	      <h3>Retrieve all alleles</h3>
 	      <%@ include file="/WEB-INF/jsp/static/home/recombinase_access_data_section2.html" %>
+	      <hr class="hrblue"/>
 	    </section>
-	    
-	    <hr class="hrblue"/>
 	    
 	    <section>
 	      <h3>Related searches</h3>

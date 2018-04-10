@@ -161,7 +161,15 @@ public class BatchController {
 		} else {     	
 			idList = parseIds(queryForm.getIds());
 		}
-		return idList;
+		
+		// remove an odd Unicode character from each ID, if it exists (shows up from copy & paste on
+		// some systems)
+		List<String> cleanedIDs = new ArrayList<String>();
+		for (String id : idList) {
+			cleanedIDs.add(id.replaceAll("\uFEFF", ""));
+		}
+		
+		return cleanedIDs;
 	}
 
 	private ModelAndView processSummary (HttpSession session, BatchQueryForm queryForm){
@@ -274,7 +282,11 @@ public class BatchController {
 		
 		ArrayList<String> list = new ArrayList<String>();
 		for(BatchMarkerId marker: searchResults.getResultObjects()) {
-			list.add(marker.getMarker().getPrimaryID());
+			if (marker != null && marker.getMarker() != null) {
+				list.add(marker.getMarker().getPrimaryID());
+			} else {
+				list.add(marker.getTerm());
+			}
 		}
 		
 		return StringUtils.join(list, ",");

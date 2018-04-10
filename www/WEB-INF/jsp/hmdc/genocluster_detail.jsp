@@ -65,6 +65,11 @@
       </c:forEach>
     </table>
     </div>
+    <c:if test="${not empty genoCluster.nonTransgeneMarker}">
+    	<br/>
+    	<span class='label'>Comparison Matrix</span> 
+    	<a href="${configBean.FEWI_URL}gxd/phenogrid/${genoCluster.nonTransgeneMarker.primaryID}?genoclusterKey=${genoCluster.genoClusterKey}" class="MP">Gene Expression + Phenotype</a>
+    </c:if>
     <c:if test="${not empty structureTerm}">
     	<br/>
 		<span class='highlight'>Highlighted</span> phenotype terms are associated with the anatomy term
