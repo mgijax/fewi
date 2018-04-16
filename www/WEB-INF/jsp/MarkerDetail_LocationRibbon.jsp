@@ -240,13 +240,18 @@
 						<c:forEach var="sm" items="${marker.strainMarkers}">
 							<tr><td>${sm.strainName} (${sm.strainID})</td>
 								<td>
-									<c:forEach var="gm" items="${sm.geneModels}">
-									  ${gm.geneModelID} (${gm.logicalDB})</br>
-									</c:forEach>
+									<c:if test="${sm.noAnnotation}">
+										no annotation
+									</c:if>
+									<c:if test="${not sm.noAnnotation}">
+										<c:forEach var="gm" items="${sm.geneModels}">
+										  ${gm.geneModelID} (${gm.logicalDB})</br>
+										</c:forEach>
+									</c:if>
 								</td>
 								<td>${sm.featureType}</td>
 								<td>${sm.location}</td>
-								<td>later...</td>
+								<td></td>
 							</tr>
 						</c:forEach> 
 					</table>
