@@ -133,6 +133,8 @@ public class HomepageController {
 	public ModelAndView strainHome() {
 		logger.debug("->strainHome started");
 		ModelAndView mav = new ModelAndView("strain/strain_home");
+		setDatabaseDate(mav);
+		mav.addObject("statistics", statisticFinder.getStatisticsByGroup("Polymorphisms Mini Home") );
 		return mav;
 	}
 
