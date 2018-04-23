@@ -14,6 +14,8 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jax.mgi.fewi.finder.AutocompleteFinder;
+import org.jax.mgi.fewi.finder.StrainFinder;
+import org.jax.mgi.fewi.searchUtil.AutocompleteResult;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.MetaData;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -35,6 +37,7 @@ import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.CreFields;
 import org.jax.mgi.shr.jsonmodel.BrowserTerm;
+import org.jax.mgi.shr.jsonmodel.SimpleStrain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,10 +60,49 @@ public class AutoCompleteController {
 	@Autowired
 	private AutocompleteFinder autocompleteFinder;
 
+	@Autowired
+	private StrainFinder strainFinder;
+
 	// get a vocabulary controller
 	@Autowired
 	private VocabularyController vocabController;
 
+	/*
+	 * This method maps requests for strain auto complete results. The results
+	 * are returned as JSON.
+	 */
+	@RequestMapping("/strainName")
+	public @ResponseBody SearchResults<AutocompleteResult> strainAutoComplete(@RequestParam("query") String query) {
+		SearchParams params = new SearchParams();
+		params.setPageSize(1000);
+		params.setFilter(new Filter(SearchConstants.STRAIN_NAME_LOWER, query.toLowerCase(),
+				Filter.Operator.OP_STRING_CONTAINS) );
+		SearchResults<SimpleStrain> sr = strainFinder.getStrains(params);
+
+		String lowerQuery = query.toLowerCase();
+		List<AutocompleteResult> results = new ArrayList<AutocompleteResult>();
+		for (SimpleStrain strain : sr.getResultObjects()) {
+			AutocompleteResult result = new AutocompleteResult(strain.getName());
+			
+			if (strain.getName().toLowerCase().indexOf(lowerQuery) < 0) {
+				if (strain.getSynonyms() != null) {
+					for (String synonym : strain.getSynonyms()) {
+						if (synonym.toLowerCase().indexOf(lowerQuery) >= 0) {
+							result.setSynonym(synonym);
+							break;
+						}
+					}
+				}
+			}
+			
+			results.add(result);
+		}
+
+		SearchResults<AutocompleteResult> out = new SearchResults<AutocompleteResult>();
+		out.setResultObjects(results);
+		out.setTotalCount(sr.getTotalCount());
+		return out;
+	}
 
 	/*
 	 * This method maps requests for driver auto complete results. The results

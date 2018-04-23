@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.jax.mgi.fewi.hunter.SolrProbeHunter;
+import org.jax.mgi.fewi.hunter.SolrStrainHunter;
 import org.jax.mgi.fewi.hunter.SolrStrainTypeFacetHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
@@ -29,6 +30,9 @@ public class StrainFinder {
 	private Logger logger = LoggerFactory.getLogger(StrainFinder.class);
 
 	@Autowired
+	private SolrStrainHunter strainHunter;
+
+	@Autowired
 	private SolrStrainTypeFacetHunter strainTypeFacetHunter;
 
     @Autowired
@@ -36,21 +40,21 @@ public class StrainFinder {
 
 	//--- public methods ---//
 
-	/* return all MolecularProbe (from Solr) objects matching the given search parameters
+	/* return all SimpleStrain (from Solr) objects matching the given search parameters
 	 */
-/*	public SearchResults<MolecularProbe> getProbes(SearchParams searchParams) {
-		logger.debug("->getProbes");
+	public SearchResults<SimpleStrain> getStrains(SearchParams searchParams) {
+		logger.debug("->getStrains");
 
 		// result object to be returned
-		SearchResults<MolecularProbe> searchResults = new SearchResults<MolecularProbe>();
+		SearchResults<SimpleStrain> searchResults = new SearchResults<SimpleStrain>();
 
 		// ask the hunter to identify which objects to return
-		probeHunter.hunt(searchParams, searchResults);
-		logger.debug("->hunter found " + searchResults.getResultObjects().size() + " probes");
+		strainHunter.hunt(searchParams, searchResults);
+		logger.debug("->hunter found " + searchResults.getResultObjects().size() + " strains");
 
 		return searchResults;
 	}
-*/	
+	
 	/* return all Strain objects (from database via Hibernate) matching the given ID
 	 */
     public List<Strain> getStrainByID(String strainID)
@@ -81,8 +85,9 @@ public class StrainFinder {
         return results;
     }
 
-    /*
+    /* ---------------
      * Facet functions
+     * ---------------
      */
     public SearchResults<SimpleStrain> getStrainTypeFacet(SearchParams params) {
 		SearchResults<SimpleStrain> results = new SearchResults<SimpleStrain>();
