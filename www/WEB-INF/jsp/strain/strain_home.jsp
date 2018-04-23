@@ -113,6 +113,7 @@
 	    </div>
 	  </section>
 	  
+	  <div style="clear:both"></div>
 	  <section class="infoBlock alleleDataCounts">
 	    <h2>Strains, SNPs, &amp; Polymorphisms Includes</h2>
 	    <div class="wrapper">

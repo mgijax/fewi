@@ -5,7 +5,7 @@
 <form method="GET" action="${configBean.FEWI_URL}strain/summary" id="strainForm" name="strainQueryForm">
 
 	<%-- Wrapper for positioning "Search" goButton --%>
-	<div class="wrapper">
+	<div>
 		<label class="searchLabel">Name</label>
 
 		<div style='display: inline-block'>
