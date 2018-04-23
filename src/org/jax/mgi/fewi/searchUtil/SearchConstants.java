@@ -276,6 +276,12 @@ public class SearchConstants {
 	public static final String CM_MARKER_ID = "markerID";
 	public static final String CM_PARENT_ANATOMY_ID = "parentAnatomyID";
 
+	// strain fields
+	public static final String STRAIN_KEY = "strainKey";
+	public static final String STRAIN_TYPE = "strainType";
+	public static final String STRAIN_NAME = "strainName";
+	public static final String STRAIN_NAME_LOWER = "strainNameLower";
+	
 	// general
 	public static final String COLUMN_ID = "columnID";
 }

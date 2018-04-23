@@ -1,11 +1,19 @@
 package org.jax.mgi.fewi.controller;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.jax.mgi.fewi.finder.StrainFinder;
+import org.jax.mgi.fewi.forms.StrainQueryForm;
+import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.SearchConstants;
+import org.jax.mgi.fewi.searchUtil.SearchParams;
+import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.util.link.IDLinker;
+import org.jax.mgi.shr.fe.sort.SmartAlphaComparator;
+import org.jax.mgi.shr.jsonmodel.SimpleStrain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,4 +139,23 @@ public class StrainController {
     	mav.addObject("seoDescription", seoDescription);
     }
 */
+	// checks any cachable fields of the strain query form, and initializes them if needed
+	public void initQFCache() {
+		if (StrainQueryForm.getStrainTypeChoices() == null) {
+			// get collection facets
+			SearchParams sp = new SearchParams();
+			sp.setPageSize(0);
+			sp.setFilter(new Filter(SearchConstants.STRAIN_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD));
+
+			SearchResults<SimpleStrain> sr = strainFinder.getStrainTypeFacet(sp);
+			List<String> strainTypeChoices = sr.getResultFacets();
+			Collections.sort(strainTypeChoices, new SmartAlphaComparator());
+			StrainQueryForm.setStrainTypeChoices(strainTypeChoices);
+		}
+	}
+
+    //--------------------------------------------------------------------//
+    // private methods
+    //--------------------------------------------------------------------//
+
 }

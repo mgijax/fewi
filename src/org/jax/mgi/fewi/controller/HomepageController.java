@@ -12,7 +12,9 @@ import org.jax.mgi.fewi.finder.DbInfoFinder;
 import org.jax.mgi.fewi.finder.StatisticFinder;
 import org.jax.mgi.fewi.forms.DiseasePortalQueryForm;
 import org.jax.mgi.fewi.forms.RecombinaseQueryForm;
+import org.jax.mgi.fewi.forms.StrainQueryForm;
 import org.jax.mgi.fewi.util.AjaxUtils;
+import org.jax.mgi.fewi.util.FewiUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,9 @@ public class HomepageController {
 
 	@Autowired
 	DbInfoFinder dbInfoFinder;
+
+	@Autowired
+	private StrainController strainController;
 
 	@Value("${solr.factetNumberDefault}")
 	private Integer facetLimit; 
@@ -135,6 +140,26 @@ public class HomepageController {
 		ModelAndView mav = new ModelAndView("strain/strain_home");
 		setDatabaseDate(mav);
 		mav.addObject("statistics", statisticFinder.getStatisticsByGroup("Polymorphisms Mini Home") );
+		mav.addObject("strainQueryForm", new StrainQueryForm());
+		mav.addObject("strainTypeChoices1", new ArrayList<String>());
+		mav.addObject("strainTypeChoices2", new ArrayList<String>());
+		mav.addObject("strainTypeChoices3", new ArrayList<String>());
+
+		strainController.initQFCache();
+		List<String> strainTypeChoices = StrainQueryForm.getStrainTypeChoices();
+		int sublistSize = (int) Math.ceil((double) strainTypeChoices.size() / (double) 3.0);
+		List<List<String>> sublists = FewiUtil.getBatches(strainTypeChoices, sublistSize);
+
+		if (sublists.size() > 0 && sublists.get(0) != null) {
+			mav.addObject("strainTypeChoices1", sublists.get(0));
+			if (sublists.size() > 1 && sublists.get(1) != null) {
+				mav.addObject("strainTypeChoices2", sublists.get(1));
+				if (sublists.size() > 2 && sublists.get(2) != null) {
+					mav.addObject("strainTypeChoices3", sublists.get(2));
+				}
+			}
+		}
+		
 		return mav;
 	}
 

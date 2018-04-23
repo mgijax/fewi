@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.jax.mgi.fewi.hunter.SolrProbeHunter;
+import org.jax.mgi.fewi.hunter.SolrStrainTypeFacetHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.shr.jsonmodel.MolecularProbe;
+import org.jax.mgi.shr.jsonmodel.SimpleStrain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +28,8 @@ public class StrainFinder {
 	
 	private Logger logger = LoggerFactory.getLogger(StrainFinder.class);
 
-//	@Autowired
-//	private SolrStrainHunter strainHunter;
+	@Autowired
+	private SolrStrainTypeFacetHunter strainTypeFacetHunter;
 
     @Autowired
     private HibernateObjectGatherer<Strain> strainGatherer;
@@ -78,4 +80,13 @@ public class StrainFinder {
         }
         return results;
     }
+
+    /*
+     * Facet functions
+     */
+    public SearchResults<SimpleStrain> getStrainTypeFacet(SearchParams params) {
+		SearchResults<SimpleStrain> results = new SearchResults<SimpleStrain>();
+		strainTypeFacetHunter.hunt(params, results);
+		return results;
+	}
 }

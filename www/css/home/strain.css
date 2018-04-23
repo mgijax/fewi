@@ -63,42 +63,51 @@
 
 /* Form section */
 
-#creForm label.searchLabel {
+#qfName {
+	display: inline-block;
+	vertical-align: top;
+}
+#qfType {
+	display: inline-block;
+	vertical-align: top;
+}
+
+#strainForm label.searchLabel {
 	display: block;
 	font-weight: bold;
 	margin-bottom: 2px;
 }
-#creForm label.searchLabel::after {
+#strainForm label.searchLabel::after {
 	content: ":";
 }
 
-#creForm input[type="checkbox"] {
+#strainForm input[type="checkbox"] {
 	display: inline;
 	margin-left: 20px;
 }
 
-#creForm input[type="text"] {
+#strainForm input[type="text"] {
 	display: block;
 	margin-left: 20px;
 }
 
 /* The "AND" text between inputs */
-#creForm #creAndDivider {
+#strainForm #strainAndDivider {
 	opacity: 0;
 	transition: opacity 700ms;
 	font-weight: bold;
 	font-size: 15px;
 	display: block;
-	margin: 7px 0px 5px 128px;
+	margin: 7px 0px 5px 22px;
 }
 
-#creForm > .wrapper {
+#strainForm > .wrapper {
 	float: left;
 	margin-top: 4px;
 	margin-bottom: 12px;
 }
 
-#creForm .goButton {
+#strainForm .goButton {
 	clear: left;
 	margin-top: 30px;
 	padding: 4px 16px;

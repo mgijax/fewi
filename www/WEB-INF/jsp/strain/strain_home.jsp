@@ -106,6 +106,13 @@
 	    </div>
 	  </section>
 	  
+	  <section class="infoBlock queryForm">
+	    <h2>Find Strains</h2>
+	    <div class="wrapper">
+	    	<%@ include file="/WEB-INF/jsp/strain/sub_strain_form.jsp" %>
+	    </div>
+	  </section>
+	  
 	  <section class="infoBlock alleleDataCounts">
 	    <h2>Strains, SNPs, &amp; Polymorphisms Includes</h2>
 	    <div class="wrapper">
@@ -134,6 +141,6 @@
 		}
 	});
 </script>
-<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/recombinase/recombinase_form.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/strain/strain_form.js"></script>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
