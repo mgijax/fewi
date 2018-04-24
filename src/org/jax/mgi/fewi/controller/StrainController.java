@@ -245,13 +245,13 @@ public class StrainController {
 		if ((name != null) && (name.length() > 0)) {
 			List<Filter> nameOrID = new ArrayList<Filter>();
 
-			if (name.indexOf("*") >= 0) {
-				// name has wildcards, so do contains search on name & synonyms, but no IDs
-				nameOrID.add(new Filter(SearchConstants.STRAIN_NAME_LOWER, name.replaceAll("[*]", ""), Filter.Operator.OP_STRING_CONTAINS));
-			} else {
+			if (name.indexOf("*") == -1) {
 				// name has no wildcard, so do exact match on name & synonyms and IDs
 				nameOrID.add(new Filter(SearchConstants.STRAIN_NAME_LOWER, name, Filter.Operator.OP_EQUAL));
 				nameOrID.add(new Filter(SearchConstants.ACC_ID, name, Filter.Operator.OP_EQUAL));
+			} else {
+				// any search with wildcards does not look at IDs
+				nameOrID.add(new Filter(SearchConstants.STRAIN_NAME_LOWER, name, Filter.Operator.OP_EQUAL_WILDCARD_ALLOWED));
 			}
 			filterList.add(Filter.or(nameOrID));
 		}
