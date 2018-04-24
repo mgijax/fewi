@@ -1,5 +1,6 @@
 package org.jax.mgi.fewi.controller;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -8,9 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.jax.mgi.fewi.finder.StrainFinder;
 import org.jax.mgi.fewi.forms.StrainQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.searchUtil.Sort;
+import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.shr.fe.sort.SmartAlphaComparator;
 import org.jax.mgi.shr.jsonmodel.SimpleStrain;
@@ -18,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -154,8 +159,112 @@ public class StrainController {
 		}
 	}
 
+	// shell of the strain summary page (The actual results are retrieved via Ajax from the /table endpoint.)
+    @RequestMapping("/summary")
+    public ModelAndView strainSummary(HttpServletRequest request, @ModelAttribute StrainQueryForm queryForm) {
+        logger.debug("In strainSummary, query string: " + request.getQueryString());
+
+        // objects needed by display
+        ModelAndView mav = new ModelAndView("strain/strain_summary");
+        mav.addObject("strainQueryForm", queryForm);
+        mav.addObject("queryString", request.getQueryString());
+
+        return mav;
+    }
+
+	/* table of strain data for summary page, to be requested via Ajax
+	 */
+	@RequestMapping("/table")
+	public ModelAndView strainTable (@ModelAttribute StrainQueryForm query, @ModelAttribute Paginator page) {
+
+		logger.debug("->strainTable started");
+
+		// perform query, and pull out the requested objects
+		SearchResults<SimpleStrain> searchResults = getSummaryResults(query, page);
+		List<SimpleStrain> strainList = searchResults.getResultObjects();
+
+		ModelAndView mav = new ModelAndView("strain/strain_summary_table");
+		mav.addObject("strains", strainList);
+		mav.addObject("count", strainList.size());
+		mav.addObject("totalCount", searchResults.getTotalCount());
+
+		return mav;
+	}
     //--------------------------------------------------------------------//
     // private methods
     //--------------------------------------------------------------------//
 
+	/* return a mav for an error screen with the given message filled in
+	 */
+	private ModelAndView errorMav(String msg) {
+		ModelAndView mav = new ModelAndView("error");
+		mav.addObject("errorMsg", msg);
+		return mav;
+	}
+
+	// This is a convenience method to handle packing the SearchParams object
+	// and return the SearchResults from the finder.
+	private SearchResults<SimpleStrain> getSummaryResults(@ModelAttribute StrainQueryForm query, @ModelAttribute Paginator page) {
+
+		SearchParams params = new SearchParams();
+		params.setPaginator(page);
+		params.setSorts(genSorts(query));
+		params.setFilter(genFilters(query));
+		
+		// perform query, return SearchResults 
+		return strainFinder.getStrains(params);
+	}
+
+	/* generate the sort options
+	 */
+	private List<Sort> genSorts(StrainQueryForm queryForm) {
+		logger.debug("->genSorts started");
+
+		// marker summary sorts by type; reference summary sorts by name
+
+		String sort = SortConstants.BY_DEFAULT;		// default to type sort
+		boolean desc = false;						// always sort ascending
+
+		List<Sort> sorts = new ArrayList<Sort>();
+		sorts.add(new Sort(sort, desc));
+		return sorts;
+	}
+	
+	/* generate the filters (translate the query parameters into Solr filters)
+	 */
+	private Filter genFilters(StrainQueryForm query){
+		logger.debug("->genFilters started");
+		logger.debug("  - QueryForm -> " + query);
+
+		// start filter list to add filters to
+		List<Filter> filterList = new ArrayList<Filter>();
+
+		// strain name (may also be an ID)
+		String name = query.getStrainName();
+		if ((name != null) && (name.length() > 0)) {
+			List<Filter> nameOrID = new ArrayList<Filter>();
+			nameOrID.add(new Filter(SearchConstants.STRAIN_NAME_LOWER, name, Filter.Operator.OP_STRING_CONTAINS));
+			nameOrID.add(new Filter(SearchConstants.ACC_ID, name, Filter.Operator.OP_EQUAL));
+			filterList.add(Filter.or(nameOrID));
+		}
+		
+		// strain type
+		List<String> strainTypes = query.getStrainType();
+		if ((strainTypes != null) && (strainTypes.size() > 0)) {
+			List<Filter> types = new ArrayList<Filter>();
+			for (String strainType : strainTypes) {
+				types.add(new Filter(SearchConstants.STRAIN_TYPE, strainType, Filter.Operator.OP_EQUAL));
+			}
+			filterList.add(Filter.or(types));
+		}
+		
+		// if we have filters, collapse them into a single filter
+		Filter containerFilter = new Filter();
+		if (filterList.size() > 0){
+			containerFilter.setFilterJoinClause(Filter.JoinClause.FC_AND);
+			containerFilter.setNestedFilters(filterList);
+		}
+
+		return containerFilter;
+	}
 }
