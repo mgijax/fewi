@@ -62,6 +62,9 @@ public class AutoCompleteController {
 	@Autowired
 	private StrainFinder strainFinder;
 
+	@Autowired
+	private StrainController strainController;
+
 	// get a vocabulary controller
 	@Autowired
 	private VocabularyController vocabController;
@@ -75,9 +78,10 @@ public class AutoCompleteController {
 			HttpServletResponse response,
 			@RequestParam("query") String query) {
 		SearchParams params = new SearchParams();
-		params.setPageSize(1000);
+		params.setPageSize(5000);
 		params.setFilter(new Filter(SearchConstants.STRAIN_NAME_LOWER, query.toLowerCase(),
 				Filter.Operator.OP_STRING_CONTAINS) );
+		params.setSorts(strainController.genSorts(null));
 		SearchResults<SimpleStrain> sr = strainFinder.getStrains(params);
 
 		String lowerQuery = query.toLowerCase();
@@ -95,10 +99,10 @@ public class AutoCompleteController {
 					}
 				}
 			}
-			
 			results.add(result);
 		}
 
+		results = prioritizeACResults(results, lowerQuery);
 		AjaxUtils.prepareAjaxHeaders(response);
 		SearchResults<AutocompleteResult> out = new SearchResults<AutocompleteResult>();
 		out.setResultObjects(results);
@@ -106,6 +110,64 @@ public class AutoCompleteController {
 		return out;
 	}
 
+	/* prioritize the matches in the 'original' list so that exact matches to 'searchString' are first (alphabetized),
+	 * followed by ones that begin with 'searchString' (alphabetized), followed by the others (alphabetized).
+	 */
+	private List<AutocompleteResult> prioritizeACResults (List<AutocompleteResult> original, String searchString) {
+		if (original == null || original.size() == 0) { return original; }
+		if (searchString == null || searchString.length() == 0) { return original; }
+		
+		// split the list of matches into the three buckets (exact matches, begins, contains)
+		
+		String lowerSearchString = searchString.toLowerCase();
+		List<AutocompleteResult> exact = new ArrayList<AutocompleteResult>();
+		List<AutocompleteResult> begins = new ArrayList<AutocompleteResult>();
+		List<AutocompleteResult> contains = new ArrayList<AutocompleteResult>();
+		
+		for (AutocompleteResult result : original) {
+			String value = result.getValue().toLowerCase();
+			String synonym = null;
+			
+			// for cases where there is a synonym, we need to get just the synonym without the
+			// extra text that tells what it's a synonym of
+			if (!value.equals(result.getLabel())) {
+				int splitPoint = result.getLabel().indexOf(", syn. of");
+				if (splitPoint >= 0) {
+					synonym = result.getLabel().substring(0, splitPoint).toLowerCase();
+				}
+			}
+
+			if (lowerSearchString.equals(value) || lowerSearchString.equals(synonym)) {
+				exact.add(result);
+			} else if (value.startsWith(lowerSearchString) || (synonym != null && synonym.startsWith(lowerSearchString))) {
+				begins.add(result);
+			} else {
+				contains.add(result);
+			}
+		}
+		
+		// Since the results originally came out of Solr sorted smart-alpha, we can skip sorting the
+		// buckets right now.
+		
+/*		if (exact.size() > 0) {
+			Collections.sort(exact, exact.get(0).getComparator());
+		}
+		if (begins.size() > 0) {
+			Collections.sort(begins, begins.get(0).getComparator());
+		}
+		if (contains.size() > 0) {
+			Collections.sort(contains, contains.get(0).getComparator());
+		}
+*/
+		// combine the buckets into a single list to return
+		
+		List<AutocompleteResult> unified = new ArrayList<AutocompleteResult>();
+		unified.addAll(exact);
+		unified.addAll(begins);
+		unified.addAll(contains);
+		return unified;
+	}
+	
 	/*
 	 * This method maps requests for driver auto complete results. The results
 	 * are returned as JSON.

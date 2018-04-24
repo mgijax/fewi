@@ -190,6 +190,22 @@ public class StrainController {
 
 		return mav;
 	}
+
+	/* generate the sort options
+	 */
+	public List<Sort> genSorts(StrainQueryForm queryForm) {
+		logger.debug("->genSorts started");
+
+		// marker summary sorts by type; reference summary sorts by name
+
+		String sort = SortConstants.BY_DEFAULT;		// default to type sort
+		boolean desc = false;						// always sort ascending
+
+		List<Sort> sorts = new ArrayList<Sort>();
+		sorts.add(new Sort(sort, desc));
+		return sorts;
+	}
+	
     //--------------------------------------------------------------------//
     // private methods
     //--------------------------------------------------------------------//
@@ -215,21 +231,6 @@ public class StrainController {
 		return strainFinder.getStrains(params);
 	}
 
-	/* generate the sort options
-	 */
-	private List<Sort> genSorts(StrainQueryForm queryForm) {
-		logger.debug("->genSorts started");
-
-		// marker summary sorts by type; reference summary sorts by name
-
-		String sort = SortConstants.BY_DEFAULT;		// default to type sort
-		boolean desc = false;						// always sort ascending
-
-		List<Sort> sorts = new ArrayList<Sort>();
-		sorts.add(new Sort(sort, desc));
-		return sorts;
-	}
-	
 	/* generate the filters (translate the query parameters into Solr filters)
 	 */
 	private Filter genFilters(StrainQueryForm query){
@@ -243,8 +244,15 @@ public class StrainController {
 		String name = query.getStrainName();
 		if ((name != null) && (name.length() > 0)) {
 			List<Filter> nameOrID = new ArrayList<Filter>();
-			nameOrID.add(new Filter(SearchConstants.STRAIN_NAME_LOWER, name, Filter.Operator.OP_STRING_CONTAINS));
-			nameOrID.add(new Filter(SearchConstants.ACC_ID, name, Filter.Operator.OP_EQUAL));
+
+			if (name.indexOf("*") >= 0) {
+				// name has wildcards, so do contains search on name & synonyms, but no IDs
+				nameOrID.add(new Filter(SearchConstants.STRAIN_NAME_LOWER, name.replaceAll("[*]", ""), Filter.Operator.OP_STRING_CONTAINS));
+			} else {
+				// name has no wildcard, so do exact match on name & synonyms and IDs
+				nameOrID.add(new Filter(SearchConstants.STRAIN_NAME_LOWER, name, Filter.Operator.OP_EQUAL));
+				nameOrID.add(new Filter(SearchConstants.ACC_ID, name, Filter.Operator.OP_EQUAL));
+			}
 			filterList.add(Filter.or(nameOrID));
 		}
 		
