@@ -36,7 +36,6 @@ import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.CreFields;
-import org.jax.mgi.shr.jsonmodel.BrowserTerm;
 import org.jax.mgi.shr.jsonmodel.SimpleStrain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +71,9 @@ public class AutoCompleteController {
 	 * are returned as JSON.
 	 */
 	@RequestMapping("/strainName")
-	public @ResponseBody SearchResults<AutocompleteResult> strainAutoComplete(@RequestParam("query") String query) {
+	public @ResponseBody SearchResults<AutocompleteResult> strainAutoComplete(
+			HttpServletResponse response,
+			@RequestParam("query") String query) {
 		SearchParams params = new SearchParams();
 		params.setPageSize(1000);
 		params.setFilter(new Filter(SearchConstants.STRAIN_NAME_LOWER, query.toLowerCase(),
@@ -98,6 +99,7 @@ public class AutoCompleteController {
 			results.add(result);
 		}
 
+		AjaxUtils.prepareAjaxHeaders(response);
 		SearchResults<AutocompleteResult> out = new SearchResults<AutocompleteResult>();
 		out.setResultObjects(results);
 		out.setTotalCount(sr.getTotalCount());

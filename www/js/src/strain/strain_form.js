@@ -3,7 +3,6 @@
  */
 
 var strainNameUrl = fewiurl+"autocomplete/strainName?query=";
-var disableColor = "#CCC";
 
 $(function() {
     // wire in the strain name autocomplete
@@ -13,18 +12,15 @@ $(function() {
     			url: strainNameUrl + request.term,
     			dataType: "json",
     			success: function( data ) {
-    				response($.map(data["resultObjects"], function( item ) {
-    					return {label: item.driverDisplay, value: item.driver};
-    				}));
+    				response(data['resultObjects']);
     			}
     		});
     	},
     	minLength: 1
     }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
-		var value = item.label;
 		return $('<li></li>')
 			.data("item.autocomplete", item)
-			.append("<a>" + value + "</a>")
+			.append("<a>" + item.label + "</a>")
 			.appendTo(ul);
    	};
 });
