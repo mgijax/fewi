@@ -77,16 +77,48 @@ public class AutoCompleteController {
 	public @ResponseBody SearchResults<AutocompleteResult> strainAutoComplete(
 			HttpServletResponse response,
 			@RequestParam("query") String query) {
-		SearchParams params = new SearchParams();
-		params.setPageSize(5000);
-		params.setFilter(new Filter(SearchConstants.STRAIN_NAME_LOWER, query.toLowerCase(),
-				Filter.Operator.OP_STRING_CONTAINS) );
-		params.setSorts(strainController.genSorts(null));
-		SearchResults<SimpleStrain> sr = strainFinder.getStrains(params);
 
+		int maxCount = 500;
+		
+		// get exact matches
+		SearchParams exact = new SearchParams();
+		exact.setPageSize(maxCount);
+		exact.setFilter(new Filter(SearchConstants.STRAIN_NAME_LOWER, query.toLowerCase(), Filter.Operator.OP_EQUAL) );
+		exact.setSorts(strainController.genSorts(null));
+		SearchResults<SimpleStrain> srExact = strainFinder.getStrains(exact);
+		List<SimpleStrain> exactMatches = srExact.getResultObjects();
+
+		// exclude exact matches from the 'begins' set
+		SearchParams begins = new SearchParams();
+		begins.setPageSize(maxCount - exactMatches.size());
+		List<Filter> beginsFilters = new ArrayList<Filter>();
+		beginsFilters.add(new Filter(SearchConstants.STRAIN_NAME_LOWER, query.toLowerCase(), Filter.Operator.OP_GREEDY_BEGINS) );
+		beginsFilters.add(Filter.notEqual(SearchConstants.STRAIN_NAME_LOWER, query.toLowerCase()));
+		begins.setFilter(Filter.and(beginsFilters));
+		begins.setSorts(strainController.genSorts(null));
+		SearchResults<SimpleStrain> srBegins = strainFinder.getStrains(begins);
+		List<SimpleStrain> beginsMatches = srBegins.getResultObjects();
+
+		// exclude exact matches and begins matches from the 'contains' set
+		SearchParams contains = new SearchParams();
+		contains.setPageSize(maxCount - exactMatches.size() - beginsMatches.size());
+		List<Filter> containsFilters = new ArrayList<Filter>();
+		containsFilters.add(new Filter(SearchConstants.STRAIN_NAME_LOWER, query.toLowerCase(), Filter.Operator.OP_STRING_CONTAINS) );
+		containsFilters.add(new Filter(SearchConstants.STRAIN_NAME_LOWER, query.toLowerCase(), Filter.Operator.OP_GREEDY_BEGINS) );
+		containsFilters.get(1).negate();
+		contains.setFilter(Filter.and(containsFilters));
+		contains.setSorts(strainController.genSorts(null));
+		SearchResults<SimpleStrain> srContains = strainFinder.getStrains(contains);
+		List<SimpleStrain> containsMatches = srContains.getResultObjects();
+
+		// combine the lists
+		
+		exactMatches.addAll(beginsMatches);
+		exactMatches.addAll(containsMatches);
+				
 		String lowerQuery = query.toLowerCase();
 		List<AutocompleteResult> results = new ArrayList<AutocompleteResult>();
-		for (SimpleStrain strain : sr.getResultObjects()) {
+		for (SimpleStrain strain : exactMatches) {
 			AutocompleteResult result = new AutocompleteResult(strain.getName());
 			
 			if (strain.getName().toLowerCase().indexOf(lowerQuery) < 0) {
@@ -102,72 +134,13 @@ public class AutoCompleteController {
 			results.add(result);
 		}
 
-		results = prioritizeACResults(results, lowerQuery);
 		AjaxUtils.prepareAjaxHeaders(response);
 		SearchResults<AutocompleteResult> out = new SearchResults<AutocompleteResult>();
 		out.setResultObjects(results);
-		out.setTotalCount(sr.getTotalCount());
+		out.setTotalCount(exactMatches.size());
 		return out;
 	}
 
-	/* prioritize the matches in the 'original' list so that exact matches to 'searchString' are first (alphabetized),
-	 * followed by ones that begin with 'searchString' (alphabetized), followed by the others (alphabetized).
-	 */
-	private List<AutocompleteResult> prioritizeACResults (List<AutocompleteResult> original, String searchString) {
-		if (original == null || original.size() == 0) { return original; }
-		if (searchString == null || searchString.length() == 0) { return original; }
-		
-		// split the list of matches into the three buckets (exact matches, begins, contains)
-		
-		String lowerSearchString = searchString.toLowerCase();
-		List<AutocompleteResult> exact = new ArrayList<AutocompleteResult>();
-		List<AutocompleteResult> begins = new ArrayList<AutocompleteResult>();
-		List<AutocompleteResult> contains = new ArrayList<AutocompleteResult>();
-		
-		for (AutocompleteResult result : original) {
-			String value = result.getValue().toLowerCase();
-			String synonym = null;
-			
-			// for cases where there is a synonym, we need to get just the synonym without the
-			// extra text that tells what it's a synonym of
-			if (!value.equals(result.getLabel())) {
-				int splitPoint = result.getLabel().indexOf(", syn. of");
-				if (splitPoint >= 0) {
-					synonym = result.getLabel().substring(0, splitPoint).toLowerCase();
-				}
-			}
-
-			if (lowerSearchString.equals(value) || lowerSearchString.equals(synonym)) {
-				exact.add(result);
-			} else if (value.startsWith(lowerSearchString) || (synonym != null && synonym.startsWith(lowerSearchString))) {
-				begins.add(result);
-			} else {
-				contains.add(result);
-			}
-		}
-		
-		// Since the results originally came out of Solr sorted smart-alpha, we can skip sorting the
-		// buckets right now.
-		
-/*		if (exact.size() > 0) {
-			Collections.sort(exact, exact.get(0).getComparator());
-		}
-		if (begins.size() > 0) {
-			Collections.sort(begins, begins.get(0).getComparator());
-		}
-		if (contains.size() > 0) {
-			Collections.sort(contains, contains.get(0).getComparator());
-		}
-*/
-		// combine the buckets into a single list to return
-		
-		List<AutocompleteResult> unified = new ArrayList<AutocompleteResult>();
-		unified.addAll(exact);
-		unified.addAll(begins);
-		unified.addAll(contains);
-		return unified;
-	}
-	
 	/*
 	 * This method maps requests for driver auto complete results. The results
 	 * are returned as JSON.
