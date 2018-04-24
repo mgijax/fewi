@@ -10,7 +10,7 @@
 
 		<div style='display: inline-block'>
 		<input type="text" size="40" name="strainName" style="margin-bottom:8px" id="strainNameAC"
-			placeholder="name, synonym, on ID"
+			placeholder="name, synonym, or ID"
 			value="<c:out value="${strainQueryForm.strainName}"/>" />
 		</div>
 		<div style='float: right; padding-right: 20px'>
