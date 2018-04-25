@@ -26,7 +26,7 @@
 					<span class="smaller">(${strain.primaryID})</span>
 				</td>
 				<td><c:forEach var="synonym" items="${strain.synonyms}" varStatus="cStatus">
-						${synonym}<br/>
+						<fewi:super value="${synonym}"/><br/>
 					</c:forEach>
 				</td>
 				<td><c:forEach var="attribute" items="${strain.attributes}" varStatus="cStatus">
