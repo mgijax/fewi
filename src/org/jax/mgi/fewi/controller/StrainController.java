@@ -247,8 +247,10 @@ public class StrainController {
 
 			if (name.indexOf("*") == -1) {
 				// name has no wildcard, so do exact match on name & synonyms and IDs
+				// Note: We don't actually want wildcards in IDs, but use this operator to get the surrounding
+				// double-quotes.  This allows the IDs to contain colons.
 				nameOrID.add(new Filter(SearchConstants.STRAIN_NAME_LOWER, name, Filter.Operator.OP_EQUAL));
-				nameOrID.add(new Filter(SearchConstants.ACC_ID, name, Filter.Operator.OP_EQUAL));
+				nameOrID.add(new Filter(SearchConstants.ACC_ID, name, Filter.Operator.OP_EQUAL_WILDCARD_ALLOWED));
 			} else {
 				// any search with wildcards does not look at IDs
 				nameOrID.add(new Filter(SearchConstants.STRAIN_NAME_LOWER, name, Filter.Operator.OP_EQUAL_WILDCARD_ALLOWED));

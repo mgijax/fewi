@@ -39,5 +39,9 @@
 	<%@ include file="strain_detail_summary_ribbon.jsp" %>
 </div>
 
+<div class="container detailStructureTable">
+	<%@ include file="strain_detail_mutation_ribbon.jsp" %>
+</div>
+
 <!--	close page template -->
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
