@@ -13,21 +13,16 @@ public class AutocompleteResult {
 	public AutocompleteResult() {}
 
 	public AutocompleteResult(String value) {
-		this.value = convertAngleBrackets(value);
-		this.label = this.value;
+		this.value = value;
+		this.label = value;
 	}
 
-	private String convertAngleBrackets(String s) {
-		if (s == null) { return s; }
-		return s.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-	}
-	
 	public String getLabel() {
 		return label;
 	}
 
 	public void setSynonym(String synonym) {
-		this.label = convertAngleBrackets(synonym + ", syn. of [" + this.value + "]");
+		this.label = synonym + ", syn. of [" + this.value + "]";
 	}
 
 	public String getValue() {
@@ -35,11 +30,11 @@ public class AutocompleteResult {
 	}
 
 	public void setLabel(String label) {
-		this.label = convertAngleBrackets(label);
+		this.label = label;
 	}
 
 	public void setValue(String value) {
-		this.value = convertAngleBrackets(value);
+		this.value = value;
 	}
 	
 	public AutocompleteResultComparator getComparator() {

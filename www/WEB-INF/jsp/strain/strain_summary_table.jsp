@@ -16,7 +16,7 @@
 		<tr>
 			<th>Offical Strain Name</th>
 			<th>Synonyms</th>
-			<th>Type</th>
+			<th>Attributes</th>
 			<th>IDs / Links</th>
 			<th>References</th>
 		</tr>

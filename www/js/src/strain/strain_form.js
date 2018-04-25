@@ -4,6 +4,10 @@
 
 var strainNameUrl = fewiurl+"autocomplete/strainName?query=";
 
+var convertAngleBrackets = function(s) {
+	return s.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 $(function() {
     // wire in the strain name autocomplete
     var strainNameAC = $( "#strainNameAC" ).autocomplete({
@@ -20,7 +24,7 @@ $(function() {
     }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
 		return $('<li></li>')
 			.data("item.autocomplete", item)
-			.append("<a>" + item.label + "</a>")
+			.append("<a>" + convertAngleBrackets(item.label) + "</a>")
 			.appendTo(ul);
    	};
 });
