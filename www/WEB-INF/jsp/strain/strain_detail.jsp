@@ -39,9 +39,17 @@
 	<%@ include file="strain_detail_summary_ribbon.jsp" %>
 </div>
 
-<div class="container detailStructureTable">
-	<%@ include file="strain_detail_mutation_ribbon.jsp" %>
-</div>
+<c:if test="${not empty strain.mutations}">
+	<div class="container detailStructureTable">
+		<%@ include file="strain_detail_mutation_ribbon.jsp" %>
+	</div>
+</c:if>
+
+<c:if test="${not empty strain.qtls}">
+	<div class="container detailStructureTable">
+		<%@ include file="strain_detail_qtl_ribbon.jsp" %>
+	</div>
+</c:if>
 
 <!--	close page template -->
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

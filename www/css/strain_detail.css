@@ -580,3 +580,20 @@ border-bottom: 1px solid gray;
 	text-align: left;
 	padding: 7px 3px 2px 3px;
 }
+	
+#qtlSummaryTable {
+	border-collapse: collapse;
+}
+
+#qtlSummaryTable th {
+	border: 1px solid black;
+	font-weight: bold;
+	text-align: left;
+	padding: 3px;
+}
+
+#qtlSummaryTable td {
+	border: 1px solid black;
+	text-align: left;
+	padding: 7px 3px 2px 3px;
+}

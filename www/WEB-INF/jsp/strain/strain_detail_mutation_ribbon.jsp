@@ -1,4 +1,3 @@
-<c:if test="${not empty strain.mutations}">
 	<div class="row">
 		<div class="header <%=leftTdStyles.getNext() %>" id="mutationRibbonLabel">
 			Associated<br/>
@@ -33,4 +32,3 @@
 	$('#mutationSummaryDiv').width($('#mutationSummaryTable').width() + 19);
 	$('#mutationSummaryTable th').css('background-color', $('#mutationRibbonLabel').css('background-color'))
 	</script>
-</c:if>
