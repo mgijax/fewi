@@ -1,6 +1,6 @@
 	<div class="row locationRibbon">
 		<div class="header <%=leftTdStyles.getNext() %>">
-			Location & Maps
+			Genome Context & Strain Distribution
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %>">
 
@@ -218,44 +218,45 @@
 					</ul>
 				</section>
 			</c:if>
+
 			<c:if test="${not empty marker.strainMarkers}">
-				<style>
-				.summarySec3 {min-width: 1000px;}
-				#strainMarkers tr th { 
-					text-align: center;
-					border: 1px solid black;
-					padding: 3px;
-					border-collapse: collapse;
-				}
-				#strainMarkers tr td { 
-					text-align: left;
-					border: 1px solid black;
-					padding: 3px;
-					border-collapse: collapse;
-				}
-				</style>
-				<section class="summarySec3">
-					<table id="strainMarkers">
-						<tr><th>Strain</th><th>Gene Model ID</th><th>Feature Type</th><th>Coordinates</th><th>Downloads</th></tr>
-						<c:forEach var="sm" items="${marker.strainMarkers}">
-							<tr><td>${sm.strainName} (${sm.strainID})</td>
-								<td>
-									<c:if test="${sm.noAnnotation}">
-										no annotation
-									</c:if>
-									<c:if test="${not sm.noAnnotation}">
-										<c:forEach var="gm" items="${sm.geneModels}">
-										  ${gm.geneModelID} (${gm.logicalDB})</br>
-										</c:forEach>
-									</c:if>
-								</td>
-								<td>${sm.featureType}</td>
-								<td>${sm.location}</td>
-								<td></td>
-							</tr>
-						</c:forEach> 
-					</table>
-				</section>
+
+				<div class="extra closed">
+				<table class="padded" id="table_strainMarkers">
+					
+					<tr class="headerStripe">
+					  <th>Strain</th>
+					  <th>Gene Model ID</th>
+					  <th>Feature Type</th>
+					  <th>Coordinates</th>
+					  <th>Downloads</th>
+					</tr>
+					
+					<c:forEach var="sm" items="${marker.strainMarkers}">
+						<tr>
+							<td>
+							  <a href="${configBean.FEWI_URL}strain/${sm.strainID}">${sm.strainName}</a>
+							</td>
+							<td>
+								<c:if test="${sm.noAnnotation}">
+									no annotation
+								</c:if>
+								<c:if test="${not sm.noAnnotation}">
+									<c:forEach var="gm" items="${sm.geneModels}">
+									  ${gm.geneModelID}</br>
+									</c:forEach>
+								</c:if>
+							</td>
+							<td>${sm.featureType}</td>
+							<td>${sm.location}</td>
+							<td></td>
+						</tr>
+					</c:forEach> 
+
+				</table>
+				</div>
+
 			</c:if>
+
 		</div>
 	</div>
