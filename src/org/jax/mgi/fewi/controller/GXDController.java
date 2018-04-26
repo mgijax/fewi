@@ -663,6 +663,15 @@ public class GXDController {
 
 		mav.addObject("queryString", request.getQueryString());
 
+		// allow the wild-type filter to be applied as a GET parameter
+		
+		String wildtypeFilter = request.getParameter("wildtypeFilter");
+		if (wildtypeFilter != null) {
+			mav.addObject("wildtypeFilter", wildtypeFilter);
+		} else {
+			mav.addObject("wildtypeFilter", "");
+		}
+		
 		// handle requests for a specific Theiler Stage
 		String theilerStage = request.getParameter("theilerStage");
 		if (theilerStage != null) {

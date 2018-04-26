@@ -106,10 +106,11 @@ body.yui-skin-sam div#outer {position:relative;}
     var fewiurl = "${configBean.FEWI_URL}";
     var mgiMarkerId = "${marker.primaryID}";
     var searchedStage = "${theilerStage}";
+    var searchedWildtypeFilter = "${wildtypeFilter}";
     var searchedAssayType = "${assayType}";
     var searchedStructure = "${structure}";
     var searchedStructureId = "${strucureId}";
-    var querystring = "markerMgiId=${marker.primaryID}&theilerStage=${theilerStage}&assayType=${assayType}&tab=${tab}";
+    var querystring = "markerMgiId=${marker.primaryID}&theilerStage=${theilerStage}&assayType=${assayType}&tab=${tab}&wildtypeFilter=${wildtypeFilter}";
     var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>
 
