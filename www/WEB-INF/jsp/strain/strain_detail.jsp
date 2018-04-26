@@ -51,5 +51,11 @@
 	</div>
 </c:if>
 
+<c:if test="${not empty strain.referenceAssociations}">
+	<div class="container detailStructureTable">
+		<%@ include file="strain_detail_reference_ribbon.jsp" %>
+	</div>
+</c:if>
+
 <!--	close page template -->
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
