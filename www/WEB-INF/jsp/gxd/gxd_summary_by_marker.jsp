@@ -110,7 +110,10 @@ body.yui-skin-sam div#outer {position:relative;}
     var searchedAssayType = "${assayType}";
     var searchedStructure = "${structure}";
     var searchedStructureId = "${strucureId}";
-    var querystring = "markerMgiId=${marker.primaryID}&theilerStage=${theilerStage}&assayType=${assayType}&tab=${tab}&wildtypeFilter=${wildtypeFilter}";
+    var querystring = "markerMgiId=${marker.primaryID}&theilerStage=${theilerStage}&assayType=${assayType}&tab=${tab}";
+    if (searchedWildtypeFilter != '') {
+    	querystring = "markerMgiId=${marker.primaryID}&theilerStage=${theilerStage}&assayType=${assayType}&tab=${tab}&wildtypeFilter=${wildtypeFilter}";
+    }
     var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>
 
