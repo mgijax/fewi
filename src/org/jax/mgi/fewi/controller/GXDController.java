@@ -668,8 +668,6 @@ public class GXDController {
 		String wildtypeFilter = request.getParameter("wildtypeFilter");
 		if (wildtypeFilter != null) {
 			mav.addObject("wildtypeFilter", wildtypeFilter);
-		} else {
-			mav.addObject("wildtypeFilter", "");
 		}
 		
 		// handle requests for a specific Theiler Stage
