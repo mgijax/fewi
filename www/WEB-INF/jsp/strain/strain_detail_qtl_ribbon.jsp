@@ -33,7 +33,7 @@
 	</div>
 	<script>
 	// fix width of DIV containing table and adjust the header color
-	$('#qtlSummaryDiv').width($('#qtlSummaryTable').width() + 19);
+	$('#qtlSummaryDiv').width($('#qtlSummaryTable').width() + 20);
 	$('#qtlSummaryTable th').css('background-color', $('#qtlRibbonLabel').css('background-color'));
 	$('#qtlButton').click(function() {
 		// section is already expanded, so contract it

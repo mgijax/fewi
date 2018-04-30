@@ -13,7 +13,7 @@
 					</c:if>
 					<li>
 						<div class="label">All</div>
-						<div class="value"><a href="${configBean.FEWI_URL}reference/strain/${strain.primaryID}?typeFilter=Literature">${strain.referenceCount}</a></div>
+						<div class="value"><a href="${configBean.FEWI_URL}reference/strain/${strain.primaryID}?typeFilter=Literature" id="allRefs">${strain.referenceCount}</a></div>
 					</li>
 				</ul>
 			</section>

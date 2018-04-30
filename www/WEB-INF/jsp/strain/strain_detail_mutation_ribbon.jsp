@@ -37,7 +37,7 @@
 	</div>
 	<script>
 	// fix width of DIV containing table and adjust the header color
-	$('#mutationSummaryDiv').width($('#mutationSummaryTable').width() + 19);
+	$('#mutationSummaryDiv').width($('#mutationSummaryTable').width() + 20);
 	$('#mutationSummaryTable th').css('background-color', $('#mutationRibbonLabel').css('background-color'))
 	$('#mutationButton').click(function() {
 		// section is already expanded, so contract it
