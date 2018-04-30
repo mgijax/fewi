@@ -8,7 +8,7 @@
 			<section class="summarySec1 ">
 				<span class="indented">
 		    	${fn:length(strain.qtls)} associated QTL</span>
-		    	<span id="qtlButton" class="searchToolButton indented hidden">Show More</span>
+		    	<span id="qtlButton" class="searchToolButton indented hidden">Show All</span>
 		    	<br/>
 			    <div id="qtlSummaryDiv" style="max-height: 125px; overflow-y: auto; overflow-x: hidden; margin-top: 5px; margin-left: 15px; max-width: 95%" id="qtlDiv">
 				    <table id="qtlSummaryTable">
@@ -39,7 +39,7 @@
 		// section is already expanded, so contract it
 		if ($('#qtlSummaryDiv').css('max-height') == 'none') {
 			$('#qtlSummaryDiv').css('max-height', '125px');
-			$('#qtlButton').html('Show More');
+			$('#qtlButton').html('Show All');
 		} else {
 			$('#qtlSummaryDiv').css('max-height', 'none');
 			$('#qtlButton').html('Show Less');

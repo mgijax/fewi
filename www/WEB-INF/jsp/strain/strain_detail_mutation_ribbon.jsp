@@ -13,7 +13,7 @@
 			    	<c:otherwise>mutation and marker</c:otherwise>
 		    	</c:choose>
 		    	</span>
-		    	<span id="mutationButton" class="searchToolButton indented hidden">Show More</span><br/>
+		    	<span id="mutationButton" class="searchToolButton indented hidden">Show All</span><br/>
 			    <div id="mutationSummaryDiv" style="max-height: 125px; overflow-y: auto; overflow-x: hidden; margin-top: 5px; margin-left: 15px; max-width: 95%" id="mutationsDiv">
 				    <table id="mutationSummaryTable">
 				    <tr>
@@ -43,7 +43,7 @@
 		// section is already expanded, so contract it
 		if ($('#mutationSummaryDiv').css('max-height') == 'none') {
 			$('#mutationSummaryDiv').css('max-height', '125px');
-			$('#mutationButton').html('Show More');
+			$('#mutationButton').html('Show All');
 		} else {
 			$('#mutationSummaryDiv').css('max-height', 'none');
 			$('#mutationButton').html('Show Less');
