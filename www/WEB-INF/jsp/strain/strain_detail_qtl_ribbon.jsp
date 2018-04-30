@@ -6,7 +6,11 @@
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %> summaryRibbon">
 			<section class="summarySec1 ">
-			    <div id="qtlSummaryDiv" style="max-height: 125px; overflow-y: scroll; overflow-x: hidden; margin-top: 5px; margin-left: 15px; max-width: 95%" id="qtlDiv">
+				<span class="indented">
+		    	${fn:length(strain.qtls)} associated QTL</span>
+		    	<span id="qtlButton" class="searchToolButton indented hidden">Show More</span>
+		    	<br/>
+			    <div id="qtlSummaryDiv" style="max-height: 125px; overflow-y: auto; overflow-x: hidden; margin-top: 5px; margin-left: 15px; max-width: 95%" id="qtlDiv">
 				    <table id="qtlSummaryTable">
 				    <tr>
 				    	<th>Allele</th>
@@ -30,5 +34,18 @@
 	<script>
 	// fix width of DIV containing table and adjust the header color
 	$('#qtlSummaryDiv').width($('#qtlSummaryTable').width() + 19);
-	$('#qtlSummaryTable th').css('background-color', $('#qtlRibbonLabel').css('background-color'))
+	$('#qtlSummaryTable th').css('background-color', $('#qtlRibbonLabel').css('background-color'));
+	$('#qtlButton').click(function() {
+		// section is already expanded, so contract it
+		if ($('#qtlSummaryDiv').css('max-height') == 'none') {
+			$('#qtlSummaryDiv').css('max-height', '125px');
+			$('#qtlButton').html('Show More');
+		} else {
+			$('#qtlSummaryDiv').css('max-height', 'none');
+			$('#qtlButton').html('Show Less');
+		}
+	});
+	if ($('#qtlSummaryDiv').height() >= 124) {
+		$('#qtlButton').removeClass('hidden');
+	}
 	</script>
