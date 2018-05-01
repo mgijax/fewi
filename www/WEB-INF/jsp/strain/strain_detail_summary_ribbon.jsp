@@ -16,6 +16,17 @@
 						</div>
 					</li>
 
+					<c:if test="${not empty strain.strainAttributes}">
+						<li>
+							<div class="label">Attributes</div>
+							<div class="value" id="strainAttributes">
+								<c:forEach var="attribute" items="${strain.strainAttributes}" varStatus="status">
+									<fewi:super value="${attribute.attribute}"/><c:if test="${!status.last}">, </c:if>
+								</c:forEach>
+							</div>
+						</li>
+					</c:if>
+
 					<li>
 						<div class="label">MGI ID</div>
 						<div class="value" id="strainPrimaryID">${strain.primaryID}</div>
@@ -32,16 +43,6 @@
 						</li>
 					</c:if>
 
-					<c:if test="${not empty strain.strainAttributes}">
-						<li>
-							<div class="label">Attributes</div>
-							<div class="value" id="strainAttributes">
-								<c:forEach var="attribute" items="${strain.strainAttributes}" varStatus="status">
-									<fewi:super value="${attribute.attribute}"/><c:if test="${!status.last}">, </c:if>
-								</c:forEach>
-							</div>
-						</li>
-					</c:if>
 
 				</ul>
 			</section>
