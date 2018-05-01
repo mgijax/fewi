@@ -597,6 +597,9 @@ border-bottom: 1px solid gray;
 	text-align: left;
 	padding: 7px 3px 2px 3px;
 }
+#strainIsStandard {
+	color:red;
+}
 .indented {
 	margin-left: 15px;
 }
