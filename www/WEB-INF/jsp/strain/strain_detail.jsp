@@ -51,6 +51,12 @@
 	</div>
 </c:if>
 
+<c:if test="${not empty strain.imsrData}">
+	<div class="container detailStructureTable">
+		<%@ include file="strain_detail_imsr_ribbon.jsp" %>
+	</div>
+</c:if>
+
 <c:if test="${not empty strain.referenceAssociations}">
 	<div class="container detailStructureTable">
 		<%@ include file="strain_detail_reference_ribbon.jsp" %>
