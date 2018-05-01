@@ -597,6 +597,7 @@ border-bottom: 1px solid gray;
 	text-align: left;
 	padding: 7px 3px 2px 3px;
 }
+
 #imsrSummaryTable {
 	border-collapse: collapse;
 }
@@ -612,6 +613,10 @@ border-bottom: 1px solid gray;
 	border: 1px solid black;
 	text-align: left;
 	padding: 7px 3px 2px 3px;
+}
+
+#strainIsStandard {
+	color:red;
 }
 .indented {
 	margin-left: 15px;
