@@ -134,8 +134,8 @@ public class AutoCompleteController {
 			results.add(result);
 		}
 		logger.debug("Prepared " + results.size() + " strain AC results");
-		AjaxUtils.prepareAjaxHeaders(response);
-		logger.debug("Prepared Ajax Headers");
+//		AjaxUtils.prepareAjaxHeaders(response);
+//		logger.debug("Prepared Ajax Headers");
 		SearchResults<AutocompleteResult> out = new SearchResults<AutocompleteResult>();
 		out.setResultObjects(results);
 		out.setTotalCount(exactMatches.size());
