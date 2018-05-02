@@ -141,24 +141,9 @@ public class HomepageController {
 		setDatabaseDate(mav);
 		mav.addObject("statistics", statisticFinder.getStatisticsByGroup("Polymorphisms Mini Home") );
 		mav.addObject("strainQueryForm", new StrainQueryForm());
-		mav.addObject("strainTypeChoices1", new ArrayList<String>());
-		mav.addObject("strainTypeChoices2", new ArrayList<String>());
-		mav.addObject("strainTypeChoices3", new ArrayList<String>());
 
 		strainController.initQFCache();
-		List<String> strainTypeChoices = StrainQueryForm.getStrainTypeChoices();
-		int sublistSize = (int) Math.ceil((double) strainTypeChoices.size() / (double) 3.0);
-		List<List<String>> sublists = FewiUtil.getBatches(strainTypeChoices, sublistSize);
-
-		if (sublists.size() > 0 && sublists.get(0) != null) {
-			mav.addObject("strainTypeChoices1", sublists.get(0));
-			if (sublists.size() > 1 && sublists.get(1) != null) {
-				mav.addObject("strainTypeChoices2", sublists.get(1));
-				if (sublists.size() > 2 && sublists.get(2) != null) {
-					mav.addObject("strainTypeChoices3", sublists.get(2));
-				}
-			}
-		}
+		mav.addObject("attributeChoices", StrainQueryForm.getAttributeChoices());
 		
 		return mav;
 	}

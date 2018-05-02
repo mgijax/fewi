@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.jax.mgi.fewi.hunter.SolrProbeHunter;
 import org.jax.mgi.fewi.hunter.SolrStrainHunter;
-import org.jax.mgi.fewi.hunter.SolrStrainTypeFacetHunter;
+import org.jax.mgi.fewi.hunter.SolrStrainAttributeFacetHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
@@ -33,7 +33,7 @@ public class StrainFinder {
 	private SolrStrainHunter strainHunter;
 
 	@Autowired
-	private SolrStrainTypeFacetHunter strainTypeFacetHunter;
+	private SolrStrainAttributeFacetHunter attributeFacetHunter;
 
     @Autowired
     private HibernateObjectGatherer<Strain> strainGatherer;
@@ -89,9 +89,9 @@ public class StrainFinder {
      * Facet functions
      * ---------------
      */
-    public SearchResults<SimpleStrain> getStrainTypeFacet(SearchParams params) {
+    public SearchResults<SimpleStrain> getAttributeFacet(SearchParams params) {
 		SearchResults<SimpleStrain> results = new SearchResults<SimpleStrain>();
-		strainTypeFacetHunter.hunt(params, results);
+		attributeFacetHunter.hunt(params, results);
 		return results;
 	}
 }

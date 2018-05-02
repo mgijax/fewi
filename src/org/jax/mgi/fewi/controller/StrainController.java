@@ -2,6 +2,7 @@ package org.jax.mgi.fewi.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,6 +57,8 @@ public class StrainController {
 	@Autowired
 	private StrainFinder strainFinder;
 
+	private static SmartAlphaComparator smartAlphaComparator = new SmartAlphaComparator();
+	
     //--------------------------------------------------------------------//
     // public methods
     //--------------------------------------------------------------------//
@@ -144,18 +147,37 @@ public class StrainController {
     	mav.addObject("seoDescription", seoDescription);
     }
 */
+    private class AttributeComparator implements Comparator<String> {
+		@Override
+		public int compare(String arg0, String arg1) {
+			// Some attributes begin with an asterisk, which we want to ignore for sorting purposes.
+			String a = arg0;
+			String b = arg1;
+			if (arg0.startsWith("*")) { a = arg0.substring(1); }
+			if (arg1.startsWith("*")) { b = arg1.substring(1); }
+			return smartAlphaComparator.compare(a, b);
+		}
+    }
+    
 	// checks any cachable fields of the strain query form, and initializes them if needed
 	public void initQFCache() {
-		if (StrainQueryForm.getStrainTypeChoices() == null) {
+		if (StrainQueryForm.getAttributeChoices() == null) {
 			// get collection facets
 			SearchParams sp = new SearchParams();
 			sp.setPageSize(0);
 			sp.setFilter(new Filter(SearchConstants.STRAIN_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD));
 
-			SearchResults<SimpleStrain> sr = strainFinder.getStrainTypeFacet(sp);
-			List<String> strainTypeChoices = sr.getResultFacets();
-			Collections.sort(strainTypeChoices, new SmartAlphaComparator());
-			StrainQueryForm.setStrainTypeChoices(strainTypeChoices);
+			SearchResults<SimpleStrain> sr = strainFinder.getAttributeFacet(sp);
+			List<String> attributeChoices = sr.getResultFacets();
+			Collections.sort(attributeChoices, new AttributeComparator());
+			
+			// remove four choices that we don't want to give the user
+			attributeChoices.remove("mutant strain");
+			attributeChoices.remove("mutant stock");
+			attributeChoices.remove("not applicable");
+			attributeChoices.remove("not specified");
+
+			StrainQueryForm.setAttributeChoices(attributeChoices);
 		}
 	}
 
@@ -259,13 +281,13 @@ public class StrainController {
 		}
 		
 		// strain type
-		List<String> strainTypes = query.getStrainType();
-		if ((strainTypes != null) && (strainTypes.size() > 0)) {
-			List<Filter> types = new ArrayList<Filter>();
-			for (String strainType : strainTypes) {
-				types.add(new Filter(SearchConstants.STRAIN_TYPE, strainType, Filter.Operator.OP_EQUAL));
+		List<String> attributes = query.getAttributes();
+		if ((attributes != null) && (attributes.size() > 0)) {
+			List<Filter> attributeList = new ArrayList<Filter>();
+			for (String attribute : attributes) {
+				attributeList.add(new Filter(SearchConstants.STRAIN_ATTRIBUTE_LOWER, attribute, Filter.Operator.OP_EQUAL));
 			}
-			filterList.add(Filter.or(types));
+			filterList.add(Filter.or(attributeList));
 		}
 		
 		// if we have filters, collapse them into a single filter

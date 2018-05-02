@@ -17,17 +17,11 @@
 			<button class="goButton">Search</button>
 		</div>
 
-		<label class="searchLabel">Type</label>
+		<label class="searchLabel">Attributes</label>
 		<div>
-			<div style="display: inline-block">
-	      	<fewi:checkboxOptions items="${strainTypeChoices1}" name="strainType" values="${strainQueryForm.strainType}" />
-			</div>
-			<div style="display: inline-block">
-	      	<fewi:checkboxOptions items="${strainTypeChoices2}" name="strainType" values="${strainQueryForm.strainType}" />
-			</div>
-			<div style="display: inline-block">
-	      	<fewi:checkboxOptions items="${strainTypeChoices3}" name="strainType" values="${strainQueryForm.strainType}" />
-			</div>
+	        <select name="attributes" id="attributeDropList" multiple="" size="7">
+			<fewi:selectOptions items="${attributeChoices}" values="${strainQueryForm.attributes}" />
+			</select>
 		</div>
 	</div>
 

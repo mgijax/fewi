@@ -6,13 +6,13 @@ public class StrainQueryForm {
 	/***--- instance variables ---***/
 	
 	private String strainName;			// user's choice of strain name
-	private List<String> strainType;	// user's selected strain types (chosen from strainTypeChoices)
+	private List<String> attributes;	// user's selected strain attributes (chosen from attributeChoices)
 	
 	/***--- class variables ---***/
 	
-	// set of strain types that we want to present to the user for choices
+	// set of strain attributes we want to present to the user for choices
 	// (to be drawn from the database by the StrainController and passed into this object)
-	private static List<String> strainTypeChoices = null;
+	private static List<String> attributeChoices = null;
 	
 	/***--- constructors ---***/
 	
@@ -28,26 +28,26 @@ public class StrainQueryForm {
 		this.strainName = strainName;
 	}
 
-	public List<String> getStrainType() {
-		return strainType;
+	public List<String> getAttributes() {
+		return attributes;
 	}
 
-	public void setStrainType(List<String> strainType) {
-		this.strainType = strainType;
+	public void setAttributes(List<String> attributes) {
+		this.attributes = attributes;
 	}
 
-	public static List<String> getStrainTypeChoices() {
-		return StrainQueryForm.strainTypeChoices;
+	public static List<String> getAttributeChoices() {
+		return StrainQueryForm.attributeChoices;
 	}
 
-	public static void setStrainTypeChoices(List<String> strainTypeChoices) {
-		StrainQueryForm.strainTypeChoices = strainTypeChoices;
+	public static void setAttributeChoices(List<String> attributeChoices) {
+		StrainQueryForm.attributeChoices = attributeChoices;
 	}
 	
 	/***--- toString ---***/
 
 	@Override
 	public String toString() {
-		return "StrainQueryForm [strainName=" + strainName + ", strainType=" + strainType + "]";
+		return "StrainQueryForm [strainName=" + strainName + ", attribute=" + attributes + "]";
 	}
 }

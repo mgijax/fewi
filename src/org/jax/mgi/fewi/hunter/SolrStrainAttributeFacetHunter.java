@@ -5,10 +5,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolrStrainTypeFacetHunter extends SolrStrainBaseHunter {
+public class SolrStrainAttributeFacetHunter extends SolrStrainBaseHunter {
 	
-    public SolrStrainTypeFacetHunter() {        
-        facetString = IndexConstants.STRAIN_TYPE;
+    public SolrStrainAttributeFacetHunter() {        
+        facetString = IndexConstants.STRAIN_ATTRIBUTE;
     }
 	
     @Value("${solr.strain.url}")
