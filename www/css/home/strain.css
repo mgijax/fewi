@@ -114,6 +114,14 @@
 	cursor: pointer;
 }
 
+#strainForm .clearButton {
+	clear: left;
+	margin-top: -4px;
+	margin-right: 10px;
+	padding: 4px 16px;
+	cursor: pointer;
+}
+
 .ui-autocomplete {
 	max-height: 250px;
 	overflow-y: auto;

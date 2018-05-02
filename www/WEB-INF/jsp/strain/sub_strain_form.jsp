@@ -14,7 +14,8 @@
 			value="<c:out value="${strainQueryForm.strainName}"/>" />
 		</div>
 		<div style='float: right; padding-right: 20px'>
-			<button class="goButton">Search</button>
+			<button id="clearButton" class="clearButton">Clear</button>
+			<button id="searchButton" class="goButton">Search</button>
 		</div>
 
 		<label class="searchLabel">Attributes</label>
@@ -24,5 +25,11 @@
 			</select>
 		</div>
 	</div>
-
 </form>
+<script>
+	$('#clearButton').click(function () {
+		$('#attributeDropList').val([]);
+		$('[name=strainName]').val('');
+		return false;
+	});
+</script>
