@@ -174,8 +174,8 @@ public class StrainController {
 			// remove four choices that we don't want to give the user
 			attributeChoices.remove("mutant strain");
 			attributeChoices.remove("mutant stock");
-			attributeChoices.remove("not applicable");
-			attributeChoices.remove("not specified");
+			attributeChoices.remove("Not Applicable");
+			attributeChoices.remove("Not Specified");
 
 			StrainQueryForm.setAttributeChoices(attributeChoices);
 		}
