@@ -496,11 +496,20 @@ var prepFilters = function(qfRequest) {
     gsfLog("prepFilters() : exited");
 };
 
+/* remove the optional wildtypeFilter parameter from the URL itself, if it exists
+ */
+var removeWildtypeFilterFromQuerystring = function() {
+	if (searchedWildtypeFilter != '') {
+		querystring = querystring.replace('&wildtypeFilter=' + searchedWildtypeFilter, '');
+		searchedWildtypeFilter = "";
+	}
+}
+
 /* removes all filters
  */
 var clearAllFilters = function() {
     window.facets = {};
-
+    removeWildtypeFilterFromQuerystring();
 //    var newState = generateRequest (gxdDataTable.getState().sortedBy, 0,
 //	gxdDataTable.get("paginator").getRowsPerPage() );
 //    YAHOO.util.History.navigate("gxd", newState);
@@ -527,6 +536,7 @@ var clearFilter = function() {
 	    items.splice(i, 1);
 	}
     }
+    removeWildtypeFilterFromQuerystring();
     var newState = generateRequest (gxdDataTable.getState().sortedBy, 0,
 	gxdDataTable.get("paginator").getRowsPerPage() );
 
