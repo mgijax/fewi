@@ -2,7 +2,6 @@ package org.jax.mgi.fewi.searchUtil;
 
 import java.util.Comparator;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.jax.mgi.shr.fe.sort.SmartAlphaComparator;
 
 public class AutocompleteResult {
@@ -19,15 +18,16 @@ public class AutocompleteResult {
 	}
 
 	public String getLabel() {
+		if (this.label == null) { return "null"; }
 		return label;
 	}
 
-	@JsonIgnore
 	public void setSynonym(String synonym) {
 		this.label = synonym + ", syn. of [" + this.value + "]";
 	}
 
 	public String getValue() {
+		if (this.value == null) { return "null"; }
 		return value;
 	}
 
