@@ -7,7 +7,7 @@
 		<div class="detail <%=rightTdStyles.getNext() %> summaryRibbon">
 			<section class="summarySec1 ">
 				<span class="indented">
-		    	${fn:length(strain.mutations)} associated
+		    	<span id="strainMutationCount">${fn:length(strain.mutations)}</span> associated
 		    	<c:choose>
 			    	<c:when test="${fn:length(strain.mutations) > 1}">mutations and markers</c:when>
 			    	<c:otherwise>mutation and marker</c:otherwise>

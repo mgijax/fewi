@@ -7,7 +7,7 @@
 		<div class="detail <%=rightTdStyles.getNext() %> summaryRibbon">
 			<section class="summarySec1 ">
 				<span class="indented">
-		    	${fn:length(strain.qtls)} associated QTL</span>
+		    	<span id="strainQtlCount">${fn:length(strain.qtls)}</span> associated QTL</span>
 		    	<span id="qtlButton" class="searchToolButton indented hidden">Show All</span>
 		    	<br/>
 			    <div id="qtlSummaryDiv" style="max-height: 125px; overflow-y: auto; overflow-x: hidden; margin-top: 5px; margin-left: 15px; max-width: 95%" id="qtlDiv">
