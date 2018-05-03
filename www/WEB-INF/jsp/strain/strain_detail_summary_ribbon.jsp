@@ -11,7 +11,7 @@
 							<fewi:super value="${strain.name}"/> 
 			
 							<c:if test="${strain.isStandard==0}">
-								<span id="strainIsStandard"> (pending review) </span>
+								<span id="strainIsStandard"> (interim) </span>
 							</c:if>
 						</div>
 					</li>
