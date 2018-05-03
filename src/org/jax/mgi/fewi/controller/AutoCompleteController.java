@@ -137,6 +137,7 @@ public class AutoCompleteController {
 //		AjaxUtils.prepareAjaxHeaders(response);
 //		logger.debug("Prepared Ajax Headers");
 		SearchResults<AutocompleteResult> out = new SearchResults<AutocompleteResult>();
+		out.cloneFrom(srContains);
 		out.setResultObjects(results);
 		out.setTotalCount(exactMatches.size());
 		logger.debug("Exiting method");

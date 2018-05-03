@@ -18,7 +18,6 @@ public class AutocompleteResult {
 	}
 
 	public String getLabel() {
-		if (this.label == null) { return "null"; }
 		return label;
 	}
 
@@ -27,7 +26,6 @@ public class AutocompleteResult {
 	}
 
 	public String getValue() {
-		if (this.value == null) { return "null"; }
 		return value;
 	}
 
