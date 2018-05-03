@@ -27,9 +27,17 @@
 	</div>
 </form>
 <script>
+	// clear button should clear both strain box and attribute selection list
 	$('#clearButton').click(function () {
 		$('#attributeDropList').val([]);
 		$('[name=strainName]').val('');
 		return false;
+	});
+	// pressing Enter in the strain box should submit the form
+	$('#strainForm').keypress(function (e) {
+		if (e.which == 13) {
+			$('#searchButton').focus().click();
+			return false;	// stop processing the keypress
+		}
 	});
 </script>
