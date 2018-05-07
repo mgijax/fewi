@@ -42,8 +42,19 @@
 							</div>
 						</li>
 					</c:if>
+				</ul>
+			</section>
 
-
+			<section class="summarySec1 ">
+				<ul>
+					<c:if test="${not empty strain.mpdData}">
+						<li title="Mouse Phenome Database">
+							<div class="label">MPD</div>
+							<div class="value">
+								<a href="https://phenome.jax.org/strains/${strain.firstMpdData.mpdID}" target="_blank" id="mpdLink">View</a>
+							</div>
+						</li>
+					</c:if>
 				</ul>
 			</section>
 		</div>
