@@ -51,7 +51,15 @@
 						<li title="Mouse Phenome Database">
 							<div class="label">MPD</div>
 							<div class="value">
-								<a href="https://phenome.jax.org/strains/${strain.firstMpdData.mpdID}" target="_blank" id="mpdLink">View</a>
+								<a href="https://phenome.jax.org/strains/${strain.firstMpdData.mpdID}" target="_blank" id="mpdLink">View Phenomic Data</a>
+							</div>
+						</li>
+					</c:if>
+					<c:if test="${strain.isSequenced == 1}">
+						<li title="Multi Genome Viewer">
+							<div class="label">MGV</div>
+							<div class="value">
+								<a href="http://proto.informatics.jax.org/prototypes/mgv/#ref=${strain.name}" target="_blank" id="mgvLink">View Genome</a>
 							</div>
 						</li>
 					</c:if>
