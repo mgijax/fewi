@@ -499,10 +499,14 @@ var prepFilters = function(qfRequest) {
 /* remove the optional wildtypeFilter parameter from the URL itself, if it exists
  */
 var removeWildtypeFilterFromQuerystring = function() {
-	if (searchedWildtypeFilter != '') {
-		querystring = querystring.replace('&wildtypeFilter=' + searchedWildtypeFilter, '');
-		searchedWildtypeFilter = "";
-	}
+	// If searchedWildtypeFilter has not been defined (as for any search other than by marker ID),
+	// then catch the corresponding exception and skip it.
+	try {
+		if (searchedWildtypeFilter != '') {
+			querystring = querystring.replace('&wildtypeFilter=' + searchedWildtypeFilter, '');
+			searchedWildtypeFilter = "";
+		}
+	} catch (c) {}
 }
 
 /* removes all filters
