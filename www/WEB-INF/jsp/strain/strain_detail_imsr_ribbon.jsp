@@ -12,7 +12,6 @@
 				    <tr>
 				    	<th>IMSR</th>
 				    	<th>Repository</th>
-				    	<th>Source</th>
 				    	<th>IMSR Strain</th>
 				    	<th>Why Matched</th>
 				    </tr>
@@ -23,9 +22,6 @@
 				    			</c:if></td>
 				    		<td><c:if test="${not empty row.repository}">
 				    			${row.repository}
-				    			</c:if></td>
-				    		<td><c:if test="${not empty row.sourceURL}">
-				    			<a href="${row.sourceURL}" target="_blank">at ${row.repository}</a>
 				    			</c:if></td>
 				    		<td><c:if test="${not empty row.imsrStrain}">
 				    			<fewi:super value="${row.imsrStrain}"/>
