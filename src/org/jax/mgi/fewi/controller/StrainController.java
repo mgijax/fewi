@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.StrainFinder;
 import org.jax.mgi.fewi.forms.StrainQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.Strain;
 
 /*-------*/
@@ -56,6 +58,9 @@ public class StrainController {
 
 	@Autowired
 	private StrainFinder strainFinder;
+
+	@Autowired
+	private ReferenceFinder referenceFinder;
 
 	private static SmartAlphaComparator smartAlphaComparator = new SmartAlphaComparator();
 	
@@ -190,6 +195,38 @@ public class StrainController {
         ModelAndView mav = new ModelAndView("strain/strain_summary");
         mav.addObject("strainQueryForm", queryForm);
         mav.addObject("queryString", request.getQueryString());
+        mav.addObject("title", "Strain Summary");
+
+        return mav;
+    }
+
+	// shell of the strain summary page, coming from a reference 
+    // (The actual results are retrieved via Ajax from the /table endpoint.)
+    @RequestMapping(value="reference/{refID:.+}", method = RequestMethod.GET)
+    public ModelAndView strainForReference(HttpServletRequest request,
+    		@ModelAttribute StrainQueryForm queryForm,
+    		@PathVariable("refID") String refID) {
+        logger.debug("In strainForReference, ref ID: " + refID);
+        queryForm.setReferenceID(refID);
+
+        // look up the reference
+        SearchResults<Reference> referenceSR = referenceFinder.getReferenceByID(refID);
+        List<Reference> references = referenceSR.getResultObjects();
+        if ((references == null) && (references.size() == 0)) {
+        	return errorMav("No references match ID: " + refID);
+        }
+        
+        String queryString = "referenceID=" + refID;
+        if (request.getQueryString() != null) {
+        	queryString = queryString + "&" + request.getQueryString().replaceAll("referenceID=[^&]*", "");
+        }
+        
+        // objects needed by display
+        ModelAndView mav = new ModelAndView("strain/strain_summary");
+        mav.addObject("strainQueryForm", queryForm);
+        mav.addObject("queryString", queryString);
+        mav.addObject("title", "Strain Summary for Reference : " + refID);
+        mav.addObject("reference", references.get(0));
 
         return mav;
     }
@@ -280,6 +317,12 @@ public class StrainController {
 			filterList.add(Filter.or(nameOrID));
 		}
 		
+		// reference ID
+		String refID = query.getReferenceID();
+		if ((refID != null) && (refID.length() > 0)) {
+			filterList.add(new Filter(SearchConstants.ACC_ID, refID, Filter.Operator.OP_EQUAL));
+		}
+
 		// strain type
 		List<String> attributes = query.getAttributes();
 		if ((attributes != null) && (attributes.size() > 0)) {

@@ -72,6 +72,22 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 	</div>
 </div>
 
+<c:if test="${not empty reference}">
+<!-- if we came from a reference page, we need a special reference header (taken from marker_summary_reference) -->
+	<table class="summaryHeader">
+	<tr>
+  		<td class="summaryHeaderCat1"><b>Reference</b></td>
+  		<td class="summaryHeaderData1">
+  			<a style="font-size:x-large;  font-weight: bold; padding-bottom:10px;"
+  				href="${configBean.FEWI_URL}reference/${reference.jnumID}">${reference.jnumID}</a>
+  			<div style="padding:4px;"> </div>
+  			${reference.shortCitation}
+  		</td>
+  	</tr>
+  	</table>
+  	<script>$('.titleBarMainTitle').html('<b>Strain Summary for Reference</b>');</script>
+</c:if>
+
 <br clear="all" />
 <%@ include file="/WEB-INF/jsp/strain/strain_summary_results.jsp" %>
 
@@ -82,6 +98,9 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 	var querystring = "${queryString}";
 	fewiurl = "${configBean.FEWI_URL}";
 	ss_search();
+	<c:if test="${not empty reference}">
+		$('#ysf').css('display', 'none');
+	</c:if>
 </script>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
