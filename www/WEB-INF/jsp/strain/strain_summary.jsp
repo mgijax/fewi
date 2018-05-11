@@ -45,6 +45,9 @@ td.summaryHeaderCat1Gxd { font-weight: bold; }
 #strainSummaryTable tr:nth-child(odd) { background-color: #dddddd; }
 #strainSummaryTable th { border: 1px solid gray; padding: 4px; background-color: #d0e0f0; font-weight: bold; }
 #strainSummaryTable td { border: 1px solid gray; padding: 4px; }
+
+.ysf { font-weight: bold; text-decoration: underline; font-size: 100%; }
+.smallGray { font-size: 75%; color: #999999; }
 </style>
 
 <!--[if IE]>

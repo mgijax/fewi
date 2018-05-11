@@ -1,6 +1,7 @@
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
-<%@ page import = "org.jax.mgi.shr.jsonmodel.Clone" %>
-<%@ page import = "org.jax.mgi.shr.jsonmodel.CloneMarker" %>
+<%@ page import = "java.util.Properties" %>
+<%@ page import = "org.jax.mgi.shr.jsonmodel.SimpleStrain" %>
+<%@ page import = "org.jax.mgi.shr.jsonmodel.AccessionID" %>
 <%@ page import = "org.jax.mgi.fewi.util.StyleAlternator" %>
 <%@ page import = "org.jax.mgi.fewi.util.FormatHelper" %>
 <%
@@ -23,7 +24,6 @@
 		<c:forEach var="strain" items="${strains}" varStatus="status">
 			<tr>
 				<td><a href="${configBean.FEWI_URL}strain/${strain.primaryID}" target="_blank"><fewi:super value="${strain.name}"/></a>
-					<span class="smaller">(${strain.primaryID})</span>
 				</td>
 				<td><c:forEach var="synonym" items="${strain.synonyms}" varStatus="cStatus">
 						<fewi:super value="${synonym}"/><br/>
@@ -33,9 +33,26 @@
 						${attribute}<br/>
 					</c:forEach>
 				</td>
-				<td><c:forEach var="accID" items="${strain.accessionIDs}" varStatus="mStatus">
-				    	${accID.accID} (${accID.logicalDB})<br/>
-					</c:forEach>
+				<td><%
+					/* dropping into scriptlet for more flexibility than JSTL in this section...
+					 * (needed to be able to look up URLs from externaUrls based on the data,
+					 * rather than a static string)
+					 */
+					Properties externalUrlsProperties = (Properties) request.getAttribute("externalUrls");
+					Properties configBean = (Properties) request.getAttribute("configBean");
+					SimpleStrain strain = (SimpleStrain) pageContext.getAttribute("strain");
+					
+					for (org.jax.mgi.shr.jsonmodel.AccessionID accID : strain.getAccessionIDs()) {
+						String ldb = ((String) accID.getLogicalDB()).replaceAll(" ", "_").replaceAll("-", "_");
+						if ("MGI".equals(accID.getLogicalDB())) {
+							%><a href="<%= configBean.get("FEWI_URL") %>strain/<%= accID.getAccID() %>" target='_blank'><%= accID.getAccID() %></a><br/><%
+						} else if (externalUrlsProperties.get(ldb) != null) {
+							%><a href="<%= ((String) externalUrlsProperties.get(ldb)).replace("@@@@", accID.getAccID()) %>" target='_blank'><%= accID.getAccID() %></a><br/><%
+						} else {
+							%><%= accID.getAccID() %> (<%= ldb %>)<br/><%
+						}
+					}
+					%>
 				</td>
 				<td><c:choose>
 						<c:when test="${strain.referenceCount > 0}">

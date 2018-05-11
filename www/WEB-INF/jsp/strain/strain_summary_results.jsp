@@ -10,7 +10,7 @@ a { text-decoration: none; }
 
 <div id="summary">
 	<div id="breadbox">
-	  	<div id="ysf">You Searched For...</div>
+	  	<div id="ysf">${ysf}</div>
 		<div id="contentcolumn">
 			<div class="innertube">
 				<div id="filterSummary" class="filters" style="display:none">

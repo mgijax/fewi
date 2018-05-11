@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.StrainFinder;
 import org.jax.mgi.fewi.forms.StrainQueryForm;
@@ -196,6 +197,9 @@ public class StrainController {
         mav.addObject("strainQueryForm", queryForm);
         mav.addObject("queryString", request.getQueryString());
         mav.addObject("title", "Strain Summary");
+        mav.addObject("ysf", getYouSearchedFor(queryForm));
+        request.setAttribute("externalUrls", ContextLoader.getExternalUrls());
+        request.setAttribute("configBean", ContextLoader.getConfigBean());
 
         return mav;
     }
@@ -227,6 +231,8 @@ public class StrainController {
         mav.addObject("queryString", queryString);
         mav.addObject("title", "Strain Summary for Reference : " + refID);
         mav.addObject("reference", references.get(0));
+        request.setAttribute("externalUrls", ContextLoader.getExternalUrls());
+        request.setAttribute("configBean", ContextLoader.getConfigBean());
 
         return mav;
     }
@@ -269,6 +275,53 @@ public class StrainController {
     // private methods
     //--------------------------------------------------------------------//
 
+	/* build the "You Searched For" string, based on data in the query form
+	 */
+	private String getYouSearchedFor (StrainQueryForm qf) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("<span class='ysf'>You Searched For...</span><br/>");
+
+		String strainName = qf.getStrainName();
+		List<String> attributes = qf.getAttributes();
+		
+		if ((strainName != null) && (strainName.length() > 0)) {
+			String op = "equals";
+			if (strainName.indexOf("*") >= 0) {
+				if (strainName.startsWith("*")) {
+					if (strainName.endsWith("*")) {
+						op = "contains";
+					} else {
+						op = "begins with";
+					}
+				} else if (strainName.endsWith("*")) {
+					op = "ends with";
+				} else {
+					op = "matches";
+				}
+			}
+			sb.append("Name: ");
+			sb.append(op);
+			sb.append(" <b>");
+			sb.append(strainName);
+			sb.append("</b>");
+			sb.append(" <span class='smallGray'>searching current names and synonyms</span>");
+			sb.append("<br/>");
+		}
+		
+		if ((attributes != null) && (attributes.size() > 0)) {
+			if (attributes.size() > 1) {
+				sb.append("Attributes: any of <b>[");
+				sb.append(String.join(", ", attributes));
+				sb.append("]</b><br/>");
+			} else {
+				sb.append("Attributes: <b>");
+				sb.append(attributes.get(0));
+				sb.append("</b><br/>");
+			}
+		}
+		return sb.toString();
+	}
+	
 	/* return a mav for an error screen with the given message filled in
 	 */
 	private ModelAndView errorMav(String msg) {
