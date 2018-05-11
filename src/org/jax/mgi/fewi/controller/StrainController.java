@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.StrainFinder;
@@ -315,7 +317,7 @@ public class StrainController {
 		if ((attributes != null) && (attributes.size() > 0)) {
 			if (attributes.size() > 1) {
 				sb.append("Attributes: any of <b>[");
-				sb.append(String.join(", ", attributes));
+				sb.append(StringUtils.join(attributes, ", "));
 				sb.append("]</b><br/>");
 			} else {
 				sb.append("Attributes: <b>");
