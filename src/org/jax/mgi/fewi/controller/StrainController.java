@@ -200,6 +200,8 @@ public class StrainController {
         mav.addObject("ysf", getYouSearchedFor(queryForm));
         request.setAttribute("externalUrls", ContextLoader.getExternalUrls());
         request.setAttribute("configBean", ContextLoader.getConfigBean());
+        mav.addObject("description", "View mouse strains with their synonyms, attributes, accession IDs, and references.");
+        mav.addObject("keywords", "MGI, mouse, mice, murine, Mus musculus, inbred, strain, consomic, congenic, conplastic, coisogenic, hybrid, insertion, inversion, recombinant, outbred, transgenic");
 
         return mav;
     }
@@ -233,6 +235,8 @@ public class StrainController {
         mav.addObject("reference", references.get(0));
         request.setAttribute("externalUrls", ContextLoader.getExternalUrls());
         request.setAttribute("configBean", ContextLoader.getConfigBean());
+        mav.addObject("description", "View mouse strains associated with reference " + refID + " with their synonyms, attributes, accession IDs, and references.");
+        mav.addObject("keywords", "MGI, mouse, mice, murine, Mus musculus, inbred, strain, consomic, congenic, conplastic, coisogenic, hybrid, insertion, inversion, recombinant, outbred, transgenic, reference, " + refID);
 
         return mav;
     }

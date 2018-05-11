@@ -6,6 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="chrome=1">
 <link rel="stylesheet" type="text/css" href="${configBean.WEBSHARE_URL}css/jquery-ui-1.10.2.custom.min.css" />
 <meta name="description" content="${description}"/>
+<meta name="keywords" content="${keywords}"/>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
