@@ -61,6 +61,8 @@
 							String idForLink = accID.getAccID();
 							if ("MMRRC".equals(accID.getLogicalDB())) {
 								idForLink = idForLink.replace("MMRRC:", "");
+							} else if ("Harwell".equals(accID.getLogicalDB()) && accID.getAccID().startsWith("FESA")) {
+								idForLink = idForLink.replace("FESA:", "");
 							}
 							%><a href="<%= ((String) externalUrlsProperties.get(ldb)).replace("@@@@", idForLink) %>" target='_blank'><%= withPrefix %></a><br/><%
 						} else {
