@@ -137,8 +137,8 @@
 					</c:if>
 
 					<c:if test="${not (empty chromosome or empty startCoord or empty endCoord)}">
-						<fmt:formatNumber value="${marker.preferredCoordinates.startCoordinate - 10000}" pattern="#0" var="startCoordWithFlank"/>
-						<fmt:formatNumber value="${marker.preferredCoordinates.endCoordinate + 10000}" pattern="#0" var="endCoordWithFlank"/>
+						<fmt:formatNumber value="${marker.preferredCoordinates.startCoordinate - 50000}" pattern="#0" var="startCoordWithFlank"/>
+						<fmt:formatNumber value="${marker.preferredCoordinates.endCoordinate + 50000}" pattern="#0" var="endCoordWithFlank"/>
 						<li class="extra closed">
 							<div class="value" style="font-size: smaller; margin-left: 16.5em;">
 								<div style="float:left; margin-right: 5px">
