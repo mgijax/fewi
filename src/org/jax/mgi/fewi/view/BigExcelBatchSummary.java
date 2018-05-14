@@ -125,10 +125,6 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 		    		}
 		    		associations.add(wrapper);
 				}
-				if(queryForm.getVega()){
-					List<List<String>> wrapper = new ArrayList<List<String>>();
-					List<String> vIds;
-				}
 				
 				if(queryForm.getGo()){
 					List<List<String>> wrapper = new ArrayList<List<String>>();
@@ -340,9 +336,6 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 		}
 		if(queryForm.getEntrez()){
 			row.createCell(i++).setCellValue("Entrez Gene ID");
-		}
-		if(queryForm.getVega()){
-			row.createCell(i++).setCellValue("VEGA ID");
 		}
 		
 		if(queryForm.getGo()){
