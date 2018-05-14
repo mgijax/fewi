@@ -289,9 +289,6 @@ public class TextBatchSummary extends AbstractTextView {
 		if(queryForm.getEntrez()){
 			header.append("\tEntrez Gene ID");
 		}
-		if(queryForm.getVega()){
-			header.append("\tVEGA ID");
-		}
 		
 		if(queryForm.getGo()){
 			header.append("\tGO ID");
