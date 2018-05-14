@@ -51,7 +51,7 @@
 							try {
 								// If we can convert the ID to an integer, we need to add a prefix.
 								int integerPortion = Integer.parseInt(withPrefix);
-								if ("JAX Registry".equals(accID.getLogicalDB()) {
+								if ("JAX Registry".equals(accID.getLogicalDB())) {
 									withPrefix = "JAX:" + withPrefix;
 								} else {
 									withPrefix = accID.getLogicalDB() + ":" + withPrefix;
