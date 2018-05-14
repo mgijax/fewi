@@ -47,7 +47,17 @@
 						if ("MGI".equals(accID.getLogicalDB())) {
 							%><a href="<%= configBean.get("FEWI_URL") %>strain/<%= accID.getAccID() %>" target='_blank'><%= accID.getAccID() %></a><br/><%
 						} else if (externalUrlsProperties.get(ldb) != null) {
-							%><a href="<%= ((String) externalUrlsProperties.get(ldb)).replace("@@@@", accID.getAccID()) %>" target='_blank'><%= accID.getAccID() %></a><br/><%
+							String withPrefix = accID.getAccID();
+							try {
+								// If we can convert the ID to an integer, we need to add a prefix.
+								int integerPortion = Integer.parseInt(withPrefix);
+								if ("JAX Registry".equals(accID.getLogicalDB()) {
+									withPrefix = "JAX:" + withPrefix;
+								} else {
+									withPrefix = accID.getLogicalDB() + ":" + withPrefix;
+								}
+							} catch (Exception e) {}
+							%><a href="<%= ((String) externalUrlsProperties.get(ldb)).replace("@@@@", accID.getAccID()) %>" target='_blank'><%= withPrefix %></a><br/><%
 						} else {
 							%><%= accID.getAccID() %> (<%= ldb %>)<br/><%
 						}
