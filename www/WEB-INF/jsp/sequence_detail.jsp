@@ -128,7 +128,7 @@
       <div style="width:22em; position: absolute; top: 0px; left: 160px; ">
       <form name="offset">
         <c:choose>
-        <c:when test="${sequence.provider=='VEGA Gene Model' || sequence.provider=='Ensembl Gene Model' || sequence.provider=='NCBI Gene Model'}">
+        <c:when test="${sequence.provider=='Ensembl Gene Model' || sequence.provider=='NCBI Gene Model'}">
           &#177; <input type="text" size=3 name="offset" value=0 > Kb of flanking sequence
         </c:when>
         <c:otherwise>

@@ -3,7 +3,7 @@
 .inheritColor {background-color: inherit}
 </style>
 
-<c:if test="${(marker.countOfSequences > 0) or (not empty marker.ccdsIDs) or (not empty marker.uniGeneIDs) or (not empty otherIDs['VEGA Gene Model']) or (not empty otherIDs['Entrez Gene']) or (not empty otherIDs['Ensembl Gene Model'])}">
+<c:if test="${(marker.countOfSequences > 0) or (not empty marker.ccdsIDs) or (not empty marker.uniGeneIDs) or (not empty otherIDs['Entrez Gene']) or (not empty otherIDs['Ensembl Gene Model'])}">
 	<div class="row sequenceRibbon" >
 		<div class="header <%=leftTdStyles.getNext() %>">
 			Sequences &amp;<br/>
@@ -49,15 +49,9 @@
 			</c:if>
 </c:if>
 
-<c:if test="${(not empty otherIDs['VEGA Gene Model']) or (not empty otherIDs['Ensembl Gene Model']) or (not empty otherIDs['Entrez Gene'])}">
+<c:if test="${(not empty otherIDs['Ensembl Gene Model']) or (not empty otherIDs['Entrez Gene'])}">
 				<section class="summarySec2 extra" style="width: 49%">
 					<ul>
-					<c:if test="${not empty otherIDs['VEGA Gene Model']}">
-					<li>
-					<div class="label">VEGA</div>
-					<div class="value">${otherIDs['VEGA Gene Model']}</div>
-					</li>
-					</c:if>
 					<c:if test="${not empty otherIDs['Ensembl Gene Model']}">
 					<li>
 					<div class="label">Ensembl</div>
@@ -86,7 +80,7 @@
 								<td class="td_disease_tbl padded"><input type="radio" name="seq1" value="<%= FormatHelper.getSeqForwardValue(seqDna) %>"></td>
 								<td class="td_disease_tbl padded">genomic</td>
 								<td class="td_disease_tbl padded">${marker.representativeGenomicSequence.primaryID}</td>
-								<td class="td_disease_tbl padded">${fn:replace(fn:replace(genomicLink, "VEGA", "VEGA Gene Model"), "href", "target='blank' href")} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeGenomicSequence.primaryID}">MGI Sequence Detail</a></td>
+								<td class="td_disease_tbl padded">${fn:replace(genomicLink, "href", "target='blank' href")} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeGenomicSequence.primaryID}">MGI Sequence Detail</a></td>
 								<td class="td_disease_tbl padded">${marker.representativeGenomicSequence.length}</td>
 								<td class="td_disease_tbl padded">${genomicSource}</td>
 								<td class="td_disease_tbl padded">&#177; <input type="text" size="3" name="flank1" value="0">&nbsp;kb</td></tr>
@@ -129,7 +123,7 @@
 					</form>
 				</section>
 </c:if>
-<c:if test="${(marker.countOfSequences > 0) or (not empty marker.ccdsIDs) or (not empty marker.uniGeneIDs) or (not empty otherIDs['VEGA Gene Model']) or (not empty otherIDs['Entrez Gene']) or (not empty otherIDs['Ensembl Gene Model'])}">
+<c:if test="${(marker.countOfSequences > 0) or (not empty marker.ccdsIDs) or (not empty marker.uniGeneIDs) or (not empty otherIDs['Entrez Gene']) or (not empty otherIDs['Ensembl Gene Model'])}">
 		</div> <!-- sequence details -->
 	</div><!-- sequence ribbon -->
 </c:if>

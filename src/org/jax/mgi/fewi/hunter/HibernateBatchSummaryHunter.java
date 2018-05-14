@@ -41,12 +41,6 @@ public class HibernateBatchSummaryHunter
 		uniprotItems.add("TrEMBL");
 		typeMap.put("UniProt", uniprotItems);
 		
-		List<String> vegaItems = new ArrayList<String>();
-		vegaItems.add("VEGA Gene Model");
-		vegaItems.add("VEGA Protein");
-		vegaItems.add("VEGA Transcript");
-		typeMap.put("VEGA", vegaItems);
-		
 		List<String> ensemblItems = new ArrayList<String>();
 		ensemblItems.add("Ensembl Gene Model");
 		ensemblItems.add("Ensembl Protein");

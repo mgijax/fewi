@@ -14,6 +14,8 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jax.mgi.fewi.finder.AutocompleteFinder;
+import org.jax.mgi.fewi.finder.StrainFinder;
+import org.jax.mgi.fewi.searchUtil.AutocompleteResult;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.MetaData;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -34,7 +36,7 @@ import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.CreFields;
-import org.jax.mgi.shr.jsonmodel.BrowserTerm;
+import org.jax.mgi.shr.jsonmodel.SimpleStrain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,10 +59,90 @@ public class AutoCompleteController {
 	@Autowired
 	private AutocompleteFinder autocompleteFinder;
 
+	@Autowired
+	private StrainFinder strainFinder;
+
+	@Autowired
+	private StrainController strainController;
+
 	// get a vocabulary controller
 	@Autowired
 	private VocabularyController vocabController;
 
+	/*
+	 * This method maps requests for strain auto complete results. The results
+	 * are returned as JSON.
+	 */
+	@RequestMapping("/strainName")
+	public @ResponseBody SearchResults<AutocompleteResult> strainAutoComplete(
+			HttpServletResponse response,
+			@RequestParam("query") String query) {
+
+		int maxCount = 500;
+		
+		// get exact matches
+		SearchParams exact = new SearchParams();
+		exact.setPageSize(maxCount);
+		exact.setFilter(new Filter(SearchConstants.STRAIN_NAME_LOWER, query.toLowerCase(), Filter.Operator.OP_EQUAL) );
+		exact.setSorts(strainController.genSorts(null));
+		SearchResults<SimpleStrain> srExact = strainFinder.getStrains(exact);
+		List<SimpleStrain> exactMatches = srExact.getResultObjects();
+
+		// exclude exact matches from the 'begins' set
+		SearchParams begins = new SearchParams();
+		begins.setPageSize(maxCount - exactMatches.size());
+		List<Filter> beginsFilters = new ArrayList<Filter>();
+		beginsFilters.add(new Filter(SearchConstants.STRAIN_NAME_LOWER, query.toLowerCase(), Filter.Operator.OP_GREEDY_BEGINS) );
+		beginsFilters.add(Filter.notEqual(SearchConstants.STRAIN_NAME_LOWER, query.toLowerCase()));
+		begins.setFilter(Filter.and(beginsFilters));
+		begins.setSorts(strainController.genSorts(null));
+		SearchResults<SimpleStrain> srBegins = strainFinder.getStrains(begins);
+		List<SimpleStrain> beginsMatches = srBegins.getResultObjects();
+
+		// exclude exact matches and begins matches from the 'contains' set
+		SearchParams contains = new SearchParams();
+		contains.setPageSize(maxCount - exactMatches.size() - beginsMatches.size());
+		List<Filter> containsFilters = new ArrayList<Filter>();
+		containsFilters.add(new Filter(SearchConstants.STRAIN_NAME_LOWER, query.toLowerCase(), Filter.Operator.OP_STRING_CONTAINS) );
+		containsFilters.add(new Filter(SearchConstants.STRAIN_NAME_LOWER, query.toLowerCase(), Filter.Operator.OP_GREEDY_BEGINS) );
+		containsFilters.get(1).negate();
+		contains.setFilter(Filter.and(containsFilters));
+		contains.setSorts(strainController.genSorts(null));
+		SearchResults<SimpleStrain> srContains = strainFinder.getStrains(contains);
+		List<SimpleStrain> containsMatches = srContains.getResultObjects();
+
+		// combine the lists
+		
+		exactMatches.addAll(beginsMatches);
+		exactMatches.addAll(containsMatches);
+				
+		String lowerQuery = query.toLowerCase();
+		List<AutocompleteResult> results = new ArrayList<AutocompleteResult>();
+		for (SimpleStrain strain : exactMatches) {
+			AutocompleteResult result = new AutocompleteResult(strain.getName());
+			
+			if (strain.getName().toLowerCase().indexOf(lowerQuery) < 0) {
+				if (strain.getSynonyms() != null) {
+					for (String synonym : strain.getSynonyms()) {
+						if (synonym.toLowerCase().indexOf(lowerQuery) >= 0) {
+							result.setSynonym(synonym);
+							break;
+						}
+					}
+				}
+			}
+			results.add(result);
+		}
+		logger.debug("Prepared " + results.size() + " strain AC results");
+//		AjaxUtils.prepareAjaxHeaders(response);
+//		logger.debug("Prepared Ajax Headers");
+		SearchResults<AutocompleteResult> out = new SearchResults<AutocompleteResult>();
+		out.cloneFrom(srContains);
+		out.setResultObjects(results);
+		out.setTotalCount(exactMatches.size());
+		logger.debug("Exiting method");
+		return out;
+	}
 
 	/*
 	 * This method maps requests for driver auto complete results. The results

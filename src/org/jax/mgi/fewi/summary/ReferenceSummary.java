@@ -152,6 +152,9 @@ public class ReferenceSummary {
         if(reference.getCountOfSequenceResults() >0){
         	sb.append(String.format("<li>Sequences: <a href=\"%ssequence/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfSequenceResults()));
         }
+        if(reference.getCountOfStrains() >0){
+        	sb.append(String.format("<li>Strains: <a href=\"%sstrain/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfStrains()));
+        }
         sb.append("</ul>");
 
 		return sb.toString();

@@ -108,18 +108,6 @@ public class TextBatchSummary extends AbstractTextView {
 		    		}
 		    		associations.add(eIds);
 				}
-				if(queryForm.getVega()){
-					//logger.debug("vega");
-					List<String> vIds = new ArrayList<String>();
-		    		if(ids != null){
-		    			for (MarkerID mId : ids) {
-							if (mId.getLogicalDB().equals(DBConstants.PROVIDER_VEGA)){
-								vIds.add(mId.getAccID());
-							}						
-						}
-		    		}
-		    		associations.add(vIds);
-				}
 				
 				if(queryForm.getGo()){
 					//logger.debug("go");
@@ -300,9 +288,6 @@ public class TextBatchSummary extends AbstractTextView {
 		}
 		if(queryForm.getEntrez()){
 			header.append("\tEntrez Gene ID");
-		}
-		if(queryForm.getVega()){
-			header.append("\tVEGA ID");
 		}
 		
 		if(queryForm.getGo()){

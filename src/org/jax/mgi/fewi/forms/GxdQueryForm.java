@@ -220,7 +220,6 @@ public class GxdQueryForm implements Cloneable {
 		idTypes.put("nomen", "All Symbols/Synonyms/Homologs");
 		idTypes.put("Entrez Gene", "Entrez Gene ID");
 		idTypes.put("Ensembl", "Ensembl ID");
-		idTypes.put("VEGA", "VEGA ID");
 		idTypes.put("UniGene", "UniGene ID");
 		idTypes.put("miRBase", "miRBase ID");
 		idTypes.put("GenBank", "GenBank/RefSeq ID");

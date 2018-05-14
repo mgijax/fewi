@@ -12,7 +12,9 @@ import org.jax.mgi.fewi.finder.DbInfoFinder;
 import org.jax.mgi.fewi.finder.StatisticFinder;
 import org.jax.mgi.fewi.forms.DiseasePortalQueryForm;
 import org.jax.mgi.fewi.forms.RecombinaseQueryForm;
+import org.jax.mgi.fewi.forms.StrainQueryForm;
 import org.jax.mgi.fewi.util.AjaxUtils;
+import org.jax.mgi.fewi.util.FewiUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,9 @@ public class HomepageController {
 
 	@Autowired
 	DbInfoFinder dbInfoFinder;
+
+	@Autowired
+	private StrainController strainController;
 
 	@Value("${solr.factetNumberDefault}")
 	private Integer facetLimit; 
@@ -133,6 +138,13 @@ public class HomepageController {
 	public ModelAndView strainHome() {
 		logger.debug("->strainHome started");
 		ModelAndView mav = new ModelAndView("strain/strain_home");
+		setDatabaseDate(mav);
+		mav.addObject("statistics", statisticFinder.getStatisticsByGroup("Polymorphisms Mini Home") );
+		mav.addObject("strainQueryForm", new StrainQueryForm());
+
+		strainController.initQFCache();
+		mav.addObject("attributeChoices", StrainQueryForm.getAttributeChoices());
+		
 		return mav;
 	}
 

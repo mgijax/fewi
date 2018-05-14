@@ -154,7 +154,7 @@ paths:
           type: string
         - name: idType
           in: query
-          description: "This specifies the type of ids that will be sent to batch query. Valid values are (\"auto\", \"MGI\", \"current symbol\", \"nomen\", \"Entrez Gene\", \"Ensembl\", \"VEGA\", \"UniGene\", \"miRBase\", \"GenBank\", \"UniProt\", \"Gene Ontology (GO)\", \"RefSNP\", \"Affy 1.0 ST\", \"Affy 430 2.0\")"
+          description: "This specifies the type of ids that will be sent to batch query. Valid values are (\"auto\", \"MGI\", \"current symbol\", \"nomen\", \"Entrez Gene\", \"Ensembl\", \"UniGene\", \"miRBase\", \"GenBank\", \"UniProt\", \"Gene Ontology (GO)\", \"RefSNP\", \"Affy 1.0 ST\", \"Affy 430 2.0\")"
           default: auto
           required: true
           type: string

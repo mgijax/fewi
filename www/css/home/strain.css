@@ -1,0 +1,139 @@
+/* Styles for the recombinase homepage */
+
+/* Set title and icon on one line */
+.strainTitle {
+	box-sizing: border-box;
+	width: 66%;
+	text-align: center;
+	float: left;
+}
+
+.strainTitle p {
+	font-size: 12px;
+	font-style: italic;
+}
+
+/* Access Data becomes left column */
+.accessData {
+	float: left;
+	margin-right: 20px;
+	max-width: 52%;
+}
+.accessData div {
+	padding: 0.5em; 
+}
+.accessData dt {
+	margin-top: 15px;
+}
+.accessData dt:first-of-type {
+	margin-top: auto;
+}
+.accessData dd {
+	margin-left: 30px;
+	margin-top: 5px;
+	margin-bottom: 10px;
+}
+
+@media screen and (max-width: 800px) {
+	.accessData {
+		max-width: 100%;
+	}
+}
+
+#strainImages tr:first-of-type td {
+	padding-top: 0.5em;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+}
+#strainImages tr:last-of-type td {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	padding-bottom: 0.5em;
+}
+#strainImages tr:first-of-type {
+	border-top: 2px solid #DFEFFF;
+	border-left: 2px solid #DFEFFF;
+	border-right: 2px solid #DFEFFF;
+}
+#strainImages tr:last-of-type {
+	border-left: 2px solid #DFEFFF;
+	border-right: 2px solid #DFEFFF;
+	border-bottom: 2px solid #DFEFFF;
+}
+
+/* Form section */
+
+#qfName {
+	display: inline-block;
+	vertical-align: top;
+}
+#qfType {
+	display: inline-block;
+	vertical-align: top;
+}
+
+#strainForm label.searchLabel {
+	display: block;
+	font-weight: bold;
+	margin-bottom: 2px;
+}
+#strainForm label.searchLabel::after {
+	content: ":";
+}
+
+#strainForm input[type="checkbox"] {
+	display: inline;
+	margin-left: 20px;
+}
+
+#strainForm input[type="text"] {
+	display: block;
+	margin-left: 20px;
+}
+
+/* The "AND" text between inputs */
+#strainForm #strainAndDivider {
+	opacity: 0;
+	transition: opacity 700ms;
+	font-weight: bold;
+	font-size: 15px;
+	display: block;
+	margin: 7px 0px 5px 22px;
+}
+
+#strainForm > .wrapper {
+	float: left;
+	margin-top: 4px;
+	margin-bottom: 12px;
+}
+
+#strainForm .goButton {
+	clear: left;
+	margin-top: -4px;
+	padding: 4px 16px;
+	cursor: pointer;
+}
+
+#strainForm .clearButton {
+	clear: left;
+	margin-top: -4px;
+	margin-right: 10px;
+	padding: 4px 16px;
+	cursor: pointer;
+}
+
+.ui-autocomplete {
+	max-height: 250px;
+	overflow-y: auto;
+	/* prevent horizontal scrollbar */
+	overflow-x: hidden;
+	font-size:90%;
+}
+/* IE 6 handling */
+* html .ui-autocomplete {height: 300px;}
+.ui-menu .ui-menu-item {padding-left:0.4em;}
+.ui-menu .ui-menu-item a {padding:0px;}
+
+#attributeDropList {
+	margin-left: 20px;
+}

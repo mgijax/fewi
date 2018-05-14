@@ -169,13 +169,6 @@ public class BatchSummaryRow {
     	return StringUtils.join(this.getId(l), "<br/>");
     }
 
-    public String getVegaIds() {
-    	if (!query.getVega()) return "";
-    	List<String> l = new ArrayList<String>();
-    	l.add(DBConstants.PROVIDER_VEGA);
-    	return StringUtils.join(this.getId(l), "<br/>");
-    }
-
     public String getGoIds(){
     	if (!query.getGo()){
     		return "";

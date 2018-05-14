@@ -19,6 +19,7 @@ public class ReferenceQueryForm {
 	private String diseaseId = "";
 	private String goMarkerId = "";
 	private String phenoMarkerId = "";
+	private String strainId = "";
 	
 	private Integer seqKey;
 	private Integer alleleKey;
@@ -59,6 +60,12 @@ public class ReferenceQueryForm {
 	}
 	public void setYear(String year) {
 		this.year = year;
+	}
+	public String getStrainId() {
+		return strainId;
+	}
+	public void setStrainId(String strainId) {
+		this.strainId = strainId;
 	}
 	public String getText() {
 		return text;

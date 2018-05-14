@@ -68,11 +68,6 @@ var getMarkerIds = function() {
     	    label:"Entrez Gene ID",
     	    sortable:false});
     }
-    if (vega){
-    	myColumnDefs.push({key:"vegaIds", 
-    	    label:"VEGA ID",
-    	    sortable:false});
-    }
     if (go){
     	myColumnDefs.push({label:"Gene Ontology (GO)",
     	    sortable:false,
@@ -154,7 +149,6 @@ var getMarkerIds = function() {
             {key:"end"},
         	{key:"ensemblIds"},
         	{key:"entrezIds"},
-        	{key:"vegaIds"},
         	{key:"goIds"},
         	{key:"goTerms"},
         	{key:"goCodes"},
