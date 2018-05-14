@@ -6,7 +6,7 @@
 
 			<c:set var="showJBrowser" value="${not empty marker.preferredCoordinates or not empty jbrowseUrl}" />
 			<c:set var="showDownloadSequence" value="${not empty marker.preferredCoordinates}" />
-			<c:set var="showGenomeBrowserLinks" value="${not (empty vegaGenomeBrowserUrl and empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty ncbiMapViewerUrl)}" />
+			<c:set var="showGenomeBrowserLinks" value="${not (empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty ncbiMapViewerUrl)}" />
 
 			<c:set var="showGeneticMap" value="${(not empty marker.preferredCentimorgans) or (not empty marker.preferredCytoband) or (marker.countOfMappingExperiments > 0) or (not empty qtlIDs) or (not empty marker.aliases)}" />
 			
@@ -33,7 +33,7 @@
 							Sequence Map
 						</div>
 						<div class="value">
-							<c:if test="${not (empty marker.preferredCoordinates and empty vegaGenomeBrowserUrl and empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty gbrowseUrl and empty jbrowseUrl)}">
+							<c:if test="${not (empty marker.preferredCoordinates and empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty gbrowseUrl and empty jbrowseUrl)}">
 								<fmt:formatNumber value="${marker.preferredCoordinates.startCoordinate}" pattern="#0" var="startCoord"/>
 								<fmt:formatNumber value="${marker.preferredCoordinates.endCoordinate}" pattern="#0" var="endCoord"/>
 								<c:set var="chromosome" value="${marker.preferredCoordinates.chromosome}"/>
@@ -47,7 +47,7 @@
 								</c:if>
 							</c:if>
 
-							<c:if test="${(empty marker.preferredCoordinates and empty vegaGenomeBrowserUrl and empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty gbrowseUrl and empty jbrowseUrl)}">
+							<c:if test="${(empty marker.preferredCoordinates and empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty gbrowseUrl and empty jbrowseUrl)}">
 								<span style="font-style: italic;font-size: smaller;">Genome coordinates not available</span>
 							</c:if>
 						</div>
@@ -110,7 +110,6 @@
 					</c:if>
 
 					<c:if test="${showGenomeBrowserLinks}">
-						<c:set var="vegaID" value="${marker.vegaGeneModelID.accID}"/>
 						<c:set var="ensemblID" value="${marker.ensemblGeneModelID.accID}"/>
 						<c:set var="ncbiID" value="${marker.ncbiGeneModelID.accID}"/>
 						<c:set var="foundOne" value="0"/>
@@ -119,10 +118,6 @@
 								Genome Browsers
 							</div>
 							<div class="value">
-								<c:if test="${not empty vegaGenomeBrowserUrl}">
-									<a href="${vegaGenomeBrowserUrl}" target="_new">VEGA</a>
-									<c:set var="foundOne" value="1"/>
-								</c:if>
 								<c:if test="${not empty ensemblGenomeBrowserUrl}">
 									<c:if test="${foundOne > 0}"> | </c:if>
 									<a href="${ensemblGenomeBrowserUrl}" target="_new">Ensembl</a>

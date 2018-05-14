@@ -29,10 +29,7 @@ public class ProviderLinker
 	private static String ncbiGmUrl = "https://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=Retrieve&dopt=Graphics&list_uids=";
 	private static String niaUrl = "http://lgsun.grc.nia.nih.gov/geneindex/mm9/bin/giU.cgi?genename=";
 	private static String refSeqUrl = "https://www.ncbi.nlm.nih.gov/entrez/viewer.cgi?val=";
-	private static String vegaGmUrl = "http://vega.sanger.ac.uk/Mus_musculus/Gene/Summary?db=core;g=";
-	private static String vegaProtUrl = "http://vega.sanger.ac.uk/Mus_musculus/Transcript/ProteinSummary?db=core;t=";
-	private static String vegaTranUrl = "http://vega.sanger.ac.uk/Mus_musculus/Transcript/Summary?db=core;t=";
-	private static String dotsUrl = "	http://genomics.betacell.org/gbco/showSummary.do?questionFullName=TranscriptQuestions.TranscriptFromDtIds&myProp%28dtIdP%29=";
+	private static String dotsUrl = "http://genomics.betacell.org/gbco/showSummary.do?questionFullName=TranscriptQuestions.TranscriptFromDtIds&myProp%28dtIdP%29=";
 
     /*-------------------------*/
     /* public instance methods */
@@ -96,18 +93,6 @@ public class ProviderLinker
         else if (seqProvider.equals(DBConstants.PROVIDER_REFSEQ)) {
 
 			links.append("<a href='" + refSeqUrl + seqID + "'>RefSeq</a>");
-		}
-        else if (seqProvider.equals(DBConstants.PROVIDER_VEGATRANSCRIPT)) {
-
-			links.append("<a href='" + vegaTranUrl + seqID + "'>VEGA</a>");
-		}
-        else if (seqProvider.equals(DBConstants.PROVIDER_VEGA)) {
-
-			links.append("<a href='" + vegaGmUrl + seqID + "'>VEGA</a>");
-		}
-        else if (seqProvider.equals(DBConstants.PROVIDER_VEGAPROTEIN)) {
-
-			links.append("<a href='" + vegaProtUrl + seqID + "'>VEGA</a>");
 		}
 
         return links.toString();
