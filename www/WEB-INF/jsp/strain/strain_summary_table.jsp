@@ -57,7 +57,12 @@
 									withPrefix = accID.getLogicalDB() + ":" + withPrefix;
 								}
 							} catch (Exception e) {}
-							%><a href="<%= ((String) externalUrlsProperties.get(ldb)).replace("@@@@", accID.getAccID()) %>" target='_blank'><%= withPrefix %></a><br/><%
+							
+							String idForLink = accID.getAccID();
+							if ("MMRRC".equals(accID.getLogicalDB())) {
+								idForLink = idForLink.replace("MMRRC:", "");
+							}
+							%><a href="<%= ((String) externalUrlsProperties.get(ldb)).replace("@@@@", idForLink) %>" target='_blank'><%= withPrefix %></a><br/><%
 						} else {
 							%><%= accID.getAccID() %> (<%= ldb %>)<br/><%
 						}
