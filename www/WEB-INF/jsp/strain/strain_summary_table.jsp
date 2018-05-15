@@ -18,7 +18,7 @@
 			<th>Official Strain Name</th>
 			<th>Synonyms</th>
 			<th>Attributes</th>
-			<th>IDs / Links</th>
+			<th>IDs</th>
 			<th>References</th>
 		</tr>
 		<c:forEach var="strain" items="${strains}" varStatus="status">
