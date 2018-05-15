@@ -615,6 +615,23 @@ border-bottom: 1px solid gray;
 	padding: 7px 3px 2px 3px;
 }
 
+#diseaseSummaryTable {
+	border-collapse: collapse;
+}
+
+#diseaseSummaryTable th {
+	border: 1px solid black;
+	font-weight: bold;
+	text-align: left;
+	padding: 3px;
+}
+
+#diseaseSummaryTable td {
+	border: 1px solid black;
+	text-align: left;
+	padding: 7px 3px 2px 3px;
+}
+
 #strainIsStandard {
 	color:red;
 }
