@@ -63,6 +63,28 @@
 							</div>
 						</li>
 					</c:if>
+					<c:if test="${not empty strain.otherIDs}">
+						<li>
+							<div class="label">Other IDs</div>
+							<div class="value" id="otherIDs">
+								<c:forEach var="id" items="${strain.otherIDs}" varStatus="status">
+									<c:set var="displayID" value="${id.accID}"/>
+									<c:catch var="err">
+										<fmt:parseNumber value="${displayID}" type="number" integerOnly="true" var="numericID" />
+										<c:choose>
+											<c:when test="${id.logicalDB == 'JAX Registry'}">
+												<c:set var="displayID" value="JAX:${displayID}"/>
+											</c:when>
+											<c:otherwise>
+												<c:set var="displayID" value="${id.logicalDB}:${displayID}"/>
+											</c:otherwise>
+										</c:choose>
+									</c:catch>
+									${displayID}<c:if test="${not status.last}">, </c:if>
+								</c:forEach>
+							</div>
+						</li>
+					</c:if>
 				</ul>
 			</section>
 		</div>
