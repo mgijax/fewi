@@ -39,7 +39,12 @@
 							<tr>
 								<td class="rightBorderThinGray label padded top right"><font class="label">Genetic<br/>Background</font></td>
 								<td class="padded" style="padding-right: 30px;">
-									<fewi:super value="${genotype.backgroundStrain}"/>
+									<c:if test="${not empty genotype.strainID}">
+										<a href="${configBean.FEWI_URL}strain/${genotype.strainID}" class="MP"><fewi:super value="${genotype.backgroundStrain}"/></a>
+									</c:if>
+									<c:if test="${empty genotype.strainID}">
+										<fewi:super value="${genotype.backgroundStrain}"/>
+									</c:if>
 								</td>
 							</tr>
 							<c:if test="${not empty genotype.cellLines}">

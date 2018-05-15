@@ -259,7 +259,14 @@ function formatFastaArgs() {
 
 	<c:if test="${not empty backgroundStrain}">
 	<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">${strainLabel}:</font>&nbsp;</td>
-	<td class="padded" width="*">${backgroundStrain}</td>
+	<td class="padded" width="*">
+		<c:if test="${not empty allele.strainID}">
+			<a href="${configBean.FEWI_URL}strain/${allele.strainID}" class="MP">${backgroundStrain}</a>
+		</c:if>
+		<c:if test="${empty allele.strainID}">
+			${backgroundStrain}
+		</c:if>
+	</td>
 	</tr>
 	</c:if>
 
