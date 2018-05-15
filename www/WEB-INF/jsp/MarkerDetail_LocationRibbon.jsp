@@ -255,7 +255,7 @@
 								</c:if>
 								<c:if test="${not sm.noAnnotation}">
 									<c:forEach var="gm" items="${sm.geneModels}">
-									  ${gm.geneModelID}</br>
+									  <a href="${configBean.FEWI_URL}sequence/${gm.geneModelID}" target="_blank">${gm.geneModelID}</a></br>
 									</c:forEach>
 								</c:if>
 							</td>
