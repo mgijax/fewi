@@ -35,7 +35,19 @@
 				</td>
 				<td>
 					<c:forEach var="id" items="${strain.accessionIDs}">
-						${id.accID}<br/>
+						<c:set var="displayID" value="${id.accID}"/>
+						<c:catch var="err">
+							<fmt:parseNumber value="${displayID}" type="number" integerOnly="true" var="numericID" />
+							<c:choose>
+								<c:when test="${id.logicalDB == 'JAX Registry'}">
+									<c:set var="displayID" value="JAX:${displayID}"/>
+								</c:when>
+								<c:otherwise>
+									<c:set var="displayID" value="${id.logicalDB}:${displayID}"/>
+								</c:otherwise>
+							</c:choose>
+						</c:catch>
+						${displayID}<br/>
 					</c:forEach>
 				</td>
 				<td><c:choose>
