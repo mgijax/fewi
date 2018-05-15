@@ -305,7 +305,7 @@ public class StrainController {
 					op = "matches";
 				}
 			}
-			sb.append("Name: ");
+			sb.append("Name/Synonym/ID: ");
 			sb.append(op);
 			sb.append(" <b>");
 			sb.append(strainName);
