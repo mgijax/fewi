@@ -33,43 +33,10 @@
 						${attribute}<br/>
 					</c:forEach>
 				</td>
-				<td><%
-					/* dropping into scriptlet for more flexibility than JSTL in this section...
-					 * (needed to be able to look up URLs from externaUrls based on the data,
-					 * rather than a static string)
-					 */
-					Properties externalUrlsProperties = (Properties) request.getAttribute("externalUrls");
-					Properties configBean = (Properties) request.getAttribute("configBean");
-					SimpleStrain strain = (SimpleStrain) pageContext.getAttribute("strain");
-					
-					for (org.jax.mgi.shr.jsonmodel.AccessionID accID : strain.getAccessionIDs()) {
-						String ldb = ((String) accID.getLogicalDB()).replaceAll(" ", "_").replaceAll("-", "_");
-						if ("MGI".equals(accID.getLogicalDB())) {
-							%><a href="<%= configBean.get("FEWI_URL") %>strain/<%= accID.getAccID() %>" target='_blank'><%= accID.getAccID() %></a><br/><%
-						} else if (externalUrlsProperties.get(ldb) != null) {
-							String withPrefix = accID.getAccID();
-							try {
-								// If we can convert the ID to an integer, we need to add a prefix.
-								int integerPortion = Integer.parseInt(withPrefix);
-								if ("JAX Registry".equals(accID.getLogicalDB())) {
-									withPrefix = "JAX:" + withPrefix;
-								} else {
-									withPrefix = accID.getLogicalDB() + ":" + withPrefix;
-								}
-							} catch (Exception e) {}
-							
-							String idForLink = accID.getAccID();
-							if ("MMRRC".equals(accID.getLogicalDB())) {
-								idForLink = idForLink.replace("MMRRC:", "");
-							} else if ("Harwell".equals(accID.getLogicalDB()) && accID.getAccID().startsWith("FESA")) {
-								idForLink = idForLink.replace("FESA:", "");
-							}
-							%><a href="<%= ((String) externalUrlsProperties.get(ldb)).replace("@@@@", idForLink) %>" target='_blank'><%= withPrefix %></a><br/><%
-						} else {
-							%><%= accID.getAccID() %> (<%= ldb %>)<br/><%
-						}
-					}
-					%>
+				<td>
+					<c:forEach var="id" items="${strain.accessionIDs}">
+						${id.accID}<br/>
+					</c:forEach>
 				</td>
 				<td><c:choose>
 						<c:when test="${strain.referenceCount > 0}">
