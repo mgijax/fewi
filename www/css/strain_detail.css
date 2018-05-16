@@ -641,3 +641,6 @@ border-bottom: 1px solid gray;
 .hidden {
 	display: none;
 }
+#diseaseSummaryTable td.center {
+	text-align: center;
+}
