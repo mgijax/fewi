@@ -36,11 +36,12 @@
 					</table>
 			    </div>
 			</section>
+			<c:set var="qtlTweak" value="width: auto; padding-left: 50px"/>
 		    </c:if>
 
 			<!-- QTL data -->
 			<c:if test="${not empty strain.qtls}">
-			<section class="summarySec1" style="width: auto; padding-left: 50px">
+			<section class="summarySec1" style="${qtlTweak}">
 				<span class="indented">
 		    	<span id="strainQtlCount">${fn:length(strain.qtls)}</span> associated QTL</span>
 		    	<span id="qtlButton" class="searchToolButton indented hidden">Show All</span>
