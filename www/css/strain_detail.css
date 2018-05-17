@@ -644,3 +644,24 @@ border-bottom: 1px solid gray;
 #diseaseSummaryTable td.center {
 	text-align: center;
 }
+
+#diseaseKey {
+	margin-top: 5px;
+}
+#diseaseKey tr td {
+	text-align: center;
+	padding: 2px;
+	border: 1px solid black;
+}
+#diseaseKey tr td:nth-of-type(1) {
+	font-weight: bold;
+	border-left: none;
+	border-top: none;
+	border-bottom: none;
+	padding-right: 10px;
+}
+#diseaseKey tr td:nth-of-type(4) {
+	width:10px;
+	border-top: none;
+	border-bottom: none;
+}

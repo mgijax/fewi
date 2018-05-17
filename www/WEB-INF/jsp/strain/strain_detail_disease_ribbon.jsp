@@ -24,7 +24,7 @@
 					    		<td class='center'>
 					    			<c:choose>
 					    			<c:when test="${row.getCellFlag(genotype.genotypeID) == 1}">&#8730;</c:when>
-					    			<c:when test="${row.getCellFlag(genotype.genotypeID) == -1}">NOT</c:when>
+					    			<c:when test="${row.getCellFlag(genotype.genotypeID) == -1}"><img src="${configBean.WEBSHARE_URL}images/notSymbol.gif" border="0" valign="bottom" class="notImage"/></c:when>
 					    			<c:otherwise></c:otherwise>
 					    			</c:choose>
 					    		</td>
@@ -32,6 +32,18 @@
 				    	</tr>
 				    </c:forEach> 
 					</table>
+					<div id="diseaseLegend">
+						<table id="diseaseKey">
+							<tr>
+							<td>Key</td>
+							<td>&#8730;</td>
+							<td>disease model</td>
+							<td></td>
+							<td><img src="${configBean.WEBSHARE_URL}images/notSymbol.gif" border="0" valign="bottom"/></td>
+							<td>expected model not found</td>
+							</tr>
+						</table>
+					</div>
 			    </div>
 			</section>
 		</div>
