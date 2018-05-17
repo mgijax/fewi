@@ -598,6 +598,11 @@ border-bottom: 1px solid gray;
 	padding: 7px 3px 2px 3px;
 }
 
+.qtlPad {
+	width: auto;
+	padding-left: 50px;
+}
+
 #imsrSummaryTable {
 	border-collapse: collapse;
 }

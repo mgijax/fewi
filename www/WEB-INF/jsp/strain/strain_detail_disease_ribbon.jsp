@@ -24,7 +24,7 @@
 					    		<td class='center'>
 					    			<c:choose>
 					    			<c:when test="${row.getCellFlag(genotype.genotypeID) == 1}">&#8730;</c:when>
-					    			<c:when test="${row.getCellFlag(genotype.genotypeID) == -1}"><img src="${configBean.WEBSHARE_URL}images/notSymbol.gif" border="0" valign="bottom" class="notImage"/></c:when>
+					    			<c:when test="${row.getCellFlag(genotype.genotypeID) == -1}"><img src="${configBean.WEBSHARE_URL}images/notSymbol.gif" border="0" valign="bottom" alt="NOT"/></c:when>
 					    			<c:otherwise></c:otherwise>
 					    			</c:choose>
 					    		</td>
