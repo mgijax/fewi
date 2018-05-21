@@ -8,6 +8,7 @@ public class SolrMPAnnotation
 	String genotypeKey;
 	String allelePairs;
 	String backgroundStrain;
+	String strainID = null;
 	String term;
 	String termID;
 	List<String> references;
@@ -17,6 +18,13 @@ public class SolrMPAnnotation
 	}
 	public void setAnnotationKey(String annotationKey) {
 		this.annotationKey = annotationKey;
+	}
+
+	public String getStrainID() {
+		return strainID;
+	}
+	public void setStrainID(String strainID) {
+		this.strainID = strainID;
 	}
 
 	public String getGenotypeKey() {

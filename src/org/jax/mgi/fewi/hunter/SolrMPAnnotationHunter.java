@@ -71,20 +71,14 @@ public class SolrMPAnnotationHunter extends SolrHunter<SolrMPAnnotation> {
 	for (SolrDocument doc : sdl) {
 	    annot = new SolrMPAnnotation();
 
-	    annot.setAnnotationKey ((String)
-		doc.getFieldValue(IndexConstants.ANNOTATION_KEY));
-	    annot.setGenotypeKey ((String)
-		doc.getFieldValue(IndexConstants.GENOTYPE_KEY));
-	    annot.setAllelePairs ((String)
-		doc.getFieldValue(IndexConstants.ALLELE_PAIRS));
-	    annot.setBackgroundStrain ((String)
-		doc.getFieldValue(IndexConstants.BACKGROUND_STRAIN));
-	    annot.setTerm ((String)
-		doc.getFieldValue(IndexConstants.TERM));
-	    annot.setTermID ((String)
-		doc.getFieldValue(IndexConstants.ANNOTATED_TERM_ID));
-	    annot.setReferences ((List<String>)
-		doc.getFieldValue(IndexConstants.JNUM_ID));
+	    annot.setAnnotationKey ((String) doc.getFieldValue(IndexConstants.ANNOTATION_KEY));
+	    annot.setGenotypeKey ((String) doc.getFieldValue(IndexConstants.GENOTYPE_KEY));
+	    annot.setAllelePairs ((String) doc.getFieldValue(IndexConstants.ALLELE_PAIRS));
+	    annot.setBackgroundStrain ((String) doc.getFieldValue(IndexConstants.BACKGROUND_STRAIN));
+	    annot.setTerm ((String) doc.getFieldValue(IndexConstants.TERM));
+	    annot.setTermID ((String) doc.getFieldValue(IndexConstants.ANNOTATED_TERM_ID));
+	    annot.setReferences ((List<String>) doc.getFieldValue(IndexConstants.JNUM_ID));
+	    annot.setStrainID((String) doc.getFieldValue(IndexConstants.STRAIN_ID));
 
 	    annots.add(annot);
 	}

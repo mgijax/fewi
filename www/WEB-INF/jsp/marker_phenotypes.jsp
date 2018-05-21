@@ -103,7 +103,16 @@ td.spaced { line-height: 1.5em; }
     String superStrain = FormatHelper.superscript(genotype.getStrain());
     %>
     <tr class="${stripe}">
-      <td rowspan="${annotationCount}" class="body spaced">${convertedPairs}<br/><%= superStrain %></td>
+      <td rowspan="${annotationCount}" class="body spaced">${convertedPairs}<br/>
+      	<c:choose>
+      		<c:when test="${not empty genotype.strainID}">
+      			<a href="${configBean.FEWI_URL}strain/${genotype.strainID}"><fewi:super value="${genotype.strain}" /></a>
+      		</c:when>
+      		<c:otherwise>
+		      	<%= superStrain %>
+      		</c:otherwise>
+      	</c:choose>
+      </td>
     <c:forEach var="annotation" items="${annotations}" varStatus="aStatus">
     <c:if test="${not aStatus.first}"><tr class="${stripe}"></c:if>
       <td class="body">

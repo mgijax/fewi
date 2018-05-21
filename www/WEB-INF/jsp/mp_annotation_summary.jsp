@@ -114,7 +114,16 @@ span.tall { line-height: 150%; }
 	<tr class="<%= stripe %>">
 		<c:set var="annotation" value="${row.firstAnnotation}"/>
 
-		<td class="mpAnnot"${rowspan}><span class="tall">${row.allelicComp}</span><br/><span class="tall">(${row.genBackground})</span></td>
+		<td class="mpAnnot"${rowspan}><span class="tall">${row.allelicComp}</span><br/><span class="tall">
+			<c:choose>
+				<c:when test="${not empty row.strainID}">
+					(<a href="${configBean.FEWI_URL}strain/${row.strainID}">${row.genBackground}</a>)
+				</c:when>
+				<c:otherwise>
+					(${row.genBackground})
+				</c:otherwise>
+			</c:choose>
+		</span></td>
 		<td class="mpAnnot"><a href="${termDetail}${annotation.termID}">${annotation.term}</a>
 		</td>
 		<td class="mpAnnot">
