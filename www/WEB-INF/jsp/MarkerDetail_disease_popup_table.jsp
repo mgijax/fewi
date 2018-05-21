@@ -9,7 +9,16 @@
 	<c:forEach var="dm" items="${models}">
 		<tr>
 			<td class="allBorders leftAlign">${ntc.convertToHTMLNewWindowWithoutPopup(dm.allelePairs)}</td>
-			<td class="allBorders leftAlign">${tf.superscriptHTML(dm.backgroundStrain)}</td>
+			<td class="allBorders leftAlign">
+				<c:choose>
+					<c:when test="${not empty dm.genotype.strainID}">
+						<a href="${configBean.FEWI_URL}strain/${dm.genotype.strainID}">${tf.superscriptHTML(dm.backgroundStrain)}</a>
+					</c:when>
+					<c:otherwise>
+						${tf.superscriptHTML(dm.backgroundStrain)}
+					</c:otherwise>
+				</c:choose>
+			</td>
 			<td class="allBorders leftAlign">
 				<!-- loop on the references -->
 				<c:forEach var="ref" items="${dm.references}">
