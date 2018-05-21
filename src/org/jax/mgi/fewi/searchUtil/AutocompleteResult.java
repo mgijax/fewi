@@ -21,9 +21,9 @@ public class AutocompleteResult {
 		return label;
 	}
 
-	public void setSynonym(String synonym) {
-		this.label = synonym + ", syn. of [" + this.value + "]";
-	}
+//	public void setSynonym(String synonym) {
+//		this.label = synonym + ", syn. of [" + this.value + "]";
+//	}
 
 	public String getValue() {
 		return value;

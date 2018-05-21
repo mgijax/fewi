@@ -125,7 +125,7 @@ public class AutoCompleteController {
 				if (strain.getSynonyms() != null) {
 					for (String synonym : strain.getSynonyms()) {
 						if (synonym.toLowerCase().indexOf(lowerQuery) >= 0) {
-							result.setSynonym(synonym);
+//							result.setSynonym(synonym);
 							break;
 						}
 					}
