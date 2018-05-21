@@ -21,9 +21,9 @@ public class AutocompleteResult {
 		return label;
 	}
 
-//	public void setSynonym(String synonym) {
-//		this.label = synonym + ", syn. of [" + this.value + "]";
-//	}
+	public void setSynonym(String synonym) {
+		this.label = synonym + ", syn. of [" + this.value + "]";
+	}
 
 	public String getValue() {
 		return value;
@@ -37,11 +37,11 @@ public class AutocompleteResult {
 		this.value = value;
 	}
 	
-	public AutocompleteResultComparator getComparator() {
-		return new AutocompleteResultComparator();
-	}
+//	public AutocompleteResultComparator getComparator() {
+//		return new AutocompleteResultComparator();
+//	}
 
-	public class AutocompleteResultComparator implements Comparator<AutocompleteResult> {
+/*	public class AutocompleteResultComparator implements Comparator<AutocompleteResult> {
 		@Override
 		public int compare(AutocompleteResult a, AutocompleteResult b) {
 			// assumes 'value' for 'a' and 'b' must be non-null
@@ -53,4 +53,5 @@ public class AutocompleteResult {
 			return i;
 		}
 	}
+*/
 }
