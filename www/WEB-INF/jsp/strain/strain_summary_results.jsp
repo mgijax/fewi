@@ -3,7 +3,7 @@
 
 <style>
 #paginationBottom { float: right; margin-right: 20px; text-align: right; padding-top: 4px; }
-#paginationTopDiv { float: right; text-align: right; width: 325px; height: 53px; }
+#paginationTopDiv { float: right; text-align: right; width: 350px; height: 53px; }
 #paginationTop { float: right; margin-right: 20px; text-align: right; padding-top: 4px; }
 #querySummary { width: 500px; }
 a { text-decoration: none; }
