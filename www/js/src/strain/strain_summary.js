@@ -5,6 +5,7 @@
 /*** logging support for debugging ***/
 
 var logging = true;	// is logging to the console enabled? (true/false)
+var ssPageLimit = 250;
 
 function log(msg) {
     // log a message to the browser console, if logging is enabled
@@ -84,7 +85,7 @@ var updateResultsDiv = function(startIndex, rowsPerPage) {
 	$("#resultSummary").html("<img src='" + fewiurl + "assets/images/loading.gif' height='24' width='24'> Searching...");
 	log("added searching message");
 	$.ajax({
-		url: fewiurl + "strain/table?" + querystring,	// can take state as param and append here for pagination
+		url: fewiurl + "strain/table?" + querystring + filters.getUrlFragment(),
 		datatype : "html",
 		success: function(data) {
 			log("successful response");
@@ -122,6 +123,10 @@ var updateResultsDiv = function(startIndex, rowsPerPage) {
 
 // update divs with the pageReport class to show a message about which items are displayed currently
 var updatePageReport = function(start, end, totalCount, item) {
+	log("start = " + start);
+	log("end = " + end);
+	log("totalCount = " + totalCount);
+	log("item = " + item);
 	if ((start == null) || (end == null) || (totalCount == null) || (item == null)) {
 		$(".pageReport").html("");
 		return;
@@ -145,6 +150,7 @@ var updatePageReport = function(start, end, totalCount, item) {
 // updated paginator
 var updatePaginator = function(totalCount, pageLimit, callback) {
 	if (instantiatedPaginator) { return; }
+	log("updatePaginator(" + totalCount + ", " + pageLimit + ", callback)");
 	instantiatedPaginator = true;
 	
 	if (totalCount == 0) {
@@ -162,6 +168,7 @@ var updatePaginator = function(totalCount, pageLimit, callback) {
 			alert("You forgot to define a callback for the paginator (page " + page + ")");
 		}
 	}
+	ssPageLimit = pageLimit;
 	
 	$(".paginator").paging(totalCount, {
         format: '[< nncnn >]',		// first, prev, five page numbers with current in middle, next, last
@@ -203,3 +210,10 @@ var ss_search = function() {
 		log("no querystring, no search");
 	}
 };
+
+// update the request & data on the page (after a filtering event)
+var updateRequest = function() {
+	filters.populateFilterSummary();
+	instantiatedPaginator = false;
+	updateResultsDiv(0, ssPageLimit);
+}

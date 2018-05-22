@@ -3,9 +3,12 @@ package org.jax.mgi.fewi.controller;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -20,6 +23,7 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.shr.fe.sort.SmartAlphaComparator;
 import org.jax.mgi.shr.jsonmodel.SimpleStrain;
@@ -27,10 +31,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import mgi.frontend.datamodel.Reference;
@@ -50,6 +56,8 @@ public class StrainController {
     // static variables
     //--------------------//
 
+	private static int facetLimit = 100;		// max number of facet values to return
+	
     //--------------------//
     // instance variables
     //--------------------//
@@ -262,6 +270,41 @@ public class StrainController {
 		return mav;
 	}
 
+	/* get the set of strain attribute filter options for the current result set
+	 */
+	@RequestMapping("/facet/attribute")
+	public @ResponseBody Map<String, List<String>> getAttributeFacet (@ModelAttribute StrainQueryForm qf, BindingResult result, HttpServletResponse response) {
+		AjaxUtils.prepareAjaxHeaders(response);
+		Map<String, List<String>> out = new HashMap<String, List<String>>();
+		List<String> messages = new ArrayList<String>();
+		
+		SearchParams params = new SearchParams();
+		params.setPageSize(0);
+		params.setFilter(genFilters(qf));
+		SearchResults<SimpleStrain> searchResults = strainFinder.getAttributeFacet(params);
+		List<String> facetChoices = searchResults.getResultFacets();
+		
+		if (facetChoices.size() > facetLimit) {
+			messages.add("Too many results to display.  Modify your search or try another filter first.");
+			out.put("error", messages);
+
+		} else if (facetChoices.size() == 0) {
+			messages.add("No values in results to filter.");
+			out.put("error", messages);
+			
+		} else {
+			// remove choices that we don't want to give the user
+			// facetChoices.remove("mutant strain");
+			// facetChoices.remove("mutant stock");
+			facetChoices.remove("Not Applicable");
+			facetChoices.remove("Not Specified");
+
+			Collections.sort(facetChoices, new AttributeComparator());
+			out.put("resultFacets", facetChoices);
+		}
+		return out;
+	}
+	
 	/* generate the sort options
 	 */
 	public List<Sort> genSorts(StrainQueryForm queryForm) {
@@ -382,7 +425,7 @@ public class StrainController {
 			filterList.add(new Filter(SearchConstants.ACC_ID, refID, Filter.Operator.OP_EQUAL));
 		}
 
-		// strain type
+		// strain attributes (chosen from query form options)
 		List<String> attributes = query.getAttributes();
 		if ((attributes != null) && (attributes.size() > 0)) {
 			List<Filter> attributeList = new ArrayList<Filter>();
@@ -390,6 +433,16 @@ public class StrainController {
 				attributeList.add(new Filter(SearchConstants.STRAIN_ATTRIBUTE_LOWER, attribute, Filter.Operator.OP_EQUAL));
 			}
 			filterList.add(Filter.or(attributeList));
+		}
+		
+		// strain attribute filter (chosen from filter button, not from query form options)
+		List<String> attributeFilter = query.getAttributeFilter();
+		if ((attributeFilter != null) && (attributeFilter.size() > 0)) {
+			List<Filter> attributeFilterList = new ArrayList<Filter>();
+			for (String attribute : attributeFilter) {
+				attributeFilterList.add(new Filter(SearchConstants.STRAIN_ATTRIBUTE_LOWER, attribute, Filter.Operator.OP_EQUAL));
+			}
+			filterList.add(Filter.or(attributeFilterList));
 		}
 		
 		// if we have filters, collapse them into a single filter

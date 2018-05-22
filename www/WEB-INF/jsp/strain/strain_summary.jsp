@@ -47,6 +47,7 @@ td.summaryHeaderCat1Gxd { font-weight: bold; }
 #strainSummaryTable th { border: 1px solid gray; padding: 4px; background-color: #d0e0f0; font-weight: bold; }
 #strainSummaryTable td { border: 1px solid gray; padding: 4px; }
 
+#ysf { float: left; margin-right: 15px; }
 .ysf { font-weight: bold; text-decoration: underline; font-size: 100%; }
 .smallGray { font-size: 75%; color: #999999; }
 </style>
@@ -97,6 +98,7 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/strain/strain_summary.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/external/jquery.paging.min.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/filters.js"></script>
 
 <script type="text/javascript">
 	var querystring = "${queryString}";
@@ -105,6 +107,15 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 	<c:if test="${not empty reference}">
 		$('#ysf').css('display', 'none');
 	</c:if>
+	
+	function getQuerystring() {
+	  return querystring + filters.getUrlFragment();
+	}
+	filters.setFewiUrl(fewiurl);
+	filters.setQueryStringFunction(getQuerystring);
+	filters.setSummaryNames('filterSummary', 'filterList');
+	filters.addFilter('attributeFilter', 'Attributes', 'attributeFilter', 'attributeFilter', fewiurl + 'strain/facet/attribute');
+	filters.registerCallback("strainCallback", updateRequest);
 </script>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

@@ -20,6 +20,7 @@ public class StrainQueryForm {
 	private String strainName;			// user's choice of strain name
 	
 	private List<String> attributes;	// user's selected strain attributes (chosen from attributeChoices)
+	private List<String> attributeFilter;	// user's selections when filtering a result set by strain attribute
 
 	private String referenceID;
 
@@ -29,6 +30,10 @@ public class StrainQueryForm {
 
 	/***--- getters and setters ---***/
 
+	public List<String> getAttributeFilter() {
+		return attributeFilter;
+	}
+
 	public List<String> getAttributes() {
 		return attributes;
 	}
@@ -36,9 +41,13 @@ public class StrainQueryForm {
 	public String getReferenceID() {
 		return referenceID;
 	}
-	
+
 	public String getStrainName() {
 		return strainName;
+	}
+	
+	public void setAttributeFilter(List<String> attributeFilter) {
+		this.attributeFilter = attributeFilter;
 	}
 
 	public void setAttributes(List<String> attributes) {
@@ -52,11 +61,12 @@ public class StrainQueryForm {
 	public void setStrainName(String strainName) {
 		this.strainName = strainName;
 	}
-	
+
 	/***--- toString ---***/
 
 	@Override
 	public String toString() {
-		return "StrainQueryForm [strainName=" + strainName + ", attribute=" + attributes + "]";
+		return "StrainQueryForm [strainName=" + strainName + ", attributes=" + attributes + ", attributeFilter="
+				+ attributeFilter + ", referenceID=" + referenceID + "]";
 	}
 }
