@@ -57,7 +57,8 @@ public class StrainController {
     //--------------------//
 
 	private static int facetLimit = 100;		// max number of facet values to return
-	
+	private static int downloadRowMax = 250000;	// maximum number of strains to allow in download file
+
     //--------------------//
     // instance variables
     //--------------------//
@@ -320,6 +321,27 @@ public class StrainController {
 		return sorts;
 	}
 	
+	// strain summary reports (txt and xls -- specified by suffix)
+	@RequestMapping("/report*")
+	public ModelAndView strainSummaryExport(HttpServletRequest request, @ModelAttribute StrainQueryForm query, @ModelAttribute Paginator page) {
+		logger.debug("generating report");
+
+		SearchParams sp = new SearchParams();
+		page.setResults(downloadRowMax);
+		sp.setPaginator(page);
+		sp.setFilter(genFilters(query));
+		sp.setSorts(genSorts(query));
+
+		SearchResults<SimpleStrain> sr = strainFinder.getStrains(sp);
+		List<SimpleStrain> strains = sr.getResultObjects();
+		logger.debug(" - got " + strains.size() + " strains");
+
+		ModelAndView mav = new ModelAndView("strainSummaryReport");
+		mav.addObject("strains", strains);
+		return mav;
+
+	}
+
     //--------------------------------------------------------------------//
     // private methods
     //--------------------------------------------------------------------//

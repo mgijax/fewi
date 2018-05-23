@@ -69,6 +69,10 @@ var getParameterMap = function() {
 
 // update the results div
 var updateResultsDiv = function(startIndex, rowsPerPage) {
+	// update the download buttons
+	$('#textDownload')[0].href = fewiurl + 'strain/report.txt?' + getQuerystring();
+	$('#excelDownload')[0].href = fewiurl + 'strain/report.xlsx?' + getQuerystring();
+
 	var xPos = window.scrollX;		// remember page position, so we can return to it
 	var yPos = window.scrollY;
 	

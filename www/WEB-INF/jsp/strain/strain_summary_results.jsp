@@ -50,6 +50,13 @@ a { text-decoration: none; }
     <br clear="all" />
 </div>
 
+<div id="toolbar" class="bluebar" style="">
+	<div id="downloadDiv">
+		<span class="label">Export:</span>
+		<a id="textDownload"  class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
+		<a id="excelDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a>
+	</div>
+</div>
 	<div id="resultSummary"></div>
 
 	<div id="paginationBottom">
