@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -27,7 +28,7 @@ public class ExcelStrainSummary  extends AbstractBigExcelView
 		if ((items == null) || (items.size() == 0)) {
 			return "";
 		}
-		return String.join("|", items);
+		return StringUtils.join(items, "|");
 	}
 	
 	// return a list of just the ID strings for the IDs of the given 'strain'

@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.shr.jsonmodel.AccessionID;
 import org.jax.mgi.shr.jsonmodel.SimpleStrain;
 
@@ -18,7 +19,7 @@ public class TextStrainSummary extends AbstractTextView {
 		if ((items == null) || (items.size() == 0)) {
 			return "";
 		}
-		return String.join("|", items);
+		return StringUtils.join(items, "|");
 	}
 	
 	// return a list of just the ID strings for the IDs of the given 'strain'
