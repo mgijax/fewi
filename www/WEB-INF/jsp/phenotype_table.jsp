@@ -2,6 +2,8 @@
 <%@ page import = "org.jax.mgi.fewi.util.StyleAlternator" %>
 <%@ page import = "mgi.frontend.datamodel.Genotype" %>
 <%@ page import = "org.jax.mgi.fewi.util.*" %>
+<%@ page import = "org.jax.mgi.fewi.config.ContextLoader" %>
+
 
 <%@ page trimDirectiveWhitespaces="true" %>
 
