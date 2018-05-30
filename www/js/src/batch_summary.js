@@ -39,12 +39,10 @@ var getMarkerIds = function() {
     if (nomenclature){
     	myColumnDefs.push({label:"<div class='center'>Nomenclature</div>",
             sortable:false,
-            children: [{key: "symbol",
-            		label: "Symbol"},
-                {key: "name",
-                	label: "Name"},
-                {key: "feature",
-                    label: "Feature Type"}]});
+            children: [{key: "symbol", label: "Symbol"},
+                {key: "name", label: "Name"},
+                {key: "strain", label: "Strain"},
+                {key: "feature", label: "Feature Type"}]});
     }
     if (loco){
     	myColumnDefs.push({label:"Genome Location - " + ncbiBuild,
@@ -142,6 +140,7 @@ var getMarkerIds = function() {
             {key:"markerId"},
             {key:"symbol"},
             {key:"name"},
+            {key:"strain"},
             {key:"feature"},
             {key:"chromosome"},
             {key:"strand"},

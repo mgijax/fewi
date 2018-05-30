@@ -2,6 +2,8 @@ package org.jax.mgi.fewi.hunter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +11,8 @@ import java.util.Map;
 import java.util.Set;
 
 import mgi.frontend.datamodel.BatchMarkerId;
+import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.StrainMarker;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
@@ -17,6 +21,7 @@ import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.shr.fe.sort.SmartAlphaComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +34,8 @@ public class HibernateBatchSummaryHunter
     // logger for the class
     private final Logger logger = LoggerFactory.getLogger(HibernateBatchSummaryHunter.class);
     
+    private static SmartAlphaComparator smartAlphaComparator = new SmartAlphaComparator();
+
 	@Autowired
 	private SessionFactory sessionFactory;
 	
@@ -123,13 +130,14 @@ public class HibernateBatchSummaryHunter
 
         // organize the results grouped by query term
         Map<String, List<BatchMarkerId>> qResults = new HashMap<String, List<BatchMarkerId>>();
-        Set<Integer> markerKey = new HashSet<Integer>();
+        Set<String> markerKey = new HashSet<String>();
+        BatchMarkerIdComparator comparator = new BatchMarkerIdComparator();
         
         for (BatchMarkerId item: qr){
         	BatchMarkerId bmi = item;
         	
         	// tracking a unique set of marker keys
-        	markerKey.add(bmi.getMarker().getMarkerKey());
+        	markerKey.add(bmi.getUniqueKey());
         	
         	// get the batch marker term and lowercase it 
         	// to maintain a map of BatchMarkerId records for that lowercase term
@@ -142,6 +150,9 @@ public class HibernateBatchSummaryHunter
         		qResults.put(bTerm, bResults);
         	}
         	bResults.add(bmi);
+        	if (bResults.size() > 1) {
+				Collections.sort(bResults, comparator);
+        	}
         }
         qr = null;
         logger.debug("-> results parsed" );
@@ -177,6 +188,55 @@ public class HibernateBatchSummaryHunter
         		endIndex));
     }
 
+	private class BatchMarkerIdComparator implements Comparator<BatchMarkerId> {
+		@Override
+		public int compare(BatchMarkerId a, BatchMarkerId b) {
+			// sort so canonical marker matches come before strain marker matches, and so 
+			// C57BL/6J strain marker matches come before other strains
+			
+			Marker am = a.getMarker();
+			Marker bm = b.getMarker();
+			
+			if (am != null) {
+				if (bm != null) {
+					// both are canonical marker matches, so smart alpha sort
+					return smartAlphaComparator.compare(am.getSymbol(), bm.getSymbol());
+				} else {
+					// a comes first
+					return -1;
+				}
+			} else if (bm != null) {
+				// b comes first
+				return 1;
+			}
+			
+			// If we got here, both are strain marker matches.  Sort by strain, preferring C57BL/6J.
+			
+			StrainMarker asm = a.getStrainMarker();
+			StrainMarker bsm = b.getStrainMarker();
+			
+			if (asm != null) {
+				if (bsm != null) {
+					// This should be the only branch we actually hit in this section.
+					
+					if ("C57BL/6J".equals(asm.getStrainName())) {
+						return -1;
+					} else if ("C57BL/6J".equals(bsm.getStrainName())) {
+						return 1;
+					}
+					return smartAlphaComparator.compare(asm.getStrainName(), bsm.getStrainName());
+					
+				} else {
+					// should not happen (a is defined, b is not)
+					return -1;
+				}
+			} else {
+				// should not happen (a is not defined, b is)
+				return 1;
+			}
+		}
+	}
+	
 	/* skip the complexity of matching results to the IDs that matched each
 	 * and just consolidate the results into a list of matching marker IDs.
 	 */
