@@ -82,8 +82,10 @@ public class BatchMarkerIdWrapper {
 			return m.getSymbol();
 		} else if (hasCanonicalMarker()) {
 			return sm.getCanonicalMarkerSymbol();
+		} else if (isStrainMarkerMatch()) {
+			return sm.getFirstGeneModelID();
 		}
-		return sm.getFirstGeneModelID();
+		return "";
 	}
 	
 	// 1. if marker match, get the marker's primary ID

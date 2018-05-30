@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.BatchMarkerAllele;
+import mgi.frontend.datamodel.BatchMarkerGoAnnotation;
 import mgi.frontend.datamodel.BatchMarkerId;
+import mgi.frontend.datamodel.BatchMarkerMpAnnotation;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerID;
 import mgi.frontend.datamodel.MarkerLocation;
@@ -20,6 +22,7 @@ import mgi.frontend.datamodel.MarkerTissueCount;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jax.mgi.fewi.forms.BatchQueryForm;
+import org.jax.mgi.fewi.util.BatchMarkerIdWrapper;
 import org.jax.mgi.fewi.util.DBConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +30,15 @@ import org.slf4j.LoggerFactory;
 public class TextBatchSummary extends AbstractTextView {
 	
 	private final Logger logger = LoggerFactory.getLogger(TextBatchSummary.class);
+	
+	// Prepend a tab character to string 's' if non-null.  If null, just return the tab character (for
+	// an empty cell).
+	private String tab(String s) {
+		if (s != null) {
+			return "\t" + s;
+		}
+		return "\t";
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -50,205 +62,219 @@ public class TextBatchSummary extends AbstractTextView {
 		
 		int rownum=1;
 		for (BatchMarkerId id : (List<BatchMarkerId>) model.get("results")) {
+			BatchMarkerIdWrapper bmi = new BatchMarkerIdWrapper(id);
+			
 			checkProgress(rownum);
+			
+			// the row we're building
 			StringBuilder markerInfo = new StringBuilder();
+			
+			// list of 1-n relationships for the current match -- These will be combined into a cross-product
+			// toward the end of processing for the current match.
 			List<List<String>> associations = new ArrayList<List<String>>();
-			Marker m = id.getMarker();
-			List<MarkerID> ids;
+
+			// is this match to a marker?
+			boolean hasMarker = (id.getMarker() != null);
+
+			// three required fields:
+			// search term that matched, the type of the matching term, and the ID of the matching object
+			markerInfo.append(bmi.getTerm());
+			markerInfo.append(tab(bmi.getTermType()));
+			if (bmi.getMarkerID().length() != 0) {
+				markerInfo.append(tab(bmi.getMarkerID())); 
+			} else {
+				markerInfo.append(tab("No associated gene"));
+			}
 			
-			markerInfo.append(id.getTerm() + "\t");
-			markerInfo.append(id.getTermType() + "\t");
+			// user requested nomenclature fields
+			if (queryForm.getNomenclature()){
+				markerInfo.append(tab(bmi.getSymbol()));
+				markerInfo.append(tab(bmi.getName()));
+				markerInfo.append(tab(bmi.getStrain()));
+				markerInfo.append(tab(bmi.getFeatureType()));
+			}
+
+			// user requested location fields
+			if (queryForm.getLocation()){
+				if ((bmi.getChromosome() != null) && (bmi.getChromosome().length() > 0)) {
+					markerInfo.append(tab(bmi.getChromosome()));
+				} else if (bmi.isMarkerMatch() || bmi.isStrainMarkerMatch()) {
+					markerInfo.append(tab("UN"));
+				} else {
+					markerInfo.append(tab(null));
+				}
+				markerInfo.append(tab(bmi.getStrand()));
+
+				if (bmi.getStart() != null) {
+					markerInfo.append(tab(String.format("%.0f", bmi.getStart()))); 
+				} else {
+					markerInfo.append(tab(null));
+				}
+				
+				if (bmi.getEnd() != null) {
+					markerInfo.append(tab(String.format("%.0f", bmi.getEnd()))); 
+				} else {
+					markerInfo.append(tab(null));
+				}
+				
+				if (bmi.isMarkerMatch() && (id.getMarker() != null)) {
+					if (id.getMarker().getLocations() != null) {
+						evictCollection(session, id.getMarker().getLocations());
+					}
+				}
+			}
+
+			// Now we begin building the lists of associations (1-n relationships for the match).  These
+			// will be combined into a cross-product later on.  After the first two, only one option can
+			// be chosen from the other association types.
 			
-			if (m != null){
-				ids = m.getIds();
-				markerInfo.append(m.getPrimaryID()); 
-		 
-				if(queryForm.getNomenclature()){
-					markerInfo.append("\t");
-					markerInfo.append(m.getSymbol() + "\t");
-					markerInfo.append(m.getName() + "\t");
-					markerInfo.append(m.getMarkerSubtype());
+			// user requested Ensembl IDs
+			if(queryForm.getEnsembl()){
+	        	associations.add(bmi.getIDs(DBConstants.PROVIDER_ENSEMBL));
+			}
+			
+			// user requested Entrez Gene IDs
+			if(queryForm.getEntrez()){
+	        	associations.add(bmi.getIDs(DBConstants.PROVIDER_ENTREZGENE));
+			}
+			
+			// user requested GO associations
+			if (queryForm.getGo()) {
+				List<String> goIds = new ArrayList<String>();
+				StringBuffer go;
+	    		for (BatchMarkerGoAnnotation goAnnot : bmi.getGOAnnotations()) {
+	    			go = new StringBuffer();
+					go.append(goAnnot.getGoId() + "\t");
+					go.append(goAnnot.getGoTerm() + "\t");
+					go.append(goAnnot.getEvidenceCode());
+					goIds.add(go.toString());
 				}
-				if(queryForm.getLocation()){
-					markerInfo.append("\t");
-					MarkerLocation loc = m.getPreferredCoordinates();
-					if (loc != null) {
-						markerInfo.append(loc.getChromosome() + "\t");
-						markerInfo.append(loc.getStrand() + "\t");
-						markerInfo.append(String.format("%.0f", loc.getStartCoordinate()) + "\t");
-						markerInfo.append(String.format("%.0f", loc.getEndCoordinate()));
-						evictCollection(session,m.getLocations());
-					} else {
-						markerInfo.append("UN\t\t");
-					}
+		    	associations.add(goIds);
+		    	if (hasMarker && goIds.size() > 0) {
+		    		evictCollection(session, id.getMarker().getBatchMarkerGoAnnotations());
+		    	}
+			}
+			
+			// user requested MP annotations
+			else if (queryForm.getMp()) {
+				List<String> mpIds = new ArrayList<String>();
+				StringBuffer mp;
+    			for (BatchMarkerMpAnnotation mpAnnot : bmi.getMPAnnotations()) {
+    				mp = new StringBuffer();
+					mp.append(mpAnnot.getMpId() + "\t");
+					mp.append(mpAnnot.getMpTerm());
+					mpIds.add(mp.toString());
 				}
+	    		associations.add(mpIds);
+	    		if (hasMarker && mpIds.size() > 0) {
+	    			evictCollection(session, id.getMarker().getBatchMarkerMpAnnotations());
+	    		}
+			}
+			
+			// user requested DO annotations
+			else if(queryForm.getDo()){
+				List<String> doIds = new ArrayList<String>();
+				StringBuffer dobuf;
+	    		for (Annotation doAnnot : bmi.getDOAnnotations()) {
+	    			dobuf = new StringBuffer();
+	    			dobuf.append(doAnnot.getTermID() + "\t");
+	    			dobuf.append(doAnnot.getTerm());
+	    			doIds.add(dobuf.toString());
+				}
+		    	associations.add(doIds);
+		    	if (hasMarker && doIds.size() > 0) {
+		    		evictCollection(session, id.getMarker().getAnnotations());
+		    	}
+			}
+			
+			// user requested alleles
+			else if(queryForm.getAllele()){
+				List<String> alleles = new ArrayList<String>();
+				StringBuffer allele;
+	    		for (BatchMarkerAllele bma : bmi.getAlleles()) {
+	    			allele = new StringBuffer();
+	    			allele.append(bma.getAlleleID() + "\t");
+	    			allele.append(bma.getAlleleSymbol());
+	    			alleles.add(allele.toString());
+	    			session.evict(bma);
+				}
+		    	associations.add(alleles);
+			}
+			
+			// user requested counts of expression results by tissue
+			else if(queryForm.getExp()){
+				List<String> expression = new ArrayList<String>();
+				StringBuffer exp;
+	    		for (MarkerTissueCount tissue : bmi.getExpressionCountsByTissue()) {
+	    			exp = new StringBuffer();
+	    			exp.append(tissue.getStructure() + "\t");
+	    			exp.append(tissue.getAllResultCount() + "\t");
+	    			exp.append(tissue.getDetectedResultCount() + "\t");
+	    			exp.append(tissue.getNotDetectedResultCount());
+					expression.add(exp.toString());
+					session.evict(tissue);
+				}
+		    	associations.add(expression);
+			}
+			
+			// user requested RefSNP IDs
+			else if(queryForm.getRefsnp()){
+				associations.add(bmi.getRefSNPs());
+			}
+			
+			// user requested RefSeq IDs
+			else if(queryForm.getRefseq()){
+		    	associations.add(bmi.getIDs(DBConstants.PROVIDER_REFSEQ, "Sequence DB"));
+			}
+			
+			// user requested UniProt IDs
+			else if(queryForm.getUniprot()){
+		    	associations.add(bmi.getIDs(DBConstants.PROVIDER_SWISSPROT, DBConstants.PROVIDER_TREMBL));
+			}
+			
+			
+			// if we have any association sets that are empty lists, add an empty value
+			for (List<String> assoc: associations) {
+				if (assoc.size() == 0) {
+					assoc.add("");
+				}
+			}
 				
-				// build associations matrix
-				if(queryForm.getEnsembl()){
-					//logger.debug("ensembl");
-					List<String> eIds = new ArrayList<String>();
-	        		if(ids != null){
-	        			for (MarkerID mId : ids) {
-	    					if (mId.getLogicalDB().equals(DBConstants.PROVIDER_ENSEMBL)){
-	    						eIds.add(mId.getAccID());
-	    					}						
-	    				}
-	        		}
-	        		associations.add(eIds);
-				}
-				if(queryForm.getEntrez()){
-					//logger.debug("entrez");
-					List<String> eIds = new ArrayList<String>();
-		    		if(ids != null){
-		    			for (MarkerID mId : ids) {
-							if (mId.getLogicalDB().equals(DBConstants.PROVIDER_ENTREZGENE)){
-								eIds.add(mId.getAccID());
-							}						
-						}
-		    		}
-		    		associations.add(eIds);
-				}
+			// compute the cross-product of the various lists of associations, so lists:
+			// 		[ A, B, C ] and [ D, E, F ]
+			// will produce rows:
+			//		[ A, D ], [ A, E ], [ A, F ], [ B, D ], [ B, E ], [ B, F ], [ C, D ], [ C, E ], [ C, F ]
+
+			List<String> combineResults = new ArrayList<String>();
+			if (associations.size() > 0) {					
+				combineResults = associations.get(0);
 				
-				if(queryForm.getGo()){
-					//logger.debug("go");
-					List<String> goIds = new ArrayList<String>();
-					StringBuffer go;
-	    			for (Annotation goAnnot : m.getGoAnnotations()) {
-	    				go = new StringBuffer();
-						go.append(goAnnot.getTermID() + "\t");
-						go.append(goAnnot.getTerm() + "\t");
-						go.append(goAnnot.getEvidenceCode());
-						goIds.add(go.toString());
-					}
-		    		associations.add(goIds);
-					evictCollection(session,m.getAnnotations());
-				} else if(queryForm.getMp()){
-					//logger.debug("mp");
-					List<String> mpIds = new ArrayList<String>();
-					StringBuffer mp;
-	    			for (Annotation mpAnnot : m.getMPAnnotations()) {
-	    				mp = new StringBuffer();
-						mp.append(mpAnnot.getTermID() + "\t");
-						mp.append(mpAnnot.getTerm());
-						mpIds.add(mp.toString());
-					}
-		    		associations.add(mpIds);
-					evictCollection(session,m.getAnnotations());
-				} else if(queryForm.getDo()){
-					List<String> doIds = new ArrayList<String>();
-					StringBuffer dobuf;
-	    			for (Annotation doAnnot : m.getDOAnnotations()) {
-	    				dobuf = new StringBuffer();
-	    				dobuf.append(doAnnot.getTermID() + "\t");
-	    				dobuf.append(doAnnot.getTerm());
-	    				doIds.add(dobuf.toString());
-					}
-		    		associations.add(doIds);
-		    		evictCollection(session,m.getAnnotations());
-				} else if(queryForm.getAllele()){
-					//logger.debug("allele");
-					List<String> alleles = new ArrayList<String>();
-					StringBuffer allele;
-	    			for (BatchMarkerAllele bma : m.getBatchMarkerAlleles()) {
-	    				allele = new StringBuffer();
-	    				allele.append(bma.getAlleleID() + "\t");
-	    				allele.append(bma.getAlleleSymbol());
-	    				alleles.add(allele.toString());
-	    				session.evict(bma);
-					}
-		    		associations.add(alleles);
-				} else if(queryForm.getExp()){
-					//logger.debug("exp");
-					List<String> expression = new ArrayList<String>();
-					StringBuffer exp;
-	    			for (MarkerTissueCount tissue : m.getMarkerTissueCounts()) {
-	    				exp = new StringBuffer();
-	    				exp.append(tissue.getStructure() + "\t");
-	    				exp.append(tissue.getAllResultCount() + "\t");
-	    				exp.append(tissue.getDetectedResultCount() + "\t");
-	    				exp.append(tissue.getNotDetectedResultCount());
-						expression.add(exp.toString());
-						session.evict(tissue);
-					}
-		    		associations.add(expression);
-				} else if(queryForm.getRefsnp()){
-					//logger.debug("refsnp");
-					List<String> refSnpIds = new ArrayList<String>();					
-        			for (String snp : m.getBatchMarkerSnps()) {
-        				refSnpIds.add(snp);
-    				}
-		    		associations.add(refSnpIds);
-				} else if(queryForm.getRefseq()){
-					//logger.debug("refseq");
-					List<String> refSeqIds = new ArrayList<String>();
-	        		if(ids != null){
-	        			for (MarkerID mId : ids) {
-	    					if (mId.getLogicalDB().equals(DBConstants.PROVIDER_REFSEQ) ||
-	    							mId.getLogicalDB().equals("Sequence DB")){
-	    						refSeqIds.add(mId.getAccID());
-	    					}						
-	    				}
-	        		}
-		    		associations.add(refSeqIds);
-				} else if(queryForm.getUniprot()){
-					//logger.debug("uniprot");
-					List<String> uniProtIds = new ArrayList<String>();
-	        		if(ids != null){
-	        			for (MarkerID mId : ids) {
-	    					if (mId.getLogicalDB().equals(DBConstants.PROVIDER_SWISSPROT) ||
-	    							mId.getLogicalDB().equals(DBConstants.PROVIDER_TREMBL)){
-	    						uniProtIds.add(mId.getAccID());
-	    					}						
-	    				}
-	        		}
-		    		associations.add(uniProtIds);
-				}
-				
-				for (List<String> assoc: associations) {
-					if (assoc.size() == 0) {
-						assoc.add("");
-					}
-				}
-				
-				List<String> combineResults = new ArrayList<String>();
-				if (associations.size() > 0) {					
-					combineResults = associations.get(0);
-					
-					if (associations.size() > 1) {				
-						for (int i = 1; i < associations.size(); i++) {
-							combineResults = combineSets(combineResults, associations.get(i));
-						}				
-					}
-					for (String s: combineResults) {
-						rownum++;
-						writer.write(markerInfo.toString());
-						//markerInfo.append("\t" + s);
-						writer.write("\t" + s + "\r\n");
-					}
-				}
-				else
-				{
-					rownum++;
+				if (associations.size() > 1) {				
+					for (int i = 1; i < associations.size(); i++) {
+						combineResults = combineSets(combineResults, associations.get(i));
+					}				
 				}
 
-				markerInfo.append("\r\n");
-				combineResults = null;
-				// make sure that maker info is still printed out if there are no combined results
-				if( associations.size() == 0) writer.write(markerInfo.toString());	
-				
-				if(ids!=null)
-				{
-					evictCollection(session,ids);
+				// Now for each of those cross-product rows we generated:
+				//	1. write out the left portion of the line (data before the associations)
+				//	2. write out the association data for this row.
+				for (String s: combineResults) {
+					rownum++;
+					writer.write(markerInfo.toString());
+					writer.write("\t" + s + "\r\n");
 				}
 			}
 			else {
-				rownum++;
-				markerInfo.append("No associated gene");
+				// no associations requested, so just write basic info
+				writer.write(markerInfo.toString());	
 				markerInfo.append("\r\n");
+				rownum++;
 			}
-			if(m!=null) {
+
+			combineResults = null;
 				
-				session.evict(m);
+			if (hasMarker) {
+				session.evict(id.getMarker());
 				id.setMarker(null);
 			}
 			session.evict(id);
@@ -275,6 +301,7 @@ public class TextBatchSummary extends AbstractTextView {
 		if(queryForm.getNomenclature()){
 			header.append("\tSymbol");
 			header.append("\tName");
+			header.append("\tStrain");
 			header.append("\tFeature Type");
 		}
 		if(queryForm.getLocation()){
