@@ -52,7 +52,7 @@
 				</td>
 				<td><c:choose>
 						<c:when test="${strain.referenceCount > 0}">
-							<a href="${configBean.FEWI_URL}reference/strain/${strain.primaryID}?typeFilter=Literature" target="_blank">${strain.referenceCount}</a>
+							<a href="${configBean.FEWI_URL}reference/strain/${strain.primaryID}?typeFilter=Literature" class="referenceLink" target="_blank">${strain.referenceCount}</a>
 						</c:when>
 						<c:when test="${strain.referenceCount == 0}">${strain.referenceCount}</c:when>
 					</c:choose>
