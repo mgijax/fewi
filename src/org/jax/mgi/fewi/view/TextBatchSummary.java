@@ -266,8 +266,8 @@ public class TextBatchSummary extends AbstractTextView {
 			}
 			else {
 				// no associations requested, so just write basic info
-				writer.write(markerInfo.toString());	
 				markerInfo.append("\r\n");
+				writer.write(markerInfo.toString());	
 				rownum++;
 			}
 
