@@ -7,12 +7,6 @@
 				<ul>
 					<li>
 						<div class="label">Symbol</div>
-						<c:if test="${not empty tssFor}">
-							<div id="tssFor" style="float: right; vertical-align: bottom">
-								<span class="label">TSS for</span>
-								<span style="font-size: 1.3em"><a href="${configBean.FEWI_URL}marker/${tssFor.relatedMarkerID}">${tssFor.relatedMarkerSymbol}</a></span>
-							</div>
-						</c:if>
 						<div class="value emphasis">
 							<fewi:super value="${marker.symbol}"/><c:if test="${marker.status == 'interim'}"> (Interim)</c:if>
 						</div>
@@ -29,19 +23,6 @@
 								<c:forEach var="synonym" items="${marker.synonyms}" varStatus="status">
 									<fewi:super value="${synonym.synonym}"/><c:if test="${!status.last}">, </c:if>
 								</c:forEach>
-							</div>
-						</li>
-					</c:if>
-
-					<c:if test="${hasTss}">
-						<li>
-							<div class="label">Transcription Start Sites</div>
-							<div class="value">
-								<c:forEach var="tss" items="${marker.tss}" varStatus="status" end="2">
-									<a href="${configBean.FEWI_URL}marker/${tss.relatedMarkerID}">${tss.relatedMarkerSymbol}</a><c:if test="${!status.last}">, </c:if>
-								</c:forEach>
-								<c:if test="${tssCount > 3}">...</c:if>
-								(<span id="showTss" class="link">${tssCount}</span> TSS)
 							</div>
 						</li>
 					</c:if>
@@ -67,6 +48,13 @@
 									</c:if>
 								</c:if>
 							</div>
+						</li>
+					</c:if>
+
+					<c:if test="${not empty tssFor}">
+						<li>
+							<div class="label">Transcription Start Site for</div>
+							<div class="value"><a href="${configBean.FEWI_URL}marker/${tssFor.relatedMarkerID}">${tssFor.relatedMarkerSymbol}</a></div>
 						</li>
 					</c:if>
 
@@ -117,6 +105,19 @@
 							<div class="label">Alliance</div>
 							<div class="value">
 								<a id="allianceLink" href="${fn:replace(externalUrls.AGR_Gene, '@@@@', marker.primaryID)}" target="_blank">gene page</a>
+							</div>
+						</li>
+					</c:if>
+
+					<c:if test="${hasTss}">
+						<li>
+							<div class="label">Transcription Start Sites</div>
+							<div class="value">
+								<c:forEach var="tss" items="${marker.tss}" varStatus="status" end="2">
+									<a href="${configBean.FEWI_URL}marker/${tss.relatedMarkerID}">${tss.relatedMarkerSymbol}</a><c:if test="${!status.last}">, </c:if>
+								</c:forEach>
+								<c:if test="${tssCount > 3}">...</c:if>
+								<span id="showTss" class="link">(all ${tssCount} TSS)</span>
 							</div>
 						</li>
 					</c:if>
