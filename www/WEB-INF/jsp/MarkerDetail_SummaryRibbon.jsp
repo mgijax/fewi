@@ -7,6 +7,12 @@
 				<ul>
 					<li>
 						<div class="label">Symbol</div>
+						<c:if test="${not empty tssFor}">
+							<div id="tssFor" style="float: right; vertical-align: bottom">
+								<span class="label">TSS for</span>
+								<span style="font-size: 1.3em"><a href="${configBean.FEWI_URL}marker/${tssFor.relatedMarkerID}">${tssFor.relatedMarkerSymbol}</a></span>
+							</div>
+						</c:if>
 						<div class="value emphasis">
 							<fewi:super value="${marker.symbol}"/><c:if test="${marker.status == 'interim'}"> (Interim)</c:if>
 						</div>
@@ -26,12 +32,19 @@
 							</div>
 						</li>
 					</c:if>
-					<!-- once we have the summary
+
+					<c:if test="${hasTss}">
 						<li>
-							<div class="label">Gene Summary</div>
-							<div class="value">from NCBI RefSeq</div>
+							<div class="label">Transcription Start Sites</div>
+							<div class="value">
+								<c:forEach var="tss" items="${marker.tss}" varStatus="status" end="2">
+									<a href="${configBean.FEWI_URL}marker/${tss.relatedMarkerID}">${tss.relatedMarkerSymbol}</a><c:if test="${!status.last}">, </c:if>
+								</c:forEach>
+								<c:if test="${tssCount > 3}">...</c:if>
+								(<span id="showTss" class="link">${tssCount}</span> TSS)
+							</div>
 						</li>
-					-->
+					</c:if>
 				</ul>
 			</section>
 

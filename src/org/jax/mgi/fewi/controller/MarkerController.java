@@ -496,6 +496,12 @@ public class MarkerController {
 		}
 		mav.addObject("memberSymbols", StringUtils.join(memberSymbols, ", "));
 
+		List<String> tssSymbols = new ArrayList<String>();
+		for (RelatedMarker tss : marker.getTss()) {
+			tssSymbols.add(tss.getRelatedMarkerSymbol());
+		}
+		mav.addObject("tssSymbols", StringUtils.join(tssSymbols, ", "));
+
 	}
 
 	private void setupRibbon1(ModelAndView mav, Marker marker) {
@@ -543,6 +549,13 @@ public class MarkerController {
 		}
 
 		mav.addObject("memberCount", marker.getClusterMembers().size());
+
+		mav.addObject("hasTss", marker.getTss().size() > 0);
+		mav.addObject("isTssFor", marker.getTssFor().size() > 0);
+		if (marker.getTssFor().size() > 0) {
+			mav.addObject("tssFor", marker.getTssFor().get(0));
+		}
+		mav.addObject("tssCount", marker.getTss().size());
 	}
 
 	

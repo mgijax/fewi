@@ -87,10 +87,56 @@
 			}
 		}
 		initializeClusterMembersPopup();
-	
+
 		/* Wire up batch submit in cluster members popup */
 		$("#clusterBatchLink").click(function(){
 			$("#batchWebForm").submit();
+		});
+	
+		function initializeTssPopup () {
+			var elem = document.getElementById("tssTable");
+
+			if (elem != null) {
+				var rows = elem.getElementsByTagName("tr").length;
+				YAHOO.namespace("markerDetail.container");
+		
+				var props = { 
+					visible:false, 
+					constraintoviewport:true,
+					context:['showTss', 'tl', 'br', [ 'beforeShow', 'windowResize' ] ] 
+				};
+		
+				if (rows > 12) {
+					props.height = "300px";
+					props.width = (elem.offsetWidth + 40) + "px";
+				}
+				
+				// make the div visible
+				elem.style.display = '';
+		
+				/* Wire up TSS popup show link */
+				YAHOO.markerDetail.container.tssPanel = new YAHOO.widget.Panel("tssDiv", props);
+				YAHOO.markerDetail.container.tssPanel.render();
+				YAHOO.util.Event.addListener ("showTss", "click",
+					YAHOO.markerDetail.container.tssPanel.show,
+					YAHOO.markerDetail.container.tssPanel, 
+					true
+				);
+				YAHOO.util.Event.addListener (
+					"YAHOO.markerDetail.container.tssPanel", "move",
+					YAHOO.markerDetail.container.tssPanel.forceContainerRedraw
+				);
+				YAHOO.util.Event.addListener (
+					"YAHOO.markerDetail.container.tssPanel", "mouseover",
+					YAHOO.markerDetail.container.tssPanel.forceContainerRedraw
+				);
+			}
+		}
+		initializeTssPopup();
+	
+		/* Wire up batch submit in cluster members popup */
+		$("#tssBatchLink").click(function(){
+			$("#tssBatchWebForm").submit();
 		});
 	
 		window.log = function(msg) {
