@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.jax.mgi.fewi.config.ContextLoader;
+
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.BatchMarkerAllele;
 import mgi.frontend.datamodel.BatchMarkerGoAnnotation;
@@ -20,6 +22,9 @@ import mgi.frontend.datamodel.StrainMarker;
  * associated Marker / StrainMarker objects.
  */
 public class BatchMarkerIdWrapper {
+	private static String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+	private static String strainLink = "<a href='(fewiUrl)strain/(id)' target='_blank'>(name)</a>".replace("(fewiUrl)", fewiUrl);
+
 	private BatchMarkerId bmi;		// matching object, has either a Marker or a StrainMarker, but not both
 	private Marker m;				// Marker to which the term in bmi matched (if any)
 	private StrainMarker sm;		// StrainMarker to which the term in bmi matched (if any)
@@ -67,9 +72,11 @@ public class BatchMarkerIdWrapper {
 	// both markers and strain markers have associated strains
 	public String getStrain() {
 		if (isMarkerMatch()) {
-			return m.getStrain();
+			// canonical markers always link to C57BL/6J
+			return strainLink.replace("(id)", "MGI:3028467").replaceAll("(name)", m.getStrain());
 		} else if (isStrainMarkerMatch()) {
-			return sm.getStrainName();
+			// strain markers link to their particular strain
+			return strainLink.replace("(id)", sm.getStrainID()).replaceAll("(name)", sm.getStrainName());
 		}
 		return null;
 	}
