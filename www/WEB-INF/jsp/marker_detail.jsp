@@ -105,9 +105,9 @@
 				<span id="tssBatchLink" style="cursor: pointer; color: #0000ff">More Data</span> for these features
 				<table id="tssTable">
 					<tr><td class="bold leftAlign allBorders">Transcription Start Site</td><td class="bold leftAlign allBorders">Location</td></tr>
-					<c:forEach var="tss" items="${marker.tss}">
-						<tr><td class="leftAlign allBorders"><a href="${configBean.FEWI_URL}marker/${tss.relatedMarkerID}">${tss.relatedMarkerSymbol}</a></td>
-							<td class="leftAlign allBorders">${tss.relatedMarkerLocation}</td>
+					<c:forEach var="tss" items="${tssMarkers}">
+						<tr><td class="leftAlign allBorders"><a href="${configBean.FEWI_URL}marker/${tss.primaryID}">${tss.symbol}</a></td>
+							<td class="leftAlign allBorders">${tss.location}</td>
 						</tr>
 					</c:forEach>
 				</table>

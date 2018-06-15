@@ -68,6 +68,7 @@ import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.GOGraphConverter;
 import org.jax.mgi.fewi.util.NotesTagConverter;
+import org.jax.mgi.fewi.util.TssMarkerWrapper;
 import org.jax.mgi.fewi.util.file.TextFileReader;
 import org.jax.mgi.fewi.util.link.FewiLinker;
 import org.jax.mgi.fewi.util.link.IDLinker;
@@ -496,9 +497,18 @@ public class MarkerController {
 		}
 		mav.addObject("memberSymbols", StringUtils.join(memberSymbols, ", "));
 
-		List<String> tssSymbols = new ArrayList<String>();
+		List<TssMarkerWrapper> tssMarkers = new ArrayList<TssMarkerWrapper>();
 		for (RelatedMarker tss : marker.getTss()) {
-			tssSymbols.add(tss.getRelatedMarkerSymbol());
+			tssMarkers.add(new TssMarkerWrapper(marker, tss));
+		}
+		if (tssMarkers.size() > 0) {
+			Collections.sort(tssMarkers, tssMarkers.get(0).getComparator());
+			mav.addObject("tssMarkers", tssMarkers);
+		}
+		
+		List<String> tssSymbols = new ArrayList<String>();
+		for (TssMarkerWrapper tss : tssMarkers) {
+			tssSymbols.add(tss.getSymbol());
 		}
 		mav.addObject("tssSymbols", StringUtils.join(tssSymbols, ", "));
 
