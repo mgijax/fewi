@@ -54,7 +54,9 @@
 					<c:if test="${not empty tssFor}">
 						<li>
 							<div class="label">Transcription Start Site for</div>
-							<div class="value"><a href="${configBean.FEWI_URL}marker/${tssFor.relatedMarkerID}">${tssFor.relatedMarkerSymbol}</a></div>
+							<div class="value"><a href="${configBean.FEWI_URL}marker/${tssFor.relatedMarkerID}">${tssFor.relatedMarkerSymbol}</a>
+								<c:if test="${not empty distanceFrom}">(${distanceFrom} bp from start of gene)</c:if>
+							</div>
 						</li>
 					</c:if>
 

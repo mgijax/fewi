@@ -1,6 +1,8 @@
 package org.jax.mgi.fewi.controller;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -564,6 +566,11 @@ public class MarkerController {
 		mav.addObject("isTssFor", marker.getTssFor().size() > 0);
 		if (marker.getTssFor().size() > 0) {
 			mav.addObject("tssFor", marker.getTssFor().get(0));
+			NumberFormat formatter = new DecimalFormat("#,###");
+			mav.addObject("distanceFrom", formatter.format(
+				TssMarkerWrapper.computeDistance(
+					marker.getTssFor().get(0).getRelatedMarker().getPreferredCoordinates(),
+					marker.getPreferredCoordinates()) ) );
 		}
 		mav.addObject("tssCount", marker.getTss().size());
 	}

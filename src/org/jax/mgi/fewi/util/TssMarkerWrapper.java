@@ -1,5 +1,7 @@
 package org.jax.mgi.fewi.util;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Comparator;
 
 import mgi.frontend.datamodel.Marker;
@@ -15,6 +17,7 @@ public class TssMarkerWrapper {
 	private RelatedMarker tssMarker;
 	private int sortableChromosome;
 	private Double startCoordinate;
+	private Double distanceFromStart;
 	
 	public TssMarkerWrapper(Marker src, RelatedMarker tss) {
 		this.sourceMarker = src;
@@ -37,12 +40,39 @@ public class TssMarkerWrapper {
 			this.sortableChromosome = 22;		// catch-all
 		}
 		
-		// start coordinate of this TSS
-		MarkerLocation coords = tssMarker.getRelatedMarker().getPreferredCoordinates();
-		if (coords == null) {
+		// Find the start coordinate of this TSS and its distance from the start of the source gene.
+		
+		MarkerLocation tssCoords = tssMarker.getRelatedMarker().getPreferredCoordinates();
+		MarkerLocation mrkCoords = sourceMarker.getPreferredCoordinates();
+
+		if (tssCoords == null) {
 			this.startCoordinate = null;
+			this.distanceFromStart = 0.0;
+		} else {
+			this.startCoordinate = tssCoords.getStartCoordinate();
+			this.distanceFromStart = computeDistance(mrkCoords, tssCoords);
 		}
-		this.startCoordinate = coords.getStartCoordinate();
+	}
+	
+	public static Double computeDistance(MarkerLocation mrkCoords, MarkerLocation tssCoords) {
+		// To find the distance, we figure using the midpoint of the TSS coordinates.  For + strand
+		// markers, we figure from the marker's start.  For - strand markers, use the marker's end.
+			
+		Double midpoint = (double) Math.round((tssCoords.getStartCoordinate() + tssCoords.getEndCoordinate()) / 2.0);
+		if (mrkCoords != null) {
+			if ("+".equals(mrkCoords.getStrand())) {
+				return midpoint - mrkCoords.getStartCoordinate();
+			} else {
+				return mrkCoords.getEndCoordinate() - midpoint;
+			}
+		}
+		return 0.0;
+	}
+	
+	public String getDistanceFromStart() {
+		if (this.distanceFromStart == 0.0) { return "-"; }
+		NumberFormat formatter = new DecimalFormat("#,###");
+		return formatter.format(this.distanceFromStart);
 	}
 	
 	public String getPrimaryID() {
@@ -67,13 +97,13 @@ public class TssMarkerWrapper {
 			// by chromosome first, then by start coordinate
 			int c = Integer.compare(o1.sortableChromosome, o2.sortableChromosome);
 			if (c == 0) {
-				if (o1.startCoordinate != null) {
-					if (o2.startCoordinate != null) {
-						c = o1.startCoordinate.compareTo(o2.startCoordinate);
+				if (o1.distanceFromStart != null) {
+					if (o2.distanceFromStart!= null) {
+						c = o1.distanceFromStart.compareTo(o2.distanceFromStart);
 					} else {
 						c = -1;		// o1 first
 					}
-				} else if (o2.startCoordinate != null) {
+				} else if (o2.distanceFromStart != null) {
 					c = 1;			// o2 first
 				} else {
 					// fall back on symbol if chromosomes match and neither has coordinates (shouldn't happen)
@@ -82,6 +112,5 @@ public class TssMarkerWrapper {
 			}
 			return c;
 		}
-		
 	}
 }

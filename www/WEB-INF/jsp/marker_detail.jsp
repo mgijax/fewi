@@ -104,10 +104,14 @@
 			<div class="bd" style="overflow:auto">
 				<span id="tssBatchLink" style="cursor: pointer; color: #0000ff">More Data</span> for these features
 				<table id="tssTable">
-					<tr><td class="bold leftAlign allBorders">Transcription Start Site</td><td class="bold leftAlign allBorders">Location</td></tr>
+					<tr><td class="bold leftAlign allBorders">Transcription Start Site</td>
+						<td class="bold leftAlign allBorders">Location</td>
+						<td class="bold leftAlign allBorders">Distance from Gene Start</td>
+						</tr>
 					<c:forEach var="tss" items="${tssMarkers}">
 						<tr><td class="leftAlign allBorders"><a href="${configBean.FEWI_URL}marker/${tss.primaryID}">${tss.symbol}</a></td>
 							<td class="leftAlign allBorders">${tss.location}</td>
+							<td class="leftAlign allBorders">${tss.distanceFromStart} bp</td>
 						</tr>
 					</c:forEach>
 				</table>
