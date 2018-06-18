@@ -106,7 +106,7 @@
 				<table id="tssTable">
 					<tr><td class="bold leftAlign allBorders">Transcription Start Site</td>
 						<td class="bold leftAlign allBorders">Location</td>
-						<td class="bold leftAlign allBorders">Distance from Gene Start</td>
+						<td class="bold leftAlign allBorders">Distance from Gene 5'-end</td>
 						</tr>
 					<c:forEach var="tss" items="${tssMarkers}">
 						<tr><td class="leftAlign allBorders"><a href="${configBean.FEWI_URL}marker/${tss.primaryID}">${tss.symbol}</a></td>
