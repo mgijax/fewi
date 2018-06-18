@@ -85,6 +85,14 @@
 							</div>
 						</li>
 					</c:if>
+					<c:if test="${not empty relatedStrainCount}">
+						<li>
+							<div class="label">Related Strains</div>
+							<div class="value" id="relatedStrains">
+								<a href="${configBean.FEWI_URL}strain/summary?strainName=${strain.name}*&attributes=inbred strain" id="relatedStrainLink" target="_blank">${relatedStrainCount}</a>
+							</div>
+						</li>
+					</c:if>
 				</ul>
 			</section>
 		</div>

@@ -104,11 +104,25 @@ public class StrainController {
         // generate ModelAndView object to be passed to detail page
         ModelAndView mav = new ModelAndView("strain/strain_detail");
         
-        //pull out the Probe, and add to mav
+        //pull out the Strain, and add to mav
         Strain strain = strainList.get(0);
         mav.addObject("strain", strain);
 //        addDetailSeo(strain, mav);
 
+        // See if there are any related strains (strains with names that have the current strain
+        // name as a prefix).  If so, add a count to the mav.
+        
+        Paginator page = new Paginator(1);
+        List<String> attributes = new ArrayList<String>();
+        attributes.add("inbred strain");
+        StrainQueryForm query = new StrainQueryForm();
+        query.setStrainName(strain.getName() + "*");
+        query.setAttributes(attributes);
+		SearchResults<SimpleStrain> searchResults = getSummaryResults(query, page);
+		if (searchResults.getTotalCount() > 0) {
+			mav.addObject("relatedStrainCount", searchResults.getTotalCount());
+		}
+        
         // add an IDLinker to the mav for use at the JSP level
         mav.addObject("idLinker", idLinker);
         return mav;
