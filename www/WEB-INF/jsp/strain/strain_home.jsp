@@ -68,50 +68,55 @@
 
   <div style="clear: both;"></div>
 
-  <section class="infoBlock accessData">
-    <h2>Access Data</h2>
-	<div>
-		<dl>
-			<dt>Search for mouse SNPs from dbSNP by strain(s), genomic position, or associated genes.</dt>
-			<dd><a href="${configBean.FEWI_URL}snp">SNP Query</a></dd>
+  <div class="column top">
+	  <section class="infoBlock queryForm">
+	    <h2>Find</h2>
+	    <h3>Strains</h3>
+	    <div class="wrapper" style="padding-left: 22px">
+	    	<%@ include file="/WEB-INF/jsp/strain/sub_strain_form.jsp" %>
+	    </div>
 
-            <dt>Inbred Strains of Mice.</dt>
-            <dd><a href="http://www.informatics.jax.org/inbred_strains/" class="small homeLink">Characteristics of Inbred Strains</a> of Mice and Rats by M. Festing</dd>
-            <dd>View lists of <a href="${configBean.FTP_URL}reports/index.html#strain" class="small homeLink">Official Mouse Strain Names</a></dd>
-
-			<dt>View a chart depicting the origins and relationships of inbred mouse strains.</dt>
-			<dd><a href="${configBean.MGIHOME_URL}genealogy/" class="small homeLink">Genealogy Chart of Inbred Strains</a></dd>
-				
-			<dt>Submit data for strains, alleles or phenotypes.</dt>
-			<dd><a href="${configBean.MGIHOME_URL}submissions/amsp_submission.cgi" class="small homeLink">Allele, Strain &amp; Phenotype Submission Form</a></dd> 
-				
-			<dt>View guidelines for proper naming of mouse strains.</dt>
-			<dd><a href="${configBean.MGIHOME_URL}nomen/strains.shtml" class="small homeLink">Guide to Strain Nomenclature</a></dd>
-
-			<dt>Search for sources of mutant mice and cell lines.</dt>
-			<dd><a href="${configBean.IMSRURL}" class="small homeLink">International Mouse Strain Resource (IMSR)</a></dd>
-
-			<dt>Find information on spontaneous, induced, and genetically-engineered mutations and QTL.</dt>
-			<dd><a href="${configBean.HOMEPAGES_URL}phenotypes.shtml" class="small homeLink">Phenotypes, Alleles &amp; Disease Models</a></dd>
-		</dl>
-	</div>
-  </section>
+		<h3>Strain Collections</h3>
+		<ul>
+			<li>Mouse Genome Project (MGP)</li>
+			<li>Hybrid Diversity Panel (HDP)</li>
+			<li>Collaborative Cross (CC)</li>
+			<li>Parental CC Strains</li>
+			<li>All strains</li>
+		</ul>
+		
+		<h3>SNPs</h3>
+		Search for mouse SNPs from dbSNP by strain(s), genomic position, or associated genes.<br/>
+		<a href="${configBean.FEWI_URL}snp" style="padding-left:22px">SNP Query</a>
+	  </section>
+  </div><!-- left column -->
   
-  <div class="column">
+  <div class="column top">
+	<section class="infoBlock">
+    	<h2>Other Data Access</h2>
+		<div>
+			<dl>
+				<dt>Submit data for strains, alleles or phenotypes.</dt>
+				<dd><a href="${configBean.MGIHOME_URL}submissions/amsp_submission.cgi" class="small homeLink">Allele, Strain &amp; Phenotype Submission Form</a></dd> 
+				
+				<dt>View guidelines for proper naming of mouse strains.</dt>
+				<dd><a href="${configBean.MGIHOME_URL}nomen/strains.shtml" class="small homeLink">Guide to Strain Nomenclature</a></dd>
+
+				<dt>Search for sources of mutant mice and cell lines.</dt>
+				<dd><a href="${configBean.IMSRURL}" class="small homeLink">International Mouse Strain Resource (IMSR)</a></dd>
+
+				<dt>Find information on spontaneous, induced, and genetically-engineered mutations and QTL.</dt>
+				<dd><a href="${configBean.HOMEPAGES_URL}phenotypes.shtml" class="small homeLink">Phenotypes, Alleles &amp; Disease Models</a></dd>
+			</dl>
+		</div>
+	</section>
   
-	  <section class="infoBlock faqs">
+	<section class="infoBlock faqs">
 	    <h2>FAQs</h2>
 	    <div class="wrapper">
 	    	<%@ include file="/WEB-INF/jsp/static/home/strain_faqs_section.html" %>
 	    </div>
-	  </section>
-	  
-	  <section class="infoBlock queryForm">
-	    <h2>Find Strains</h2>
-	    <div class="wrapper">
-	    	<%@ include file="/WEB-INF/jsp/strain/sub_strain_form.jsp" %>
-	    </div>
-	  </section>
+	</section>
 	  
 	  <div style="clear:both"></div>
 	  <section class="infoBlock alleleDataCounts">
@@ -121,7 +126,7 @@
 	    </div>
 	  </section>
 	  
-  </div>
+  </div><!-- right column -->
   
   <div style="clear:both"></div>
 
