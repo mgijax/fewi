@@ -211,7 +211,8 @@ var ss_search = function() {
 		log("search with querystring: " + querystring);
 		updateResultsDiv();
 	} else {
-		log("no querystring, no search");
+		log("no querystring -- retrieve all strains");
+		updateResultsDiv();
 	}
 };
 

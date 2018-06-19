@@ -78,11 +78,12 @@
 
 		<h3>Strain Collections</h3>
 		<ul>
-			<li>Mouse Genome Project (MGP)</li>
+			<li><a href="${configBean.FEWI_URL}strain/summary?isSequenced=1">Mouse Genome Project (MGP)</a></li>
+			<li><a href="${configBean.FEWI_URL}strain/summary?attributes=inbred strain">Inbred strains</a></li>
 			<li>Hybrid Diversity Panel (HDP)</li>
-			<li>Collaborative Cross (CC)</li>
+			<li><a href="${configBean.FEWI_URL}strain/summary?strainName=CC0*">Collaborative Cross (CC)</a></li>
 			<li>Parental CC Strains</li>
-			<li>All strains</li>
+			<li><a href="${configBean.FEWI_URL}strain/summary">All strains</a></li>
 		</ul>
 		
 		<h3>SNPs</h3>

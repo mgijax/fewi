@@ -366,20 +366,50 @@ public class StrainController {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<span class='ysf'>You Searched For...</span><br/>");
 
+		// remember the initial size so we can tell if we add something
+		int initialSize = sb.length();
+		
+		String collection = null;
 		String strainName = qf.getStrainName();
 		List<String> attributes = qf.getAttributes();
+		Integer isSequenced = qf.getIsSequenced();
+		String group = qf.getGroup();
+		String refID = qf.getReferenceID();
 		
-		if ((strainName != null) && (strainName.length() > 0)) {
+		if (isSequenced != null) {
+			if (isSequenced == 1) {
+				collection = "Mouse Genomes Project Strains";
+			}
+		}
+		
+		if ((group != null) && (group.length() > 0)) {
+			if ("HDP".equals(group)) {
+				collection = "Hybrid Diversity Panel (HDP) Strains";
+			} else if ("CCParental".equals(group)) {
+				collection = "Collaborative Cross (CC) Parental Strains";
+			}
+		}
+		
+		if ((refID != null) && (refID.length() > 0)) {
+			sb.append("Reference: <b>");
+			sb.append(refID);
+			sb.append("</b><br/>");
+		}
+		
+		// The CC strains are found using a nomenclature search, so we need special handling.
+		if ("CC0*".equals(strainName)) {
+			collection = "Collaborative Cross (CC)";
+		} else if ((strainName != null) && (strainName.length() > 0)) {
 			String op = "equals";
 			if (strainName.indexOf("*") >= 0) {
 				if (strainName.startsWith("*")) {
 					if (strainName.endsWith("*")) {
 						op = "contains";
 					} else {
-						op = "begins with";
+						op = "ends with";
 					}
 				} else if (strainName.endsWith("*")) {
-					op = "ends with";
+					op = "begins with";
 				} else {
 					op = "matches";
 				}
@@ -403,6 +433,17 @@ public class StrainController {
 				sb.append(attributes.get(0));
 				sb.append("</b><br/>");
 			}
+		}
+
+		// Did we identify a collection to mention?
+		if ((collection != null) && (collection.length() > 0)) {
+			sb.append("Collection: <b>");
+			sb.append(collection);
+			sb.append("</b><br/>");
+		}
+
+		if (sb.length() == initialSize) {
+			sb.append("All strains");
 		}
 		return sb.toString();
 	}
@@ -455,6 +496,18 @@ public class StrainController {
 			filterList.add(Filter.or(nameOrID));
 		}
 		
+		// groups that the strain is part of (HDP, CCParental, etc.)
+		String group = query.getGroup();
+		if ((group != null) && (group.length() > 0)) {
+			filterList.add(new Filter(SearchConstants.STRAIN_GROUPS, group, Filter.Operator.OP_EQUAL));
+		}
+		
+		// Has the strain been sequenced (1) or not (0)?
+		Integer isSequenced = query.getIsSequenced();
+		if (isSequenced != null) {
+			filterList.add(new Filter(SearchConstants.STRAIN_IS_SEQUENCED, isSequenced, Filter.Operator.OP_EQUAL));
+		}
+		
 		// reference ID
 		String refID = query.getReferenceID();
 		if ((refID != null) && (refID.length() > 0)) {
@@ -486,6 +539,9 @@ public class StrainController {
 		if (filterList.size() > 0){
 			containerFilter.setFilterJoinClause(Filter.JoinClause.FC_AND);
 			containerFilter.setNestedFilters(filterList);
+		} else {
+			// if no filters, then we want to return all strains
+			containerFilter = new Filter(SearchConstants.STRAIN_NAME, "*", Filter.Operator.OP_EQUAL_WILDCARD_ALLOWED);
 		}
 
 		return containerFilter;

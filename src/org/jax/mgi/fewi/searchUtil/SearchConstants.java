@@ -282,6 +282,8 @@ public class SearchConstants {
 	public static final String STRAIN_NAME = "strainName";
 	public static final String STRAIN_NAME_LOWER = "strainNameLower";
 	public static final String STRAIN_ATTRIBUTE_LOWER = "attributeLower";
+	public static final String STRAIN_GROUPS = "groups";
+	public static final String STRAIN_IS_SEQUENCED = "isSequenced";
 	
 	// general
 	public static final String COLUMN_ID = "columnID";
