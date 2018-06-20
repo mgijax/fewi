@@ -39,6 +39,12 @@
 	<%@ include file="strain_detail_summary_ribbon.jsp" %>
 </div>
 
+<c:if test="${not empty strain.description}">
+	<div class="container detailStructureTable">
+		<%@ include file="strain_detail_description_ribbon.jsp" %>
+	</div>
+</c:if>
+
 <c:if test="${(not empty strain.mutations) or (not empty strain.qtls)}">
 	<div class="container detailStructureTable">
 		<%@ include file="strain_detail_mutation_ribbon.jsp" %>
