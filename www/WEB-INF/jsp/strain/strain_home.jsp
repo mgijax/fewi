@@ -68,7 +68,7 @@
 
   <div style="clear: both;"></div>
 
-  <div class="column top">
+  <div class="strainColumn top">
 	  <section class="infoBlock queryForm">
 	    <h2>Find</h2>
 	    <h3>Strains</h3>
@@ -92,7 +92,7 @@
 	  </section>
   </div><!-- left column -->
   
-  <div class="column top">
+  <div class="strainColumn top">
 	<section class="infoBlock">
     	<h2>Other Data Access</h2>
 		<div>

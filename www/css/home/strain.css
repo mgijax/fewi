@@ -3,7 +3,7 @@
 /* Set title and icon on one line */
 .strainTitle {
 	box-sizing: border-box;
-	width: 66%;
+	width: 800px;
 	text-align: center;
 	float: left;
 }

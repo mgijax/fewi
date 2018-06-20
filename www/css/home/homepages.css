@@ -75,6 +75,13 @@ section.infoBlock > .wrapper {
 	max-width: 40%
 }
 
+/* sections that appear in a column should be stacked */
+.strainColumn {
+	display: inline-block;
+	width: 565px;
+	padding-right: 12px;
+}
+
 @media screen and (max-width: 800px) {
 	.column {
 		max-width: 100%;
