@@ -3,9 +3,13 @@
 /* Set title and icon on one line */
 .strainTitle {
 	box-sizing: border-box;
-	width: 800px;
+	width: 847px;
 	text-align: center;
 	float: left;
+}
+
+#otherDataAccess {
+	padding-left: 0.5em;	
 }
 
 .strainTitle p {

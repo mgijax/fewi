@@ -71,31 +71,42 @@
   <div class="strainColumn top">
 	  <section class="infoBlock queryForm">
 	    <h2>Find</h2>
+	    <div style="padding-left: 0.5em; padding-bottom: 0.5em;">
 	    <h3>Strains</h3>
-	    <div class="wrapper" style="padding-left: 22px">
+	    <div class="wrapper" style="padding-left: 20px; padding-bottom: 8px;">
 	    	<%@ include file="/WEB-INF/jsp/strain/sub_strain_form.jsp" %>
 	    </div>
 
 		<h3>Strain Collections</h3>
-		<ul>
-			<li><a href="${configBean.FEWI_URL}strain/summary?isSequenced=1">Mouse Genome Project (MGP)</a></li>
-			<li><a href="${configBean.FEWI_URL}strain/summary?attributes=inbred strain">Inbred strains</a></li>
+		<ul class="collections">
+			<li><a href="${configBean.FEWI_URL}strain/summary?isSequenced=1" class="homeLink">Mouse Genome Project (MGP)</a></li>
+			<li><a href="${configBean.FEWI_URL}strain/summary?attributes=inbred strain" class="homeLink">Inbred strains</a></li>
 			<li>Hybrid Diversity Panel (HDP)</li>
-			<li><a href="${configBean.FEWI_URL}strain/summary?strainName=CC0*">Collaborative Cross (CC)</a></li>
+			<li><a href="${configBean.FEWI_URL}strain/summary?strainName=CC0*" class="homeLink">Collaborative Cross (CC)</a></li>
 			<li>Parental CC Strains</li>
-			<li><a href="${configBean.FEWI_URL}strain/summary">All strains</a></li>
+			<li><a href="${configBean.FEWI_URL}strain/summary" class="homeLink">All strains</a></li>
 		</ul>
 		
 		<h3>SNPs</h3>
 		Search for mouse SNPs from dbSNP by strain(s), genomic position, or associated genes.<br/>
-		<a href="${configBean.FEWI_URL}snp" style="padding-left:22px">SNP Query</a>
+		<div style="padding-left:40px"><a href="${configBean.FEWI_URL}snp" class="homeLink">SNP Query</a></div>
+		</div>
 	  </section>
   </div><!-- left column -->
   
+<style>
+.collections {
+	padding-top: 0px;
+}
+.collections li {
+	padding-bottom: 2px;
+}
+</style>
+
   <div class="strainColumn top">
 	<section class="infoBlock">
     	<h2>Other Data Access</h2>
-		<div>
+		<div id="otherDataAccess">
 			<dl>
 				<dt>Submit data for strains, alleles or phenotypes.</dt>
 				<dd><a href="${configBean.MGIHOME_URL}submissions/amsp_submission.cgi" class="small homeLink">Allele, Strain &amp; Phenotype Submission Form</a></dd> 
@@ -131,7 +142,7 @@
   
   <div style="clear:both"></div>
 
-  <article class="tabs">
+  <article class="tabs" style="margin-left:30px; max-width:1164px;">
   	<%@ include file="/WEB-INF/jsp/static/home/strain_footer_tabs.html" %>
   </article>
 
