@@ -234,6 +234,8 @@
 			<c:if test="${not empty marker.strainMarkers}">
 
 				<div class="extra closed">
+				<form name="strainMarkerForm" method="GET" action="${configBean.SEQFETCH_URL}" target="_blank">
+				<div id="strainGenesTableDiv">
 				<table class="padded" id="table_strainMarkers">
 					
 					<tr class="headerStripe">
@@ -245,6 +247,7 @@
 					</tr>
 					
 					<c:forEach var="sm" items="${marker.strainMarkers}">
+						<c:set var="sgID" value=""/>
 						<tr>
 							<td>
 							  <a href="${configBean.FEWI_URL}strain/${sm.strainID}">${sm.strainName}</a>
@@ -256,19 +259,58 @@
 								<c:if test="${not sm.noAnnotation}">
 									<c:forEach var="gm" items="${sm.preferredGeneModels}">
 									  <a href="${configBean.FEWI_URL}sequence/${gm.geneModelID}" target="_blank">${gm.geneModelID}</a></br>
+									  <c:if test="${empty sgID}">
+									  	<c:set var="sgID" value="${gm.geneModelID}"/>
+								  	  </c:if>
 									</c:forEach>
 								</c:if>
 							</td>
 							<td>${sm.featureType}</td>
 							<td>${sm.location}</td>
-							<td></td>
+							<td class="sgCenter">
+							  <c:if test="${not empty sgID}">
+								<input type="checkbox" name="seqs" value="straingene!${sgID}!!!!!" class="sgCheckbox" />
+							  </c:if>
+							</td>
 						</tr>
 					</c:forEach> 
 
 				</table>
+				</div>
+				<div id="strainGenesTableButtons">
+					<input type="submit" class="sgButton" value="Get FASTA" />
+					<input type="button" class="sgButton" value="Check All" onClick="clickAllStrainGenes()"/>
+					<input type="reset" class="sgButton" value="Uncheck All" />
+				</div>
+				</form>
 				</div>
 
 			</c:if>
 
 		</div>
 	</div>
+
+<style>
+#strainGenesTableDiv {
+}
+#strainGenesTableButtons {
+	text-align: center;
+	margin-left: 15px;
+	width: 779px;
+}
+.sgButton {
+	width: 90px;
+	padding: 3px;
+	margin: 3px;
+}
+.sgCenter {
+	text-align: center;
+	vertical-align: middle;
+}
+</style>
+<script>
+	function clickAllStrainGenes() {
+		// for all checkboxes on the strainMarkerForm that aren't checked, click them
+		$('[name=strainMarkerForm] [type=checkbox]:not(:checked)').click();
+	}
+</script>
