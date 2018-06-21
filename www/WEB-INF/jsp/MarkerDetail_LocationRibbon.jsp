@@ -303,14 +303,12 @@
 	padding: 3px;
 	margin: 3px;
 }
-.sgCenter {
-	text-align: center;
-	vertical-align: middle;
-}
 </style>
 <script>
 	function clickAllStrainGenes() {
 		// for all checkboxes on the strainMarkerForm that aren't checked, click them
 		$('[name=strainMarkerForm] [type=checkbox]:not(:checked)').click();
 	}
+	// add centering of download checkboxes
+	$('.sgCenter').css({'text-align' : 'center'});
 </script>
