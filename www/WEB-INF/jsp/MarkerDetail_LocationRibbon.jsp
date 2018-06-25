@@ -235,6 +235,11 @@
 
 				<div class="extra closed">
 				<form name="strainMarkerForm" method="GET" action="${configBean.SEQFETCH_URL}" target="_blank">
+				<div id="strainGenesTableButtons">
+					<input type="submit" class="sgButton" value="Get FASTA" />
+					<input type="button" class="sgButton" value="Check All" onClick="clickAllStrainGenes()"/>
+					<input type="reset" class="sgButton" value="Uncheck All" />
+				</div>
 				<div id="strainGenesTableDiv">
 				<table class="padded" id="table_strainMarkers">
 					
@@ -276,11 +281,6 @@
 					</c:forEach> 
 
 				</table>
-				</div>
-				<div id="strainGenesTableButtons">
-					<input type="submit" class="sgButton" value="Get FASTA" />
-					<input type="button" class="sgButton" value="Check All" onClick="clickAllStrainGenes()"/>
-					<input type="reset" class="sgButton" value="Uncheck All" />
 				</div>
 				</form>
 				</div>
