@@ -21,7 +21,7 @@
 				    <table id="mutationSummaryTable">
 				    <tr>
 				    	<th>Mutation Carried</th>
-				    	<th>Gene</th>
+				    	<th>Marker</th>
 				    </tr>
 				    <c:forEach var="mutation" items="${strain.mutations}">
 				    	<tr>
@@ -49,7 +49,7 @@
 				    <table id="qtlSummaryTable">
 				    <tr>
 				    	<th>Allele</th>
-				    	<th>Gene</th>
+				    	<th>Marker</th>
 				    </tr>
 				    <c:forEach var="qtl" items="${strain.qtls}">
 				    	<tr>
@@ -90,7 +90,7 @@
 	<c:if test="${not empty strain.qtls}">
 	// fix width of DIV containing QTL table and adjust the header color
 	$('#qtlSummaryDiv').width($('#qtlSummaryTable').width() + 20);
-	$('#qtlSummaryTable th').css('background-color', $('#qtlRibbonLabel').css('background-color'));
+	$('#qtlSummaryTable th').css('background-color', $('#mutationRibbonLabel').css('background-color'));
 	$('#qtlButton').click(function() {
 		// section is already expanded, so contract it
 		if ($('#qtlSummaryDiv').css('max-height') == 'none') {
