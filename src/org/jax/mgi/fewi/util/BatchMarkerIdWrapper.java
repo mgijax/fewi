@@ -73,10 +73,10 @@ public class BatchMarkerIdWrapper {
 	public String getStrain() {
 		if (isMarkerMatch() && (m.getStrain() != null)) {
 			// canonical markers always link to C57BL/6J
-			return strainLink.replace("(id)", "MGI:3028467").replaceAll("(name)", m.getStrain());
+			return strainLink.replace("(id)", "MGI:3028467").replace("(name)", m.getStrain());
 		} else if (isStrainMarkerMatch() && (sm.getStrainName() != null)) {
 			// strain markers link to their particular strain
-			return strainLink.replace("(id)", sm.getStrainID()).replaceAll("(name)", sm.getStrainName());
+			return strainLink.replace("(id)", sm.getStrainID()).replace("(name)", sm.getStrainName());
 		}
 		return null;
 	}
