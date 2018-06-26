@@ -425,7 +425,11 @@ public class StrainController {
 		
 		if ((attributes != null) && (attributes.size() > 0)) {
 			if (attributes.size() > 1) {
-				sb.append("Attributes: any of <b>[");
+				String op = "any";
+				if (qf.getAttributeOperator() != null) {
+					op = qf.getAttributeOperator();
+				}
+				sb.append("Attributes: " + op + " of <b>[");
 				sb.append(StringUtils.join(attributes, ", "));
 				sb.append("]</b><br/>");
 			} else {
@@ -521,7 +525,12 @@ public class StrainController {
 			for (String attribute : attributes) {
 				attributeList.add(new Filter(SearchConstants.STRAIN_ATTRIBUTE_LOWER, attribute, Filter.Operator.OP_EQUAL));
 			}
-			filterList.add(Filter.or(attributeList));
+			
+			if ("all".equals(query.getAttributeOperator())) {
+				filterList.add(Filter.and(attributeList)); 
+			} else {
+				filterList.add(Filter.or(attributeList)); 
+			}
 		}
 		
 		// strain attribute filter (chosen from filter button, not from query form options)

@@ -144,6 +144,7 @@ public class HomepageController {
 
 		strainController.initQFCache();
 		mav.addObject("attributeChoices", StrainQueryForm.getAttributeChoices());
+		mav.addObject("attributeOperatorChoices", StrainQueryForm.getAttributeOperatorChoices());
 		
 		return mav;
 	}

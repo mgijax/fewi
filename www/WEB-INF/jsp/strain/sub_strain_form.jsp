@@ -19,10 +19,19 @@
 		</div>
 
 		<label class="searchLabel">Attributes</label>
-		<div>
-	        <select name="attributes" id="attributeDropList" multiple="" size="7">
-			<fewi:selectOptions items="${attributeChoices}" values="${strainQueryForm.attributes}" />
-			</select>
+		<div id="attributeContainer">
+			<div id="attributeDiv">
+	        	<select name="attributes" id="attributeDropList" multiple="" size="7">
+				<fewi:selectOptions items="${attributeChoices}" values="${strainQueryForm.attributes}" />
+				</select>
+			</div>
+			<div id="operatorDiv">
+				Match
+	        	<select name="attributeOperator" id="attributeOperatorList" size="1">
+				<fewi:selectOptions items="${attributeOperatorChoices}" values="${strainQueryForm.attributeOperator}" />
+				</select>
+				selected attributes.
+			</div>
 		</div>
 	</div>
 </form>
@@ -41,3 +50,7 @@
 		}
 	});
 </script>
+<style>
+#attributeContainer { display:flex; }
+#operatorDiv { padding-left: 10px; }
+</style>
