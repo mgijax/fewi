@@ -40,6 +40,7 @@
 	$('#clearButton').click(function () {
 		$('#attributeDropList').val([]);
 		$('[name=strainName]').val('');
+		$('#attributeOperatorList').val(['any']);
 		return false;
 	});
 	// pressing Enter in the strain box should submit the form
