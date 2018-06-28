@@ -64,7 +64,7 @@
 						<c:set var="sgCells" value="${strain.gridCells}"/>
 						<c:set var="sgShowAbbrev" value="false"/>
 						<c:set var="sgTooltipTemplate" value="<count> phenotype(s)"/>
-						<c:set var="sgUrl" value="${configBean.FEWI_URL}diseasePortal/popup?isPhenotype=true&markerID=<markerID>&header=<abbrev>"/>
+						<c:set var="sgUrl" value="${configBean.FEWI_URL}strain/phenotype/${strain.primaryID}?header=<term>"/>
 
 						<%@ include file="../MarkerDetail_slimgrid.jsp" %>
 						<br/>

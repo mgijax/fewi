@@ -15,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.StrainFinder;
+import org.jax.mgi.fewi.finder.VocabularyFinder;
 import org.jax.mgi.fewi.forms.StrainQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
@@ -24,6 +25,7 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.util.AjaxUtils;
+import org.jax.mgi.fewi.util.StrainPhenoGroup;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.shr.fe.sort.SmartAlphaComparator;
 import org.jax.mgi.shr.jsonmodel.SimpleStrain;
@@ -36,11 +38,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.Strain;
+import mgi.frontend.datamodel.StrainGridCell;
+import mgi.frontend.datamodel.StrainGridPopupCell;
+import mgi.frontend.datamodel.StrainGridPopupRow;
+import mgi.frontend.datamodel.VocabTerm;
 
 /*-------*/
 /* class */
@@ -80,6 +87,54 @@ public class StrainController {
     // public methods
     //--------------------------------------------------------------------//
 
+	//------------------------//
+	// strain phenogrid popup
+	//------------------------//
+	@RequestMapping(value="/phenotype/{strainID:.+}", method = RequestMethod.GET)
+	public ModelAndView getStrainGridPopup(@PathVariable("strainID") String strainID,
+			@RequestParam("header") String header) {
+        logger.debug("->getStrainGridPopup started");
+
+        List<Strain> strainList = strainFinder.getStrainByID(strainID);
+        // there can be only one...
+        if (strainList.size() < 1) { // none found
+            return errorMav("No Strain Found for ID " + strainID);
+        } else if (strainList.size() > 1) { // dupe found
+            return errorMav("ID " + strainID + " is associated with multiple strains");
+        }
+        // success - we have a single strain
+
+
+        // pull out the Strain and the header term, adding them to the mav
+        Strain strain = strainList.get(0);
+        StrainGridCell sgCell = strain.getGridCell(header);
+        if (sgCell == null) {
+            return errorMav("Unknown MP header term: " + header);
+        }
+
+        // success - we have a single term
+        
+        if (sgCell == null) {
+        	return errorMav("Strain " + strainID + " has no annotations for term " + header);
+        }
+
+        // generate ModelAndView object to be passed to detail page
+        ModelAndView mav = new ModelAndView("strain/strain_grid_popup");
+        mav.addObject("strain", strain);
+        mav.addObject("header", header);
+        
+        // construct a StrainPhenoGroup and add it to the mav
+        StrainPhenoGroup spg = new StrainPhenoGroup();
+        for (StrainGridPopupRow row : sgCell.getPopupRows()) {
+        	spg.addRow(row.getGenotype());
+        	for (StrainGridPopupCell cell : row.getCells()) {
+        		spg.addCell(cell.getTerm(), cell.getValue());
+        	}
+        }
+        mav.addObject("strainPhenoGroup", spg);
+
+		return mav;
+	}
 
     //--------------------//
     // strain detail page
