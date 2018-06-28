@@ -109,12 +109,6 @@ public class StrainController {
         Strain strain = strainList.get(0);
         StrainGridCell sgCell = strain.getGridCell(header);
         if (sgCell == null) {
-            return errorMav("Unknown MP header term: " + header);
-        }
-
-        // success - we have a single term
-        
-        if (sgCell == null) {
         	return errorMav("Strain " + strainID + " has no annotations for term " + header);
         }
 
