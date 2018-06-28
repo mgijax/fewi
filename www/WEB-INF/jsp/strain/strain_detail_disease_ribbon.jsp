@@ -1,14 +1,17 @@
 	<div class="row">
 		<div class="header <%=leftTdStyles.getNext() %>" id="diseaseRibbonLabel">
-			Associated<br/>Diseases
+			Associated<br/>
+			<c:if test="${(not empty strain.diseases) and (not empty strain.gridCells)}">Diseases<br/>and<br/>Phenotypes</c:if>
+			<c:if test="${(empty strain.diseases) and (not empty strain.gridCells)}">Phenotypes</c:if>
+			<c:if test="${(not empty strain.diseases) and (empty strain.gridCells)}">Diseases</c:if>
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %> summaryRibbon">
-			<section class="summarySec1">
-				<span class="indented">
-		    	${fn:length(strain.diseases)} associated disease<c:if test="${fn:length(strain.diseases) > 1}">s</c:if></span>
-		    	<br/>
-			    <div id="diseaseSummaryDiv" style="margin-top: 5px; margin-left: 15px; max-width: 95%" id="diseaseDiv">
-				    <table id="diseaseSummaryTable">
+			<c:if test="${not empty strain.diseases}">
+			    <section id="diseaseDiv" class="summarySec1" style="margin-left: 15px">
+					<span id="diseaseTableTitle">
+			    	${fn:length(strain.diseases)} associated disease<c:if test="${fn:length(strain.diseases) > 1}">s</c:if></span>
+			    	<br/>
+				    <table id="diseaseSummaryTable" style="margin-top: 5px">
 				    <tr>
 				    	<th>Human Diseases</th>
 					    <c:forEach var="genotype" items="${strain.diseaseGenotypes}" varStatus="gStatus">
@@ -37,18 +40,47 @@
 							<tr>
 							<td>Key</td>
 							<td>&#8730;</td>
-							<td>disease model</td>
+							<td class="nowrap">disease model</td>
 							<td></td>
 							<td><img src="${configBean.WEBSHARE_URL}images/notSymbol.gif" border="0" valign="bottom"/></td>
-							<td>expected model not found</td>
+							<td class="nowrap">expected model not found</td>
 							</tr>
 						</table>
 					</div>
-			    </div>
-			</section>
+			    </section>
+			</c:if>
+
+			<c:if test="${not empty strain.gridCells}">
+				<section id="mpSlimgridSection" class="summarySec1">
+					<div id="mpSlimgridWrapper" class="sgWrapper">
+						<div class="label" style="width: 100%; text-align:center;">Phenotype Overview<img id="sgPhenoHelpImage" src="${configBean.FEWI_URL}assets/images/help_icon_16.png" style="margin-bottom: -3px; margin-left: 3px; cursor: pointer;"/></div><br />
+						<div id="sgPhenoHelp" style="visibility: hidden;">
+							<div class="hd">Phenotype Overview</div>
+							<div class="bd" style="text-align: center">
+								Blue squares indicate phenotypes directly attributed to mutations/alleles in this strain.
+							</div>
+						</div>
+						<c:set var="sgID" value="mpSlimgrid"/>
+						<c:set var="sgCells" value="${strain.gridCells}"/>
+						<c:set var="sgShowAbbrev" value="false"/>
+						<c:set var="sgTooltipTemplate" value="<count> phenotype(s)"/>
+						<c:set var="sgUrl" value="${configBean.FEWI_URL}diseasePortal/popup?isPhenotype=true&markerID=<markerID>&header=<abbrev>"/>
+
+						<%@ include file="../MarkerDetail_slimgrid.jsp" %>
+						<br/>
+						<span style="font-size: 90%">Click cells to view annotations.</span>
+					</div>
+				</section>
+			</c:if>
 		</div>
 	</div>
 	<script>
 	// fix width of DIV containing table and adjust the header color
 	$('#diseaseSummaryTable th').css('background-color', $('#diseaseRibbonLabel').css('background-color'));
+
+	// set up popup for help icon in pheno grid area
+	YAHOO.namespace("mp.container");
+	YAHOO.mp.container.phenoHelp = new YAHOO.widget.Panel("sgPhenoHelp", { width:"360px", draggable:false, visible:false, constraintoviewport:true } );
+	YAHOO.mp.container.phenoHelp.render();
+	YAHOO.util.Event.addListener("sgPhenoHelpImage", "click", YAHOO.mp.container.phenoHelp.show, YAHOO.mp.container.phenoHelp, true);
 	</script>

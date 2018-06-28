@@ -57,7 +57,7 @@
 	</div>
 </c:if>
 
-<c:if test="${not empty strain.diseases}">
+<c:if test="${(not empty strain.diseases) or (not empty strain.gridCells)}">
 	<div class="container detailStructureTable">
 		<%@ include file="strain_detail_disease_ribbon.jsp" %>
 	</div>

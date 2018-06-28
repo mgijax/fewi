@@ -392,7 +392,6 @@ border-bottom: 1px solid gray;
 	}
 
 	#body #mpSlimgridWrapper .label {
-		padding-top: 1.625em;
 		padding-bottom: 2em;
 	}
 
@@ -470,7 +469,6 @@ border-bottom: 1px solid gray;
 	}
 
 	#body .container #mpSlimgridWrapper {
-		padding-top: 1.406em;
 		margin-bottom: 1em;
 		margin-left: 2em;
 	}
@@ -669,4 +667,10 @@ border-bottom: 1px solid gray;
 	width:10px;
 	border-top: none;
 	border-bottom: none;
+}
+.nowrap {
+	white-space: nowrap;
+}
+#mpSlimgrid {
+	padding-top: 5px;
 }
