@@ -248,6 +248,10 @@ border-bottom: 1px solid gray;
 		min-width: 555px;
 	}
 
+	#body .summarySec1mp {
+		min-width: 650px;
+	}
+
 	#body  .container li {
 		margin-bottom: .615em;
 	}

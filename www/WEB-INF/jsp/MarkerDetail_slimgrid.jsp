@@ -18,7 +18,7 @@
 
 <c:if test="${not empty sgCells}">
 	<div id="${sgID}" style="display:inline-block">
-		<table>
+		<table id="${sgID}Table">
 			<tr>
 				<c:forEach var="sgCell" items="${sgCells}">
 					<c:set var="sgHeader" value="${sgCell.heading}"/>
