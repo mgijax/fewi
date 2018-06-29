@@ -14,7 +14,7 @@
 	keywords="${seoKeywords}"
 />
 
-<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/strain_detail.css" />
+<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/strain/strain_detail.css" />
 
 <%
 	StyleAlternator leftTdStyles = new StyleAlternator("detailCat1","detailCat2");
