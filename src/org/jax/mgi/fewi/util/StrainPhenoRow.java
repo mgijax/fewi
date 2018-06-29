@@ -1,5 +1,6 @@
 package org.jax.mgi.fewi.util;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,6 +27,15 @@ public class StrainPhenoRow {
 	// add a StrainPhenoCell with the specified color value to this row
 	public void addCell(int color) {
 		cells.add(new StrainPhenoCell(color));
+	}
+	
+	public String getAllelePairs() {
+		try {
+			NotesTagConverter ntc = new NotesTagConverter("MP");
+			return ntc.convertNotes(this.genotype.getCombination2(), '|', true);
+		} catch (IOException e) {
+			return this.genotype.getCombination1();
+		}
 	}
 	
 	public Genotype getGenotype() {

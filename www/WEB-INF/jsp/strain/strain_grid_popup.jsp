@@ -35,20 +35,18 @@
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 <%@ include file="/WEB-INF/jsp/strain/strain_header.jsp" %>
-<div id="sgTitle">${pageTitle}</div>
+<div id="sgTitle">Phenotype annotations related to ${headerTerm}</div>
 <script>
 <% /* for slimgrid popup, override title shown on page to make custom title for browser tab */ %>
 // change window title on page load
-document.title = '${strain.name} ' + '${header} ' + 'phenotype data';
+document.title = '${strain.name} ' + '${headerTerm} phenotype data';
 </script>
 
-<c:if test="${not empty isPhenotype}">
-	<div id="legend">
-	  <table id="hdpSystemPopupLegend" class="popupTable">
-		<tr><td>Darker colors indicate more <span title="The lightest color represents one annotation. 2-5 annotations is represented by a darker shade, 6-99 annotations darker still and more than 100 annotations by the darkest color." style="color: #3399f3; text-decoration: none;">supporting annotations</span></td></tr>
-	  </table>
-	</div>
-</c:if>
+<div id="legend">
+  <table id="hdpSystemPopupLegend" class="popupTable">
+	<tr><td>Darker colors indicate <span title="The lightest color represents one annotation. 2-5 annotations is represented by a darker shade, 6-99 annotations darker still and more than 100 annotations by the darkest color." style="color: #3399f3; text-decoration: none;">more annotations</span></td></tr>
+  </table>
+</div>
 
  <div id="dialog" title="Find Mice" style="display: none">
   <p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>

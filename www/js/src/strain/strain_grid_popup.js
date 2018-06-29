@@ -50,14 +50,14 @@ var imsrUrl = '';
 	var gcKey = '' + genoclusterKey;
 	var msg = "unknown genocluster key: " + genoclusterKey;
 
-	if (gcKey in genoclusters) {
+	if (gcKey in genotypes) {
 		var allZero = true;
 		
 		var header = "Using the International Mouse Strain Resource "
 			+ "(<a target='_blank' href='" + imsrUrl + "'>IMSR</a>)<br/>";
 		var msg = "Mouse lines carrying:<br/>";
 		
-		var gc = genoclusters[gcKey];
+		var gc = genotypes[gcKey];
 		for (var i = 0; i < gc.length; i++) {
 			var g = gc[i];
 			msg = msg + superscript(g[1]) + " mutation " + alleleImsrLink(g[0], g[2]);

@@ -115,7 +115,7 @@ public class StrainController {
         // generate ModelAndView object to be passed to detail page
         ModelAndView mav = new ModelAndView("strain/strain_grid_popup");
         mav.addObject("strain", strain);
-        mav.addObject("header", header);
+        mav.addObject("headerTerm", header);
         
         // construct a StrainPhenoGroup and add it to the mav
         StrainPhenoGroup spg = new StrainPhenoGroup();

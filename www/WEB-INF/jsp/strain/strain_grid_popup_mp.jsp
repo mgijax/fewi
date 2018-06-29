@@ -26,7 +26,7 @@
 				<c:set var="gtKey" value="${row.genotype.genotypeKey}"/>
 				<input id="${buttonID}" class="button" value="Find Mice" type="button" onClick='showDialog(event, ${gtKey})'>
 			</td>
-			<td id="${buttonID}a" class="border">${row.genotype.primaryID}</td>
+			<td id="${buttonID}a" class="border">${row.allelePairs}</td>
 			<c:forEach var="cell" items="${row.cells}">
 				<c:set var="mouseColor" value=""/>
 				<c:choose>
