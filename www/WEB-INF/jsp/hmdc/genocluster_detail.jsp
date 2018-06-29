@@ -62,7 +62,7 @@
 	  	  <td class="allBorders white">
 	  	  	<c:choose>
 	  	  	<c:when test="${not empty genotype.strainID}">
-	  	  		<a href="${configBean.FEWI_URL}strain/${genotype.strainID}" class="MP"><fewi:super value="${genotype.backgroundStrain}"/></a>
+	  	  		<a href="${configBean.FEWI_URL}strain/${genotype.strainID}" class="MP" target="_blank"><fewi:super value="${genotype.backgroundStrain}"/></a>
 	  	  	</c:when>
 	  	  	<c:otherwise>
 	  	  		<fewi:super value="${genotype.backgroundStrain}"/>

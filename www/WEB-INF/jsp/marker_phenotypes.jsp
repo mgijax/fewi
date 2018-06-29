@@ -106,7 +106,7 @@ td.spaced { line-height: 1.5em; }
       <td rowspan="${annotationCount}" class="body spaced">${convertedPairs}<br/>
       	<c:choose>
       		<c:when test="${not empty genotype.strainID}">
-      			<a href="${configBean.FEWI_URL}strain/${genotype.strainID}"><fewi:super value="${genotype.strain}" /></a>
+      			<a href="${configBean.FEWI_URL}strain/${genotype.strainID}" target="_blank"><fewi:super value="${genotype.strain}" /></a>
       		</c:when>
       		<c:otherwise>
 		      	<%= superStrain %>

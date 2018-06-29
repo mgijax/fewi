@@ -117,7 +117,7 @@ span.tall { line-height: 150%; }
 		<td class="mpAnnot"${rowspan}><span class="tall">${row.allelicComp}</span><br/><span class="tall">
 			<c:choose>
 				<c:when test="${not empty row.strainID}">
-					(<a href="${configBean.FEWI_URL}strain/${row.strainID}">${row.genBackground}</a>)
+					(<a href="${configBean.FEWI_URL}strain/${row.strainID}" target="_blank">${row.genBackground}</a>)
 				</c:when>
 				<c:otherwise>
 					(${row.genBackground})

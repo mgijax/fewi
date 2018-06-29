@@ -62,7 +62,14 @@
 	    </a>
 	  </td>
 	  <td class="allBorders white"><span class="genotypeCombo"><fewi:genotype value="${genotype}" newWindow="${true}"/></span></td>
-	  <td class="allBorders white"><fewi:super value="${genotype.backgroundStrain}"/></td>
+	  <td class="allBorders white">
+	  	<c:if test="${not empty genotype.strainID}">
+	  		<a href="${configBean.FEWI_URL}strain/${genotype.strainID}" style="text-decoration:none" target="_blank"><fewi:super value="${genotype.backgroundStrain}"/></a>
+  		</c:if>
+	  	<c:if test="${empty genotype.strainID}">
+	  		<fewi:super value="${genotype.backgroundStrain}"/>
+  		</c:if>
+	  </td>
 	  <td class="allBorders white">${genotype.primaryID}</td>
 	</tr>
       </c:forEach>

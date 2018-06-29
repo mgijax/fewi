@@ -12,7 +12,7 @@
 			<td class="allBorders leftAlign">
 				<c:choose>
 					<c:when test="${not empty dm.genotype.strainID}">
-						<a href="${configBean.FEWI_URL}strain/${dm.genotype.strainID}">${tf.superscriptHTML(dm.backgroundStrain)}</a>
+						<a href="${configBean.FEWI_URL}strain/${dm.genotype.strainID}" target="_blank">${tf.superscriptHTML(dm.backgroundStrain)}</a>
 					</c:when>
 					<c:otherwise>
 						${tf.superscriptHTML(dm.backgroundStrain)}
