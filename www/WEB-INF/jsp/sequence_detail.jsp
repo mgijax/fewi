@@ -225,7 +225,7 @@
           <b>Organism</b> ${sequence.organism}
         </div>
         <div style="position: absolute; top: 0px; right: 4px; text-align:right;">
-           See <%=ProviderLinker.getSeqProviderLinks(sequence)%> for source
+           See <%=ProviderLinker.getSeqProviderLinks(sequence).replace("Mouse Genomes Project", "Ensembl") %> for source
         </div>
       </div>
     </c:otherwise>
