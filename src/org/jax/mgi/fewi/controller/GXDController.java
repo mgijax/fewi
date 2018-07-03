@@ -2254,6 +2254,8 @@ public class GXDController {
 			for (int stage = 1; stage <= 28; stage++) {
 				if (!stages.contains(stage)) {
 					diffFilters.add(new Filter(GxdResultFields.DIFF_EXCLUSIVE_STAGES, stage, Filter.Operator.OP_NOT_HAS));
+				} else {
+					diffFilters.add(new Filter(GxdResultFields.DIFF_EXCLUSIVE_STAGES, stage, Filter.Operator.OP_CONTAINS));
 				}
 			}
 		}
