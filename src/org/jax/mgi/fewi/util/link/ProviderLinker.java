@@ -30,6 +30,7 @@ public class ProviderLinker
 	private static String niaUrl = "http://lgsun.grc.nia.nih.gov/geneindex/mm9/bin/giU.cgi?genename=";
 	private static String refSeqUrl = "https://www.ncbi.nlm.nih.gov/entrez/viewer.cgi?val=";
 	private static String dotsUrl = "http://genomics.betacell.org/gbco/showSummary.do?questionFullName=TranscriptQuestions.TranscriptFromDtIds&myProp%28dtIdP%29=";
+	private static String mgpSeqUrl = "http://useast.ensembl.org/Mus_musculus_A_J/Gene/Summary?db=core;g=";
 
     /*-------------------------*/
     /* public instance methods */
@@ -93,6 +94,12 @@ public class ProviderLinker
         else if (seqProvider.equals(DBConstants.PROVIDER_REFSEQ)) {
 
 			links.append("<a href='" + refSeqUrl + seqID + "'>RefSeq</a>");
+		} else if (seqProvider.equals(DBConstants.PROVIDER_MGP)) {
+
+			links.append("<a href='" + mgpSeqUrl + seqID + "'>Mouse Genomes Project</a>");
+		} else if (seqProvider.equals(DBConstants.PROVIDER_MGI_SGM)) {
+			
+			// no extra link for MGI C57BL/6J Strain Gene Model; just use the standard sequence detail link
 		}
 
         return links.toString();
