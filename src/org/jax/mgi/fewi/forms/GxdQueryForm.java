@@ -199,8 +199,8 @@ public class GxdQueryForm implements Cloneable {
 			if (!key.equals(ANY_STAGE))
 				theilerStagesRibbon2.put(key, theilerStages.get(key));
 		}
-		difTheilerStages.put(ANY_STAGE_NOT_ABOVE,
-				"Any stage not selected above");
+		difTheilerStages.put(ANY_STAGE, "Any developmental stage");
+		difTheilerStages.put(ANY_STAGE_NOT_ABOVE, "Any stage not selected above");
 		for (Integer key : theilerStages.keySet()) {
 			if (!key.equals(ANY_STAGE))
 				difTheilerStages.put(key, theilerStages.get(key));
@@ -536,7 +536,7 @@ public class GxdQueryForm implements Cloneable {
 	 * this part of the form is filled in)
 	 */
 	public Collection<Integer> getResolvedDifTheilerStage() {
-		if (difTheilerStage.contains(ANY_STAGE_NOT_ABOVE)) {
+		if (difTheilerStage.contains(ANY_STAGE_NOT_ABOVE) || difTheilerStage.contains(ANY_STAGE)) {
 			// I'm actually not sure what to do in this case. What does
 			// "any not selected" from "any" mean?
 			if (theilerStage.contains(ANY_STAGE))
