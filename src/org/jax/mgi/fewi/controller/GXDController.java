@@ -2288,7 +2288,8 @@ public class GXDController {
 		boolean hasStructures = (structure!=null && !structure.equals("")
 				&& difStructure!=null && !difStructure.equals(""));
 		boolean hasStages = (stages.size() > 0 && difStages.size()>0
-				&& !(stages.contains(GxdQueryForm.ANY_STAGE) && difStages.contains(GxdQueryForm.ANY_STAGE_NOT_ABOVE)));
+				&& !(stages.contains(GxdQueryForm.ANY_STAGE) && (
+						difStages.contains(GxdQueryForm.ANY_STAGE_NOT_ABOVE) || difStages.contains(GxdQueryForm.ANY_STAGE)) ));
 		boolean nowhereElse = (query.getAnywhereElse() != null) && (query.getAnywhereElse().trim().length() > 0);
 
 		if (!nowhereElse) {
@@ -2466,7 +2467,8 @@ public class GXDController {
 		boolean hasStructures = (structure!=null && !structure.equals("")
 				&& difStructure!=null && !difStructure.equals(""));
 		boolean hasStages = (stages.size() > 0 && difStages.size()>0
-				&& !(stages.contains(GxdQueryForm.ANY_STAGE) && difStages.contains(GxdQueryForm.ANY_STAGE_NOT_ABOVE)));
+				&& !(stages.contains(GxdQueryForm.ANY_STAGE) && (
+					difStages.contains(GxdQueryForm.ANY_STAGE_NOT_ABOVE) || difStages.contains(GxdQueryForm.ANY_STAGE)) ));
 		boolean nowhereElse = (query.getAnywhereElse() != null) && (query.getAnywhereElse().trim().length() > 0);
 
 		// if user checked 'AND NOT anywhere else' checkbox, handle that separately
