@@ -60,7 +60,14 @@
            ${otherID.accID}
          </c:forEach>
        </c:if>
-       (<%=ProviderLinker.getSeqProviderLinks(sequence)%>)
+       <%
+          String providerLink = ProviderLinker.getSeqProviderLinks(sequence);
+          if ((providerLink != null) && (providerLink.length() > 0)) {
+       %>
+	         (<%= providerLink %>)
+       <%
+          }
+       %>
 
     </td>
     <td align=right>
@@ -225,7 +232,13 @@
           <b>Organism</b> ${sequence.organism}
         </div>
         <div style="position: absolute; top: 0px; right: 4px; text-align:right;">
-           See <%=ProviderLinker.getSeqProviderLinks(sequence).replace("Mouse Genomes Project", "Ensembl") %> for source
+		<%
+			if ((providerLink != null) && (providerLink.length() > 0)) {
+		%>
+        		See <%= providerLink.replace("Mouse Genomes Project", "Ensembl") %> for source
+		<%
+			}
+		%>
         </div>
       </div>
     </c:otherwise>
