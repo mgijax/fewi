@@ -181,11 +181,12 @@
     <b>Source</b>
   </td>
   <td class="${rightTdStyles.next}" >
-
     <c:choose>
     <c:when test="${sequence.logicalDB=='Sequence DB' || sequence.logicalDB=='RefSeq' || sequence.logicalDB=='Mouse Genome Project' || sequence.logicalDB=='MGI Strain Gene'}">
 
       <c:if test="${not empty sequence.sources}">
+	  <c:set var="seqSource" value="${sequence.sources[0]}"/>
+
       <table id="sourceTable">
         <tr>
         <td valign=top>
@@ -205,11 +206,17 @@
           </tr>
           <tr>
             <td align=right><B>Strain/Species</B></td>
-            <td>${sequence.sources[0].strain}</td>
+			<td>
+			<c:choose>
+			<c:when test="${not empty seqSource.strainID}"><a href="${configBean.FEWI_URL}strain/${seqSource.strainID}" id="strainLink">${seqSource.strain}</a>
+			</c:when>
+			<c:otherwise>${seqSource.strain}</c:otherwise>
+			</c:choose>
+			</td>
           </tr>
           <tr>
             <td align=right><B>Sex</B></td>
-            <td>${sequence.sources[0].sex}</td>
+            <td>${seqSource.sex}</td>
           </tr>
           </table>
         </td>
@@ -217,15 +224,15 @@
           <table style="padding:3px;">
           <tr>
             <td align=right><B>Age</B></td>
-            <td>${sequence.sources[0].age}</td>
+            <td>${seqSource.age}</td>
           </tr>
           <tr>
             <td align=right><B>Tissue</B></td>
-            <td>${sequence.sources[0].tissue}</td>
+            <td>${seqSource.tissue}</td>
           </tr>
           <tr>
             <td align=right><B>Cell line</B></td>
-            <td>${sequence.sources[0].cellLine}</td>
+            <td>${seqSource.cellLine}</td>
           </tr>
           </table>
         </td>
