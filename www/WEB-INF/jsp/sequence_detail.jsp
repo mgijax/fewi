@@ -50,7 +50,7 @@
        <b>ID/Version</b>
   </td>
   <td class="${rightTdStyles.next}">
-    <table width=100%>
+    <table width="100%" id="seqIdTable">
     <tr>
     <td>
 
@@ -64,12 +64,25 @@
           String providerLink = ProviderLinker.getSeqProviderLinks(sequence);
           if ((providerLink != null) && (providerLink.length() > 0)) {
        %>
-	         (<%= providerLink %>)
+        	 (<%= providerLink.replace("Mouse Genomes Project", "Ensembl") %>)
        <%
           }
        %>
 
     </td>
+    <c:if test="${not empty sequence.locations}">
+    	<td align="center">
+			<fmt:formatNumber value="${sequence.locations[0].startCoordinate - 50000}" pattern="#0" var="startCoordWithFlank"/>
+			<fmt:formatNumber value="${sequence.locations[0].endCoordinate + 50000}" pattern="#0" var="endCoordWithFlank"/>
+			<c:set var="referenceStrain" value="C57BL/6J"/>
+			<c:if test="${(not empty sequence.sources) and (sequence.logicalDB=='Mouse Genome Project' || sequence.logicalDB=='MGI Strain Gene')}">
+				<c:set var="referenceStrain" value="${sequence.sources[0].strain}"/>
+			</c:if>
+			<a href="${externalUrls.MGV}#ref=${referenceStrain}&genomes=${externalUrls.MGV_Strains}&chr=${chromosome}&start=${startCoordWithFlank}&end=${endCoordWithFlank}&highlight=${sequence.primaryID}" target="_blank" id="mgvLink">
+			Multiple Genome Viewer (MGV)
+			</a>
+ 		</td>
+    </c:if>
     <td align=right>
 
       <c:if test="${not empty sequence.version}">
@@ -170,15 +183,20 @@
   <td class="${rightTdStyles.next}" >
 
     <c:choose>
-    <c:when test="${sequence.logicalDB=='Sequence DB' || sequence.logicalDB=='RefSeq'}">
+    <c:when test="${sequence.logicalDB=='Sequence DB' || sequence.logicalDB=='RefSeq' || sequence.logicalDB=='Mouse Genome Project' || sequence.logicalDB=='MGI Strain Gene'}">
 
       <c:if test="${not empty sequence.sources}">
-      <table>
+      <table id="sourceTable">
         <tr>
         <td valign=top>
           <table style="padding:3px;" >
           <tr>
-            <td align=right><B>Library</B></td>
+            <td align=right><B>
+				<c:choose>
+				<c:when test="${sequence.logicalDB == 'Mouse Genome Project' || sequence.logicalDB=='MGI Strain Gene'}">Source Name</c:when>
+				<c:otherwise>Library</c:otherwise>
+				</c:choose>
+			</B></td>
             <td>${sequence.library}</td>
           </tr>
           <tr>
@@ -365,4 +383,14 @@
 
 <!-- close structural table and page template-->
 </table>
+<style>
+#sourceTable td {
+	padding-bottom: 5px;
+	padding-left: 3px;
+	padding-right: 3px;
+}
+#seqIdTable td {
+	width: 33%;
+}
+</style>
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
