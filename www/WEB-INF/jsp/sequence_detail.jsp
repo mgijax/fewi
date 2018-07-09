@@ -190,7 +190,7 @@
       <table id="sourceTable">
         <tr>
         <td valign=top>
-          <table style="padding:3px;" >
+          <table style="padding:3px;" id="sourceTableInner1">
           <tr>
             <td align=right><B>
 				<c:choose>
@@ -221,7 +221,7 @@
           </table>
         </td>
         <td valign=top>
-          <table style="padding:3px;">
+          <table style="padding:3px;" id="sourceTableInner2">
           <tr>
             <td align=right><B>Age</B></td>
             <td>${seqSource.age}</td>
@@ -300,7 +300,7 @@
   expression assays, orthologs, phenotypic alleles, and other information 
   for the genes or markers below.</em>
 
-  <table class="borderedTable" style="margin-top:5px; width:95%;" >
+  <table class="borderedTable" style="margin-top:5px; width:95%;" id="markerTable">
     <tr>
     <th>Type</th>
     <th>Symbol</th>
@@ -337,7 +337,7 @@
   </td>
   <td class="${rightTdStyles.next}" >
     
-    <table class="borderedTable" width=75%>
+    <table class="borderedTable" width=75% id="cloneTable">
     <tr>
       <th><b>Name</b></th>
       <th><b>Clone<br>Collection</b></th>
