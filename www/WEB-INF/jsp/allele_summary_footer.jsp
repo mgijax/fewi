@@ -4,7 +4,7 @@
 	var show_dialog = function(panel_id) {
 		//console.log("show_dialog(" + panel_id + ")");
 		panels[panel_id].show(panels[panel_id]);
-		pageTracker._trackEvent("AlleleSummaryPageEvent", "allele summary disease popup", panel_id);
+		ga_logEvent("AlleleSummaryPageEvent", "allele summary disease popup", panel_id);
 	};
 
 	var setup_panel = function(panel_id) {
