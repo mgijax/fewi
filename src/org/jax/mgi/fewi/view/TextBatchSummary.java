@@ -90,7 +90,6 @@ public class TextBatchSummary extends AbstractTextView {
 			if (queryForm.getNomenclature()){
 				markerInfo.append(tab(bmi.getSymbol()));
 				markerInfo.append(tab(bmi.getName()));
-				markerInfo.append(tab(bmi.getStrain()));
 				markerInfo.append(tab(bmi.getFeatureType()));
 			}
 
@@ -98,8 +97,6 @@ public class TextBatchSummary extends AbstractTextView {
 			if (queryForm.getLocation()){
 				if ((bmi.getChromosome() != null) && (bmi.getChromosome().length() > 0)) {
 					markerInfo.append(tab(bmi.getChromosome()));
-				} else if (bmi.isMarkerMatch() || bmi.isStrainMarkerMatch()) {
-					markerInfo.append(tab("UN"));
 				} else {
 					markerInfo.append(tab(null));
 				}
@@ -117,10 +114,8 @@ public class TextBatchSummary extends AbstractTextView {
 					markerInfo.append(tab(null));
 				}
 				
-				if (bmi.isMarkerMatch() && (id.getMarker() != null)) {
-					if (id.getMarker().getLocations() != null) {
-						evictCollection(session, id.getMarker().getLocations());
-					}
+				if (id.getMarker().getLocations() != null) {
+					evictCollection(session, id.getMarker().getLocations());
 				}
 			}
 
@@ -301,7 +296,6 @@ public class TextBatchSummary extends AbstractTextView {
 		if(queryForm.getNomenclature()){
 			header.append("\tSymbol");
 			header.append("\tName");
-			header.append("\tStrain");
 			header.append("\tFeature Type");
 		}
 		if(queryForm.getLocation()){

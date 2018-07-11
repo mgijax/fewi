@@ -95,7 +95,6 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 			if (queryForm.getNomenclature()) {
 				row.createCell(col++).setCellValue(bmi.getSymbol());
 				row.createCell(col++).setCellValue(notNull(bmi.getName()));
-				row.createCell(col++).setCellValue(notNull(bmi.getStrain()));
 				row.createCell(col++).setCellValue(bmi.getFeatureType());
 			}
 			
@@ -103,8 +102,6 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 			if (queryForm.getLocation()) {
 				if ((bmi.getChromosome() != null) && (bmi.getChromosome().length() > 0)) {
 					row.createCell(col++).setCellValue(bmi.getChromosome());
-				} else if (bmi.isMarkerMatch() || bmi.isStrainMarkerMatch()) {
-					row.createCell(col++).setCellValue("UN");
 				} else {
 					row.createCell(col++).setCellValue("");
 				}
@@ -361,7 +358,6 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 		if(queryForm.getNomenclature()){
 			row.createCell(i++).setCellValue("Symbol");
 			row.createCell(i++).setCellValue("Name");
-			row.createCell(i++).setCellValue("Strain");
 			row.createCell(i++).setCellValue("Feature Type");
 		}
 		if(queryForm.getLocation()){

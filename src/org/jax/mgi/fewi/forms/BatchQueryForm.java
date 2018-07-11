@@ -41,7 +41,7 @@ public class BatchQueryForm {
 		idTypes.put("Affy 430 2.0", "Affy 430 2.0");
 		
 		attributeList.put("Nomenclature", "Nomenclature");
-		attributeList.put("Location", "Genome Location");
+		attributeList.put("Location", "C57BL/6J Genome Location");
 		attributeList.put("Ensembl", "Ensembl ID");
 		attributeList.put("EntrezGene", "Entrez Gene ID");
 		

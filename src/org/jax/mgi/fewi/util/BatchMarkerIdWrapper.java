@@ -16,23 +16,16 @@ import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerID;
 import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.MarkerTissueCount;
-import mgi.frontend.datamodel.StrainMarker;
 
-/* wrapper class over a BatchMarkerId object, hiding the complexity of the
- * associated Marker / StrainMarker objects.
+/* wrapper class over a BatchMarkerId object, hiding some of the complexity
  */
 public class BatchMarkerIdWrapper {
-	private static String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
-	private static String strainLink = "<a href='(fewiUrl)strain/(id)' target='_blank'>(name)</a>".replace("(fewiUrl)", fewiUrl);
-
-	private BatchMarkerId bmi;		// matching object, has either a Marker or a StrainMarker, but not both
-	private Marker m;				// Marker to which the term in bmi matched (if any)
-	private StrainMarker sm;		// StrainMarker to which the term in bmi matched (if any)
+	private BatchMarkerId bmi;		// matching object, has an associated Marker
+	private Marker m;				// Marker to which the term in bmi matched (should not be null)
 	
 	public BatchMarkerIdWrapper (BatchMarkerId bmi) {
 		this.bmi = bmi;
 		this.m = bmi.getMarker();
-		this.sm = bmi.getStrainMarker();
 	}
 
 	/***--- basic attributes of the match itself ---***/
@@ -47,181 +40,108 @@ public class BatchMarkerIdWrapper {
 		return bmi.getTermType();
 	}
 	
-	// get unique identifier for this term/marker or term/strainMarker pair
-	public String getUniqueKey() {
-		return bmi.getUniqueKey();
-	}
+	/***--- attributes of the marker associated with the matching term ---***/
 	
-	// true if this match is to a canonical marker
-	public boolean isMarkerMatch() {
-		return m != null;
-	}
-	
-	// true if this match is to a strain marker
-	public boolean isStrainMarkerMatch() {
-		return sm != null;
-	}
-	
-	// true if this match is to a strain marker associated with a canonical marker
-	public boolean hasCanonicalMarker() {
-		return (m == null) && (sm != null) && (sm.getCanonicalMarkerID() != null);
-	}
-	
-	/***--- attributes of the marker (or strain marker) associated with the matching term ---***/
-	
-	// both markers and strain markers have associated strains
-	public String getStrain() {
-		if (isMarkerMatch() && (m.getStrain() != null)) {
-			// canonical markers always link to C57BL/6J
-			return strainLink.replace("(id)", "MGI:3028467").replace("(name)", m.getStrain());
-		} else if (isStrainMarkerMatch() && (sm.getStrainName() != null)) {
-			// strain markers link to their particular strain
-			return strainLink.replace("(id)", sm.getStrainID()).replace("(name)", sm.getStrainName());
-		}
-		return null;
-	}
-	
-	// 1. if marker match, get the marker's symbol
-	// 2. if strainmarker is associated with a canonical marker, get the canonical marker's symbol
-	// 3. otherwise get the strain marker's first gene model ID
+	// if defined, get the marker's symbol
 	public String getSymbol() {
-		if (isMarkerMatch()) {
+		if ((m != null) && (m.getSymbol() != null)) {
 			return m.getSymbol();
-		} else if (hasCanonicalMarker()) {
-			return sm.getCanonicalMarkerSymbol();
-		} else if (isStrainMarkerMatch()) {
-			return sm.getFirstGeneModelID();
 		}
 		return "";
 	}
 	
-	// 1. if marker match, get the marker's primary ID
-	// 2. if strainmarker is associated with a canonical marker, get the canonical marker's primary ID
-	// 3. otherwise get the strainmarker's first gene model ID
+	// if defined, get the marker's primary ID
 	public String getMarkerID() {
-		if (isMarkerMatch()) {
+		if ((m != null) && (m.getPrimaryID() != null)) {
 			return m.getPrimaryID();
-		} else if (isStrainMarkerMatch()) {
-			if (hasCanonicalMarker()) {
-				return sm.getCanonicalMarkerID();
-			} else {
-				return sm.getFirstGeneModelID();
-			}
 		}
-		return "";
+		return "No associated gene";
 	}
 	
-	// 1. if marker match, get the marker's name
-	// 2. if strainmarker is associated with a canonical marker, get the canonical marker's name
-	// 3. otherwise a strain marker has no name
+	// if defined, get the marker's name
 	public String getName() {
-		if (isMarkerMatch()) {
+		if ((m != null) && (m.getName() != null)) {
 			return m.getName();
-		} else if (hasCanonicalMarker()) {
-			return sm.getCanonicalMarkerName();
 		}
 		return "";
 	}
 	
-	// 1. if marker match, get the marker's feature type
-	// 2. if strainmarker match, get the strainmarker's feature type
-	// 3. otherwise return an empty string
+	// if defined, get the marker's feature type
 	public String getFeatureType() {
-		if (isMarkerMatch()) {
+		if ((m != null) && (m.getMarkerSubtype() != null)) {
 			return m.getMarkerSubtype();
-		} else if (isStrainMarkerMatch()) {
-			return sm.getFeatureType();
 		}
 		return "";
 	}
 	
-	// 1. if marker match, get chromosome from genomic location (preferred) or genetic location
-	// 2. otherwise get from strainmarker
-	// 3. failing both, return an empty string
+	// get chromosome from genomic location (preferred) or genetic location
 	public String getChromosome() {
-		if (isMarkerMatch()) {
-			MarkerLocation loc = m.getPreferredCoordinates();
-	    	if (loc != null){
-				if (loc.getChromosome() != null) {
-				    return loc.getChromosome();
-				}
-	    	}
+		if (m == null) { return ""; }
+		
+		MarkerLocation loc = m.getPreferredCoordinates();
+	    if (loc != null) {
+			if (loc.getChromosome() != null) {
+			    return loc.getChromosome();
+			}
+	    }
 			
-		    loc = m.getPreferredCentimorgans();
-		    if (loc != null){
-	    		if (loc.getChromosome() != null){
-	    			return loc.getChromosome();
-	    		}
-		    }
-		} else if (isStrainMarkerMatch() && (sm.getChromosome() != null)) {
-			return sm.getChromosome();
-		}
-		return "";
-	}
-	
-	// 1. if marker match, get strand from genomic location
-	// 2. otherwise get from strainmarker
-	// 3. failing both, return an empty string
-	public String getStrand() {
-		if (isMarkerMatch()) {
-			MarkerLocation loc = m.getPreferredCoordinates();
-	    	if (loc != null){
-				if (loc.getStrand() != null) {
-				    return loc.getStrand();
-				}
+		loc = m.getPreferredCentimorgans();
+		if (loc != null){
+			if (loc.getChromosome() != null){
+				return loc.getChromosome();
 	    	}
-		} else if (isStrainMarkerMatch() && (sm.getStrand() != null)) {
-			return sm.getStrand();
 		}
 		return "";
 	}
 	
-	// 1. if marker match, get start coordinate from genomic location
-	// 2. otherwise get from strainmarker
-	// 3. failing both, return null
+	// if defined, get strand from genomic location
+	public String getStrand() {
+		if (m == null) { return ""; }
+
+		MarkerLocation loc = m.getPreferredCoordinates();
+	    if (loc != null){
+			if (loc.getStrand() != null) {
+			    return loc.getStrand();
+			}
+	    }
+		return "";
+	}
+	
+	// if defined, get start coordinate from genomic location
 	public Double getStart() {
-		if (isMarkerMatch()) {
+		if (m != null) {
 			MarkerLocation loc = m.getPreferredCoordinates();
 	    	if (loc != null){
 				if (loc.getStartCoordinate() != null) {
-				    return loc.getStartCoordinate();
+					return loc.getStartCoordinate();
 				}
 	    	}
-		} else if (isStrainMarkerMatch() && (sm.getStartCoordinate() != null)) {
-			return sm.getStartCoordinate();
 		}
 		return null;
 	}
 
-	// 1. if marker match, get end coordinate from genomic location
-	// 2. otherwise get from strainmarker
-	// 3. failing both, return null
+	// if defined, get end coordinate from genomic location
 	public Double getEnd() {
-		if (isMarkerMatch()) {
+		if (m != null) {
 			MarkerLocation loc = m.getPreferredCoordinates();
-	    	if (loc != null) {
+			if (loc != null) {
 				if (loc.getEndCoordinate() != null) {
-				    return loc.getEndCoordinate();
+					return loc.getEndCoordinate();
 				}
-	    	}
-		} else if (isStrainMarkerMatch() && (sm.getEndCoordinate() != null)) {
-			return sm.getEndCoordinate();
+			}
 		}
 		return null;
 	}
 	
-	// get a list of the marker IDs (not strain marker IDs) for the given logical database
-	// for the associated marker (if there is one)
+	// get a list of the marker IDs for the given logical database
 	public List<String> getIDs(String logicalDB) {
 		return getIDs(logicalDB, null);
 	}
 	
-	// get a list of the marker IDs (not strain marker IDs) for either of the given logical databases
-	// for the associated marker (if there is one)
+	// get a list of the marker IDs for either of the given logical databases
 	public List<String> getIDs(String logicalDB1, String logicalDB2) {
     	List<String> idList = new ArrayList<String>();
-    	if (m == null) { return idList; }
-    	
+
 		Set<String> ldbs = new HashSet<String>();
     	ldbs.add(logicalDB1);
     	if (logicalDB2 != null) {
@@ -241,50 +161,38 @@ public class BatchMarkerIdWrapper {
 	
 	// Get a list of GO annotations for the associated marker (if any).  Return an empty list otherwise.
 	public List<BatchMarkerGoAnnotation> getGOAnnotations() {
-		if (m != null) {
-			return m.getBatchMarkerGoAnnotations();
-		}
-		return new ArrayList<BatchMarkerGoAnnotation>();
+		if (m == null) { return new ArrayList<BatchMarkerGoAnnotation>(); }
+		return m.getBatchMarkerGoAnnotations();
 	}
 
 	// Get a list of MP annotations for the associated marker (if any).  Return an empty list otherwise.
 	public List<BatchMarkerMpAnnotation> getMPAnnotations() {
-		if (m != null) {
-			return m.getBatchMarkerMpAnnotations();
-		}
-		return new ArrayList<BatchMarkerMpAnnotation>();
+		if (m == null) { return new ArrayList<BatchMarkerMpAnnotation>(); }
+		return m.getBatchMarkerMpAnnotations();
 	}
 
 	// Get a list of DO annotations for the associated marker (if any).  Return an empty list otherwise.
 	public List<Annotation> getDOAnnotations() {
-		if (m != null) {
-			return m.getDOAnnotations();
-		}
-		return new ArrayList<Annotation>();
+		if (m == null) { return new ArrayList<Annotation>(); }
+		return m.getDOAnnotations();
 	}
 
 	// Get a list of alleles for the associated marker (if any).  Return an empty list otherwise.
 	public List<BatchMarkerAllele> getAlleles() {
-		if (m != null) {
-			return m.getBatchMarkerAlleles();
-		}
-		return new ArrayList<BatchMarkerAllele>();
+		if (m == null) { return new ArrayList<BatchMarkerAllele>(); }
+		return m.getBatchMarkerAlleles();
 	}
 
 	// Get a list of records for expression counts by tissue for the associated marker (if any).
 	// Return an empty list otherwise.
 	public List<MarkerTissueCount> getExpressionCountsByTissue() {
-		if (m != null) {
-			return m.getMarkerTissueCounts();
-		}
-		return new ArrayList<MarkerTissueCount>();
+		if (m == null) { return new ArrayList<MarkerTissueCount>(); }
+		return m.getMarkerTissueCounts();
 	}
 
 	// Get a list of records for RefSNPs for the associated marker (if any). Return an empty list otherwise.
 	public List<String> getRefSNPs() {
-		if (m != null) {
-			return m.getBatchMarkerSnps();
-		}
-		return new ArrayList<String>();
+		if (m == null) { return new ArrayList<String>(); }
+		return m.getBatchMarkerSnps();
 	}
 }

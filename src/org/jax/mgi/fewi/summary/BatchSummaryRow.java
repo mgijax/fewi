@@ -72,30 +72,18 @@ public class BatchSummaryRow {
     		}
     	}
 
-    	// if the match is to a canonical marker or a strain marker associated with a canonical marker, 
-    	// then we link to the marker detail page
-    	if (bmi.isMarkerMatch() || (bmi.isStrainMarkerMatch() && bmi.hasCanonicalMarker())) {
+    	// This was an ID search and we have a match to a marker, so link the ID.
+    	if (bmi.getMarkerID() != null) {
        		return String.format(urlPattern, fewiUrl + "marker/" + bmi.getMarkerID(), bmi.getMarkerID());
-
-    	} else if (bmi.isStrainMarkerMatch()) {
-    		// otherwise, this is an orphan strain marker -- link to sequence detail page for gene model
-			return String.format(urlPattern, fewiUrl + "sequence/" + bmi.getMarkerID(), bmi.getMarkerID());
     	}
     	
     	return "No associated gene";
     }
 
-    // Get the value for the symbol column -- marker symbol, if the match is for a canonical marker or if
-    // the strain marker is associated with a canonical marker.  gene model ID for orphan strain markers.
-    // Symbol is linked appropriately if the query included nomen display.
+    // Get the value for the symbol column. Symbol is linked appropriately if the query included nomen display.
     public String getSymbol() {
-    	if (bmi.isMarkerMatch() || bmi.hasCanonicalMarker()) {
-    		// link to marker detail page
+    	if ((bmi.getMarkerID() != null) && (bmi.getSymbol() != null)) {
     		return String.format(urlPattern, fewiUrl + "marker/" + bmi.getMarkerID(), bmi.getSymbol());
-
-    	} else if (bmi.isStrainMarkerMatch()) {
-    		// otherwise, this is an orphan strain marker -- link to sequence detail page for gene model
-			return String.format(urlPattern, fewiUrl + "sequence/" + bmi.getMarkerID(), bmi.getMarkerID());
     	}
     	return "";
     }
@@ -110,11 +98,6 @@ public class BatchSummaryRow {
     	return bmi.getFeatureType();
     }
 
-    // Get the value for the strain column.
-    public String getStrain() {
-    	return bmi.getStrain();
-    }
-
     // Get the value for the chromosome column.
     public String getChromosome() {
     	return bmi.getChromosome();
@@ -124,7 +107,7 @@ public class BatchSummaryRow {
     public String getStrand() {
     	return bmi.getStrand();
     }
-
+/*
     // Get the value for the start coordinate column.
     public Double getStart() {
     	return bmi.getStart();
@@ -134,6 +117,7 @@ public class BatchSummaryRow {
     public Double getEnd() {
     	return bmi.getEnd();
     }
+*/
 
     // Get a string containing the matching marker's Ensembl IDs (if requested), separated by HTML line breaks.
     public String getEnsemblIds() {

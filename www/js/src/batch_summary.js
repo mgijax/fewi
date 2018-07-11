@@ -41,11 +41,10 @@ var getMarkerIds = function() {
             sortable:false,
             children: [{key: "symbol", label: "Symbol"},
                 {key: "name", label: "Name"},
-                {key: "strain", label: "Strain"},
                 {key: "feature", label: "Feature Type"}]});
     }
     if (loco){
-    	myColumnDefs.push({label:"Genome Location - " + ncbiBuild,
+    	myColumnDefs.push({label:"C57BL/6J Genome Location - " + ncbiBuild,
     	    sortable:false,
     	    children: [{key: "chromosome",
     	    		label: "Chr"},
@@ -140,7 +139,6 @@ var getMarkerIds = function() {
             {key:"markerId"},
             {key:"symbol"},
             {key:"name"},
-            {key:"strain"},
             {key:"feature"},
             {key:"chromosome"},
             {key:"strand"},
