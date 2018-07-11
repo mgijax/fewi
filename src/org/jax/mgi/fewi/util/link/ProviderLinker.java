@@ -100,7 +100,7 @@ public class ProviderLinker
 			String[] pieces = seqID.split("_");
 			if (pieces.length == 3) {
 				String myUrl = mgpSeqUrl.replace("<strain>", tweakStrainValue(pieces[1])).replaceAll("<id>", seqID);
-				links.append("<a href='" + myUrl + "'>Mouse Genomes Project</a>");
+				links.append("<a href='" + myUrl + "'>Ensembl</a>");
 			} else {
 				// bad ID format, just show the provider
 				links.append("Mouse Genomes Project");
