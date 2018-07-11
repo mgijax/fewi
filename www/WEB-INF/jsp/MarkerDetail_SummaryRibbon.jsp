@@ -113,13 +113,9 @@
 
 					<c:if test="${hasTss}">
 						<li>
-							<div class="label">Transcription Start Sites</div>
+							<div class="label">Transcription</div>
 							<div class="value">
-								<c:forEach var="tss" items="${marker.tss}" varStatus="status" end="2">
-									<a href="${configBean.FEWI_URL}marker/${tss.relatedMarkerID}">${tss.relatedMarkerSymbol}</a><c:if test="${!status.last}">, </c:if>
-								</c:forEach>
-								<c:if test="${tssCount > 3}">...</c:if>
-								<span id="showTss" class="link">(all ${tssCount} TSS)</span>
+								<span id="showTss" class="link">${tssCount} start site<c:if test="${fn:length(marker.tss) > 1}">s</c:if></span>
 							</div>
 						</li>
 					</c:if>
