@@ -22,7 +22,7 @@
 						<c:set var="sgTooltipTemplate" value="<count> annotation(s)"/>
 						<c:set var="sgUrl" value="${configBean.FEWI_URL}strain/phenotype/${strain.primaryID}?header=<term>"/>
 
-						<%@ include file="../MarkerDetail_slimgrid.jsp" %>
+						<%@ include file="../shared_slimgrid.jsp" %>
 						<br/>
 						<span style="font-size: 90%">Click cells to view annotations.</span>
 					</div>

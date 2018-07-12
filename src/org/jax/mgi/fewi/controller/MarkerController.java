@@ -437,7 +437,7 @@ public class MarkerController {
 		}
 
 		// generate ModelAndView object to be passed to detail page
-		ModelAndView mav = new ModelAndView("marker_detail");
+		ModelAndView mav = new ModelAndView("marker/marker_detail");
 
 		// set specific hibernate filters to omit data that does not appear on this page. (for performance)
 		sessionFactory.getCurrentSession().enableFilter("markerDetailRefs");
