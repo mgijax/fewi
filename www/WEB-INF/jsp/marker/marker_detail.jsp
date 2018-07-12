@@ -43,22 +43,21 @@
 
 <div class="container detailStructureTable">
 
-	<%@ include file="MarkerDetail_SummaryRibbon.jsp" %>
-	<%@ include file="MarkerDetail_LocationRibbon.jsp" %>
-	<%@ include file="MarkerDetail_HomologyRibbon.jsp" %>
-	<%@ include file="MarkerDetail_DiseaseRibbon.jsp" %>
-	<%@ include file="MarkerDetail_AlleleRibbon.jsp" %>
-	<%@ include file="MarkerDetail_GORibbon.jsp" %>
-	<%@ include file="MarkerDetail_ExpressionRibbon.jsp" %>
-
-	<%@ include file="MarkerDetail_InteractionRibbon.jsp" %>
-	<%@ include file="MarkerDetail_SequenceRibbon.jsp" %>
-	<%@ include file="MarkerDetail_PolymorphismRibbon.jsp" %>
-	<%@ include file="MarkerDetail_ProteinRibbon.jsp" %>
-	<%@ include file="MarkerDetail_MolecularReagentRibbon.jsp" %>
-	<%@ include file="MarkerDetail_DatabaseLinkRibbon.jsp" %>
-	<%@ include file="MarkerDetail_OtherAccessRibbon.jsp" %>
-	<%@ include file="MarkerDetail_ReferenceRibbon.jsp" %>
+	<%@ include file="marker_detail_SummaryRibbon.jsp" %>
+	<%@ include file="marker_detail_LocationRibbon.jsp" %>
+	<%@ include file="marker_detail_HomologyRibbon.jsp" %>
+	<%@ include file="marker_detail_DiseaseRibbon.jsp" %>
+	<%@ include file="marker_detail_AlleleRibbon.jsp" %>
+	<%@ include file="marker_detail_GORibbon.jsp" %>
+	<%@ include file="marker_detail_ExpressionRibbon.jsp" %>
+	<%@ include file="marker_detail_InteractionRibbon.jsp" %>
+	<%@ include file="marker_detail_SequenceRibbon.jsp" %>
+	<%@ include file="marker_detail_PolymorphismRibbon.jsp" %>
+	<%@ include file="marker_detail_ProteinRibbon.jsp" %>
+	<%@ include file="marker_detail_MolecularReagentRibbon.jsp" %>
+	<%@ include file="marker_detail_DatabaseLinkRibbon.jsp" %>
+	<%@ include file="marker_detail_OtherAccessRibbon.jsp" %>
+	<%@ include file="marker_detail_ReferenceRibbon.jsp" %>
 
 </div>
 

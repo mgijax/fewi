@@ -42,7 +42,7 @@
 								<c:set var="sgTooltipTemplate" value="<count> annotation(s)"/>
 								<c:set var="sgUrl" value="${configBean.FEWI_URL}gxd/summary?markerMgiId=<markerID>&structureID=<termID>&structure=<term>&tab=stagegridtab"/>
 
-								<%@ include file="MarkerDetail_slimgrid.jsp" %>
+								<%@ include file="shared_slimgrid.jsp" %>
 								<div style="font-size: 90%">Click cells to view annotations.</div>
 							</div><br/><br/>
 						</c:if>
