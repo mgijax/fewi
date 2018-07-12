@@ -78,7 +78,7 @@
 											<td class="td_disease_tbl">
 												<div style="float: left; margin-right: 10px;"><a href="${configBean.FEWI_URL}disease/${diseaseRow.get('diseaseId')}">${diseaseRow.get('diseaseTerm')}</a></div>
 												<div style="float: right;"><span id="show_${disease_safe_name}_dialog" class="link">IDs</span></div>
-												<%@ include file="MarkerDetail_disease_popup2.jsp" %>
+												<%@ include file="marker_detail_disease_popup2.jsp" %>
 											</td>
 											<td class="td_disease_tbl">
 												<c:set var="nonNotCount" value="${fn:length(MouseModels.get(diseaseRow.get('diseaseId')))}" />
@@ -86,11 +86,11 @@
 					
 												<c:if test="${nonNotCount > 0}">
 													<span id="show${disease_safe_name}" class="link">View ${fn:length(MouseModels.get(diseaseRow.get('diseaseId')))}</span> model<c:if test="${fn:length(MouseModels.get(diseaseRow.get('diseaseId'))) > 1}">s</c:if>
-													<%@ include file="MarkerDetail_disease_popup.jsp" %>
+													<%@ include file="marker_detail_disease_popup.jsp" %>
 												</c:if>
 												<c:if test="${nonNotCount == 0 and notCount > 0}">
 													<span id="show${disease_safe_name}" class="link">View ${fn:length(NotMouseModels.get(diseaseRow.get('diseaseId')))}</span> "NOT" model<c:if test="${fn:length(NotMouseModels.get(diseaseRow.get('diseaseId'))) > 1}">s</c:if>
-													<%@ include file="MarkerDetail_disease_popup.jsp" %>
+													<%@ include file="marker_detail_disease_popup.jsp" %>
 												</c:if>
 											</td>
 										</tr>
