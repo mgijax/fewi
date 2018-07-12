@@ -33,6 +33,7 @@
 							Strain Annotations
 						</div>
 						<div class="value">
+							${marker.annotatedStrainMarkerCount}
 						</div>
 					</li>
 					<li class="${extrastate}">
@@ -40,6 +41,7 @@
 							SNPs within 2kb
 						</div>
 						<div class="value">
+							X
 						</div>
 					</li>
 					<li class="${extrastate}">
@@ -47,12 +49,22 @@
 							RFLP
 						</div>
 						<div class="value">
+							X
 						</div>
 					</li>
 				</ul>
 			</section>
 			<section class="summarySec1">
-				Strain-Specific Marker button
+				<ul>
+					<li class="${extrastate}">
+						<c:if test="${not empty strainSpecificNote}">
+							<div class="value">
+							<nobr><a onClick="return overlib('${strainSpecificNote}', STICKY, CAPTION, 'Strain-Specific Marker', ANCHOR, 'mice', ANCHORALIGN, 'BL', 'BR', WIDTH, 400, CLOSECLICK, CLOSETEXT, 'Close X');" href="#"><img style="position: relative; top: 7px;" src="${configBean.WEBSHARE_URL}images/mice.jpg" height="25" width="25" id="mice" border="0"></a>
+							<a onClick="return overlib('${strainSpecificNote}', STICKY, CAPTION, 'Strain-Specific Marker', ANCHOR, 'mice', ANCHORALIGN, 'BL', 'BR', WIDTH, 400, CLOSECLICK, CLOSETEXT, 'Close X');" href="#" class="markerNoteButton" style='display:inline;'>Strain-Specific Marker</a></nobr>
+							</div>
+						</c:if>
+					</li>
+				</ul>
 			</section>
 
 			<c:if test="${not (empty marker.preferredCoordinates and empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty gbrowseUrl and empty jbrowseUrl)}">
