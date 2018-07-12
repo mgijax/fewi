@@ -1,5 +1,5 @@
 	<c:if test="${(not empty marker.molecularReagentCountsByType) || (marker.countOfMicroarrayProbesets > 0)}">
-		<div class="row" >
+		<div class="row" id="molecularReagentsRibbon">
 			<div class="header <%=leftTdStyles.getNext() %>">
 				Molecular<br/>Reagents
 			</div>

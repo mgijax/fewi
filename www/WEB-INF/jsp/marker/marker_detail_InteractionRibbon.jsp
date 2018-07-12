@@ -1,5 +1,5 @@
 	<c:if test="${not empty interactions}">
-		<div class="row">
+		<div class="row" id="interactionRibbon">
 			<div class="header <%=leftTdStyles.getNext() %>">
 				<span style="white-space: nowrap; vertical-align: top;">
 					Interactions

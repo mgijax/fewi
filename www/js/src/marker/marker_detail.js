@@ -1,4 +1,3 @@
-
 	$(function(){
 		window.isIntegerFlank = function(flank) {
 		// error if non-numeric flank
@@ -173,9 +172,7 @@
 			parent.find(".toggleImage").toggleClass("hdExpand");
 			parent.find(".toggleImage").toggleClass("hdCollapse");
 
-			//$(this).title = "Show Less";
-			//$(this).textContent = "Show Less";
-
+			var action="Open";
 			if($(this).hasClass("hdCollapse")) {
 				$(this).text("less");
 				$(this).attr('title', 'Show Less');
@@ -183,7 +180,10 @@
 			if($(this).hasClass("hdExpand")) {
 				$(this).text("more");
 				$(this).attr('title', 'Show More');
+				action="Close";
 			}
+
+			ga_logEvent('MarkerDetailPageEvent', parent[0].id, action);
 		});
 		
 		try {

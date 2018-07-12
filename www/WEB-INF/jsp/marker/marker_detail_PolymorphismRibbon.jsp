@@ -1,5 +1,5 @@
 	<c:if test="${not empty marker.polymorphismCountsByType}">
-		<div class="row" >
+		<div class="row" id="polymorphismRibbon">
 			<div class="header <%=leftTdStyles.getNext() %>">
 				Polymorphisms
 			</div>

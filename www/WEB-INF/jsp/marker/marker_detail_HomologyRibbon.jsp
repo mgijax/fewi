@@ -1,5 +1,5 @@
 	<c:if test="${(not empty humanHomologs) or (marker.hasOneEnsemblGeneModelID) or (not empty marker.pirsfAnnotation) }">
-		<div class="row" >
+		<div class="row" id="homologyRibbon">
 			<div class="header <%=leftTdStyles.getNext() %>">Homology</div>
 			<div class="detail <%=rightTdStyles.getNext() %>">
 

@@ -1,5 +1,5 @@
 	<c:if test="${(marker.countOfAlleles > 0) or (not empty marker.markerClip) or (not empty marker.incidentalMutations) or (marker.countOfHumanDiseases > 0) or (marker.countOfAllelesWithHumanDiseases > 0) or (marker.countOfPhenotypeImages > 0) or (marker.countOfPhenotypeReferences > 0) or (marker.countOfOtherPhenotypeAnnotations > 0)}">
-		<div class="row phenoRibbon" >
+		<div class="row phenoRibbon" id="phenotypeRibbon">
 			<div class="header <%=leftTdStyles.getNext() %>">
 				Mutations,<br/>Alleles, and<br/>Phenotypes
 			</div>

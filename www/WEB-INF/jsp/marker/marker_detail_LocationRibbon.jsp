@@ -1,4 +1,4 @@
-	<div class="row locationRibbon">
+	<div class="row locationRibbon" id="locationRibbon">
 		<div class="header <%=leftTdStyles.getNext() %>">
 			Genome Context & Strain Distribution
 		</div>

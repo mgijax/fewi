@@ -11,7 +11,7 @@
 	</c:if>
 
 	<c:if test="${not empty marker.slimgridCellsAnatomy or marker.countOfGxdLiterature > 0 or marker.countOfGxdResults > 0 or marker.countOfCdnaSources > 0 or marker.countOfGxdImages > 0 or marker.countOfGxdResults > 0 or gxdHasMouseLinks or gxdHasVertebrateLinks}">
-		<div class="row gxdRibbon" >
+		<div class="row gxdRibbon" id="expressionRibbon">
 			<div class="header <%=leftTdStyles.getNext() %>">
 				<div id="gxdHeading">
 					Expression

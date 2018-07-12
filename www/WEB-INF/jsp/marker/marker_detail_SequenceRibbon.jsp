@@ -4,7 +4,7 @@
 </style>
 
 <c:if test="${(marker.countOfSequences > 0) or (not empty marker.ccdsIDs) or (not empty marker.uniGeneIDs) or (not empty otherIDs['Entrez Gene']) or (not empty otherIDs['Ensembl Gene Model'])}">
-	<div class="row sequenceRibbon" >
+	<div class="row sequenceRibbon" id="sequenceRibbon">
 		<div class="header <%=leftTdStyles.getNext() %>">
 			Sequences &amp;<br/>
 			Gene Models

@@ -1,5 +1,5 @@
 	<c:if test="${not empty logicalDBs}">
-		<div class="row" >
+		<div class="row" id="otherIdsRibbon">
 			<div class="header <%=leftTdStyles.getNext() %>">
 				Other&nbsp;Database<br/>Links
 			</div>

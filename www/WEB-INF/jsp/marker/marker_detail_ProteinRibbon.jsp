@@ -1,5 +1,5 @@
 <c:if test="${(marker.countOfUniProtSequences > 0) or (not empty marker.interProAnnotations) or (not empty marker.proteinOntologyAnnotations) or (not empty marker.ecIDs) or (not empty marker.pdbIDs)}">
-	<div class="row proteinRibbon" >
+	<div class="row proteinRibbon" id="proteinInfoRibbon">
 		<div class="header <%=leftTdStyles.getNext() %>">
 			Protein<br/>Information
 		</div>

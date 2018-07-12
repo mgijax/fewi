@@ -1,5 +1,5 @@
 	<c:if test="${not empty marker.references}">
-		<div class="row">
+		<div class="row" id="referenceRibbon">
 			<div class="header <%=leftTdStyles.getNext() %>" >
 				References
 			</div>

@@ -1,6 +1,6 @@
 
 	<c:if test="${(marker.countOfGOTerms > 0) or (not empty marker.funcBaseID)}">
-		<div class="row goRibbon" >
+		<div class="row goRibbon" id="goRibbon">
 			<div class="header <%=leftTdStyles.getNext() %>">
 				Gene&nbsp;Ontology<br/>(GO)<br/>Classifications
 			</div>

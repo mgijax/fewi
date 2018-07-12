@@ -1,5 +1,5 @@
 	<c:if test="${fn:length(MouseDOAnnotations) > 0 or fn:length(HumanDOAnnotations) > 0 or (not empty diseaseRefCount && diseaseRefCount > 0) or (marker.countOfAllelesWithHumanDiseases > 0)}">
-		<div class="row diseaseRibbon" >
+		<div class="row diseaseRibbon" id="diseaseRibbon">
 			<div class="header <%=leftTdStyles.getNext() %>">
 				Human Diseases
 			</div>

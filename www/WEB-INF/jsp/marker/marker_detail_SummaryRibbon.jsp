@@ -1,4 +1,4 @@
-	<div class="row">
+	<div class="row" id="summaryRibbon">
 		<div class="header <%=leftTdStyles.getNext() %>">
 			Summary
 		</div>

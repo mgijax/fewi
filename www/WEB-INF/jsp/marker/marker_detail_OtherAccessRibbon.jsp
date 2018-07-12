@@ -1,6 +1,6 @@
 	<c:set var="otherMgiIDs" value="${marker.otherMgiIDs}"/>
 	<c:if test="${not empty otherMgiIDs}">
-		<div class="row">
+		<div class="row" id="otherMgiIdsRibbon">
 			<div class="header <%=leftTdStyles.getNext() %>" >
 				Other<br/>Accession&nbsp;IDs
 			</div>
