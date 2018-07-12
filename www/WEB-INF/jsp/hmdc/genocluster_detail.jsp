@@ -59,12 +59,26 @@
 	   		 </a>
 	  	  </td>
 	 	  <td class="allBorders white"><span class="genotypeCombo"><fewi:genotype value="${genotype}" newWindow="${true}"/></span></td>
-	  	  <td class="allBorders white"><fewi:super value="${genotype.backgroundStrain}"/></td>
+	  	  <td class="allBorders white">
+	  	  	<c:choose>
+	  	  	<c:when test="${not empty genotype.strainID}">
+	  	  		<a href="${configBean.FEWI_URL}strain/${genotype.strainID}" class="MP" target="_blank"><fewi:super value="${genotype.backgroundStrain}"/></a>
+	  	  	</c:when>
+	  	  	<c:otherwise>
+	  	  		<fewi:super value="${genotype.backgroundStrain}"/>
+	  	  	</c:otherwise>
+	  	  	</c:choose>
+	  	  </td>
 	  	  <td class="allBorders white">${genotype.primaryID}</td>
 		</tr>
       </c:forEach>
     </table>
     </div>
+    <c:if test="${not empty genoCluster.nonTransgeneMarker}">
+    	<br/>
+    	<span class='label'>Comparison Matrix</span> 
+    	<a href="${configBean.FEWI_URL}gxd/phenogrid/${genoCluster.nonTransgeneMarker.primaryID}?genoclusterKey=${genoCluster.genoClusterKey}" class="MP">Gene Expression + Phenotype</a>
+    </c:if>
     <c:if test="${not empty structureTerm}">
     	<br/>
 		<span class='highlight'>Highlighted</span> phenotype terms are associated with the anatomy term

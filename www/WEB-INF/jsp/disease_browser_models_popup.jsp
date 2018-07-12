@@ -97,7 +97,14 @@ a {text-decoration: none;}
 		<%=FormatHelper.newline2HTMLBR(ntc.useNewWindows(ntc.convertNotes(model.getAllelePairs(), '|')))%>
 	</td>
 	<td>
-		<%=FormatHelper.superscript(model.getBackgroundStrain())%>
+		<c:choose>
+			<c:when test="${not empty model.genotype.strainID}">
+				<a href="${configBean.FEWI_URL}strain/${model.genotype.strainID}" target="_blank"><fewi:super value="${model.backgroundStrain}"/></a>
+			</c:when>
+			<c:otherwise>
+				<%=FormatHelper.superscript(model.getBackgroundStrain())%>
+			</c:otherwise>
+		</c:choose>
 	</td>
 	<td> 
 		<c:forEach var="ref" items="${model.references}" varStatus="status">
@@ -141,7 +148,14 @@ No similarity to the expected human disease phenotype was found.
 		<%=FormatHelper.newline2HTMLBR(ntc.convertNotes(model.getAllelePairs(), '|'))%>
 	</td>
 	<td>
-		<%=FormatHelper.superscript(model.getBackgroundStrain())%>
+		<c:choose>
+			<c:when test="${not empty model.genotype.strainID}">
+				<a href="${configBean.FEWI_URL}strain/${model.genotype.strainID}" target="_blank"><fewi:super value="${model.backgroundStrain}"/></a>
+			</c:when>
+			<c:otherwise>
+				<%=FormatHelper.superscript(model.getBackgroundStrain())%>
+			</c:otherwise>
+		</c:choose>
 	</td>
 	<td> 
 		<c:forEach var="ref" items="${model.references}" varStatus="status">

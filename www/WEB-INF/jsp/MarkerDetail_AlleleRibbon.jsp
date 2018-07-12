@@ -103,7 +103,13 @@
 								<div class="label">Incidental Mutations</div>
 								<div class="value">
 									<c:forEach var="incidentalMutation" items="${marker.incidentalMutations}" varStatus="imStatus">
-										<c:if test="${imStatus.index>0}">, </c:if><a href="${configBean.FTP_URL}datasets/incidental_muts/${incidentalMutation.filename}">${incidentalMutation.filenameNoExtension}</a>
+										<c:if test="${imStatus.index>0}">, </c:if>
+										<c:if test="${incidentalMutation.provider != 'CvDC'}">
+											<a href="${fn:replace(externalUrls.IncidentalMutations, '@@@@', marker.primaryID)}" target="_blank">${incidentalMutation.provider}</a>
+										</c:if>
+										<c:if test="${incidentalMutation.provider == 'CvDC'}">
+											<a href="${configBean.FTP_URL}datasets/incidental_muts/${incidentalMutation.provider}.xlsx" target="_blank">${incidentalMutation.provider}</a>
+										</c:if>
 									</c:forEach>
 								</div>
 							</li>

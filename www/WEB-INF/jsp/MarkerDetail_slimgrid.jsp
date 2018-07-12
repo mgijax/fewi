@@ -18,7 +18,7 @@
 
 <c:if test="${not empty sgCells}">
 	<div id="${sgID}" style="display:inline-block">
-		<table>
+		<table id="${sgID}Table">
 			<tr>
 				<c:forEach var="sgCell" items="${sgCells}">
 					<c:set var="sgHeader" value="${sgCell.heading}"/>
@@ -38,7 +38,9 @@
 				</c:forEach>
 			</tr>
 			<tr>
+				<c:set var="idCounter" value="0"/>
 				<c:forEach var="sgCell" items="${sgCells}">
+					<c:set var="idCounter" value="${idCounter + 1}"/>
 					<c:set var="sgColor" value=""/>
 					<c:if test="${sgCell.colorLevel == 1}"><c:set var="sgColor" value="blue"/></c:if>
 					<c:if test="${sgCell.colorLevel == 2}"><c:set var="sgColor" value="dogear"/></c:if>
@@ -53,7 +55,7 @@
 						<c:set var="sgCellUrl" value="${fn:replace(fn:replace(fn:replace(fn:replace(sgUrl, '<markerID>', marker.primaryID), '<termID>', sgCell.termIDs), '<term>', sgCell.heading), '<abbrev>', sgCell.headingAbbreviation)}"/>
 					</c:if>
 
-					<td class="box sgWidth" title="${sgTooltip}"><a href="${sgCellUrl}" target="_blank"><div class="${sgColor}"></div></a></td>
+					<td class="box sgWidth" title="${sgTooltip}"><a href="${sgCellUrl}" target="_blank"><div id="${sgID}${idCounter}Div" class="${sgColor}"></div></a></td>
 				</c:forEach>
 			</tr>
 		</table>

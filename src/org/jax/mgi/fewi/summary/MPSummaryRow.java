@@ -72,6 +72,14 @@ public class MPSummaryRow {
 	return this.annotations;
     }
 
+    // get the strain ID, if available
+    public String getStrainID() {
+    	if (this.annotations.size() > 0) {
+    		return this.annotations.get(0).getStrainID();
+    	}
+    	return null;
+    }
+
     // get just the first Annotation
     public SolrMPAnnotation getFirstAnnotation() {
 	return this.annotations.get(0);

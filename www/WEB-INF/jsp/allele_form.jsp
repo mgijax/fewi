@@ -223,7 +223,7 @@
   </tr>
 
 
-  <!-- allele type, subtype, and collection -->
+  <!-- allele type, subtype, mutation, and collection -->
   <tr class="stripe1">
     <td class="cat1">Categories</td>
     <td>
@@ -264,6 +264,19 @@
       		<fewi:checkboxOptions items="${alleleQueryForm.subTypeGroup3}" name="alleleSubType" values="${alleleQueryForm.alleleSubType}" />
       	</div>
       	<div style="clear:both;"></div>
+      </div>
+    </div>
+
+    <!-- molecular mutations -->
+    <div class='relativePos categoryDiv' style='margin-right: 10px;'>
+      <div class='categoryHeader' style="width:225px; " >
+      <a class='userhelpLink'
+	href="${configBean.USERHELP_URL}ALLELE_phenotypic_categories_help.shtml#mutations"
+	onclick="javascript:openUserhelpWindow('ALLELE_phenotypic_categories_help.shtml#mutations'); return false;"
+	      >Molecular Mutations</a>
+      </div>
+      <div class='categorySelection' style="width:225px; overflow: auto; " >
+      	<fewi:checkboxOptions items="${mutationValues}" name="mutation" values="${alleleQueryForm.mutation}" />
       </div>
     </div>
 

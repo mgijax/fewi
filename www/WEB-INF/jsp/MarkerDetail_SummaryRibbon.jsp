@@ -26,12 +26,6 @@
 							</div>
 						</li>
 					</c:if>
-					<!-- once we have the summary
-						<li>
-							<div class="label">Gene Summary</div>
-							<div class="value">from NCBI RefSeq</div>
-						</li>
-					-->
 				</ul>
 			</section>
 
@@ -53,6 +47,15 @@
 										<a onClick="return overlib('${strainSpecificNote}', STICKY, CAPTION, 'Strain-Specific Marker', ANCHOR, 'mice', ANCHORALIGN, 'BL', 'BR', WIDTH, 400, CLOSECLICK, CLOSETEXT, 'Close X');" href="#" class="markerNoteButton" style='display:inline;'>Strain-Specific Marker</a></nobr>
 									</c:if>
 								</c:if>
+							</div>
+						</li>
+					</c:if>
+
+					<c:if test="${not empty tssFor}">
+						<li>
+							<div class="label">Transcription Start Site for</div>
+							<div class="value"><a href="${configBean.FEWI_URL}marker/${tssFor.relatedMarkerID}">${tssFor.relatedMarkerSymbol}</a>
+								<c:if test="${not empty distanceFrom}">(${distanceFrom} bp from 5'-end of gene)</c:if>
 							</div>
 						</li>
 					</c:if>
@@ -104,6 +107,15 @@
 							<div class="label">Alliance</div>
 							<div class="value">
 								<a id="allianceLink" href="${fn:replace(externalUrls.AGR_Gene, '@@@@', marker.primaryID)}" target="_blank">gene page</a>
+							</div>
+						</li>
+					</c:if>
+
+					<c:if test="${hasTss}">
+						<li>
+							<div class="label">Transcription</div>
+							<div class="value">
+								<span id="showTss" class="link">${tssCount} start site<c:if test="${fn:length(marker.tss) > 1}">s</c:if></span>
 							</div>
 						</li>
 					</c:if>

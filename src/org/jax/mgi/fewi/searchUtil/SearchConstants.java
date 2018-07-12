@@ -60,6 +60,7 @@ public class SearchConstants {
 	public static final String ALL_IS_CELLLINE		 = "isCellLine";
     public static final String ALLELE_KEY              = "alleleKey";
     public static final String ALL_MI_MARKER_IDS = "mutationInvolvesMarkerIDs";
+	public static final String ALL_MUTATION			 = "mutation";
 
     // Accession
 
@@ -275,6 +276,15 @@ public class SearchConstants {
 	public static final String CM_MARKER_ID = "markerID";
 	public static final String CM_PARENT_ANATOMY_ID = "parentAnatomyID";
 
+	// strain fields
+	public static final String STRAIN_KEY = "strainKey";
+	public static final String STRAIN_TYPE = "strainType";
+	public static final String STRAIN_NAME = "strainName";
+	public static final String STRAIN_NAME_LOWER = "strainNameLower";
+	public static final String STRAIN_ATTRIBUTE_LOWER = "attributeLower";
+	public static final String STRAIN_GROUPS = "groups";
+	public static final String STRAIN_IS_SEQUENCED = "isSequenced";
+	
 	// general
 	public static final String COLUMN_ID = "columnID";
 }

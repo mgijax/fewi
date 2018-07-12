@@ -21,6 +21,16 @@ section.infoBlock h2 {
 	padding: 3px 2px;
 }
 
+section.infoBlock h3 {
+	font-weight: bold;
+	font-size: 14px;
+	padding: 3px 2px;
+}
+
+section.infoBlock dt {
+	padding-top: 5px;
+}
+
 /* Optional date inside header */
 section.infoBlock > .wrapper .headerDate {
 	font-size: 10px;
@@ -63,6 +73,13 @@ section.infoBlock > .wrapper {
 .column {
 	display: inline-block;
 	max-width: 40%
+}
+
+/* sections that appear in a column should be stacked */
+.strainColumn {
+	display: inline-block;
+	width: 565px;
+	margin-left: 30px;
 }
 
 @media screen and (max-width: 800px) {
@@ -164,4 +181,10 @@ a.homeLink:active{
 }
 .statsTable td:nth-of-type(2) {
 	padding-left: 10px;
+}
+.top {
+	vertical-align: top;
+}
+.blue {
+	color:blue;
 }

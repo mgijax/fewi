@@ -69,9 +69,11 @@ public class AlleleSummaryRow {
 	public String getCategory() {
 		StringBuffer category = new StringBuffer();
 
-		category.append("<span style=\"white-space: nowrap;\">");
-		category.append(allele.getAlleleType());
-		category.append("</span>");
+		if (!"Not Applicable".equals(allele.getAlleleType())) {
+			category.append("<span style=\"white-space: nowrap;\">");
+			category.append(allele.getAlleleType());
+			category.append("</span>");
+		}
 
 		if(allele.getAlleleSubType()!=null && !allele.getAlleleSubType().equals("")) {
 			category.append("<br>(");

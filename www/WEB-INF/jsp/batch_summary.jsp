@@ -105,7 +105,6 @@
 	var loco = ${batchQueryForm.location};
 	var ensembl = ${batchQueryForm.ensembl};
 	var entrez = ${batchQueryForm.entrez};
-	var vega = ${batchQueryForm.vega};
 	
 	// additional columns
 	var go = ${batchQueryForm.go};

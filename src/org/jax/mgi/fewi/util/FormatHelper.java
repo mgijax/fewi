@@ -293,6 +293,8 @@ public class FormatHelper {
 			return getSeqForwardValue(seq.getProvider(), seq.getPrimaryID(), loc.getChromosome(),
 				String.valueOf(loc.getStartCoordinate().intValue()),
 				String.valueOf(loc.getEndCoordinate().intValue()), "+");
+		} else if ("straingene".equals(getSeqProviderForward(seq.getProvider()))) {
+			return getSeqForwardValue(seq.getProvider(), seq.getPrimaryID(), "", "", "", "");
 		}
 
 		// no genomic location, so use genbank ID if we have one, primary ID if not
@@ -359,18 +361,16 @@ public class FormatHelper {
 			providerForward = "trembl";
 		}else if (seqProvider.equals(DBConstants.PROVIDER_REFSEQ)) {
 			providerForward = "refseq";
-		}else if (seqProvider.equals(DBConstants.PROVIDER_VEGAPROTEIN)) {
-			providerForward = "vega_mus_prot";
-		}else if (seqProvider.equals(DBConstants.PROVIDER_VEGATRANSCRIPT)) {
-			providerForward = "vega_mus_cdna";
 		}else if (seqProvider.equals(DBConstants.PROVIDER_ENSEMBLPROTEIN)) {
 			providerForward = "ensembl_mus_prot";
 		}else if (seqProvider.equals(DBConstants.PROVIDER_ENSEMBLTRANSCRIPT)) {
 			providerForward = "ensembl_mus_cdna";
 		}else if (seqProvider.equals(DBConstants.PROVIDER_NCBI) ||
-				seqProvider.equals(DBConstants.PROVIDER_ENSEMBL) ||
-				seqProvider.equals(DBConstants.PROVIDER_VEGA)) {
+				seqProvider.equals(DBConstants.PROVIDER_ENSEMBL)) {
 			providerForward = "mousegenome";
+		}else if (seqProvider.equalsIgnoreCase("mgp strain gene model") ||
+				(seqProvider.startsWith("MGI") && seqProvider.endsWith("Gene Model")) ) {
+			providerForward = "straingene";
 		}
 
 		return providerForward;

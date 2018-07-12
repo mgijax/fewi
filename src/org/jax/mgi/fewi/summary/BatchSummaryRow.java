@@ -8,14 +8,12 @@ import mgi.frontend.datamodel.BatchMarkerAllele;
 import mgi.frontend.datamodel.BatchMarkerGoAnnotation;
 import mgi.frontend.datamodel.BatchMarkerId;
 import mgi.frontend.datamodel.BatchMarkerMpAnnotation;
-import mgi.frontend.datamodel.Marker;
-import mgi.frontend.datamodel.MarkerID;
-import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.MarkerTissueCount;
 
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.forms.BatchQueryForm;
+import org.jax.mgi.fewi.util.BatchMarkerIdWrapper;
 import org.jax.mgi.fewi.util.DBConstants;
 import org.jax.mgi.fewi.util.FormatHelper;
 
@@ -24,13 +22,12 @@ import org.jax.mgi.fewi.util.FormatHelper;
  * wrapper around a Marker;  represents on row in summary
  */
 public class BatchSummaryRow {
-
 	//-------------------
 	// instance variables
 	//-------------------
 
 	// encapsulated row object
-	private BatchMarkerId batchMarkerId;
+	private BatchMarkerIdWrapper bmi;
 
 	private BatchQueryForm query = null;
 
@@ -40,18 +37,12 @@ public class BatchSummaryRow {
     private static String urlPattern = "<a href='%s' target='_blank'>%s</a>";
     private static String noWrap = "<span style='white-space:nowrap;'>%s</span>";
 
-    private List<BatchMarkerGoAnnotation> goAnnots = null;
-    private List<BatchMarkerMpAnnotation> mpAnnots = null;
-    private List<Annotation> doAnnots = null;
-    private List<BatchMarkerAllele> markerAlleles = null;
-    private List<MarkerTissueCount> expCounts = null;
-
 	//-------------
 	// constructors
 	//-------------
 
     public BatchSummaryRow (BatchMarkerId batchMarkerId, BatchQueryForm query) {
-    	this.batchMarkerId = batchMarkerId;
+    	this.bmi = new BatchMarkerIdWrapper(batchMarkerId);
     	this.query = query;
     	return;
     }
@@ -61,402 +52,273 @@ public class BatchSummaryRow {
     // public instance methods;  JSON serializer will call all public methods
     //------------------------------------------------------------------------
 
+    // get the matching term
     public String getTerm() {
-    	return batchMarkerId.getTerm();
+    	return bmi.getTerm();
     }
+    
+    // get the type of the matching term
     public String getType() {
-    	return batchMarkerId.getTermType();
+    	return bmi.getTermType();
     }
+    
+    // get the value of the marker ID column.  This will be linked, if we're not showing the nomen columns.
     public String getMarkerId() {
-    	if (batchMarkerId.getMarker() != null){
-    		if (query != null && !query.getNomenclature()){
-        		return String.format(urlPattern,
-        				fewiUrl + "marker/" + batchMarkerId.getMarker().getPrimaryID(),
-        				batchMarkerId.getMarker().getPrimaryID());
-    		} else {
-    			return batchMarkerId.getMarker().getPrimaryID();
+
+    	// if we're showing the nomen fields, then this one is just simply an ID
+    	if ((query != null) && query.getNomenclature()) {
+    		if ((bmi.getMarkerID() != null) && (bmi.getMarkerID().length() > 0)) {
+    			return bmi.getMarkerID();
     		}
-    	} else {
-    		return "No associated gene";
     	}
+
+    	// This was an ID search and we have a match to a marker, so link the ID.
+    	if (bmi.getMarkerID() != null) {
+       		return String.format(urlPattern, fewiUrl + "marker/" + bmi.getMarkerID(), bmi.getMarkerID());
+    	}
+    	
+    	return "No associated gene";
     }
+
+    // Get the value for the symbol column. Symbol is linked appropriately if the query included nomen display.
     public String getSymbol() {
-    	if (batchMarkerId.getMarker() != null && query.getNomenclature()){
-    		return String.format(urlPattern,
-    				fewiUrl + "marker/" + batchMarkerId.getMarker().getPrimaryID(),
-    				batchMarkerId.getMarker().getSymbol());
-    	} else {
-    		return "";
+    	if ((bmi.getMarkerID() != null) && (bmi.getSymbol() != null)) {
+    		return String.format(urlPattern, fewiUrl + "marker/" + bmi.getMarkerID(), bmi.getSymbol());
     	}
+    	return "";
     }
+
+    // Get the value for the name column.
     public String getName() {
-    	if (batchMarkerId.getMarker() != null && query.getNomenclature()){
-    		return batchMarkerId.getMarker().getName();
-    	} else {
-    		return "";
-    	}
+    	return bmi.getName();
     }
+
+    // Get the value for the feature type column.
     public String getFeature() {
-    	if (batchMarkerId.getMarker() != null && query.getNomenclature()){
-    		return batchMarkerId.getMarker().getMarkerSubtype();
-    	} else {
-    		return "";
-    	}
+    	return bmi.getFeatureType();
     }
+
+    // Get the value for the chromosome column.
     public String getChromosome() {
-    	if (query.getLocation() && batchMarkerId.getMarker() != null) 
-    	{
-		    // first attempt to get the chromosome from the coordinates
-	
-	    	MarkerLocation loc = batchMarkerId.getMarker().getPreferredCoordinates();
-	    	if (loc != null){
-				if (loc.getChromosome() != null) {
-				    return loc.getChromosome();
-				} // if coordinate's chromosome is non-null
-	    	} // if coordinates exist
-	
-		    // fall back on chromosome from a cM location
-	
-		    loc = batchMarkerId.getMarker().getPreferredCentimorgans();
-		    if (loc != null){
-	    		if (loc.getChromosome() != null){
-	    			return loc.getChromosome();
-	    		} // if cM location's chromosome is non-null
-		    } // if cM location exists
-    	} // if batchMarkerId.getMarker() != null
-    	return "";
+    	return bmi.getChromosome();
     }
+
+    // Get the value for the strand column.
     public String getStrand() {
-    	if (batchMarkerId.getMarker() != null && query.getLocation()){
-    		MarkerLocation loc = batchMarkerId.getMarker().getPreferredCoordinates();
-    		if(loc != null){
-    			return loc.getStrand();
-    		}
-    	}
-    	return "";
+    	return bmi.getStrand();
     }
+
+    // Get the value for the start coordinate column.
     public Double getStart() {
-    	if (batchMarkerId.getMarker() != null && query.getLocation()){
-    		MarkerLocation loc = batchMarkerId.getMarker().getPreferredCoordinates();
-    		if(loc != null){
-    			return loc.getStartCoordinate();
-    		}
-    	}
-    	return null;
+    	return bmi.getStart();
     }
+
+    // Get the value for the end coordinate column.
     public Double getEnd() {
-    	if (batchMarkerId.getMarker() != null && query.getLocation()){
-    		MarkerLocation loc = batchMarkerId.getMarker().getPreferredCoordinates();
-    		if(loc != null){
-    			return loc.getEndCoordinate();
-    		}
-    	}
-    	return null;
+    	return bmi.getEnd();
     }
 
+    // Get a string containing the matching marker's Ensembl IDs (if requested), separated by HTML line breaks.
     public String getEnsemblIds() {
-
     	if (!query.getEnsembl()) return "";
-    	List<String> l = new ArrayList<String>();
-    	l.add(DBConstants.PROVIDER_ENSEMBL);
-    	return StringUtils.join(this.getId(l), "<br/>");
+    	return StringUtils.join(bmi.getIDs(DBConstants.PROVIDER_ENSEMBL), "<br/>");
     }
 
+    // Get a string containing the matching marker's Entrez Gene IDs (if requested), separated by HTML line breaks.
     public String getEntrezIds() {
-    	if(!query.getEntrez()) return "";
-    	List<String> l = new ArrayList<String>();
-    	l.add(DBConstants.PROVIDER_ENTREZGENE);
-    	return StringUtils.join(this.getId(l), "<br/>");
+    	if (!query.getEntrez()) return "";
+    	return StringUtils.join(bmi.getIDs(DBConstants.PROVIDER_ENTREZGENE), "<br/>");
     }
 
-    public String getVegaIds() {
-    	if (!query.getVega()) return "";
-    	List<String> l = new ArrayList<String>();
-    	l.add(DBConstants.PROVIDER_VEGA);
-    	return StringUtils.join(this.getId(l), "<br/>");
-    }
-
-    public String getGoIds(){
-    	if (!query.getGo()){
-    		return "";
-    	}
-    	Marker marker = batchMarkerId.getMarker();
+    // Get a string containing the matching marker's associated GO IDs, terms, or evidence codes (if requested), 
+    // separated by HTML line breaks.
+    private String getGoField(String field){
+    	if (!query.getGo()){ return ""; }
     	List<String> go = new ArrayList<String>();
-    	if (marker != null && goAnnots == null){
-    		goAnnots = marker.getBatchMarkerGoAnnotations();
-    	}
-    	if (goAnnots!= null && goAnnots.size() > 0){
-    		for (BatchMarkerGoAnnotation annotation : goAnnots) {
+    	for (BatchMarkerGoAnnotation annotation : bmi.getGOAnnotations()) {
+    		if ("ID".equals(field)) {
     			go.add(String.format(noWrap, annotation.getGoId()));
-			}
-    	}
-    	return StringUtils.join(go, "<br/>");
-    }
-
-    public String getGoTerms(){
-    	if (!query.getGo()){
-    		return "";
-    	}
-    	Marker marker = batchMarkerId.getMarker();
-    	List<String> go = new ArrayList<String>();
-    	if (marker != null && goAnnots == null){
-    		goAnnots = marker.getBatchMarkerGoAnnotations();
-    	}
-    	if (goAnnots!= null && goAnnots.size() > 0){
-    		for (BatchMarkerGoAnnotation annotation : goAnnots) {
+    		} else if ("term".equals(field)) {
     			go.add(String.format(noWrap, annotation.getGoTerm()));
-			}
-    	}
-    	return StringUtils.join(go, "<br/>");
-    }
-
-    public String getGoCodes(){
-    	if (!query.getGo()){
-    		return "";
-    	}
-    	Marker marker = batchMarkerId.getMarker();
-    	if (marker != null && goAnnots == null){
-    		goAnnots = marker.getBatchMarkerGoAnnotations();
-    	}
-    	List<String> go = new ArrayList<String>();
-    	if (goAnnots!= null && goAnnots.size() > 0){
-    		for (BatchMarkerGoAnnotation annotation : goAnnots) {
+    		} else if ("code".equals(field)) {
     			go.add(String.format(noWrap, annotation.getEvidenceCode()));
-			}
-    	}
+    		}
+		}
     	return StringUtils.join(go, "<br/>");
     }
 
-    public String getMpIds(){
-    	if (!query.getMp()){
-    		return "";
-    	}
-    	Marker marker = batchMarkerId.getMarker();
-    	List<String> mp = new ArrayList<String>();
-    	if (marker != null && mpAnnots == null){
-    		mpAnnots = marker.getBatchMarkerMpAnnotations();
-    	}
-    	if (mpAnnots != null && mpAnnots.size() > 0){
-    		for (BatchMarkerMpAnnotation annotation : mpAnnots) {
-    			mp.add(String.format(noWrap, annotation.getMpId()));
-			}
-    	}
-    	return StringUtils.join(mp, "<br/>");
+    // Get a string containing the matching marker's associated GO IDs (if requested),
+    // separated by HTML line breaks.
+    public String getGoIds(){
+    	return getGoField("ID");
     }
 
-    public String getMpTerms(){
-    	if (!query.getMp()){
-    		return "";
-    	}
-    	Marker marker = batchMarkerId.getMarker();
+    // Get a string containing the matching marker's associated GO terms (if requested),
+    // separated by HTML line breaks.
+    public String getGoTerms(){
+    	return getGoField("term");
+    }
+
+    // Get a string containing the matching marker's associated GO evidence codes (if requested),
+    // separated by HTML line breaks.
+    public String getGoCodes(){
+    	return getGoField("code");
+    }
+
+    // Get a string containing the matching marker's associated MP IDs or terms (if requested), 
+    // separated by HTML line breaks.
+    private String getMpField(String field){
+    	if (!query.getMp()){ return ""; }
     	List<String> mp = new ArrayList<String>();
-    	if (marker != null && mpAnnots == null){
-    		mpAnnots = marker.getBatchMarkerMpAnnotations();
-    	}
     	String text, url;
-    	if (mpAnnots != null && mpAnnots.size() > 0){
-    		for (BatchMarkerMpAnnotation annotation : mpAnnots) {
+    	for (BatchMarkerMpAnnotation annotation : bmi.getMPAnnotations()) {
+    		if ("ID".equals(field)) {
+    			mp.add(String.format(noWrap, annotation.getMpId()));
+    		} else if ("term".equals(field)) {
     			text = annotation.getMpTerm() + " (%s)";
-			url = fewiUrl + String.format("mp/annotations/%s?markerID=%s", annotation.getMpId(), marker.getPrimaryID() );
+    			url = fewiUrl + String.format("mp/annotations/%s?markerID=%s", annotation.getMpId(), bmi.getMarkerID() );
     			mp.add(String.format(noWrap, String.format(text, String.format(urlPattern, url, "details"))));
-			}
-    	}
+    		}
+		}
     	return StringUtils.join(mp, "<br/>");
     }
 
+    // Get a string containing the matching marker's associated MP IDs (if requested), separated by HTML line breaks.
+    public String getMpIds(){
+    	return getMpField("ID");
+    }
+
+    // Get a string containing the matching marker's associated MP terms (if requested), separated by HTML line breaks.
+    public String getMpTerms(){
+    	return getMpField("term");
+    }
+
+    // Get a string containing the matching marker's associated DO IDs or terms (if requested), 
+    // separated by HTML line breaks.
+    private String getDoField(String field){
+    	if (!query.getDo()){ return ""; }
+    	List<String> out = new ArrayList<String>();
+    	String url;
+    	for (Annotation annotation : bmi.getDOAnnotations()) {
+    		// only want to keep positive annotations (no NOTs)
+    		if (annotation.getQualifier() == null) {
+    			if ("ID".equals(field)) {
+    				out.add(String.format(noWrap, annotation.getTermID()));
+    			} else if ("term".equals(field)) {
+   					url = fewiUrl + "disease/" + annotation.getTermID();
+   					out.add(String.format(noWrap, String.format(urlPattern, url, annotation.getTerm())));
+    			}
+    		}
+		}
+    	return StringUtils.join(out, "<br/>");
+    }
+
+    // Get a string containing the matching marker's associated DO IDs (if requested), separated by HTML line breaks.
     public String getDoIds(){
-    	if (!query.getDo()){
-    		return "";
-    	}
-    	Marker marker = batchMarkerId.getMarker();
-    	List<String> doa = new ArrayList<String>();
-    	if (marker != null  && doAnnots == null){
-    		doAnnots = batchMarkerId.getMarker().getDOAnnotations();
-    	}
-    	if (doAnnots != null){
-    		for (Annotation annotation :doAnnots) {
-    			// only keep positive annotations (no NOTs)
-    			if (annotation.getQualifier() == null) {
-    				doa.add(String.format(noWrap, annotation.getTermID()));
-    			}
-			}
-    	}
-    	return StringUtils.join(doa, "<br/>");
+    	return getDoField("ID");
     }
 
+    // Get a string containing the matching marker's associated DO terms (if requested), separated by HTML line breaks.
     public String getDoTerms(){
-    	if(!query.getDo()) return "";
-    	Marker marker = batchMarkerId.getMarker();
-    	List<String> doa = new ArrayList<String>();
-    	if (marker != null  && doAnnots == null){
-    		doAnnots = batchMarkerId.getMarker().getDOAnnotations();
-    	}
-    	if (doAnnots != null){
-    		for (Annotation annotation : doAnnots) {
-    			// only keep positive annotations (no NOTs)
-    			if (annotation.getQualifier() == null) {
-    				String url = fewiUrl + "disease/" + annotation.getTermID();
-    				doa.add(String.format(noWrap, String.format(urlPattern, url, annotation.getTerm())));
-    			}
-			}
-    	}
-    	return StringUtils.join(doa, "<br/>");
+    	return getDoField("term");
     }
 
-    public String getAlleleIds(){
-    	List<String> alleleOutput = new ArrayList<String>();
-    	Marker marker = batchMarkerId.getMarker();
-
-    	if (query.getAllele() && marker != null){
-    		if (markerAlleles == null){
-    			markerAlleles = marker.getBatchMarkerAlleles();
-    		}
-    		for (BatchMarkerAllele allele : markerAlleles) {
-    			alleleOutput.add(String.format(noWrap, allele.getAlleleID()));
-			}
-    	}
-    	return StringUtils.join(alleleOutput, "<br/>");
-    }
-
-    public String getAlleleSymbols(){
-    	List<String> alleleOutput = new ArrayList<String>();
-    	Marker marker = batchMarkerId.getMarker();
-
-    	if ( query.getAllele() && marker != null){
-    		if (markerAlleles == null){
-    			markerAlleles = marker.getBatchMarkerAlleles();
-    		}
-    		String url;
-    		for (BatchMarkerAllele allele : markerAlleles) {
+    // Get a string containing the matching marker's allele IDs or linked symbols (if requested), 
+    // separated by HTML line breaks.
+    private String getAlleleField(String field){
+    	if (!query.getAllele()){ return ""; }
+    	List<String> out = new ArrayList<String>();
+    	String url;
+    	for (BatchMarkerAllele allele : bmi.getAlleles()) {
+    		if ("ID".equals(field)) {
+    			out.add(String.format(noWrap, allele.getAlleleID()));
+    		} else if ("symbol".equals(field)) {
     			url = fewiUrl + "allele/" + allele.getAlleleID();
-    			alleleOutput.add(String.format(noWrap, String.format(urlPattern, url,
+    			out.add(String.format(noWrap, String.format(urlPattern, url,
 						FormatHelper.superscript(allele.getAlleleSymbol()))));
-			}
-    	}
-    	return StringUtils.join(alleleOutput, "<br/>");
+    		}
+		}
+    	return StringUtils.join(out, "<br/>");
     }
 
+    // Get a string containing the matching marker's allele IDs (if requested), separated by HTML line breaks.
+    public String getAlleleIds(){
+    	return getAlleleField("ID");
+    }
+
+    // Get a string containing the matching marker's (linked) allele symbols (if requested), separated by HTML line breaks.
+    public String getAlleleSymbols(){
+    	return getAlleleField("symbol");
+    }
+
+    // Get a string containing the matching marker's expression counts by tissue (if requested), 
+    // separated by HTML line breaks.
+    private String getExpressionTissueCountsField(String field){
+    	if (!query.getExp()){ return ""; }
+    	List<String> out = new ArrayList<String>();
+    	String url;
+    	for (MarkerTissueCount tissue : bmi.getExpressionCountsByTissue()) {
+    		if ("structure".equals(field)) {
+    			out.add(String.format(noWrap, tissue.getStructure()));
+    		} else if ("all results".equals(field)) {
+    			url = fewiUrl + String.format("gxd/summary?markerMgiId=%s&annotatedStructureKey=%d",
+    					bmi.getMarkerID(), tissue.getStructureKey());
+				out.add(String.format(urlPattern, url, tissue.getAllResultCount()));
+    		} else if ("detected".equals(field)) {
+    			out.add(String.format(noWrap, tissue.getDetectedResultCount()));
+    		} else if ("not detected".equals(field)) {
+    			out.add(String.format(noWrap, tissue.getNotDetectedResultCount()));
+    		}
+		}
+    	return StringUtils.join(out, "<br/>");
+    }
+
+    // Get a string containing the matching marker's tissue names which have GXD data (if requested), 
+    // separated by HTML line breaks.
     public String getExpressionStructure(){
-    	if (!query.getExp()){
-    		return "";
-    	}
-    	List<String> structures = new ArrayList<String>();
-    	Marker marker = batchMarkerId.getMarker();
-
-    	if (marker != null  && expCounts == null){
-    		expCounts = batchMarkerId.getMarker().getMarkerTissueCounts();
-    	}
-
-    	if (expCounts != null){
-	    	for (MarkerTissueCount tissue : expCounts) {
-	    		structures.add(String.format(noWrap, tissue.getStructure()));
-			}
-    	}
-    	return StringUtils.join(structures, "<br/>");
+    	return getExpressionTissueCountsField("structure");
     }
 
+    // Get a string containing the matching marker's counts of expression results (if requested), 
+    // separated by HTML line breaks.
     public String getExpressionResultCount(){
-    	if (!query.getExp()){
-    		return "";
-    	}
-    	List<String> structures = new ArrayList<String>();
-    	Marker marker = batchMarkerId.getMarker();
-
-    	if (marker != null  && expCounts == null){
-    		expCounts = batchMarkerId.getMarker().getMarkerTissueCounts();
-    	}
-
-    	if (expCounts != null){
-	    	for (MarkerTissueCount tissue : expCounts) {
-    			String url = fewiUrl + String.format("gxd/summary?markerMgiId=%s&annotatedStructureKey=%d",
-    					marker.getPrimaryID(), tissue.getStructureKey());
-    			structures.add(String.format(urlPattern, url, tissue.getAllResultCount()));
-			}
-    	}
-    	return StringUtils.join(structures, "<br/>");
+    	return getExpressionTissueCountsField("all results");
     }
 
+    // Get a string containing the matching marker's counts of "detected" expression results (if requested), 
+    // separated by HTML line breaks.
     public String getExpressionDetectedCount(){
-    	if (!query.getExp()){
-    		return "";
-    	}
-    	List<Integer> structures = new ArrayList<Integer>();
-    	Marker marker = batchMarkerId.getMarker();
-
-    	if (marker != null  && expCounts == null){
-    		expCounts = batchMarkerId.getMarker().getMarkerTissueCounts();
-    	}
-
-    	if (expCounts != null){
-	    	for (MarkerTissueCount tissue : expCounts) {
-	    		structures.add(tissue.getDetectedResultCount());
-			}
-    	}
-    	return StringUtils.join(structures, "<br/>");
+    	return getExpressionTissueCountsField("detected");
     }
 
+    // Get a string containing the matching marker's counts of "not detected" expression results (if requested), 
+    // separated by HTML line breaks.
     public String getExpressionNotDetectedCount(){
-    	if (!query.getExp()){
-    		return "";
-    	}
-    	List<Integer> structures = new ArrayList<Integer>();
-    	Marker marker = batchMarkerId.getMarker();
-
-    	if (marker != null  && expCounts == null){
-    		expCounts = batchMarkerId.getMarker().getMarkerTissueCounts();
-    	}
-
-    	if (expCounts != null){
-	    	for (MarkerTissueCount tissue : expCounts) {
-	    		structures.add(tissue.getNotDetectedResultCount());
-			}
-    	}
-    	return StringUtils.join(structures, "<br/>");
+    	return getExpressionTissueCountsField("not detected");
     }
 
+    // Get a string containing the matching marker's associated RefSNPs (if requested), 
+    // separated by HTML line breaks.
     public String getRefsnpIds(){
+    	if (!query.getRefsnp()) { return ""; }
     	List<String> refSnpIds = new ArrayList<String>();
     	String url = fewiUrl + "snp/%s";
-    	if (query.getRefsnp() && batchMarkerId.getMarker() != null){
-			for (String snp : batchMarkerId.getMarker().getBatchMarkerSnps()) {
-				String snpUrl = String.format(url, snp);
-				refSnpIds.add(String.format(urlPattern, snpUrl, snp));
-			}
-    	}
+		for (String snp : bmi.getRefSNPs()) {
+			String snpUrl = String.format(url, snp);
+			refSnpIds.add(String.format(urlPattern, snpUrl, snp));
+		}
     	return StringUtils.join(refSnpIds, "<br/>");
     }
 
+    // Get a string containing the matching marker's RefSeq IDs (if requested), separated by HTML line breaks.
     public String getRefseqIds(){
     	if(!query.getRefseq()) return "";
-    	List<String> l = new ArrayList<String>();
-    	l.add(DBConstants.PROVIDER_REFSEQ);
-    	l.add("Sequence DB");
-    	return StringUtils.join(this.getId(l), "<br/>");
+    	return StringUtils.join(bmi.getIDs(DBConstants.PROVIDER_REFSEQ, "Sequence DB"), "<br/>");
     }
 
+    // Get a string containing the matching marker's Swiss-Prot and TrEMBL IDs (if requested), separated by HTML line breaks.
     public String getUniprotIds(){
     	if(!query.getUniprot()) return "";
-    	List<String> l = new ArrayList<String>();
-    	l.add(DBConstants.PROVIDER_SWISSPROT);
-    	l.add(DBConstants.PROVIDER_TREMBL);
-    	return StringUtils.join(this.getId(l), "<br/>");
+    	return StringUtils.join(bmi.getIDs(DBConstants.PROVIDER_SWISSPROT, DBConstants.PROVIDER_TREMBL), "<br/>");
     }
-
-    private List<String> getId(List<String> logicalDb){
-    	List<String> idList = new ArrayList<String>();
-    	if (batchMarkerId.getMarker() != null){
-    		List<MarkerID> ids = batchMarkerId.getMarker().getIds();
-    		if(ids != null){
-    			for (MarkerID id : ids) {
-    				for (String ldb : logicalDb) {
-    					if (id.getLogicalDB().equals(ldb)){
-    						idList.add(id.getAccID());
-    					}
-					}
-				}
-    		}
-    	}
-    	return idList;
-    }
-
 }

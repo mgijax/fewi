@@ -971,7 +971,8 @@ var differentialRestriction  = function()
 	// If we have 'any' structure for the detected TS choice, then 'any other' doesn't make sense as a
 	// NOT detected TS choice.
 	if (!hasTS) {
-		if ((difStage.selectedOptions.length == 1) && (difStage.selectedOptions[0].value == '-1')) {
+		if ((difStage.selectedOptions.length == 1) && (
+				(difStage.selectedOptions[0].value == '-1') || (difStage.selectedOptions[0].value == '0') )) {
 			hasDifTS = false;
 		}
 	}

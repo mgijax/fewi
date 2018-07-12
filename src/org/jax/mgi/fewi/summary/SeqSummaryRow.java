@@ -62,13 +62,15 @@ public class SeqSummaryRow {
 
 
     public String getSeqInfo() {
-
+    	String providerLinks = ProviderLinker.getSeqProviderLinks(this.seq);
         StringBuffer seqInfo = new StringBuffer();
+
         seqInfo.append(this.seq.getPrimaryID());
         seqInfo.append("<br/>&nbsp;&nbsp;");
-        seqInfo.append(ProviderLinker.getSeqProviderLinks(this.seq));
- //       seqInfo.append("Links");
-        seqInfo.append("<br/>&nbsp;&nbsp;");
+        if ((providerLinks != null) && (providerLinks.trim().length() > 0)) {
+        	seqInfo.append(ProviderLinker.getSeqProviderLinks(this.seq));
+        	seqInfo.append("<br/>&nbsp;&nbsp;");
+        }
         seqInfo.append("<a href='" + fewiUrl + "sequence/"
           + seq.getPrimaryID() + "'>MGI Sequence Detail </a>");
 

@@ -22,6 +22,7 @@ import mgi.frontend.datamodel.Disease;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.Sequence;
+import mgi.frontend.datamodel.Strain;
 
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.AlleleFinder;
@@ -29,6 +30,7 @@ import org.jax.mgi.fewi.finder.DiseaseFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.SequenceFinder;
+import org.jax.mgi.fewi.finder.StrainFinder;
 import org.jax.mgi.fewi.forms.ReferenceQueryForm;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.Filter;
@@ -77,6 +79,9 @@ public class ReferenceController {
 
 	@Autowired
 	private SequenceFinder sequenceFinder;
+
+	@Autowired
+	private StrainFinder strainFinder;
 
 	@Autowired
 	private MarkerFinder markerFinder;
@@ -401,6 +406,37 @@ public class ReferenceController {
 		return "reference_summary_sequence";
 	}
 
+	/* references for a strain
+	 */
+	@RequestMapping("/strain/{strainID}")
+	public ModelAndView referencesByStrainId (
+		@PathVariable("strainID") String strainID,
+		@ModelAttribute ReferenceQueryForm query,
+		HttpServletRequest request, Model model) {
+
+	    logger.debug("->referencesByStrainId started: " + strainID);
+	    
+	    List<Strain> strainList = strainFinder.getStrainByID(strainID);
+        if (strainList.size() < 1) {
+        	// forward to error page
+        	ModelAndView mav = new ModelAndView("error");
+        	mav.addObject("errorMsg", "No strain found for ID " + strainID);
+        	return mav;
+        } else if (strainList.size() > 1) {
+        	// forward to error page
+        	ModelAndView mav = new ModelAndView("error");
+        	mav.addObject("errorMsg", "Multiple strains associated with ID " + strainID);
+        	return mav;
+	    }
+
+	    ModelAndView mav = new ModelAndView("reference_summary_strain");
+	    mav.addObject("strain", strainList.get(0));
+	    String queryString = "strainId=" + strainID;
+        mav.addObject("queryString", queryString);
+	    addFieldsFromQF(mav, queryString, query);
+	    return mav;
+	}
+
 	/* references for GO annotations for a marker
 	 */
 	@RequestMapping("/go/marker/{mrkID}")
@@ -715,6 +751,12 @@ public class ReferenceController {
 
 		// process normal query form parameter.  the resulting filter objects
 		// are added to queryList.
+
+		// search for references associated with a strain
+		String strainId = query.getStrainId();
+		if (strainId != null && !strainId.equals("")) {
+			queryList.add(new Filter(IndexConstants.STRAIN_ID, strainId, Filter.Operator.OP_EQUAL));
+		}
 
 		// build diseaseRelevantMarkerId query
 		String diseaseRelevantMarkerId = query.getDiseaseRelevantMarkerId();

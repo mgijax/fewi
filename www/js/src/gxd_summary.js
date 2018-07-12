@@ -313,6 +313,17 @@ function reverseEngineerFormInput(request)
 	return foundParams;
 }
 
+// Get a string that represents the range of records displayed (to tell when we've had a pagination event).
+var getRecordsDisplayed = function() {
+	var pages = "";
+	if ((gxdDataTable != undefined) && (gxdDataTable != null)) {
+		var startIndex = gxdDataTable.configs.paginator.getStartIndex();
+		var count = gxdDataTable.configs.paginator.getRowsPerPage();
+		pages = startIndex + '-' + (startIndex + count - 1);
+	}
+	return pages;
+}
+
 //a globabl variable to help the summary know when to generate a new datatable
 var previousQueryString = "none";
 var previousFilterString = "none";
@@ -420,11 +431,11 @@ handleNavigation = function (request, calledLocally) {
 		refreshGxdLitLink();
 
 		// Shh, do not tell anyone about this. We are sneaking in secret Google Analytics calls, even though there is no approved User Story for it.
-		var GAState = "/gxd/summary/"+tabState+"?"+querystring;
+		var GAState = "/gxd/summary/" + tabState + "?" + querystringWithFilters + '&records=' + getRecordsDisplayed();
 		if(GAState != previousGAState)
 		{
 			try {
-				gaA_pageTracker._trackPageview(GAState);
+				ga_logPageview(GAState);
 			} catch (e) {};
 			previousGAState = GAState;
 		}
@@ -826,6 +837,7 @@ var gxdGenesTable = function (oCallback) {
 				recordOffset: Number(pRequest['startIndex']) || 0
 		};
 
+		ga_logPagination('GXD Summary', 'Genes', oPayload.pagination.recordOffset);
 		return true;
 	};
 
@@ -944,6 +956,7 @@ var gxdAssaysTable = function() {
 				recordOffset: Number(pRequest['startIndex']) || 0
 		};
 
+		ga_logPagination('GXD Summary', 'Assays', oPayload.pagination.recordOffset);
 		return true;
 	};
 
@@ -1074,6 +1087,7 @@ var gxdResultsTable = function() {
 				recordOffset: offset
 		};
 
+		ga_logPagination('GXD Summary', 'Assay Results', oPayload.pagination.recordOffset);
 		return true;
 	};
 
@@ -1179,6 +1193,7 @@ var gxdImagesTable = function() {
 				recordOffset: Number(pRequest['startIndex']) || 0
 		};
 
+		ga_logPagination('GXD Summary', 'Images', oPayload.pagination.recordOffset);
 		return true;
 	};
 
