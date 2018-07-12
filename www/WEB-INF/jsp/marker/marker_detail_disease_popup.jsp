@@ -10,14 +10,14 @@
 		<strong>Human Disease Modeled:</strong> ${dTerm}<br/>
 		<c:if test="${fn:length(MouseModels.get(dId)) > 0}">
 			<c:set var="models" value="${MouseModels.get(dId)}" />
-			<%@ include file="/WEB-INF/jsp/marker_detail_disease_popup_table.jsp" %>
+			<%@ include file="marker_detail_disease_popup_table.jsp" %>
 		</c:if>
 		<c:if test="${fn:length(NotMouseModels.get(dId)) > 0}">
 			<p/>
 			<strong>NOT Models</strong><br/>
 			No similarity to the expected human disease phenotype was found.<br/>
 			<c:set var="models" value="${NotMouseModels.get(dId)}" />
-			<%@ include file="/WEB-INF/jsp/marker_detail_disease_popup_table.jsp" %>
+			<%@ include file="marker_detail_disease_popup_table.jsp" %>
 		</c:if>
 	</div>
 </div>
