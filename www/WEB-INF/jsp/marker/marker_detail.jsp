@@ -45,6 +45,7 @@
 
 	<%@ include file="marker_detail_SummaryRibbon.jsp" %>
 	<%@ include file="marker_detail_LocationRibbon.jsp" %>
+	<%@ include file="marker_detail_StrainRibbon.jsp" %>
 	<%@ include file="marker_detail_HomologyRibbon.jsp" %>
 	<%@ include file="marker_detail_DiseaseRibbon.jsp" %>
 	<%@ include file="marker_detail_AlleleRibbon.jsp" %>
