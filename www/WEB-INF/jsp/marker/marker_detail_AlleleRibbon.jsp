@@ -55,7 +55,7 @@
 							<c:set var="sgTooltipTemplate" value="<count> phenotype(s)"/>
 							<c:set var="sgUrl" value="${configBean.FEWI_URL}diseasePortal/popup?isPhenotype=true&markerID=<markerID>&header=<abbrev>"/>
 
-							<%@ include file="shared_slimgrid.jsp" %>
+							<%@ include file="../shared_slimgrid.jsp" %>
 							<br/>
 							<span style="font-size: 90%">Click cells to view annotations.</span>
 						</div>

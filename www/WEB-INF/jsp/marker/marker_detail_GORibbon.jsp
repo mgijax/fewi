@@ -72,7 +72,7 @@
 														<c:set var="sgShowAbbrev" value="true"/>
 														<c:set var="sgTooltipTemplate" value="<count> annotation(s)"/>
 														<c:set var="sgUrl" value="${configBean.FEWI_URL}go/marker/<markerID>?header=<term>"/>
-														<%@ include file="shared_slimgrid.jsp" %>
+														<%@ include file="../shared_slimgrid.jsp" %>
 													</div>
 													<div class="sgSpacer"></div>
 													<div id="bpSlimgridWrapper" class="sgWrapper sgWrapperHeight">
@@ -81,7 +81,7 @@
 														<c:set var="sgCells" value="${marker.slimgridCellsProcess}"/>
 														<c:set var="sgShowAbbrev" value="true"/>
 														<c:set var="sgTooltipTemplate" value="<count> annotation(s)"/>
-														<%@ include file="shared_slimgrid.jsp" %>
+														<%@ include file="../shared_slimgrid.jsp" %>
 													</div>
 													<div class="sgSpacer"></div>
 													<div id="ccSlimgridWrapper" class="sgWrapper sgWrapperHeight">
@@ -90,7 +90,7 @@
 														<c:set var="sgCells" value="${marker.slimgridCellsComponent}"/>
 														<c:set var="sgShowAbbrev" value="true"/>
 														<c:set var="sgTooltipTemplate" value="<count> annotation(s)"/>
-														<%@ include file="shared_slimgrid.jsp" %>
+														<%@ include file="../shared_slimgrid.jsp" %>
 													</div>
 													<div style="font-size: 90%">Click cells to view annotations.</div>
 												</div>
