@@ -107,7 +107,7 @@ public class BatchSummaryRow {
     public String getStrand() {
     	return bmi.getStrand();
     }
-/*
+
     // Get the value for the start coordinate column.
     public Double getStart() {
     	return bmi.getStart();
@@ -117,7 +117,6 @@ public class BatchSummaryRow {
     public Double getEnd() {
     	return bmi.getEnd();
     }
-*/
 
     // Get a string containing the matching marker's Ensembl IDs (if requested), separated by HTML line breaks.
     public String getEnsemblIds() {
