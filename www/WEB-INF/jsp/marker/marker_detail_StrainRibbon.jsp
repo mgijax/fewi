@@ -36,22 +36,37 @@
 							${marker.annotatedStrainMarkerCount}
 						</div>
 					</li>
-					<li class="${extrastate}">
-						<div class="label">
-							SNPs within 2kb
-						</div>
-						<div class="value">
-							X
-						</div>
-					</li>
-					<li class="${extrastate}">
-						<div class="label">
-							RFLP
-						</div>
-						<div class="value">
-							X
-						</div>
-					</li>
+
+					<c:set var="snpsfound" value="false"/>
+					<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
+						<c:if test="${(fn:startsWith(item.countType, 'SNP')) and (item.count > 0)}">
+							<c:set var="snpsfound" value="true"/>
+						</c:if>
+					</c:forEach>
+
+					<c:if test="${snpsfound}">
+						<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
+							<c:if test="${(fn:startsWith(item.countType, 'SNP')) and (item.count > 0)}">
+								<li class="${extrastate}">
+								<c:set var="polyUrl" value="${configBean.FEWI_URL}snp/marker/${marker.primaryID}"/>
+									<div class="label" style="white-space: normal;">${item.countType}</div>
+									<div class="value"><a href="${polyUrl}" id="snpLink">${item.count}</a>
+										<c:if test="${not empty snpBuildNumber}"><span style="font-size: smaller; font-weight: normal;">from ${snpBuildNumber}</span></c:if>
+									</div>
+								</li>
+							</c:if>
+						</c:forEach>
+					</c:if>
+				
+					<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
+						<c:if test="${(item.countType == 'PCR') or (item.countType == 'RFLP')}">
+							<li class="${extrastate}">
+								<c:set var="polyUrl" value="${configBean.FEWI_URL}marker/polymorphisms/${fn:toLowerCase(item.countType)}/${marker.primaryID}"/>
+								<div class="label" style="white-space: normal;">${item.countType}</div>
+								<div class="value"><a href="${polyUrl}" id="${item.countType}Link">${item.count}</a></div>
+							</li>
+						</c:if>
+					</c:forEach>
 				</ul>
 			</section>
 			<section class="summarySec1">
