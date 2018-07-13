@@ -1,48 +1,37 @@
+<c:set var="snpsfound" value="false"/>
+<c:set var="polymorphismsfound" value="false"/>
+<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
+	<c:if test="${(fn:startsWith(item.countType, 'SNP')) and (item.count > 0)}">
+		<c:set var="snpsfound" value="true"/>
+	</c:if>
+	<c:if test="${((item.countType == 'PCR') or (item.countType == 'RFLP')) and (item.count > 0)}">
+		<c:set var="polymorphismsfound" value="true"/>
+	</c:if>
+</c:forEach>
+
+<c:set var="hasStrainMarkers" value="${marker.annotatedStrainMarkerCount > 0}"/>
+<c:set var="hasCoords" value="${not empty marker.preferredCoordinates}"/>
+
+<c:if test="${snpsfound or hasStrainMarkers or polymorphismsfound or hasCoords or (not empty strainSpecificNote)}">
 	<div class="row locationRibbon" id="strainRibbon">
 		<div class="header <%=leftTdStyles.getNext() %>">
 			Strain<br/>Comparison
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %>">
-
-			<c:set var="showJBrowser" value="${not empty marker.preferredCoordinates or not empty jbrowseUrl}" />
-			<c:set var="showDownloadSequence" value="${not empty marker.preferredCoordinates}" />
-			<c:set var="showGenomeBrowserLinks" value="${not (empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty ncbiMapViewerUrl)}" />
-
-			<c:set var="showGeneticMap" value="${(not empty marker.preferredCentimorgans) or (not empty marker.preferredCytoband) or (marker.countOfMappingExperiments > 0) or (not empty qtlIDs) or (not empty marker.aliases)}" />
-			
-			<c:set var="geneticMapExtra" value="${not empty qtlIDs or marker.countOfMappingExperiments > 0 or not empty marker.aliases or hasMiniMap}" />
-			<c:set var="showLocationNote" value="${not empty marker.locationNote}" />
-
-			<c:set var="arrowstate" value="hdExpand" />
-			<c:set var="extrastate" value="" />
-			<c:set var="arrowtext" value="more" />
-			<c:set var="titletext" value="Show More" />
-			<c:if test="${not (showLocationNote or showJBrowser or showDownloadSequence or showGenomeBrowserLinks or geneticMapExtra)}">
-				<c:set var="arrowstate" value="hdCollapse" />
-				<c:set var="extrastate" value="extra" />
-				<c:set var="arrowtext" value="less" />
-				<c:set var="titletext" value="Show Less" />
-			</c:if>
-
-			<div title="${titletext}" class="toggleImage ${arrowstate}">${arrowtext}</div>
+			<div title="Show More" class="toggleImage hdExpand">more</div>
 
 			<section class="summarySec1">
 				<ul>
-					<li class="${extrastate}">
-						<div class="label">
-							Strain Annotations
-						</div>
-						<div class="value">
-							${marker.annotatedStrainMarkerCount}
-						</div>
-					</li>
-
-					<c:set var="snpsfound" value="false"/>
-					<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
-						<c:if test="${(fn:startsWith(item.countType, 'SNP')) and (item.count > 0)}">
-							<c:set var="snpsfound" value="true"/>
-						</c:if>
-					</c:forEach>
+					<c:if test="${hasStrainMarkers}">
+						<li class="${extrastate}">
+							<div class="label">
+								Strain Annotations
+							</div>
+							<div class="value">
+								${marker.annotatedStrainMarkerCount}
+							</div>
+						</li>
+					</c:if>
 
 					<c:if test="${snpsfound}">
 						<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
@@ -58,15 +47,17 @@
 						</c:forEach>
 					</c:if>
 				
-					<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
-						<c:if test="${(item.countType == 'PCR') or (item.countType == 'RFLP')}">
-							<li class="extra closed">
-								<c:set var="polyUrl" value="${configBean.FEWI_URL}marker/polymorphisms/${fn:toLowerCase(item.countType)}/${marker.primaryID}"/>
-								<div class="label" style="white-space: normal;">${item.countType}</div>
-								<div class="value"><a href="${polyUrl}" id="${item.countType}Link">${item.count}</a></div>
-							</li>
-						</c:if>
-					</c:forEach>
+					<c:if test="${polymorphismsfound}">
+						<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
+							<c:if test="${(item.countType == 'PCR') or (item.countType == 'RFLP')}">
+								<li class="extra closed">
+									<c:set var="polyUrl" value="${configBean.FEWI_URL}marker/polymorphisms/${fn:toLowerCase(item.countType)}/${marker.primaryID}"/>
+									<div class="label" style="white-space: normal;">${item.countType}</div>
+									<div class="value"><a href="${polyUrl}" id="${item.countType}Link">${item.count}</a></div>
+								</li>
+							</c:if>
+						</c:forEach>
+					</c:if>
 				</ul>
 			</section>
 			<section class="summarySec1">
@@ -82,31 +73,30 @@
 				</ul>
 			</section>
 
-			<c:if test="${not (empty marker.preferredCoordinates and empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty gbrowseUrl and empty jbrowseUrl)}">
-					<fmt:formatNumber value="${marker.preferredCoordinates.startCoordinate}" pattern="#0" var="startCoord"/>
-					<fmt:formatNumber value="${marker.preferredCoordinates.endCoordinate}" pattern="#0" var="endCoord"/>
-					<c:set var="chromosome" value="${marker.preferredCoordinates.chromosome}"/>
+			<c:if test="${hasCoords}">
+				<fmt:formatNumber value="${marker.preferredCoordinates.startCoordinate}" pattern="#0" var="startCoord"/>
+				<fmt:formatNumber value="${marker.preferredCoordinates.endCoordinate}" pattern="#0" var="endCoord"/>
+				<c:set var="chromosome" value="${marker.preferredCoordinates.chromosome}"/>
 			</c:if>
 
-					<c:if test="${not (empty chromosome or empty startCoord or empty endCoord)}">
-						<fmt:formatNumber value="${marker.preferredCoordinates.startCoordinate - 50000}" pattern="#0" var="startCoordWithFlank"/>
-						<fmt:formatNumber value="${marker.preferredCoordinates.endCoordinate + 50000}" pattern="#0" var="endCoordWithFlank"/>
-						<li class="extra closed">
-							<div class="value" style="font-size: smaller; margin-left: 16.5em;">
-								<div style="float:left; margin-right: 5px">
-									<img src="${configBean.WEBSHARE_URL}images/new_icon.png"/>
-								</div>
-								<div style="padding-top:5px; font-size: 1.2em;">
-									<a href="${externalUrls.MGV}#ref=C57BL/6J&genomes=${externalUrls.MGV_Strains}&chr=${chromosome}&start=${startCoordWithFlank}&end=${endCoordWithFlank}&highlight=${marker.primaryID}" target="_blank" id="mgvLink">
-									Multiple Genome Viewer (MGV)
-									</a>
-								</div>
-							</div>
-						</li>
-					</c:if>
+			<c:if test="${not (empty chromosome or empty startCoord or empty endCoord)}">
+				<fmt:formatNumber value="${marker.preferredCoordinates.startCoordinate - 50000}" pattern="#0" var="startCoordWithFlank"/>
+				<fmt:formatNumber value="${marker.preferredCoordinates.endCoordinate + 50000}" pattern="#0" var="endCoordWithFlank"/>
+				<li class="extra closed">
+					<div class="value" style="font-size: smaller; margin-left: 16.5em;">
+						<div style="float:left; margin-right: 5px">
+							<img src="${configBean.WEBSHARE_URL}images/new_icon.png"/>
+						</div>
+						<div style="padding-top:5px; font-size: 1.2em;">
+							<a href="${externalUrls.MGV}#ref=C57BL/6J&genomes=${externalUrls.MGV_Strains}&chr=${chromosome}&start=${startCoordWithFlank}&end=${endCoordWithFlank}&highlight=${marker.primaryID}" target="_blank" id="mgvLink">
+							Multiple Genome Viewer (MGV)
+							</a>
+						</div>
+					</div>
+				</li>
+			</c:if>
 
 			<c:if test="${not empty marker.strainMarkers}">
-
 				<div class="extra closed">
 				<form name="strainMarkerForm" method="GET" action="${configBean.SEQFETCH_URL}" target="_blank">
 				<div id="strainGenesTableButtons">
@@ -163,6 +153,7 @@
 
 		</div>
 	</div>
+</c:if>
 
 <style>
 #strainGenesTableDiv {
