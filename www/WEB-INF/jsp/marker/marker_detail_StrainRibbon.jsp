@@ -15,7 +15,13 @@
 <c:if test="${snpsfound or hasStrainMarkers or polymorphismsfound or hasCoords or (not empty strainSpecificNote)}">
 	<div class="row locationRibbon" id="strainRibbon">
 		<div class="header <%=leftTdStyles.getNext() %>">
-			Strain<br/>Comparison
+			Strain<br/>Comparison<br/>
+			<div style="float:right;">
+				<img src="${configBean.FEWI_URL}assets/images/mice_transparent.png" style="height:28px"/>
+			</div>
+			<div style="float:right; margin-right: 5px">
+				<img src="${configBean.WEBSHARE_URL}images/new_icon.png"/>
+			</div>
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %>">
 			<div title="Show More" class="toggleImage hdExpand">more</div>
@@ -83,11 +89,8 @@
 				<fmt:formatNumber value="${marker.preferredCoordinates.startCoordinate - 50000}" pattern="#0" var="startCoordWithFlank"/>
 				<fmt:formatNumber value="${marker.preferredCoordinates.endCoordinate + 50000}" pattern="#0" var="endCoordWithFlank"/>
 				<li class="extra closed">
-					<div class="value" style="font-size: smaller; margin-left: 16.5em;">
-						<div style="float:left; margin-right: 5px">
-							<img src="${configBean.WEBSHARE_URL}images/new_icon.png"/>
-						</div>
-						<div style="padding-top:5px; font-size: 1.2em;">
+					<div class="value" style="margin-left: 16.5em;">
+						<div id="mgvDiv">
 							<a href="${externalUrls.MGV}#ref=C57BL/6J&genomes=${externalUrls.MGV_Strains}&chr=${chromosome}&start=${startCoordWithFlank}&end=${endCoordWithFlank}&highlight=${marker.primaryID}" target="_blank" id="mgvLink">
 							Multiple Genome Viewer (MGV)
 							</a>
