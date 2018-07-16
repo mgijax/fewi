@@ -30,9 +30,9 @@
 		<div class="header <%=leftTdStyles.getNext() %>">
 			Strain<br/>Comparison<br/>
 			<div style="float:right;">
-				<img src="${configBean.FEWI_URL}assets/images/mice_transparent.png" style="height:28px"/>
+				<img src="${configBean.FEWI_URL}assets/images/mice_transparent.png" style="height:50px"/>
 			</div>
-			<div style="float:right; margin-right: 5px">
+			<div style="float:right; margin-right: 5px; margin-top: 13px;">
 				<img src="${configBean.WEBSHARE_URL}images/new_icon.png"/>
 			</div>
 		</div>
@@ -116,9 +116,17 @@
 				<div class="extra closed">
 				<form name="strainMarkerForm" method="GET" action="${configBean.SEQFETCH_URL}" target="_blank">
 				<div id="strainGenesTableButtons">
-					<input type="submit" class="sgButton" value="Get FASTA" />
 					<input type="button" class="sgButton" value="Check All" onClick="clickAllStrainGenes()"/>
+					<input type="button" class="sgButton" value="Check DO/CC Founders" onClick="clickParentalStrainGenes()"/>
 					<input type="reset" class="sgButton" value="Uncheck All" />
+					For selected strains:
+					<select id="strainOp" name="strainOp">
+						<option value="fasta">Get FASTA</option>
+						<option value="mgv">Send to MGV</option>
+						<option value="muscle">Send to MUSCLE</option>
+						<option value="snps">Send to Sanger SNP Query</option>
+					</select>
+					<input type="button" class="sgButton" value="Go" />
 				</div>
 				<div id="strainGenesTableDiv">
 				<table class="padded" id="table_strainMarkers">
@@ -177,10 +185,10 @@
 #strainGenesTableButtons {
 	text-align: center;
 	margin-left: 15px;
-	width: 779px;
+	width: 838px;
 }
 .sgButton {
-	width: 90px;
+	min-width: 50px;
 	padding: 3px;
 	margin: 3px;
 }

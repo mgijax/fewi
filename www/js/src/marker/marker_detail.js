@@ -193,4 +193,24 @@
 
 	});
 
+// list of names for DO/CC Founder strains
+var parentalStrains = [ '129S1/SvImJ', 'A/J', 'C57BL/6J', 'CAST/EiJ', 'NOD/ShiLtJ', 'NZO/HlLtJ', 'PWK/PhJ', 'WSB/EiJ' ];
 
+// removes any slashes occurring in string 's'
+var noSlash = function(s) {
+	return s.replace(/\//g, '');
+}
+
+// check all the DO/CC Founder strains in the table of strain genes
+var clickParentalStrainGenes = function() {
+	var checkboxes = $('[type=checkbox][name=seqs]');
+	for (i = 0; i < checkboxes.length; i++) {
+		for (j = 0; j < parentalStrains.length; j++) {
+			// strain name (minus the slash) is embedded in the ID that is the checkbox's value string,
+			// bordered by underscores on either side
+			if (checkboxes[i].value.indexOf('_' + noSlash(parentalStrains[j]) + '_') >= 0) {
+				checkboxes[i].checked = true;
+			}
+		}
+	}
+}
