@@ -39,6 +39,11 @@
 		<div class="detail <%=rightTdStyles.getNext() %>">
 			<div title="Show More" class="toggleImage hdExpand">more</div>
 
+			<c:set var="mgvUrl" value="${externalUrls.MGV}#ref=C57BL/6J&genomes=${externalUrls.MGV_Strains}&chr=${chromosome}&start=${startCoordWithFlank}&end=${endCoordWithFlank}&highlight=${marker.primaryID}" />
+			<script>
+			var mgvUrl = "${mgvUrl}";
+			</script>
+			
 			<section class="summarySec1">
 				<ul>
 					<c:if test="${hasStrainMarkers}">
@@ -50,7 +55,7 @@
 								${marker.annotatedStrainMarkerCount}
 								<c:if test="${hasMgvLink}">
 									<span id="mgvSpan" class="leftpad15">
-										<a href="${externalUrls.MGV}#ref=C57BL/6J&genomes=${externalUrls.MGV_Strains}&chr=${chromosome}&start=${startCoordWithFlank}&end=${endCoordWithFlank}&highlight=${marker.primaryID}" target="_blank" id="mgvLink">
+										<a href="${mgvUrl}" target="_blank" id="mgvLink">
 										Multiple Genome Viewer (MGV)
 										</a>
 									</span>

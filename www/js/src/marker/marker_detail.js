@@ -193,6 +193,10 @@
 
 	});
 
+/*****************************************/
+/*** JS support for strain marker form ***/
+/*****************************************/
+	
 // list of names for DO/CC Founder strains
 var parentalStrains = [ '129S1/SvImJ', 'A/J', 'C57BL/6J', 'CAST/EiJ', 'NOD/ShiLtJ', 'NZO/HlLtJ', 'PWK/PhJ', 'WSB/EiJ' ];
 
@@ -215,16 +219,69 @@ var clickParentalStrainGenes = function() {
 	}
 }
 
+// get a munged strain name from 's', which is either an ID or a valid strain name.  The munged
+// strain name has no slashes or other special characters.
+var getMungedStrainName = function(s) {
+	// If this is a strain gene ID, it will contain two underscores.  The strain name is between them.
+	var pieces = s.split('_');
+	var name = s;
+	if (pieces.length == 3) {
+		name = pieces[1];
+	}
+	return name.replace(/\//g, '');
+}
+
 // handle when the strain ribbon's Go button is clicked
 var strainRibbonGoButtonClick = function() {
 	var option = $('#strainOp :selected')[0].value;
 	var form = $('#strainMarkerForm')[0];
 	
 	if (option == 'fasta') {
+		// simples one -- just get the base pairs from seqfetch.
+		
 		form.action = getUrl('seqfetch');
 		form.submit();
 		
 	} else if (option == 'mgv') {
+		// We only want strains to appear in MGV if they're in the list of strains that have checks from the user.
+		// The base URL has all of them, so we need to remove any unchecked ones.
+
+		// map of munged strain names that were checked by the user
+		var checked = {};
+		var checkboxes = $('[type=checkbox][name=seqs]');
+		for (i = 0; i < checkboxes.length; i++) {
+			if (checkboxes[i].checked) {
+				checked[getMungedStrainName(checkboxes[i].value)] = 1;
+			}
+		}
+		
+		// Now that we know which checkboxes were checked, we need to eliminate unwanted ones from the MGV URL.
+		var urlPieces = getUrl('mgv').split('&');
+		var url = '';
+		
+		for (j = 0; j < urlPieces.length; j++) {
+			if (url.length > 0) { url = url + '&'; }			// add joiner between parameters
+
+			if (urlPieces[j].startsWith('genomes=')) {
+				url = url + 'genomes=';							// add parameter name back in
+				var strains = urlPieces[j].split('=')[1].split('+');
+				var firstStrain = true;
+				for (s = 0; s < strains.length; s++) {
+					if (getMungedStrainName(strains[s]) in checked) {
+						if (!firstStrain) { url = url + '+'; }
+						url = url + strains[s];
+						firstStrain = false;
+					}
+				}
+				
+			} else {
+				// other parameters can go back into the url as-is
+				url = url + urlPieces[j];
+			}
+		}
+		
+		form.action = url;
+		form.submit();
 		
 	} else if (option == 'snps') {
 		
@@ -235,11 +292,16 @@ var strainRibbonGoButtonClick = function() {
 	}
 }
 
+// cache of URLs needed for the strain marker form, configured in the JSP (which has
+// access to configBean and externalUrls)
 urls = {}
+
+// associate the given 'name' with the given 'url', so we can look it up in Javascript
 var configureUrl = function(name, url) {
 	urls[name] = url;
 }
 
+// get the URL associated with the given 'name' (as set up using configureUrl)
 var getUrl = function(name) {
 	if (name in urls) {
 		return urls[name];

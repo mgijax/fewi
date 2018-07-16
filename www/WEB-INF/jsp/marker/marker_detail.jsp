@@ -145,6 +145,7 @@ YAHOO.util.Event.addListener("sgPhenoHelpImage", "click", YAHOO.mp.container.phe
 <script>
 	// setup for form in strain ribbon
 	configureUrl('seqfetch', '${configBean.SEQFETCH_URL}');
+	configureUrl('mgv', '${mgvUrl}');
 </script>
 <!--	close page template -->
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
