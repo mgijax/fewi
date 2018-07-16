@@ -5,7 +5,6 @@
 		<div class="detail <%=rightTdStyles.getNext() %>">
 
 			<c:set var="showJBrowser" value="${not empty marker.preferredCoordinates or not empty jbrowseUrl}" />
-			<c:set var="showDownloadSequence" value="${not empty marker.preferredCoordinates}" />
 			<c:set var="showGenomeBrowserLinks" value="${not (empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty ncbiMapViewerUrl)}" />
 
 			<c:set var="showGeneticMap" value="${(not empty marker.preferredCentimorgans) or (not empty marker.preferredCytoband) or (marker.countOfMappingExperiments > 0) or (not empty qtlIDs) or (not empty marker.aliases)}" />
@@ -17,7 +16,7 @@
 			<c:set var="extrastate" value="" />
 			<c:set var="arrowtext" value="more" />
 			<c:set var="titletext" value="Show More" />
-			<c:if test="${not (showLocationNote or showJBrowser or showDownloadSequence or showGenomeBrowserLinks or geneticMapExtra)}">
+			<c:if test="${not (showLocationNote or showJBrowser or showGenomeBrowserLinks or geneticMapExtra)}">
 				<c:set var="arrowstate" value="hdCollapse" />
 				<c:set var="extrastate" value="extra" />
 				<c:set var="arrowtext" value="less" />
@@ -78,34 +77,6 @@
 								</c:if>
 
 							</div>
-						</li>
-					</c:if>
-
-					<c:if test="${showDownloadSequence}">
-						<li class="extra closed">
-							<div class="label">
-								Download<br/>Sequence
-							</div>
-							<div class="value">
-								<form name="markerCoordForm" method="GET" action="${configBean.SEQFETCH_URL}">
-									<c:set var="length" value="${marker.preferredCoordinates.endCoordinate - marker.preferredCoordinates.startCoordinate + 1}"/>
-									<c:set var="seqfetchParms" value="mousegenome!!${marker.preferredCoordinates.chromosome}!${startCoord}!${endCoord}!!"/>
-
-									<!-- handle end < start, which is very atypical -->
-									<c:if test="${length < 0}">
-										<c:set var="length" value="${marker.preferredCoordinates.startCoordinate - marker.preferredCoordinates.endCoordinate + 1}"/>
-										<c:set var="seqfetchParms" value="mousegenome!!${marker.preferredCoordinates.chromosome}!${endCoord}!${startCoord}!!"/>
-									</c:if>
-
-									<fmt:formatNumber value="${length}" pattern="#0" var="lengthStr"/>
-
-									<input type="hidden" name="seq1" value="${seqfetchParms}">
-									<input type="button" value="Get FASTA" onClick="formatFastaArgs()">
-									&nbsp;&nbsp;${lengthStr} bp
-									&nbsp;&nbsp;&#177; <input type="text" size="3" name="flank1" value="0">&nbsp;kb&nbsp;flank
-								</form>
-							</div>
-							<br />
 						</li>
 					</c:if>
 
