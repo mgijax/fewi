@@ -120,10 +120,7 @@
 			<c:if test="${not empty marker.strainMarkers}">
 				<div class="extra closed">
 				<form id="strainMarkerForm" name="strainMarkerForm" method="GET" action="" target="_blank">
-				<div id="strainGenesTableButtons">
-					<input type="button" class="sgButton" value="Select All" onClick="clickAllStrainGenes()"/>
-					<input type="button" class="sgButton" value="Select DO/CC Founders" onClick="clickParentalStrainGenes()"/>
-					<input id="sgResetButton" type="reset" class="sgButton" value="Deselect All" />
+				<div id="strainGenesTableControls">
 					For selected strains:
 					<select id="strainOp" name="strainOp">
 						<option value="fasta">Get FASTA</option>
@@ -133,6 +130,7 @@
 					</select>
 					<input type="button" class="sgButton" value="Go" onClick="strainRibbonGoButtonClick()" />
 				</div>
+				<div id="strainGenesWrapperDiv">
 				<div id="strainGenesTableDiv">
 				<table class="padded" id="table_strainMarkers">
 					
@@ -175,6 +173,12 @@
 
 				</table>
 				</div>
+				<div id="strainGenesButtonsDiv">
+					<input type="button" class="sgButton" value="Select All" onClick="clickAllStrainGenes()"/><br/>
+					<input type="button" class="sgButton" value="Select DO/CC Founders" onClick="clickParentalStrainGenes()"/><br/>
+					<input id="sgResetButton" type="reset" class="sgButton" value="Deselect All" />
+				</div>
+				</div>
 				</form>
 				</div>
 
@@ -185,12 +189,22 @@
 </c:if>
 
 <style>
-#strainGenesTableDiv {
+#strainGenesWrapperDiv {
+	vertical-align: top;
 }
-#strainGenesTableButtons {
-	text-align: center;
-	margin-left: 15px;
-	width: 838px;
+#strainGenesTableDiv {
+	display: inline-block;
+	vertical-align: top;
+}
+#strainGenesButtonsDiv {
+	display: inline-block;
+	vertical-align: top;
+}
+#strainGenesTableControls {
+	display: inline-block;
+	text-align: right;
+	min-width: 838px;
+	margin-left: 35px;
 }
 .sgButton {
 	min-width: 50px;
@@ -206,6 +220,17 @@
 		// for all checkboxes on the strainMarkerForm that aren't checked, click them
 		$('[name=strainMarkerForm] [type=checkbox]:not(:checked)').click();
 	}
+	
+	function realWidth(obj){
+	    var clone = obj.clone();
+	    clone.css("visibility","hidden");
+	    $('body').append(clone);
+	    var width = clone.outerWidth();
+	    clone.remove();
+	    return width;
+	}
+
 	// add centering of download checkboxes
 	$('.sgCenter').css({'text-align' : 'center'});
+	$('#strainGenesTableControls').width(realWidth($('#strainGenesTableDiv')));
 </script>
