@@ -107,9 +107,9 @@
 
 					<c:if test="${hasTss}">
 						<li>
-							<div class="label">Transcription</div>
+							<div class="label">Transcription Start Sites</div>
 							<div class="value">
-								<span id="showTss" class="link">${tssCount} start site<c:if test="${fn:length(marker.tss) > 1}">s</c:if></span>
+								<span id="showTss" class="link">${tssCount} TSS</span>
 							</div>
 						</li>
 					</c:if>
