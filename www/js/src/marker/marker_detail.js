@@ -207,6 +207,7 @@ var noSlash = function(s) {
 
 // check all the DO/CC Founder strains in the table of strain genes
 var clickParentalStrainGenes = function() {
+	$('#sgResetButton').click();
 	var checkboxes = $('[type=checkbox][name=seqs]');
 	for (i = 0; i < checkboxes.length; i++) {
 		for (j = 0; j < parentalStrains.length; j++) {
@@ -236,6 +237,22 @@ var strainRibbonGoButtonClick = function() {
 	var option = $('#strainOp :selected')[0].value;
 	var form = $('#strainMarkerForm')[0];
 	
+	// map of munged strain names that were checked by the user
+	var checked = {};
+	var checkboxes = $('[type=checkbox][name=seqs]');
+
+	for (i = 0; i < checkboxes.length; i++) {
+		if (checkboxes[i].checked) {
+			checked[getMungedStrainName(checkboxes[i].value)] = 1;
+		}
+	}
+	
+	// if no boxes checked, give a message and bail out
+	if ($.isEmptyObject(checked)) {
+		alert("You must check at least one of the checkboxes in the right column.");
+		return;
+	}
+		
 	if (option == 'fasta') {
 		// simples one -- just get the base pairs from seqfetch.
 		
@@ -246,16 +263,7 @@ var strainRibbonGoButtonClick = function() {
 		// We only want strains to appear in MGV if they're in the list of strains that have checks from the user.
 		// The base URL has all of them, so we need to remove any unchecked ones.
 
-		// map of munged strain names that were checked by the user
-		var checked = {};
-		var checkboxes = $('[type=checkbox][name=seqs]');
-		for (i = 0; i < checkboxes.length; i++) {
-			if (checkboxes[i].checked) {
-				checked[getMungedStrainName(checkboxes[i].value)] = 1;
-			}
-		}
-		
-		// Now that we know which checkboxes were checked, we need to eliminate unwanted ones from the MGV URL.
+		// We already know which checkboxes were checked; now we need to eliminate unwanted ones from the MGV URL.
 		var urlPieces = getUrl('mgv').split('&');
 		var url = '';
 		

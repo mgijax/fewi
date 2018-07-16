@@ -121,15 +121,15 @@
 				<div class="extra closed">
 				<form id="strainMarkerForm" name="strainMarkerForm" method="GET" action="" target="_blank">
 				<div id="strainGenesTableButtons">
-					<input type="button" class="sgButton" value="Check All" onClick="clickAllStrainGenes()"/>
-					<input type="button" class="sgButton" value="Check DO/CC Founders" onClick="clickParentalStrainGenes()"/>
-					<input type="reset" class="sgButton" value="Uncheck All" />
+					<input type="button" class="sgButton" value="Select All" onClick="clickAllStrainGenes()"/>
+					<input type="button" class="sgButton" value="Select DO/CC Founders" onClick="clickParentalStrainGenes()"/>
+					<input id="sgResetButton" type="reset" class="sgButton" value="Deselect All" />
 					For selected strains:
 					<select id="strainOp" name="strainOp">
 						<option value="fasta">Get FASTA</option>
-						<option value="mgv">Send to MGV</option>
-						<option value="muscle">Send to MUSCLE</option>
-						<option value="snps">Send to Sanger SNP Query</option>
+						<option value="mgv">Send to Multi Genome Viewer (MGV)</option>
+						<option value="muscle">Send to MUSCLE (Multiple Sequence Alignment Tool)</option>
+						<option value="snps">Send to Sanger SNP Query (+/- 2kb)</option>
 					</select>
 					<input type="button" class="sgButton" value="Go" onClick="strainRibbonGoButtonClick()" />
 				</div>
@@ -141,7 +141,7 @@
 					  <th>Gene Model ID</th>
 					  <th>Feature Type</th>
 					  <th>Coordinates</th>
-					  <th>Downloads</th>
+					  <th>Select Strains</th>
 					</tr>
 					
 					<c:forEach var="sm" items="${marker.strainMarkers}">
