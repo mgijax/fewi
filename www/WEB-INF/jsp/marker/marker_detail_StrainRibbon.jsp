@@ -49,7 +49,7 @@
 							<div class="value">
 								${marker.annotatedStrainMarkerCount}
 								<c:if test="${hasMgvLink}">
-									<span id="mgvSpan">
+									<span id="mgvSpan" class="leftpad15">
 										<a href="${externalUrls.MGV}#ref=C57BL/6J&genomes=${externalUrls.MGV_Strains}&chr=${chromosome}&start=${startCoordWithFlank}&end=${endCoordWithFlank}&highlight=${marker.primaryID}" target="_blank" id="mgvLink">
 										Multiple Genome Viewer (MGV)
 										</a>
@@ -61,6 +61,8 @@
 					<c:if test="${(not hasStrainMarkers) and (hasMgvLink)}">
 						<li class="${extrastate}">
 							<div class="label">
+							</div>
+							<div class="value">
 								<span id="mgvSpan">
 									<a href="${externalUrls.MGV}#ref=C57BL/6J&genomes=${externalUrls.MGV_Strains}&chr=${chromosome}&start=${startCoordWithFlank}&end=${endCoordWithFlank}&highlight=${marker.primaryID}" target="_blank" id="mgvLink">
 									Multiple Genome Viewer (MGV)
@@ -182,9 +184,8 @@
 	padding: 3px;
 	margin: 3px;
 }
-#mgvSpan {
+.leftpad15 {
 	margin-left: 15px;
-	font-weight: normal;
 }
 </style>
 <script>
