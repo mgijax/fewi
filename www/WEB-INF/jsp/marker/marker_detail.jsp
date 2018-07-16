@@ -141,5 +141,10 @@ YAHOO.util.Event.addListener("sgPhenoHelpImage", "click", YAHOO.mp.container.phe
 			}, 200);
 	</script>
 </c:if>
+
+<script>
+	// setup for form in strain ribbon
+	configureUrl('seqfetch', '${configBean.SEQFETCH_URL}');
+</script>
 <!--	close page template -->
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

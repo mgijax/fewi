@@ -214,3 +214,38 @@ var clickParentalStrainGenes = function() {
 		}
 	}
 }
+
+// handle when the strain ribbon's Go button is clicked
+var strainRibbonGoButtonClick = function() {
+	var option = $('#strainOp :selected')[0].value;
+	var form = $('#strainMarkerForm')[0];
+	
+	if (option == 'fasta') {
+		console.log('form.action = ' + form.action);
+		form.action = getUrl('seqfetch');
+		console.log('form.action = ' + form.action);
+		form.submit();
+		
+	} else if (option == 'mgv') {
+		
+	} else if (option == 'snps') {
+		
+	} else if (option == 'muscle') {
+		
+	} else {
+		console.log('Unrecognized value for strainOp: ' + option);
+	}
+}
+
+urls = {}
+var configureUrl = function(name, url) {
+	urls[name] = url;
+}
+
+var getUrl = function(name) {
+	if (name in urls) {
+		return urls[name];
+	}
+	console.log('Unrecognized name for requested URL: ' + name);
+	return null;
+}

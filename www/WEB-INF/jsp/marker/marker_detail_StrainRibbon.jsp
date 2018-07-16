@@ -114,7 +114,7 @@
 
 			<c:if test="${not empty marker.strainMarkers}">
 				<div class="extra closed">
-				<form name="strainMarkerForm" method="GET" action="${configBean.SEQFETCH_URL}" target="_blank">
+				<form id="strainMarkerForm" name="strainMarkerForm" method="GET" action="" target="_blank">
 				<div id="strainGenesTableButtons">
 					<input type="button" class="sgButton" value="Check All" onClick="clickAllStrainGenes()"/>
 					<input type="button" class="sgButton" value="Check DO/CC Founders" onClick="clickParentalStrainGenes()"/>
@@ -126,7 +126,7 @@
 						<option value="muscle">Send to MUSCLE</option>
 						<option value="snps">Send to Sanger SNP Query</option>
 					</select>
-					<input type="button" class="sgButton" value="Go" />
+					<input type="button" class="sgButton" value="Go" onClick="strainRibbonGoButtonClick()" />
 				</div>
 				<div id="strainGenesTableDiv">
 				<table class="padded" id="table_strainMarkers">
