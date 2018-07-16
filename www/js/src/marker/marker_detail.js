@@ -221,9 +221,7 @@ var strainRibbonGoButtonClick = function() {
 	var form = $('#strainMarkerForm')[0];
 	
 	if (option == 'fasta') {
-		console.log('form.action = ' + form.action);
 		form.action = getUrl('seqfetch');
-		console.log('form.action = ' + form.action);
 		form.submit();
 		
 	} else if (option == 'mgv') {
