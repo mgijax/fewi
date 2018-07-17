@@ -159,6 +159,8 @@
 	div.centered { text-align: center; }
 	td.rightPadded { padding-right: 4px; }
 
+#showTss:hover{color:#c00; background-color: #c7e3fe; text-decoration: none}
+
 .sgHeaderDiv {
 color: black;
 font-weight: 10;
