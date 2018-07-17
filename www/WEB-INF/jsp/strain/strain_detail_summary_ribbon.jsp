@@ -16,12 +16,16 @@
 						</div>
 					</li>
 
+					<c:set var="isStrainFamily" value="false" />
 					<c:if test="${not empty strain.strainAttributes}">
 						<li>
 							<div class="label">Attributes</div>
 							<div class="value" id="strainAttributes">
 								<c:forEach var="attribute" items="${strain.strainAttributes}" varStatus="status">
 									<fewi:super value="${attribute.attribute}"/><c:if test="${!status.last}">, </c:if>
+									<c:if test="${attribute.attribute == 'strain family'}">
+										<c:set var="isStrainFamily" value="true" />
+									</c:if>
 								</c:forEach>
 							</div>
 						</li>
@@ -85,9 +89,9 @@
 							</div>
 						</li>
 					</c:if>
-					<c:if test="${not empty relatedStrainCount}">
+					<c:if test="${(not empty relatedStrainCount) and isStrainFamily}">
 						<li>
-							<div class="label">Related Strains</div>
+							<div class="label">Strain Family Members</div>
 							<div class="value" id="relatedStrains">
 								<a href="${configBean.FEWI_URL}strain/summary?strainName=${strain.name}*&attributes=inbred strain" id="relatedStrainLink" target="_blank">${relatedStrainCount}</a>
 							</div>
