@@ -29,7 +29,7 @@
 				    			<a href="${configBean.FEWI_URL}allele/${mutation.alleleID}"><fewi:super value="${mutation.alleleSymbol}"/></a>
 				    			</c:if></td>
 				    		<td><c:if test="${not empty mutation.markerID}">
-				    			<a href="${configBean.FEWI_URL}marker/${mutation.markerID}"><fewi:super value="${mutation.markerSymbol}"/></a>
+				    			<a href="${configBean.FEWI_URL}marker/${mutation.markerID}" title="${mutation.markerName}"><fewi:super value="${mutation.markerSymbol}"/></a>
 				    			</c:if></td>
 				    	</tr>
 				    </c:forEach> 
@@ -57,7 +57,7 @@
 				    			<a href="${configBean.FEWI_URL}allele/${qtl.alleleID}"><fewi:super value="${qtl.alleleSymbol}"/></a>
 				    			</c:if></td>
 				    		<td><c:if test="${not empty qtl.markerID}">
-				    			<a href="${configBean.FEWI_URL}marker/${qtl.markerID}"><fewi:super value="${qtl.markerSymbol}"/></a>
+				    			<a href="${configBean.FEWI_URL}marker/${qtl.markerID}" title="${qtl.markerName}"><fewi:super value="${qtl.markerSymbol}"/></a>
 				    			</c:if></td>
 				    	</tr>
 				    </c:forEach> 
