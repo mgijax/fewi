@@ -183,6 +183,7 @@
 				action="Close";
 			}
 
+			adjustDisplay(parent[0].id, action);
 			ga_logEvent('MarkerDetailPageEvent', parent[0].id, action);
 		});
 		
@@ -193,16 +194,49 @@
 
 	});
 
+// Make any display adjustments needed when we open or close ribbons.  (Sometimes widths need to 
+// be tweaked to help things line up.)
+var adjustDisplay = function(ribbonID, action) {
+	if ((action == 'Open') && (ribbonID == 'strainRibbon')) {	
+		$('#strainGenesTableControls').width($('#strainGenesTableDiv').width());
+	}
+}
+	
 /*****************************************/
 /*** JS support for strain marker form ***/
 /*****************************************/
 	
+// all strains included in list of strain genes
+var allStrains = [ '129S1/SvImJ', 'A/J', 'AKR/J', 'BALB/cJ', 'C3H/HeJ', 'C57BL/6J', 'C57BL/6NJ', 'CAROLI/EiJ',
+	'CAST/EiJ', 'CBA/J', 'DBA/2J', 'FVB/NJ', 'LP/J', 'NOD/ShiLtJ', 'NZO/HlLtJ', 'PWK/PhJ', 'SPRET/EiJ', 'WSB/EiJ' ];
+
 // list of names for DO/CC Founder strains
 var parentalStrains = [ '129S1/SvImJ', 'A/J', 'C57BL/6J', 'CAST/EiJ', 'NOD/ShiLtJ', 'NZO/HlLtJ', 'PWK/PhJ', 'WSB/EiJ' ];
+
+// converts any slashes occurring in string 's' to be underscores
+var slashToUnderscore = function(s) {
+	return s.replace(/\//g, '_');
+}
 
 // removes any slashes occurring in string 's'
 var noSlash = function(s) {
 	return s.replace(/\//g, '');
+}
+
+// get the full URL to Sanger SNPs, including those strains currently checked on the form
+var getSangerUrl = function() {
+	var st = "";
+	var checkboxes = $('[type=checkbox][name=seqs]');
+	for (i = 0; i < checkboxes.length; i++) {
+		if (checkboxes[i].checked) {
+			for (j = 0; j < allStrains.length; j++) {
+				if (checkboxes[i].value.indexOf('_' + noSlash(allStrains[j]) + '_') >= 0) {
+					st = st + '&st=' + slashToUnderscore(allStrains[j]);
+				}
+			}
+		}
+	}
+	return getUrl('sanger') + st.toLowerCase();
 }
 
 // check all the DO/CC Founder strains in the table of strain genes
@@ -249,7 +283,7 @@ var strainRibbonGoButtonClick = function() {
 	
 	// if no boxes checked, give a message and bail out
 	if ($.isEmptyObject(checked)) {
-		alert("You must check at least one of the checkboxes in the right column.");
+		alert("You must select at least one strain using the checkboxes in the right column.");
 		return;
 	}
 		
@@ -292,8 +326,10 @@ var strainRibbonGoButtonClick = function() {
 		form.submit();
 		
 	} else if (option == 'snps') {
+		window.open(getSangerUrl(), '_blank');
 		
 	} else if (option == 'muscle') {
+		alert('Coming in a future sprint');
 		
 	} else {
 		console.log('Unrecognized value for strainOp: ' + option);

@@ -146,6 +146,9 @@ YAHOO.util.Event.addListener("sgPhenoHelpImage", "click", YAHOO.mp.container.phe
 	// setup for form in strain ribbon
 	configureUrl('seqfetch', '${configBean.SEQFETCH_URL}');
 	configureUrl('mgv', '${mgvUrl}');
+	configureUrl('sanger', '${fn:replace(fn:replace(fn:replace(externalUrls.Sanger_SNPs, "<chromosome>", chromosome),
+			"<start>", sangerStartCoord), 
+			"<end>", sangerEndCoord)}');
 </script>
 <!--	close page template -->
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

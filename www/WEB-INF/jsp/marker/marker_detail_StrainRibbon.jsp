@@ -23,6 +23,10 @@
 	<fmt:formatNumber value="${marker.preferredCoordinates.startCoordinate - 50000}" pattern="#0" var="startCoordWithFlank"/>
 	<fmt:formatNumber value="${marker.preferredCoordinates.endCoordinate + 50000}" pattern="#0" var="endCoordWithFlank"/>
 	<c:set var="hasMgvLink" value="true"/>
+
+	<!-- default to canonical marker coordinates for Sanger link with 2kb flank -->
+	<fmt:formatNumber value="${marker.preferredCoordinates.startCoordinate - 2000}" pattern="#0" var="sangerStartCoord"/>
+	<fmt:formatNumber value="${marker.preferredCoordinates.endCoordinate + 2000}" pattern="#0" var="sangerEndCoord"/>
 </c:if>
 
 <c:if test="${snpsfound or hasStrainMarkers or polymorphismsfound or hasCoords or (not empty strainSpecificNote)}">
@@ -169,6 +173,11 @@
 							  </c:if>
 							</td>
 						</tr>
+						<c:if test="${sm.strainName == 'C57BL/6J'}">
+							<!-- prefer C57BL/6J coords for Sanger SNP link -->
+							<fmt:formatNumber value="${sm.startCoordinate - 2000}" pattern="#0" var="sangerStartCoord"/>
+							<fmt:formatNumber value="${sm.endCoordinate + 2000}" pattern="#0" var="sangerEndCoord"/>
+						</c:if>
 					</c:forEach> 
 
 				</table>
@@ -204,7 +213,7 @@
 	display: inline-block;
 	text-align: right;
 	min-width: 838px;
-	margin-left: 35px;
+	margin-left: 3px;
 }
 .sgButton {
 	min-width: 50px;
@@ -221,16 +230,6 @@
 		$('[name=strainMarkerForm] [type=checkbox]:not(:checked)').click();
 	}
 	
-	function realWidth(obj){
-	    var clone = obj.clone();
-	    clone.css("visibility","hidden");
-	    $('body').append(clone);
-	    var width = clone.outerWidth();
-	    clone.remove();
-	    return width;
-	}
-
 	// add centering of download checkboxes
 	$('.sgCenter').css({'text-align' : 'center'});
-	$('#strainGenesTableControls').width(realWidth($('#strainGenesTableDiv')));
 </script>
