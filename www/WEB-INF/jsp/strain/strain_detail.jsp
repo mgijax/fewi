@@ -27,6 +27,11 @@
 
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="STRAIN_detail_help.shtml" style="max-width: none;">
+	<div class="yourInputButton">
+		<form name="YourInputForm">
+			<input class="largeButton" value="Your Input Welcome" name="yourInputButton" onclick='window.open("${configBean.MGIHOME_URL}feedback/feedback_form.cgi?accID=${strain.primaryID}&amp;dataDate=<fmt:formatDate type='date' value='${databaseDate}' dateStyle='short'/>")' onmouseover="return overlib('We welcome your corrections and new data. Click here to contact us.', LEFT, WIDTH, 200, TIMEOUT, 2000);" onmouseout="nd();" type="button">
+		</form>
+	</div>
 	<div name="centeredTitle">
 		<span class="titleBarMainTitle"><fewi:super value="${strain.name}"/></span>
 		<span class="titleBar_sub">
