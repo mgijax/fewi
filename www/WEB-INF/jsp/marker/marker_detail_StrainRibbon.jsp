@@ -41,7 +41,7 @@
 			</div>
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %>">
-			<div title="Show More" class="toggleImage hdExpand">more</div>
+			<div id="scToggle" title="Show More" class="toggleImage hdExpand">more</div>
 
 			<c:set var="mgvUrl" value="${externalUrls.MGV}#ref=C57BL/6J&genomes=${externalUrls.MGV_Strains}&chr=${chromosome}&start=${startCoordWithFlank}&end=${endCoordWithFlank}&highlight=${marker.primaryID}" />
 			<script>
@@ -56,7 +56,7 @@
 								Strain Annotations
 							</div>
 							<div class="value">
-								${marker.annotatedStrainMarkerCount}
+								<span id="annotatedStrainMarkerCount">${marker.annotatedStrainMarkerCount}</span>
 								<c:if test="${hasMgvLink}">
 									<span id="mgvSpan" class="leftpad15">
 										<a href="${mgvUrl}" target="_blank" id="mgvLink">

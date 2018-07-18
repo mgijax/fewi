@@ -149,6 +149,12 @@ YAHOO.util.Event.addListener("sgPhenoHelpImage", "click", YAHOO.mp.container.phe
 	configureUrl('sanger', '${fn:replace(fn:replace(fn:replace(externalUrls.Sanger_SNPs, "<chromosome>", chromosome),
 			"<start>", sangerStartCoord), 
 			"<end>", sangerEndCoord)}');
+
+	// The strain comparison ribbon needs to be opened if there are only PCR/RFLP data.  These variables are
+	// set in the jsp file for that ribbon.  Use a little delay, though, to let things render first.
+	<c:if test="${polymorphismsfound and not (snpsfound or hasStrainMarkers or hasCoords or (not empty strainSpecificNote))}">
+		setTimeout(function() { $('#scToggle')[0].click(); }, 500);
+	</c:if>
 </script>
 <!--	close page template -->
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
