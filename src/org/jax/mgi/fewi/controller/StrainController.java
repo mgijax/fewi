@@ -429,8 +429,8 @@ public class StrainController {
 		if ((group != null) && (group.length() > 0)) {
 			if ("HDP".equals(group)) {
 				collection = "Hybrid Diversity Panel (HDP) Strains";
-			} else if ("CCParental".equals(group)) {
-				collection = "Collaborative Cross (CC) Parental Strains";
+			} else if ("DOCCFounders".equals(group)) {
+				collection = "DO/CC Founders";
 			}
 		}
 		

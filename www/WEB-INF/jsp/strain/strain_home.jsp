@@ -83,7 +83,7 @@
 			<li><a href="${configBean.FEWI_URL}strain/summary?attributes=inbred strain" class="homeLink">Inbred strains</a></li>
 			<li><a href="${configBean.FEWI_URL}strain/summary?group=HDP" class="homeLink">Hybrid Diversity Panel (HDP)</a></li>
 			<li><a href="${configBean.FEWI_URL}strain/summary?strainName=CC0*" class="homeLink">Collaborative Cross (CC)</a></li>
-			<li><a href="${configBean.FEWI_URL}strain/summary?group=CCParental" class="homeLink">Parental CC Strains</a></li>
+			<li><a href="${configBean.FEWI_URL}strain/summary?group=DOCCFounders" class="homeLink">DO/CC Founders</a></li>
 			<li><a href="${configBean.FEWI_URL}strain/summary" class="homeLink">All strains</a></li>
 		</ul>
 		
