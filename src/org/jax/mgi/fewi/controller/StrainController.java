@@ -44,9 +44,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.Strain;
+import mgi.frontend.datamodel.StrainAttribute;
 import mgi.frontend.datamodel.StrainGridCell;
 import mgi.frontend.datamodel.StrainGridPopupCell;
 import mgi.frontend.datamodel.StrainGridPopupRow;
+import mgi.frontend.datamodel.StrainSynonym;
 import mgi.frontend.datamodel.VocabTerm;
 
 /*-------*/
@@ -156,7 +158,7 @@ public class StrainController {
         //pull out the Strain, and add to mav
         Strain strain = strainList.get(0);
         mav.addObject("strain", strain);
-//        addDetailSeo(strain, mav);
+        addDetailSeo(strain, mav);
 
         // See if there are any related strains (strains with names that have the current strain
         // name as a prefix).  If so, add a count to the mav.
@@ -178,55 +180,48 @@ public class StrainController {
     }
 
     // add SEO data (seoDescription, seoTitle, and seoKeywords) to the given detail page's mav
-/*    private void addDetailSeo (Strain p, ModelAndView mav) {
-    	List<String> synonyms = p.getSynonyms();
-    	
-    	// identify high-level segment type (probe or primer)
-    	
-    	String highLevelSegmentType = "Probe";
-    	if ("primer".equals(p.getSegmentType()) ) {
-    		highLevelSegmentType = "Primer";
-    	}
-    	mav.addObject("highLevelSegmentType", highLevelSegmentType);
-    	
+    private void addDetailSeo (Strain p, ModelAndView mav) {
     	// compose browser / SEO title
     	
     	StringBuffer seoTitle = new StringBuffer();
     	seoTitle.append(p.getName());
     	seoTitle.append(" ");
-    	seoTitle.append(highLevelSegmentType);
-    	seoTitle.append(" Detail MGI Mouse ");
+    	seoTitle.append(" Strain Detail MGI Mouse ");
     	seoTitle.append(p.getPrimaryID());
     	mav.addObject("seoTitle", seoTitle.toString());
     	
     	// compose set of SEO keywords
     	
+    	List<StrainSynonym> synonyms = p.getStrainSynonyms();
+    	List<StrainAttribute> attributes = p.getStrainAttributes();
+    	
     	StringBuffer seoKeywords = new StringBuffer();
     	seoKeywords.append(p.getName());
-    	if (!"Probe".equals(highLevelSegmentType)) {		// already adding lowercase 'probe' below
-    		seoKeywords.append(", ");
-    		seoKeywords.append(highLevelSegmentType); 
-    	}
     	if ((synonyms != null) && (synonyms.size() > 0)) {
-    		for (String synonym : synonyms) {
+    		for (StrainSynonym synonym : synonyms) {
     			seoKeywords.append(", ");
-    			seoKeywords.append(synonym);
+    			seoKeywords.append(synonym.getSynonym());
     		}
     	}
-    	seoKeywords.append(", probe, clone, mouse, mice, murine, Mus");
+    	if ((attributes != null) && (attributes.size() > 0)) {
+    		for (StrainAttribute attribute : attributes) {
+    			seoKeywords.append(", ");
+    			seoKeywords.append(attribute.getAttribute());
+    		}
+    	}
+
+    	seoKeywords.append(", strain, mouse, mice, murine, Mus");
     	mav.addObject("seoKeywords", seoKeywords);
     	
     	// compose SEO description
     	
     	StringBuffer seoDescription = new StringBuffer();
-    	seoDescription.append("View ");
-    	seoDescription.append(highLevelSegmentType);
-    	seoDescription.append(" ");
+    	seoDescription.append("View mouse strain ");
     	seoDescription.append(p.getName());
-    	seoDescription.append(" : location, molecular source, gene associations, expression, sequences, polymorphisms, and references.");
+    	seoDescription.append(" : mutations, QTL, phenotypes, diseases, and references.");
     	mav.addObject("seoDescription", seoDescription);
     }
-*/
+
     private class AttributeComparator implements Comparator<String> {
 		@Override
 		public int compare(String arg0, String arg1) {
