@@ -46,6 +46,15 @@
 							</div>
 						</li>
 					</c:if>
+
+					<c:if test="${(not empty strain.collectionStrings) and (strain.isFounder)}">
+						<li>
+							<div class="label">Collection</div>
+							<div class="value" id="strainCollection">
+								DO/CC Founder
+							</div>
+						</li>
+					</c:if>
 				</ul>
 			</section>
 
