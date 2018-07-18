@@ -51,15 +51,15 @@
 	</div>
 </c:if>
 
-<c:if test="${not empty strain.imsrData}">
-	<div class="container detailStructureTable">
-		<%@ include file="strain_detail_imsr_ribbon.jsp" %>
-	</div>
-</c:if>
-
 <c:if test="${(not empty strain.diseases) or (not empty strain.gridCells)}">
 	<div class="container detailStructureTable">
 		<%@ include file="strain_detail_disease_ribbon.jsp" %>
+	</div>
+</c:if>
+
+<c:if test="${not empty strain.imsrData}">
+	<div class="container detailStructureTable">
+		<%@ include file="strain_detail_imsr_ribbon.jsp" %>
 	</div>
 </c:if>
 

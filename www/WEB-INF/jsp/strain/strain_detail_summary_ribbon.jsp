@@ -1,6 +1,6 @@
 	<div class="row">
 		<div class="header <%=leftTdStyles.getNext() %>">
-			Nomenclature
+			Summary
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %> summaryRibbon">
 			<section class="summarySec1 ">
@@ -53,17 +53,17 @@
 				<ul>
 					<c:if test="${not empty strain.mpdData}">
 						<li title="Mouse Phenome Database">
-							<div class="label">MPD</div>
+							<div class="label">Phenomic Data</div>
 							<div class="value">
-								<a href="${fn:replace(externalUrls.MPD, '@@@@', strain.firstMpdData.mpdID)}" target="_blank" id="mpdLink">View Phenomic Data</a>
+								<a href="${fn:replace(externalUrls.MPD, '@@@@', strain.firstMpdData.mpdID)}" target="_blank" id="mpdLink">Mouse Phenome Database (MPD)</a>
 							</div>
 						</li>
 					</c:if>
 					<c:if test="${strain.isSequenced == 1}">
 						<li title="Multiple Genome Viewer">
-							<div class="label">MGV</div>
+							<div class="label">Mouse Genome Browsers</div>
 							<div class="value">
-								<a href="${externalUrls.MGV}#ref=${strain.name}&genomes=${externalUrls.MGV_Strains}" target="_blank" id="mgvLink">View Genome</a>
+								<a href="${externalUrls.MGV}#ref=${strain.name}&genomes=${externalUrls.MGV_Strains}" target="_blank" id="mgvLink">Strain Genome Comparison (MGV)</a>
 							</div>
 						</li>
 					</c:if>
