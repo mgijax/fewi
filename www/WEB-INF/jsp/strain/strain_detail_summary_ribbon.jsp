@@ -3,11 +3,11 @@
 			Summary
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %> summaryRibbon">
-			<section class="summarySec1 ">
+			<section id="summaryLeft" class="summarySec1 ">
 				<ul>
 					<li>
-						<div class="label">Strain Name</div>
-						<div class="value" id="strainName">
+						<div class="label narrow">Strain Name</div>
+						<div class="valueNarrow" id="strainName">
 							<fewi:super value="${strain.name}"/> 
 			
 							<c:if test="${strain.isStandard==0}">
@@ -19,8 +19,8 @@
 					<c:set var="isStrainFamily" value="false" />
 					<c:if test="${not empty strain.strainAttributes}">
 						<li>
-							<div class="label">Attributes</div>
-							<div class="value" id="strainAttributes">
+							<div class="label narrow">Attributes</div>
+							<div class="valueNarrow" id="strainAttributes">
 								<c:forEach var="attribute" items="${strain.strainAttributes}" varStatus="status">
 									<fewi:super value="${attribute.attribute}"/><c:if test="${!status.last}">, </c:if>
 									<c:if test="${attribute.attribute == 'strain family'}">
@@ -32,14 +32,14 @@
 					</c:if>
 
 					<li>
-						<div class="label">MGI ID</div>
-						<div class="value" id="strainPrimaryID">${strain.primaryID}</div>
+						<div class="label narrow">MGI ID</div>
+						<div class="valueNarrow" id="strainPrimaryID">${strain.primaryID}</div>
 					</li>
 
 					<c:if test="${not empty strain.strainSynonyms}">
 						<li>
-							<div class="label">Synonyms</div>
-							<div class="value" id="strainSynonyms">
+							<div class="label narrow">Synonyms</div>
+							<div class="valueNarrow" id="strainSynonyms">
 								<c:forEach var="synonym" items="${strain.strainSynonyms}" varStatus="status">
 									<fewi:super value="${synonym.synonym}"/><c:if test="${!status.last}">, </c:if>
 								</c:forEach>
@@ -49,8 +49,8 @@
 
 					<c:if test="${(not empty strain.collectionStrings) and (strain.isFounder)}">
 						<li>
-							<div class="label">Collection</div>
-							<div class="value" id="strainCollection">
+							<div class="label narrow">Collection</div>
+							<div class="valueNarrow" id="strainCollection">
 								DO/CC Founder
 							</div>
 						</li>
@@ -58,7 +58,7 @@
 				</ul>
 			</section>
 
-			<section class="summarySec1 ">
+			<section id="summaryRight" class="summarySec1 ">
 				<ul>
 					<c:if test="${not empty strain.mpdData}">
 						<li title="Mouse Phenome Database">

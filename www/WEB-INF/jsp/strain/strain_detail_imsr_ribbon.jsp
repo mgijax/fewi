@@ -3,7 +3,6 @@
 			Find Mice (IMSR)
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %> summaryRibbon">
-			<section class="summarySec1 ">
 				<span class="indented">
 		    	${fn:length(strain.imsrData)} associated strain record<c:if test="${fn:length(strain.imsrData) > 1}">s</c:if> at IMSR</span>
 		    	<br/>
@@ -33,7 +32,6 @@
 				    </c:forEach> 
 					</table>
 			    </div>
-			</section>
 		</div>
 	</div>
 	<script>

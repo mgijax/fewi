@@ -12,8 +12,8 @@
 				<span class="indented">
 		    	<span id="strainMutationCount">${fn:length(strain.mutations)}</span> associated
 		    	<c:choose>
-			    	<c:when test="${fn:length(strain.mutations) > 1}">mutations and markers</c:when>
-			    	<c:otherwise>mutation and marker</c:otherwise>
+			    	<c:when test="${fn:length(strain.mutations) > 1}">mutations</c:when>
+			    	<c:otherwise>mutation</c:otherwise>
 		    	</c:choose>
 		    	</span>
 		    	<span id="mutationButton" class="searchToolButton indented hidden">Show All</span><br/>
@@ -130,5 +130,6 @@
 	    manageQtlPad();
 	});
 	manageQtlPad();
+	$('#mutationSection').width($('#summaryLeft').width());
 	</c:if>
 	</script>

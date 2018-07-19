@@ -222,6 +222,10 @@ border-bottom: 1px solid gray;
 		float: left;
 		margin-top: 1px;
 	}
+	
+	#body .narrow {
+		width: 8em;
+	}
 
 	#gxdLogoImage {
 		width: 90%;
@@ -231,7 +235,11 @@ border-bottom: 1px solid gray;
 	}
 	
 	#body .value {
-		margin-left: 9.813em;
+		margin-left: 12.7em;
+	}
+
+	#body .valueNarrow {
+		margin-left: 8.5em;
 	}
 
 	#body .value.emphasis {
@@ -241,11 +249,10 @@ border-bottom: 1px solid gray;
 	#body section {
 		display: inline-block;
 		vertical-align: top;
-		width: 49%;
 	}
 
 	#body .summarySec1 {
-		min-width: 555px;
+		min-width: 320px;
 	}
 
 	#body .summarySec1mp {
