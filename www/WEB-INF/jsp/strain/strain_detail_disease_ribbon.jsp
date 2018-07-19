@@ -31,12 +31,10 @@
 
 			<c:if test="${not empty strain.diseases}">
 			    <section id="diseaseDiv" class="summarySec1" style="margin-left: 15px">
-					<span id="diseaseTableTitle">
-			    	${fn:length(strain.diseases)} associated disease<c:if test="${fn:length(strain.diseases) > 1}">s</c:if></span>
-			    	<br/>
+					<div class="label" style="width: 100%; text-align:center;padding-bottom:1.25em;">Human Diseases</div><br />
 				    <table id="diseaseSummaryTable" style="margin-top: 5px">
 				    <tr>
-				    	<th>Human Diseases</th>
+				    	<th></th>
 					    <c:forEach var="genotype" items="${strain.diseaseGenotypes}" varStatus="gStatus">
 					    	<th><a href="${configBean.FEWI_URL}allele/genoview/${genotype.genotypeID}">model ${gStatus.count}</a></th>
 					    </c:forEach>
