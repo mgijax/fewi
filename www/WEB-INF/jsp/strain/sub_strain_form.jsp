@@ -14,8 +14,8 @@
 			value="<c:out value="${strainQueryForm.strainName}"/>" />
 		</div>
 		<div style='float: right; padding-right: 20px'>
-			<button id="clearButton" class="clearButton">Clear</button>
 			<button id="searchButton" class="goButton">Search</button>
+			<button id="clearButton" class="clearButton">Clear</button>
 		</div>
 
 		<label class="searchLabel">Attributes</label>
@@ -25,12 +25,18 @@
 				<fewi:selectOptions items="${attributeChoices}" values="${strainQueryForm.attributes}" />
 				</select>
 			</div>
+			<div id="operatorContainer">
 			<div id="operatorDiv">
 				Match
 	        	<select name="attributeOperator" id="attributeOperatorList" size="1">
 				<fewi:selectOptions items="${attributeOperatorChoices}" values="${strainQueryForm.attributeOperator}" />
 				</select>
 				selected attributes.
+			</div>
+			<div id="definitionsDiv">
+			Need help?
+			See attribute <a href="${configBean.USERHELP_URL}STRAIN_search_help.shtml#attributes" target="_blank" class="MP">definitions</a>.
+			</div>
 			</div>
 		</div>
 	</div>
@@ -54,4 +60,5 @@
 <style>
 #attributeContainer { display:flex; }
 #operatorDiv { padding-left: 10px; }
+#definitionsDiv { padding-left: 10px; padding-top: 73px; }
 </style>
