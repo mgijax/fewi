@@ -1,5 +1,5 @@
 	<div class="row">
-		<div class="header <%=leftTdStyles.getNext() %>">
+		<div class="header <%=leftTdStyles.getNext() %>" id="summaryRibbonLabel">
 			Summary
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %> summaryRibbon">

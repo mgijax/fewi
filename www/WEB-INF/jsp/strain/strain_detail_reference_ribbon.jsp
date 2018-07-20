@@ -1,5 +1,5 @@
 	<div class="row">
-		<div class="header <%=leftTdStyles.getNext() %>" id="qtlRibbonLabel">
+		<div class="header <%=leftTdStyles.getNext() %>" id="referenceRibbonLabel">
 			References
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %> summaryRibbon">
