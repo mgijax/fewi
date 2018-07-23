@@ -104,6 +104,7 @@
 	if ($('#qtlSummaryDiv').height() >= 124) {
 		$('#qtlButton').removeClass('hidden');
 	}
+	</c:if>
 	</script>
 
 	<style>
