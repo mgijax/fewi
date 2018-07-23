@@ -17,7 +17,7 @@
 		    	</c:choose>
 		    	</span>
 		    	<span id="mutationButton" class="searchToolButton indented hidden">Show All</span><br/>
-			    <div id="mutationSummaryDiv" style="max-height: 125px; overflow-y: auto; overflow-x: hidden; margin-top: 5px; margin-left: 15px; max-width: 95%" id="mutationsDiv">
+			    <div id="mutationSummaryDiv" style="max-height: 125px; overflow-y: auto; overflow-x: hidden; margin-top: 5px; margin-left: 15px; max-width: 95%; border-bottom: 1px solid black;" id="mutationsDiv">
 				    <table id="mutationSummaryTable">
 				    <tr>
 				    	<th>Mutation Carried</th>
@@ -45,7 +45,7 @@
 		    	<span id="strainQtlCount">${fn:length(strain.qtls)}</span> associated QTL</span>
 		    	<span id="qtlButton" class="searchToolButton indented hidden">Show All</span>
 		    	<br/>
-			    <div id="qtlSummaryDiv" style="max-height: 125px; overflow-y: auto; overflow-x: hidden; margin-top: 5px; margin-left: 15px; max-width: 95%" id="qtlDiv">
+			    <div id="qtlSummaryDiv" style="max-height: 125px; overflow-y: auto; overflow-x: hidden; margin-top: 5px; margin-left: 15px; max-width: 95%; border-bottom: 1px solid black;" id="qtlDiv">
 				    <table id="qtlSummaryTable">
 				    <tr>
 				    	<th>Allele</th>
