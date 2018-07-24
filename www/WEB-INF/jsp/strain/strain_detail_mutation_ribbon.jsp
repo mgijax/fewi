@@ -106,6 +106,9 @@
 	});
 	if ($('#qtlSummaryDiv').height() >= 124) {
 		$('#qtlButton').removeClass('hidden');
+	} else {
+		// table is all showing (no scrolling), so we don't need the extra line on bottom
+		$('#qtlSummaryDiv').css({ 'border-bottom' : 'none'});
 	}
 	</c:if>
 	</script>
