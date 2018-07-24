@@ -1,4 +1,4 @@
-<%-- Recombinase Home page --%>
+<title>MGI-Strains and SNPs</title>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 
@@ -10,7 +10,7 @@
 	title="MGI-Mouse Strains, SNPs, &amp; Polymorphisms"
 	canonical="${configBean.FEWI_URL}home/strain"
 	description="MGI integrates comparative data on inbred strain characteristics including SNPs, polymorphisms, and quantitative phenotypes."
-	keywords="MGI, mgi, mice, mouse, murine, mus musculus, genes, genome, genomic, strains, inbred strains, SNPs, single nucleotide polymorphisms, PCR, polymerase chain reactions, RFLP, restriction fragment length polymorphisms, coding SNPs, RefSNPs"
+	keywords="MGI, mgi, mice, mouse, murine, mus musculus, genes, genome, genomic, strains, inbred strains, CC Founders, SNPs, single nucleotide polymorphisms, PCR, polymerase chain reactions, RFLP, restriction fragment length polymorphisms, coding SNPs, RefSNPs"
 />
 
 <link rel="stylesheet" type="text/css" href="${configBean.WEBSHARE_URL}css/jquery-ui-1.10.2.custom.min.css" />
@@ -27,47 +27,83 @@
     ***********************************************/
 </script>
 
+ <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
+
+
+<!-- start body content -->
+
+<style type="text/css">
+
+  div {
+  	/*border:1px solid red;*/
+  }
+
+  #homePageBodyInsert {
+    width:920px;
+    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    font-family: Verdana,Arial,Helvetica;
+  }
+
+.gridRow {
+ display: -webkit-flex;
+    -webkit-justify-content: space-evenly; 
+    display: flex;
+    justify-content: space-evenly;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.strainSectionSpacer {
+    border: 1px solid #D0E0F0;
+    background-color: #D0E0F0;
+    height: 35px;
+  }
+
+.blankSectionSpacer {
+    border: none;
+    background-color: none;
+    height: 10px;
+  }
+
+.collections {
+	padding-top: 0px;
+}
+.collections li {
+	padding-bottom: 2px;
+}
+
+.right {float:right}
+
+</style>
+
+</head>
+<body>
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
-<article>
+<div class="text-center">
+  <h3>Strains and SNPs</h3>
+  <p><i>MGI integrates comparative data on inbred strain characteristics including SNPs, polymorphisms, and quantitative phenotypes.</i></p> 
+</div>
 
-  <section class="strainTitle">
-    <h1>Strains, SNPs &amp; Polymorphisms</h1>
-    <p>MGI integrates comparative data on inbred strain characteristics including SNPs, polymorphisms, and quantitative phenotypes.
-    </p>
-  </section>
-
-			<div>
-				<table id="strainImages">
-					<tr valign="top" align="center">
-					<td>
-							<a href="${configBean.FAQ_URL}STRN_imgpop.shtml" onClick='javascript:openFaqWindow("STRN_imgpop.shtml"); return false;'>
-								<img class="outlineImg" src="${configBean.FEWI_URL}assets/images/static/Strain_mice.gif" height="105">
-							</a>
-						</td>
-						<td>
-							<a href="${configBean.FAQ_URL}STRN_imgpop.shtml" onClick='javascript:openFaqWindow("STRN_imgpop.shtml"); return false;'>
-								<img class="outlineImg" src="${configBean.FEWI_URL}assets/images/static/Strain_SNP.png" width="146" height="105">
-							</a>
-						</td>
-					</tr>
-					<tr valign="top" align="center">
-						<td align="center">
-							<em><a class="small homeLink" href="${configBean.FAQ_URL}STRN_imgpop.shtml" onClick='javascript:openFaqWindow("STRN_imgpop.shtml"); return false;'>
-								Inbred strains C57BL/6J,<br> C3H/HeJ,  A/J and DBA/2J
-							</a></em>
-						</td>
-						<td>
-							<em><a class="small homeLink" href="${configBean.FAQ_URL}STRN_imgpop.shtml" onClick='javascript:openFaqWindow("STRN_imgpop.shtml"); return false;'>
-								SNP Query Result
-							</a></em>
-						</td>
-					</tr>
-				</table>
-			</div>
-
-  <div style="clear: both;"></div>
-
+<div class="container">
+  <div class="col-sm-9" style="">
+  <div id="" class="strainSectionSpacer"><h5>Strain Query <a href="http://www.informatics.jax.org/userhelp/STRAIN_search_help.shtml" onclick="javascript:openUserhelpWindow(&quot;STRAIN_search_help.shtml&quot;); return false;"><img class="right"  src="http://www.informatics.jax.org/webshare/images/help_large_transp.gif" alt="Help"></a></h5></div>
+  </div>
+  <div class="col-sm-3" style="">
+  <div id="" class="strainSectionSpacer"><h5>Strain Collections</h5></div>
+  </div>
+</div>
+<div class="container">
+<div class="row">
+  <div class="col-sm-9" style="">
   <div class="strainColumn top">
 	  <section class="infoBlock queryForm">
 	    <h2>Find</h2>
@@ -76,77 +112,59 @@
 	    <div class="wrapper" style="padding-left: 20px; padding-bottom: 8px;">
 	    	<%@ include file="/WEB-INF/jsp/strain/sub_strain_form.jsp" %>
 	    </div>
-
-		<h3>Strain Collections</h3>
+	    </div>
+	    </div>
+	    </div>
+  <div class="col-sm-3" style="">
 		<ul class="collections">
-			<li><a href="${configBean.FEWI_URL}strain/summary?isSequenced=1" class="homeLink">Wellcome Sanger Institute's Mouse Genomes Project (MGP)</a></li>
+			<li><a href="${configBean.FEWI_URL}strain/summary?isSequenced=1" class="homeLink">Wellcome Sanger Institute's <br>Mouse Genomes Project (MGP)</a></li>
 			<li><a href="${configBean.FEWI_URL}strain/summary?attributes=inbred strain" class="homeLink">Inbred strains</a></li>
 			<li><a href="${configBean.FEWI_URL}strain/summary?group=HDP" class="homeLink">Hybrid Diversity Panel (HDP)</a></li>
 			<li><a href="${configBean.FEWI_URL}strain/summary?strainName=CC0*" class="homeLink">Collaborative Cross (CC)</a></li>
 			<li><a href="${configBean.FEWI_URL}strain/summary?group=DOCCFounders" class="homeLink">DO/CC Founders</a></li>
 			<li><a href="${configBean.FEWI_URL}strain/summary" class="homeLink">All strains</a></li>
 		</ul>
-		
-		<h3>SNPs</h3>
-		Search for mouse SNPs from dbSNP by strain(s), genomic position, or associated genes.<br/>
-		<div style="padding-left:40px"><a href="${configBean.FEWI_URL}snp" class="homeLink">SNP Query</a></div>
-		</div>
-	  </section>
-  </div><!-- left column -->
-  
-<style>
-.collections {
-	padding-top: 0px;
-}
-.collections li {
-	padding-bottom: 2px;
-}
-</style>
+  </div>
+</div>
+</div>
+<div class="container">
+<div class="gridRow">
+<div class="col-md-4" style="">
+				      <a href="<!--#include file='include/fewi_url.html'-->snp"><img style="width:350px;" src="images/static/SNPQueryImage.png" alt="Mouse SNP Query"></a>
+				    </div>
+				    <div class="col-md-4" style="">
+				      <a href="<!--#include file='include/fewi_url.html'-->allele"><img style="width:350px;" src="images/static/Alleleqf.png" alt="Phenotypes, Alleles & Disease Models Search"></a>
+				    </div>
+				    <div class="col-md-4" style="">
+				      <a href="http://www.findmice.org/index.jsp"><img style="width:350px;" src="images/static/IMSRLink.png" alt="IMSR"></a>
+				    </div>
+				    </div>
+<div class="col-md-4" style="">
+				       <a href="<!--#include file='include/mgihome_url.html'-->nomen/index.shtml"><img style="width:350px;" src="images/static/4Strains.png" alt="Nomenclature Guidelines"></a>
+				    </div>
+				    <div class="col-md-4" style="">
+				      <a href="<!--#include file='include/mgihome_url.html'-->menus/submit.shtml"><img style="width:350px;" src="images/static/SubmitLink.png" alt="Submit Your Data"></a>
+				    </div>
+				    <div class="col-md-4" style="">
+				      <a href="http://www.findmice.org/index.jsp"><img style="width:350px;" src="images/static/FAQimage.png" alt="IMSR"></a>
+				    </div>
+				    </div>
+				    </div>
+<div id="" class="blankSectionSpacer"></div>
 
-  <div class="strainColumn top">
-	<section class="infoBlock">
-    	<h2>Other Data Access</h2>
-		<div id="otherDataAccess">
-			<dl>
-				<dt>Submit data for strains, alleles or phenotypes.</dt>
-				<dd><a href="${configBean.MGIHOME_URL}submissions/amsp_submission.cgi" class="small homeLink">Allele, Strain &amp; Phenotype Submission Form</a></dd> 
-				
-				<dt>View guidelines for proper naming of mouse strains.</dt>
-				<dd><a href="${configBean.MGIHOME_URL}nomen/strains.shtml" class="small homeLink">Guide to Strain Nomenclature</a></dd>
-
-				<dt>Search for sources of mutant mice and cell lines.</dt>
-				<dd><a href="${configBean.IMSRURL}" class="small homeLink">International Mouse Strain Resource (IMSR)</a></dd>
-
-				<dt>Find information on spontaneous, induced, and genetically-engineered mutations and QTL.</dt>
-				<dd><a href="${configBean.HOMEPAGES_URL}phenotypes.shtml" class="small homeLink">Phenotypes, Alleles &amp; Disease Models</a></dd>
-			</dl>
-		</div>
-	</section>
-  
-	<section class="infoBlock faqs">
-	    <h2>FAQs</h2>
-	    <div class="wrapper">
-	    	<%@ include file="/WEB-INF/jsp/static/home/strain_faqs_section.html" %>
-	    </div>
-	</section>
-	  
-	  <div style="clear:both"></div>
-	  <section class="infoBlock alleleDataCounts">
-	    <h2>Strains, SNPs, &amp; Polymorphisms Includes</h2>
-	    <div class="wrapper">
+<div class="container">
+  <div class="col-sm-9" style="">
+  <div id="" class="strainSectionSpacer"><h5>SNPs, Strains &amp; Polymorphisms </h5></div>
+  <div class="wrapper">
 	    	<%@ include file="/WEB-INF/jsp/strain/sub_strain_counts.jsp" %>
 	    </div>
-	  </section>
-	  
-  </div><!-- right column -->
-  
-  <div style="clear:both"></div>
-
-  <article class="tabs" style="margin-left:30px; max-width:1164px;">
+  </div>
+  <div class="col-sm-3" style="">
+  </div>
+</div>
+ <article class="tabs" style="margin-left:30px; max-width:1164px;">
   	<%@ include file="/WEB-INF/jsp/static/home/strain_footer_tabs.html" %>
   </article>
-
-</article>
 
 
 <script type="text/javascript">
