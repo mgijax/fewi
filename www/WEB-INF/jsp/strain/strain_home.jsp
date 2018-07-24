@@ -130,23 +130,23 @@
 <div class="container">
 <div class="gridRow">
 <div class="col-md-4" style="">
-				      <a href="<!--#include file='include/fewi_url.html'-->snp"><img style="width:350px; height:170;" src="assets/images/static/SNPQueryImage.png" alt="Mouse SNP Query"></a>
+				      <a href="<!--#include file='include/fewi_url.html'-->snp"><img style="width:350px; height:170;" src="${configBean.FEWI_URL}assets/images/static/SNPQueryImage.png" alt="Mouse SNP Query"></a>
 				    </div>
 				    <div class="col-md-4" style="">
-				      <a href="<!--#include file='include/fewi_url.html'-->allele"><img style="width:350px; height:170;" src="assets/images/static/Alleleqf.png" alt="Phenotypes, Alleles & Disease Models Search"></a>
+				      <a href="<!--#include file='include/fewi_url.html'-->allele"><img style="width:350px; height:170;" src="${configBean.FEWI_URL}assets/images/static/Alleleqf.png" alt="Phenotypes, Alleles & Disease Models Search"></a>
 				    </div>
 				    <div class="col-md-4" style="">
 				      <a href="http://www.findmice.org/index.jsp"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/IMSRLink.png" alt="IMSR"></a>
 				    </div>
 				    </div>
 <div class="col-md-4" style="">
-				       <a href="<!--#include file='include/mgihome_url.html'-->nomen/index.shtml"><img style="width:350px;" src="assets/images/static/4Strains.png" alt="Nomenclature Guidelines"></a>
+				       <a href="<!--#include file='include/mgihome_url.html'-->nomen/index.shtml"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/4Strains.png" alt="Nomenclature Guidelines"></a>
 				    </div>
 				    <div class="col-md-4" style="">
-				      <a href="<!--#include file='include/mgihome_url.html'-->menus/submit.shtml"><img style="width:350px;" src="assets/images/static/SubmitLink.png" alt="Submit Your Data"></a>
+				      <a href="<!--#include file='include/mgihome_url.html'-->menus/submit.shtml"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/SubmitLink.png" alt="Submit Your Data"></a>
 				    </div>
 				    <div class="col-md-4" style="">
-				      <a href="http://www.findmice.org/index.jsp"><img style="width:350px;" src="assets/images/static/FAQimage.png" alt="FAQ"></a>
+				      <a href="http://www.findmice.org/index.jsp"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/FAQimage.png" alt="FAQ"></a>
 				    </div>
 				    </div>
 				    </div>
