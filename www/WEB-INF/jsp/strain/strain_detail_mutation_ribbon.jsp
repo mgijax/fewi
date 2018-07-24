@@ -84,6 +84,9 @@
 	});
 	if ($('#mutationSummaryDiv').height() >= 124) {
 		$('#mutationButton').removeClass('hidden');
+	} else {
+		// table is all showing (no scrolling), so we don't need the extra line on bottom
+		$('#mutationSummaryDiv').css({ 'border-bottom' : 'none'});
 	}
 	</c:if>
 	
