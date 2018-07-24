@@ -20,12 +20,12 @@
 
 		<label class="searchLabel">Attributes</label>
 		<div id="attributeContainer">
+			<div id="attributeTopDiv">
 			<div id="attributeDiv">
 	        	<select name="attributes" id="attributeDropList" multiple="" size="7">
 				<fewi:selectOptions items="${attributeChoices}" values="${strainQueryForm.attributes}" />
 				</select>
 			</div>
-			<div id="operatorContainer">
 			<div id="operatorDiv">
 				Match
 	        	<select name="attributeOperator" id="attributeOperatorList" size="1">
@@ -33,10 +33,9 @@
 				</select>
 				selected attributes.
 			</div>
-			<div id="definitionsDiv">
-			Need help?
-			See attribute <a href="${configBean.USERHELP_URL}STRAIN_search_help.shtml#attributes" target="_blank" class="MP">definitions</a>.
 			</div>
+			<div id="definitionsDiv">
+				<a href="${configBean.USERHELP_URL}STRAIN_search_help.shtml#attributes" target="_blank" class="homeLink">See attribute definitions</a>.
 			</div>
 		</div>
 	</div>
@@ -58,7 +57,8 @@
 	});
 </script>
 <style>
-#attributeContainer { display:flex; }
-#operatorDiv { padding-left: 10px; }
-#definitionsDiv { padding-left: 10px; padding-top: 73px; }
+#attributeContainer {}
+#attributeTopDiv { display: flex; }
+#operatorDiv { padding-left: 10px; padding-top: 45px; }
+#definitionsDiv { padding-left: 20px; padding-top: 5px; }
 </style>

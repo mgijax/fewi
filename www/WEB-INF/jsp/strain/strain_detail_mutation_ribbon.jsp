@@ -8,7 +8,7 @@
 		<div class="detail <%=rightTdStyles.getNext() %> summaryRibbon">
 			<!-- marker/allele mutation data -->
 			<c:if test="${not empty strain.mutations}">
-			<section class="summarySec1 " id="mutationSection">
+			<section class="summarySec1 msStyle" id="mutationSection">
 				<span class="indented">
 		    	<span id="strainMutationCount">${fn:length(strain.mutations)}</span> associated
 		    	<c:choose>
@@ -17,7 +17,7 @@
 		    	</c:choose>
 		    	</span>
 		    	<span id="mutationButton" class="searchToolButton indented hidden">Show All</span><br/>
-			    <div id="mutationSummaryDiv" style="max-height: 125px; overflow-y: auto; overflow-x: hidden; margin-top: 5px; margin-left: 15px; max-width: 95%" id="mutationsDiv">
+			    <div id="mutationSummaryDiv" style="max-height: 125px; overflow-y: auto; overflow-x: hidden; margin-top: 5px; margin-left: 15px; max-width: 95%; border-bottom: 1px solid black;" id="mutationsDiv">
 				    <table id="mutationSummaryTable">
 				    <tr>
 				    	<th>Mutation Carried</th>
@@ -40,12 +40,12 @@
 
 			<!-- QTL data -->
 			<c:if test="${not empty strain.qtls}">
-			<section class="summarySec1" id="qtlSection" style="width:auto">
+			<section class="summarySec1 qtlStyle" id="qtlSection" style="width:auto">
 				<span class="indented">
 		    	<span id="strainQtlCount">${fn:length(strain.qtls)}</span> associated QTL</span>
 		    	<span id="qtlButton" class="searchToolButton indented hidden">Show All</span>
 		    	<br/>
-			    <div id="qtlSummaryDiv" style="max-height: 125px; overflow-y: auto; overflow-x: hidden; margin-top: 5px; margin-left: 15px; max-width: 95%" id="qtlDiv">
+			    <div id="qtlSummaryDiv" style="max-height: 125px; overflow-y: auto; overflow-x: hidden; margin-top: 5px; margin-left: 15px; max-width: 95%; border-bottom: 1px solid black;" id="qtlDiv">
 				    <table id="qtlSummaryTable">
 				    <tr>
 				    	<th>Allele</th>
@@ -84,6 +84,9 @@
 	});
 	if ($('#mutationSummaryDiv').height() >= 124) {
 		$('#mutationButton').removeClass('hidden');
+	} else {
+		// table is all showing (no scrolling), so we don't need the extra line on bottom
+		$('#mutationSummaryDiv').css({ 'border-bottom' : 'none'});
 	}
 	</c:if>
 	
@@ -103,33 +106,14 @@
 	});
 	if ($('#qtlSummaryDiv').height() >= 124) {
 		$('#qtlButton').removeClass('hidden');
+	} else {
+		// table is all showing (no scrolling), so we don't need the extra line on bottom
+		$('#qtlSummaryDiv').css({ 'border-bottom' : 'none'});
 	}
-	function manageQtlPad() {
-		// We want padding at left of the QTL section, if it is at the right of the page, so
-		// it will line up better with the data at right in the summary ribbon.
-		if ($(window).width() >= 1342) {
-			if (!$('#qtlSection').hasClass('qtlPad')) {
-				$('#qtlSection').addClass('qtlPad');
-			}
-		} else {
-			if ($('#qtlSection').hasClass('qtlPad')) {
-				$('#qtlSection').removeClass('qtlPad');
-			}
-		}
-	}
-	
-	// We only want to deal with resizing after it's been stopped for 250ms, so define a custom
-	// event "resizeEnd", which we then handle.
-	$(window).resize(function() {
-        if(this.resizeTO) clearTimeout(this.resizeTO);
-        this.resizeTO = setTimeout(function() {
-            $(this).trigger('resizeEnd');
-        }, 250);
-    });
-	$(window).bind('resizeEnd', function() {
-	    manageQtlPad();
-	});
-	manageQtlPad();
-	$('#mutationSection').width($('#summaryLeft').width());
 	</c:if>
 	</script>
+
+	<style>
+	#body .msStyle { padding-left: 95px; min-width: 470px; width: auto; margin-bottom: 3px; }
+	#body .qtlStyle { width: auto; padding-left: 95px; mar}
+	</style>
