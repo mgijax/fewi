@@ -140,13 +140,13 @@
 				    </div>
 				    </div>
 <div class="col-md-4" style="">
-				       <a href="<!--#include file='include/mgihome_url.html'-->nomen/index.shtml"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/4Strains.png" alt="Nomenclature Guidelines"></a>
+				       <a href=""${configBean.MGIHOME_URL}nomen/strains.shtml"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/4Strains.png" alt="Nomenclature Guidelines"></a>
 				    </div>
 				    <div class="col-md-4" style="">
-				      <a href="<!--#include file='include/mgihome_url.html'-->menus/submit.shtml"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/SubmitLink.png" alt="Submit Your Data"></a>
+				      <a href="${configBean.MGIHOME_URL}submissions/amsp_submission.cgi"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/SubmitLink.png" alt="Submit Your Data"></a>
 				    </div>
 				    <div class="col-md-4" style="">
-				      <a href="http://www.findmice.org/index.jsp"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/FAQimage.png" alt="FAQ"></a>
+				      <a href="${configBean.FEWI_URL}snp"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/FAQimage.png" alt="FAQ"></a>
 				    </div>
 				    </div>
 				    </div>
