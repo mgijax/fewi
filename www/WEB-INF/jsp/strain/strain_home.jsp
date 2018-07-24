@@ -136,7 +136,7 @@
 				      <a href="<!--#include file='include/fewi_url.html'-->allele"><img style="width:350px; height:170;" src="assets/images/static/Alleleqf.png" alt="Phenotypes, Alleles & Disease Models Search"></a>
 				    </div>
 				    <div class="col-md-4" style="">
-				      <a href="http://www.findmice.org/index.jsp"><src="${configBean.FEWI_URL}assets/images/static/IMSRLink.png" width="350" height="170" alt="IMSR"></a>
+				      <a href="http://www.findmice.org/index.jsp"><img src="${configBean.FEWI_URL}assets/images/static/IMSRLink.png" width="350" height="170" alt="IMSR"></a>
 				    </div>
 				    </div>
 <div class="col-md-4" style="">
@@ -146,7 +146,7 @@
 				      <a href="<!--#include file='include/mgihome_url.html'-->menus/submit.shtml"><img style="width:350px;" src="/images/static/SubmitLink.png" alt="Submit Your Data"></a>
 				    </div>
 				    <div class="col-md-4" style="">
-				      <a href="http://www.findmice.org/index.jsp"><img style="width:350px;" src="/images/static/FAQimage.png" alt="IMSR"></a>
+				      <a href="http://www.findmice.org/index.jsp"><img style="width:350px;" src="/images/static/FAQimage.png" alt="FAQ"></a>
 				    </div>
 				    </div>
 				    </div>
