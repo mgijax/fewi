@@ -130,13 +130,13 @@
 <div class="container">
 <div class="gridRow">
 <div class="col-md-4" style="">
-				      <a href="<!--#include file='include/fewi_url.html'-->snp"><img style="width:350px;" src="/images/static/SNPQueryImage.png" alt="Mouse SNP Query"></a>
+				      <a href="<!--#include file='include/fewi_url.html'-->snp"><img style="width:350px; height:170;" src="/images/static/SNPQueryImage.png" alt="Mouse SNP Query"></a>
 				    </div>
 				    <div class="col-md-4" style="">
-				      <a href="<!--#include file='include/fewi_url.html'-->allele"><img style="width:350px;" src="/images/static/Alleleqf.png" alt="Phenotypes, Alleles & Disease Models Search"></a>
+				      <a href="<!--#include file='include/fewi_url.html'-->allele"><img style="width:350px; height:170;" src="assets/images/static/Alleleqf.png" alt="Phenotypes, Alleles & Disease Models Search"></a>
 				    </div>
 				    <div class="col-md-4" style="">
-				      <a href="http://www.findmice.org/index.jsp"><img style="width:350px;" src="/images/static/IMSRLink.png" alt="IMSR"></a>
+				      <a href="http://www.findmice.org/index.jsp"><src="${configBean.FEWI_URL}assets/images/static/IMSRLink.png" width="350" height="170" alt="IMSR"></a>
 				    </div>
 				    </div>
 <div class="col-md-4" style="">
