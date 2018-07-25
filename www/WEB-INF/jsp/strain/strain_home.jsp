@@ -149,7 +149,6 @@
 				      <a href="${configBean.FEWI_URL}snp"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/FAQimage.png" alt="FAQ"></a>
 				    </div>
 				    </div>
-				    </div>
 <div id="" class="blankSectionSpacer"></div>
 
 <div class="container">
@@ -204,7 +203,7 @@ background: white url(images/shadeGoldGray.gif) top left repeat-x;
 	</div>
 	
 	<img src="<!--#include file='include/mgihome_url.html'-->homepages/images/white_dot.gif" width="720px" height="1px">
-
+</div>
 </td></tr>
 </table>
 
