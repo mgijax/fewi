@@ -162,6 +162,9 @@
   <div class="col-sm-3" style="">
   </div>
 </div>
+
+<div id="bottomSection">
+		<div class="row">
 <!-- Tabs box -->
 <!-- Note: This section uses a white gif to set the width and avoid
     the a crash in IE6, and display problems in IE 6 & 7.  I also
