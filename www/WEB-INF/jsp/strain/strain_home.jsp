@@ -190,7 +190,7 @@ background: white url(images/shadeGoldGray.gif) top left repeat-x;
 </style>
 
 <div class="boxWide marginBottom">
-	<ul id="tab" class="shadetabs">
+	<ul id="straintab" class="shadetabs">
 		<li class="selected"><a href="${configBean.FEWI_URL}tabContents/strain_about.html" rel="ajaxcontentarea">About</a></li>
 		<li><a href="${configBean.FEWI_URL}tabContents/strain_help.html" rel="ajaxcontentarea">Help Documents</a></li>
 		<li><a href="${configBean.FEWI_URL}tabContents/strain_collaborators.html"rel="ajaxcontentarea">Collaborators</a></li>
@@ -199,9 +199,10 @@ background: white url(images/shadeGoldGray.gif) top left repeat-x;
 	<div id="strainContentarea" class="strainContentstyle">
 		<!--#include file='tabContents/strain_about.html'-->
 	</div>
+	
+	<img src="<!--#include file='include/mgihome_url.html'-->homepages/images/white_dot.gif" width="720px" height="1px">
 
 </td></tr>
-</div>
 </table>
 
 <!--AJAX TABS CALLS-->
