@@ -162,9 +162,65 @@
   <div class="col-sm-3" style="">
   </div>
 </div>
- <article class="tabs" style="margin-left:30px; max-width:1164px;">
-  	<%@ include file="/WEB-INF/jsp/static/home/strain_footer_tabs.html" %>
-  </article>
+<!-- Tabs box -->
+<!-- Note: This section uses a white gif to set the width and avoid
+    the a crash in IE6, and display problems in IE 6 & 7.  I also
+    needed to put this div in a table to get the fix to work.  The
+    order of the table and div tags is very specific to avoid some
+    flickering in IE.-->
+<table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td>
+<style>
+.strainContentstyle {
+border: 1px solid #D0E0F0;
+margin-bottom: 1em;
+padding: 10px;
+background-color: #D0E0F0;
+color: #025;
+}
+.shadetabs li a{
+text-decoration: none;
+padding: 3px 7px;
+margin-right: 3px;
+border-top: 1px solid #D0E0F0;
+border-right: 1px solid #D0E0F0;
+border-left: 1px solid #D0E0F0;
+border-bottom-style:none;
+background: white url(images/shadeGoldGray.gif) top left repeat-x;
+}
+</style>
+
+<div class="boxWide marginBottom">
+	<ul id="tab" class="shadetabs">
+		<li class="selected"><a href="${configBean.FEWI_URL}tabContents/strain_about.html" rel="ajaxcontentarea">About</a></li>
+		<li><a href="${configBean.FEWI_URL}tabContents/strain_help.html" rel="ajaxcontentarea">Help Documents</a></li>
+		<li><a href="${configBean.FEWI_URL}tabContents/strain_collaborators.html"
+		rel="ajaxcontentarea">Collaborators</a></li>
+		<li><a href="${configBean.FEWI_URL}tabContents/strain_other_links.html" rel="ajaxcontentarea">Other Links</a></li>
+	</ul>
+	<div id="strainContentarea" class="strainContentstyle">
+		<!--#include file='tabContents/strain_about.html'-->
+	</div>
+
+</td></tr>
+</div>
+</table>
+
+<!--AJAX TABS CALLS-->
+
+<script type="text/javascript" src="<!--#include file="include/javascript.html"-->">
+    /***********************************************
+    * Ajax Tabs Content script- © Dynamic Drive DHTML code library (www.dynamicdrive.com)
+    * This notice MUST stay intact for legal use
+    * Visit Dynamic Drive at http://www.dynamicdrive.com/ for full source code
+    ***********************************************/
+</script>
+
+<script type="text/javascript">
+    var strain_box=new ddajaxtabs("straintab", "strainContentarea")
+    strain_box.setpersist(true)
+    strain_box.setselectedClassTarget("linkparent") //"link" or "linkparent"
+    strain_box.init()
+</script>
 
 
 <script type="text/javascript">
