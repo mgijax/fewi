@@ -164,10 +164,13 @@ public class StrainController {
         // name as a prefix).  If so, add a count to the mav.
         
         Paginator page = new Paginator(1);
+        List<String> attributes = new ArrayList<String>();
+        attributes.add("inbred strain");
         StrainQueryForm query = new StrainQueryForm();
         query.setStrainName(strain.getName() + "*");
+        query.setAttributes(attributes);
 		SearchResults<SimpleStrain> searchResults = getSummaryResults(query, page);
-		if (searchResults.getTotalCount() > 1) {
+		if (searchResults.getTotalCount() > 0) {
 			mav.addObject("relatedStrainCount", searchResults.getTotalCount());
 		}
         
