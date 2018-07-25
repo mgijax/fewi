@@ -197,8 +197,10 @@
 // Make any display adjustments needed when we open or close ribbons.  (Sometimes widths need to 
 // be tweaked to help things line up.)
 var adjustDisplay = function(ribbonID, action) {
+	// fix widths related to strain gene table
 	if ((action == 'Open') && (ribbonID == 'strainRibbon')) {	
 		$('#strainGenesTableControls').width($('#strainGenesTableDiv').width());
+		$('#sgLeftWrapper').width($('#strainGenesTableDiv').width());
 	}
 }
 	
