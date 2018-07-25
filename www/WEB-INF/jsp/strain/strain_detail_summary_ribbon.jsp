@@ -102,7 +102,7 @@
 						<li>
 							<div class="label">Strain Family Members</div>
 							<div class="value" id="relatedStrains">
-								<a href="${configBean.FEWI_URL}strain/summary?strainName=${strain.name}*&attributes=inbred strain" id="relatedStrainLink" target="_blank">${relatedStrainCount}</a>
+								<a href="${configBean.FEWI_URL}strain/summary?strainName=${strain.name}*" id="relatedStrainLink" target="_blank">${relatedStrainCount}</a>
 							</div>
 						</li>
 					</c:if>
