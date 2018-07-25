@@ -190,7 +190,7 @@ background: white url(images/shadeGoldGray.gif) top left repeat-x;
 </style>
 
 <div class="boxWide marginBottom">
-	<ul id="tab" class="shadetabs">
+	<ul id="gxdtab" class="shadetabs">
 		<li class="selected"><a href="${configBean.FEWI_URL}tabContents/strain_about.html" rel="ajaxcontentarea">About</a></li>
 		<li><a href="${configBean.FEWI_URL}tabContents/strain_help.html" rel="ajaxcontentarea">Help Documents</a></li>
 		<li><a href="${configBean.FEWI_URL}tabContents/strain_collaborators.html"
