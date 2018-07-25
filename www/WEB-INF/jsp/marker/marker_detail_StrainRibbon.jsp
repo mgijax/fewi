@@ -124,27 +124,26 @@
 			<c:if test="${not empty marker.strainMarkers}">
 				<div class="extra closed">
 				<form id="strainMarkerForm" name="strainMarkerForm" method="GET" action="" target="_blank">
-				<div id="strainGenesTableControls">
-					For selected strains:
-					<select id="strainOp" name="strainOp">
-						<option value="fasta">Get FASTA</option>
-						<option value="mgv">Send to Multi Genome Viewer (MGV)</option>
-						<option value="muscle">Send to MUSCLE (Multiple Sequence Alignment Tool)</option>
-						<option value="snps">Send to Sanger SNP Query (+/- 2kb)</option>
-					</select>
-					<input type="button" class="sgButton" value="Go" onClick="strainRibbonGoButtonClick()" />
-				</div>
 				<div id="strainGenesWrapperDiv">
-				<div id="strainGenesTableDiv">
-				<table class="padded" id="table_strainMarkers">
-					
-					<tr class="headerStripe">
-					  <th>Strain</th>
-					  <th>Gene Model ID</th>
-					  <th>Feature Type</th>
-					  <th>Coordinates</th>
-					  <th>Select Strains</th>
-					</tr>
+				<div id="sgLeftWrapper">
+					<div id="strainGenesTableControls">
+						For selected strains:
+						<select id="strainOp" name="strainOp">
+							<option value="fasta">Get FASTA</option>
+							<option value="mgv">Send to Multi Genome Viewer (MGV)</option>
+							<option value="muscle">Send to MUSCLE (Multiple Sequence Alignment Tool)</option>
+							<option value="snps">Send to Sanger SNP Query (+/- 2kb)</option>
+						</select>
+					</div>
+					<div id="strainGenesTableDiv">
+						<table class="padded" id="table_strainMarkers">
+							<tr class="headerStripe">
+					  		<th>Strain</th>
+					  		<th>Gene Model ID</th>
+					  		<th>Feature Type</th>
+					  		<th>Coordinates</th>
+					  		<th>Select Strains</th>
+					  	</tr>
 					
 					<c:forEach var="sm" items="${marker.strainMarkers}">
 						<c:set var="sgID" value=""/>
@@ -179,13 +178,16 @@
 							<fmt:formatNumber value="${sm.endCoordinate + 2000}" pattern="#0" var="sangerEndCoord"/>
 						</c:if>
 					</c:forEach> 
-
 				</table>
 				</div>
-				<div id="strainGenesButtonsDiv">
-					<input type="button" class="sgButton" value="Select All" onClick="clickAllStrainGenes()"/><br/>
-					<input type="button" class="sgButton" value="Select DO/CC Founders" onClick="clickParentalStrainGenes()"/><br/>
-					<input id="sgResetButton" type="reset" class="sgButton" value="Deselect All" />
+				</div>
+				<div id="sgRightWrapper">
+					<div id="strainGenesButtonsDiv">
+						<input type="button" class="sgButton" value="Go" onClick="strainRibbonGoButtonClick()" /><br/>
+						<input type="button" class="sgButton" value="Select All" onClick="clickAllStrainGenes()"/><br/>
+						<input type="button" class="sgButton" value="Select DO/CC Founders" onClick="clickParentalStrainGenes()"/><br/>
+						<input id="sgResetButton" type="reset" class="sgButton" value="Deselect All" />
+					</div>
 				</div>
 				</div>
 				</form>
@@ -200,6 +202,7 @@
 <style>
 #strainGenesWrapperDiv {
 	vertical-align: top;
+	display: flex;
 }
 #strainGenesTableDiv {
 	display: inline-block;
@@ -212,16 +215,22 @@
 #strainGenesTableControls {
 	display: inline-block;
 	text-align: right;
-	min-width: 838px;
-	margin-left: 3px;
+	padding-top: 5px;
+	padding-bottom: 9px;
 }
 .sgButton {
 	min-width: 50px;
 	padding: 3px;
-	margin: 3px;
+	margin-left: 3px;
+	margin-right: 3px;
+	margin-bottom: 6px;
 }
 .leftpad15 {
 	margin-left: 15px;
+}
+#sgLeftWrapper {
+}
+#sgRightWrapper {
 }
 </style>
 <script>
