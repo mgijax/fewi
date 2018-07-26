@@ -149,7 +149,6 @@
 				      <a href="${configBean.FEWI_URL}snp"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/FAQimage.png" alt="FAQ"></a>
 				    </div>
 				    </div>
-				    </div>
 <div id="" class="blankSectionSpacer"></div>
 
 <div class="container">
@@ -162,6 +161,9 @@
   <div class="col-sm-3" style="">
   </div>
 </div>
+
+<div id="bottomSection">
+		<div class="row">
 <!-- Tabs box -->
 <!-- Note: This section uses a white gif to set the width and avoid
     the a crash in IE6, and display problems in IE 6 & 7.  I also
@@ -190,19 +192,19 @@ background: white url(images/shadeGoldGray.gif) top left repeat-x;
 </style>
 
 <div class="boxWide marginBottom">
-	<ul id="gxdtab" class="shadetabs">
+	<ul id="straintab" class="shadetabs">
 		<li class="selected"><a href="${configBean.FEWI_URL}tabContents/strain_about.html" rel="ajaxcontentarea">About</a></li>
 		<li><a href="${configBean.FEWI_URL}tabContents/strain_help.html" rel="ajaxcontentarea">Help Documents</a></li>
-		<li><a href="${configBean.FEWI_URL}tabContents/strain_collaborators.html"
-		rel="ajaxcontentarea">Collaborators</a></li>
+		<li><a href="${configBean.FEWI_URL}tabContents/strain_collaborators.html"rel="ajaxcontentarea">Collaborators</a></li>
 		<li><a href="${configBean.FEWI_URL}tabContents/strain_other_links.html" rel="ajaxcontentarea">Other Links</a></li>
 	</ul>
 	<div id="strainContentarea" class="strainContentstyle">
 		<!--#include file='tabContents/strain_about.html'-->
 	</div>
-
-</td></tr>
+	
+	<img src="<!--#include file='include/mgihome_url.html'-->homepages/images/white_dot.gif" width="720px" height="1px">
 </div>
+</td></tr>
 </table>
 
 <!--AJAX TABS CALLS-->
