@@ -143,7 +143,7 @@
 				      <a href="${configBean.MGIHOME_URL}submissions/amsp_submission.cgi"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/SubmitLink.png" alt="Submit Your Data"></a>
 				    </div>
 				    <div class="col-md-4" style="">
-				      <a href="${configBean.FEWI_URL}snp"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/FAQimage.png" alt="FAQ"></a>
+				      <a href="/WEB-INF/jsp/static/home/strain_faqs_section.html"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/FAQimage.png" alt="FAQ"></a>
 				    </div>
 				    </div>
 <div id="" class="blankSectionSpacer"></div>
@@ -160,12 +160,10 @@
 </div>
 
 <div id="bottomSection">
-		<div class="row">
 
 <article class="tabs">
   	<%@ include file="/WEB-INF/jsp/static/home/strain_footer_tabs.html" %>
 </article>
-</div>
 </div>
 
 <!--AJAX TABS CALLS-->
