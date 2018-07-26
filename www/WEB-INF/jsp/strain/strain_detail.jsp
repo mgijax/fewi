@@ -50,6 +50,12 @@
 	</div>
 </c:if>
 
+<c:if test="${not empty strain.snpRows}">
+	<div class="container detailStructureTable">
+		<%@ include file="strain_detail_snp_ribbon.jsp" %>
+	</div>
+</c:if>
+
 <c:if test="${(not empty strain.mutations) or (not empty strain.qtls)}">
 	<div class="container detailStructureTable">
 		<%@ include file="strain_detail_mutation_ribbon.jsp" %>
