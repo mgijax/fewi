@@ -71,7 +71,13 @@
 	padding-bottom: 2px;
 }
 
-.right {float:right}
+.right {
+	float:right
+}
+
+#bottomSection {
+    width:100%;
+  }
 
 </style>
 
@@ -156,13 +162,11 @@
 <div id="bottomSection">
 		<div class="row">
 
-
 <article class="tabs">
   	<%@ include file="/WEB-INF/jsp/static/home/strain_footer_tabs.html" %>
 </article>
 </div>
-</td></tr>
-</table>
+</div>
 
 <!--AJAX TABS CALLS-->
 
@@ -173,14 +177,6 @@
     * Visit Dynamic Drive at http://www.dynamicdrive.com/ for full source code
     ***********************************************/
 </script>
-
-<script type="text/javascript">
-    var strain_box=new ddajaxtabs("straintab", "strainContentarea")
-    strain_box.setpersist(true)
-    strain_box.setselectedClassTarget("linkparent") //"link" or "linkparent"
-    strain_box.init()
-</script>
-
 
 <script type="text/javascript">
 	var fewiurl = "${configBean.FEWI_URL}";
