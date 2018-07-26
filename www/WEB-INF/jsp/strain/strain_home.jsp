@@ -155,37 +155,12 @@
 
 <div id="bottomSection">
 		<div class="row">
-<!-- Tabs box -->
-<!-- Note: This section uses a white gif to set the width and avoid
-    the a crash in IE6, and display problems in IE 6 & 7.  I also
-    needed to put this div in a table to get the fix to work.  The
-    order of the table and div tags is very specific to avoid some
-    flickering in IE.-->
-<table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td>
-<style>
-.strainContentstyle {
-border: 1px solid #D0E0F0;
-margin-bottom: 1em;
-padding: 10px;
-background-color: #D0E0F0;
-color: #025;
-}
-.shadetabs li a{
-text-decoration: none;
-padding: 3px 7px;
-margin-right: 3px;
-border-top: 1px solid #D0E0F0;
-border-right: 1px solid #D0E0F0;
-border-left: 1px solid #D0E0F0;
-border-bottom-style:none;
-background: white url top left repeat-x;
-}
-</style>
+
 
 <article class="tabs">
   	<%@ include file="/WEB-INF/jsp/static/home/strain_footer_tabs.html" %>
 </article>
-  
+</div>
 </td></tr>
 </table>
 
