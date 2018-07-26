@@ -71,7 +71,13 @@
 	padding-bottom: 2px;
 }
 
-.right {float:right}
+.right {
+	float:right
+}
+
+#bottomSection {
+    width:100%;
+  }
 
 </style>
 
@@ -137,7 +143,7 @@
 				      <a href="${configBean.MGIHOME_URL}submissions/amsp_submission.cgi"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/SubmitLink.png" alt="Submit Your Data"></a>
 				    </div>
 				    <div class="col-md-4" style="">
-				      <a href="${configBean.FEWI_URL}snp"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/FAQimage.png" alt="FAQ"></a>
+				      <a href="/WEB-INF/jsp/static/home/strain_faqs_section.html"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/FAQimage.png" alt="FAQ"></a>
 				    </div>
 				    </div>
 <div id="" class="blankSectionSpacer"></div>
@@ -154,15 +160,11 @@
 </div>
 
 <div id="bottomSection">
-		<div class="row">
-
 
 <article class="tabs">
   	<%@ include file="/WEB-INF/jsp/static/home/strain_footer_tabs.html" %>
 </article>
 </div>
-</td></tr>
-</table>
 
 <!--AJAX TABS CALLS-->
 
@@ -173,14 +175,6 @@
     * Visit Dynamic Drive at http://www.dynamicdrive.com/ for full source code
     ***********************************************/
 </script>
-
-<script type="text/javascript">
-    var strain_box=new ddajaxtabs("straintab", "strainContentarea")
-    strain_box.setpersist(true)
-    strain_box.setselectedClassTarget("linkparent") //"link" or "linkparent"
-    strain_box.init()
-</script>
-
 
 <script type="text/javascript">
 	var fewiurl = "${configBean.FEWI_URL}";
