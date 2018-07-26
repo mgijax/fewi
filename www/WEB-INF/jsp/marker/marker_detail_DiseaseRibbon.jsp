@@ -15,7 +15,7 @@
 					<c:set var="titletext" value="Show More" />
 				</c:if>
 
-				<div title="${titletext}" class="toggleImage ${arrowstate}">${arrowtext}</div>
+				<div id="hdToggle" title="${titletext}" class="toggleImage ${arrowstate}">${arrowtext}</div>
 
 				<c:set var="sectionstate" value="open" />
 

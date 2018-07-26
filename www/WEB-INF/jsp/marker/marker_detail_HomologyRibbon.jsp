@@ -12,7 +12,7 @@
 					<c:set var="titletext" value="Show Less" />
 				</c:if>
 
-				<div title="${titletext}" class="toggleImage ${arrowstate}">${arrowtext}</div>
+				<div id="homToggle" title="${titletext}" class="toggleImage ${arrowstate}">${arrowtext}</div>
 
 				<c:if test="${fn:length(humanHomologs) > 0}">
 					<section class="summarySec1 extra open">

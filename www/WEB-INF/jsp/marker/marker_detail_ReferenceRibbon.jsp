@@ -4,7 +4,7 @@
 				References
 			</div>
 			<div class="detail <%=rightTdStyles.getNext() %>" >
-				<div title="Show More" class="toggleImage hdExpand">more</div>
+				<div id="refToggle" title="Show More" class="toggleImage hdExpand">more</div>
 				<section class="summarySec1 wide">
 					<ul>
 						<c:if test="${marker.countOfReferences > 0}">

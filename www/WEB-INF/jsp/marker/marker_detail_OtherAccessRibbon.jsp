@@ -6,7 +6,7 @@
 			</div>
 			<div class="detail <%=rightTdStyles.getNext() %>" >
 
-				<div title="Show Less" class="toggleImage hdCollapse">less</div>
+				<div id="idToggle" title="Show Less" class="toggleImage hdCollapse">less</div>
 
 				<div class="extra" style="padding-left: 90px;">
 					<c:forEach var="item" items="${otherMgiIDs}" varStatus="status">

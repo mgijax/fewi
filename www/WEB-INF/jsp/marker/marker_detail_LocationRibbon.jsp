@@ -23,7 +23,7 @@
 				<c:set var="titletext" value="Show Less" />
 			</c:if>
 
-			<div title="${titletext}" class="toggleImage ${arrowstate}">${arrowtext}</div>
+			<div id="lmToggle" title="${titletext}" class="toggleImage ${arrowstate}">${arrowtext}</div>
 
 			<section class="summarySec1">
 				<ul>

@@ -23,7 +23,7 @@
 			<div id="gxd" class="detail <%=rightTdStyles.getNext() %>">
 
 
-				<div title="Show Less" class="toggleImage hdCollapse">less</div>
+				<div id="gxdToggle" title="Show Less" class="toggleImage hdCollapse">less</div>
 
 				<c:if test="${not empty marker.slimgridCellsAnatomy or marker.countOfGxdResults > 0 or marker.countOfGxdTissues > 0 or marker.countOfCdnaSources > 0 or marker.countOfGxdLiterature > 0 or (marker.countOfGxdImages > 0 && not empty gxdImage) or marker.countOfGxdResults > 0}">
 					<section class="summarySec1 extra">

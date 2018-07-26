@@ -8,7 +8,7 @@
 			  -- PDB, EC, InterPro Domains
 			  -->
 
-			<div class="toggleImage hdCollapse" title="Show Less">less</div>
+			<div id="piToggle" class="toggleImage hdCollapse" title="Show Less">less</div>
 
 			<section class="summarySec1 extra wide">
 				<ul>

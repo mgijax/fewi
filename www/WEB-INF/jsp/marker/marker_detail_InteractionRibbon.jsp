@@ -7,7 +7,7 @@
 			</div>
 			<div class="detail <%=rightTdStyles.getNext() %>">
 
-				<div title="Show Less" class="toggleImage hdCollapse">less</div>
+				<div id="intToggle" title="Show Less" class="toggleImage hdCollapse">less</div>
 
 				<section class="summarySec1 wide extra open">
 					<ul>

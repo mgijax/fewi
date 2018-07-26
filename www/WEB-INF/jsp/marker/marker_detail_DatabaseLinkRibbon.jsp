@@ -5,7 +5,7 @@
 			</div>
 			<div class="detail <%=rightTdStyles.getNext() %>">
 				<section class="summarySec1">
-					<div title="Show Less" class="toggleImage hdCollapse">less</div>
+					<div id="odbToggle" title="Show Less" class="toggleImage hdCollapse">less</div>
 					<ul class="extra open">
 						<c:forEach var="item" items="${logicalDBs}">
 							<li>

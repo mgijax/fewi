@@ -6,7 +6,7 @@
 			</div>
 			<div class="detail <%=rightTdStyles.getNext() %>">
 
-				<div title="Show Less" class="toggleImage hdCollapse">less</div>
+				<div id="goToggle" title="Show Less" class="toggleImage hdCollapse">less</div>
 
 				<c:if test="${marker.countOfGOTerms > 0 or ((not empty marker.countOfGOReferences) and (marker.countOfGOReferences > 0))}">
 
