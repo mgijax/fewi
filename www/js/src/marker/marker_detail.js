@@ -241,9 +241,17 @@ var getSangerUrl = function() {
 	return getUrl('sanger') + st.toLowerCase();
 }
 
+// set all strain gene checkboxes to be not checked
+var clearStrainGeneCheckboxes = function() {
+	var checkboxes = $('[type=checkbox][name=seqs]');
+	for (i = 0; i < checkboxes.length; i++) {
+		checkboxes[i].checked = false;
+	}
+}
+
 // check all the DO/CC Founder strains in the table of strain genes
 var clickParentalStrainGenes = function() {
-	$('#sgResetButton').click();
+	clearStrainGeneCheckboxes();
 	var checkboxes = $('[type=checkbox][name=seqs]');
 	for (i = 0; i < checkboxes.length; i++) {
 		for (j = 0; j < parentalStrains.length; j++) {

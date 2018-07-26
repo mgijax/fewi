@@ -34,7 +34,7 @@
 					<div class="label" style="width: 100%; text-align:center;padding-bottom:1.25em;">Human Diseases</div><br />
 				    <table id="diseaseSummaryTable" style="margin-top: 5px">
 				    <tr>
-				    	<th></th>
+				    	<th id="diseaseTableColumnHeader1"></th>
 					    <c:forEach var="genotype" items="${strain.diseaseGenotypes}" varStatus="gStatus">
 					    	<th><a href="${configBean.FEWI_URL}allele/genoview/${genotype.genotypeID}">model ${gStatus.count}</a></th>
 					    </c:forEach>

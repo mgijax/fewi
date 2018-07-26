@@ -164,8 +164,8 @@
 									</c:forEach>
 								</c:if>
 							</td>
-							<td>${sm.featureType}</td>
-							<td>${sm.location}</td>
+							<td class="nowrap">${sm.featureType}</td>
+							<td class="nowrap">${sm.location}</td>
 							<td class="sgCenter">
 							  <c:if test="${not empty sgID}">
 								<input type="checkbox" name="seqs" value="straingene!${sgID}!!!!!" class="sgCheckbox" />
@@ -183,10 +183,10 @@
 				</div>
 				<div id="sgRightWrapper">
 					<div id="strainGenesButtonsDiv">
-						<input type="button" class="sgButton" value="Go" onClick="strainRibbonGoButtonClick()" /><br/>
-						<input type="button" class="sgButton" value="Select All" onClick="clickAllStrainGenes()"/><br/>
-						<input type="button" class="sgButton" value="Select DO/CC Founders" onClick="clickParentalStrainGenes()"/><br/>
-						<input id="sgResetButton" type="reset" class="sgButton" value="Deselect All" />
+						<input id="sgGoButton" type="button" class="sgButton" value="Go" onClick="strainRibbonGoButtonClick()" /><br/>
+						<input id="sgAllButton" type="button" class="sgButton" value="Select All" onClick="clickAllStrainGenes()"/><br/>
+						<input id="sgFounderButton" type="button" class="sgButton" value="Select DO/CC Founders" onClick="clickParentalStrainGenes()"/><br/>
+						<input id="sgNoneButton" type="button" class="sgButton" value="Deselect All" onClick="clearStrainGeneCheckboxes()"/>
 					</div>
 				</div>
 				</div>
@@ -215,7 +215,6 @@
 #strainGenesTableControls {
 	display: inline-block;
 	text-align: right;
-	padding-top: 5px;
 	padding-bottom: 9px;
 }
 .sgButton {
@@ -231,6 +230,9 @@
 #sgLeftWrapper {
 }
 #sgRightWrapper {
+}
+.nowrap {
+	white-space: nowrap;
 }
 </style>
 <script>
