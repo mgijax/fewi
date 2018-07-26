@@ -137,13 +137,13 @@
 				    </div>
 				    </div>
 <div class="col-md-4" style="">
-				       <a href=""${configBean.MGIHOME_URL}nomen/strains.shtml"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/4Strains.png" alt="Nomenclature Guidelines"></a>
+				       <a href="${configBean.MGIHOME_URL}nomen/strains.shtml"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/4Strains.png" alt="Nomenclature Guidelines"></a>
 				    </div>
 				    <div class="col-md-4" style="">
 				      <a href="${configBean.MGIHOME_URL}submissions/amsp_submission.cgi"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/SubmitLink.png" alt="Submit Your Data"></a>
 				    </div>
 				    <div class="col-md-4" style="">
-				      <a href="/WEB-INF/jsp/static/home/strain_faqs_section.html"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/FAQimage.png" alt="FAQ"></a>
+				      <a href="${configBean.FAQ_URL}FAQ.shtml#faq_strain"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/FAQimage.png" alt="FAQ"></a>
 				    </div>
 				    </div>
 <div id="" class="blankSectionSpacer"></div>
@@ -159,12 +159,11 @@
   </div>
 </div>
 
-<div id="bottomSection">
+<div style="clear:both"></div>
 
 <article class="tabs">
   	<%@ include file="/WEB-INF/jsp/static/home/strain_footer_tabs.html" %>
 </article>
-</div>
 
 <!--AJAX TABS CALLS-->
 
