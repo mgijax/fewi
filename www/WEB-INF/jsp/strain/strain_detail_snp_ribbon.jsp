@@ -6,7 +6,7 @@
 				<ul>
 					<li>
 						<div class="label narrow">SNPs involving ${strain.name}</div>
-						<div id="snpCount" class="valueNarrow">${strain.snpCount}</div>
+						<div id="snpCount" class="valueNarrow"><fmt:formatNumber type="number" value="${strain.snpCount}" maxFractionDigits="0" groupingUsed="true"/></div>
 					</li>
 					<li>
 						<div class="label narrow">Comparison Strains</div>
@@ -68,6 +68,7 @@
     #snpLeftDiv { margin-left: 20px; }
     #snpRightDiv { margin-left: 40px; }
     #snpContainer { display: flex; }
+    #snpLegend { margin-top: 3px; }
     #snpLegend td { border: 1px solid black; }
-    #legendLabel { font-weight: bold; padding-bottom: 3px; }
+    #legendLabel { font-weight: bold; margin-left: 31px; }
 	</style>
