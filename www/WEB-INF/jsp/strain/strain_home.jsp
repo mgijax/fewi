@@ -193,10 +193,10 @@ background: white url(images/shadeGoldGray.gif) top left repeat-x;
 
 <div class="boxWide marginBottom">
 	<ul id="straintab" class="shadetabs">
-		<li class="selected"><a href="${configBean.FEWI_URL}tabContents/strain_about.html" rel="ajaxcontentarea">About</a></li>
-		<li><a href="${configBean.FEWI_URL}tabContents/strain_help.html" rel="ajaxcontentarea">Help Documents</a></li>
-		<li><a href="${configBean.FEWI_URL}tabContents/strain_collaborators.html"rel="ajaxcontentarea">Collaborators</a></li>
-		<li><a href="${configBean.FEWI_URL}tabContents/strain_other_links.html" rel="ajaxcontentarea">Other Links</a></li>
+		<li class="selected"><a href="tabContents/strain_about.html" rel="ajaxcontentarea">About</a></li>
+		<li><a href="tabContents/strain_help.html" rel="ajaxcontentarea">Help Documents</a></li>
+		<li><a href="tabContents/strain_collaborators.html"rel="ajaxcontentarea">Collaborators</a></li>
+		<li><a href="tabContents/strain_other_links.html" rel="ajaxcontentarea">Other Links</a></li>
 	</ul>
 	<div id="strainContentarea" class="strainContentstyle">
 		<!--#include file='tabContents/strain_about.html'-->
