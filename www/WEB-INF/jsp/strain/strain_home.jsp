@@ -187,7 +187,7 @@ border-top: 1px solid #D0E0F0;
 border-right: 1px solid #D0E0F0;
 border-left: 1px solid #D0E0F0;
 border-bottom-style:none;
-background: white url(images/shadeGoldGray.gif) top left repeat-x;
+background: white url top left repeat-x;
 }
 </style>
 
@@ -202,7 +202,6 @@ background: white url(images/shadeGoldGray.gif) top left repeat-x;
 		<!--#include file='tabContents/strain_about.html'-->
 	</div>
 	
-	<img src="<!--#include file='include/mgihome_url.html'-->homepages/images/white_dot.gif" width="720px" height="1px">
 </div>
 </td></tr>
 </table>
