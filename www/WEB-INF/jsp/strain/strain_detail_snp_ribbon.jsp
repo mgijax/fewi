@@ -17,14 +17,14 @@
 				<div id="snpLeftDiv">
 				<table id="snpTable">
 					<tr>
-						<th>Comparison Strain</th>
+						<th class='snpLeftColumn'>Comparison Strain</th>
 						<c:forEach var="chrom" items="${strain.snpChromosomes}">
-							<th class="center">${chrom}</th>
+							<th class="snpHeaderCell">${chrom}</th>
 						</c:forEach>
 					</tr>
 					<c:forEach var="row" items="${strain.snpRows}">
 						<tr>
-						<td><a href="${configBean.FEWI_URL}strain/${row.comparisonStrainID}" target="_blank">${row.comparisonStrainName}</a></td>
+						<td class='snpLeftColumn'><a href="${configBean.FEWI_URL}strain/${row.comparisonStrainID}" target="_blank">${row.comparisonStrainName}</a></td>
 						<c:forEach var="cell" items="${row.cells}">
 							<td title="${cell.allCountComma} SNP<c:if test='${cell.allCount > 1}'>s</c:if>" class="cell colorBin${cell.colorBin}"
 								<c:if test='${cell.allCount > 0}'>
@@ -64,11 +64,12 @@
 	#snpTable th { font-weight: bold; white-space: nowrap; }
     #snpTable td { border: 1px solid black; }
     .cell { width: 20px; height: 20px; }
-    .center { text-align: center; }
+    .snpHeaderCell { width: 20px; height: 20px; text-align: center; }
     #snpLeftDiv { margin-left: 20px; }
     #snpRightDiv { margin-left: 40px; }
     #snpContainer { display: flex; }
     #snpLegend { margin-top: 3px; }
     #snpLegend td { border: 1px solid black; }
     #legendLabel { font-weight: bold; margin-left: 31px; }
+    .snpLeftColumn { width: 215px; height: 20px; }
 	</style>
