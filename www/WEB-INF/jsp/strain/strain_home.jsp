@@ -7,7 +7,7 @@
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
 <fewi:simpleseo
-	title="MGI-Mouse Strains, SNPs, &amp; Polymorphisms"
+	title="MGI-Strains and SNPs"
 	canonical="${configBean.FEWI_URL}home/strain"
 	description="MGI integrates comparative data on inbred strain characteristics including SNPs, polymorphisms, and quantitative phenotypes."
 	keywords="MGI, mgi, mice, mouse, murine, mus musculus, genes, genome, genomic, strains, inbred strains, CC Founders, SNPs, single nucleotide polymorphisms, PCR, polymerase chain reactions, RFLP, restriction fragment length polymorphisms, coding SNPs, RefSNPs"
@@ -17,15 +17,6 @@
 
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/home/homepages.css">
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/home/strain.css">
-
-
-<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/home/homepages.js">
-    /***********************************************
-    * Ajax Tabs Content script- © Dynamic Drive DHTML code library (www.dynamicdrive.com)
-    * This notice MUST stay intact for legal use
-    * Visit Dynamic Drive at http://www.dynamicdrive.com/ for full source code
-    ***********************************************/
-</script>
 
  <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
