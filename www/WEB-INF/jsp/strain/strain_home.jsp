@@ -165,6 +165,15 @@
 
 <div style="clear:both"></div>
 
+<div class="container">
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="tabContents/strain_about.html">About</a></li>
+    <li><a href="tabContents/strain_help.html">Help Documents</a></li>
+    <li><a href="tabContents/strain_collaborators.html">Collaborators</a></li>
+    <li><a href="tabContents/strain_other_links.html">Other Links</a></li>
+  </ul>
+</div>
+
 <article class="tabs" style="margin-left:30px; max-width:1164px;">
   	<article class="tabs">
   	<%@ include file="/WEB-INF/jsp/static/home/strain_footer_tabs.html" %>
