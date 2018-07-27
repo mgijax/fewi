@@ -72,7 +72,10 @@
 }
 
 .right {
-	float:right
+    position: absolute;
+    right: 20px;
+    height: 30px;
+    padding-bottom: 14px;
 }
 
 #bottomSection {
