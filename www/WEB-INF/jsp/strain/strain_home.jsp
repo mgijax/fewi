@@ -164,9 +164,33 @@
 
 <div style="clear:both"></div>
 
-<article class="tabs">
+<article class="tabs" style="margin-left:30px; max-width:1164px;">
+  	<article class="tabs">
   	<%@ include file="/WEB-INF/jsp/static/home/strain_footer_tabs.html" %>
 </article>
+
+<style>
+/* Custom page styles */
+
+</style>
+
+<div id="strainTabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+	<ul class="shadetabs ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all" role="tablist">
+		<li class="selected ui-state-default ui-corner-top ui-tabs-active ui-state-active" role="tab" tabindex="0" aria-controls="tabs-1" aria-labelledby="ui-id-1" aria-selected="true" aria-expanded="true"><a href="#tabs-1" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-1">About</a></li>
+		<li class="selected ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="tabs-2" aria-labelledby="ui-id-2" aria-selected="false" aria-expanded="false"><a href="#tabs-2" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-2">Help Documents</a></li>
+		<li class="selected ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="tabs-3" aria-labelledby="ui-id-3" aria-selected="false" aria-expanded="false"><a href="#tabs-3" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-3">Collaborators</a></li>
+		<li class="selected ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="tabs-4" aria-labelledby="ui-id-4" aria-selected="false" aria-expanded="false"><a href="#tabs-4" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-4">Other Links</a></li>
+	</ul>
+	<div id="tabs-1" aria-labelledby="ui-id-1" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-hidden="false">
+	<table>
+	<tbody><tr>
+	<td>
+
+<script type="text/javascript">
+    (function() {
+    	$( "#strainTabs" ).tabs();
+    })();
+</script>
 
 <!--AJAX TABS CALLS-->
 
