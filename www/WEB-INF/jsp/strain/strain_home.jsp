@@ -94,16 +94,16 @@
 </div>
 
 <div class="container">
-  <div class="col-sm-9" style="">
-  <div id="" class="strainSectionSpacer"><h5>Strain Query <a href="http://www.informatics.jax.org/userhelp/STRAIN_search_help.shtml" onclick="javascript:openUserhelpWindow(&quot;STRAIN_search_help.shtml&quot;); return false;"><img class="right"  src="http://www.informatics.jax.org/webshare/images/help_large_transp.gif" alt="Help"></a></h5></div>
+  <div class="col-sm-8" style="">
+  <div class="strainSectionSpacer"><h5>Strain Query <a href="http://www.informatics.jax.org/userhelp/STRAIN_search_help.shtml" onclick="javascript:openUserhelpWindow(&quot;STRAIN_search_help.shtml&quot;); return false;"><img class="right"  src="http://www.informatics.jax.org/webshare/images/help_large_transp.gif" alt="Help"></a></h5></div>
   </div>
-  <div class="col-sm-3" style="">
-  <div id="" class="strainSectionSpacer"><h5>Strain Collections</h5></div>
+  <div class="col-sm-4" style="">
+  <div class="strainSectionSpacer"><h5>Strain Collections</h5></div>
   </div>
 </div>
 <div class="container">
 <div class="row">
-  <div class="col-sm-9" style="">
+  <div class="col-sm-8" style="">
   <div class="strainColumn top">
 	  <section class="infoBlock queryForm">
 	    <h2>Find</h2>
@@ -113,9 +113,11 @@
 	    	<%@ include file="/WEB-INF/jsp/strain/sub_strain_form.jsp" %>
 	    </div>
 	    </div>
+	    </section>
 	    </div>
 	    </div>
-  <div class="col-sm-3" style="">
+	    <div class="row">
+  <div class="col-sm-4" style="">
 		<ul class="collections">
 			<li><a href="${configBean.FEWI_URL}strain/summary?isSequenced=1" class="homeLink">Wellcome Sanger Institute's <br>Mouse Genomes Project (MGP)</a></li>
 			<li><a href="${configBean.FEWI_URL}strain/summary?attributes=inbred strain" class="homeLink">Inbred strains</a></li>
@@ -124,8 +126,18 @@
 			<li><a href="${configBean.FEWI_URL}strain/summary?group=DOCCFounders" class="homeLink">DO/CC Founders</a></li>
 			<li><a href="${configBean.FEWI_URL}strain/summary" class="homeLink">All strains</a></li>
 		</ul>
+  <div class="row">
+ <div class="col-sm-12" style="">
+  <div class="strainSectionSpacer"><h5>SNPs, Strains &amp; Polymorphisms </h5></div>
+  <div class="wrapper">
+	    	<%@ include file="/WEB-INF/jsp/strain/sub_strain_counts.jsp" %>
+	    </div>
+  </div>
   </div>
 </div>
+</div>
+ 
+  </div>
 </div>
 <div class="container">
 <div class="gridRow">
