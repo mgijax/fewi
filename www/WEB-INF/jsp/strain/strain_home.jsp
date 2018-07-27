@@ -174,7 +174,6 @@
   </ul>
   <div class="tab-content">
   <div id="about" class="tab-pane fade in active">
-    <h4>About</h4>
     <table>
 	<tr>
 	<td>
@@ -204,7 +203,6 @@
 </table>
   </div>
   <div id="help" class="tab-pane fade">
-    <h4>Help Documents</h4>
     <table>
 		<tr><td>
 		  Detailed explanations for using Strains, SNPs & Polymorphisms query forms and tools:	
@@ -218,7 +216,6 @@
 	</table>
   </div>
   <div id="collab" class="tab-pane fade">
-    <h4>Collaborators</h4>
     <table>
 	<tr>
 		<td>
@@ -239,7 +236,6 @@
 </table>
   </div>
   <div id="links" class="tab-pane fade">
-    <h4>Other Links</h4>
    <table>
 	<tr>
 		<td>
