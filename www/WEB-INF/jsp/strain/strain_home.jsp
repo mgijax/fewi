@@ -163,17 +163,6 @@
 				    </div>
 <div id="" class="blankSectionSpacer"></div>
 
-<div class="container">
-  <div class="col-sm-9" style="">
-  <div id="" class="strainSectionSpacer"><h5>SNPs, Strains &amp; Polymorphisms </h5></div>
-  <div class="wrapper">
-	    	<%@ include file="/WEB-INF/jsp/strain/sub_strain_counts.jsp" %>
-	    </div>
-  </div>
-  <div class="col-sm-3" style="">
-  </div>
-</div>
-
 <div style="clear:both"></div>
 
 <article class="tabs" style="margin-left:30px; max-width:1164px;">
