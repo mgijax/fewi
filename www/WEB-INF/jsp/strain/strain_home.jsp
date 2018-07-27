@@ -167,7 +167,7 @@
 
 <div class="container">
   <ul class="nav nav-tabs">
-    <li class="active"><a href="tabContents/strain_about.html">About</a></li>
+    <li class="active"><a href="#tabs-1">About</a></li>
     <li><a href="tabContents/strain_help.html">Help Documents</a></li>
     <li><a href="tabContents/strain_collaborators.html">Collaborators</a></li>
     <li><a href="tabContents/strain_other_links.html">Other Links</a></li>
