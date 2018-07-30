@@ -155,6 +155,7 @@
 				      <a href="http://www.findmice.org/index.jsp"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/IMSRLink.png" alt="IMSR"></a>
 				    </div>
 				    </div>
+	<div class="blankSectionSpacer"></div>
 <div class="col-md-4" style="">
 				       <a href="${configBean.MGIHOME_URL}nomen/strains.shtml"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/4Strains.png" alt="Nomenclature Guidelines"></a>
 				    </div>
