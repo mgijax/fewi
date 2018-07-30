@@ -128,9 +128,10 @@
 			<li><a href="${configBean.FEWI_URL}strain/summary?group=DOCCFounders" class="homeLink">DO/CC Founders</a></li>
 			<li><a href="${configBean.FEWI_URL}strain/summary" class="homeLink">All strains</a></li>
 		</ul>
-  <div class="row">
- <div class="col-sm-12" style="">
+   <div class="row">
+ <div class="col-sm-11" style="">
   <div class="strainSectionSpacer"><h5>SNPs, Strains &amp; Polymorphisms </h5></div>
+  <div class="col-sm-1"></div>
   <div class="wrapper">
 	    	<%@ include file="/WEB-INF/jsp/strain/sub_strain_counts.jsp" %>
 	    </div>
