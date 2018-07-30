@@ -738,7 +738,7 @@ public class FormatHelper {
 			return "#" + rg + rg + "FF";
 		}
 
-		// SNP counts are lower than half, so red shades.
+		// SNP counts are more than half, so red shades.
 		long fraction = Math.round(((logMax - logCount) / logHalfMax) * 221);
 		String gb = String.format("%02X", fraction);
 		return "#FF" + gb + gb;
