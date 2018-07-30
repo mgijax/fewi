@@ -22,11 +22,15 @@
 							<th class="snpHeaderCell">${chrom}</th>
 						</c:forEach>
 					</tr>
+					<% int maxCount = (int) request.getAttribute("maxSnpCount"); %>
 					<c:forEach var="row" items="${strain.snpRows}">
 						<tr>
 						<td class='snpLeftColumn'><a href="${configBean.FEWI_URL}strain/${row.comparisonStrainID}" target="_blank">${row.comparisonStrainName}</a></td>
 						<c:forEach var="cell" items="${row.cells}">
-							<td title="${cell.allCountComma} SNP<c:if test='${cell.allCount > 1}'>s</c:if>" class="cell colorBin${cell.colorBin}"
+							<c:set var="reqCell" value="${cell}" scope="request"/>
+							<% StrainSnpCell cell = (StrainSnpCell) request.getAttribute("reqCell"); %>
+							<td title="${cell.allCountComma} SNP<c:if test='${cell.allCount > 1}'>s</c:if>" class="cell"
+								style="background-color: <%= FormatHelper.getSnpColorCode(cell.getAllCount(), maxCount) %>"
 								<c:if test='${cell.allCount > 0}'>
 								onClick="window.open('${configBean.FEWI_URL}snp/summary?selectedChromosome=${cell.chromosome}&coordinate=0-200&coordinateUnit=Mbp&selectedStrains=${row.comparisonStrainName}&referenceStrain=${strain.name}&searchBySameDiff=&selectedTab=1');"
 								</c:if>
@@ -40,13 +44,13 @@
 					<span id="legendLabel">Legend</span><br/>
 					<!-- Values need to be kept in sync with fedatamodel's StrainSnpCell class. -->
 					<table id="snpLegend">
-						<tr><td class="cell colorBin0"></td><td>0 SNPs</td></tr>
-						<tr><td class="cell colorBin1"></td><td>1-9 SNPs</td></tr>
-						<tr><td class="cell colorBin2"></td><td>10-99 SNPs</td></tr>
-						<tr><td class="cell colorBin3"></td><td>100-349 SNPs</td></tr>
-						<tr><td class="cell colorBin4"></td><td>350-499 SNPs</td></tr>
-						<tr><td class="cell colorBin5"></td><td>500-999 SNPs</td></tr>
-						<tr><td class="cell colorBin6"></td><td>1,000+ SNPs</td></tr>
+						<c:set var="snpBins" value="10 100 1000 10000 100000 ${maxSnpCount}"/>
+						<c:forEach var="bin" items="${fn:split(snpBins, ' ')}">
+							<c:set var="reqBin" value="${bin}" scope="request"/>
+							<% int bin = (int) Integer.valueOf((String) request.getAttribute("reqBin")); %>
+							<tr><td class="cell" style="background-color: <%= FormatHelper.getSnpColorCode(bin, maxCount) %>"></td>
+							<td><fmt:formatNumber type="number" value="${bin}" maxFractionDigits="0" groupingUsed="true"/> SNPs</td></tr>
+						</c:forEach>
 					</table>
 				</div>
 			</div>

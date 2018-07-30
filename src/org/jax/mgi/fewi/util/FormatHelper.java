@@ -716,5 +716,20 @@ public class FormatHelper {
 		String template = "<a href='$1'" + target + css + ">$1</a>";
 		return s.replaceAll("(https?://[^ )]+)", template);
 	}
+	
+	/* get the hex color code for the given 'snpCount', where the highest number of SNPs per cell is given
+	 * as 'maxSnpCount'.
+	 */
+	public static String getSnpColorCode(int snpCount, int maxSnpCount) {
+		// For a range of 256 shades of blue, we include the full (FF) blue component while starting with
+		// full (FF) red and green components, walking them back to 00 as snpCount approaches maxSnpCount.
+		// Due to the wide range of snpCount values, we use a logarithmic scale.
+		
+		double logMax = Math.log10((double) maxSnpCount);
+		double logCount = Math.log10((double) snpCount);
+		long fraction = Math.round(((logMax - logCount) / logMax) * 255);
+		String rg = String.format("%02X", fraction);
+		return "#" + rg + rg + "FF";
+	}
 } // end of class FormatHelper
 
