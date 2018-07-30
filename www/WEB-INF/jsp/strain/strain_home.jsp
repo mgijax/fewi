@@ -72,7 +72,10 @@
 }
 
 .right {
-	float:right
+    position: absolute;
+    right: 20px;
+    height: 30px;
+    padding-bottom: 14px;
 }
 
 #bottomSection {
@@ -91,16 +94,16 @@
 </div>
 
 <div class="container">
-  <div class="col-sm-9" style="">
-  <div id="" class="strainSectionSpacer"><h5>Strain Query <a href="http://www.informatics.jax.org/userhelp/STRAIN_search_help.shtml" onclick="javascript:openUserhelpWindow(&quot;STRAIN_search_help.shtml&quot;); return false;"><img class="right"  src="http://www.informatics.jax.org/webshare/images/help_large_transp.gif" alt="Help"></a></h5></div>
+  <div class="col-sm-8" style="">
+  <div class="strainSectionSpacer"><h5>Strain Query <a href="http://www.informatics.jax.org/userhelp/STRAIN_search_help.shtml" onclick="javascript:openUserhelpWindow(&quot;STRAIN_search_help.shtml&quot;); return false;"><img class="right"  src="http://www.informatics.jax.org/webshare/images/help_large_transp.gif" alt="Help"></a></h5></div>
   </div>
-  <div class="col-sm-3" style="">
-  <div id="" class="strainSectionSpacer"><h5>Strain Collections</h5></div>
+  <div class="col-sm-4" style="">
+  <div class="strainSectionSpacer"><h5>Strain Collections</h5></div>
   </div>
 </div>
 <div class="container">
 <div class="row">
-  <div class="col-sm-9" style="">
+  <div class="col-sm-8" style="">
   <div class="strainColumn top">
 	  <section class="infoBlock queryForm">
 	    <h2>Find</h2>
@@ -110,9 +113,11 @@
 	    	<%@ include file="/WEB-INF/jsp/strain/sub_strain_form.jsp" %>
 	    </div>
 	    </div>
+	    </section>
 	    </div>
 	    </div>
-  <div class="col-sm-3" style="">
+	    <div class="row">
+  <div class="col-sm-4" style="">
 		<ul class="collections">
 			<li><a href="${configBean.FEWI_URL}strain/summary?isSequenced=1" class="homeLink">Wellcome Sanger Institute's <br>Mouse Genomes Project (MGP)</a></li>
 			<li><a href="${configBean.FEWI_URL}strain/summary?attributes=inbred strain" class="homeLink">Inbred strains</a></li>
@@ -121,8 +126,18 @@
 			<li><a href="${configBean.FEWI_URL}strain/summary?group=DOCCFounders" class="homeLink">DO/CC Founders</a></li>
 			<li><a href="${configBean.FEWI_URL}strain/summary" class="homeLink">All strains</a></li>
 		</ul>
+  <div class="row">
+ <div class="col-sm-12" style="">
+  <div class="strainSectionSpacer"><h5>SNPs, Strains &amp; Polymorphisms </h5></div>
+  <div class="wrapper">
+	    	<%@ include file="/WEB-INF/jsp/strain/sub_strain_counts.jsp" %>
+	    </div>
+  </div>
   </div>
 </div>
+</div>
+ 
+  </div>
 </div>
 <div class="container">
 <div class="gridRow">
@@ -148,22 +163,102 @@
 				    </div>
 <div id="" class="blankSectionSpacer"></div>
 
-<div class="container">
-  <div class="col-sm-9" style="">
-  <div id="" class="strainSectionSpacer"><h5>SNPs, Strains &amp; Polymorphisms </h5></div>
-  <div class="wrapper">
-	    	<%@ include file="/WEB-INF/jsp/strain/sub_strain_counts.jsp" %>
-	    </div>
-  </div>
-  <div class="col-sm-3" style="">
-  </div>
-</div>
-
 <div style="clear:both"></div>
 
-<article class="tabs">
-  	<%@ include file="/WEB-INF/jsp/static/home/strain_footer_tabs.html" %>
-</article>
+<div class="container">
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#about">About</a></li>
+    <li><a data-toggle="tab" href="#help">Help Documents</a></li>
+    <li><a data-toggle="tab" href="#collab">Collaborators</a></li>
+    <li><a data-toggle="tab" href="#links">Other Links</a></li>
+  </ul>
+  <div class="tab-content">
+  <div id="about" class="tab-pane fade in active">
+    <table>
+	<tr>
+	<td>
+		<p><strong>Strains</strong></p>
+		<p>Inbred strains of mice represent unique fixed genotypes that  can be repeatedly accessed as homogeneous
+		experimental individuals, with  predictable phenotypes and defined allelic composition. Hundreds of inbred
+		strains of mice have been described and new strains continue to be developed,  taking advantage of the rich
+		genetic diversity among the existing strains and  the ease with which the mouse genome can be manipulated.<br /><br />
+		MGI serves as a  registry for mouse strains worldwide, maintaining the authoritative  nomenclature for
+		existing strains. Comparative data on inbred strain  characteristics, SNPs, polymorphisms, and quantitative
+		phenotypes are  integrated with other genetic, genomic, and biological data in MGI.</p>
+		<p><strong>SNPs (single nucleotide polymorphisms)</strong></p>
+		<p>MGI provides comprehensive information about reference SNPs including the reference flanking sequence, 
+		assays that define the SNP, and gene/marker associations with their corresponding function class annotations. 
+		Each SNP detail page includes links to popular gene browsers including the MGI 
+		Mouse Genome Browser.</p>
+		<p><strong>Other molecular polymorphisms</strong></p>
+		<p>MGI includes data on <abbr title="Restriction Fragment Length Polymorphism">RFLP</abbr> and PCR based polymorphisms. Probes and restriction enzymes used for <abbr title="Restriction Fragment Length Polymorphism">RFLP</abbr> analysis and primer sequences used for PCR are provided, with fragment sizes and variants for each strain tested. Links to these data can be found in the Polymorphisms section of gene and marker detail pages.</p>
+		<p><strong>Strain characteristics and historical origins</strong></p>
+		<p>MGI holds information on comparative strain characteristics as originally curated by Dr. Michael Festing.
+		These narratives provide key phenotypic traits of major inbred strains, such as behavior, physiology, anatomy,
+		drug responses, immunology, infection, and reproduction. The Genealogy of Inbred Strains provides a "pedigree" of relationships of strains since their origin. The Genealogy
+		Chart graphically displays the movement and development of inbred strains and is particularly useful in looking at
+		dispersion of strains and how inbreeding (and allele fixation) occurred in relation to conserved sequence blocks observed in SNP analysis  Data are fully referenced.</p>
+	</td>
+	</tr>
+</table>
+  </div>
+  <div id="help" class="tab-pane fade">
+    <table>
+		<tr><td>
+		  Detailed explanations for using Strains, SNPs & Polymorphisms query forms and tools:	
+			<ul>
+				<li>SNP Query Form <a href="${configBean.USERHELP_URL}SNP_help.shtml">help</a></li>
+				<!--<li>RFLP/PCR Polymorphism Query Form <a href="${configBean.USERHELP_URL}STRAINS_polymorphism_help.shtml">help</a></li>-->
+				<li>Guidelines for Nomenclature of Mouse and Rat Strains <a href="${configBean.MGIHOME_URL}nomen/strains.shtml">help</a></li>
+				<li>Mouse Strain 129 Substrain Nomenclature <a href="${configBean.MGIHOME_URL}nomen/strain_129.shtml">help</a></li>
+			</ul>
+		</td></tr>
+	</table>
+  </div>
+  <div id="collab" class="tab-pane fade">
+    <table>
+	<tr>
+		<td>
+            Collaborators and Data Providers:<br>
+            <br>
+            Mouse SNP data in MGI are obtained from the <a href='https://www.ncbi.nlm.nih.gov/SNP/snp_summary.cgi'>dbSNP</a> resource at NCBI<br>
+            <br>
+            The registered mouse strains in MGI include strains
+            <ul>          
+				<li>in public repositories like the International Mouse Strain Resource (<a href="${configBean.IMSRURL}">IMSR</a>)</li>
+				<li>held by members of the Federation of International Mouse Resources (FIMRe)</li>
+				<li>described as source material for sequences in NCBI <a href="https://www.ncbi.nlm.nih.gov/genbank/">GenBank</a> entries</li>
+				<li>submitted by researchers</li>
+				<li>included in the scientific literature</li>
+            </ul>
+    </td>
+	</tr>
+</table>
+  </div>
+  <div id="links" class="tab-pane fade">
+   <table>
+	<tr>
+		<td>
+			<ul id="sendData">
+				<li><a href="${configBean.MGIHOME_URL}genealogy/" title="View a chart depicting the origins and relationships of inbred mouse strains.">Genealogy Chart of Inbred Strains</a></li>
+				<li><a href="${configBean.FTP_URL}datasets/index.html#major_histo">Major Histocompatibility Complex H2 Haplotypes for Strains</a></li>
+				<li><a href="${configBean.FTP_URL}datasets/index.html#Moore">Polymorphisms in Microsatellite Markers for 129X1/SvJ vs Other Inbred Strains</a></li>
+				<li><a href="${configBean.FTP_URL}reports/index.html#strain">ES Cell Lines Used for Genetic Engineering and their Strain of Origin</a></li>
+			</ul>
+		</td>
+		<td>
+			<ul>
+				<li><a href="${configBean.MGIHOME_URL}nomen/strain_129.shtml">Mouse Strain 129 Substrain Nomenclature</a></li>
+				<li><a href="http://www.informatics.jax.org/inbred_strains/">Characteristics of Inbred Strains</a> of Mice and Rats by M. Festing</li>
+				<li><a href="https://csbio.unc.edu/CCstatus/index.py">Collaborative Cross Project</a> at the University of North Carolina</li> 
+                <li><a href="https://www.sanger.ac.uk/sanger/Mouse_SnpViewer/rel-1505">Mouse Genomes Project</a> at the Wellcome Sanger Institute</li>
+			</ul>
+		</td>
+	</tr>
+</table>
+  </div>
+</div>
+</div>
 
 <!--AJAX TABS CALLS-->
 
