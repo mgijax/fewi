@@ -67,7 +67,8 @@ public class StrainController {
 
 	private static int facetLimit = 100;		// max number of facet values to return
 	private static int downloadRowMax = 250000;	// maximum number of strains to allow in download file
-
+	private static int maxSnpCount = -1;		// max number of SNPs in a cell for the SNP ribbon on detail page
+	
     //--------------------//
     // instance variables
     //--------------------//
@@ -152,8 +153,13 @@ public class StrainController {
         }
         // success - we have a single object
 
+        if (maxSnpCount <= 0) {
+        	maxSnpCount = strainFinder.getMaxSnpCount();
+        }
+        
         // generate ModelAndView object to be passed to detail page
         ModelAndView mav = new ModelAndView("strain/strain_detail");
+        mav.addObject("maxSnpCount", maxSnpCount);
         
         //pull out the Strain, and add to mav
         Strain strain = strainList.get(0);

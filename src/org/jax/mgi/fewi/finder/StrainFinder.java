@@ -3,6 +3,8 @@ package org.jax.mgi.fewi.finder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.jax.mgi.fewi.hunter.HibernateStrainSnpCellHunter;
 import org.jax.mgi.fewi.hunter.SolrProbeHunter;
 import org.jax.mgi.fewi.hunter.SolrStrainHunter;
 import org.jax.mgi.fewi.hunter.SolrStrainAttributeFacetHunter;
@@ -38,8 +40,16 @@ public class StrainFinder {
     @Autowired
     private HibernateObjectGatherer<Strain> strainGatherer;
 
+	@Autowired
+	private HibernateStrainSnpCellHunter snpCellHunter;
+
 	//--- public methods ---//
 
+	// get the maximum number of SNPs for a cell in the SNP ribbon of any detail page
+	public int getMaxSnpCount() {
+		return snpCellHunter.getMaxCount(); 
+	}
+	
 	/* return all SimpleStrain (from Solr) objects matching the given search parameters
 	 */
 	public SearchResults<SimpleStrain> getStrains(SearchParams searchParams) {
