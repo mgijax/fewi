@@ -104,7 +104,7 @@
 <div class="container">
 <div class="row">
   <div class="col-sm-1">&nbsp;</div>
-  <div class="col-sm-7" style="">
+  <div class="col-sm-6" style="">
   <div class="strainColumn top">
 	  <section class="infoBlock queryForm">
 	    <h2>Find</h2>
@@ -117,7 +117,7 @@
 	    </section>
 	    </div>
 	    </div>
-	    
+	    <div class="col-sm-1">&nbsp;</div>
 	    <div class="row">
   <div class="col-sm-4" style="">
 		<ul class="collections">
