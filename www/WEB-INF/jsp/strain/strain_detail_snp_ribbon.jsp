@@ -1,11 +1,12 @@
-	<div class="row">
-		<div class="header <%=leftTdStyles.getNext() %>" id="referenceRibbonLabel">
+	<div class="row" id="snpRibbon">
+		<div class="header <%=leftTdStyles.getNext() %>" id="snpRibbonLabel">
 			SNPs
 		</div>
-		<div class="detail <%=rightTdStyles.getNext() %> summaryRibbon">
+		<div class="detail <%=rightTdStyles.getNext() %> summaryRibbon" id="snpRibbonDetails">
+			<div id="snpToggle" title="Show More" class="toggleImage hdExpand">more</div>
 				<ul>
 					<li>
-						<div class="label narrow">SNPs involving ${strain.name}</div>
+						<div class="label narrow">Involving ${strain.name}</div>
 						<div id="snpCount" class="valueNarrow"><fmt:formatNumber type="number" value="${strain.snpCount}" maxFractionDigits="0" groupingUsed="true"/></div>
 					</li>
 					<li>
@@ -13,9 +14,10 @@
 						<div id="comparisonStrainCount" class="valueNarrow">${strain.countOfSnpComparisonStrains}</a></div>
 					</li>
 				</ul>
-			<div id="snpContainer">
+			<div id="snpContainer" class="extra closed">
 				<div id="snpLeftDiv">
 				<table id="snpTableHeader">
+					<tr><th></th><th colspan="22" class="snpChromosomeHeader">Chromosomes</th></tr>
 					<tr>
 						<th class='snpLeftColumn'>Comparison Strain</th>
 						<c:forEach var="chrom" items="${strain.snpChromosomes}">
@@ -91,7 +93,9 @@
     	overflow-y: auto;
     }
     .rlPad { padding-left: 3px; padding-right: 3px; }
+    .snpChromosomeHeader { padding-bottom: 4px; text-align: center }
 	</style>
+
 	<script>
 	// seems silly to make a table border the same color as the background, but we need it to help the
 	// header cells line up with the color cells in the scrollable table below

@@ -742,31 +742,6 @@ public class FormatHelper {
 		long fraction = Math.round(((logMax - logCount) / logHalfMax) * 221);
 		String gb = String.format("%02X", fraction);
 		return "#FF" + gb + gb;
-/*		
-		// For smaller SNP counts we show gradations of yellow, and we use gradations of blue for larger counts.
-		// This helps mitigate the intense similarity of blues at the upper end of the spectrum.
-		
-		if (logCount < 2.0) {
-			// start with #FFFFCC to get a visible yellow at the low end
-			long fraction = Math.round(((2.0 - logCount) / 2.0) * 204);
-			String blue = String.format("%02X", fraction);
-			return "#FFFF" + blue;
-		}
-		
-		if (logCount < 4.0) {
-			// start with #FFEBCC to get a orange at the low end
-			long greenFraction = Math.round(((4.0 - logCount) / 2.0) * 82);
-			long blueFraction = Math.round(((4.0 - logCount) / 2.0) * 204);
-			String blue = String.format("%02X", blueFraction);
-			String green = String.format("%02X", greenFraction + 153);		// offset from bottom of range
-			return "#FF" + green + blue;
-		}
-		
-		// start with #DDDDFF to get a visible blue at the low end
-		long fraction = Math.round(((logMax - logCount) / (logMax - 4.0)) * 221);
-		String rg = String.format("%02X", fraction);
-		return "#" + rg + rg + "FF";
-		*/
 	}
 } // end of class FormatHelper
 

@@ -686,3 +686,30 @@ border-bottom: 1px solid gray;
 #mpSlimgrid {
 	padding-top: 5px;
 }
+
+#body .hdExpand {
+	background: url("http://www.informatics.jax.org/webshare/images/rightArrow.gif") no-repeat 42px 3px;
+}
+
+#body .hdCollapse {
+	background: url("http://www.informatics.jax.org/webshare/images/downArrow.gif") no-repeat 42px 3px; 
+}
+
+#body .toggleImage {
+	margin: 0px 0px 0px 10px;
+	padding: 0px 0px 1px 5px;
+	border-color: rgb(187, 220, 239);
+	color: #54709B;
+	width: 50px;
+	border: 1px;
+	border-style: solid;
+	vertical-align: top;
+	position: absolute;
+}
+
+#body .closed {
+	display: none;
+}
+
+.row {
+}
