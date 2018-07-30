@@ -721,13 +721,28 @@ public class FormatHelper {
 	 * as 'maxSnpCount'.
 	 */
 	public static String getSnpColorCode(int snpCount, int maxSnpCount) {
-		// For a range of 256 shades of blue, we include the full (FF) blue component while starting with
-		// full (FF) red and green components, walking them back to 00 as snpCount approaches maxSnpCount.
-		// Due to the wide range of snpCount values, we use a logarithmic scale.
+		// New plan -- heat map from brightest blue for lowest counts to brightest red for highest counts.
+		// For shades of blue, we include the full (FF) blue component while starting with full (FF) red
+		// and green components, walking them back to 0xE6 as snpCount approaches maxSnpCount.  Similar
+		// for reds.  Due to the wide range of snpCount values, we use a logarithmic scale.
 		
 		double logMax = Math.log10((double) maxSnpCount);
 		double logCount = Math.log10((double) snpCount);
+		double logHalfMax = logMax / 2.0;
 		
+		if (logCount < logHalfMax) {
+			// SNP counts are lower than half, so blue shades.
+
+			long fraction = 221 - Math.round(((logHalfMax - logCount) / logHalfMax) * 221);
+			String rg = String.format("%02X", fraction);
+			return "#" + rg + rg + "FF";
+		}
+
+		// SNP counts are lower than half, so red shades.
+		long fraction = Math.round(((logMax - logCount) / logHalfMax) * 221);
+		String gb = String.format("%02X", fraction);
+		return "#FF" + gb + gb;
+/*		
 		// For smaller SNP counts we show gradations of yellow, and we use gradations of blue for larger counts.
 		// This helps mitigate the intense similarity of blues at the upper end of the spectrum.
 		
@@ -751,6 +766,7 @@ public class FormatHelper {
 		long fraction = Math.round(((logMax - logCount) / (logMax - 4.0)) * 221);
 		String rg = String.format("%02X", fraction);
 		return "#" + rg + rg + "FF";
+		*/
 	}
 } // end of class FormatHelper
 

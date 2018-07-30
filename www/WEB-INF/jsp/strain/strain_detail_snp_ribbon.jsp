@@ -84,7 +84,7 @@
     #snpContainer { display: flex; }
     #snpLegend { margin-top: 3px; }
     #snpLegend td { border: 1px solid black; }
-    #legendLabel { font-weight: bold; margin-left: 31px; }
+    #legendLabel { font-weight: bold; margin-left: 73px; }
     .snpLeftColumn { width: 215px; height: 20px; }
     #snpTableDiv {
     	max-height: 200px;
