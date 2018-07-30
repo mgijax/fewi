@@ -15,13 +15,16 @@
 				</ul>
 			<div id="snpContainer">
 				<div id="snpLeftDiv">
-				<table id="snpTable">
+				<table id="snpTableHeader">
 					<tr>
 						<th class='snpLeftColumn'>Comparison Strain</th>
 						<c:forEach var="chrom" items="${strain.snpChromosomes}">
 							<th class="snpHeaderCell">${chrom}</th>
 						</c:forEach>
 					</tr>
+				</table>
+				<div id="snpTableDiv">
+				  <table id="snpTable">
 					<% int maxCount = (int) request.getAttribute("maxSnpCount"); %>
 					<c:forEach var="row" items="${strain.snpRows}">
 						<tr>
@@ -38,18 +41,23 @@
 						</c:forEach>
 						</tr>
 					</c:forEach>
-				</table>
+				  </table>
+				</div>
 				</div>
 				<div id="snpRightDiv">
 					<span id="legendLabel">Legend</span><br/>
 					<!-- Values need to be kept in sync with fedatamodel's StrainSnpCell class. -->
 					<table id="snpLegend">
-						<c:set var="snpBins" value="10 100 1000 10000 100000 ${maxSnpCount}"/>
+						<c:set var="snpBins" value="1-9 10-99 100-999 1000-9999 10000-99999 100000-${maxSnpCount}"/>
 						<c:forEach var="bin" items="${fn:split(snpBins, ' ')}">
-							<c:set var="reqBin" value="${bin}" scope="request"/>
-							<% int bin = (int) Integer.valueOf((String) request.getAttribute("reqBin")); %>
-							<tr><td class="cell" style="background-color: <%= FormatHelper.getSnpColorCode(bin, maxCount) %>"></td>
-							<td><fmt:formatNumber type="number" value="${bin}" maxFractionDigits="0" groupingUsed="true"/> SNPs</td></tr>
+							<c:set var="fromTo" value="${fn:split(bin, '-')}"/>
+							<c:set var="reqLastStart" value="${fromTo[0]}" scope="request"/>
+							<c:set var="reqBin" value="${fromTo[1]}" scope="request"/>
+							<% int lastStart = (int) Integer.valueOf((String) request.getAttribute("reqLastStart")); %>
+							<% int sbin = (int) Integer.valueOf((String) request.getAttribute("reqBin")); %>
+							<tr><td class="cell" style="background-color: <%= FormatHelper.getSnpColorCode(lastStart, maxCount) %>"></td>
+							<td class="cell" style="background-color: <%= FormatHelper.getSnpColorCode(sbin, maxCount) %>"></td>
+							<td class="rlPad"><fmt:formatNumber type="number" value="${reqLastStart}" maxFractionDigits="0" groupingUsed="true"/>-<fmt:formatNumber type="number" value="${reqBin}" maxFractionDigits="0" groupingUsed="true"/> SNPs</td></tr>
 						</c:forEach>
 					</table>
 				</div>
@@ -65,6 +73,8 @@
 	.colorBin4 { background-color: #0066FF; }
 	.colorBin5 { background-color: #0000FF; }
 	.colorBin6 { background-color: #0000CC; }
+	#snpTableHeader th { font-weight: bold; white-space: nowrap; }
+    #snpTableHeader td { border: 1px solid black; }
 	#snpTable th { font-weight: bold; white-space: nowrap; }
     #snpTable td { border: 1px solid black; }
     .cell { width: 20px; height: 20px; }
@@ -76,4 +86,18 @@
     #snpLegend td { border: 1px solid black; }
     #legendLabel { font-weight: bold; margin-left: 31px; }
     .snpLeftColumn { width: 215px; height: 20px; }
+    #snpTableDiv {
+    	max-height: 200px;
+    	overflow-y: auto;
+    }
+    .rlPad { padding-left: 3px; padding-right: 3px; }
 	</style>
+	<script>
+	// seems silly to make a table border the same color as the background, but we need it to help the
+	// header cells line up with the color cells in the scrollable table below
+	var snpHeaderBorderColor = $('#snpContainer').parent().css('background-color');
+	$('#snpTableHeader th').css({
+		'border-left' : '1px solid ' + snpHeaderBorderColor,
+		'border-right' : '1px solid ' + snpHeaderBorderColor
+	});
+	</script>
