@@ -8,6 +8,7 @@ import mgi.frontend.datamodel.BatchMarkerAllele;
 import mgi.frontend.datamodel.BatchMarkerGoAnnotation;
 import mgi.frontend.datamodel.BatchMarkerId;
 import mgi.frontend.datamodel.BatchMarkerMpAnnotation;
+import mgi.frontend.datamodel.MarkerID;
 import mgi.frontend.datamodel.MarkerTissueCount;
 
 import org.apache.commons.lang.StringUtils;
