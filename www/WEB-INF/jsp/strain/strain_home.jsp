@@ -80,7 +80,13 @@
 
 #bottomSection {
     width:100%;
-  }
+ }
+ 
+.headerDate {
+    font-size: 10px;
+    float: right;
+    margin-top: -22px;
+}
 
 </style>
 
@@ -130,7 +136,7 @@
 		</ul>
    <div class="row">
  <div class="col-sm-11" style="">
-  <div class="strainSectionSpacer"><h5>SNPs, Strains &amp; Polymorphisms </h5></div>
+  <div class="strainSectionSpacer"><h5>SNPs, Strains &amp; Polymorphisms </h5><span class="headerDate">${databaseDate}</span></div>
   <div class="col-sm-1"></div>
   <div class="wrapper">
 	    	<%@ include file="/WEB-INF/jsp/strain/sub_strain_counts.jsp" %>
