@@ -80,5 +80,7 @@
 	</div>
 </c:if>
 
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/strain/strain_detail.js"></script>
+
 <!--	close page template -->
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
