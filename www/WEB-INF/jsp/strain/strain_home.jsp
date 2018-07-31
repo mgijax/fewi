@@ -82,7 +82,7 @@
     width:100%;
  }
  
- section.infoBlock > .wrapper .headerDate {
+.headerDate {
     font-size: 10px;
     float: right;
     margin-top: -22px;
