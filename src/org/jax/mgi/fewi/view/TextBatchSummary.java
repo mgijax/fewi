@@ -114,7 +114,7 @@ public class TextBatchSummary extends AbstractTextView {
 					markerInfo.append(tab(null));
 				}
 				
-				if (id.getMarker().getLocations() != null) {
+				if ((id.getMarker() != null) && (id.getMarker().getLocations() != null)) {
 					evictCollection(session, id.getMarker().getLocations());
 				}
 			}
