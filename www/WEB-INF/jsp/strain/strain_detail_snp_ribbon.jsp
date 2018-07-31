@@ -33,15 +33,15 @@
     #snpTableHeader td { border: 1px solid black; }
 	#snpTable th { font-weight: bold; white-space: nowrap; }
     #snpTable td { border: 1px solid black; }
-    .cell { width: 20px; height: 20px; }
-    .snpHeaderCell { width: 20px; height: 20px; text-align: center; }
+    .cell { min-width: 20px; max-width: 20px; width: 20px; height: 20px; }
+    .snpHeaderCell { min-width: 20px; max-width: 20px; width: 20px; height: 20px; text-align: center; }
     #snpLeftDiv { margin-left: 20px; }
     #snpRightDiv { margin-left: 40px; }
     #snpContainer { display: flex; }
     #snpLegend { margin-top: 3px; }
     #snpLegend td { border: 1px solid black; }
     #legendLabel { font-weight: bold; margin-left: 73px; }
-    .snpLeftColumn { width: 215px; height: 20px; }
+    .snpLeftColumn { min-width: 215px; max-width: 215px; width: 215px; height: 20px; }
     #snpTableDiv {
     	max-height: 200px;
     	overflow-y: auto;

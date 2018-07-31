@@ -141,6 +141,7 @@ public class BatchMarkerIdWrapper {
 	// get a list of the marker IDs for either of the given logical databases
 	public List<String> getIDs(String logicalDB1, String logicalDB2) {
     	List<String> idList = new ArrayList<String>();
+		if (m == null) { return idList; }
 
 		Set<String> ldbs = new HashSet<String>();
     	ldbs.add(logicalDB1);
