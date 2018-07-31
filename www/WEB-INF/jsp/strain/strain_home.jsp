@@ -84,6 +84,7 @@
  
 .headerDate {
     font-size: 10px;
+    font-weight: lighter;
     float: right;
     margin-top: -22px;
 }
