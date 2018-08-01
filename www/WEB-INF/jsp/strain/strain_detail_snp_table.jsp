@@ -10,7 +10,7 @@
 				<table id="snpTableHeader">
 					<tr><th></th><th colspan="22" class="snpChromosomeHeader">Chromosomes</th></tr>
 					<tr>
-						<th class='snpLeftColumn'>Comparison Strain</th>
+						<th id='comparisonStrainLabel' class='snpLeftColumn'>Comparison Strain</th>
 						<c:forEach var="chrom" items="${strain.snpChromosomes}">
 							<th class="snpHeaderCell">${chrom}</th>
 						</c:forEach>

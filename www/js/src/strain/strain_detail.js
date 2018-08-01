@@ -82,6 +82,14 @@ var loadSnpTable = function(sortBy) {
 				'border-left' : '1px solid ' + snpHeaderBorderColor,
 				'border-right' : '1px solid ' + snpHeaderBorderColor
 			});
+			
+			// define click handling for column headers of table
+			$(".snpHeaderCell").click(function(event) {
+				loadSnpTable($(this).html());
+			});
+			$("#comparisonStrainLabel").click(function(event) {
+				loadSnpTable('strain');
+			});
 		}
 	});
 }
