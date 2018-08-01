@@ -7,7 +7,7 @@
 				<ul>
 					<li>
 						<div class="label narrow">Involving ${strain.name}</div>
-						<div id="snpCount" class="valueNarrow"><fmt:formatNumber type="number" value="${strain.snpCount}" maxFractionDigits="0" groupingUsed="true"/></div>
+						<div id="snpCount" class="valueNarrow"><fmt:formatNumber type="number" value="${strain.snpCount}" maxFractionDigits="0" groupingUsed="true"/> from ${snpBuildNumber}</div>
 					</li>
 					<li>
 						<div class="label narrow">Comparison Strains</div>
@@ -15,8 +15,7 @@
 					</li>
 				</ul>
 			<div id="snpContainer" class="extra closed">
-				<c:set var="snpRows" value="${strain.snpRows}"/>
-			    <%@ include file="strain_detail_snp_table.jsp" %>
+				<!-- populated by Ajax -->
 			</div>
 		</div>
 	</div>
@@ -42,20 +41,7 @@
     #snpLegend td { border: 1px solid black; }
     #legendLabel { font-weight: bold; margin-left: 73px; }
     .snpLeftColumn { min-width: 215px; max-width: 215px; width: 215px; height: 20px; }
-    #snpTableDiv {
-    	max-height: 200px;
-    	overflow-y: auto;
-    }
+    #snpTableDiv {}
     .rlPad { padding-left: 3px; padding-right: 3px; }
     .snpChromosomeHeader { padding-bottom: 4px; text-align: center }
 	</style>
-
-	<script>
-	// seems silly to make a table border the same color as the background, but we need it to help the
-	// header cells line up with the color cells in the scrollable table below
-	var snpHeaderBorderColor = $('#snpContainer').parent().css('background-color');
-	$('#snpTableHeader th').css({
-		'border-left' : '1px solid ' + snpHeaderBorderColor,
-		'border-right' : '1px solid ' + snpHeaderBorderColor
-	});
-	</script>

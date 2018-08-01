@@ -81,6 +81,10 @@
 </c:if>
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/strain/strain_detail.js"></script>
+<script>
+	initialize('${configBean.FEWI_URL}', '${strain.primaryID}');
+	loadSnpTable('strain');
+</script>
 
 <!--	close page template -->
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

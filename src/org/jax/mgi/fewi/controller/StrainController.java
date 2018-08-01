@@ -48,6 +48,7 @@ import mgi.frontend.datamodel.StrainAttribute;
 import mgi.frontend.datamodel.StrainGridCell;
 import mgi.frontend.datamodel.StrainGridPopupCell;
 import mgi.frontend.datamodel.StrainGridPopupRow;
+import mgi.frontend.datamodel.StrainSnpRow;
 import mgi.frontend.datamodel.StrainSynonym;
 import mgi.frontend.datamodel.VocabTerm;
 
@@ -83,6 +84,9 @@ public class StrainController {
 
 	@Autowired
 	private ReferenceFinder referenceFinder;
+
+	@Autowired
+	private SnpController snpController;
 
 	private static SmartAlphaComparator smartAlphaComparator = new SmartAlphaComparator();
 	
@@ -166,6 +170,8 @@ public class StrainController {
         mav.addObject("strain", strain);
         addDetailSeo(strain, mav);
 
+        mav.addObject("snpBuildNumber", snpController.getSnpBuildNumber());
+        
         // See if there are any related strains (strains with names that have the current strain
         // name as a prefix).  If so, add a count to the mav.
         
@@ -183,6 +189,75 @@ public class StrainController {
         // add an IDLinker to the mav for use at the JSP level
         mav.addObject("idLinker", idLinker);
         return mav;
+    }
+
+    // SNP table (loaded via Ajax) for strain detail page
+    @RequestMapping(value="/snpTable/{strainID}", method = RequestMethod.GET)
+    public ModelAndView getSnpTable(HttpServletRequest request, HttpServletResponse response,
+    		@PathVariable("strainID") String strainID,
+    		@RequestParam(value="sortBy", required=false) String sortBy,
+    		@RequestParam(value="dir", required=false) String dir) {
+        logger.debug("->getSnpTable started");
+
+        if ((sortBy == null) || sortBy.equals("")) {
+        	sortBy = "strain";
+        }
+
+        if ((dir == null) || dir.equals("")) {
+        	if (sortBy.equals("strain")) {
+        		dir = "asc";
+        	} else {
+        		dir = "desc";
+        	}
+        }
+
+        List<Strain> strainList = strainFinder.getStrainByID(strainID);
+        // there can be only one...
+        if (strainList.size() < 1) { // none found
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Strain Found for ID " + strainID);
+            return mav;
+        } else if (strainList.size() > 1) { // dupe found
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "ID " + strainID + " is associated with multiple strains");
+            return mav;
+        }
+        // success - we have a single object
+
+        // need the maximum count of SNPs for a cell to aid with coloring computations
+        if (maxSnpCount <= 0) {
+        	maxSnpCount = strainFinder.getMaxSnpCount();
+        }
+        
+        // generate ModelAndView object to be passed to detail page
+        ModelAndView mav = new ModelAndView("strain/strain_detail_snp_table");
+        mav.addObject("maxSnpCount", maxSnpCount);
+        
+        //pull out the Strain, sort its SNP rows as requested, and add them to the mav
+        Strain strain = strainList.get(0);
+        mav.addObject("strain", strain);
+        mav.addObject("snpRows", getSortedStrainRows(strain, sortBy, dir));
+        return mav;
+    }
+    
+    // sort the strain's rows according to a field specified in 'sortBy' (either 'strain' or a chromosome)
+    private List<StrainSnpRow> getSortedStrainRows(Strain s, String sortBy, String dir) {
+    	if ((sortBy == null) || (sortBy.equals("") || sortBy.equals("strain"))) {
+    		// default order is already managed by Hibernate
+    		return s.getSnpRows();
+    	}
+
+    	// make a duplicate list that we can sort without messing up the original
+    	List<StrainSnpRow> rows = new ArrayList<StrainSnpRow>();
+    	for (StrainSnpRow row : s.getSnpRows()) {
+    		rows.add(row);
+    	}
+    	
+    	Collections.sort(rows, rows.get(0).getComparator(sortBy));
+    	if ("desc".equals(dir)) {
+    		Collections.reverse(rows);
+    	}
+    	return rows;
     }
 
     // add SEO data (seoDescription, seoTitle, and seoKeywords) to the given detail page's mav
