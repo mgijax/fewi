@@ -49,17 +49,3 @@
     .rlPad { padding-left: 3px; padding-right: 3px; }
     .snpChromosomeHeader { padding-bottom: 4px; text-align: center }
 	</style>
-
-	<script>
-	// seems silly to make a table border the same color as the background, but we need it to help the
-	// header cells line up with the color cells in the scrollable table below
-	var snpHeaderBorderColor = $('#snpContainer').parent().css('background-color');
-	$('#snpTableHeader th').css({
-		'border-left' : '1px solid ' + snpHeaderBorderColor,
-		'border-right' : '1px solid ' + snpHeaderBorderColor
-	});
-	var myUrl = '${configBean.FEWI_URL}strain/snpTable/${strain.primaryID}';
-	$.ajax({'url': myUrl, 'datatype': 'html', 'success':
-		function(html) { $('#snpContainer').html(html); }
-		});
-	</script>
