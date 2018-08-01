@@ -220,10 +220,9 @@
 		<tr><td>
 		  Detailed explanations for using Strains, SNPs & Polymorphisms query forms and tools:	
 			<ul>
-				<li>SNP Query Form <a href="${configBean.USERHELP_URL}SNP_help.shtml">help</a></li>
-				<!--<li>RFLP/PCR Polymorphism Query Form <a href="${configBean.USERHELP_URL}STRAINS_polymorphism_help.shtml">help</a></li>-->
-				<li>Guidelines for Nomenclature of Mouse and Rat Strains <a href="${configBean.MGIHOME_URL}nomen/strains.shtml">help</a></li>
-				<li>Mouse Strain 129 Substrain Nomenclature <a href="${configBean.MGIHOME_URL}nomen/strain_129.shtml">help</a></li>
+				<li>SNP Query Form <a href="${configBean.USERHELP_URL}SNP_help.shtml" target="_blank">help</a></li>
+				<li>Guidelines for Nomenclature of Mouse and Rat Strains <a href="${configBean.MGIHOME_URL}nomen/strains.shtml" target="_blank">help</a></li>
+				<li>Mouse Strain 129 Substrain Nomenclature <a href="${configBean.MGIHOME_URL}nomen/strain_129.shtml" target="_blank">help</a></li>
 			</ul>
 		</td></tr>
 	</table>
@@ -234,13 +233,13 @@
 		<td>
             Collaborators and Data Providers:<br>
             <br>
-            Mouse SNP data in MGI are obtained from the <a href='https://www.ncbi.nlm.nih.gov/SNP/snp_summary.cgi'>dbSNP</a> resource at NCBI<br>
+            Mouse SNP data in MGI are obtained from the <a href='https://www.ncbi.nlm.nih.gov/SNP/snp_summary.cgi' target="_blank">dbSNP</a> resource at NCBI<br>
             <br>
             The registered mouse strains in MGI include strains
             <ul>          
 				<li>in public repositories like the International Mouse Strain Resource (<a href="${configBean.IMSRURL}">IMSR</a>)</li>
 				<li>held by members of the Federation of International Mouse Resources (FIMRe)</li>
-				<li>described as source material for sequences in NCBI <a href="https://www.ncbi.nlm.nih.gov/genbank/">GenBank</a> entries</li>
+				<li>described as source material for sequences in NCBI <a href="https://www.ncbi.nlm.nih.gov/genbank/" target="_blank">GenBank</a> entries</li>
 				<li>submitted by researchers</li>
 				<li>included in the scientific literature</li>
             </ul>
@@ -253,18 +252,18 @@
 	<tr>
 		<td>
 			<ul id="sendData">
-				<li><a href="${configBean.MGIHOME_URL}genealogy/" title="View a chart depicting the origins and relationships of inbred mouse strains.">Genealogy Chart of Inbred Strains</a></li>
-				<li><a href="${configBean.FTP_URL}datasets/index.html#major_histo">Major Histocompatibility Complex H2 Haplotypes for Strains</a></li>
-				<li><a href="${configBean.FTP_URL}datasets/index.html#Moore">Polymorphisms in Microsatellite Markers for 129X1/SvJ vs Other Inbred Strains</a></li>
-				<li><a href="${configBean.FTP_URL}reports/index.html#strain">ES Cell Lines Used for Genetic Engineering and their Strain of Origin</a></li>
+				<li><a href="${configBean.MGIHOME_URL}genealogy/" title="View a chart depicting the origins and relationships of inbred mouse strains." target="_blank">Genealogy Chart of Inbred Strains</a></li>
+				<li><a href="${configBean.FTP_URL}datasets/index.html#major_histo" target="_blank">Major Histocompatibility Complex H2 Haplotypes for Strains</a></li>
+				<li><a href="${configBean.FTP_URL}datasets/index.html#Moore" target="_blank">Polymorphisms in Microsatellite Markers for 129X1/SvJ vs Other Inbred Strains</a></li>
+				<li><a href="${configBean.FTP_URL}reports/index.html#strain" target="_blank">ES Cell Lines Used for Genetic Engineering and their Strain of Origin</a></li>
 			</ul>
 		</td>
 		<td>
 			<ul>
-				<li><a href="${configBean.MGIHOME_URL}nomen/strain_129.shtml">Mouse Strain 129 Substrain Nomenclature</a></li>
-				<li><a href="http://www.informatics.jax.org/inbred_strains/">Characteristics of Inbred Strains</a> of Mice and Rats by M. Festing</li>
-				<li><a href="https://csbio.unc.edu/CCstatus/index.py">Collaborative Cross Project</a> at the University of North Carolina</li> 
-                <li><a href="https://www.sanger.ac.uk/sanger/Mouse_SnpViewer/rel-1505">Mouse Genomes Project</a> at the Wellcome Sanger Institute</li>
+				<li><a href="${configBean.MGIHOME_URL}nomen/strain_129.shtml" target="_blank">Mouse Strain 129 Substrain Nomenclature</a></li>
+				<li><a href="http://www.informatics.jax.org/inbred_strains/" target="_blank">Characteristics of Inbred Strains</a> of Mice and Rats by M. Festing</li>
+				<li><a href="https://csbio.unc.edu/CCstatus/index.py" target="_blank">Collaborative Cross Project</a> at the University of North Carolina</li> 
+                <li><a href="https://www.sanger.ac.uk/sanger/Mouse_SnpViewer/rel-1505" target="_blank">Mouse Genomes Project</a> at the Wellcome Sanger Institute</li>
 			</ul>
 		</td>
 	</tr>
