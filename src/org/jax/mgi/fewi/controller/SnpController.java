@@ -123,6 +123,19 @@ public class SnpController {
 	// public methods
 	//--------------------------------------------------------------------//
 
+	public String getSnpBuildNumber() {
+		if (buildNumber == null) {
+			SearchResults<QueryFormOption> options = queryFormOptionFinder.getQueryFormOptions("snp", "build number");
+			List<QueryFormOption> optionList = options.getResultObjects();
+
+			if (optionList.size() > 0) {
+				buildNumber = optionList.get(0).getDisplayValue();
+				logger.debug("Cached SNP build number: " + buildNumber);
+			}
+		}
+		return buildNumber;
+	}
+	
 	//----------------------------------------------------------//
 	// make sure we have the data we need for the SNP query form
 	//----------------------------------------------------------//
@@ -153,15 +166,7 @@ public class SnpController {
 			logger.debug("Cached " + withinRanges.size() + " coordinate ranges");
 		}
 
-		if (buildNumber == null) {
-			SearchResults<QueryFormOption> options = queryFormOptionFinder.getQueryFormOptions("snp", "build number");
-			List<QueryFormOption> optionList = options.getResultObjects();
-
-			if (optionList.size() > 0) {
-				buildNumber = optionList.get(0).getDisplayValue();
-				logger.debug("Cached SNP build number: " + buildNumber);
-			}
-		}
+		String buildNumber = getSnpBuildNumber();
 
 		if(referenceStrains == null) {
 			Map<String, String> tempList = queryFormOptionFinder.getOptionMap("snp", "strain");

@@ -1,3 +1,10 @@
+<%@ include file="/WEB-INF/jsp/includes.jsp" %>
+<%@ page import = "org.jax.mgi.fewi.util.StyleAlternator" %>
+<%@ page import = "mgi.frontend.datamodel.StrainSnpCell" %>
+<%@ page import = "org.jax.mgi.fewi.util.*" %>
+<%@ page import = "org.jax.mgi.fewi.config.ContextLoader" %>
+
+<%@ page trimDirectiveWhitespaces="true" %>
 
 				<div id="snpLeftDiv">
 				<table id="snpTableHeader">
