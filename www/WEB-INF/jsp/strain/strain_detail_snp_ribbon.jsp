@@ -41,11 +41,7 @@
     #snpLegend td { border: 1px solid black; }
     #legendLabel { font-weight: bold; margin-left: 73px; }
     .snpLeftColumn { min-width: 215px; max-width: 215px; width: 215px; height: 20px; }
-    #snpTableDiv {
-    	max-height: 200px;
-    	overflow-y: auto;
-    	overflow-x: none;
-    }
+    #snpTableDiv {}
     .rlPad { padding-left: 3px; padding-right: 3px; }
     .snpChromosomeHeader { padding-bottom: 4px; text-align: center }
 	</style>
