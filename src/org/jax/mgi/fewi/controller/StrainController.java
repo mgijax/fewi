@@ -242,7 +242,7 @@ public class StrainController {
     
     // sort the strain's rows according to a field specified in 'sortBy' (either 'strain' or a chromosome)
     private List<StrainSnpRow> getSortedStrainRows(Strain s, String sortBy, String dir) {
-    	if ((sortBy == null) || (sortBy.equals("") || sortBy.equals("strain"))) {
+    	if ((sortBy == null) || sortBy.equals("") || (sortBy.equals("strain") && "asc".equals(dir)) ) {
     		// default order is already managed by Hibernate
     		return s.getSnpRows();
     	}

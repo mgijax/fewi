@@ -8,7 +8,15 @@
 
 				<div id="snpLeftDiv">
 				<table id="snpTableHeader">
-					<tr><th></th><th colspan="22" class="snpChromosomeHeader">Chromosomes</th></tr>
+					<tr><th></th><th colspan="22" class="snpChromosomeHeader">Chromosomes<img id="snpTableHelpImage" src="${configBean.FEWI_URL}assets/images/help_icon_16.png" style="margin-bottom: -3px; margin-left: 3px; cursor: pointer;"/></th></tr>
+							<div id="snpTableHelp" style="visibility: hidden;">
+								<div class="hd">SNP Data Overview</div>
+								<div class="bd" style="text-align: left">
+									Click a column heading to sort rows by that column's value in each.  Click the same
+									heading to reverse the order.  Chromosome columns sort by descending number of SNPs
+									by default, while the default order for the Comparison Strain column is ascending. 
+								</div>
+							</div>
 					<tr>
 						<th id='comparisonStrainLabel' class='snpLeftColumn'>Comparison Strain</th>
 						<c:forEach var="chrom" items="${strain.snpChromosomes}">
@@ -54,3 +62,9 @@
 						</c:forEach>
 					</table>
 				</div>
+	<script>
+	YAHOO.namespace("snp.container");
+	YAHOO.snp.container.snpTableHelp = new YAHOO.widget.Panel("snpTableHelp", { width:"360px", draggable:false, visible:false, constraintoviewport:true } );
+	YAHOO.snp.container.snpTableHelp.render();
+	YAHOO.util.Event.addListener("snpTableHelpImage", "click", YAHOO.snp.container.snpTableHelp.show, YAHOO.snp.container.snpTableHelp, true);
+	</script>

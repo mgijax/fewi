@@ -40,7 +40,7 @@ var adjustDisplay = function(ribbonID, action) {
 var sdFewiUrl = null;				// value of configBean.FEWI_URL
 var sdStrainID = null;				// current strain's primary ID
 var sdSnpSortBy = 'strain';			// current sort of snp table ('strain' or chromosome)
-var sdSnpDir = 'asc';				// direction of sort of snp table ('asc' or 'desc')
+var sdSnpDir = 'desc';				// direction of sort of snp table ('asc' or 'desc')
 
 var initialize = function(fewiUrl, strainID) {
 	sdFewiUrl = fewiUrl;
