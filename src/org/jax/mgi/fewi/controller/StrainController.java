@@ -232,6 +232,8 @@ public class StrainController {
         // generate ModelAndView object to be passed to detail page
         ModelAndView mav = new ModelAndView("strain/strain_detail_snp_table");
         mav.addObject("maxSnpCount", maxSnpCount);
+        mav.addObject("sortBy", sortBy);
+        mav.addObject("dir", dir);
         
         //pull out the Strain, sort its SNP rows as requested, and add them to the mav
         Strain strain = strainList.get(0);

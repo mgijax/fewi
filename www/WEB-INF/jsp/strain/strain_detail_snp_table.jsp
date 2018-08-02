@@ -14,13 +14,13 @@
 								<div class="bd" style="text-align: left">
 									Click a column heading to sort rows by that column's value in each.  Click the same
 									heading to reverse the order.  Chromosome columns sort by descending number of SNPs
-									by default, while the default order for the Comparison Strain column is ascending. 
+									by default, while the default Strain order for the Comparison Strain column is ascending. 
 								</div>
 							</div>
 					<tr>
-						<th id='comparisonStrainLabel' class='snpLeftColumn'>Comparison Strain</th>
+						<th id='comparisonStrainLabel' class='snpLeftColumn'>Comparison Strain <fewi:sortIcon column="strain" sortBy="${sortBy}" dir="${dir}"/></th>
 						<c:forEach var="chrom" items="${strain.snpChromosomes}">
-							<th class="snpHeaderCell">${chrom}</th>
+							<th class="snpHeaderCell">${chrom}<fewi:sortIcon column="${chrom}" sortBy="${sortBy}" dir="${dir}"/></th>
 						</c:forEach>
 					</tr>
 				</table>
