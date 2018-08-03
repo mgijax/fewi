@@ -32,8 +32,8 @@
     #snpTableHeader td { border: 1px solid black; }
 	#snpTable th { font-weight: bold; white-space: nowrap; }
     #snpTable td { border: 1px solid black; }
-    .cell { min-width: 20px; max-width: 20px; width: 20px; height: 20px; }
-    .snpHeaderCell { min-width: 20px; max-width: 20px; width: 20px; height: 20px; text-align: center; }
+    .cell { min-width: 27px; max-width: 27px; width: 27px; height: 20px; }
+    .snpHeaderCell { min-width: 27px; max-width: 27px; width: 27px; height: 20px; text-align: center; }
     #snpLeftDiv { margin-left: 20px; }
     #snpRightDiv { margin-left: 40px; }
     #snpContainer { display: flex; }
@@ -44,4 +44,5 @@
     #snpTableDiv {}
     .rlPad { padding-left: 3px; padding-right: 3px; }
     .snpChromosomeHeader { padding-bottom: 4px; text-align: center }
+    .sortArrow { margin-left: 1px; }
 	</style>

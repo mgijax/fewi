@@ -53,6 +53,11 @@ var loadSnpTable = function(sortBy) {
 		return;
 	}
 
+	// add a loading message to the pre-existing table (if there is one)
+	$('#snpTable td:first').html('<div style="display:flex">'
+		+ '<div><img src="' + sdFewiUrl + 'assets/images/loading.gif" style="height:20px"></div>'
+		+ '<div style="padding-top:2px; font-weight: bold">Loading...</div></div>');
+
 	// If this is same as last column sorted, swap the direction of the sort.
 	if (sdSnpSortBy == sortBy) {
 		if (sdSnpDir == 'asc') {
@@ -85,7 +90,7 @@ var loadSnpTable = function(sortBy) {
 			
 			// define click handling for column headers of table
 			$(".snpHeaderCell").click(function(event) {
-				loadSnpTable($(this).html());
+				loadSnpTable($(this).html().split(/[^0-9a-zA-Z]+/)[0]);
 			});
 			$("#comparisonStrainLabel").click(function(event) {
 				loadSnpTable('strain');
