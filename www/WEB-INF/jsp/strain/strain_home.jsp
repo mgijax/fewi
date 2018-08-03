@@ -154,24 +154,24 @@
 <div class="container">
 <div class="gridRow">
 <div class="col-md-4" style="">
-				      <a href="${configBean.FEWI_URL}snp"><img style="width:350px; height:170;" src="${configBean.FEWI_URL}assets/images/static/SNPQueryImage.png" alt="Mouse SNP Query"></a>
+				      <a href="${configBean.FEWI_URL}snp"><img style="width:350px; height:150;" src="${configBean.FEWI_URL}assets/images/static/SNPQueryImage.png" alt="Mouse SNP Query"></a>
 				    </div>
 				    <div class="col-md-4" style="">
-				      <a href="${configBean.FEWI_URL}allele"><img style="width:350px; height:170;" src="${configBean.FEWI_URL}assets/images/static/Alleleqf.png" alt="Phenotypes, Alleles & Disease Models Search"></a>
+				      <a href="${configBean.FEWI_URL}allele"><img style="width:350px; height:150;" src="${configBean.FEWI_URL}assets/images/static/Alleleqf.png" alt="Phenotypes, Alleles & Disease Models Search"></a>
 				    </div>
 				    <div class="col-md-4" style="">
-				      <a href="http://www.findmice.org/index.jsp"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/IMSRLink.png" alt="IMSR"></a>
+				      <a href="http://www.findmice.org/index.jsp"><img style="width:350px; height:150;" src="${configBean.FEWI_URL}assets/images/static/IMSRLink.png" alt="IMSR"></a>
 				    </div>
 				    </div>
 	<div class="blankSectionSpacer"></div>
 <div class="col-md-4" style="">
-				       <a href="${configBean.MGIHOME_URL}nomen/strains.shtml"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/4Strains.png" alt="Nomenclature Guidelines"></a>
+				       <a href="${configBean.MGIHOME_URL}nomen/strains.shtml"><img style="width:350px; height:150;" src="${configBean.FEWI_URL}assets/images/static/4Strains.png" alt="Nomenclature Guidelines"></a>
 				    </div>
 				    <div class="col-md-4" style="">
-				      <a href="${configBean.MGIHOME_URL}submissions/amsp_submission.cgi"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/SubmitLink.png" alt="Submit Your Data"></a>
+				      <a href="${configBean.MGIHOME_URL}submissions/amsp_submission.cgi"><img style="width:350px; height:150;" src="${configBean.FEWI_URL}assets/images/static/SubmitLink.png" alt="Submit Your Data"></a>
 				    </div>
 				    <div class="col-md-4" style="">
-				      <a href="${configBean.FAQ_URL}FAQ.shtml#faq_strain"><img style="width:350px;" src="${configBean.FEWI_URL}assets/images/static/FAQimage.png" alt="FAQ"></a>
+				      <a href="${configBean.FAQ_URL}FAQ.shtml#faq_strain"><img style="width:350px; height:150;" src="${configBean.FEWI_URL}assets/images/static/FAQimage.png" alt="FAQ"></a>
 				    </div>
 				    </div>
 <div id="" class="blankSectionSpacer"></div>
