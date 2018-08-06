@@ -41,13 +41,14 @@ var sdFewiUrl = null;				// value of configBean.FEWI_URL
 var sdStrainID = null;				// current strain's primary ID
 var sdSnpSortBy = 'strain';			// current sort of snp table ('strain' or chromosome)
 var sdSnpDir = 'desc';				// direction of sort of snp table ('asc' or 'desc')
+var sdMode = 'all';					// mode of table (all, same, diff)
 
 var initialize = function(fewiUrl, strainID) {
 	sdFewiUrl = fewiUrl;
 	sdStrainID = strainID;
 }
 
-var loadSnpTable = function(sortBy) {
+var loadSnpTable = function(sortBy, mode) {
 	if ((sdStrainID == null) || (sdFewiUrl == null)) {
 		console.log('Error: need to call initialize()');
 		return;
@@ -58,13 +59,16 @@ var loadSnpTable = function(sortBy) {
 		+ '<div><img src="' + sdFewiUrl + 'assets/images/loading.gif" style="height:20px"></div>'
 		+ '<div style="padding-top:2px; font-weight: bold">Loading...</div></div>');
 
-	// If this is same as last column sorted, swap the direction of the sort.
-	if (sdSnpSortBy == sortBy) {
+	// If this is same as last column sorted (and the same mode), swap the direction of the sort.
+	if ((sdSnpSortBy == sortBy) && (sdMode == mode)) {
 		if (sdSnpDir == 'asc') {
 			sdSnpDir = 'desc';
 		} else {
 			sdSnpDir = 'asc';
 		}
+	} else if (sdMode != mode) {
+		// change in mode (all, same, diff) but same sortBy & direction
+		sdMode = mode; 
 	} else {
 		// Otherwise, this is a new column sort, go to default direction for that column.
 		sdSnpSortBy = sortBy;
@@ -75,7 +79,8 @@ var loadSnpTable = function(sortBy) {
 		}
 	}
 	
-	var myUrl = sdFewiUrl + 'strain/snpTable/' + sdStrainID + '?sortBy=' + sdSnpSortBy + '&dir=' + sdSnpDir;
+	var myUrl = sdFewiUrl + 'strain/snpTable/' + sdStrainID + '?sortBy=' + sdSnpSortBy + '&dir=' + sdSnpDir + '&mode=' + sdMode;
+	
 	$.ajax({'url': myUrl, 'datatype': 'html', 'success':
 		function(html) {
 			$('#snpContainer').html(html);
@@ -90,11 +95,22 @@ var loadSnpTable = function(sortBy) {
 			
 			// define click handling for column headers of table
 			$(".snpHeaderCell").click(function(event) {
-				loadSnpTable($(this).html().split(/[^0-9a-zA-Z]+/)[0]);
+				loadSnpTable($(this).html().split(/[^0-9a-zA-Z]+/)[0], sdMode);
 			});
 			$("#comparisonStrainLabel").click(function(event) {
-				loadSnpTable('strain');
+				loadSnpTable('strain', sdMode);
 			});
+			
+			// define click handling for the radio buttons
+			$('[name=mode]').click(function(event) {
+				loadSnpTable(sdSnpSortBy, $(this)[0].value);
+			});
+			
+			// ensure that the correct radio button is checked
+			var buttons = $('[name=mode][value=' + sdMode + ']');
+			if (buttons.length > 0) {
+				buttons[0].checked = true;
+			}
 		}
 	});
 }

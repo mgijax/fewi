@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +70,7 @@ public class StrainController {
 	private static int facetLimit = 100;		// max number of facet values to return
 	private static int downloadRowMax = 250000;	// maximum number of strains to allow in download file
 	private static int maxSnpCount = -1;		// max number of SNPs in a cell for the SNP ribbon on detail page
-	
+
     //--------------------//
     // instance variables
     //--------------------//
@@ -196,13 +197,17 @@ public class StrainController {
     public ModelAndView getSnpTable(HttpServletRequest request, HttpServletResponse response,
     		@PathVariable("strainID") String strainID,
     		@RequestParam(value="sortBy", required=false) String sortBy,
-    		@RequestParam(value="dir", required=false) String dir) {
+    		@RequestParam(value="dir", required=false) String dir,
+    		@RequestParam(value="mode", required=false) String mode
+    		) {
         logger.debug("->getSnpTable started");
 
+        // sortBy should be either 'strain' or a chromosome name
         if ((sortBy == null) || sortBy.equals("")) {
         	sortBy = "strain";
         }
 
+        // dir should be either 'asc' or 'desc'
         if ((dir == null) || dir.equals("")) {
         	if (sortBy.equals("strain")) {
         		dir = "asc";
@@ -211,6 +216,11 @@ public class StrainController {
         	}
         }
 
+        // mode should be 'all', 'same', or 'diff'
+        if ((mode == null) || (mode.equals(""))) {
+        	mode = "all";
+        }
+        
         List<Strain> strainList = strainFinder.getStrainByID(strainID);
         // there can be only one...
         if (strainList.size() < 1) { // none found
@@ -238,13 +248,15 @@ public class StrainController {
         //pull out the Strain, sort its SNP rows as requested, and add them to the mav
         Strain strain = strainList.get(0);
         mav.addObject("strain", strain);
-        mav.addObject("snpRows", getSortedStrainRows(strain, sortBy, dir));
+        mav.addObject("snpRows", getSortedStrainRows(strain, sortBy, dir, mode));
+        mav.addObject("mode", mode);
+
         return mav;
     }
     
     // sort the strain's rows according to a field specified in 'sortBy' (either 'strain' or a chromosome)
-    private List<StrainSnpRow> getSortedStrainRows(Strain s, String sortBy, String dir) {
-    	if ((sortBy == null) || sortBy.equals("") || (sortBy.equals("strain") && "asc".equals(dir)) ) {
+    private List<StrainSnpRow> getSortedStrainRows(Strain s, String sortBy, String dir, String mode) {
+    	if ((sortBy == null) || sortBy.equals("") || (sortBy.equals("strain") && "all".equals(mode) && "asc".equals(dir)) ) {
     		// default order is already managed by Hibernate
     		return s.getSnpRows();
     	}
@@ -255,7 +267,7 @@ public class StrainController {
     		rows.add(row);
     	}
     	
-    	Collections.sort(rows, rows.get(0).getComparator(sortBy));
+    	Collections.sort(rows, rows.get(0).getComparator(sortBy, mode));
     	if ("desc".equals(dir)) {
     		Collections.reverse(rows);
     	}

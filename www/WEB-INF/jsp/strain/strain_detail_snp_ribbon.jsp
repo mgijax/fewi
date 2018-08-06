@@ -45,4 +45,6 @@
     .rlPad { padding-left: 3px; padding-right: 3px; }
     .snpChromosomeHeader { padding-bottom: 4px; text-align: center }
     .sortArrow { margin-left: 1px; }
+    #sameDiffTable td { max-width: 225px; border: none; padding-right: 4px; vertical-align: top; }
+    #sameDiffLabel { font-weight: bold; margin-left: 80px; }
 	</style>

@@ -6,6 +6,17 @@
 
 <%@ page trimDirectiveWhitespaces="true" %>
 
+<c:choose>
+	<c:when test="${mode == 'same'}">
+		<c:set var="qfMode" value="same_reference"/>
+	</c:when>
+	<c:when test="${mode == 'diff'}">
+		<c:set var="qfMode" value="diff_reference"/>
+	</c:when>
+	<c:otherwise>
+		<c:set var="qfMode" value=""/>
+	</c:otherwise>
+</c:choose>
 				<div id="snpLeftDiv">
 				<table id="snpTableHeader">
 					<tr><th></th><th colspan="22" class="snpChromosomeHeader">Chromosomes<img id="snpTableHelpImage" src="${configBean.FEWI_URL}assets/images/help_icon_16.png" style="margin-bottom: -3px; margin-left: 3px; cursor: pointer;"/></th></tr>
@@ -33,10 +44,39 @@
 						<c:forEach var="cell" items="${row.cells}">
 							<c:set var="reqCell" value="${cell}" scope="request"/>
 							<% StrainSnpCell cell = (StrainSnpCell) request.getAttribute("reqCell"); %>
-							<td title="${cell.allCountComma} SNP<c:if test='${cell.allCount > 1}'>s</c:if>" class="cell"
-								style="background-color: <%= FormatHelper.getSnpColorCode(cell.getAllCount(), maxCount) %>"
-								<c:if test='${cell.allCount > 0}'>
-								onClick="window.open('${configBean.FEWI_URL}snp/summary?selectedChromosome=${cell.chromosome}&coordinate=0-200&coordinateUnit=Mbp&selectedStrains=${row.comparisonStrainName}&referenceStrain=${strain.name}&searchBySameDiff=&selectedTab=1');"
+
+							<c:choose>
+								<c:when test="${mode == 'same'}">
+									<c:set var="cellCount" value="${cell.sameCount}" scope="request"/>
+									<c:set var="countWithComma" value="${cell.sameCountComma}"/>
+								</c:when>
+								<c:when test="${mode == 'diff'}">
+									<c:set var="cellCount" value="${cell.differentCount}" scope="request"/>
+									<c:set var="countWithComma" value="${cell.diffCountComma}"/>
+								</c:when>
+								<c:otherwise>
+									<c:set var="cellCount" value="${cell.allCount}" scope="request"/>
+									<c:set var="countWithComma" value="${cell.allCountComma}"/>
+								</c:otherwise>
+							</c:choose>
+							
+							<c:choose>
+								<c:when test="${cell.allCount == 0}">
+									<c:set var="cellTitle" value="no data"/>
+								</c:when>
+								<c:when test="${cellCount == 1}">
+									<c:set var="cellTitle" value="1 SNP"/>
+								</c:when>
+								<c:otherwise>
+									<c:set var="cellTitle" value="${countWithComma} SNPs"/>
+								</c:otherwise>
+							</c:choose>
+
+							<% Integer cellCount = (Integer) request.getAttribute("cellCount"); %>
+							<td title="${cellTitle}" class="cell"
+								style="background-color: <%= FormatHelper.getSnpColorCode(cellCount, maxCount) %>"
+								<c:if test='${cellCount > 0}'>
+								onClick="window.open('${configBean.FEWI_URL}snp/summary?selectedChromosome=${cell.chromosome}&coordinate=0-200&coordinateUnit=Mbp&selectedStrains=${row.comparisonStrainName}&referenceStrain=${strain.name}&searchBySameDiff=${qfMode}&selectedTab=1');"
 								</c:if>
 								></td>
 						</c:forEach>
@@ -46,6 +86,22 @@
 				</div>
 				</div>
 				<div id="snpRightDiv">
+					<span id="sameDiffLabel">View</span><br/>
+					<table id="sameDiffTable">
+					<tr>
+						<td><input name="mode" type="radio" id="mode1" value="all"/></td>
+						<td>all SNPs</td>
+					</tr>
+					<tr>
+						<td><input name="mode" type="radio" id="mode2" value="same"/></td>
+						<td>SNPs where alleles are the same as ${strain.name}</td>
+					</tr>
+					<tr>
+						<td><input name="mode" type="radio" id="mode3" value="diff"/></td>
+						<td>SNPs where alleles are different from ${strain.name}</td>
+					</tr>
+					</table>
+					<p/>
 					<span id="legendLabel">Legend</span><br/>
 					<!-- Values need to be kept in sync with fedatamodel's StrainSnpCell class. -->
 					<table id="snpLegend">
