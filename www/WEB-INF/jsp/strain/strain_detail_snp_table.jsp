@@ -60,9 +60,11 @@
 								</c:otherwise>
 							</c:choose>
 							
+							<c:set var="flagCell" value=""/>
 							<c:choose>
 								<c:when test="${cell.allCount == 0}">
 									<c:set var="cellTitle" value="no data"/>
+									<c:set var="flagCell" value="slash"/>
 								</c:when>
 								<c:when test="${cellCount == 1}">
 									<c:set var="cellTitle" value="1 SNP"/>
@@ -73,7 +75,7 @@
 							</c:choose>
 
 							<% Integer cellCount = (Integer) request.getAttribute("cellCount"); %>
-							<td title="${cellTitle}" class="cell"
+							<td title="${cellTitle}" class="cell ${flagCell}"
 								style="background-color: <%= FormatHelper.getSnpColorCode(cellCount, maxCount) %>"
 								<c:if test='${cellCount > 0}'>
 								onClick="window.open('${configBean.FEWI_URL}snp/summary?selectedChromosome=${cell.chromosome}&coordinate=0-200&coordinateUnit=Mbp&selectedStrains=${row.comparisonStrainName}&referenceStrain=${strain.name}&searchBySameDiff=${qfMode}&selectedTab=1');"

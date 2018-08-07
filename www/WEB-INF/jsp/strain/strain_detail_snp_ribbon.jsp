@@ -47,4 +47,5 @@
     .sortArrow { margin-left: 1px; }
     #sameDiffTable td { max-width: 225px; border: none; padding-right: 4px; vertical-align: top; }
     #sameDiffLabel { font-weight: bold; margin-left: 80px; }
+    .slash { background-image: linear-gradient(to bottom right, rgb(0,0,0,0) 48%, black, rgb(0,0,0,0) 52% ); }
 	</style>
