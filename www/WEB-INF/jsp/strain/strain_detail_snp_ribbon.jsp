@@ -6,7 +6,14 @@
 			<div id="snpToggle" title="Show More" class="toggleImage hdExpand">more</div>
 				<ul>
 					<li>
-						<div class="label narrow">Involving ${strain.name}</div>
+						<div class="label narrow">Involving 
+							<c:if test='${fn:length(strain.name) > 21}'>
+								this strain
+							</c:if>
+							<c:if test='${fn:length(strain.name) <= 21}'>
+								<fewi:super value="${strain.name}"/>
+							</c:if>
+						</div>
 						<div id="snpCount" class="valueNarrow"><fmt:formatNumber type="number" value="${strain.snpCount}" maxFractionDigits="0" groupingUsed="true"/> from ${snpBuildNumber}</div>
 					</li>
 					<li>
@@ -32,8 +39,8 @@
     #snpTableHeader td { border: 1px solid black; }
 	#snpTable th { font-weight: bold; white-space: nowrap; }
     #snpTable td { border: 1px solid black; }
-    .cell { min-width: 27px; max-width: 27px; width: 27px; height: 20px; }
-    .snpHeaderCell { min-width: 27px; max-width: 27px; width: 27px; height: 20px; text-align: center; }
+    .cell { min-width: 29px; max-width: 29px; width: 29px; height: 29px; }
+    .snpHeaderCell { min-width: 29px; max-width: 29px; width: 29px; height: 20px; text-align: center; vertical-align: bottom; }
     #snpLeftDiv { margin-left: 20px; }
     #snpRightDiv { margin-left: 40px; }
     #snpContainer { display: flex; }
@@ -45,7 +52,14 @@
     .rlPad { padding-left: 3px; padding-right: 3px; }
     .snpChromosomeHeader { padding-bottom: 4px; text-align: center }
     .sortArrow { margin-left: 1px; }
-    #sameDiffTable td { max-width: 225px; border: none; padding-right: 4px; vertical-align: top; }
+    #sameDiffTable td { max-width: 225px; border: none; padding-right: 4px; vertical-align: top; line-height: 1.5em; }
     #sameDiffLabel { font-weight: bold; margin-left: 80px; }
     .slash { background-image: linear-gradient(to bottom right, rgb(0,0,0,0) 48%, black, rgb(0,0,0,0) 52% ); }
 	</style>
+	
+	<c:if test='${(fn:length(strain.name) > 11) and (fn:length(strain.name) <= 21)}'>
+		<script>
+		// for long strain names, kick the more/less button down a bit to make room
+		$('#snpToggle').css('margin-top', '22px');
+		</script>
+	</c:if>

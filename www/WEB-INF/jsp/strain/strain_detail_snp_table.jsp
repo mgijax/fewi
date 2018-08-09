@@ -40,7 +40,7 @@
 					<% int maxCount = (int) request.getAttribute("maxSnpCount"); %>
 					<c:forEach var="row" items="${snpRows}">
 						<tr>
-						<td class='snpLeftColumn'><a href="${configBean.FEWI_URL}strain/${row.comparisonStrainID}" target="_blank">${row.comparisonStrainName}</a></td>
+						<td class='snpLeftColumn'><a href="${configBean.FEWI_URL}strain/${row.comparisonStrainID}" target="_blank"><fewi:super value="${row.comparisonStrainName}"/></a></td>
 						<c:forEach var="cell" items="${row.cells}">
 							<c:set var="reqCell" value="${cell}" scope="request"/>
 							<% StrainSnpCell cell = (StrainSnpCell) request.getAttribute("reqCell"); %>
@@ -96,11 +96,11 @@
 					</tr>
 					<tr>
 						<td><input name="mode" type="radio" id="mode2" value="same"/></td>
-						<td>SNPs where alleles are the same as ${strain.name}</td>
+						<td>SNPs where alleles are the same as <fewi:super value="${strain.name}"/></td>
 					</tr>
 					<tr>
 						<td><input name="mode" type="radio" id="mode3" value="diff"/></td>
-						<td>SNPs where alleles are different from ${strain.name}</td>
+						<td>SNPs where alleles are different from <fewi:super value="${strain.name}"/></td>
 					</tr>
 					</table>
 					<p/>
@@ -112,10 +112,10 @@
 							<td class="rlPad">0 SNPs</td></tr>
 						<tr><td rowspan="6" class="cell" style="background: linear-gradient(
 							<%= FormatHelper.getSnpColorCode(1, maxCount) %>, <%= FormatHelper.getSnpColorCode(maxCount, maxCount) %>);"></td>
-							<td class="rlPad">1 SNPs</td></tr>
+							<td class="rlPad" style="height: 29px">1 SNPs</td></tr>
 						<c:set var="snpBins" value="100 1000 10000 100000 ${maxSnpCount}"/>
 						<c:forEach var="bin" items="${fn:split(snpBins, ' ')}">
-							<tr><td class="rlPad"><fmt:formatNumber type="number" value="${bin}" maxFractionDigits="0" groupingUsed="true"/> SNPs</td></tr>
+							<tr><td class="rlPad" style="height: 29px"><fmt:formatNumber type="number" value="${bin}" maxFractionDigits="0" groupingUsed="true"/> SNPs</td></tr>
 						</c:forEach>
 					</table>
 				</div>
