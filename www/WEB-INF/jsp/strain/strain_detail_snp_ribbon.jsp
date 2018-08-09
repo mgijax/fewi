@@ -37,7 +37,7 @@
     #snpLeftDiv { margin-left: 20px; }
     #snpRightDiv { margin-left: 40px; }
     #snpContainer { display: flex; }
-    #snpLegend { margin-top: 3px; }
+    #snpLegend { margin-top: 3px; margin-left: 30px; }
     #snpLegend td { border: 1px solid black; }
     #legendLabel { font-weight: bold; margin-left: 73px; }
     .snpLeftColumn { min-width: 215px; max-width: 215px; width: 215px; height: 20px; }

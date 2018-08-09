@@ -717,31 +717,42 @@ public class FormatHelper {
 		return s.replaceAll("(https?://[^ )]+)", template);
 	}
 	
+	// 'color1' and 'color2' are integer arrays with length = 3.  The three integers range from 0-255
+	// and specify the red, green, and blue components of a color.  'index' specifies which of the
+	// three components we're getting a shade for.  'fraction' specifies how far from color1 we have
+	// progressed to color2 on a scale of 0.0 to 1.0.  Returns a two-digit hex string ranging from 
+	// 00 to FF.
+	private static String hexComponent(int[] color1, int[] color2, int index, Double fraction) {
+		Double shade = ((1.0 - fraction) * color1[index]) + (fraction * color2[index]);
+		return String.format("%02X", Math.round(shade));
+	}
+	
+	// get the shade between 'color1' and 'color2' when we have a given 'count' of of a given 'total',
+	// using a logarithmic scale because 'total' is very large.
+	private static String getShade(int[] color1, int[] color2, int count, int total) {
+		if (count == 0) {
+			return "rgb(0,0,0,0)";		// fully transparent cell if no count
+		}
+		Double fraction = Math.log(count) / Math.log(total);
+		StringBuffer sb = new StringBuffer("#");
+		sb.append(hexComponent(color1, color2, 0, fraction));
+		sb.append(hexComponent(color1, color2, 1, fraction));
+		sb.append(hexComponent(color1, color2, 2, fraction));
+		return sb.toString();
+	}
+	
 	/* get the hex color code for the given 'snpCount', where the highest number of SNPs per cell is given
 	 * as 'maxSnpCount'.
 	 */
 	public static String getSnpColorCode(int snpCount, int maxSnpCount) {
-		// New plan -- heat map from brightest blue for lowest counts to brightest red for highest counts.
-		// For shades of blue, we include the full (FF) blue component while starting with full (FF) red
-		// and green components, walking them back to 0xE6 as snpCount approaches maxSnpCount.  Similar
-		// for reds.  Due to the wide range of snpCount values, we use a logarithmic scale.
+		// New plan -- heat map from brightest blue for lowest counts to brightest green for highest counts.
+		// Due to the wide range of snpCount values, we use a logarithmic scale.
 		
-		double logMax = Math.log10((double) maxSnpCount);
-		double logCount = Math.log10((double) snpCount);
-		double logHalfMax = logMax / 2.0;
+		int[] color1 = { 0, 0, 255 };		// blue
+		int[] color2 = { 128, 255, 0 };		// light green
+		int[] color3 = { 255, 0, 0 };		// red
 		
-		if (logCount < logHalfMax) {
-			// SNP counts are lower than half, so blue shades.
-
-			long fraction = 221 - Math.round(((logHalfMax - logCount) / logHalfMax) * 221);
-			String rg = String.format("%02X", fraction);
-			return "#" + rg + rg + "FF";
-		}
-
-		// SNP counts are more than half, so red shades.
-		long fraction = Math.round(((logMax - logCount) / logHalfMax) * 221);
-		String gb = String.format("%02X", fraction);
-		return "#FF" + gb + gb;
+		return getShade(color1, color3, snpCount, maxSnpCount);
 	}
 } // end of class FormatHelper
 

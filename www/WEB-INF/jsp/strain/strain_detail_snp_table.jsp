@@ -105,18 +105,17 @@
 					</table>
 					<p/>
 					<span id="legendLabel">Legend</span><br/>
-					<!-- Values need to be kept in sync with fedatamodel's StrainSnpCell class. -->
 					<table id="snpLegend">
-						<c:set var="snpBins" value="1-9 10-99 100-999 1000-9999 10000-99999 100000-${maxSnpCount}"/>
+						<tr><td class="cell slash" style=""></td>
+							<td class="rlPad">No data</td></tr>
+						<tr><td class="cell"></td>
+							<td class="rlPad">0 SNPs</td></tr>
+						<!-- Color values need to be kept in sync with fedatamodel's StrainSnpCell class. -->
+						<tr><td rowspan="6" class="cell" style="background: linear-gradient(#0000FF, #FF0000);"></td>
+							<td class="rlPad">1 SNPs</td></tr>
+						<c:set var="snpBins" value="100 1000 10000 100000 ${maxSnpCount}"/>
 						<c:forEach var="bin" items="${fn:split(snpBins, ' ')}">
-							<c:set var="fromTo" value="${fn:split(bin, '-')}"/>
-							<c:set var="reqLastStart" value="${fromTo[0]}" scope="request"/>
-							<c:set var="reqBin" value="${fromTo[1]}" scope="request"/>
-							<% int lastStart = (int) Integer.valueOf((String) request.getAttribute("reqLastStart")); %>
-							<% int sbin = (int) Integer.valueOf((String) request.getAttribute("reqBin")); %>
-							<tr><td class="cell" style="background-color: <%= FormatHelper.getSnpColorCode(lastStart, maxCount) %>"></td>
-							<td class="cell" style="background-color: <%= FormatHelper.getSnpColorCode(sbin, maxCount) %>"></td>
-							<td class="rlPad"><fmt:formatNumber type="number" value="${reqLastStart}" maxFractionDigits="0" groupingUsed="true"/>-<fmt:formatNumber type="number" value="${reqBin}" maxFractionDigits="0" groupingUsed="true"/> SNPs</td></tr>
+							<tr><td class="rlPad"><fmt:formatNumber type="number" value="${bin}" maxFractionDigits="0" groupingUsed="true"/> SNPs</td></tr>
 						</c:forEach>
 					</table>
 				</div>
