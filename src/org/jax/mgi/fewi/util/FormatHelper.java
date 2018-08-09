@@ -748,9 +748,9 @@ public class FormatHelper {
 		// New plan -- heat map from brightest blue for lowest counts to brightest green for highest counts.
 		// Due to the wide range of snpCount values, we use a logarithmic scale.
 		
-		int[] color1 = { 0, 0, 255 };		// blue
+		int[] color1 = { 0, 153, 255 };		// light blue
 		int[] color2 = { 128, 255, 0 };		// light green
-		int[] color3 = { 255, 0, 0 };		// red
+		int[] color3 = { 255, 80, 80 };		// light red
 		
 		return getShade(color1, color3, snpCount, maxSnpCount);
 	}

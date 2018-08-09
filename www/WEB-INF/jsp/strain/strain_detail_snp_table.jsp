@@ -110,8 +110,8 @@
 							<td class="rlPad">No data</td></tr>
 						<tr><td class="cell"></td>
 							<td class="rlPad">0 SNPs</td></tr>
-						<!-- Color values need to be kept in sync with fedatamodel's StrainSnpCell class. -->
-						<tr><td rowspan="6" class="cell" style="background: linear-gradient(#0000FF, #FF0000);"></td>
+						<tr><td rowspan="6" class="cell" style="background: linear-gradient(
+							<%= FormatHelper.getSnpColorCode(1, maxCount) %>, <%= FormatHelper.getSnpColorCode(maxCount, maxCount) %>);"></td>
 							<td class="rlPad">1 SNPs</td></tr>
 						<c:set var="snpBins" value="100 1000 10000 100000 ${maxSnpCount}"/>
 						<c:forEach var="bin" items="${fn:split(snpBins, ' ')}">
