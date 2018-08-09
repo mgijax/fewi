@@ -285,10 +285,11 @@ var updateQuerySummary = function() {
 			}
 			detectedStagesText += " ("+detectedStages.join(" or ")+")";
 		}
-		var selectedDifStages = parseStageOptions("difTheilerStage4","-1");
+		var selectedDifStagesNSA = parseStageOptions("difTheilerStage4","-1");	// any stage not selected above
+		var selectedDifStagesADS = parseStageOptions("difTheilerStage4", "0");	// any developmental stage
 		var notDetectedStages = [];
 		var notDetectedStagesText = "any of the developmental stage(s):";
-		if(selectedDifStages=="Any") {
+		if( (selectedDifStagesNSA =="Any") || (selectedDifStagesADS =="Any") ) {
 			// cases:
 			// 1. structure & notStructure, no selectedStages
 			// 2. structure & selectedStages & (structure == notStructure)
@@ -298,15 +299,15 @@ var updateQuerySummary = function() {
 				notDetectedStagesText = "<b>Any developmental stage</b>";
 			} else if ((structure != '') && (selectedStages != 'Any') && (selectedStages != '') && (structure == notStructure)) {
 				notDetectedStagesText = "<b>Any developmental stage not selected above</b>";
-			} else if ((structure != '') && (selectedStages != 'Any') && (selectedStages != '') && (notStructure != '')) {
+			} else if ((structure != '') && (selectedStages != 'Any') && (selectedStages != '') && (notStructure != '') && (selectedDifStagesADS == 'Any')) {
 				notDetectedStagesText = "<b>Any developmental stage</b>";
 			} else {
 				notDetectedStagesText = "<b>Any developmental stage not selected above</b>";
 			}
 		} else {
-			for(var i=0;i<selectedDifStages.length;i++)
+			for(var i=0;i<selectedDifStagesNSA.length;i++)
 			{
-				notDetectedStages.push("<b>TS:"+selectedDifStages[i]+"</b>");
+				notDetectedStages.push("<b>TS:"+selectedDifStagesNSA[i]+"</b>");
 			}
 			notDetectedStagesText += " ("+notDetectedStages.join(", ")+")";
 		}
