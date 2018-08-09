@@ -524,6 +524,8 @@ public class StrainController {
 		if ((group != null) && (group.length() > 0)) {
 			if ("HDP".equals(group)) {
 				collection = "Hybrid Diversity Panel (HDP) Strains";
+			} else if ("CC".equals(group)) {
+				collection = "Collaborative Cross Strains";
 			} else if ("DOCCFounders".equals(group)) {
 				collection = "DO/CC Founders";
 			}
@@ -535,10 +537,7 @@ public class StrainController {
 			sb.append("</b><br/>");
 		}
 		
-		// The CC strains are found using a nomenclature search, so we need special handling.
-		if ("CC0*".equals(strainName)) {
-			collection = "Collaborative Cross (CC)";
-		} else if ((strainName != null) && (strainName.length() > 0)) {
+		if ((strainName != null) && (strainName.length() > 0)) {
 			String op = "equals";
 			if (strainName.indexOf("*") >= 0) {
 				if (strainName.startsWith("*")) {
