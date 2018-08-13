@@ -76,7 +76,7 @@
 
 							<% Integer cellCount = (Integer) request.getAttribute("cellCount"); %>
 							<td title="${cellTitle}" class="cell ${flagCell}"
-								style="background-color: <%= FormatHelper.getSnpColorCode(cellCount, maxCount) %>"
+								style="background-color: <%= FormatHelper.getSnpColorCode(cellCount, cell.getAllCount(), maxCount) %>"
 								<c:if test='${cellCount > 0}'>
 								onClick="window.open('${configBean.FEWI_URL}snp/summary?selectedChromosome=${cell.chromosome}&coordinate=0-200&coordinateUnit=Mbp&selectedStrains=${row.comparisonStrainName}&referenceStrain=${strain.name}&searchBySameDiff=${qfMode}&selectedTab=1');"
 								</c:if>
@@ -108,11 +108,9 @@
 					<table id="snpLegend">
 						<tr><td class="cell slash" style=""></td>
 							<td class="rlPad">No data</td></tr>
-						<tr><td class="cell"></td>
-							<td class="rlPad">0 SNPs</td></tr>
 						<tr><td rowspan="6" class="cell" style="background: linear-gradient(
-							<%= FormatHelper.getSnpColorCode(1, maxCount) %>, <%= FormatHelper.getSnpColorCode(maxCount, maxCount) %>);"></td>
-							<td class="rlPad" style="height: 29px">1 SNPs</td></tr>
+							<%= FormatHelper.getSnpColorCode(0, 1, maxCount) %>, <%= FormatHelper.getSnpColorCode(maxCount, maxCount, maxCount) %>);"></td>
+							<td class="rlPad" style="height: 29px">0 SNPs</td></tr>
 						<c:set var="snpBins" value="100 1000 10000 100000 ${maxSnpCount}"/>
 						<c:forEach var="bin" items="${fn:split(snpBins, ' ')}">
 							<tr><td class="rlPad" style="height: 29px"><fmt:formatNumber type="number" value="${bin}" maxFractionDigits="0" groupingUsed="true"/> SNPs</td></tr>

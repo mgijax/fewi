@@ -729,11 +729,14 @@ public class FormatHelper {
 	
 	// get the shade between 'color1' and 'color2' when we have a given 'count' of of a given 'total',
 	// using a logarithmic scale because 'total' is very large.
-	private static String getShade(int[] color1, int[] color2, int count, int total) {
-		if (count == 0) {
-			return "rgb(0,0,0,0)";		// fully transparent cell if no count
+	private static String getShade(int[] color1, int[] color2, int count, int allCount, int total) {
+		if (allCount == 0) {
+			return "rgb(0,0,0,0)";		// fully transparent cell if no data
 		}
-		Double fraction = Math.log(count) / Math.log(total);
+		Double fraction = 0.0;
+		if (count > 0) {
+			fraction = Math.log(count) / Math.log(total);
+		}
 		StringBuffer sb = new StringBuffer("#");
 		sb.append(hexComponent(color1, color2, 0, fraction));
 		sb.append(hexComponent(color1, color2, 1, fraction));
@@ -744,7 +747,7 @@ public class FormatHelper {
 	/* get the hex color code for the given 'snpCount', where the highest number of SNPs per cell is given
 	 * as 'maxSnpCount'.
 	 */
-	public static String getSnpColorCode(int snpCount, int maxSnpCount) {
+	public static String getSnpColorCode(int snpCount, int allSnpCount, int maxSnpCount) {
 		// New plan -- heat map from brightest blue for lowest counts to brightest green for highest counts.
 		// Due to the wide range of snpCount values, we use a logarithmic scale.
 		
@@ -752,7 +755,7 @@ public class FormatHelper {
 		int[] color2 = { 128, 255, 0 };		// light green
 		int[] color3 = { 255, 80, 80 };		// light red
 		
-		return getShade(color1, color3, snpCount, maxSnpCount);
+		return getShade(color1, color3, snpCount, allSnpCount, maxSnpCount);
 	}
 } // end of class FormatHelper
 
