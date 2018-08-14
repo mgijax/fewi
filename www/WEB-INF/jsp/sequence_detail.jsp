@@ -106,7 +106,7 @@
     <b>Sequence<br>description<br>from provider</b>
   </td>
   <td class="${rightTdStyles.next}" >
-    <fewi:verbatim value="${sequence.description}" />
+    <fewi:ntc value="${sequence.description}" />
   </td>
 </tr>
 
