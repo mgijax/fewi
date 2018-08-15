@@ -15,6 +15,7 @@ $(".toggleImage").click(function(event) {
 	if($(this).hasClass("hdCollapse")) {
 		$(this).text("less");
 		$(this).attr('title', 'Show Less');
+		makeViewPanelFloat();
 	}
 	if($(this).hasClass("hdExpand")) {
 		$(this).text("more");
@@ -111,6 +112,13 @@ var loadSnpTable = function(sortBy, mode) {
 			if (buttons.length > 0) {
 				buttons[0].checked = true;
 			}
+			
+			makeViewPanelFloat();
 		}
 	});
+}
+
+var makeViewPanelFloat = function() {
+	// make the View controls float when scrolling
+	makeYoyo($('#snpViewPanel'));
 }

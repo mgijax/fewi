@@ -88,6 +88,7 @@
 				</div>
 				</div>
 				<div id="snpRightDiv">
+					<div id="snpViewPanel">
 					<span id="sameDiffLabel">View</span><br/>
 					<table id="sameDiffTable">
 					<tr>
@@ -116,6 +117,7 @@
 							<tr><td class="rlPad" style="height: 29px"><fmt:formatNumber type="number" value="${bin}" maxFractionDigits="0" groupingUsed="true"/> SNPs</td></tr>
 						</c:forEach>
 					</table>
+					</div>
 				</div>
 	<script>
 	YAHOO.namespace("snp.container");

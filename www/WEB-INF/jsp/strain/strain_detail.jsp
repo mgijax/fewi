@@ -81,6 +81,7 @@
 </c:if>
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/strain/strain_detail.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/yoyo.js"></script>
 <script>
 	initialize('${configBean.FEWI_URL}', '${strain.primaryID}');
 	loadSnpTable('strain', 'all');
