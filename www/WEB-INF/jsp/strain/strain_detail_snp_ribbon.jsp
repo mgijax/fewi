@@ -4,9 +4,15 @@
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %> summaryRibbon" id="snpRibbonDetails">
 			<div id="snpToggle" title="Show More" class="toggleImage hdExpand">more</div>
+			<div id="snpTeaderWrapper" class="flex">
+				<div id="snpTableTeaser" class="summarySec1 flex">
+					<img id="heatmap_icon" src="${configBean.FEWI_URL}assets/images/heatmap_icon.png"/>
+					<div id="snpProfileLabel" class="label">SNP Profile Heat Map</div>
+				</div>
+				<div id="snpCounts" class="summarySec1">
 				<ul>
 					<li>
-						<div class="label narrow">Involving 
+						<div class="label narrow">SNPs Involving 
 							<c:if test='${fn:length(strain.name) > 21}'>
 								this strain
 							</c:if>
@@ -21,6 +27,8 @@
 						<div id="comparisonStrainCount" class="valueNarrow">${strain.countOfSnpComparisonStrains}</a></div>
 					</li>
 				</ul>
+				</div>
+			</div>
 			<div id="snpContainer" class="extra closed">
 				<!-- populated by Ajax -->
 			</div>
@@ -55,6 +63,11 @@
     #sameDiffTable td { max-width: 225px; border: none; padding-right: 4px; vertical-align: top; line-height: 1.5em; }
     #sameDiffLabel { font-weight: bold; margin-left: 80px; }
     .slash { background-image: linear-gradient(to bottom right, rgb(0,0,0,0) 48%, black, rgb(0,0,0,0) 52% ); }
+    .flex { display: flex; }
+    #snpTableTeaser {}
+    #snpCounts {}
+    #heatmap_icon { height: 50px; width: 50px; margin-left: 80px; }
+    #snpProfileLabel { margin-left: -20px; margin-top: 17px; }
 	</style>
 	
 	<c:if test='${(fn:length(strain.name) > 11) and (fn:length(strain.name) <= 21)}'>
