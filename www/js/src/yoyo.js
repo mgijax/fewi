@@ -1,6 +1,12 @@
 var makeYoyo = function(yoyoDiv) {
+	// add to the list of DIVs to manage
 	yoyos.push(yoyoDiv);
+	
+	// tie in the event handler for scrolling
 	$(window).scroll(handleScroll);
+	
+	// check to see if any initial movement of the DIV is needed
+	handleScroll();
 }
 
 var yoyos = [];
