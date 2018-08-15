@@ -131,7 +131,6 @@
 						<select id="strainOp" name="strainOp">
 							<option value="fasta">Get FASTA</option>
 							<option value="mgv">Send to Multi Genome Viewer (MGV)</option>
-							<option value="muscle">Send to MUSCLE (Multiple Sequence Alignment Tool)</option>
 							<option value="snps">Send to Sanger SNP Query (+/- 2kb)</option>
 						</select>
 					</div>

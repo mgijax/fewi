@@ -338,9 +338,6 @@ var strainRibbonGoButtonClick = function() {
 	} else if (option == 'snps') {
 		window.open(getSangerUrl(), '_blank');
 		
-	} else if (option == 'muscle') {
-		alert('Coming in a future sprint');
-		
 	} else {
 		console.log('Unrecognized value for strainOp: ' + option);
 	}
