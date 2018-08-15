@@ -8,6 +8,7 @@ import java.util.List;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.DBConstants;
 import org.jax.mgi.fewi.util.FormatHelper;
+import org.jax.mgi.fewi.util.NotesTagConverter;
 import org.jax.mgi.fewi.util.link.ProviderLinker;
 import org.jax.mgi.shr.jsonmodel.SimpleMarker;
 import org.jax.mgi.shr.jsonmodel.SimpleSequence;
@@ -25,6 +26,8 @@ public class SeqSummaryRow {
 	//-------------------
 
     private final Logger logger = LoggerFactory.getLogger(SeqSummaryRow.class);
+    
+    private final NotesTagConverter ntc = new NotesTagConverter();
 
 	// encapsulated row object
 	private SimpleSequence seq;
@@ -105,7 +108,8 @@ public class SeqSummaryRow {
 
     public String getDescription() {
     	if (this.seq.getDescription() == null) { return ""; }
-    	return this.seq.getDescription();
+    	return ntc.convertNotes(this.seq.getDescription(), '|');
+
     }
 
     public String getCloneCollection() {
