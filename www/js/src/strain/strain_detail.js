@@ -43,6 +43,7 @@ var sdStrainID = null;				// current strain's primary ID
 var sdSnpSortBy = 'strain';			// current sort of snp table ('strain' or chromosome)
 var sdSnpDir = 'desc';				// direction of sort of snp table ('asc' or 'desc')
 var sdMode = 'all';					// mode of table (all, same, diff)
+var alreadyLoadedOnce = false;		// have we already loaded the SNP table once?  (for GA tracking)
 
 var initialize = function(fewiUrl, strainID) {
 	sdFewiUrl = fewiUrl;
@@ -62,6 +63,7 @@ var loadSnpTable = function(sortBy, mode) {
 
 	// If this is same as last column sorted (and the same mode), swap the direction of the sort.
 	if ((sdSnpSortBy == sortBy) && (sdMode == mode)) {
+		if (alreadyLoadedOnce) ga_logEvent('StrainDetailPageEvent', 'snpTable', 'change sort direction');
 		if (sdSnpDir == 'asc') {
 			sdSnpDir = 'desc';
 		} else {
@@ -70,16 +72,21 @@ var loadSnpTable = function(sortBy, mode) {
 	} else if (sdMode != mode) {
 		// change in mode (all, same, diff) but same sortBy & direction
 		sdMode = mode; 
+		if (alreadyLoadedOnce) ga_logEvent('StrainDetailPageEvent', 'snpTable', 'change mode to ' + sdMode);
 	} else {
 		// Otherwise, this is a new column sort, go to default direction for that column.
 		sdSnpSortBy = sortBy;
 		if (sdSnpSortBy == 'strain') {
 			sdSnpDir = 'asc';
+			if (alreadyLoadedOnce) ga_logEvent('StrainDetailPageEvent', 'snpTable', 'sort by strain');
 		} else {
 			sdSnpDir = 'desc';
+			if (alreadyLoadedOnce) ga_logEvent('StrainDetailPageEvent', 'snpTable', 'sort by chromosome');
 		}
 	}
 	
+	// We don't want a GA event tracked for the initial table load, but we do for subsequent interaction.
+	alreadyLoadedOnce = true;
 	var myUrl = sdFewiUrl + 'strain/snpTable/' + sdStrainID + '?sortBy=' + sdSnpSortBy + '&dir=' + sdSnpDir + '&mode=' + sdMode;
 	
 	$.ajax({'url': myUrl, 'datatype': 'html', 'success':
