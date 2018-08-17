@@ -37,12 +37,24 @@ public class SearchConstants {
     public static final String MRK_SYMBOL               = "marker_symbol";
     public static final String MRK_SYMBOL_LOWER         = "markerSymbolLower";
     public static final String MRK_NOMENCLATURE			= "nomenclature";
+    public static final String MRK_HOMOLOG_SYMBOLS		= "homologSymbols";
 	public static final String FEATURE_TYPE = "featureType";
 	public static final String FEATURE_TYPE_KEY = "featureTypeKey";
 	public static final String EVIDENCE_CODE		= "evidenceCode";
 	public static final String EVIDENCE_TERM		= "evidenceTerm";
 	public static final String EVIDENCE_CATEGORY	= "evidenceCategory";
 
+	// marker symbols in marker index
+    public static final String MRK_CURRENT_SYMBOL	= "currentSymbol";
+    public static final String MRK_HUMAN_SYMBOL		= "humanSymbol";
+    public static final String MRK_RAT_SYMBOL		= "ratSymbol";
+    public static final String MRK_RHESUS_SYMBOL	= "rhesusSymbol";
+    public static final String MRK_CATTLE_SYMBOL	= "cattleSymbol";
+    public static final String MRK_DOG_SYMBOL		= "dogSymbol";
+    public static final String MRK_ZFIN_SYMBOL		= "zebrafishSymbol";
+    public static final String MRK_CHICKEN_SYMBOL	= "chickenSymbol";
+    public static final String MRK_CHIMP_SYMBOL		= "chimpSymbol";
+    public static final String MRK_FROG_SYMBOL		= "westernClawedFrogSymbol";
 
     // allele constants
     public static final String ALL_KEY              = "allele_key";

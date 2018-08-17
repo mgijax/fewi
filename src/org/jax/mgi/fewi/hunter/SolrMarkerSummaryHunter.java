@@ -49,7 +49,18 @@ public class SolrMarkerSummaryHunter extends SolrHunter<SolrSummaryMarker> {
         propertyMap.put(SearchConstants.END_COORD, new SolrPropertyMapper(IndexConstants.END_COORD));
         propertyMap.put(SearchConstants.CM_OFFSET, new SolrPropertyMapper(IndexConstants.CM_OFFSET));
         propertyMap.put(SearchConstants.STRAND, new SolrPropertyMapper(IndexConstants.CHROMOSOME));
-        
+
+        propertyMap.put(SearchConstants.MRK_SYMBOL, new SolrPropertyMapper(IndexConstants.MRK_SYMBOL));
+        propertyMap.put(SearchConstants.MRK_CURRENT_SYMBOL, new SolrPropertyMapper(IndexConstants.MRK_CURRENT_SYMBOL));
+        propertyMap.put(SearchConstants.MRK_HUMAN_SYMBOL, new SolrPropertyMapper(IndexConstants.MRK_HUMAN_SYMBOL));
+        propertyMap.put(SearchConstants.MRK_RAT_SYMBOL, new SolrPropertyMapper(IndexConstants.MRK_RAT_SYMBOL));
+        propertyMap.put(SearchConstants.MRK_RHESUS_SYMBOL, new SolrPropertyMapper(IndexConstants.MRK_RHESUS_SYMBOL));
+        propertyMap.put(SearchConstants.MRK_CATTLE_SYMBOL, new SolrPropertyMapper(IndexConstants.MRK_CATTLE_SYMBOL));
+        propertyMap.put(SearchConstants.MRK_DOG_SYMBOL, new SolrPropertyMapper(IndexConstants.MRK_DOG_SYMBOL));
+        propertyMap.put(SearchConstants.MRK_ZFIN_SYMBOL, new SolrPropertyMapper(IndexConstants.MRK_ZFIN_SYMBOL));
+        propertyMap.put(SearchConstants.MRK_CHICKEN_SYMBOL, new SolrPropertyMapper(IndexConstants.MRK_CHICKEN_SYMBOL));
+        propertyMap.put(SearchConstants.MRK_CHIMP_SYMBOL, new SolrPropertyMapper(IndexConstants.MRK_CHIMP_SYMBOL));
+        propertyMap.put(SearchConstants.MRK_FROG_SYMBOL, new SolrPropertyMapper(IndexConstants.MRK_FROG_SYMBOL));
         
         /*
          * Nomen search

@@ -101,6 +101,19 @@ public class SnpController {
 
 	private static String assemblyVersion = null;
 
+	private static String[] homologSymbolFields = new String[] {
+        SearchConstants.MRK_SYMBOL, 
+        SearchConstants.MRK_HUMAN_SYMBOL, 
+        SearchConstants.MRK_RAT_SYMBOL, 
+        SearchConstants.MRK_RHESUS_SYMBOL, 
+        SearchConstants.MRK_CATTLE_SYMBOL, 
+        SearchConstants.MRK_DOG_SYMBOL, 
+        SearchConstants.MRK_ZFIN_SYMBOL, 
+        SearchConstants.MRK_CHICKEN_SYMBOL, 
+        SearchConstants.MRK_CHIMP_SYMBOL, 
+        SearchConstants.MRK_FROG_SYMBOL
+	};
+
 	//--------------------//
 	// instance variables
 	//--------------------//
@@ -241,7 +254,8 @@ public class SnpController {
 		mav.addObject("buildNumber", buildNumber);
 
 		searchByOptions = new LinkedHashMap<String, String>();
-		searchByOptions.put(SearchConstants.MRK_SYMBOL, "Current symbols");
+		searchByOptions.put(SearchConstants.MRK_SYMBOL, "Current symbol (mouse)");
+		searchByOptions.put(SearchConstants.MRK_HOMOLOG_SYMBOLS, "Current symbol (mouse or homologs)");
 		searchByOptions.put(SearchConstants.MRK_NOMENCLATURE, "Current symbols/names, synonyms & homologs");
 
 		searchBySameDiffOptions = new LinkedHashMap<String, String>();
@@ -427,6 +441,11 @@ public class SnpController {
 				SearchParams sp = new SearchParams();
 				sp.setPageSize(250000);
 
+				Filter.Operator op = Filter.Operator.OP_EQUAL;
+				if (symbol.contains("*")) {
+					op = Filter.Operator.OP_EQUAL_WILDCARD_ALLOWED;
+				}
+
 				// Taken from genFilters in the Marker Controller
 				//Filter symbolFilter = new Filter(SearchConstants.MRK_SYMBOL,"\""+stripped.replace("\"","")+"\"^1000000000000",Filter.Operator.OP_HAS_WORD);
 				Filter symbolFilter = new Filter(SearchConstants.MRK_SYMBOL, stripped, Filter.Operator.OP_EQUAL_WILDCARD_ALLOWED);
@@ -436,8 +455,15 @@ public class SnpController {
 					filterList.add(symbolFilter);
 					filterList.add(FilterUtil.generateNomenFilter(SearchConstants.MRK_NOMENCLATURE,stripped));
 					sp.setFilter(Filter.or(filterList));
-				} else {
+				} else if (query.getSearchGeneBy().equals(SearchConstants.MRK_SYMBOL)) {
 					sp.setFilter(symbolFilter);
+				} else {
+					List<Filter> filterList = new ArrayList<Filter>();
+					for (String symbolField : homologSymbolFields) {
+						symbolFilter = new Filter(symbolField, stripped, op);
+						filterList.add(symbolFilter);
+					}
+					sp.setFilter(Filter.or(filterList));
 				}
 
 				SearchResults<Marker> results = markerFinder.getMarkers(sp);
