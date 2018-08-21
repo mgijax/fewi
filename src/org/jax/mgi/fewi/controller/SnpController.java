@@ -254,8 +254,8 @@ public class SnpController {
 		mav.addObject("buildNumber", buildNumber);
 
 		searchByOptions = new LinkedHashMap<String, String>();
-		searchByOptions.put(SearchConstants.MRK_SYMBOL, "Current symbol (mouse)");
 		searchByOptions.put(SearchConstants.MRK_HOMOLOG_SYMBOLS, "Current symbol (mouse or homologs)");
+		searchByOptions.put(SearchConstants.MRK_SYMBOL, "Current symbol (mouse)");
 		searchByOptions.put(SearchConstants.MRK_NOMENCLATURE, "Current symbols/names, synonyms & homologs");
 
 		searchBySameDiffOptions = new LinkedHashMap<String, String>();
