@@ -178,7 +178,7 @@ public class SnpQueryForm {
 			if ("marker_symbol".equals(searchGeneBy)) {
 				breadth = " searching current mouse symbols";
 			} else if ("homologSymbols".equals(searchGeneBy)) {
-				breadth = " searching current mouse and homology symbols";
+				breadth = " searching current mouse and homolog symbols";
 			} else if ("nomenclature".equals(searchGeneBy)) {
 				breadth = " searching current symbols/names, synonyms &amp; homologs";
 			}
