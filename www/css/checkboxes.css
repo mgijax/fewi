@@ -1,0 +1,77 @@
+/* colored checkbox classes, based on :
+ *	https://www.w3schools.com/howto/howto_css_custom_checkbox.asp
+ *
+ * Notes:  Expects HTML checkbox input fields to have an associated span and be
+ *	wrapped together in a label tag, like this:
+ *		<label class="cbContainer">One
+ *			<input type="checkbox" id="c1">
+ *			<span class="cbCheckmark"></span>
+ *		</label> 
+ */
+
+/* The container */
+.cbContainer {
+    display: block;
+    position: relative;
+    padding-left: 23px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.cbContainer input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.cbCheckmark {
+    position: absolute;
+    top: -2px;
+    left: 0;
+    height: 15px;
+    width: 15px;
+    background-color: #eee;
+    border: 1px solid black;
+}
+
+/* On mouse-over, add a grey background color */
+.cbContainer:hover input ~ .cbCheckmark {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.cbContainer input:checked ~ .cbCheckmark {
+    background-color: #D0E0F0;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.cbCheckmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the cbCheckmark when checked */
+.cbContainer input:checked ~ .cbCheckmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.cbContainer .cbCheckmark:after {
+    left: 4px;
+    top: 0px;
+    width: 4px;
+    height: 9px;
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}

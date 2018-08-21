@@ -27,12 +27,13 @@
 		Object checked = values.contains(key) ? "checked=\"checked\"" : "";
 		if(count % columnSize == 0) {
 			if(count != 0) { %> </div> <% }
-			%> <div style="float:left;width:210px;">  <%
+			%> <div style="float:left;width:220px;">  <%
 		}
 %>
 	<div class="checkbox">
-		<label>
+		<label class="cbContainer">
 			<input name="${name}" type="checkbox" value="<%=key %>" <%=checked %> /> <%=value %>
+ 			<span class="cbCheckmark"></span>
 		</label>
 	</div>
 <%
