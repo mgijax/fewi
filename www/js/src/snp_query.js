@@ -217,7 +217,7 @@ snpqry.resetQF = function (e) {
 	//form.rangeDropList.value = 2000;
 	form.referenceStrain.value = "";
 	form.searchBySameDiff.value = "";
-	form.searchGeneByList.value = "marker_symbol";
+	form.searchGeneByList.value = "homologSymbols";
 	snpqry.resetRadio();
 
 	var form = YAHOO.util.Dom.get("form2");
