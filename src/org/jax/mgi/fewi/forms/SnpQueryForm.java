@@ -163,7 +163,7 @@ public class SnpQueryForm {
 	}
 
 	/* returns a List of Strings which describe in plain Engligh the
-	 * parameters encoded in this query form.  (These Strins can be used
+	 * parameters encoded in this query form.  (These Strings can be used
 	 * as the "You Searched For" text on the SNP summary page.)
 	 */
 	public List<String> getYouSearchedFor() {
@@ -176,7 +176,9 @@ public class SnpQueryForm {
 		if (nomen != null) {
 			String breadth = "";
 			if ("marker_symbol".equals(searchGeneBy)) {
-				breadth = " searching current symbols";
+				breadth = " searching current mouse symbols";
+			} else if ("homologSymbols".equals(searchGeneBy)) {
+				breadth = " searching current mouse and homology symbols";
 			} else if ("nomenclature".equals(searchGeneBy)) {
 				breadth = " searching current symbols/names, synonyms &amp; homologs";
 			}
