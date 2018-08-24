@@ -3,38 +3,40 @@
  *
  * Notes:  Expects HTML checkbox input fields to have an associated span and be
  *	wrapped together in a label tag, like this:
- *		<label class="cbContainer">One
+ *		<label class="cmpContainer">One
  *			<input type="checkbox" id="c1">
- *			<span class="cbCheckmark"></span>
+ *			<span class="cmpCheckmark"></span>
  *		</label> 
  */
 
 /* The container */
-.cbContainer {
+.cmpContainer {
     display: block;
     position: relative;
-    padding-left: 23px;
+    padding-left: 22px;
+    margin-left: 18px;
     margin-bottom: 8px;
     cursor: pointer;
     font-size: 12px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    white-space: nowrap;
     user-select: none;
 }
 
 /* Hide the browser's default checkbox */
-.cbContainer input {
+.cmpContainer input {
     position: absolute;
     opacity: 0;
     cursor: pointer;
 }
 
 /* Create a custom checkbox */
-.cbCheckmark {
+.cmpCheckmark {
     position: absolute;
     top: -2px;
-    left: 0;
+    left: 2px;
     height: 15px;
     width: 15px;
     background-color: #eee;
@@ -42,29 +44,29 @@
 }
 
 /* On mouse-over, add a grey background color */
-.cbContainer:hover input ~ .cbCheckmark {
+.cmpContainer:hover input ~ .cmpCheckmark {
     background-color: #ccc;
 }
 
 /* When the checkbox is checked, add a blue background */
-.cbContainer input:checked ~ .cbCheckmark {
+.cmpContainer input:checked ~ .cmpCheckmark {
     background-color: #D0E0F0;
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
-.cbCheckmark:after {
+.cmpCheckmark:after {
     content: "";
     position: absolute;
     display: none;
 }
 
-/* Show the cbCheckmark when checked */
-.cbContainer input:checked ~ .cbCheckmark:after {
+/* Show the cmpCheckmark when checked */
+.cmpContainer input:checked ~ .cmpCheckmark:after {
     display: block;
 }
 
 /* Style the checkmark/indicator */
-.cbContainer .cbCheckmark:after {
+.cmpContainer .cmpCheckmark:after {
     left: 4px;
     top: 0px;
     width: 4px;
@@ -75,3 +77,75 @@
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
 }
+
+/* The container for reference strain checkboxes */
+.refContainer {
+    display: block;
+    position: relative;
+    padding-left: 23px;
+    cursor: pointer;
+    font-size: 12px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.refContainer input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.refCheckmark {
+    position: absolute;
+    top: -2px;
+    left: 0;
+    height: 15px;
+    width: 15px;
+    background-color: #eee;
+    border: 1px solid black;
+}
+
+/* On mouse-over, add a grey background color */
+.refContainer:hover input ~ .refCheckmark {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.refContainer input:checked ~ .refCheckmark {
+    background-color: #FF8C00;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.refCheckmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the refCheckmark when checked */
+.refContainer input:checked ~ .refCheckmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.refContainer .refCheckmark:after {
+    left: 4px;
+    top: 0px;
+    width: 4px;
+    height: 9px;
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.refToggle {}
+.refHide { display: none; }
+
+.refHeader { width:18px; text-align:center; margin-bottom: 5px; color: #FF8C00; float:left; font-weight:bold; }
+.cmpHeader { width:18px; text-align:center; margin-bottom: 5px; color: blue; float:left; font-weight:bold; }

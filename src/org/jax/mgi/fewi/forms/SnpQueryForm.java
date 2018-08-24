@@ -162,6 +162,14 @@ public class SnpQueryForm {
 	       	return s;	// fallback: display original string
 	}
 
+	public List<String> getReferenceStrainList() {
+		List<String> strains = new ArrayList<String>();
+		if (this.referenceStrain != null) {
+			strains.add(this.referenceStrain);
+		}
+		return strains;
+	}
+	
 	/* returns a List of Strings which describe in plain Engligh the
 	 * parameters encoded in this query form.  (These Strings can be used
 	 * as the "You Searched For" text on the SNP summary page.)

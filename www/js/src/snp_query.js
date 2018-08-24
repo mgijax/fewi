@@ -232,7 +232,7 @@ snpqry.resetQF = function (e) {
 };
 
 snpqry.resetRadio = function() {
-	$("input:radio").each( function() { this.checked = (this.value == 2000) || (this.value == ""); });
+	$("input[name=withinRange]").each( function() { this.checked = (this.value == 2000) || (this.value == ""); });
 };
 
 snpqry.deselectAll = function() {
@@ -240,8 +240,8 @@ snpqry.deselectAll = function() {
 };
 
 snpqry.selectAll = function() {
-	//$("#wrapper input[type=button]")
-	$("input:checkbox").each(function(){ this.checked = true; });
+	snpqry.deselectAll();
+	$("input[name=selectedStrains]").each(function() { this.checked = true; });
 };
 
 /* update the strain checkboxes on 'toForm' to match those on 'fromForm'
