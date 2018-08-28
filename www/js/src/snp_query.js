@@ -228,6 +228,7 @@ snpqry.resetQF = function (e) {
 	form.referenceStrain.value = "";
 	form.searchBySameDiff.value = "";
 
+	$('input[name=referenceMode][value=no]')[0].click();	// back to comparison-only mode (no reference)
 	snpqry.selectAll();
 };
 

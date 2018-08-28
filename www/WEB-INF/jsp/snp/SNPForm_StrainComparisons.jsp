@@ -5,7 +5,6 @@
 		</td>
 		<td>
 			<div class="left" style="float: left;margin-bottom: 15px;">
-				<span class="label"><a onclick="javascript:openUserhelpWindow('${userhelppage}#sasc'); return false;" href="${userhelpurl}#sasc">Find SNPs Involving these Strains</a></span><br /><br />
 				<span class="label">Compare to one or more Reference strains?</span>
 				<label><input type="radio" name="referenceMode" value="no"> No</labeL>
 				<label><input type="radio" name="referenceMode" value="yes"> Yes</labeL>
