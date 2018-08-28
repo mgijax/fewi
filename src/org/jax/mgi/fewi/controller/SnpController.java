@@ -23,6 +23,7 @@ import org.jax.mgi.fewi.finder.QueryFormOptionFinder;
 import org.jax.mgi.fewi.finder.SnpBatchFinder;
 import org.jax.mgi.fewi.finder.SnpFinder;
 import org.jax.mgi.fewi.forms.SnpQueryForm;
+import org.jax.mgi.fewi.forms.StrainQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.fewi.searchUtil.Paginator;
@@ -34,6 +35,7 @@ import org.jax.mgi.fewi.summary.ConsensusSNPSummaryRow;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
+import org.jax.mgi.shr.jsonmodel.SimpleStrain;
 import org.jax.mgi.snpdatamodel.AlleleSNP;
 import org.jax.mgi.snpdatamodel.ConsensusAlleleSNP;
 import org.jax.mgi.snpdatamodel.ConsensusCoordinateSNP;
@@ -114,11 +116,20 @@ public class SnpController {
         SearchConstants.MRK_FROG_SYMBOL
 	};
 
+	// list of DO/CC Founder strain names (retrieved and cached)
+	private static List<String> doccFounders = null;
+	
+	// list of Sanger Mouse Genomes Project (MGP) strain names (retrieved and cached)
+	private static List<String> mgpStrains = null;
+
 	//--------------------//
 	// instance variables
 	//--------------------//
 
 	private Logger logger = LoggerFactory.getLogger(SnpController.class);
+
+	@Autowired
+	private StrainController strainController;
 
 	@Autowired
 	private SnpFinder snpFinder;
@@ -244,6 +255,20 @@ public class SnpController {
 			}
 		}
 
+		if ((doccFounders == null) || (mgpStrains == null)) {
+			StrainQueryForm doccQuery = new StrainQueryForm();
+			doccQuery.setGroup("DOCCFounders");
+			doccFounders = makeStrainList(doccQuery);
+			logger.debug("Cached " + doccFounders.size() + " DO/CC Founders");
+
+			StrainQueryForm mgpQuery = new StrainQueryForm();
+			mgpQuery.setIsSequenced(1);
+			mgpStrains = makeStrainList(mgpQuery);
+			logger.debug("Cached " + mgpStrains.size() + " MGP Strains");
+		}
+		mav.addObject("doccFounders", doccFounders);
+		mav.addObject("mgpStrains", mgpStrains);
+		
 		mav.addObject("chromosomes", chromosomes);
 		mav.addObject("withinRanges", withinRanges);
 		mav.addObject("selectableStrains", selectableStrains);
@@ -1173,4 +1198,13 @@ public class SnpController {
 		}
 	}
 
+	// use the strainController to search for the strains specified by 'form' and return their names in a list
+	private List<String> makeStrainList(StrainQueryForm form) {
+		SearchResults<SimpleStrain> sr = strainController.getSummaryResults(form, new Paginator(1000));
+		List<String> names = new ArrayList<String>();
+		for (SimpleStrain strain : sr.getResultObjects()) {
+			names.add(strain.getName());
+		}
+		return names;
+	}
 }

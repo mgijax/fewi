@@ -495,6 +495,19 @@ public class StrainController {
 
 	}
 
+	// This is a convenience method to handle packing the SearchParams object
+	// and return the SearchResults from the finder.
+	public SearchResults<SimpleStrain> getSummaryResults(StrainQueryForm query, Paginator page) {
+
+		SearchParams params = new SearchParams();
+		params.setPaginator(page);
+		params.setSorts(genSorts(query));
+		params.setFilter(genFilters(query));
+		
+		// perform query, return SearchResults 
+		return strainFinder.getStrains(params);
+	}
+
     //--------------------------------------------------------------------//
     // private methods
     //--------------------------------------------------------------------//
@@ -596,19 +609,6 @@ public class StrainController {
 		ModelAndView mav = new ModelAndView("error");
 		mav.addObject("errorMsg", msg);
 		return mav;
-	}
-
-	// This is a convenience method to handle packing the SearchParams object
-	// and return the SearchResults from the finder.
-	private SearchResults<SimpleStrain> getSummaryResults(@ModelAttribute StrainQueryForm query, @ModelAttribute Paginator page) {
-
-		SearchParams params = new SearchParams();
-		params.setPaginator(page);
-		params.setSorts(genSorts(query));
-		params.setFilter(genFilters(query));
-		
-		// perform query, return SearchResults 
-		return strainFinder.getStrains(params);
 	}
 
 	/* generate the filters (translate the query parameters into Solr filters)

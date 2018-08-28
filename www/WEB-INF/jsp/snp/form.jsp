@@ -53,3 +53,19 @@
 		</div>
 	</div>
 </div>
+
+<c:if test="${not empty doccFounders}">
+<script>
+	var doccFounders = [
+		<c:forEach var="strain" items="${doccFounders}">"${strain}", </c:forEach>
+	];
+</script>
+</c:if>
+
+<c:if test="${not empty mgpStrains}">
+<script>
+	var mgpStrains = [
+		<c:forEach var="strain" items="${mgpStrains}">"${strain}", </c:forEach>
+	];
+</script>
+</c:if>
