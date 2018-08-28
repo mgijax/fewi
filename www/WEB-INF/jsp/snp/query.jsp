@@ -45,8 +45,16 @@
 	window.setTimeout(function() {
 		$("#ui-id-1").click(snpqry.updateQF1);
 		$("#ui-id-2").click(snpqry.updateQF2); 
+
+		<c:if test="${not empty snpQueryForm.referenceStrainList}">
+		// show Reference strain controls
+		$('input[name=referenceMode]')[1].click();
+		</c:if>
+		<c:if test="${empty snpQueryForm.referenceStrainList}">
+		// show only Comparison strain controls
+		$('input[name=referenceMode]')[0].click();
+		</c:if>
 		}, 500);
 </script>
-
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

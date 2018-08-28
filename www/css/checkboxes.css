@@ -149,3 +149,13 @@
 
 .refHeader { width:18px; text-align:center; margin-bottom: 5px; color: #FF8C00; float:left; font-weight:bold; }
 .cmpHeader { width:18px; text-align:center; margin-bottom: 5px; color: blue; float:left; font-weight:bold; }
+
+.refColor { color: #FF8C00; font-weight: bold; }
+.cmpColor { color: blue; font-weight: bold; }
+
+#rcLegendTitle { font-weight: bold; }
+#rcLegend { margin-bottom: 10px; margin-top: 3px; margin-left: 75px;}
+#rcLegend td { border: 1px solid black; padding: 3px; text-align: left; }
+#rightColumn { width: 300px; max-width: 300px; min-width: 300px; text-align: center; }
+#legendWrapper { text-align: center; }
+#sameDiffWrapper { margin-left: 6px; }
