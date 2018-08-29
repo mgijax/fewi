@@ -9,33 +9,41 @@
 				<label><input type="radio" name="referenceMode" value="no"> No</labeL>
 				<label><input type="radio" name="referenceMode" value="yes"> Yes</labeL>
 				<br/><br/>
-				<input type="button" id="selectButton" value="Select All"/>
-				<input type="button" id="deselectButton" value="Clear All"/><br/><br/>
 				<style>
 					.checkbox {
 						width: 210px;
 						float: left;
 					}
 				</style>
+				<div id="legendWrapper">
+					<div id="rcTableWrapper">
+						<table id="rcLegend">
+						<tr class="refToggle"><td><span class="refColor">Reference</span> strains</td>
+							<td>
+							<input type="button" id="refDeselectButton" value="Clear All"/>
+							</td>
+						</tr>
+						<tr><td class="refToggle"><span class="cmpColor">Comparison</span> strains</td>
+							<td>
+							<input type="button" id="doccSelectButton" value="Select DO/CC Founders"/>
+							<input type="button" id="mgpSelectButton" value="Select Sanger MGP Strains"/>
+							<input type="button" id="selectButton" value="Select All"/>
+							<input type="button" id="deselectButton" value="Clear All"/>
+							</td>
+						</tr>
+						</table>
+					</div>
+				</div>
 				<div>
 					<c:if test="${empty snpQueryForm.selectedStrains}">
-						<fewi:checkboxStrainsGrid name="selectedStrains" refName="referenceStrain" width="4" items="${selectableStrains}" values="${selectedStrains}" />
+						<fewi:checkboxStrainsGrid name="selectedStrains" refName="referenceStrains" width="4" items="${selectableStrains}" values="${selectedStrains}" />
 					</c:if>
 					<c:if test="${not empty snpQueryForm.selectedStrains}">
-						<fewi:checkboxStrainsGrid name="selectedStrains" refName="referenceStrain" width="4" items="${selectableStrains}" values="${snpQueryForm.selectedStrains}" refValues="${snpQueryForm.referenceStrainList}"/>
+						<fewi:checkboxStrainsGrid name="selectedStrains" refName="referenceStrains" width="4" items="${selectableStrains}" values="${snpQueryForm.selectedStrains}" refValues="${snpQueryForm.referenceStrains}"/>
 					</c:if>
 				</div>
 			</div>
 			<div class="refToggle rightColumn" style="float:left;">
-				<div id="legendWrapper">
-				<span id="rcLegendTitle">Legend</span><br/>
-					<div id="rcTableWrapper">
-						<table id="rcLegend">
-						<tr><td class="refColor">R</td><td><span class="refColor">Reference</span> strains</td></tr>
-						<tr><td class="cmpColor">C</td><td><span class="cmpColor">Comparison</span> strains</td></tr>
-						</table>
-					</div>
-				</div>
 				<div id="sameDiffWrapper" class="left">
 				Return SNPs with alleles in the selected strains:<br/><br/>
 				<fewi:radio name="searchBySameDiff" divider="<br/>" idPrefix="searchBySameDiffOptionsList" items="${searchBySameDiffOptions}" value="${snpQueryForm.searchBySameDiff}" />
@@ -65,6 +73,7 @@ $('input[name=referenceMode]').on('click', function(e) {
 		} else {
 			$('#form1 input[name=referenceMode][value=no]')[0].checked = true;		
 		}
+		snpqry.refDeselectAll();
 	}
 });
 
@@ -72,7 +81,7 @@ $('input[name=referenceMode]').on('click', function(e) {
 // and so that checking a box on one form also checks the same box on the other form
 $('input[name=selectedStrains]').click(function (e) {
 	var strainClicked = e.target.value;
-	var boxes = $('input[name=referenceStrain][value="' + strainClicked + '"]');
+	var boxes = $('input[name=referenceStrains][value="' + strainClicked + '"]');
 	for (var i in boxes) {
 		boxes[i].checked = false;
 	}
@@ -81,13 +90,13 @@ $('input[name=selectedStrains]').click(function (e) {
 		boxes[i].checked = e.target.checked;
 	}
 });
-$('input[name=referenceStrain]').click(function (e) {
+$('input[name=referenceStrains]').click(function (e) {
 	var strainClicked = e.target.value;
 	var boxes = $('input[name=selectedStrains][value="' + strainClicked + '"]');
 	for (var i in boxes) {
 		boxes[i].checked = false;
 	}
-	boxes = $('input[name=referenceStrain][value="' + strainClicked + '"]');
+	boxes = $('input[name=referenceStrains][value="' + strainClicked + '"]');
 	for (var i in boxes) {
 		boxes[i].checked = e.target.checked;
 	}

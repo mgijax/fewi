@@ -154,8 +154,8 @@
 .cmpColor { color: blue; font-weight: bold; }
 
 #rcLegendTitle { font-weight: bold; }
-#rcLegend { margin-bottom: 10px; margin-top: 3px; margin-left: 75px;}
-#rcLegend td { border: 1px solid black; padding: 3px; text-align: left; }
+#rcLegend { margin-bottom: 10px; }
+#rcLegend td { padding: 3px; text-align: left; border: none; }
 #rightColumn { width: 300px; max-width: 300px; min-width: 300px; text-align: center; }
 #legendWrapper { text-align: center; }
 #sameDiffWrapper { margin-left: 6px; }

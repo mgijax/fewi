@@ -404,11 +404,13 @@ public class SnpController {
 				selectedStrains = new ArrayList<String>();
 			}
 
-			String referenceStrain = query.getReferenceStrain();
-			if(referenceStrain != null && !referenceStrain.equals("")) {
-				Filter referenceStrainFilter = new Filter(SearchConstants.STRAINS, referenceStrain, Operator.OP_IN);
-				filterList.add(referenceStrainFilter);
-				selectedStrains.remove(referenceStrain);
+			List<String> referenceStrains = query.getReferenceStrains();
+			if(referenceStrains != null && (referenceStrains.size() > 0)) {
+				for (String referenceStrain : referenceStrains) {
+					Filter referenceStrainFilter = new Filter(SearchConstants.SAME_STRAINS, referenceStrain, Operator.OP_IN);
+					filterList.add(referenceStrainFilter);
+					selectedStrains.remove(referenceStrain);
+				}
 			}
 
 			Filter selectedStrainFilter = new Filter(SearchConstants.STRAINS, selectedStrains, Operator.OP_IN);
@@ -886,9 +888,11 @@ public class SnpController {
 			List<String> selectedStrains = query.getSelectedStrains();
 
 			if(selectedStrains == null) selectedStrains = new ArrayList<String>();
-			if(query.getReferenceStrain() != null && !query.getReferenceStrain().equals("")) {
-				selectedStrains.remove(query.getReferenceStrain());
-				selectedStrains.add(0, query.getReferenceStrain());
+			if(query.getReferenceStrains() != null && query.getReferenceStrains().size() > 0) {
+				for (String referenceStrain : query.getReferenceStrains()) {
+					selectedStrains.remove(referenceStrain);
+					selectedStrains.add(0, referenceStrain);
+				}
 			}
 
 			displayedStrains = new ArrayList<String>();
@@ -899,8 +903,10 @@ public class SnpController {
 			}
 		} else {
 			displayedStrains = query.getSelectedStrains();
-			if(query.getReferenceStrain() != null && !query.getReferenceStrain().equals("")) {
-				displayedStrains.add(0, query.getReferenceStrain());
+			if(query.getReferenceStrains() != null && query.getReferenceStrains().size() > 0) {
+				for (String referenceStrain : query.getReferenceStrains()) {
+					displayedStrains.add(0, referenceStrain);
+				}
 			}
 		}
 
@@ -912,7 +918,7 @@ public class SnpController {
 		}
 
 		mav.addObject("count", searchResults.getTotalCount());
-		mav.addObject("referenceStrain", query.getReferenceStrain());
+		mav.addObject("referenceStrains", query.getReferenceStrains());
 		mav.addObject("strains", displayedStrains);
 		mav.addObject("strainHeaders", strainHeaders);
 
@@ -920,11 +926,13 @@ public class SnpController {
 	}
 
 	private Filter genSameDiffFilter(SnpQueryForm query) {
-		if(query.getSearchBySameDiff() != null && query.getReferenceStrain() != null && query.getReferenceStrain().length() > 0) {
+		if(query.getSearchBySameDiff() != null && query.getReferenceStrains() != null && query.getReferenceStrains().size() > 0) {
 
 			List<Filter> filterList = new ArrayList<Filter>();
 
-			filterList.add(new Filter(SearchConstants.SAME_STRAINS, query.getReferenceStrain(), Operator.OP_IN));
+			for (String referenceStrain : query.getReferenceStrains()) {
+				filterList.add(new Filter(SearchConstants.SAME_STRAINS, referenceStrain, Operator.OP_IN));
+			}
 
 			if(query.getSearchBySameDiff().equals("same_reference")) {
 				filterList.add(new Filter(SearchConstants.SAME_STRAINS, query.getSelectedStrains(), Operator.OP_IN));

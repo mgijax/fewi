@@ -174,8 +174,8 @@ snpqry.validateQF = function(e) {
 	
 	// 2. if choose same/different display, must specify reference strain
 	var sameDiff = $('#' + formID + ' [name=searchBySameDiff]:checked').val();
-	var refStrain = $('#' + formID + ' [name=referenceStrain]').val();
-	if ((refStrain.length == 0) && (sameDiff.length != 0)) {
+	var refStrains = $('#' + formID + ' [name=referenceStrains]').val();
+	if ((refStrains.length == 0) && (sameDiff.length != 0)) {
 		snpqry.showError("Your query is missing a required parameter.  To show only 'same' or 'different' SNPs, you must select a Reference Strain.");
 		return false;
 	}
@@ -237,12 +237,32 @@ snpqry.resetRadio = function() {
 };
 
 snpqry.deselectAll = function() {
-	$("input:checkbox").each(function(){ this.checked = false; });
+	$("input[name=selectedStrains]").each(function(){ this.checked = false; });
+};
+
+snpqry.refDeselectAll = function() {
+	$("input[name=referenceStrains]").each(function(){ this.checked = false; });
 };
 
 snpqry.selectAll = function() {
-	snpqry.deselectAll();
+	snpqry.refDeselectAll();
 	$("input[name=selectedStrains]").each(function() { this.checked = true; });
+};
+
+snpqry.doccSelectAll = function() {
+	snpqry.deselectAll();
+	for (var i in doccFounders) {
+		var strain = doccFounders[i];
+		var box = $("input[name=selectedStrains][value='" + strain + "']").each(function() { this.checked = true; });
+	}
+};
+
+snpqry.mgpSelectAll = function() {
+	snpqry.deselectAll();
+	for (var i in mgpStrains) {
+		var strain = mgpStrains[i];
+		var box = $("input[name=selectedStrains][value='" + strain + "']").each(function() { this.checked = true; });
+	}
 };
 
 /* update the strain checkboxes on 'toForm' to match those on 'fromForm'
@@ -301,3 +321,9 @@ YAHOO.util.Event.addListener($("#form1 #deselectButton"), "click", snpqry.desele
 YAHOO.util.Event.addListener($("#form1 #selectButton"), "click", snpqry.selectAll);
 YAHOO.util.Event.addListener($("#form2 #deselectButton"), "click", snpqry.deselectAll);
 YAHOO.util.Event.addListener($("#form2 #selectButton"), "click", snpqry.selectAll);
+YAHOO.util.Event.addListener($("#form1 #refDeselectButton"), "click", snpqry.refDeselectAll);
+YAHOO.util.Event.addListener($("#form2 #refDeselectButton"), "click", snpqry.refDeselectAll);
+YAHOO.util.Event.addListener($("#form1 #mgpSelectButton"), "click", snpqry.mgpSelectAll);
+YAHOO.util.Event.addListener($("#form2 #mgpSelectButton"), "click", snpqry.mgpSelectAll);
+YAHOO.util.Event.addListener($("#form1 #doccSelectButton"), "click", snpqry.doccSelectAll);
+YAHOO.util.Event.addListener($("#form2 #doccSelectButton"), "click", snpqry.doccSelectAll);
