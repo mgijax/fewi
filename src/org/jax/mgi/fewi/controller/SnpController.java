@@ -284,9 +284,9 @@ public class SnpController {
 		searchByOptions.put(SearchConstants.MRK_NOMENCLATURE, "Current symbols/names, synonyms & homologs");
 
 		searchBySameDiffOptions = new LinkedHashMap<String, String>();
-		searchBySameDiffOptions.put("", "Not compared to the Reference Strain");
-		searchBySameDiffOptions.put("diff_reference", "Different from the Reference Strain");
-		searchBySameDiffOptions.put("same_reference", "Same as the Reference Strain");
+		searchBySameDiffOptions.put("", "Not compared to the Reference Strain(s)");
+		searchBySameDiffOptions.put("diff_reference", "Different from the Reference Strain(s)");
+		searchBySameDiffOptions.put("same_reference", "Same as the Reference Strain(s)");
 
 		mav.addObject("searchByOptions", searchByOptions);
 		mav.addObject("searchBySameDiffOptions", searchBySameDiffOptions);
