@@ -50,6 +50,19 @@
 							<div class="label">Transcription Start Site for</div>
 							<div class="value"><a href="${configBean.FEWI_URL}marker/${tssFor.relatedMarkerID}">${tssFor.relatedMarkerSymbol}</a>
 								<c:if test="${not empty distanceFrom}">(${distanceFrom} bp from 5'-end of gene)</c:if>
+								<c:if test="${not empty marker.preferredCoordinates and not empty tssFor.relatedMarker.preferredCoordinates}">
+									<fmt:formatNumber value="${marker.preferredCoordinates.startCoordinate}" pattern="#0" var="startCoord"/>
+									<fmt:formatNumber value="${marker.preferredCoordinates.endCoordinate}" pattern="#0" var="endCoord"/>
+									<fmt:formatNumber value="${tssFor.relatedMarker.preferredCoordinates.startCoordinate}" pattern="#0" var="tssForStart"/>
+									<fmt:formatNumber value="${tssFor.relatedMarker.preferredCoordinates.endCoordinate}" pattern="#0" var="tssForEnd"/>
+									<c:set var="tssAtJbrowse" value="${externalUrls.JBrowseTSS_Highlight}"/>
+									<c:set var="tssAtJbrowse" value="${fn:replace(tssAtJbrowse, '<chromosome>', marker.preferredCoordinates.chromosome)}"/>
+									<c:set var="tssAtJbrowse" value="${fn:replace(tssAtJbrowse, '<start>', tssForStart)}"/>
+									<c:set var="tssAtJbrowse" value="${fn:replace(tssAtJbrowse, '<end>', tssForEnd)}"/>
+									<c:set var="tssAtJbrowse" value="${fn:replace(tssAtJbrowse, '<startHighlight>', startCoord)}"/>
+									<c:set var="tssAtJbrowse" value="${fn:replace(tssAtJbrowse, '<endHighlight>', endCoord)}"/>
+									(view in <a href="${tssAtJbrowse}" target="_blank">JBrowse</a>)
+								</c:if>
 							</div>
 						</li>
 					</c:if>
@@ -110,6 +123,15 @@
 							<div class="label">Transcription Start Sites</div>
 							<div class="value">
 								<span id="showTss" class="link">${tssCount} TSS</span>
+								<c:if test="${not empty marker.preferredCoordinates}">
+									<fmt:formatNumber value="${marker.preferredCoordinates.startCoordinate}" pattern="#0" var="startCoord"/>
+									<fmt:formatNumber value="${marker.preferredCoordinates.endCoordinate}" pattern="#0" var="endCoord"/>
+									<c:set var="tssAtJbrowse" value="${externalUrls.JBrowseTSS}"/>
+									<c:set var="tssAtJbrowse" value="${fn:replace(tssAtJbrowse, '<chromosome>', marker.preferredCoordinates.chromosome)}"/>
+									<c:set var="tssAtJbrowse" value="${fn:replace(tssAtJbrowse, '<start>', startCoord)}"/>
+									<c:set var="tssAtJbrowse" value="${fn:replace(tssAtJbrowse, '<end>', endCoord)}"/>
+									(view in <a href="${tssAtJbrowse}" target="_blank">JBrowse</a>)
+								</c:if>
 							</div>
 						</li>
 					</c:if>
