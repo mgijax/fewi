@@ -156,6 +156,7 @@
 #rcLegendTitle { font-weight: bold; }
 #rcLegend { margin-bottom: 10px; }
 #rcLegend td { padding: 3px; text-align: left; border: none; }
-#rightColumn { width: 300px; max-width: 300px; min-width: 300px; text-align: center; }
+.rightColumn { width: 400px; max-width: 400px; min-width: 400px; text-align: center; }
 #legendWrapper { text-align: center; }
 #sameDiffWrapper { margin-left: 6px; }
+#sameDiffRadioButtons { margin-left: 30px; margin-bottom: 10px; }

@@ -5,49 +5,56 @@
 		</td>
 		<td>
 			<div class="left" style="float: left;margin-bottom: 15px;">
-				<span class="label">Compare to one or more Reference strains?</span>
-				<label><input type="radio" name="referenceMode" value="no"> No</labeL>
-				<label><input type="radio" name="referenceMode" value="yes"> Yes</labeL>
-				<br/><br/>
-				<style>
-					.checkbox {
-						width: 210px;
-						float: left;
-					}
-				</style>
-				<div id="legendWrapper">
-					<div id="rcTableWrapper">
-						<table id="rcLegend">
-						<tr class="refToggle"><td><span class="refColor">Reference</span> strains</td>
-							<td>
-							<input type="button" id="refDeselectButton" value="Clear All"/>
-							</td>
-						</tr>
-						<tr><td class="refToggle"><span class="cmpColor">Comparison</span> strains</td>
-							<td>
-							<input type="button" id="doccSelectButton" value="Select DO/CC Founders"/>
-							<input type="button" id="mgpSelectButton" value="Select Sanger MGP Strains"/>
-							<input type="button" id="selectButton" value="Select All"/>
-							<input type="button" id="deselectButton" value="Clear All"/>
-							</td>
-						</tr>
-						</table>
+				<div id="controlWrapper">
+					<div id="controlWrapperLeft" style="float:left;">
+						<span class="label">Compare to one or more Reference strains?</span>
+						<label><input type="radio" name="referenceMode" value="no"> No</labeL>
+						<label><input type="radio" name="referenceMode" value="yes"> Yes</labeL>
+						<br/><br/>
+						<style>
+							.checkbox {
+								width: 210px;
+								float: left;
+							}
+						</style>
+						<div id="legendWrapper">
+							<div id="rcTableWrapper">
+								<table id="rcLegend">
+								<tr class="refToggle"><td><span class="refColor">Reference</span> strains</td>
+									<td>
+									<input type="button" id="refDeselectButton" value="Clear All"/>
+									</td>
+								</tr>
+								<tr><td class="refToggle"><span class="cmpColor">Comparison</span> strains</td>
+									<td>
+									<input type="button" id="doccSelectButton" value="Select DO/CC Founders"/>
+									<input type="button" id="mgpSelectButton" value="Select Sanger MGP Strains"/>
+									<input type="button" id="selectButton" value="Select All"/>
+									<input type="button" id="deselectButton" value="Clear All"/>
+									</td>
+								</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="refToggle rightColumn" style="float:left;">
+						<div id="sameDiffWrapper" class="left">
+							You can select one or more Reference Strains.  If you select multiple Reference Strains,
+							the SNPs returned will have the same allele in all Reference Strains.<br/><br/>
+							<div id="sameDiffRadioButtons">
+							<fewi:radio name="searchBySameDiff" divider="<br/>" idPrefix="searchBySameDiffOptionsList" items="${searchBySameDiffOptions}" value="${snpQueryForm.searchBySameDiff}" />
+							(only applies if a Reference is selected)<br/>
+							</div>
+						</div>
 					</div>
 				</div>
-				<div>
+				<div style="clear:both;">
 					<c:if test="${empty snpQueryForm.selectedStrains}">
 						<fewi:checkboxStrainsGrid name="selectedStrains" refName="referenceStrains" width="4" items="${selectableStrains}" values="${selectedStrains}" />
 					</c:if>
 					<c:if test="${not empty snpQueryForm.selectedStrains}">
 						<fewi:checkboxStrainsGrid name="selectedStrains" refName="referenceStrains" width="4" items="${selectableStrains}" values="${snpQueryForm.selectedStrains}" refValues="${snpQueryForm.referenceStrains}"/>
 					</c:if>
-				</div>
-			</div>
-			<div class="refToggle rightColumn" style="float:left;">
-				<div id="sameDiffWrapper" class="left">
-				Return SNPs with alleles in the selected strains:<br/><br/>
-				<fewi:radio name="searchBySameDiff" divider="<br/>" idPrefix="searchBySameDiffOptionsList" items="${searchBySameDiffOptions}" value="${snpQueryForm.searchBySameDiff}" />
-				(only applies if a Reference is selected)<br/>
 				</div>
 			</div>
 		</td>
