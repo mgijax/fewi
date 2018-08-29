@@ -889,7 +889,9 @@ public class SnpController {
 
 			if(selectedStrains == null) selectedStrains = new ArrayList<String>();
 			if(query.getReferenceStrains() != null && query.getReferenceStrains().size() > 0) {
-				for (String referenceStrain : query.getReferenceStrains()) {
+				List<String> referenceStrainsReversed = query.getReferenceStrains().subList(0, query.getReferenceStrains().size());
+				Collections.reverse(referenceStrainsReversed);
+				for (String referenceStrain : referenceStrainsReversed) {
 					selectedStrains.remove(referenceStrain);
 					selectedStrains.add(0, referenceStrain);
 				}
