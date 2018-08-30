@@ -22,6 +22,8 @@ public class SnpQueryForm {
 	private List<String> selectedStrains;
 	private List<String> functionClassFilter;
 	private String displayStrains;			// for text file output
+	private String startMarker;
+	private String endMarker;
 
 	private static int allStrainsCount = 88;
 
@@ -162,13 +164,22 @@ public class SnpQueryForm {
 	       	return s;	// fallback: display original string
 	}
 
-	public List<String> getReferenceStrainList() {
-		if (this.referenceStrains != null) {
-			return this.referenceStrains;
-		}
-		return new ArrayList<String>();
+	public String getStartMarker() {
+		return startMarker;
 	}
-	
+
+	public void setStartMarker(String startMarker) {
+		this.startMarker = startMarker;
+	}
+
+	public String getEndMarker() {
+		return endMarker;
+	}
+
+	public void setEndMarker(String endMarker) {
+		this.endMarker = endMarker;
+	}
+
 	/* returns a List of Strings which describe in plain Engligh the
 	 * parameters encoded in this query form.  (These Strings can be used
 	 * as the "You Searched For" text on the SNP summary page.)
@@ -208,17 +219,23 @@ public class SnpQueryForm {
 		}
 
 		// Genome Region (chromosome + coordinates)
-		if ((coordinate != null) && (coordinateUnit != null) && (selectedChromosome != null)) {
+		if ((coordinate != null) && (coordinateUnit != null) && (selectedChromosome != null)
+				&& (!coordinate.trim().equals("")) && (!selectedChromosome.trim().equals("")) ) {
 			String cu = "bp";
 			if ("mbp".equalsIgnoreCase(coordinateUnit)) {
 				cu = "Mbp";
 			}
 			out.add("Genome Region: " + bold("Chr" + selectedChromosome + ":") + bold(orientCoordinates(coordinate)) + " " + cu);
 
-		} else if (selectedChromosome != null) {
+		} else if ( (selectedChromosome != null) && (!selectedChromosome.trim().equals("")) ) {
 			out.add("Genome Region: " + bold("Chr" + selectedChromosome));
 		}
 
+		// marker range
+		if ( (startMarker != null) && (endMarker != null) && (!startMarker.trim().equals("")) && (!endMarker.trim().equals("")) ) {
+			out.add("Marker Range: between " + bold(startMarker) + " and " + bold(endMarker));
+		}
+		
 		// Reference Strain
 		if ((referenceStrains != null) && (referenceStrains.size() > 0)) {
 			String label = "Reference Strain";

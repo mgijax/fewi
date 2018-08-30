@@ -105,7 +105,20 @@
 </c:forEach>
 
 <c:if test="${empty snps}">
-<tr><td colspan='5'>No SNPs returned</td></tr>
+	<c:choose>
+		<c:when test="${not empty errors}">
+			<tr><td colspan='5'>Errors were detected:<br/>
+				<ul>
+				<c:forEach var="error" items="${errors}">
+					<li>${error}</li>
+				</c:forEach>
+				</ul>
+			</td></tr>
+		</c:when>
+		<c:otherwise>
+			<tr><td colspan='5'>No SNPs returned</td></tr>
+		</c:otherwise>
+	</c:choose>
 </c:if>
 
 </table>

@@ -46,11 +46,11 @@
 		$("#ui-id-1").click(snpqry.updateQF1);
 		$("#ui-id-2").click(snpqry.updateQF2); 
 
-		<c:if test="${not empty snpQueryForm.referenceStrainList}">
+		<c:if test="${not empty snpQueryForm.referenceStrains}">
 		// show Reference strain controls
 		$('input[name=referenceMode]')[1].click();
 		</c:if>
-		<c:if test="${empty snpQueryForm.referenceStrainList}">
+		<c:if test="${empty snpQueryForm.referenceStrains}">
 		// show only Comparison strain controls
 		$('input[name=referenceMode]')[0].click();
 		</c:if>

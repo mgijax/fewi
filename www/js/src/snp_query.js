@@ -161,13 +161,19 @@ snpqry.showError = function(msg) {
 snpqry.validateQF = function(e) {
 	var formID = snpqry.getActiveFormID();
 	
-	// 1. if on region tab, must specify chromosome and coordinates
+	// 1. if on region tab, must specify chromosome and coordinates (or marker range)
 	if (formID == 'form2') {
 		var hasChrom = ($('#chromosomeDropList').val().length != 0);
 		var hasCoord = ($('[name=coordinate]').val().trim().length != 0);
+		var hasStartMarker = ($('[name=startMarker]').val().length != 0);
+		var hasEndMarker = ($('[name=endMarker]').val().length != 0);
 		
-		if (!hasChrom || !hasCoord) {
-			snpqry.showError('Your query is missing required parameters.  When searching by region, you must specify both Chromosome and Genome Coordinates.');
+		if (!( (hasChrom && hasCoord) || (hasStartMarker && hasEndMarker)) ) {
+			snpqry.showError('Your query is missing required parameters.  When searching by region, you must specify both Chromosome and Genome Coordinates or specify a Marker Range.');
+			return false;
+		}
+		if ((hasChrom || hasCoord) && (hasStartMarker || hasEndMarker)) {
+			snpqry.showError('You may search using Chromosome and Genome Coordinates or by Marker Range, but not both.');
 			return false;
 		}
 	}
@@ -215,7 +221,7 @@ snpqry.resetQF = function (e) {
 
 	form.nomen.value = "";
 	//form.rangeDropList.value = 2000;
-	form.referenceStrain.value = "";
+	snpqry.refDeselectAll();
 	form.searchBySameDiff.value = "";
 	form.searchGeneByList.value = "homologSymbols";
 	snpqry.resetRadio();
@@ -225,8 +231,10 @@ snpqry.resetQF = function (e) {
 	form.chromosomeDropList.value = "";
 	form.coordinate.value = "";
 	form.coordinateUnitDropList.value = "bp";
-	form.referenceStrain.value = "";
+	snpqry.refDeselectAll();
 	form.searchBySameDiff.value = "";
+	form.startMarker.value = "";
+	form.endMarker.value = "";
 
 	$('input[name=referenceMode][value=no]')[0].click();	// back to comparison-only mode (no reference)
 	snpqry.selectAll();

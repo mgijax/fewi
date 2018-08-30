@@ -353,6 +353,61 @@ public class SnpController {
 	// private methods
 	//--------------------------------------------------------------------//
 
+	// identifier can be either a marker ID, a marker symbol, or a RefSNP ID.  Look up relevant data to
+	// find the coordinates for the specified item.  Return as a CoordinateRange.  Returns null if
+	// we cannot find a location for the specified identifier.
+	private CoordinateRange getCoordinates(String identifier) {
+		// check by marker ID first
+		SearchResults<Marker> markerIDresults = markerFinder.getMarkerByID(identifier);
+		if (markerIDresults.getTotalCount() > 0) {
+			if (markerIDresults.getTotalCount() == 1) {
+				MarkerLocation ml = markerIDresults.getResultObjects().get(0).getPreferredCoordinates();
+				if (ml != null) {
+					return new CoordinateRange(ml);
+				} else {
+					return new CoordinateRange("Marker " + identifier + " has no coordinates");
+				}
+			} else {
+				return new CoordinateRange(identifier + " matches multiple markers");
+			}
+		}
+		
+		// failing that, check by marker symbol
+		
+		SearchResults<Marker> markerSymbolResults = markerFinder.getMarkerBySymbol(identifier);
+		if (markerSymbolResults.getTotalCount() > 0) {
+			if (markerSymbolResults.getTotalCount() == 1) {
+				MarkerLocation ml = markerSymbolResults.getResultObjects().get(0).getPreferredCoordinates();
+				if (ml != null) {
+					return new CoordinateRange(ml);
+				} else {
+					return new CoordinateRange("Marker " + identifier + " has no coordinates");
+				}
+			} else {
+				return new CoordinateRange(identifier + " matches multiple markers");
+			}
+		}
+		
+		// finally, check by SNP ID
+		SearchResults<ConsensusSNP> snpResults = snpFinder.getSnpByID(identifier);
+		if (snpResults.getTotalCount() > 0) {
+			if (snpResults.getTotalCount() == 1) {
+				List<ConsensusCoordinateSNP> coords = snpResults.getResultObjects().get(0).getConsensusCoordinates();
+				if (coords.size() == 1) {
+					return new CoordinateRange(coords.get(0));
+				} else if (coords.size() > 1) {
+					return new CoordinateRange("SNP " + identifier + " has multiple coordinates");
+				} else {
+					return new CoordinateRange("SNP" + identifier + " has no coordinates");
+				}
+			} else {
+				return new CoordinateRange(identifier + " matches multiple SNPs");
+			}
+		}
+		
+		return new CoordinateRange("Cannot find " + identifier);
+	}
+	
 	// parse the query form object and generate the filters (embedded within a
 	// single Filter wrapper object)
 	private Filter genFilters(SnpQueryForm query, List<String> matchedMarkerIds, BindingResult result) {
@@ -393,7 +448,57 @@ public class SnpController {
 			}
 		}
 
-		/* Strians Filter - 
+		// Marker Range search
+		String startMarker = query.getStartMarker();
+		String endMarker = query.getEndMarker();
+		if ((startMarker != null) && (endMarker != null) && (startMarker.trim().length() > 0) && (endMarker.trim().length() > 0)) {
+			// Both start marker and end marker were specified.  Ensure that we don't also have a coordinate search.
+			if ((query.getCoordinate() != null) && (query.getCoordinate().trim().length() > 0)) {
+				result.addError(new ObjectError("snpQueryForm", "Please search by either Genome Coordinates or Marker Range, but not both."));
+				return null;
+			}
+			CoordinateRange startCR = getCoordinates(startMarker);
+			if (startCR.error != null) {
+				result.addError(new ObjectError("snpQueryForm", "Error in the start marker: " + startCR.error));
+				return null;
+			}
+			CoordinateRange endCR = getCoordinates(endMarker);
+			if (endCR.error != null) {
+				result.addError(new ObjectError("snpQueryForm", "Error in the end marker: " + endCR.error));
+				return null;
+			}
+
+			// Confirm that the markers exist on the same chromosome.
+			if (!startCR.chromosome.equals(endCR.chromosome)) {
+				result.addError(new ObjectError("snpQueryForm", "Markers " + startMarker + " and " + endMarker + " are on different chromosomes."));
+				return null;
+			}
+			
+			// Confirm that a user-selected chromosome matches.
+			if ((selectedChromosome != null) && (!selectedChromosome.trim().equals("")) && !selectedChromosome.equals(startCR.chromosome)) {
+				result.addError(new ObjectError("snpQueryForm", "Selected chromosome does not match the chromosome of the specified markers."));
+				return null;
+			}
+			
+			String coordString = startCR.getSpan(endCR).getCoords();
+			Filter coordFilter = FilterUtil.genCoordFilter(coordString, "bp", true);
+			if (coordFilter != null) {
+				filterList.add(coordFilter);
+			}
+
+			Filter chrFilter = new Filter(SearchConstants.CHROMOSOME, startCR.chromosome, Operator.OP_IN);
+			filterList.add(chrFilter);
+			
+		} else if ((startMarker != null) && (endMarker == null)) {
+			result.addError(new ObjectError("snpQueryForm", "To search by Marker Range, please enter both a start marker and an end marker"));
+			return null;
+			
+		} else if ((startMarker == null) && (endMarker != null)) {
+			result.addError(new ObjectError("snpQueryForm", "To search by Marker Range, please enter both a start marker and an end marker"));
+			return null;
+		}
+		
+		/* Strains Filter - 
 		 * no choice of strains from marker detail page, so skip this
 		 * section.  (Otherwise, it won't return facets for the 
 		 * function class filter.)
@@ -510,8 +615,6 @@ public class SnpController {
 				}
 			}
 
-
-
 			// mismatching nomen is not a fatal error, so use extra parameters
 			// to ensure the user's original nomen query string appears in the
 			// box on the form
@@ -590,12 +693,7 @@ public class SnpController {
 
 		logger.debug("->snpDetailByID started");
 
-		// setup search parameters object
-		SearchParams searchParams = new SearchParams();
-		Filter snpIdFilter = new Filter(SearchConstants.SNPID, snpID);
-		searchParams.setFilter(snpIdFilter);
-
-		SearchResults<ConsensusSNP> searchResults = snpFinder.getSnp(searchParams);
+		SearchResults<ConsensusSNP> searchResults = snpFinder.getSnpByID(snpID);
 		List<ConsensusSNP> snpList = searchResults.getResultObjects();
 
 		// there can be only one...
@@ -805,6 +903,13 @@ public class SnpController {
 
 		// build the set of filters for the search
 		Filter searchFilter = genFilters(query, matchedMarkerIds, result);
+		if (result.hasErrors()) {
+			List<String> errors = new ArrayList<String>();
+			for (ObjectError er : result.getAllErrors()) {
+				errors.add(er.getDefaultMessage());
+			}
+			mav.addObject("errors", errors);
+		}
 
 		// if the user searched for SNPs in a genome region (not for
 		// a marker or set of markers by nomenclature), then we want
@@ -1216,5 +1321,74 @@ public class SnpController {
 			names.add(strain.getName());
 		}
 		return names;
+	}
+	
+	// ------------- //
+	// inner classes
+	// ------------- //
+	class CoordinateRange {
+		public String chromosome = null;
+		public Long startCoordinate = null;
+		public Long endCoordinate = null;
+		public String strand = null; 
+		public String error = null;
+		
+		public CoordinateRange(String error) {
+			this.error = error;
+		}
+		
+		public CoordinateRange(MarkerLocation ml) {
+			this.chromosome = ml.getChromosome();
+			this.startCoordinate = Math.round(ml.getStartCoordinate());
+			this.endCoordinate = Math.round(ml.getEndCoordinate());
+			this.strand = ml.getStrand();
+			this.orderCoordinates();
+		}
+		
+		public CoordinateRange(ConsensusCoordinateSNP c) {
+			this.chromosome = c.getChromosome();
+			this.startCoordinate = (long) c.getStartCoordinate();
+			this.endCoordinate = (long) c.getStartCoordinate();
+			this.strand = c.getStrand();
+			this.orderCoordinates();
+		}
+		
+		public CoordinateRange() {}
+
+		// Ensure that startCoordinate is lower than endCoordinate.
+		private void orderCoordinates() {
+			if ((this.startCoordinate != null) && (this.endCoordinate != null)) {
+				if (this.startCoordinate > this.endCoordinate) {
+					Long t = this.startCoordinate;
+					this.startCoordinate = this.endCoordinate;
+					this.endCoordinate = t;
+				}
+			}
+		}
+		
+		// Get a new coordinate range that spans this one and 'cr'.  Assumes the chromosomes
+		// and strands match.  Assumes all coordinates are non-null.
+		public CoordinateRange getSpan(CoordinateRange cr) {
+			CoordinateRange out = new CoordinateRange();
+			out.chromosome = this.chromosome;
+			out.strand = this.strand;
+			out.error = this.error;
+			out.startCoordinate = Math.min(this.startCoordinate, cr.startCoordinate);
+			out.endCoordinate = Math.max(this.endCoordinate, cr.endCoordinate);
+			return out;
+		}
+		
+		// Get the coordinates, separated by a dash.  Assumes coordinates are non-null;
+		public String getCoords() {
+			return this.startCoordinate + "-" + this.endCoordinate;
+		}
+		
+		public String toString() {
+			if (this.error != null) {
+				return "Error: " + this.error;
+			}
+			return "Chr" + this.chromosome + ":" + this.getCoords() + " (" + this.strand + ")";
+			
+		}
 	}
 }

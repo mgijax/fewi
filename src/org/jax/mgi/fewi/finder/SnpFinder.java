@@ -57,6 +57,14 @@ public class SnpFinder {
 		return searchResults;
 	}
 
+	// convenience wrapper
+	public SearchResults<ConsensusSNP> getSnpByID(String snpID) {
+		SearchParams searchParams = new SearchParams();
+		Filter snpIdFilter = new Filter(SearchConstants.SNPID, snpID);
+		searchParams.setFilter(snpIdFilter);
+		return this.getSnp(searchParams);
+	}
+
 	public SearchResults<ConsensusSNPSummaryRow> getSummarySnps(SearchParams searchParams, List<String> matchedMarkerIds) {
 		SearchResults<ConsensusSNP> searchResults1 = new SearchResults<ConsensusSNP>();
 
