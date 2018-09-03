@@ -45,42 +45,12 @@
 
 			<c:set var="mgvUrl" value="${externalUrls.MGV}#ref=C57BL/6J&genomes=${externalUrls.MGV_Strains}&chr=${chromosome}&start=${startCoordWithFlank}&end=${endCoordWithFlank}&highlight=${marker.primaryID}" />
 			<script>
+			// used in marker_detail.jsp
 			var mgvUrl = "${mgvUrl}";
 			</script>
 			
 			<section class="summarySec1">
 				<ul>
-					<c:if test="${hasStrainMarkers}">
-						<li class="${extrastate}">
-							<div class="label">
-								Strain Annotations
-							</div>
-							<div class="value">
-								<span id="annotatedStrainMarkerCount">${marker.annotatedStrainMarkerCount}</span>
-								<c:if test="${hasMgvLink}">
-									<span id="mgvSpan" class="leftpad15">
-										<a href="${mgvUrl}" target="_blank" id="mgvLink">
-										Multiple Genome Viewer (MGV)
-										</a>
-									</span>
-								</c:if>
-							</div>
-						</li>
-					</c:if>
-					<c:if test="${(not hasStrainMarkers) and (hasMgvLink)}">
-						<li class="${extrastate}">
-							<div class="label">
-							</div>
-							<div class="value">
-								<span id="mgvSpan">
-									<a href="${externalUrls.MGV}#ref=C57BL/6J&genomes=${externalUrls.MGV_Strains}&chr=${chromosome}&start=${startCoordWithFlank}&end=${endCoordWithFlank}&highlight=${marker.primaryID}" target="_blank" id="mgvLink">
-									Multiple Genome Viewer (MGV)
-									</a>
-								</span>
-							</div>
-						</li>
-					</c:if>
-
 					<c:if test="${snpsfound}">
 						<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
 							<c:if test="${(fn:startsWith(item.countType, 'SNP')) and (item.count > 0)}">
@@ -95,6 +65,17 @@
 						</c:forEach>
 					</c:if>
 				
+					<c:if test="${hasStrainMarkers}">
+						<li class="${extrastate}">
+							<div class="label">
+								Strain Annotations
+							</div>
+							<div class="value">
+								<span id="annotatedStrainMarkerCount">${marker.annotatedStrainMarkerCount}</span>
+							</div>
+						</li>
+					</c:if>
+
 					<c:if test="${polymorphismsfound}">
 						<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
 							<c:if test="${(item.countType == 'PCR') or (item.countType == 'RFLP')}">
@@ -129,8 +110,8 @@
 					<div id="strainGenesTableControls">
 						For selected strains:
 						<select id="strainOp" name="strainOp">
+							<option value="mgv">Send to Multiple Genome Viewer (MGV)</option>
 							<option value="fasta">Get FASTA</option>
-							<option value="mgv">Send to Multi Genome Viewer (MGV)</option>
 							<option value="snps">Send to Sanger SNP Query (+/- 2kb)</option>
 						</select>
 					</div>
