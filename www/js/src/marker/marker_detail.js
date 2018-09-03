@@ -133,11 +133,6 @@
 		}
 		initializeTssPopup();
 	
-		/* Wire up batch submit in cluster members popup */
-		$("#tssBatchLink").click(function(){
-			$("#tssBatchWebForm").submit();
-		});
-	
 		window.log = function(msg) {
 			// log a message to the browser console
 			//setTimeout(function() { throw new Error(msg); }, 0);

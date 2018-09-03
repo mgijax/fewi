@@ -507,13 +507,6 @@ public class MarkerController {
 			Collections.sort(tssMarkers, tssMarkers.get(0).getComparator());
 			mav.addObject("tssMarkers", tssMarkers);
 		}
-		
-		List<String> tssSymbols = new ArrayList<String>();
-		for (TssMarkerWrapper tss : tssMarkers) {
-			tssSymbols.add(tss.getSymbol());
-		}
-		mav.addObject("tssSymbols", StringUtils.join(tssSymbols, ", "));
-
 	}
 
 	private void setupRibbon1(ModelAndView mav, Marker marker) {
