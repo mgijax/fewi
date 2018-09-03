@@ -103,9 +103,6 @@
 					<c:set var="tssAtJbrowse" value="${fn:replace(tssAtJbrowse, '<end>', endCoord)}"/>
 					(View these features in <a id="tssBatchLink" style="cursor: pointer" href="${tssAtJbrowse}" target="_blank">JBrowse</a>)
 				</c:if>
-				<c:if test="${empty marker.preferredCoordinates}">
-					${fn:length(tssMarkers)} site(s)
-				</c:if>
 				<table id="tssTable">
 					<tr><td class="bold leftAlign allBorders">Transcription Start Site</td>
 						<td class="bold leftAlign allBorders">Location</td>
