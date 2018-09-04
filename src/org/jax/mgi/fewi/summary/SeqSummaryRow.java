@@ -8,6 +8,7 @@ import java.util.List;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.DBConstants;
 import org.jax.mgi.fewi.util.FormatHelper;
+import org.jax.mgi.fewi.util.NotesTagConverter;
 import org.jax.mgi.fewi.util.link.ProviderLinker;
 import org.jax.mgi.shr.jsonmodel.SimpleMarker;
 import org.jax.mgi.shr.jsonmodel.SimpleSequence;
@@ -25,6 +26,8 @@ public class SeqSummaryRow {
 	//-------------------
 
     private final Logger logger = LoggerFactory.getLogger(SeqSummaryRow.class);
+    
+    private final NotesTagConverter ntc = new NotesTagConverter();
 
 	// encapsulated row object
 	private SimpleSequence seq;
@@ -62,13 +65,15 @@ public class SeqSummaryRow {
 
 
     public String getSeqInfo() {
-
+    	String providerLinks = ProviderLinker.getSeqProviderLinks(this.seq);
         StringBuffer seqInfo = new StringBuffer();
+
         seqInfo.append(this.seq.getPrimaryID());
         seqInfo.append("<br/>&nbsp;&nbsp;");
-        seqInfo.append(ProviderLinker.getSeqProviderLinks(this.seq));
- //       seqInfo.append("Links");
-        seqInfo.append("<br/>&nbsp;&nbsp;");
+        if ((providerLinks != null) && (providerLinks.trim().length() > 0)) {
+        	seqInfo.append(ProviderLinker.getSeqProviderLinks(this.seq));
+        	seqInfo.append("<br/>&nbsp;&nbsp;");
+        }
         seqInfo.append("<a href='" + fewiUrl + "sequence/"
           + seq.getPrimaryID() + "'>MGI Sequence Detail </a>");
 
@@ -103,7 +108,8 @@ public class SeqSummaryRow {
 
     public String getDescription() {
     	if (this.seq.getDescription() == null) { return ""; }
-    	return this.seq.getDescription();
+    	return ntc.convertNotes(this.seq.getDescription(), '|');
+
     }
 
     public String getCloneCollection() {

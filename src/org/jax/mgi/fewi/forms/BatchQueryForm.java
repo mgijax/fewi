@@ -31,7 +31,6 @@ public class BatchQueryForm {
 		idTypes.put("nomen", "All Symbols/Synonyms/Homologs");
 		idTypes.put("Entrez Gene", "Entrez Gene ID");
 		idTypes.put("Ensembl", "Ensembl ID");
-		idTypes.put("VEGA", "VEGA ID");
 		idTypes.put("UniGene", "UniGene ID");
 		idTypes.put("miRBase", "miRBase ID");
 		idTypes.put("GenBank", "GenBank/RefSeq ID");
@@ -42,10 +41,9 @@ public class BatchQueryForm {
 		idTypes.put("Affy 430 2.0", "Affy 430 2.0");
 		
 		attributeList.put("Nomenclature", "Nomenclature");
-		attributeList.put("Location", "Genome Location");
+		attributeList.put("Location", "C57BL/6J Genome Location");
 		attributeList.put("Ensembl", "Ensembl ID");
 		attributeList.put("EntrezGene", "Entrez Gene ID");
-		attributeList.put("VEGA", "VEGA ID");
 		
 		attributes.add("Nomenclature");
 		
@@ -187,9 +185,6 @@ public class BatchQueryForm {
 	}
 	public boolean getEntrez(){
 		return this.hasAttribute("EntrezGene");
-	}
-	public boolean getVega(){
-		return this.hasAttribute("VEGA");
 	}
 	public Map<String, String> getAssociationList() {
 		return associationList;

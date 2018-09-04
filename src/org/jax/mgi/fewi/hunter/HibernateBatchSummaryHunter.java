@@ -2,6 +2,8 @@ package org.jax.mgi.fewi.hunter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import mgi.frontend.datamodel.BatchMarkerId;
+import mgi.frontend.datamodel.Marker;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
@@ -17,6 +20,7 @@ import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.shr.fe.sort.SmartAlphaComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +33,8 @@ public class HibernateBatchSummaryHunter
     // logger for the class
     private final Logger logger = LoggerFactory.getLogger(HibernateBatchSummaryHunter.class);
     
+    private static SmartAlphaComparator smartAlphaComparator = new SmartAlphaComparator();
+
 	@Autowired
 	private SessionFactory sessionFactory;
 	
@@ -40,12 +46,6 @@ public class HibernateBatchSummaryHunter
 		uniprotItems.add("SWISS-PROT");
 		uniprotItems.add("TrEMBL");
 		typeMap.put("UniProt", uniprotItems);
-		
-		List<String> vegaItems = new ArrayList<String>();
-		vegaItems.add("VEGA Gene Model");
-		vegaItems.add("VEGA Protein");
-		vegaItems.add("VEGA Transcript");
-		typeMap.put("VEGA", vegaItems);
 		
 		List<String> ensemblItems = new ArrayList<String>();
 		ensemblItems.add("Ensembl Gene Model");
@@ -130,6 +130,7 @@ public class HibernateBatchSummaryHunter
         // organize the results grouped by query term
         Map<String, List<BatchMarkerId>> qResults = new HashMap<String, List<BatchMarkerId>>();
         Set<Integer> markerKey = new HashSet<Integer>();
+        BatchMarkerIdComparator comparator = new BatchMarkerIdComparator();
         
         for (BatchMarkerId item: qr){
         	BatchMarkerId bmi = item;
@@ -148,6 +149,9 @@ public class HibernateBatchSummaryHunter
         		qResults.put(bTerm, bResults);
         	}
         	bResults.add(bmi);
+        	if (bResults.size() > 1) {
+				Collections.sort(bResults, comparator);
+        	}
         }
         qr = null;
         logger.debug("-> results parsed" );
@@ -183,6 +187,16 @@ public class HibernateBatchSummaryHunter
         		endIndex));
     }
 
+	private class BatchMarkerIdComparator implements Comparator<BatchMarkerId> {
+		@Override
+		public int compare(BatchMarkerId a, BatchMarkerId b) {
+			Marker am = a.getMarker();
+			Marker bm = b.getMarker();
+			
+			return smartAlphaComparator.compare(am.getSymbol(), bm.getSymbol());
+		}
+	}
+	
 	/* skip the complexity of matching results to the IDs that matched each
 	 * and just consolidate the results into a list of matching marker IDs.
 	 */

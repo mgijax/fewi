@@ -41,6 +41,12 @@
 		</div>
 	</div>
 
+    <div id="rightcolumn">
+        <div class="innertube">
+        	<div id="paginationTop">&nbsp;</div>
+        </div>
+    </div>
+
     <div id="querySummary">
         <div class="innertube">
             <div id="searchSummary"> <!-- filled via js --> </div>
@@ -56,12 +62,6 @@
 		<img src="/fewi/mgi/assets/images/loading.gif">
 		</form:form>
 	    </div>
-	</div>
-    </div>
-
-    <div id="rightcolumn">
-        <div class="innertube">
-	    <div id="paginationTop">&nbsp;</div>
 	</div>
     </div>
 

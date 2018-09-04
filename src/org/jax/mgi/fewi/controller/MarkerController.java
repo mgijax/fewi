@@ -1,6 +1,8 @@
 package org.jax.mgi.fewi.controller;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -68,6 +70,7 @@ import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.GOGraphConverter;
 import org.jax.mgi.fewi.util.NotesTagConverter;
+import org.jax.mgi.fewi.util.TssMarkerWrapper;
 import org.jax.mgi.fewi.util.file.TextFileReader;
 import org.jax.mgi.fewi.util.link.FewiLinker;
 import org.jax.mgi.fewi.util.link.IDLinker;
@@ -434,7 +437,7 @@ public class MarkerController {
 		}
 
 		// generate ModelAndView object to be passed to detail page
-		ModelAndView mav = new ModelAndView("marker_detail");
+		ModelAndView mav = new ModelAndView("marker/marker_detail");
 
 		// set specific hibernate filters to omit data that does not appear on this page. (for performance)
 		sessionFactory.getCurrentSession().enableFilter("markerDetailRefs");
@@ -496,6 +499,14 @@ public class MarkerController {
 		}
 		mav.addObject("memberSymbols", StringUtils.join(memberSymbols, ", "));
 
+		List<TssMarkerWrapper> tssMarkers = new ArrayList<TssMarkerWrapper>();
+		for (RelatedMarker tss : marker.getTss()) {
+			tssMarkers.add(new TssMarkerWrapper(marker, tss));
+		}
+		if (tssMarkers.size() > 0) {
+			Collections.sort(tssMarkers, tssMarkers.get(0).getComparator());
+			mav.addObject("tssMarkers", tssMarkers);
+		}
 	}
 
 	private void setupRibbon1(ModelAndView mav, Marker marker) {
@@ -543,6 +554,18 @@ public class MarkerController {
 		}
 
 		mav.addObject("memberCount", marker.getClusterMembers().size());
+
+		mav.addObject("hasTss", marker.getTss().size() > 0);
+		mav.addObject("isTssFor", marker.getTssFor().size() > 0);
+		if (marker.getTssFor().size() > 0) {
+			mav.addObject("tssFor", marker.getTssFor().get(0));
+			NumberFormat formatter = new DecimalFormat("#,###");
+			mav.addObject("distanceFrom", formatter.format(
+				TssMarkerWrapper.computeDistance(
+					marker.getTssFor().get(0).getRelatedMarker().getPreferredCoordinates(),
+					marker.getPreferredCoordinates()) ) );
+		}
+		mav.addObject("tssCount", marker.getTss().size());
 	}
 
 	
@@ -583,40 +606,18 @@ public class MarkerController {
 		String endCoordinate = null;
 		String chromosome = null;
 
-		String vegaEnsemblLocation = null;
+		String ensemblLocation = null;
 		MarkerLocation coords = marker.getPreferredCoordinates();
 		if (coords != null) {
 			startCoordinate = Long.toString(coords.getStartCoordinate().longValue());
 			endCoordinate = Long.toString(coords.getEndCoordinate().longValue());
 			chromosome = coords.getChromosome();
-			vegaEnsemblLocation = chromosome + ":" + startCoordinate + "-" + endCoordinate;
-		}
-
-		// VEGA Genome Browser
-		String vegaGenomeBrowserUrl = null;
-		if (vegaEnsemblLocation != null) {
-			vegaGenomeBrowserUrl = externalUrls.getProperty("VEGA_Genome_Browser");
-
-			MarkerID vegaID = marker.getVegaGeneModelID();
-
-			// plug in VEGA ID, if available
-			if (vegaID != null) {
-				vegaGenomeBrowserUrl = vegaGenomeBrowserUrl.replace("<id>", vegaID.getAccID());
-			} else {
-				vegaGenomeBrowserUrl = vegaGenomeBrowserUrl.replace("g=<id>", "");
-				vegaGenomeBrowserUrl = vegaGenomeBrowserUrl.replace(";", "");
-			}
-
-			// plug in coordinates, if available
-			vegaGenomeBrowserUrl = vegaGenomeBrowserUrl.replace("<location>", vegaEnsemblLocation);
-		}
-		if (vegaGenomeBrowserUrl != null) {
-			mav.addObject ("vegaGenomeBrowserUrl", vegaGenomeBrowserUrl);
+			ensemblLocation = chromosome + ":" + startCoordinate + "-" + endCoordinate;
 		}
 
 		String ensemblGenomeBrowserUrl = null;
 		// Ensembl Genome Browser
-		if (vegaEnsemblLocation != null) {
+		if (ensemblLocation != null) {
 			ensemblGenomeBrowserUrl = externalUrls.getProperty("Ensembl_Genome_Browser");
 
 			MarkerID ensemblGmID = marker.getEnsemblGeneModelID();
@@ -630,7 +631,7 @@ public class MarkerController {
 			}
 
 			// plug in coordinates, if available
-			ensemblGenomeBrowserUrl = ensemblGenomeBrowserUrl.replace("<location>", vegaEnsemblLocation);
+			ensemblGenomeBrowserUrl = ensemblGenomeBrowserUrl.replace("<location>", ensemblLocation);
 		}
 		if (ensemblGenomeBrowserUrl != null) {
 			mav.addObject ("ensemblGenomeBrowserUrl", ensemblGenomeBrowserUrl);
@@ -652,6 +653,11 @@ public class MarkerController {
 			gbrowseUrl = externalUrls.getProperty("GBrowse").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
 
 			jbrowseUrl = externalUrls.getProperty("JBrowse").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
+
+			// if this marker is a TSS, then we need a different URL that will open up the TSS track
+			if ((marker.getTssFor() != null) && (marker.getTssFor().size() > 0)) {
+				jbrowseUrl = externalUrls.getProperty("JBrowseTSS").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
+			}
 
 			gbrowseThumbnailUrl = externalUrls.getProperty("GBrowse_Thumbnail").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
 
@@ -693,12 +699,12 @@ public class MarkerController {
 
 		// new simpler rules as of C4AM (coordinates for any marker) project:
 		// 1. Any marker with coordinates gets links to all five genome
-		//    browsers (VEGA, Ensembl, NCBI, UCSC, GBrowse).  No more
+		//    browsers (Ensembl, NCBI, UCSC, GBrowse).  No more
 		//    restrictions by marker type.
 		// 2. If a marker has multiple IDs, use the first one returned to make
 		//    the link.
 		// 3. External links go to build 38 (GRCm38) data.
-		// 4. For VEGA or Ensembl, use either a VEGA ID or coordinates -- or
+		// 4. For Ensembl, use coordinates -- or
 		//    both if both are available.
 		// 5. NCBI's map viewer needs to use two different URLs for cases
 		//    where:
@@ -1041,10 +1047,7 @@ public class MarkerController {
 			myLink = idLinker.getLink(myID);
 
 			// for gene model sequences, we need to add evidence links where possible
-			if ("VEGA Gene Model".equals(logicaldb)) {
-				myLink = myLink + " (" + FormatHelper.setNewWindow(idLinker.getLink("VEGA Gene Model Evidence", myID.getAccID(), "Evidence")) + ")";
-				isGeneModelID = true;
-			} else if ("Ensembl Gene Model".equals(logicaldb)) {
+			if ("Ensembl Gene Model".equals(logicaldb)) {
 				myLink = myLink + " (" + FormatHelper.setNewWindow(idLinker.getLink("Ensembl Gene Model Evidence", myID.getAccID(), "Evidence")) + ")";
 				isGeneModelID = true;
 			} else if ("Entrez Gene".equals(logicaldb) && (ncbiEvidenceID != null)) {

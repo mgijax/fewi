@@ -4,7 +4,7 @@
 dmIt = models.iterator();
 while (dmIt.hasNext()) {
   model = dmIt.next();
-
+  pageContext.setAttribute("model", model);
   if (!dmIt.hasNext()) {
 %>
     <c:set var="borders" value="${sectionBorder}"/>
@@ -26,7 +26,15 @@ while (dmIt.hasNext()) {
 <%= ntc.convertNotes(model.getAllelePairs(), '|').trim().replace("\n", "<br/>").replace("</sup>", "</span>").replace("<sup>", "<span class='superscript'>") %></td>
 
 	<td class="${borders} ${stripe} leftAlign">
-<%= FormatHelper.superscript(model.getBackgroundStrain()).replace("</SUP>", "</span>").replace("<SUP>", "<span class='superscript'>") %></td>
+	<c:choose>
+		<c:when test="${not empty model.genotype.strainID}">
+			<a href="${configBean.FEWI_URL}strain/${model.genotype.strainID}" target="_blank"><%= FormatHelper.superscript(model.getBackgroundStrain()).replace("</SUP>", "</span>").replace("<SUP>", "<span class='superscript'>") %></a>
+		</c:when>
+		<c:otherwise>
+			<%= FormatHelper.superscript(model.getBackgroundStrain()).replace("</SUP>", "</span>").replace("<SUP>", "<span class='superscript'>") %>
+		</c:otherwise>
+	</c:choose>
+	</td>
 
 	<td class="${borders} ${stripe} leftAlign">
 <%

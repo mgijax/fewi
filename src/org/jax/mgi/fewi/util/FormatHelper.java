@@ -293,6 +293,8 @@ public class FormatHelper {
 			return getSeqForwardValue(seq.getProvider(), seq.getPrimaryID(), loc.getChromosome(),
 				String.valueOf(loc.getStartCoordinate().intValue()),
 				String.valueOf(loc.getEndCoordinate().intValue()), "+");
+		} else if ("straingene".equals(getSeqProviderForward(seq.getProvider()))) {
+			return getSeqForwardValue(seq.getProvider(), seq.getPrimaryID(), "", "", "", "");
 		}
 
 		// no genomic location, so use genbank ID if we have one, primary ID if not
@@ -359,18 +361,16 @@ public class FormatHelper {
 			providerForward = "trembl";
 		}else if (seqProvider.equals(DBConstants.PROVIDER_REFSEQ)) {
 			providerForward = "refseq";
-		}else if (seqProvider.equals(DBConstants.PROVIDER_VEGAPROTEIN)) {
-			providerForward = "vega_mus_prot";
-		}else if (seqProvider.equals(DBConstants.PROVIDER_VEGATRANSCRIPT)) {
-			providerForward = "vega_mus_cdna";
 		}else if (seqProvider.equals(DBConstants.PROVIDER_ENSEMBLPROTEIN)) {
 			providerForward = "ensembl_mus_prot";
 		}else if (seqProvider.equals(DBConstants.PROVIDER_ENSEMBLTRANSCRIPT)) {
 			providerForward = "ensembl_mus_cdna";
 		}else if (seqProvider.equals(DBConstants.PROVIDER_NCBI) ||
-				seqProvider.equals(DBConstants.PROVIDER_ENSEMBL) ||
-				seqProvider.equals(DBConstants.PROVIDER_VEGA)) {
+				seqProvider.equals(DBConstants.PROVIDER_ENSEMBL)) {
 			providerForward = "mousegenome";
+		}else if (seqProvider.endsWith("(MGP) Strain Gene Model") ||
+				(seqProvider.startsWith("MGI") && seqProvider.endsWith("Gene Model")) ) {
+			providerForward = "straingene";
 		}
 
 		return providerForward;
@@ -715,6 +715,47 @@ public class FormatHelper {
 		
 		String template = "<a href='$1'" + target + css + ">$1</a>";
 		return s.replaceAll("(https?://[^ )]+)", template);
+	}
+	
+	// 'color1' and 'color2' are integer arrays with length = 3.  The three integers range from 0-255
+	// and specify the red, green, and blue components of a color.  'index' specifies which of the
+	// three components we're getting a shade for.  'fraction' specifies how far from color1 we have
+	// progressed to color2 on a scale of 0.0 to 1.0.  Returns a two-digit hex string ranging from 
+	// 00 to FF.
+	private static String hexComponent(int[] color1, int[] color2, int index, Double fraction) {
+		Double shade = ((1.0 - fraction) * color1[index]) + (fraction * color2[index]);
+		return String.format("%02X", Math.round(shade));
+	}
+	
+	// get the shade between 'color1' and 'color2' when we have a given 'count' of of a given 'total',
+	// using a logarithmic scale because 'total' is very large.
+	private static String getShade(int[] color1, int[] color2, int count, int allCount, int total) {
+		if (allCount == 0) {
+			return "rgb(0,0,0,0)";		// fully transparent cell if no data
+		}
+		Double fraction = 0.0;
+		if (count > 0) {
+			fraction = Math.log(count) / Math.log(total);
+		}
+		StringBuffer sb = new StringBuffer("#");
+		sb.append(hexComponent(color1, color2, 0, fraction));
+		sb.append(hexComponent(color1, color2, 1, fraction));
+		sb.append(hexComponent(color1, color2, 2, fraction));
+		return sb.toString();
+	}
+	
+	/* get the hex color code for the given 'snpCount', where the highest number of SNPs per cell is given
+	 * as 'maxSnpCount'.
+	 */
+	public static String getSnpColorCode(int snpCount, int allSnpCount, int maxSnpCount) {
+		// New plan -- heat map from brightest blue for lowest counts to brightest green for highest counts.
+		// Due to the wide range of snpCount values, we use a logarithmic scale.
+		
+		int[] color1 = { 0, 153, 255 };		// light blue
+		int[] color2 = { 128, 255, 0 };		// light green
+		int[] color3 = { 255, 80, 80 };		// light red
+		
+		return getShade(color1, color3, snpCount, allSnpCount, maxSnpCount);
 	}
 } // end of class FormatHelper
 

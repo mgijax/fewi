@@ -23,6 +23,7 @@ import org.jax.mgi.fewi.finder.QueryFormOptionFinder;
 import org.jax.mgi.fewi.finder.SnpBatchFinder;
 import org.jax.mgi.fewi.finder.SnpFinder;
 import org.jax.mgi.fewi.forms.SnpQueryForm;
+import org.jax.mgi.fewi.forms.StrainQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.fewi.searchUtil.Paginator;
@@ -34,6 +35,7 @@ import org.jax.mgi.fewi.summary.ConsensusSNPSummaryRow;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
+import org.jax.mgi.shr.jsonmodel.SimpleStrain;
 import org.jax.mgi.snpdatamodel.AlleleSNP;
 import org.jax.mgi.snpdatamodel.ConsensusAlleleSNP;
 import org.jax.mgi.snpdatamodel.ConsensusCoordinateSNP;
@@ -101,11 +103,33 @@ public class SnpController {
 
 	private static String assemblyVersion = null;
 
+	private static String[] homologSymbolFields = new String[] {
+        SearchConstants.MRK_SYMBOL, 
+        SearchConstants.MRK_HUMAN_SYMBOL, 
+        SearchConstants.MRK_RAT_SYMBOL, 
+        SearchConstants.MRK_RHESUS_SYMBOL, 
+        SearchConstants.MRK_CATTLE_SYMBOL, 
+        SearchConstants.MRK_DOG_SYMBOL, 
+        SearchConstants.MRK_ZFIN_SYMBOL, 
+        SearchConstants.MRK_CHICKEN_SYMBOL, 
+        SearchConstants.MRK_CHIMP_SYMBOL, 
+        SearchConstants.MRK_FROG_SYMBOL
+	};
+
+	// list of DO/CC Founder strain names (retrieved and cached)
+	private static List<String> doccFounders = null;
+	
+	// list of Sanger Mouse Genomes Project (MGP) strain names (retrieved and cached)
+	private static List<String> mgpStrains = null;
+
 	//--------------------//
 	// instance variables
 	//--------------------//
 
 	private Logger logger = LoggerFactory.getLogger(SnpController.class);
+
+	@Autowired
+	private StrainController strainController;
 
 	@Autowired
 	private SnpFinder snpFinder;
@@ -123,6 +147,19 @@ public class SnpController {
 	// public methods
 	//--------------------------------------------------------------------//
 
+	public String getSnpBuildNumber() {
+		if (buildNumber == null) {
+			SearchResults<QueryFormOption> options = queryFormOptionFinder.getQueryFormOptions("snp", "build number");
+			List<QueryFormOption> optionList = options.getResultObjects();
+
+			if (optionList.size() > 0) {
+				buildNumber = optionList.get(0).getDisplayValue();
+				logger.debug("Cached SNP build number: " + buildNumber);
+			}
+		}
+		return buildNumber;
+	}
+	
 	//----------------------------------------------------------//
 	// make sure we have the data we need for the SNP query form
 	//----------------------------------------------------------//
@@ -153,15 +190,7 @@ public class SnpController {
 			logger.debug("Cached " + withinRanges.size() + " coordinate ranges");
 		}
 
-		if (buildNumber == null) {
-			SearchResults<QueryFormOption> options = queryFormOptionFinder.getQueryFormOptions("snp", "build number");
-			List<QueryFormOption> optionList = options.getResultObjects();
-
-			if (optionList.size() > 0) {
-				buildNumber = optionList.get(0).getDisplayValue();
-				logger.debug("Cached SNP build number: " + buildNumber);
-			}
-		}
+		String buildNumber = getSnpBuildNumber();
 
 		if(referenceStrains == null) {
 			Map<String, String> tempList = queryFormOptionFinder.getOptionMap("snp", "strain");
@@ -226,6 +255,20 @@ public class SnpController {
 			}
 		}
 
+		if ((doccFounders == null) || (mgpStrains == null)) {
+			StrainQueryForm doccQuery = new StrainQueryForm();
+			doccQuery.setGroup("DOCCFounders");
+			doccFounders = makeStrainList(doccQuery);
+			logger.debug("Cached " + doccFounders.size() + " DO/CC Founders");
+
+			StrainQueryForm mgpQuery = new StrainQueryForm();
+			mgpQuery.setIsSequenced(1);
+			mgpStrains = makeStrainList(mgpQuery);
+			logger.debug("Cached " + mgpStrains.size() + " MGP Strains");
+		}
+		mav.addObject("doccFounders", doccFounders);
+		mav.addObject("mgpStrains", mgpStrains);
+		
 		mav.addObject("chromosomes", chromosomes);
 		mav.addObject("withinRanges", withinRanges);
 		mav.addObject("selectableStrains", selectableStrains);
@@ -236,13 +279,14 @@ public class SnpController {
 		mav.addObject("buildNumber", buildNumber);
 
 		searchByOptions = new LinkedHashMap<String, String>();
-		searchByOptions.put(SearchConstants.MRK_SYMBOL, "Current symbols");
+		searchByOptions.put(SearchConstants.MRK_HOMOLOG_SYMBOLS, "Current symbol (mouse or homologs)");
+		searchByOptions.put(SearchConstants.MRK_SYMBOL, "Current symbol (mouse)");
 		searchByOptions.put(SearchConstants.MRK_NOMENCLATURE, "Current symbols/names, synonyms & homologs");
 
 		searchBySameDiffOptions = new LinkedHashMap<String, String>();
-		searchBySameDiffOptions.put("", "Not compared to the Reference Strain");
-		searchBySameDiffOptions.put("diff_reference", "Different from the Reference Strain");
-		searchBySameDiffOptions.put("same_reference", "Same as the Reference Strain");
+		searchBySameDiffOptions.put("", "Not compared to the Reference Strain(s)");
+		searchBySameDiffOptions.put("diff_reference", "Different from the Reference Strain(s)");
+		searchBySameDiffOptions.put("same_reference", "Same as the Reference Strain(s)");
 
 		mav.addObject("searchByOptions", searchByOptions);
 		mav.addObject("searchBySameDiffOptions", searchBySameDiffOptions);
@@ -309,6 +353,61 @@ public class SnpController {
 	// private methods
 	//--------------------------------------------------------------------//
 
+	// identifier can be either a marker ID, a marker symbol, or a RefSNP ID.  Look up relevant data to
+	// find the coordinates for the specified item.  Return as a CoordinateRange.  Returns null if
+	// we cannot find a location for the specified identifier.
+	private CoordinateRange getCoordinates(String identifier) {
+		// check by marker ID first
+		SearchResults<Marker> markerIDresults = markerFinder.getMarkerByID(identifier);
+		if (markerIDresults.getTotalCount() > 0) {
+			if (markerIDresults.getTotalCount() == 1) {
+				MarkerLocation ml = markerIDresults.getResultObjects().get(0).getPreferredCoordinates();
+				if (ml != null) {
+					return new CoordinateRange(ml);
+				} else {
+					return new CoordinateRange("Marker " + identifier + " has no coordinates");
+				}
+			} else {
+				return new CoordinateRange(identifier + " matches multiple markers");
+			}
+		}
+		
+		// failing that, check by marker symbol
+		
+		SearchResults<Marker> markerSymbolResults = markerFinder.getMarkerBySymbol(identifier);
+		if (markerSymbolResults.getTotalCount() > 0) {
+			if (markerSymbolResults.getTotalCount() == 1) {
+				MarkerLocation ml = markerSymbolResults.getResultObjects().get(0).getPreferredCoordinates();
+				if (ml != null) {
+					return new CoordinateRange(ml);
+				} else {
+					return new CoordinateRange("Marker " + identifier + " has no coordinates");
+				}
+			} else {
+				return new CoordinateRange(identifier + " matches multiple markers");
+			}
+		}
+		
+		// finally, check by SNP ID
+		SearchResults<ConsensusSNP> snpResults = snpFinder.getSnpByID(identifier);
+		if (snpResults.getTotalCount() > 0) {
+			if (snpResults.getTotalCount() == 1) {
+				List<ConsensusCoordinateSNP> coords = snpResults.getResultObjects().get(0).getConsensusCoordinates();
+				if (coords.size() == 1) {
+					return new CoordinateRange(coords.get(0));
+				} else if (coords.size() > 1) {
+					return new CoordinateRange("SNP " + identifier + " has multiple coordinates");
+				} else {
+					return new CoordinateRange("SNP" + identifier + " has no coordinates");
+				}
+			} else {
+				return new CoordinateRange(identifier + " matches multiple SNPs");
+			}
+		}
+		
+		return new CoordinateRange("Cannot find " + identifier);
+	}
+	
 	// parse the query form object and generate the filters (embedded within a
 	// single Filter wrapper object)
 	private Filter genFilters(SnpQueryForm query, List<String> matchedMarkerIds, BindingResult result) {
@@ -349,7 +448,57 @@ public class SnpController {
 			}
 		}
 
-		/* Strians Filter - 
+		// Marker Range search
+		String startMarker = query.getStartMarker();
+		String endMarker = query.getEndMarker();
+		if ((startMarker != null) && (endMarker != null) && (startMarker.trim().length() > 0) && (endMarker.trim().length() > 0)) {
+			// Both start marker and end marker were specified.  Ensure that we don't also have a coordinate search.
+			if ((query.getCoordinate() != null) && (query.getCoordinate().trim().length() > 0)) {
+				result.addError(new ObjectError("snpQueryForm", "Please search by either Genome Coordinates or Marker Range, but not both."));
+				return null;
+			}
+			CoordinateRange startCR = getCoordinates(startMarker);
+			if (startCR.error != null) {
+				result.addError(new ObjectError("snpQueryForm", "Error in the start marker: " + startCR.error));
+				return null;
+			}
+			CoordinateRange endCR = getCoordinates(endMarker);
+			if (endCR.error != null) {
+				result.addError(new ObjectError("snpQueryForm", "Error in the end marker: " + endCR.error));
+				return null;
+			}
+
+			// Confirm that the markers exist on the same chromosome.
+			if (!startCR.chromosome.equals(endCR.chromosome)) {
+				result.addError(new ObjectError("snpQueryForm", "Markers " + startMarker + " and " + endMarker + " are on different chromosomes."));
+				return null;
+			}
+			
+			// Confirm that a user-selected chromosome matches.
+			if ((selectedChromosome != null) && (!selectedChromosome.trim().equals("")) && !selectedChromosome.equals(startCR.chromosome)) {
+				result.addError(new ObjectError("snpQueryForm", "Selected chromosome does not match the chromosome of the specified markers."));
+				return null;
+			}
+			
+			String coordString = startCR.getSpan(endCR).getCoords();
+			Filter coordFilter = FilterUtil.genCoordFilter(coordString, "bp", true);
+			if (coordFilter != null) {
+				filterList.add(coordFilter);
+			}
+
+			Filter chrFilter = new Filter(SearchConstants.CHROMOSOME, startCR.chromosome, Operator.OP_IN);
+			filterList.add(chrFilter);
+			
+		} else if ((startMarker != null) && (endMarker == null)) {
+			result.addError(new ObjectError("snpQueryForm", "To search by Marker Range, please enter both a start marker and an end marker"));
+			return null;
+			
+		} else if ((startMarker == null) && (endMarker != null)) {
+			result.addError(new ObjectError("snpQueryForm", "To search by Marker Range, please enter both a start marker and an end marker"));
+			return null;
+		}
+		
+		/* Strains Filter - 
 		 * no choice of strains from marker detail page, so skip this
 		 * section.  (Otherwise, it won't return facets for the 
 		 * function class filter.)
@@ -360,11 +509,13 @@ public class SnpController {
 				selectedStrains = new ArrayList<String>();
 			}
 
-			String referenceStrain = query.getReferenceStrain();
-			if(referenceStrain != null && !referenceStrain.equals("")) {
-				Filter referenceStrainFilter = new Filter(SearchConstants.STRAINS, referenceStrain, Operator.OP_IN);
-				filterList.add(referenceStrainFilter);
-				selectedStrains.remove(referenceStrain);
+			List<String> referenceStrains = query.getReferenceStrains();
+			if(referenceStrains != null && (referenceStrains.size() > 0)) {
+				for (String referenceStrain : referenceStrains) {
+					Filter referenceStrainFilter = new Filter(SearchConstants.SAME_STRAINS, referenceStrain, Operator.OP_IN);
+					filterList.add(referenceStrainFilter);
+					selectedStrains.remove(referenceStrain);
+				}
 			}
 
 			Filter selectedStrainFilter = new Filter(SearchConstants.STRAINS, selectedStrains, Operator.OP_IN);
@@ -422,6 +573,11 @@ public class SnpController {
 				SearchParams sp = new SearchParams();
 				sp.setPageSize(250000);
 
+				Filter.Operator op = Filter.Operator.OP_EQUAL;
+				if (symbol.contains("*")) {
+					op = Filter.Operator.OP_EQUAL_WILDCARD_ALLOWED;
+				}
+
 				// Taken from genFilters in the Marker Controller
 				//Filter symbolFilter = new Filter(SearchConstants.MRK_SYMBOL,"\""+stripped.replace("\"","")+"\"^1000000000000",Filter.Operator.OP_HAS_WORD);
 				Filter symbolFilter = new Filter(SearchConstants.MRK_SYMBOL, stripped, Filter.Operator.OP_EQUAL_WILDCARD_ALLOWED);
@@ -431,8 +587,15 @@ public class SnpController {
 					filterList.add(symbolFilter);
 					filterList.add(FilterUtil.generateNomenFilter(SearchConstants.MRK_NOMENCLATURE,stripped));
 					sp.setFilter(Filter.or(filterList));
-				} else {
+				} else if (query.getSearchGeneBy().equals(SearchConstants.MRK_SYMBOL)) {
 					sp.setFilter(symbolFilter);
+				} else {
+					List<Filter> filterList = new ArrayList<Filter>();
+					for (String symbolField : homologSymbolFields) {
+						symbolFilter = new Filter(symbolField, stripped, op);
+						filterList.add(symbolFilter);
+					}
+					sp.setFilter(Filter.or(filterList));
 				}
 
 				SearchResults<Marker> results = markerFinder.getMarkers(sp);
@@ -451,8 +614,6 @@ public class SnpController {
 					mismatches.add(symbol);
 				}
 			}
-
-
 
 			// mismatching nomen is not a fatal error, so use extra parameters
 			// to ensure the user's original nomen query string appears in the
@@ -532,12 +693,7 @@ public class SnpController {
 
 		logger.debug("->snpDetailByID started");
 
-		// setup search parameters object
-		SearchParams searchParams = new SearchParams();
-		Filter snpIdFilter = new Filter(SearchConstants.SNPID, snpID);
-		searchParams.setFilter(snpIdFilter);
-
-		SearchResults<ConsensusSNP> searchResults = snpFinder.getSnp(searchParams);
+		SearchResults<ConsensusSNP> searchResults = snpFinder.getSnpByID(snpID);
 		List<ConsensusSNP> snpList = searchResults.getResultObjects();
 
 		// there can be only one...
@@ -747,6 +903,13 @@ public class SnpController {
 
 		// build the set of filters for the search
 		Filter searchFilter = genFilters(query, matchedMarkerIds, result);
+		if (result.hasErrors()) {
+			List<String> errors = new ArrayList<String>();
+			for (ObjectError er : result.getAllErrors()) {
+				errors.add(er.getDefaultMessage());
+			}
+			mav.addObject("errors", errors);
+		}
 
 		// if the user searched for SNPs in a genome region (not for
 		// a marker or set of markers by nomenclature), then we want
@@ -830,9 +993,13 @@ public class SnpController {
 			List<String> selectedStrains = query.getSelectedStrains();
 
 			if(selectedStrains == null) selectedStrains = new ArrayList<String>();
-			if(query.getReferenceStrain() != null && !query.getReferenceStrain().equals("")) {
-				selectedStrains.remove(query.getReferenceStrain());
-				selectedStrains.add(0, query.getReferenceStrain());
+			if(query.getReferenceStrains() != null && query.getReferenceStrains().size() > 0) {
+				List<String> referenceStrainsReversed = query.getReferenceStrains().subList(0, query.getReferenceStrains().size());
+				Collections.reverse(referenceStrainsReversed);
+				for (String referenceStrain : referenceStrainsReversed) {
+					selectedStrains.remove(referenceStrain);
+					selectedStrains.add(0, referenceStrain);
+				}
 			}
 
 			displayedStrains = new ArrayList<String>();
@@ -843,8 +1010,10 @@ public class SnpController {
 			}
 		} else {
 			displayedStrains = query.getSelectedStrains();
-			if(query.getReferenceStrain() != null && !query.getReferenceStrain().equals("")) {
-				displayedStrains.add(0, query.getReferenceStrain());
+			if(query.getReferenceStrains() != null && query.getReferenceStrains().size() > 0) {
+				for (String referenceStrain : query.getReferenceStrains()) {
+					displayedStrains.add(0, referenceStrain);
+				}
 			}
 		}
 
@@ -856,7 +1025,7 @@ public class SnpController {
 		}
 
 		mav.addObject("count", searchResults.getTotalCount());
-		mav.addObject("referenceStrain", query.getReferenceStrain());
+		mav.addObject("referenceStrains", query.getReferenceStrains());
 		mav.addObject("strains", displayedStrains);
 		mav.addObject("strainHeaders", strainHeaders);
 
@@ -864,11 +1033,13 @@ public class SnpController {
 	}
 
 	private Filter genSameDiffFilter(SnpQueryForm query) {
-		if(query.getSearchBySameDiff() != null && query.getReferenceStrain() != null && query.getReferenceStrain().length() > 0) {
+		if(query.getSearchBySameDiff() != null && query.getReferenceStrains() != null && query.getReferenceStrains().size() > 0) {
 
 			List<Filter> filterList = new ArrayList<Filter>();
 
-			filterList.add(new Filter(SearchConstants.SAME_STRAINS, query.getReferenceStrain(), Operator.OP_IN));
+			for (String referenceStrain : query.getReferenceStrains()) {
+				filterList.add(new Filter(SearchConstants.SAME_STRAINS, referenceStrain, Operator.OP_IN));
+			}
 
 			if(query.getSearchBySameDiff().equals("same_reference")) {
 				filterList.add(new Filter(SearchConstants.SAME_STRAINS, query.getSelectedStrains(), Operator.OP_IN));
@@ -1142,4 +1313,82 @@ public class SnpController {
 		}
 	}
 
+	// use the strainController to search for the strains specified by 'form' and return their names in a list
+	private List<String> makeStrainList(StrainQueryForm form) {
+		SearchResults<SimpleStrain> sr = strainController.getSummaryResults(form, new Paginator(1000));
+		List<String> names = new ArrayList<String>();
+		for (SimpleStrain strain : sr.getResultObjects()) {
+			names.add(strain.getName());
+		}
+		return names;
+	}
+	
+	// ------------- //
+	// inner classes
+	// ------------- //
+	class CoordinateRange {
+		public String chromosome = null;
+		public Long startCoordinate = null;
+		public Long endCoordinate = null;
+		public String strand = null; 
+		public String error = null;
+		
+		public CoordinateRange(String error) {
+			this.error = error;
+		}
+		
+		public CoordinateRange(MarkerLocation ml) {
+			this.chromosome = ml.getChromosome();
+			this.startCoordinate = Math.round(ml.getStartCoordinate());
+			this.endCoordinate = Math.round(ml.getEndCoordinate());
+			this.strand = ml.getStrand();
+			this.orderCoordinates();
+		}
+		
+		public CoordinateRange(ConsensusCoordinateSNP c) {
+			this.chromosome = c.getChromosome();
+			this.startCoordinate = (long) c.getStartCoordinate();
+			this.endCoordinate = (long) c.getStartCoordinate();
+			this.strand = c.getStrand();
+			this.orderCoordinates();
+		}
+		
+		public CoordinateRange() {}
+
+		// Ensure that startCoordinate is lower than endCoordinate.
+		private void orderCoordinates() {
+			if ((this.startCoordinate != null) && (this.endCoordinate != null)) {
+				if (this.startCoordinate > this.endCoordinate) {
+					Long t = this.startCoordinate;
+					this.startCoordinate = this.endCoordinate;
+					this.endCoordinate = t;
+				}
+			}
+		}
+		
+		// Get a new coordinate range that spans this one and 'cr'.  Assumes the chromosomes
+		// and strands match.  Assumes all coordinates are non-null.
+		public CoordinateRange getSpan(CoordinateRange cr) {
+			CoordinateRange out = new CoordinateRange();
+			out.chromosome = this.chromosome;
+			out.strand = this.strand;
+			out.error = this.error;
+			out.startCoordinate = Math.min(this.startCoordinate, cr.startCoordinate);
+			out.endCoordinate = Math.max(this.endCoordinate, cr.endCoordinate);
+			return out;
+		}
+		
+		// Get the coordinates, separated by a dash.  Assumes coordinates are non-null;
+		public String getCoords() {
+			return this.startCoordinate + "-" + this.endCoordinate;
+		}
+		
+		public String toString() {
+			if (this.error != null) {
+				return "Error: " + this.error;
+			}
+			return "Chr" + this.chromosome + ":" + this.getCoords() + " (" + this.strand + ")";
+			
+		}
+	}
 }

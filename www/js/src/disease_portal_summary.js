@@ -206,7 +206,7 @@ handleNavigation = function (request, calledLocally, fromInit)
 		var GAState = "/diseasePortal/summary/"+tabState+"?"+querystring + filterState;
 		if(GAState != previousGAState)
 		{
-			gaA_pageTracker._trackPageview(GAState);
+			ga_logPageview(GAState);
 			previousGAState = GAState;
 		}
 	}

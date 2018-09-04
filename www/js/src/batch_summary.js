@@ -39,15 +39,12 @@ var getMarkerIds = function() {
     if (nomenclature){
     	myColumnDefs.push({label:"<div class='center'>Nomenclature</div>",
             sortable:false,
-            children: [{key: "symbol",
-            		label: "Symbol"},
-                {key: "name",
-                	label: "Name"},
-                {key: "feature",
-                    label: "Feature Type"}]});
+            children: [{key: "symbol", label: "Symbol"},
+                {key: "name", label: "Name"},
+                {key: "feature", label: "Feature Type"}]});
     }
     if (loco){
-    	myColumnDefs.push({label:"Genome Location - " + ncbiBuild,
+    	myColumnDefs.push({label:"C57BL/6J Genome Location - " + ncbiBuild,
     	    sortable:false,
     	    children: [{key: "chromosome",
     	    		label: "Chr"},
@@ -66,11 +63,6 @@ var getMarkerIds = function() {
     if (entrez){
     	myColumnDefs.push({key:"entrezIds", 
     	    label:"Entrez Gene ID",
-    	    sortable:false});
-    }
-    if (vega){
-    	myColumnDefs.push({key:"vegaIds", 
-    	    label:"VEGA ID",
     	    sortable:false});
     }
     if (go){
@@ -154,7 +146,6 @@ var getMarkerIds = function() {
             {key:"end"},
         	{key:"ensemblIds"},
         	{key:"entrezIds"},
-        	{key:"vegaIds"},
         	{key:"goIds"},
         	{key:"goTerms"},
         	{key:"goCodes"},

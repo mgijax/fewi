@@ -51,7 +51,7 @@ public class AccessionSummaryRow {
     	return acc.getDisplayID();
     }
     public String getLogicalDb() {
-    	if (acc.getLogicalDB().equals("MGI") || acc.getLogicalDB().equals("BayGenomics")) {
+    	if (acc.getLogicalDB().equals("MGI") || acc.getLogicalDB().equals("BayGenomics") || acc.getLogicalDB().equals("Mouse Genome Project")) {
     		return acc.getLogicalDB();
     	}
     	else  {

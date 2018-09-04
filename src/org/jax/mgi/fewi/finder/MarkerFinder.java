@@ -62,6 +62,13 @@ public class MarkerFinder {
 		return getMarkerByID(searchParams);
 	}
 
+	// convenience wrapper
+	public SearchResults<Marker> getMarkerBySymbol(String id) {
+		SearchParams searchParams = new SearchParams();
+		searchParams.setFilter(new Filter(SearchConstants.MRK_SYMBOL,id.trim(),Filter.Operator.OP_EQUAL));
+		return getMarkers(searchParams);
+	}
+
 	public List<Marker> getMarkerByPrimaryId(String id) {
 		return mrkGatherer.get(Marker.class,Arrays.asList(id),"primaryID");
 	}

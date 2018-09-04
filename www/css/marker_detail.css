@@ -127,6 +127,23 @@
 		cursor: pointer;
 	}
 
+	#table_strainMarkers {
+		margin-left: 15px;
+		margin-bottom: 5px;
+	}
+	#table_strainMarkers th {
+		text-align:left;
+		vertical-align:center;
+		padding: 4px 10px 4px 10px;
+		border-left:thin solid grey;border-right:thin solid grey;border-top:thin solid grey;border-bottom:thin solid grey;
+	}
+	#table_strainMarkers td {
+		text-align:left;
+		vertical-align:center;
+		padding: 4px 10px 4px 10px;
+		border-left:thin solid grey;border-right:thin solid grey;border-top:thin solid grey;border-bottom:thin solid grey;
+	}
+
 	.hdExpand {
 		background: url("../images/rightArrow.gif") no-repeat;
 	}
@@ -141,6 +158,8 @@
 	a:hover{color:#c00; background-color: #c7e3fe; text-decoration: none}
 	div.centered { text-align: center; }
 	td.rightPadded { padding-right: 4px; }
+
+#showTss:hover{color:#c00; background-color: #c7e3fe; text-decoration: none}
 
 .sgHeaderDiv {
 color: black;

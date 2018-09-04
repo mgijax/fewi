@@ -74,11 +74,18 @@ jsData = {
 		if (genotype.hasDiseases()) {
 			diseaseModel = new String("<span style='font-size:80%; font-style:italic;' >&nbsp;&nbsp;Disease&nbsp;Model</span>");
 		}
+		String strainValue = null;
+		if (genotype.getStrainID() != null) {
+			strainValue = "<a href='" + ContextLoader.getConfigBean().getProperty("FEWI_URL") + "strain/" + genotype.getStrainID()
+				+ "' target='_blank' class='MP'>" + FormatHelper.superscript(genotype.getBackgroundStrain()) + "</a>"; 
+		} else {
+			strainValue = FormatHelper.superscript(genotype.getBackgroundStrain());
+		}
 	  %>
       {
        genotypeCol:"<a style='text-decoration: none;' class='genoLink' title='phenotype details' href='${configBean.FEWI_URL}allele/genoview/${phenoTableGenotype.genotype.primaryID}?counter=${phenoTableGenotype.genotypeSeq}' target='_blank'><span style='font-size:80%;' class='${genotype.genotypeType}Geno ${genotype.genotypeType}GenoButton genoLegendButton' >${phenoTableGenotype.genotype.genotypeType}${phenoTableGenotype.genotypeSeq}</span></a><%=diseaseModel%>", 
        allCompCol:"<span id='allCompColID' style='font-size:80%;'> <%=allComp%> </span>", 
-       genBackCol:"<span style='font-size:80%;'><%=FormatHelper.superscript(genotype.getBackgroundStrain())%></span>", 
+       genBackCol:"<span style='font-size:80%;'><%= strainValue %></span>", 
        <c:if test="${not empty genotype.cellLines}">
         cellLineCol:"<span style='font-size:80%;'><%=FormatHelper.superscript(genotype.getCellLines())%></span>"
        </c:if>  

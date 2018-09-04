@@ -1,4 +1,5 @@
-<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>
+<link rel="stylesheet" href="${configBean.FEWI_URL}assets/css/checkboxes.css"/>
 
 <style>
 .left { text-align: left; }
@@ -52,3 +53,19 @@
 		</div>
 	</div>
 </div>
+
+<c:if test="${not empty doccFounders}">
+<script>
+	var doccFounders = [
+		<c:forEach var="strain" items="${doccFounders}">"${strain}", </c:forEach>
+	];
+</script>
+</c:if>
+
+<c:if test="${not empty mgpStrains}">
+<script>
+	var mgpStrains = [
+		<c:forEach var="strain" items="${mgpStrains}">"${strain}", </c:forEach>
+	];
+</script>
+</c:if>
