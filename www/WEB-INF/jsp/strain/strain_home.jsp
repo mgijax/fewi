@@ -66,6 +66,7 @@
 
 .collections {
 	padding-top: 0px;
+	font-size: 90%;
 }
 .collections li {
 	padding-bottom: 2px;
@@ -153,30 +154,30 @@
 <div class="container">
 <div class="gridRow">
 <div class="col-md-3" style="">
-	<a href="${configBean.FEWI_URL}snp"><img style="width:260px; height:150;" src="${configBean.FEWI_URL}assets/images/static/SNPQueryImage.png" alt="Mouse SNP Query"></a>
+	<a href="${configBean.FEWI_URL}snp"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/SNPQueryImage.png" alt="Mouse SNP Query"></a>
 	</div>
 <div class="col-md-3" style="">
-	<a href="${configBean.FEWI_URL}allele"><img style="width:260px; height:150;" src="${configBean.FEWI_URL}assets/images/static/Alleleqf.png" alt="Phenotypes, Alleles & Disease Models Search"></a>
+	<a href="${configBean.FEWI_URL}allele"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/Alleleqf.png" alt="Phenotypes, Alleles & Disease Models Search"></a>
 	</div>
 <div class="col-md-3" style="">
-	<a href="http://www.informatics.jax.org/mgv/#chr=4&start=37427566&end=46427572&dmode=comparison&ref=C57BL/6J&genomes=C57BL/6J+A/J+AKR/J+BALB/cJ+C3H/HeJ+C57BL/6NJ&highlight=MGI:1919151+MGI:192141"><img style="width:260px; height:150;" src="${configBean.FEWI_URL}assets/images/static/MGVLink.png" alt="MGV"></a>
+	<a href="http://www.informatics.jax.org/mgv/#chr=4&start=37427566&end=46427572&dmode=comparison&ref=C57BL/6J&genomes=C57BL/6J+A/J+AKR/J+BALB/cJ+C3H/HeJ+C57BL/6NJ&highlight=MGI:1919151+MGI:192141"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/MGVLink.png" alt="MGV"></a>
 	</div>
 <div class="col-md-3" style="">
-	<a href="http://jbrowse.informatics.jax.org/"><img style="width:260px; height:150;" src="${configBean.FEWI_URL}assets/images/static/JBrowseLink.png" alt="JBrowse"></a>
+	<a href="http://jbrowse.informatics.jax.org/"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/JBrowseLink.png" alt="JBrowse"></a>
 	</div>
 </div>
 <div class="blankSectionSpacer"></div>
 <div class="col-md-3" style="">
-	<a href="http://www.findmice.org/index.jsp"><img style="width:260px; height:150;" src="${configBean.FEWI_URL}assets/images/static/IMSRLink.png" alt="IMSR"></a>
+	<a href="http://www.findmice.org/index.jsp"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/IMSRLink.png" alt="IMSR"></a>
 	</div>
 <div class="col-md-3" style="">
-	 <a href="${configBean.MGIHOME_URL}nomen/strains.shtml"><img style="width:260px; height:150;" src="${configBean.FEWI_URL}assets/images/static/4Strains.png" alt="Nomenclature Guidelines"></a>
+	 <a href="${configBean.MGIHOME_URL}nomen/strains.shtml"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/4Strains.png" alt="Nomenclature Guidelines"></a>
 	</div>
 <div class="col-md-3" style="">
-	<a href="${configBean.MGIHOME_URL}submissions/amsp_submission.cgi"><img style="width:260px; height:150;" src="${configBean.FEWI_URL}assets/images/static/SubmitLink.png" alt="Submit Your Data"></a>
+	<a href="${configBean.MGIHOME_URL}submissions/amsp_submission.cgi"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/SubmitLink.png" alt="Submit Your Data"></a>
 	</div>
  <div class="col-md-3" style="">
-	<a href="${configBean.FAQ_URL}FAQ.shtml#faq_strain"><img style="width:260px; height:150;" src="${configBean.FEWI_URL}assets/images/static/FAQimage.png" alt="FAQ"></a>
+	<a href="${configBean.FAQ_URL}FAQ.shtml#faq_strain"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/FAQimage.png" alt="FAQ"></a>
 	</div>
 </div>
 <div id="" class="blankSectionSpacer"></div>
@@ -223,7 +224,7 @@
   <div id="help" class="tab-pane fade">
     <table>
 		<tr><td>
-		  Detailed explanations for using Strains, SNPs & Polymorphisms query forms and tools:	
+		  Detailed explanations for using Strains, SNPs &amp; Polymorphisms query forms and tools:	
 			<ul>
 				<li>SNP Query Form <a href="${configBean.USERHELP_URL}SNP_help.shtml" target="_blank">help</a></li>
 				<li>Guidelines for Nomenclature of Mouse and Rat Strains <a href="${configBean.MGIHOME_URL}nomen/strains.shtml" target="_blank">help</a></li>
@@ -279,7 +280,7 @@
 
 <!--AJAX TABS CALLS-->
 
-<script type="text/javascript" src="<!--#include file="include/javascript.html"-->">
+<script type="text/javascript" src="${configBean.WEBSHARE_URL}js/ajaxtabs.js">
     /***********************************************
     * Ajax Tabs Content script- © Dynamic Drive DHTML code library (www.dynamicdrive.com)
     * This notice MUST stay intact for legal use
