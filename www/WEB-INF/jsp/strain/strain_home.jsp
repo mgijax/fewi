@@ -115,7 +115,6 @@
   <div class="col-sm-6" style="">
   <div class="strainColumn top">
 	  <section class="infoBlock queryForm">
-	    <h2>Find</h2>
 	    <div style="padding-left: 0.5em; padding-bottom: 0.5em;">
 	    <h3>Strains</h3>
 	    <div class="wrapper" style="padding-left: 20px; padding-bottom: 8px;">
