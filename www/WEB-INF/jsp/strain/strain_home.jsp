@@ -117,7 +117,7 @@
 	  <section class="infoBlock queryForm"> 
 	    <div style="padding-left: 0.5em; padding-bottom: 0.5em;">
 	   
-	    <div class="wrapper" style="padding-left: 20px; padding-bottom: 8px;">
+	    <div class="wrapper" style="padding-left: 15px; padding-bottom: 8px;">
 	    	<%@ include file="/WEB-INF/jsp/strain/sub_strain_form.jsp" %>
 	    </div>
 	    </div>
