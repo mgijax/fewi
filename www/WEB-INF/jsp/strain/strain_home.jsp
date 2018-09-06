@@ -103,16 +103,16 @@
 </div>
 
 <div class="container">
-  <div class="col-sm-6" style="">
+  <div class="col-sm-7" style="">
   <div class="strainSectionSpacer"><h5>Strain Query <a href="http://www.informatics.jax.org/userhelp/STRAIN_search_help.shtml" onclick="javascript:openUserhelpWindow(&quot;STRAIN_search_help.shtml&quot;); return false;"><img class="right"  src="http://www.informatics.jax.org/webshare/images/help_large_transp.gif" alt="Help"></a></h5></div>
   </div>
-  <div class="col-sm-6" style="">
+  <div class="col-sm-5" style="">
   <div class="strainSectionSpacer"><h5>Strain Collections</h5></div>
   </div>
 </div>
 <div class="container">
 <div class="row">
-  <div class="col-sm-6" style="">
+  <div class="col-sm-7" style="">
   <div class="strainColumn top">
 	  <section class="infoBlock queryForm"> 
 	    <div style="padding-left: 0.5em; padding-bottom: 0.5em;">
@@ -126,7 +126,7 @@
 	    </div>
 	   
 	    <div class="row">
-  <div class="col-sm-6" style="">
+  <div class="col-sm-5" style="">
 		<ul class="collections">
 			<li><a href="${configBean.FEWI_URL}strain/summary?isSequenced=1" class="homeLink">Wellcome Sanger Institute's Mouse Genomes Project (MGP)</a></li>
 			<li><a href="${configBean.FEWI_URL}strain/summary?attributes=inbred strain" class="homeLink">Inbred strains</a></li>
