@@ -225,6 +225,7 @@
 		<tr><td>
 		  Detailed explanations for using Strains, SNPs &amp; Polymorphisms query forms and tools:	
 			<ul>
+			    <li>Strain Search <a href="${configBean.USERHELP_URL}Strain_search_help.shtml" target="_blank">help</a></li>
 				<li>SNP Query Form <a href="${configBean.USERHELP_URL}SNP_help.shtml" target="_blank">help</a></li>
 				<li>Guidelines for Nomenclature of Mouse and Rat Strains <a href="${configBean.MGIHOME_URL}nomen/strains.shtml" target="_blank">help</a></li>
 				<li>Mouse Strain 129 Substrain Nomenclature <a href="${configBean.MGIHOME_URL}nomen/strain_129.shtml" target="_blank">help</a></li>
