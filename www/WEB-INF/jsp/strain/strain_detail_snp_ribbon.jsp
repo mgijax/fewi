@@ -6,7 +6,7 @@
 			<div id="snpToggle" title="Show More" class="toggleImage hdExpand">more</div>
 			<div id="snpTeaderWrapper" class="flex">
 				<div id="snpTableTeaser" class="summarySec1snp flex">
-					<img id="heatmap_icon" src="${configBean.FEWI_URL}assets/images/heatmap_icon.png"/>
+					<img id="heatmap_icon" src="${configBean.FEWI_URL}assets/images/heatmap_icon.png" onClick="$('#snpToggle').click();" />
 					<div id="snpProfileLabel" class="label">SNP Profile Heat Map</div>
 				</div>
 				<div id="snpCounts" class="summarySec2snp">
