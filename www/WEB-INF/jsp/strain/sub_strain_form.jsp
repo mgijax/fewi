@@ -6,7 +6,7 @@
 
 	<%-- Wrapper for positioning "Search" goButton --%>
 	<div>
-		<label class="searchLabel">Name</label>
+		<label class="searchLabel">Strain Name</label>
 
 		<div style='display: inline-block'>
 		<input type="text" size="40" name="strainName" style="margin-bottom:8px" id="strainNameAC"
