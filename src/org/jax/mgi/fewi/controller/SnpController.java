@@ -511,11 +511,15 @@ public class SnpController {
 
 			List<String> referenceStrains = query.getReferenceStrains();
 			if(referenceStrains != null && (referenceStrains.size() > 0)) {
+				List<Filter> refStrains = new ArrayList<Filter>();
 				for (String referenceStrain : referenceStrains) {
-					Filter referenceStrainFilter = new Filter(SearchConstants.SAME_STRAINS, referenceStrain, Operator.OP_IN);
-					filterList.add(referenceStrainFilter);
+					// default behavior is to look for alleles in all reference strains (regardless of allele call)
+					//Filter referenceStrainFilter = new Filter(SearchConstants.SAME_STRAINS, referenceStrain, Operator.OP_IN);
+					Filter referenceStrainFilter = new Filter(SearchConstants.STRAINS, referenceStrain, Operator.OP_IN);
+					refStrains.add(referenceStrainFilter);
 					selectedStrains.remove(referenceStrain);
 				}
+				filterList.add(Filter.and(refStrains));
 			}
 
 			Filter selectedStrainFilter = new Filter(SearchConstants.STRAINS, selectedStrains, Operator.OP_IN);
