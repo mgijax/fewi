@@ -8,11 +8,11 @@ var convertAngleBrackets = function(s) {
 	return s.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-$(function() {
+jQuery(function() {
     // wire in the strain name autocomplete
-    var strainNameAC = $( "#strainNameAC" ).autocomplete({
+    var strainNameAC = jQuery( "#strainNameAC" ).autocomplete({
     	source: function( request, response ) {
-    		$.ajax({
+    		jQuery.ajax({
     			url: strainNameUrl + request.term,
     			dataType: "json",
     			success: function( data ) {
@@ -22,7 +22,7 @@ $(function() {
     	},
     	minLength: 1
     }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
-		return $('<li></li>')
+		return jQuery('<li></li>')
 			.data("item.autocomplete", item)
 			.append("<a>" + convertAngleBrackets(item.label) + "</a>")
 			.appendTo(ul);
@@ -33,10 +33,10 @@ $(function() {
 // wire the form submission
 (function(){
 
-	var $strainForm = $("#strainForm");
+	var strainForm = jQuery("#strainForm");
 
 	/* Clicking GO submits strainForm */
-	$strainForm.find("goButton").click(function(e){
-		$("#strainForm").submit();
+	strainForm.find("goButton").click(function(e){
+		jQuery("#strainForm").submit();
 	});
 })();

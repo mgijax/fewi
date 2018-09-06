@@ -21,7 +21,7 @@
  <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <!-- jQuery library -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
   <!-- Latest compiled JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
 
@@ -274,7 +274,7 @@
 
 <!--AJAX TABS CALLS-->
 
-<script type="text/javascript" src="<!--#include file="include/javascript.html"-->">
+<script type="text/javascript" src="${configBean.WEBSHARE_URL}js/ajaxtabs.js">
     /***********************************************
     * Ajax Tabs Content script- © Dynamic Drive DHTML code library (www.dynamicdrive.com)
     * This notice MUST stay intact for legal use
