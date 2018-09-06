@@ -103,14 +103,6 @@
 </div>
 
 <div class="container">
-  <div class="col-sm-8" style="">
-  <div class="strainSectionSpacer"><h5>Strain Query <a href="http://www.informatics.jax.org/userhelp/STRAIN_search_help.shtml" onclick="javascript:openUserhelpWindow(&quot;STRAIN_search_help.shtml&quot;); return false;"><img class="right"  src="http://www.informatics.jax.org/webshare/images/help_large_transp.gif" alt="Help"></a></h5></div>
-  </div>
-  <div class="col-sm-4" style="">
-  <div class="strainSectionSpacer"><h5>Strain Collections</h5></div>
-  </div>
-</div>
-<div class="container">
   <div class="col-sm-6" style="">
   <div class="strainSectionSpacer"><h5>Strain Query <a href="http://www.informatics.jax.org/userhelp/STRAIN_search_help.shtml" onclick="javascript:openUserhelpWindow(&quot;STRAIN_search_help.shtml&quot;); return false;"><img class="right"  src="http://www.informatics.jax.org/webshare/images/help_large_transp.gif" alt="Help"></a></h5></div>
   </div>
