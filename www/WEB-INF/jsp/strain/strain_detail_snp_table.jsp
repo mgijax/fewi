@@ -19,7 +19,7 @@
 </c:choose>
 				<div id="snpLeftDiv">
 				<table id="snpTableHeader">
-					<tr><th></th><th colspan="22" class="snpChromosomeHeader">Chromosomes<img id="snpTableHelpImage" src="${configBean.FEWI_URL}assets/images/help_icon_16.png" style="margin-bottom: -3px; margin-left: 3px; cursor: pointer;"/></th></tr>
+					<tr><th></th><th colspan="22" class="snpChromosomeHeader">Chromosomes</th></tr>
 							<div id="snpTableHelp" style="visibility: hidden;">
 								<div class="hd">SNP Data Overview</div>
 								<div class="bd" style="text-align: left">
@@ -88,7 +88,11 @@
 				</div>
 				</div>
 				<div id="snpRightDiv">
+					<div id="heatmapHelp"><a href="" onClick="return false;">How to use the SNP Heat Map</a>
+						<img id="snpTableHelpImage" src="${configBean.FEWI_URL}assets/images/help_icon_16.png" style="margin-bottom: -3px; margin-left: 3px; cursor: pointer;"/>
+					</div>
 					<div id="snpViewPanel">
+					<p/>
 					<span id="sameDiffLabel">View</span><br/>
 					<table id="sameDiffTable">
 					<tr>
@@ -123,5 +127,9 @@
 	YAHOO.namespace("snp.container");
 	YAHOO.snp.container.snpTableHelp = new YAHOO.widget.Panel("snpTableHelp", { width:"390px", draggable:false, visible:false, constraintoviewport:true } );
 	YAHOO.snp.container.snpTableHelp.render();
+	YAHOO.util.Event.addListener("heatmapHelp", "click", YAHOO.snp.container.snpTableHelp.show, YAHOO.snp.container.snpTableHelp, true);
 	YAHOO.util.Event.addListener("snpTableHelpImage", "click", YAHOO.snp.container.snpTableHelp.show, YAHOO.snp.container.snpTableHelp, true);
 	</script>
+	<style>
+	#snpTableHelp_c { margin-left: 400px; }
+	</style>
