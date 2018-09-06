@@ -730,7 +730,7 @@ public class FormatHelper {
 	// get the shade between 'color1' and 'color2' when we have a given 'count' of of a given 'total',
 	// using a logarithmic scale because 'total' is very large.
 	private static String getShade(int[] color1, int[] color2, int count, int allCount, int total) {
-		if (allCount == 0) {
+		if ((allCount == 0) || (count == 0)){
 			return "rgb(0,0,0,0)";		// fully transparent cell if no data
 		}
 		Double fraction = 0.0;

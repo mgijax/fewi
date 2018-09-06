@@ -110,8 +110,8 @@
 						<tr><td class="cell slash" style=""></td>
 							<td class="rlPad">No data</td></tr>
 						<tr><td rowspan="6" class="cell" style="background: linear-gradient(
-							<%= FormatHelper.getSnpColorCode(0, 1, maxCount) %>, <%= FormatHelper.getSnpColorCode(maxCount, maxCount, maxCount) %>);"></td>
-							<td class="rlPad" style="height: 29px">0 SNPs</td></tr>
+							<%= FormatHelper.getSnpColorCode(1, 1, maxCount) %>, <%= FormatHelper.getSnpColorCode(maxCount, maxCount, maxCount) %>);"></td>
+							<td class="rlPad" style="height: 29px">1 SNP</td></tr>
 						<c:set var="snpBins" value="100 1000 10000 100000 ${maxSnpCount}"/>
 						<c:forEach var="bin" items="${fn:split(snpBins, ' ')}">
 							<tr><td class="rlPad" style="height: 29px"><fmt:formatNumber type="number" value="${bin}" maxFractionDigits="0" groupingUsed="true"/> SNPs</td></tr>
