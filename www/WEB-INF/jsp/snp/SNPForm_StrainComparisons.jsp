@@ -25,12 +25,24 @@
 									<input type="button" id="refDeselectButton" value="Clear All"/>
 									</td>
 								</tr>
+								<tr class="refToggle"><td></td>
+									<td>
+									Return SNPs With Allele Call in All <span class="refColor">Reference</span> strains?
+									<fewi:radio name="allReferenceStrainsRequired" divider="&nbsp;&nbsp;" idPrefix="allReferenceStrainsRequired" items="${yesNoOptions}" value="${snpQueryForm.allReferenceStrainsRequired}" />
+									</td>
+								</tr>
 								<tr><td class="refToggle"><span class="cmpColor">Comparison</span> strains</td>
 									<td>
 									<input type="button" id="doccSelectButton" value="Select DO/CC Founders"/>
 									<input type="button" id="mgpSelectButton" value="Select Sanger MGP Strains"/>
 									<input type="button" id="selectButton" value="Select All"/>
 									<input type="button" id="deselectButton" value="Clear All"/>
+									</td>
+								</tr>
+								<tr class="refToggle"><td></td>
+									<td>
+									Return SNPs With Allele Call in All <span class="cmpColor">Comparison</span> strains?
+									<fewi:radio name="allComparisonStrainsRequired" divider="&nbsp;&nbsp;" idPrefix="allComparisonStrainsRequired" items="${yesNoOptions}" value="${snpQueryForm.allComparisonStrainsRequired}" />
 									</td>
 								</tr>
 								</table>

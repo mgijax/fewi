@@ -24,9 +24,31 @@ public class SnpQueryForm {
 	private String displayStrains;			// for text file output
 	private String startMarker;
 	private String endMarker;
+	private String allReferenceStrainsRequired;
+	private String allComparisonStrainsRequired;
 
 	private static int allStrainsCount = 88;
 
+	public void setDefaults() {
+		if (this.allReferenceStrainsRequired == null) {
+			this.setAllReferenceStrainsRequired("yes");
+		}
+		if (this.allComparisonStrainsRequired == null) {
+			this.setAllComparisonStrainsRequired("no");
+		}
+	}
+	public String getAllReferenceStrainsRequired() {
+		return allReferenceStrainsRequired;
+	}
+	public void setAllReferenceStrainsRequired(String allReferenceStrainsRequired) {
+		this.allReferenceStrainsRequired = allReferenceStrainsRequired;
+	}
+	public String getAllComparisonStrainsRequired() {
+		return allComparisonStrainsRequired;
+	}
+	public void setAllComparisonStrainsRequired(String allComparisonStrainsRequired) {
+		this.allComparisonStrainsRequired = allComparisonStrainsRequired;
+	}
 	public List<String> getFunctionClassFilter() {
 		return functionClassFilter;
 	}

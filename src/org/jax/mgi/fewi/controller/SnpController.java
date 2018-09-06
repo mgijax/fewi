@@ -291,6 +291,11 @@ public class SnpController {
 		mav.addObject("searchByOptions", searchByOptions);
 		mav.addObject("searchBySameDiffOptions", searchBySameDiffOptions);
 
+		Map<String,String> yesNoOptions = new LinkedHashMap<String, String>();
+		yesNoOptions.put("yes", "Yes");
+		yesNoOptions.put("no", "No");
+		mav.addObject("yesNoOptions", yesNoOptions);
+
 		mav.addObject("seoDescription", "Search for mouse SNPs represented in dbSNP by gene or genome region. Results include selected strains. Filter by dbSNP function class.");
 		mav.addObject("seoKeywords", "SNP, SNPs, refSNP, dbSNP, build 142, variation, variant, function class, intron, locus region, mRNA-UTR, coding-nonSynonymous, coding-synonymous, noncoding-transcript-variant, splice-site , allele, mouse strains, polymorphism.");
 
@@ -312,6 +317,7 @@ public class SnpController {
 
 		SnpQueryForm qf = new SnpQueryForm();
 		qf.setSelectedStrains(new ArrayList<String>(selectableStrains.keySet()));
+		qf.setDefaults();
 
 		mav.addObject("snpQueryForm", qf);
 		return mav;
@@ -329,6 +335,7 @@ public class SnpController {
 		if(queryForm.getWithinRange() == null || queryForm.getWithinRange().equals("")) {
 			queryForm.setWithinRange("2000");
 		}
+		queryForm.setDefaults();
 
 		ModelAndView mav = new ModelAndView("snp/summary");
 		mav.addObject("queryString", request.getQueryString());
@@ -519,11 +526,27 @@ public class SnpController {
 					refStrains.add(referenceStrainFilter);
 					selectedStrains.remove(referenceStrain);
 				}
-				filterList.add(Filter.and(refStrains));
+				if ("no".equalsIgnoreCase(query.getAllReferenceStrainsRequired())) {
+					// Just require at least one reference strain to have an allele call in each SNP.
+					filterList.add(Filter.or(refStrains));
+				} else {
+					// Require all reference strains to have an allele call in each SNP. (default)
+					filterList.add(Filter.and(refStrains));
+				}
 			}
 
-			Filter selectedStrainFilter = new Filter(SearchConstants.STRAINS, selectedStrains, Operator.OP_IN);
-			filterList.add(selectedStrainFilter);
+			if ((selectedStrains != null) && (selectedStrains.size() > 0)) {
+				List<Filter> cmpStrains = new ArrayList<Filter>();
+				for (String comparisonStrain : selectedStrains) {
+					Filter cmpStrainFilter = new Filter(SearchConstants.STRAINS, comparisonStrain, Operator.OP_IN);
+					cmpStrains.add(cmpStrainFilter);
+				}
+				if ("yes".equalsIgnoreCase(query.getAllComparisonStrainsRequired())) {
+					filterList.add(Filter.and(cmpStrains));
+				} else {
+					filterList.add(Filter.or(cmpStrains));
+				}
+			}
 		}
 
 		// function class filter
