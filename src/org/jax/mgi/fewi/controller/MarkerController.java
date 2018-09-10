@@ -656,7 +656,9 @@ public class MarkerController {
 
 			// if this marker is a TSS, then we need a different URL that will open up the TSS track
 			if ((marker.getTssFor() != null) && (marker.getTssFor().size() > 0)) {
-				jbrowseUrl = externalUrls.getProperty("JBrowseTSS").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
+				Long tssStart = Long.parseLong(startCoordinate) - 500;
+				Long tssEnd = Long.parseLong(endCoordinate) + 500;
+				jbrowseUrl = externalUrls.getProperty("JBrowseTSS_Highlight").replaceAll("<chromosome>", chromosome).replace("<startHighlight>", startCoordinate).replace("<endHighlight>", endCoordinate).replace("<start>", "" + tssStart).replace("<end>", "" + tssEnd);
 			}
 
 			gbrowseThumbnailUrl = externalUrls.getProperty("GBrowse_Thumbnail").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
