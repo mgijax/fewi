@@ -51,8 +51,6 @@
 					</div>
 					<div class="refToggle rightColumn" style="float:left;">
 						<div id="sameDiffWrapper" class="left">
-							You can select one or more Reference Strains.  If you select multiple Reference Strains,
-							the SNPs returned will have the same allele in all Reference Strains.<br/><br/>
 							<div id="sameDiffRadioButtons">
 							<fewi:radio name="searchBySameDiff" divider="<br/>" idPrefix="searchBySameDiffOptionsList" items="${searchBySameDiffOptions}" value="${snpQueryForm.searchBySameDiff}" />
 							(only applies if a Reference is selected)<br/>
