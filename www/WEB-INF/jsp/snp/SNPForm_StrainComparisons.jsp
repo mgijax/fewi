@@ -27,7 +27,7 @@
 								</tr>
 								<tr class="refToggle"><td></td>
 									<td>
-									Return SNPs With Allele Call in All <span class="refColor">Reference</span> strains?
+									Return SNPs With an Allele Call in All <span class="refColor">Reference</span> strains?
 									<fewi:radio name="allReferenceStrainsRequired" divider="&nbsp;&nbsp;" idPrefix="allReferenceStrainsRequired" items="${yesNoOptions}" value="${snpQueryForm.allReferenceStrainsRequired}" />
 									</td>
 								</tr>
@@ -41,7 +41,7 @@
 								</tr>
 								<tr class="refToggle"><td></td>
 									<td>
-									Return SNPs With Allele Call in All <span class="cmpColor">Comparison</span> strains?
+									Return SNPs With an Allele Call in All <span class="cmpColor">Comparison</span> strains?
 									<fewi:radio name="allComparisonStrainsRequired" divider="&nbsp;&nbsp;" idPrefix="allComparisonStrainsRequired" items="${yesNoOptions}" value="${snpQueryForm.allComparisonStrainsRequired}" />
 									</td>
 								</tr>
@@ -51,8 +51,6 @@
 					</div>
 					<div class="refToggle rightColumn" style="float:left;">
 						<div id="sameDiffWrapper" class="left">
-							You can select one or more Reference Strains.  If you select multiple Reference Strains,
-							the SNPs returned will have the same allele in all Reference Strains.<br/><br/>
 							<div id="sameDiffRadioButtons">
 							<fewi:radio name="searchBySameDiff" divider="<br/>" idPrefix="searchBySameDiffOptionsList" items="${searchBySameDiffOptions}" value="${snpQueryForm.searchBySameDiff}" />
 							(only applies if a Reference is selected)<br/>
@@ -73,24 +71,39 @@
 	</tr>
 
 <script>
+function inasecond(f) {
+	setTimeout(f, 1000);
+}
+
 // handler for the radio buttons, determining whether we are in Reference mode or just Comparison mode
 $('input[name=referenceMode]').on('click', function(e) {
-    var formID = 'form' + $(".ui-tabs-active").attr('aria-controls').split('-')[1];
+	var formID = 'form1';		// default to form1
+	try {
+		// if the styling is in-place, we can pick up the actual active form
+    	formID = 'form' + $(".ui-tabs-active").attr('aria-controls').split('-')[1];
+	} catch (err) {
+		// if not, we can either rely on the default or if we have a chromosome, then we can
+		// recognize that form2 should be active
+		<c:if test="${not empty snpQueryForm.selectedChromosome}">
+			formID = 'form2';
+		</c:if> 
+	}
+	
 	if (this.value == 'yes') {
 		$('.refToggle').removeClass('refHide');
 		// also keep the other form's selection in sync
 		if (formID == 'form1') {
-			$('#form2 input[name=referenceMode][value=yes]')[0].checked = true;		
+			inasecond(function() { $('#form2 input[name=referenceMode][value=yes]')[0].checked = true; });
 		} else {
-			$('#form1 input[name=referenceMode][value=yes]')[0].checked = true;		
+			inasecond(function() { $('#form1 input[name=referenceMode][value=yes]')[0].checked = true; });
 		}
 	} else {
 		$('.refToggle').addClass('refHide');
 		// also keep the other form's selection in sync
 		if (formID == 'form1') {
-			$('#form2 input[name=referenceMode][value=no]')[0].checked = true;		
+			inasecond(function() { $('#form2 input[name=referenceMode][value=no]')[0].checked = true; });
 		} else {
-			$('#form1 input[name=referenceMode][value=no]')[0].checked = true;		
+			inasecond(function() { $('#form1 input[name=referenceMode][value=no]')[0].checked = true; });
 		}
 		snpqry.refDeselectAll();
 	}
@@ -120,4 +133,14 @@ $('input[name=referenceStrains]').click(function (e) {
 		boxes[i].checked = e.target.checked;
 	}
 });
+
+// ensure that the reference strains radio button is selected
+<c:choose>
+	<c:when test="${not empty referenceStrains}">
+		$('input[name=referenceMode][value=yes]')[0].click();
+	</c:when>
+	<c:when test="${empty referenceStrains}">
+		$('input[name=referenceMode][value=no]')[0].click();
+	</c:when>
+</c:choose>
 </script>

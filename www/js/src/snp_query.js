@@ -120,7 +120,11 @@ if (!YAHOO.lang.isUndefined(snpqry.toggleImg)){
 // get the ID ('form1' or 'form2') of the active form
 snpqry.getActiveFormID = function() {
 	// the 'aria-controls' attribute of the active tab will be like 'tabs-1' or 'tabs-2'
-    return 'form' + $(".ui-tabs-active").attr('aria-controls').split('-')[1];
+    try {
+    	return 'form' + $(".ui-tabs-active").attr('aria-controls').split('-')[1];
+    } catch (err) {
+    	return 'form1';
+    }
 };
 
 // hide the error rows (if visible)
@@ -178,11 +182,14 @@ snpqry.validateQF = function(e) {
 		}
 	}
 	
-	// 2. if choose same/different display, must specify reference strain
-	var sameDiff = $('#' + formID + ' [name=searchBySameDiff]:checked').val();
-	var refStrains = $('#' + formID + ' [name=referenceStrains]').val();
-	if ((refStrains.length == 0) && (sameDiff.length != 0)) {
-		snpqry.showError("Your query is missing a required parameter.  To show only 'same' or 'different' SNPs, you must select a Reference Strain.");
+	// 2. if choose to use a reference strain, must specify at least one
+	var expectRef = $('#' + formID + ' [name=referenceMode]:checked').val();
+	var refStrains = $('#' + formID + ' [name=referenceStrains]:checked');
+	if ((refStrains == undefined) && (refStrains == null)) {
+		refStrains = [];
+	}
+	if ((refStrains.length == 0) && (expectRef == 'yes')) {
+		snpqry.showError("Your query is missing a required parameter. If you choose to 'Compare to one or more Reference Strains', you must select at least one Reference Strain.");
 		return false;
 	}
 
@@ -193,7 +200,6 @@ snpqry.validateQF = function(e) {
 			return false;
 		}
 	}
-
 	return true;
 };
 
@@ -262,6 +268,7 @@ snpqry.doccSelectAll = function() {
 	for (var i in doccFounders) {
 		var strain = doccFounders[i];
 		var box = $("input[name=selectedStrains][value='" + strain + "']").each(function() { this.checked = true; });
+		var box = $("input[name=referenceStrains][value='" + strain + "']").each(function() { this.checked = false; });
 	}
 };
 
@@ -270,6 +277,7 @@ snpqry.mgpSelectAll = function() {
 	for (var i in mgpStrains) {
 		var strain = mgpStrains[i];
 		var box = $("input[name=selectedStrains][value='" + strain + "']").each(function() { this.checked = true; });
+		var box = $("input[name=referenceStrains][value='" + strain + "']").each(function() { this.checked = false; });
 	}
 };
 
