@@ -268,6 +268,7 @@ snpqry.doccSelectAll = function() {
 	for (var i in doccFounders) {
 		var strain = doccFounders[i];
 		var box = $("input[name=selectedStrains][value='" + strain + "']").each(function() { this.checked = true; });
+		var box = $("input[name=referenceStrains][value='" + strain + "']").each(function() { this.checked = false; });
 	}
 };
 
@@ -276,6 +277,7 @@ snpqry.mgpSelectAll = function() {
 	for (var i in mgpStrains) {
 		var strain = mgpStrains[i];
 		var box = $("input[name=selectedStrains][value='" + strain + "']").each(function() { this.checked = true; });
+		var box = $("input[name=referenceStrains][value='" + strain + "']").each(function() { this.checked = false; });
 	}
 };
 
