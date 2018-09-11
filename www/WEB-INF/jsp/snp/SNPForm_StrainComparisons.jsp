@@ -27,7 +27,7 @@
 								</tr>
 								<tr class="refToggle"><td></td>
 									<td>
-									Return SNPs With Allele Call in All <span class="refColor">Reference</span> strains?
+									Return SNPs With an Allele Call in All <span class="refColor">Reference</span> strains?
 									<fewi:radio name="allReferenceStrainsRequired" divider="&nbsp;&nbsp;" idPrefix="allReferenceStrainsRequired" items="${yesNoOptions}" value="${snpQueryForm.allReferenceStrainsRequired}" />
 									</td>
 								</tr>
@@ -41,7 +41,7 @@
 								</tr>
 								<tr class="refToggle"><td></td>
 									<td>
-									Return SNPs With Allele Call in All <span class="cmpColor">Comparison</span> strains?
+									Return SNPs With an Allele Call in All <span class="cmpColor">Comparison</span> strains?
 									<fewi:radio name="allComparisonStrainsRequired" divider="&nbsp;&nbsp;" idPrefix="allComparisonStrainsRequired" items="${yesNoOptions}" value="${snpQueryForm.allComparisonStrainsRequired}" />
 									</td>
 								</tr>
