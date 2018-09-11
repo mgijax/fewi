@@ -49,14 +49,6 @@
 							</div>
 						</div>
 					</div>
-					<div class="refToggle rightColumn" style="float:left;">
-						<div id="sameDiffWrapper" class="left">
-							<div id="sameDiffRadioButtons">
-							<fewi:radio name="searchBySameDiff" divider="<br/>" idPrefix="searchBySameDiffOptionsList" items="${searchBySameDiffOptions}" value="${snpQueryForm.searchBySameDiff}" />
-							(only applies if a Reference is selected)<br/>
-							</div>
-						</div>
-					</div>
 				</div>
 				<div style="clear:both;">
 					<c:if test="${empty snpQueryForm.selectedStrains}">

@@ -8,10 +8,10 @@
 
 <c:choose>
 	<c:when test="${mode == 'same'}">
-		<c:set var="qfMode" value="same_reference"/>
+		<c:set var="qfMode" value="${same_reference}"/>
 	</c:when>
 	<c:when test="${mode == 'diff'}">
-		<c:set var="qfMode" value="diff_reference"/>
+		<c:set var="qfMode" value="${diff_reference}"/>
 	</c:when>
 	<c:otherwise>
 		<c:set var="qfMode" value=""/>
@@ -78,7 +78,7 @@
 							<td title="${cellTitle}" class="cell ${flagCell}"
 								style="background-color: <%= FormatHelper.getSnpColorCode(cellCount, cell.getAllCount(), maxCount) %>"
 								<c:if test='${cellCount > 0}'>
-								onClick="window.open('${configBean.FEWI_URL}snp/summary?selectedChromosome=${cell.chromosome}&coordinate=0-200&coordinateUnit=Mbp&selectedStrains=${row.comparisonStrainName}&referenceStrains=${strain.name}&searchBySameDiff=${qfMode}&selectedTab=1');"
+								onClick="window.open('${configBean.FEWI_URL}snp/summary?selectedChromosome=${cell.chromosome}&coordinate=0-200&coordinateUnit=Mbp&selectedStrains=${row.comparisonStrainName}&referenceStrains=${strain.name}&alleleAgreementFilter=${qfMode}&selectedTab=1');"
 								</c:if>
 								></td>
 						</c:forEach>

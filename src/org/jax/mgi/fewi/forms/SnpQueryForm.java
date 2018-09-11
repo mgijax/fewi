@@ -17,7 +17,6 @@ public class SnpQueryForm {
 	private List<String> referenceStrains;
 	private String selectedChromosome;
 	private String searchGeneBy;
-	private String searchBySameDiff = "";
 	private boolean hideStrains = true;
 	private List<String> selectedStrains;
 	private List<String> functionClassFilter;
@@ -26,6 +25,7 @@ public class SnpQueryForm {
 	private String endMarker;
 	private String allReferenceStrainsRequired;
 	private String allComparisonStrainsRequired;
+	private List<String> alleleAgreementFilter;
 
 	private static int allStrainsCount = 88;
 
@@ -48,6 +48,12 @@ public class SnpQueryForm {
 	}
 	public void setAllComparisonStrainsRequired(String allComparisonStrainsRequired) {
 		this.allComparisonStrainsRequired = allComparisonStrainsRequired;
+	}
+	public List<String> getAlleleAgreementFilter() {
+		return alleleAgreementFilter;
+	}
+	public void setAlleleAgreementFilter(List<String> alleleAgreementFilter) {
+		this.alleleAgreementFilter = alleleAgreementFilter;
 	}
 	public List<String> getFunctionClassFilter() {
 		return functionClassFilter;
@@ -126,12 +132,6 @@ public class SnpQueryForm {
 	}
 	public void setDisplayStrains(String displayStrains) {
 		this.displayStrains = displayStrains;
-	}
-	public String getSearchBySameDiff() {
-		return searchBySameDiff;
-	}
-	public void setSearchBySameDiff(String searchBySameDiff) {
-		this.searchBySameDiff = searchBySameDiff;
 	}
 	public boolean isHideStrains() {
 		return hideStrains;
@@ -267,15 +267,6 @@ public class SnpQueryForm {
 				label = label + "s";
 				out.add(label + ": " + bold("" + referenceStrains.size()));
 			}
-
-			if(searchBySameDiff != null && searchBySameDiff.length() > 0) {
-				if(searchBySameDiff.equals("diff_reference")) {
-					out.add("SNPs with alleles " + bold("different from") + " the " + label);
-				}
-				if(searchBySameDiff.equals("same_reference")) {
-					out.add("SNPs with alleles " + bold("same as") + " the " + label);
-				}
-			}
 		}
 
 		// Selected Strains
@@ -312,8 +303,6 @@ public class SnpQueryForm {
 		if(referenceStrains != null) ret += "referenceStrains=" + referenceStrains + "\n";
 		
 		if(searchGeneBy != null) ret += "searchGeneBy=" + searchGeneBy + "\n";
-		if(searchBySameDiff != null) ret += "searchBySameDiff=" + searchBySameDiff + "\n";
-		
 		if(functionClassFilter != null) ret += "functionClassFilter=" + functionClassFilter + "\n";
 		
 		ret += "hideStrains=" + hideStrains + "\n";
