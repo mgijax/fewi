@@ -241,6 +241,7 @@ snpqry.resetQF = function (e) {
 	form.endMarker.value = "";
 
 	$('input[name=referenceMode][value=no]')[0].click();	// back to comparison-only mode (no reference)
+	$('input[name=referenceMode][value=no]')[1].click();	// back to comparison-only mode (no reference)
 	snpqry.selectAll();
 };
 

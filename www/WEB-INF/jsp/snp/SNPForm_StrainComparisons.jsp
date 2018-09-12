@@ -126,13 +126,10 @@ $('input[name=referenceStrains]').click(function (e) {
 	}
 });
 
-// ensure that the reference strains radio button is selected
-<c:choose>
-	<c:when test="${not empty referenceStrains}">
-		$('input[name=referenceMode][value=yes]')[0].click();
-	</c:when>
-	<c:when test="${empty referenceStrains}">
-		$('input[name=referenceMode][value=no]')[0].click();
-	</c:when>
-</c:choose>
+// ensure that the reference strains radio button is selected (if some are selected)
+if ($('input[name=referenceStrains]:checked').length > 0) {
+	$('input[name=referenceMode][value=yes]')[0].click();
+} else {
+	$('input[name=referenceMode][value=no]')[0].click();
+}
 </script>
