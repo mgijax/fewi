@@ -107,7 +107,7 @@
 <c:if test="${empty snps}">
 	<c:choose>
 		<c:when test="${not empty errors}">
-			<tr><td colspan='5'>Errors were detected:<br/>
+			<tr><td colspan='5' style="color:red">Errors were detected:<br/>
 				<ul>
 				<c:forEach var="error" items="${errors}">
 					<li>${error}</li>
