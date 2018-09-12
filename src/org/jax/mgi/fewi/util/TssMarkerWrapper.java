@@ -70,7 +70,7 @@ public class TssMarkerWrapper {
 	}
 	
 	public String getDistanceFromStart() {
-		if (this.distanceFromStart == 0.0) { return "-"; }
+		if (this.distanceFromStart == 0.0) { return "0"; }
 		NumberFormat formatter = new DecimalFormat("#,###");
 		return formatter.format(this.distanceFromStart);
 	}
