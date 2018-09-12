@@ -55,7 +55,9 @@
 .strainSectionSpacer {
     border: 1px solid #D0E0F0;
     background-color: #D0E0F0;
-    height: 35px;
+    height: 25px;
+    display: flex; 
+    align-items: center;
   }
 
 .blankSectionSpacer {
@@ -63,20 +65,21 @@
     background-color: none;
     height: 10px;
   }
-
+  
 .collections {
 	padding-top: 0px;
 	font-size: 90%;
 }
+
 .collections li {
 	padding-bottom: 2px;
 }
 
 .right {
-    position: absolute;
+    position:absolute;
+    top: 7%;
     right: 20px;
-    height: 30px;
-    padding-bottom: 14px;
+    max-height: 85%;
 }
 
 #bottomSection {
@@ -117,7 +120,7 @@
 	  <section class="infoBlock queryForm"> 
 	    <div style="padding-left: 0.5em; padding-bottom: 0.5em;">
 	   
-	    <div class="wrapper" style="padding-left: 20px; padding-bottom: 8px;">
+	    <div class="wrapper" style="padding-left: 15px; padding-bottom: 8px;">
 	    	<%@ include file="/WEB-INF/jsp/strain/sub_strain_form.jsp" %>
 	    </div>
 	    </div>
@@ -225,6 +228,7 @@
 		<tr><td>
 		  Detailed explanations for using Strains, SNPs &amp; Polymorphisms query forms and tools:	
 			<ul>
+			    <li>Strain Search <a href="${configBean.USERHELP_URL}Strain_search_help.shtml" target="_blank">help</a></li>
 				<li>SNP Query Form <a href="${configBean.USERHELP_URL}SNP_help.shtml" target="_blank">help</a></li>
 				<li>Guidelines for Nomenclature of Mouse and Rat Strains <a href="${configBean.MGIHOME_URL}nomen/strains.shtml" target="_blank">help</a></li>
 				<li>Mouse Strain 129 Substrain Nomenclature <a href="${configBean.MGIHOME_URL}nomen/strain_129.shtml" target="_blank">help</a></li>
