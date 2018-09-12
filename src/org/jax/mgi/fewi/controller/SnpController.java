@@ -352,7 +352,9 @@ public class SnpController {
 		
 		if ((queryForm.getAlleleAgreementFilter() != null) && (queryForm.getAlleleAgreementFilter().size() > 1)) {
 			ModelAndView err = new ModelAndView("error");
-			err.addObject("errorMsg", "Please choose only one value for the Allele Agreement filter.");
+			err.addObject("errorMsg", "Please choose only one value for the Allele Agreement filter.<br/>"
+				+ "Note: The filter \"" + referenceAllelesMatch + "\" is automatically applied when you choose "
+				+ "either of the \"Comparison Strains Differ or Agree\" filters.");
 			return err;
 		}
 		return mav;
@@ -942,11 +944,10 @@ public class SnpController {
 		}
 
 		if ((query.getAlleleAgreementFilter() != null) && (query.getAlleleAgreementFilter().size() > 1)) {
-//			ModelAndView err = new ModelAndView("error");
-//			err.addObject("errorMsg", "Please choose only one value for the Allele Agreement filter.");
-//			return err;
 			List<String> errors = new ArrayList<String>();
-			errors.add("Please choose only one value for the Allele Agreement filter.");
+			errors.add("Please choose only one value for the Allele Agreement filter.<br/>"
+				+ "Note: The filter \"" + referenceAllelesMatch + "\" is automatically applied when you choose "
+				+ "either of the \"Comparison Strains Differ or Agree\" filters.");
 			mav.addObject("errors", errors);
 			
 			// ensure we get no results, so the message will get displayed
