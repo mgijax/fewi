@@ -55,7 +55,9 @@
 .strainSectionSpacer {
     border: 1px solid #D0E0F0;
     background-color: #D0E0F0;
-    height: 35px;
+    height: 25px;
+    display: flex; 
+    align-items: center;
   }
 
 .blankSectionSpacer {
