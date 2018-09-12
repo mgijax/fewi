@@ -75,10 +75,10 @@
 }
 
 .right {
-    position: absolute;
+    position:absolute;
+    top: 7%;
     right: 20px;
-    height: 30px;
-    padding-bottom: 14px;
+    max-height: 90%;
 }
 
 #bottomSection {
