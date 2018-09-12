@@ -65,11 +65,12 @@
     background-color: none;
     height: 10px;
   }
-
+  
 .collections {
 	padding-top: 0px;
 	font-size: 90%;
 }
+
 .collections li {
 	padding-bottom: 2px;
 }
