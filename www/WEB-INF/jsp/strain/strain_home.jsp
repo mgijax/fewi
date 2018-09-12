@@ -78,7 +78,7 @@
     position:absolute;
     top: 7%;
     right: 20px;
-    max-height: 90%;
+    max-height: 85%;
 }
 
 #bottomSection {
