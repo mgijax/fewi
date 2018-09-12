@@ -92,9 +92,6 @@ public class SnpController {
 	// map for options in search by pulldown
 	private static Map<String, String> searchByOptions = null;
 
-	// map for options in search by pulldown
-	private static Map<String, String> searchBySameDiffOptions = null;
-
 	// list for which marker types to show
 	private static ArrayList<String> markerfeatureTypes = null;
 
@@ -121,6 +118,11 @@ public class SnpController {
 	
 	// list of Sanger Mouse Genomes Project (MGP) strain names (retrieved and cached)
 	private static List<String> mgpStrains = null;
+
+	// list of 'allele agreement' filter choices
+	public static String referenceAllelesMatch = "All Reference Strains Have Same Allele";
+	public static String comparisonAllelesDiffer = "All Comparison Strains Differ from Reference Allele";
+	public static String comparisonAllelesAgree = "All Comparison Strains Agree with Reference Allele";
 
 	//--------------------//
 	// instance variables
@@ -283,13 +285,7 @@ public class SnpController {
 		searchByOptions.put(SearchConstants.MRK_SYMBOL, "Current symbol (mouse)");
 		searchByOptions.put(SearchConstants.MRK_NOMENCLATURE, "Current symbols/names, synonyms & homologs");
 
-		searchBySameDiffOptions = new LinkedHashMap<String, String>();
-		searchBySameDiffOptions.put("", "Not compared to the Reference Strain(s)");
-		searchBySameDiffOptions.put("diff_reference", "Different from the Reference Strain(s)");
-		searchBySameDiffOptions.put("same_reference", "Same as the Reference Strain(s)");
-
 		mav.addObject("searchByOptions", searchByOptions);
-		mav.addObject("searchBySameDiffOptions", searchBySameDiffOptions);
 
 		Map<String,String> yesNoOptions = new LinkedHashMap<String, String>();
 		yesNoOptions.put("yes", "Yes");
@@ -352,6 +348,12 @@ public class SnpController {
 				err.addObject("errorMsg", "Specified ID does not uniquely identify a marker.");
 				return err;
 			}
+		}
+		
+		if ((queryForm.getAlleleAgreementFilter() != null) && (queryForm.getAlleleAgreementFilter().size() > 1)) {
+			ModelAndView err = new ModelAndView("error");
+			err.addObject("errorMsg", "Please choose only one value for the Allele Agreement filter.");
+			return err;
 		}
 		return mav;
 	}
@@ -521,7 +523,6 @@ public class SnpController {
 				List<Filter> refStrains = new ArrayList<Filter>();
 				for (String referenceStrain : referenceStrains) {
 					// default behavior is to look for alleles in all reference strains (regardless of allele call)
-					//Filter referenceStrainFilter = new Filter(SearchConstants.SAME_STRAINS, referenceStrain, Operator.OP_IN);
 					Filter referenceStrainFilter = new Filter(SearchConstants.STRAINS, referenceStrain, Operator.OP_IN);
 					refStrains.add(referenceStrainFilter);
 					selectedStrains.remove(referenceStrain);
@@ -538,6 +539,8 @@ public class SnpController {
 			if ((selectedStrains != null) && (selectedStrains.size() > 0)) {
 				List<Filter> cmpStrains = new ArrayList<Filter>();
 				for (String comparisonStrain : selectedStrains) {
+					// default behavior is just to look for comparison strains (at least one) in the list
+					// of strain with an allele call for the SNP
 					Filter cmpStrainFilter = new Filter(SearchConstants.STRAINS, comparisonStrain, Operator.OP_IN);
 					cmpStrains.add(cmpStrainFilter);
 				}
@@ -938,6 +941,18 @@ public class SnpController {
 			mav.addObject("errors", errors);
 		}
 
+		if ((query.getAlleleAgreementFilter() != null) && (query.getAlleleAgreementFilter().size() > 1)) {
+//			ModelAndView err = new ModelAndView("error");
+//			err.addObject("errorMsg", "Please choose only one value for the Allele Agreement filter.");
+//			return err;
+			List<String> errors = new ArrayList<String>();
+			errors.add("Please choose only one value for the Allele Agreement filter.");
+			mav.addObject("errors", errors);
+			
+			// ensure we get no results, so the message will get displayed
+			searchFilter = null;
+		}
+
 		// if the user searched for SNPs in a genome region (not for
 		// a marker or set of markers by nomenclature), then we want
 		// to include a JBrowse link for the region.
@@ -1060,29 +1075,38 @@ public class SnpController {
 	}
 
 	private Filter genSameDiffFilter(SnpQueryForm query) {
-		if(query.getSearchBySameDiff() != null && query.getReferenceStrains() != null && query.getReferenceStrains().size() > 0) {
-
-			List<Filter> filterList = new ArrayList<Filter>();
-
-			for (String referenceStrain : query.getReferenceStrains()) {
-				filterList.add(new Filter(SearchConstants.SAME_STRAINS, referenceStrain, Operator.OP_IN));
-			}
-
-			if(query.getSearchBySameDiff().equals("same_reference")) {
-				filterList.add(new Filter(SearchConstants.SAME_STRAINS, query.getSelectedStrains(), Operator.OP_IN));
-				filterList.add(new Filter(SearchConstants.DIFF_STRAINS, query.getSelectedStrains(), Operator.OP_NOT_IN));
-				return Filter.and(filterList);
-			} else if(query.getSearchBySameDiff().equals("diff_reference")) {
-
-				filterList.add(new Filter(SearchConstants.SAME_STRAINS, query.getSelectedStrains(), Operator.OP_NOT_IN));
-				filterList.add(new Filter(SearchConstants.DIFF_STRAINS, query.getSelectedStrains(), Operator.OP_IN));
-				return Filter.and(filterList);
-			} else {
-				return null;
-			}
-		} else {
+		// if not a single allele agreement filter or no reference strain, just bail out
+		if ((query.getAlleleAgreementFilter() == null) 
+				|| (query.getAlleleAgreementFilter().size() != 1)
+				|| (query.getReferenceStrains() == null)
+				|| (query.getReferenceStrains().size() == 0)) {
 			return null;
 		}
+
+		// At this point we have four options to consider:
+		// 1. the default -- reference strains don't need to have the same allele.  #1 is handled by the 'if' above.
+		// 2. referenceAllelesMatch -- "All Reference Strains Have Same Allele"
+		// 3. comparisonAllelesAgree -- referenceAllelesMatch AND "All Comparison Strains Agree with Reference Allele"
+		// 4. comparisonAllelesDiffer -- referenceAllelesMatch AND "All Comparison Strains Differ from Reference Allele"
+
+		List<Filter> filterList = new ArrayList<Filter>();
+
+		// needed for #2, #3, and #4
+		for (String referenceStrain : query.getReferenceStrains()) {
+			filterList.add(new Filter(SearchConstants.SAME_STRAINS, referenceStrain, Operator.OP_IN));
+		}
+
+		// #3
+		if (comparisonAllelesAgree.equalsIgnoreCase(query.getAlleleAgreementFilter().get(0))) {
+			filterList.add(new Filter(SearchConstants.SAME_STRAINS, query.getSelectedStrains(), Operator.OP_IN));
+			filterList.add(new Filter(SearchConstants.DIFF_STRAINS, query.getSelectedStrains(), Operator.OP_NOT_IN));
+
+		// #4
+		} else if (comparisonAllelesDiffer.equalsIgnoreCase(query.getAlleleAgreementFilter().get(0))) {
+			filterList.add(new Filter(SearchConstants.SAME_STRAINS, query.getSelectedStrains(), Operator.OP_NOT_IN));
+			filterList.add(new Filter(SearchConstants.DIFF_STRAINS, query.getSelectedStrains(), Operator.OP_IN));
+		}
+		return Filter.and(filterList);
 	}
 
 	/* takes a strain name with non-alphanumeric characters and converts
@@ -1197,7 +1221,47 @@ public class SnpController {
 		SearchResults<String> results = new SearchResults<String>();
 		results.setResultFacets(facets);
 
-		return parseFacetResponse(results);
+		return parseFacetResponse(results, true, null);
+	}
+
+	// This method maps requests for the allele agreement facet list for
+	// SNPs matching the query.
+	@RequestMapping("/facet/alleleAgreement")
+	public @ResponseBody Map<String, List<String>> facetAlleleAgreement(@ModelAttribute SnpQueryForm query, BindingResult result, HttpServletResponse response) {
+		// perform query and return results as json
+		logger.debug("finding allele agreement filter values");
+		AjaxUtils.prepareAjaxHeaders(response);
+		
+		String errorMessage = null;
+		List<String> facets = new ArrayList<String>();
+		
+		// If we already have one selected, just return it.
+		if ((query.getAlleleAgreementFilter() != null) && (query.getAlleleAgreementFilter().size() > 0)) {
+			for (String facet : query.getAlleleAgreementFilter()) {
+				facets.add(facet);
+			}
+
+		} else {
+			// Otherwise, we have up to three choices for the user...
+			
+			// Filter is only valid if there is at least one reference strain chosen.
+			if ((query.getReferenceStrains() != null) && (query.getReferenceStrains().size() > 0)) {
+
+				if (query.getReferenceStrains().size() > 1) {
+					// only show this option if >1 reference strain has been selected
+					facets.add(referenceAllelesMatch);
+				}
+			
+				facets.add(comparisonAllelesDiffer);
+				facets.add(comparisonAllelesAgree);
+			} else {
+				errorMessage = "This filter is only valid when at least one Reference Strain has been selected.";
+			}
+		}
+
+		SearchResults<String> results = new SearchResults<String>();
+		results.setResultFacets(facets);
+		return parseFacetResponse(results, false, errorMessage);
 	}
 
 	// SNPs out to tab-delimited file (from summary page)
@@ -1246,12 +1310,15 @@ public class SnpController {
 	// This is a convenience method to parse the facet response from the 
 	// SearchResults object, inspect it for error conditions, and return a 
 	// map that the ui is expecting.
-	private Map<String, List<String>> parseFacetResponse(SearchResults<String> facetResults) {
+	private Map<String, List<String>> parseFacetResponse(SearchResults<String> facetResults, boolean sortResults, String errorMessage) {
 
 		Map<String, List<String>> m = new HashMap<String, List<String>>();
 		List<String> l = new ArrayList<String>();
 
-		if (facetResults.getResultFacets().size() >= facetLimit){
+		if ((errorMessage != null) && (errorMessage.length() > 0)) {
+			l.add(errorMessage);
+			m.put("error", l);
+		} else if (facetResults.getResultFacets().size() >= facetLimit){
 			logger.debug("too many facet results");
 			l.add("Too many results to display. Modify your search or try another filter first.");
 			m.put("error", l);
@@ -1261,7 +1328,9 @@ public class SnpController {
 			m.put("error", l);
 		} else {
 			List<String> facets = facetResults.getResultFacets();
-			Collections.sort(facets, new SmartAlphaComparator<String>());
+			if (sortResults) {
+				Collections.sort(facets, new SmartAlphaComparator<String>());
+			}
 			m.put("resultFacets", facets);
 		}
 		return m;

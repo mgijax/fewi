@@ -244,6 +244,8 @@ public class StrainController {
         mav.addObject("maxSnpCount", maxSnpCount);
         mav.addObject("sortBy", sortBy);
         mav.addObject("dir", dir);
+        mav.addObject("same_reference", SnpController.comparisonAllelesAgree);
+        mav.addObject("diff_reference", SnpController.comparisonAllelesDiffer);
         
         //pull out the Strain, sort its SNP rows as requested, and add them to the mav
         Strain strain = strainList.get(0);

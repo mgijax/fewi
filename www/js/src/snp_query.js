@@ -228,7 +228,6 @@ snpqry.resetQF = function (e) {
 	form.nomen.value = "";
 	//form.rangeDropList.value = 2000;
 	snpqry.refDeselectAll();
-	form.searchBySameDiff.value = "";
 	form.searchGeneByList.value = "homologSymbols";
 	snpqry.resetRadio();
 
@@ -238,11 +237,11 @@ snpqry.resetQF = function (e) {
 	form.coordinate.value = "";
 	form.coordinateUnitDropList.value = "bp";
 	snpqry.refDeselectAll();
-	form.searchBySameDiff.value = "";
 	form.startMarker.value = "";
 	form.endMarker.value = "";
 
 	$('input[name=referenceMode][value=no]')[0].click();	// back to comparison-only mode (no reference)
+	$('input[name=referenceMode][value=no]')[1].click();	// back to comparison-only mode (no reference)
 	snpqry.selectAll();
 };
 
@@ -307,16 +306,6 @@ snpqry.updateQF = function(fromForm, toForm) {
 	var toRefStrain = $(toForm + ' [name=referenceStrain] option[value="' + fromRefStrain + '"]');
 	if (toRefStrain.length > 0) {
 		toRefStrain[0].selected = true;
-	}
-
-	// finally copy the same/different radio button
-
-	var fromRadioButton = $(fromForm + ' [name=searchBySameDiff]:checked');
-	if (fromRadioButton.length > 0) {
-		var toRadioButton = $(toForm + ' #' + fromRadioButton[0].id);
-		if (toRadioButton.length > 0) {
-			toRadioButton[0].checked = true;
-		}
 	}
 };
 
