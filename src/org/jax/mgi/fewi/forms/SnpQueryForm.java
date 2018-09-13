@@ -23,8 +23,8 @@ public class SnpQueryForm implements Cloneable {
 	private String displayStrains;			// for text file output
 	private String startMarker;
 	private String endMarker;
-	private String allReferenceStrainsRequired;
-	private String allComparisonStrainsRequired;
+	private String allowNullsForReferenceStrains;
+	private String allowNullsForComparisonStrains;
 	private List<String> alleleAgreementFilter;
 
 	private static int allStrainsCount = 88;
@@ -47,8 +47,8 @@ public class SnpQueryForm implements Cloneable {
 		newQF.displayStrains = this.displayStrains;
 		newQF.startMarker = this.startMarker;
 		newQF.endMarker = this.endMarker;
-		newQF.allReferenceStrainsRequired = this.allReferenceStrainsRequired;
-		newQF.allComparisonStrainsRequired = this.allComparisonStrainsRequired;
+		newQF.allowNullsForReferenceStrains = this.allowNullsForReferenceStrains;
+		newQF.allowNullsForComparisonStrains = this.allowNullsForComparisonStrains;
 
 		if (this.referenceStrains != null) {
 			newQF.referenceStrains = new ArrayList<String>(this.referenceStrains);
@@ -66,28 +66,32 @@ public class SnpQueryForm implements Cloneable {
 	}
 	
 	public void setDefaults() {
-		if (this.allReferenceStrainsRequired == null) {
-			this.setAllReferenceStrainsRequired("yes");
+		if (this.allowNullsForReferenceStrains == null) {
+			this.setAllowNullsForReferenceStrains("no");
 		}
-		if (this.allComparisonStrainsRequired == null) {
-			this.setAllComparisonStrainsRequired("no");
+		if (this.allowNullsForComparisonStrains == null) {
+			this.setAllowNullsForComparisonStrains("yes");
 		}
-	}
-	public String getAllReferenceStrainsRequired() {
-		return allReferenceStrainsRequired;
-	}
-	public void setAllReferenceStrainsRequired(String allReferenceStrainsRequired) {
-		this.allReferenceStrainsRequired = allReferenceStrainsRequired;
-	}
-	public String getAllComparisonStrainsRequired() {
-		return allComparisonStrainsRequired;
-	}
-	public void setAllComparisonStrainsRequired(String allComparisonStrainsRequired) {
-		this.allComparisonStrainsRequired = allComparisonStrainsRequired;
 	}
 	public List<String> getAlleleAgreementFilter() {
 		return alleleAgreementFilter;
 	}
+	public String getAllowNullsForReferenceStrains() {
+		return allowNullsForReferenceStrains;
+	}
+
+	public void setAllowNullsForReferenceStrains(String allowNullsForReferenceStrains) {
+		this.allowNullsForReferenceStrains = allowNullsForReferenceStrains;
+	}
+
+	public String getAllowNullsForComparisonStrains() {
+		return allowNullsForComparisonStrains;
+	}
+
+	public void setAllowNullsForComparisonStrains(String allowNullsForComparisonStrains) {
+		this.allowNullsForComparisonStrains = allowNullsForComparisonStrains;
+	}
+
 	public void setAlleleAgreementFilter(List<String> alleleAgreementFilter) {
 		this.alleleAgreementFilter = alleleAgreementFilter;
 	}

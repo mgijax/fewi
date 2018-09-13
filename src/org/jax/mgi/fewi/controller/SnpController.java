@@ -529,7 +529,7 @@ public class SnpController {
 					refStrains.add(referenceStrainFilter);
 					selectedStrains.remove(referenceStrain);
 				}
-				if ("no".equalsIgnoreCase(query.getAllReferenceStrainsRequired())) {
+				if ("yes".equalsIgnoreCase(query.getAllowNullsForReferenceStrains())) {
 					// Just require at least one reference strain to have an allele call in each SNP.
 					filterList.add(Filter.or(refStrains));
 				} else {
@@ -546,7 +546,7 @@ public class SnpController {
 					Filter cmpStrainFilter = new Filter(SearchConstants.STRAINS, comparisonStrain, Operator.OP_IN);
 					cmpStrains.add(cmpStrainFilter);
 				}
-				if ("yes".equalsIgnoreCase(query.getAllComparisonStrainsRequired())) {
+				if ("no".equalsIgnoreCase(query.getAllowNullsForComparisonStrains())) {
 					filterList.add(Filter.and(cmpStrains));
 				} else {
 					filterList.add(Filter.or(cmpStrains));
