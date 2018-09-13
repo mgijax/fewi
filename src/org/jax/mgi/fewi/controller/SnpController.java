@@ -120,9 +120,9 @@ public class SnpController {
 	private static List<String> mgpStrains = null;
 
 	// list of 'allele agreement' filter choices
-	public static String referenceAllelesMatch = "All Reference Strains Have Same Allele";
-	public static String comparisonAllelesDiffer = "All Comparison Strains Differ from Reference Allele";
-	public static String comparisonAllelesAgree = "All Comparison Strains Agree with Reference Allele";
+	public static String referenceAllelesMatch = "All reference strains agree on allele call";
+	public static String comparisonAllelesDiffer = "All reference strains agree and all comparison strains differ from reference";
+	public static String comparisonAllelesAgree = "All reference strains agree and all comparison strains agree with reference";
 
 	//--------------------//
 	// instance variables
@@ -910,6 +910,123 @@ public class SnpController {
 		return mav;
 	}
 
+	//----------------------------------//
+	// heatmap of SNPs for summary page
+	//----------------------------------//
+	@RequestMapping("/heatmap")
+	public ModelAndView snpSummaryHeatmap(HttpServletRequest request, HttpServletResponse response, @ModelAttribute SnpQueryForm query, @ModelAttribute Paginator page, BindingResult result) {
+		logger.debug("->snpSummaryHeatmap started");
+
+		// add headers to allow Ajax access
+		AjaxUtils.prepareAjaxHeaders(response);
+
+		// set up MAV
+		ModelAndView mav = new ModelAndView("snp/summary_heatmap");
+		
+		// list of IDs for markers which matched the query
+		List<String> matchedMarkerIds = new ArrayList<String>();
+
+		// Defaults all strains on when coming from marker detail page
+		if(query.getMarkerID() != null && query.getMarkerID().length() > 0) {
+			query.setSelectedStrains(new ArrayList<String>(selectableStrains.keySet()));
+		}
+
+		// build the set of filters for the search
+		Filter searchFilter = genFilters(query, matchedMarkerIds, result);
+		if (result.hasErrors()) {
+			mav.addObject("error", "Filter errors");
+			return mav;
+		}
+		
+		if ((query.getAlleleAgreementFilter() != null) && (query.getAlleleAgreementFilter().size() > 1)) {
+			mav.addObject("error", "Allele Agreement filter error");
+			return mav;
+		}
+		
+		// We can only have a heatmap if we have a single genomic region.  That is, a contiguous region
+		// on a single chromosome.  That can be:
+		//	1. a single marker matched
+		//	2. a chromosome & coordinate range
+		//	3. a range specified by start & end markers
+		
+		String chromosome = null;
+		Long startCoordinate = null;
+		Long endCoordinate = null;
+		
+		if (matchedMarkerIds.size() == 1) {
+			CoordinateRange range = getCoordinates(matchedMarkerIds.get(0));
+			if (range.error == null) {
+				chromosome = range.chromosome;
+				startCoordinate = range.startCoordinate;
+				endCoordinate = range.endCoordinate;
+			}
+
+		} else if ((query.getSelectedChromosome() != null) && (query.getCoordinate() != null)) {
+			String coords = query.orientCoordinates(query.getCoordinate());
+			int pos = coords.indexOf("-");
+			if (pos > 0) {
+				try {
+					chromosome = query.getSelectedChromosome();
+					startCoordinate = Long.parseLong(coords.substring(0, pos));
+					endCoordinate = Long.parseLong(coords.substring(pos + 1));
+					if ("Mbp".equalsIgnoreCase(query.getCoordinateUnit())) {
+						startCoordinate = startCoordinate * 1000000;
+						endCoordinate = endCoordinate * 1000000;
+					}
+				} catch (Exception e) {}
+			}
+			
+		} else if ((query.getStartMarker() != null) && (query.getEndMarker() != null)) {
+			CoordinateRange range1 = getCoordinates(query.getStartMarker());
+			CoordinateRange range2 = getCoordinates(query.getEndMarker());
+			if (range1.error == null && range2.error == null) {
+				if (range1.chromosome.equals(range2.chromosome)) {
+					chromosome = range1.chromosome;
+					startCoordinate = Math.min(range1.startCoordinate, range2.startCoordinate);
+					endCoordinate = Math.min(range1.endCoordinate, range2.endCoordinate);
+				}
+			}
+		} else {
+			// failed to identify a single genomic region -- just let it fall through
+		}
+		
+		// If we don't have a single region, then bail out.
+		if ((chromosome == null) && (startCoordinate == null) && (endCoordinate == null)) {
+			mav.addObject("error", "No single region");
+			return mav;
+		}
+		
+		// TODO -- HERE
+		
+		
+		
+		SearchParams params = new SearchParams();
+		params.setPaginator(page);
+		params.setSorts(genSorts(request));
+
+		Filter sameDiffFilter = genSameDiffFilter(query);
+
+		if(searchFilter != null) {
+			if(sameDiffFilter != null) {
+				ArrayList<Filter> list = new ArrayList<Filter>();
+				list.add(searchFilter);
+				list.add(sameDiffFilter);
+				params.setFilter(Filter.and(list));
+			} else {
+				params.setFilter(searchFilter);
+			}
+		}
+
+		SearchResults<ConsensusSNPSummaryRow> searchResults = snpFinder.getSummarySnps(params, matchedMarkerIds);
+
+		mav.addObject("snps", searchResults.getResultObjects());
+		
+		
+		
+		
+		return mav;
+	}
+	
 	//--------------------------------//
 	// table of SNPs for summary page
 	//--------------------------------//
@@ -1096,6 +1213,7 @@ public class SnpController {
 		for (String referenceStrain : query.getReferenceStrains()) {
 			filterList.add(new Filter(SearchConstants.SAME_STRAINS, referenceStrain, Operator.OP_IN));
 		}
+		logger.info("filter: " + query.getAlleleAgreementFilter());
 
 		// #3
 		if (comparisonAllelesAgree.equalsIgnoreCase(query.getAlleleAgreementFilter().get(0))) {

@@ -168,7 +168,7 @@ public class SnpQueryForm {
 	/* if the coordinate range in s has the greater before the lesser,
 	 * swap them
 	 */
-	protected String orientCoordinates(String s) {
+	public String orientCoordinates(String s) {
 		if ((s == null) || (s.length() == 0)) { return ""; }
 
 		int pos = s.indexOf("-");

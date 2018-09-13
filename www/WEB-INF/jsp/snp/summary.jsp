@@ -98,6 +98,11 @@ width: 1250px;
     <div class="innertube">
 	<div id="paginationTop" style="float: right">&nbsp;</div>
     </div>
+    <div id="heatmap" style="float: right; display:none;">
+    	<table><tbody>
+    		<tr><td style="width: 400px; text-align: center; border: 1px solid black;">Loading...</td></tr>
+    	</tbody></table>
+    </div>
   </div>
 </div>
 
@@ -153,7 +158,8 @@ width: 1250px;
 	filters.setSummaryNames('filterSummary', 'filterList');
 	filters.setHistoryManagement('historyModule', handleNavigation);
 	filters.addFilter('functionClassFilter', 'dbSNP Function Class', 'functionClassFilter', 'functionClassFilter', fewiurl + 'snp/facet/functionClass');
-	filters.addFilter('alleleAgreementFilter', 'Allele Agreement', 'alleleAgreementFilter', 'alleleAgreementFilter', fewiurl + 'snp/facet/alleleAgreement');
+	filters.addFilter('alleleAgreementFilter', 'Allele Agreement', 'alleleAgreementFilter', 'alleleAgreementFilter', fewiurl + 'snp/facet/alleleAgreement',
+		null, filters.parseResponseRadio, 'Filter for SNPs where');
 	filters.registerCallback("pfs", updateRequest);
 
 	// need to wait a half-second before wiring up the checkbox updating functions, making sure to

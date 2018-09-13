@@ -1022,7 +1022,15 @@ filters.fillAndShowDialog = function (title, body, error) {
  * which has a list of value choices.  Override this if you need something
  * different.
  */
+filters.parseResponseRadio = function(oRequest, oResponse, oPayload) {
+	filters.parseResponseShared(oRequest, oResponse, oPayload, "radio");
+}
+
 filters.parseResponse = function(oRequest, oResponse, oPayload) {
+	filters.parseResponseShared(oRequest, oResponse, oPayload, "checkbox");
+}
+
+filters.parseResponseShared = function(oRequest, oResponse, oPayload, widgetType) {
     filters.log('parseResponse() : ' + oPayload.name);
 
     var list = [];
@@ -1096,7 +1104,7 @@ filters.parseResponse = function(oRequest, oResponse, oPayload) {
 	// multiple strings when the QueryForm object is constructed on
 	// the fewi side of the fence.  (my best guess)
 
-	options[x] = '<label><input type="checkbox" name="'
+	options[x] = '<label><input type="' + widgetType + '" name="'
 	    + fieldname + '" value="'
 	    + res[x].replace(/,/g, '(') + '"'
 	    + checked + '> '
