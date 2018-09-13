@@ -117,6 +117,8 @@
 <div class="row">
   <div class="col-sm-7" style="">
   <div class="strainColumn top">
+	  
+	   
 	    <div class="wrapper" style="padding-left: 15px; padding-bottom: 8px;">
 	    	<form method="GET" action="${configBean.FEWI_URL}strain/summary" id="strainForm" name="strainQueryForm">
 
@@ -124,34 +126,23 @@
 		<label class="searchLabel">Strain Name</label>
 <br>
 		<div style='display: inline-block'>
-		<div class="row">
-  <div class="col-sm-8" style="">
 		<input type="text" size="40" name="strainName" style="margin-bottom:8px" id="strainNameAC"
 			placeholder="name, synonym, or ID"
 			value="<c:out value="${strainQueryForm.strainName}"/>" />
 		</div>
-		<div class="col-sm-4" style="">
-		<div style='float: right; padding-right: 20px; white-space: nowrap'>
+		<div style='float: right; padding-right: 20px'>
 			<button id="searchButton" class="goButton">Search</button>
 			<button id="clearButton" class="clearButton">Clear</button>
 		</div>
-		</div>
-		<div class="row">
-  <div class="col-sm-12" style="">
+<br>
 		<label class="searchLabel">Attributes</label>
-		</div>
-</div>
-<div class="row">
-		<div class="col-sm-6" style="">
 		<div id="attributeContainer">
 			<div id="attributeTopDiv">
 			<div id="attributeDiv">
 	        	<select name="attributes" id="attributeDropList" multiple="" size="7">
 				<fewi:selectOptions items="${attributeChoices}" values="${strainQueryForm.attributes}" />
 				</select>
-			
 			</div>
-			<div class="col-sm-6" style="">
 			<div id="operatorDiv">
 				Match
 	        	<select name="attributeOperator" id="attributeOperatorList" size="1">
@@ -160,17 +151,9 @@
 				selected attributes.
 			</div>
 			</div>
-			</div>
-			</div>
-			</div>
-<div class="row">
-  <div class="col-sm-12" style="">
 			<div id="definitionsDiv">
 				<a href="${configBean.USERHELP_URL}STRAIN_search_help.shtml#attributes" target="_blank" class="homeLink">See attribute definitions</a>.
 			</div>
-		</div>
-		</div>
-		</div>
 		</div>
 	</div>
 </form>
