@@ -207,6 +207,14 @@ snpqry.interceptSubmit = function(e) {
 	YAHOO.util.Event.preventDefault(e);	
 	if (snpqry.validateQF(e)) {
 		snpqry.toggleQF(function(){
+			if ($('[name=allReferenceStrainsRequired]:checked').val() == 'no') {
+				for (var x = 0; x < $('.filterItem').length; x++) {
+					if ($('.filterItem')[x].id.startsWith('allele')) {
+						$('.filterItem')[x].click();
+						break;
+					}
+				}
+			}
 			var form = YAHOO.util.Dom.get(snpqry.getActiveFormID());
 			form.submit();
 		});

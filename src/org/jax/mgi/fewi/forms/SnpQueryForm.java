@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.jax.mgi.fewi.util.FormatHelper;
 
-public class SnpQueryForm {
+public class SnpQueryForm implements Cloneable {
 
 	private String nomen;
 	private String withinRange = "2000";
@@ -29,6 +29,42 @@ public class SnpQueryForm {
 
 	private static int allStrainsCount = 88;
 
+	public SnpQueryForm clone() {
+		// implementing this custom to ensure deep copy of Lists
+
+		SnpQueryForm newQF = new SnpQueryForm();
+		newQF.nomen = this.nomen;
+		newQF.withinRange = this.withinRange;
+		newQF.markerID = this.markerID;
+		newQF.coordinateUnit = this.coordinateUnit;
+		newQF.coordinate = this.coordinate;
+		newQF.locationSearch = this.locationSearch;
+		newQF.geneSearch = this.geneSearch;
+		newQF.selectedTab = this.selectedTab;
+		newQF.selectedChromosome = this.selectedChromosome;
+		newQF.searchGeneBy = this.searchGeneBy;
+		newQF.hideStrains = this.hideStrains;
+		newQF.displayStrains = this.displayStrains;
+		newQF.startMarker = this.startMarker;
+		newQF.endMarker = this.endMarker;
+		newQF.allReferenceStrainsRequired = this.allReferenceStrainsRequired;
+		newQF.allComparisonStrainsRequired = this.allComparisonStrainsRequired;
+
+		if (this.referenceStrains != null) {
+			newQF.referenceStrains = new ArrayList<String>(this.referenceStrains);
+		}
+		if (this.selectedStrains != null) {
+			newQF.selectedStrains = new ArrayList<String>(this.selectedStrains);
+		}
+		if (this.functionClassFilter != null) {
+			newQF.functionClassFilter = new ArrayList<String>(this.functionClassFilter);
+		}
+		if (this.alleleAgreementFilter != null) {
+			newQF.alleleAgreementFilter = new ArrayList<String>(this.alleleAgreementFilter);
+		}
+		return newQF;
+	}
+	
 	public void setDefaults() {
 		if (this.allReferenceStrainsRequired == null) {
 			this.setAllReferenceStrainsRequired("yes");
