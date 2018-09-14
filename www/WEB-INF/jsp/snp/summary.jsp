@@ -58,7 +58,7 @@ max-height: 30em;
 overflow-x: hidden;
 overflow-y: auto;
 text-align: left;
-width: 285px;
+width: 470px;
 }
 .fixedWidth {
 width: 1250px;
@@ -168,6 +168,8 @@ width: 1250px;
 		$("#ui-id-1").click(snpqry.updateQF1);
 		$("#ui-id-2").click(snpqry.updateQF2); 
 		}, 500);
+	
+	$('#facetDialog').css('width', '490px');
 </script>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

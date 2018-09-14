@@ -529,7 +529,7 @@ public class SnpController {
 					refStrains.add(referenceStrainFilter);
 					selectedStrains.remove(referenceStrain);
 				}
-				if ("no".equalsIgnoreCase(query.getAllReferenceStrainsRequired())) {
+				if ("yes".equalsIgnoreCase(query.getAllowNullsForReferenceStrains())) {
 					// Just require at least one reference strain to have an allele call in each SNP.
 					filterList.add(Filter.or(refStrains));
 				} else {
@@ -546,7 +546,7 @@ public class SnpController {
 					Filter cmpStrainFilter = new Filter(SearchConstants.STRAINS, comparisonStrain, Operator.OP_IN);
 					cmpStrains.add(cmpStrainFilter);
 				}
-				if ("yes".equalsIgnoreCase(query.getAllComparisonStrainsRequired())) {
+				if ("no".equalsIgnoreCase(query.getAllowNullsForComparisonStrains())) {
 					filterList.add(Filter.and(cmpStrains));
 				} else {
 					filterList.add(Filter.or(cmpStrains));
@@ -914,7 +914,7 @@ public class SnpController {
 	// heatmap of SNPs for summary page
 	//----------------------------------//
 	@RequestMapping("/heatmap")
-	public ModelAndView snpSummaryHeatmap(HttpServletRequest request, HttpServletResponse response, @ModelAttribute SnpQueryForm query, @ModelAttribute Paginator page, BindingResult result) {
+	public ModelAndView snpSummaryHeatmap(HttpServletRequest request, HttpServletResponse response, @ModelAttribute SnpQueryForm query, BindingResult result) {
 		logger.debug("->snpSummaryHeatmap started");
 
 		// add headers to allow Ajax access
@@ -996,30 +996,58 @@ public class SnpController {
 			return mav;
 		}
 		
+		long rangeSize = endCoordinate - startCoordinate;
+		long numberOfBins = Math.min(rangeSize, 80);
+		
+		mav.addObject("chromosome", chromosome);
+		mav.addObject("startCoordinate", startCoordinate);
+		mav.addObject("endCoordinate", endCoordinate);
+		mav.addObject("numberOfBins", numberOfBins);
+
+		Paginator page = new Paginator(0);
+		
+		SnpQueryForm sliceQF = query.clone();
+		sliceQF.setSelectedChromosome(chromosome);
+		
+		long sliceStart = startCoordinate;
+		double sliceSize = (endCoordinate - startCoordinate) / numberOfBins;
+
+		for (long i = 0; i < numberOfBins; i++) {
+			long sliceEnd = Math.round(startCoordinate + (i * sliceSize));
+			
+			sliceQF.setCoordinate(sliceStart + "-" + sliceEnd);
+			
+			Filter sliceFilter = genFilters(sliceQF, matchedMarkerIds, result);
+
+			SearchParams params = new SearchParams();
+			params.setPaginator(page);
+
+			Filter sameDiffFilter = genSameDiffFilter(sliceQF);
+			if(sliceFilter != null) {
+				if(sameDiffFilter != null) {
+					ArrayList<Filter> list = new ArrayList<Filter>();
+					list.add(sliceFilter);
+					list.add(sameDiffFilter);
+					params.setFilter(Filter.and(list));
+				} else {
+					params.setFilter(sliceFilter);
+				}
+			}
+
+			SearchResults<ConsensusSNPSummaryRow> searchResults = snpFinder.getSummarySnps(params, matchedMarkerIds);
+			
+			
+			
+			
+			sliceStart = sliceEnd + 1;
+		}
+
 		// TODO -- HERE
 		
 		
 		
-		SearchParams params = new SearchParams();
-		params.setPaginator(page);
-		params.setSorts(genSorts(request));
 
-		Filter sameDiffFilter = genSameDiffFilter(query);
-
-		if(searchFilter != null) {
-			if(sameDiffFilter != null) {
-				ArrayList<Filter> list = new ArrayList<Filter>();
-				list.add(searchFilter);
-				list.add(sameDiffFilter);
-				params.setFilter(Filter.and(list));
-			} else {
-				params.setFilter(searchFilter);
-			}
-		}
-
-		SearchResults<ConsensusSNPSummaryRow> searchResults = snpFinder.getSummarySnps(params, matchedMarkerIds);
-
-		mav.addObject("snps", searchResults.getResultObjects());
+		// mav.addObject("snps", searchResults.getResultObjects());
 		
 		
 		
@@ -1210,10 +1238,10 @@ public class SnpController {
 		List<Filter> filterList = new ArrayList<Filter>();
 
 		// needed for #2, #3, and #4
+		filterList.add(new Filter(SearchConstants.SAME_STRAINS, query.getReferenceStrains(), Operator.OP_IN));
 		for (String referenceStrain : query.getReferenceStrains()) {
-			filterList.add(new Filter(SearchConstants.SAME_STRAINS, referenceStrain, Operator.OP_IN));
+			filterList.add(new Filter(SearchConstants.DIFF_STRAINS, referenceStrain, Operator.OP_NOT_IN));
 		}
-		logger.info("filter: " + query.getAlleleAgreementFilter());
 
 		// #3
 		if (comparisonAllelesAgree.equalsIgnoreCase(query.getAlleleAgreementFilter().get(0))) {
