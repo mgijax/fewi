@@ -77,9 +77,9 @@
 
 .right {
     position:absolute;
-    top: 7%;
+    top: 2%;
     right: 20px;
-    max-height: 85%;
+    max-height: 23px;
 }
 
 #bottomSection {
@@ -155,6 +155,7 @@
 <div class="blankSectionSpacer"></div>
 <div class="container">
 <div class="gridRow">
+<div class="row">
 <div class="col-md-3" style="">
 	<a href="${configBean.FEWI_URL}snp"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/SNPQueryImage.png" alt="Mouse SNP Query"></a>
 	</div>
@@ -168,7 +169,9 @@
 	<a href="http://jbrowse.informatics.jax.org/"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/JBrowseLink.png" alt="JBrowse"></a>
 	</div>
 </div>
+</div>
 <div class="blankSectionSpacer"></div>
+<div class="row">
 <div class="col-md-3" style="">
 	<a href="http://www.findmice.org/index.jsp"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/IMSRLink.png" alt="IMSR"></a>
 	</div>
@@ -181,6 +184,7 @@
  <div class="col-md-3" style="">
 	<a href="${configBean.FAQ_URL}FAQ.shtml#faq_strain"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/FAQimage.png" alt="FAQ"></a>
 	</div>
+</div>
 </div>
 <div id="" class="blankSectionSpacer"></div>
 
