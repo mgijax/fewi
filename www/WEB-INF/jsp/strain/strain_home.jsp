@@ -106,16 +106,12 @@
 </div>
 
 <div class="container">
-  <div class="col-sm-7" style="">
-  <div class="strainSectionSpacer"><h5>&nbsp;Strain Query <a href="http://www.informatics.jax.org/userhelp/STRAIN_search_help.shtml" onclick="javascript:openUserhelpWindow(&quot;STRAIN_search_help.shtml&quot;); return false;"><img class="right"  src="http://www.informatics.jax.org/webshare/images/help_large_transp.gif" alt="Help"></a></h5></div>
-  </div>
-  <div class="col-sm-5" style="">
-  <div class="strainSectionSpacer"><h5>&nbsp;Strain Collections</h5></div>
-  </div>
-</div>
-<div class="container">
 <div class="row">
-  <div class="col-sm-7" style="">
+  <div class="col-md-7" style="">
+  <div class="strainSectionSpacer"><h5>&nbsp;Strain Query <a href="http://www.informatics.jax.org/userhelp/STRAIN_search_help.shtml" onclick="javascript:openUserhelpWindow(&quot;STRAIN_search_help.shtml&quot;); return false;"><img class="right"  src="http://www.informatics.jax.org/webshare/images/help_large_transp.gif" alt="Help"></a></h5></div>
+  <div class="container">
+  <div class="row">
+  <div class="col-md-12" style="">
   <div class="strainColumn top">
 	  <section class="infoBlock queryForm"> 
 	    <div style="padding-left: 0.5em; padding-bottom: 0.5em;">
@@ -126,11 +122,15 @@
 	    </div>
 	    </section>
 	    </div>
-	    </div>
-	   
-	    <div class="row">
-  <div class="col-sm-5" style="">
-		<ul class="collections">
+  </div>
+  </div>
+  </div>
+</div>
+<div class="col-md-5" style="">
+  <div class="strainSectionSpacer"><h5>&nbsp;Strain Collections</h5></div>
+  <div class="row">
+  <div class="col-md-12" style="">
+  <ul class="collections">
 			<li><a href="${configBean.FEWI_URL}strain/summary?isSequenced=1" class="homeLink">Wellcome Sanger Institute's Mouse Genomes Project (MGP)</a></li>
 			<li><a href="${configBean.FEWI_URL}strain/summary?attributes=inbred strain" class="homeLink">Inbred strains</a></li>
 			<li><a href="${configBean.FEWI_URL}strain/summary?group=HDP" class="homeLink">Hybrid Diversity Panel (HDP)</a></li>
@@ -138,8 +138,8 @@
 			<li><a href="${configBean.FEWI_URL}strain/summary?group=DOCCFounders" class="homeLink">DO/CC Founders</a></li>
 			<li><a href="${configBean.FEWI_URL}strain/summary" class="homeLink">All strains</a></li>
 		</ul>
-  <div class="row">
- <div class="col-sm-11" style="">
+		<div class="row">
+ <div class="col-md-11" style="">
   <div class="strainSectionSpacer"><h5>&nbsp;SNPs, Strains &amp; Polymorphisms </h5></div>
   <div class="col-sm-1"></div>
   <div class="wrapper">
@@ -149,8 +149,8 @@
   </div>
 </div>
 </div>
- 
   </div>
+</div>
 </div>
 <div class="blankSectionSpacer"></div>
 <div class="container">
