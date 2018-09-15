@@ -159,6 +159,48 @@ public class SnpFinder {
 		ret.setResultObjects(summaryRows);
 		return ret;
 	}
+
+	public SearchResults<ConsensusSNPSummaryRow> getMatchingSnpCount(SearchParams searchParams, List<String> matchedMarkerIds) {
+		SearchResults<ConsensusSNP> searchResults1 = new SearchResults<ConsensusSNP>();
+
+		Filter sameFilter = null;
+		Filter diffFilter = null;
+		
+		if(searchParams.getFilter() != null) {
+			sameFilter = searchParams.getFilter().getFirstFilterFor(SearchConstants.SAME_STRAINS);
+			diffFilter = searchParams.getFilter().getFirstFilterFor(SearchConstants.DIFF_STRAINS);
+		}
+		
+		if(sameFilter != null || diffFilter != null) {
+			snpAlleleSearchHunter.setFacetString(IndexConstants.SNP_STRAINS);
+			snpAlleleSearchHunter.hunt(searchParams, searchResults1);
+		} else {
+			snpSearchHunter.setFacetString(IndexConstants.SNP_STRAINS);
+			snpSearchHunter.hunt(searchParams, searchResults1);
+		}
+		
+		HashMap<String, String> ml = new HashMap<String, String>();
+		for(String markerId: matchedMarkerIds) {
+			ml.put(markerId, markerId);
+		}
+
+/*		SearchParams dataSearchParams = new SearchParams();
+		Filter snpIdFilter = new Filter(SearchConstants.SNPID, searchResults1.getResultKeys(), Filter.Operator.OP_IN);
+		dataSearchParams.setFilter(snpIdFilter);
+		dataSearchParams.setPageSize(searchParams.getPageSize());
+		
+		SearchResults<ConsensusSNP> searchResults2 = new SearchResults<ConsensusSNP>();
+		snpDataHunter.hunt(dataSearchParams, searchResults2);
+		
+		List<ConsensusSNPSummaryRow> summaryRows = new ArrayList<ConsensusSNPSummaryRow>();
+*/		
+		SearchResults<ConsensusSNPSummaryRow> ret = new SearchResults<ConsensusSNPSummaryRow>();
+//		ret.setResultKeys(searchResults1.getResultKeys());
+		ret.setTotalCount(searchResults1.getTotalCount());
+//		ret.setResultFacets(searchResults1.getResultFacets());
+//		ret.setResultObjects(summaryRows);
+		return ret;
+	}
 	
 	/* get the function classes (as facets) for the consensus SNPs
 	 * matching the current query

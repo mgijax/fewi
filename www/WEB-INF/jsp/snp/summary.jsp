@@ -98,11 +98,6 @@ width: 1250px;
     <div class="innertube">
 	<div id="paginationTop" style="float: right">&nbsp;</div>
     </div>
-    <div id="heatmap" style="float: right; display:none;">
-    	<table><tbody>
-    		<tr><td style="width: 400px; text-align: center; border: 1px solid black;">Loading...</td></tr>
-    	</tbody></table>
-    </div>
   </div>
 </div>
 
