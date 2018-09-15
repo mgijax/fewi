@@ -77,9 +77,9 @@
 
 .right {
     position:absolute;
-    top: 7%;
+    top: 2%;
     right: 20px;
-    max-height: 85%;
+    max-height: 23px;
 }
 
 #bottomSection {
@@ -106,88 +106,31 @@
 </div>
 
 <div class="container">
-  <div class="col-sm-7" style="">
-  <div class="strainSectionSpacer"><h5>&nbsp;Strain Query <a href="http://www.informatics.jax.org/userhelp/STRAIN_search_help.shtml" onclick="javascript:openUserhelpWindow(&quot;STRAIN_search_help.shtml&quot;); return false;"><img class="right"  src="http://www.informatics.jax.org/webshare/images/help_large_transp.gif" alt="Help"></a></h5></div>
-  </div>
-  <div class="col-sm-5" style="">
-  <div class="strainSectionSpacer"><h5>Strain Collections</h5></div>
-  </div>
-</div>
-<div class="container">
 <div class="row">
-  <div class="col-sm-7" style="">
+  <div class="col-md-7" style="">
+  <div class="strainSectionSpacer"><h5>&nbsp;Strain Query <a href="http://www.informatics.jax.org/userhelp/STRAIN_search_help.shtml" onclick="javascript:openUserhelpWindow(&quot;STRAIN_search_help.shtml&quot;); return false;"><img class="right"  src="http://www.informatics.jax.org/webshare/images/help_large_transp.gif" alt="Help"></a></h5></div>
+  <div class="container">
+  <div class="row">
+  <div class="col-md-12" style="">
   <div class="strainColumn top">
-	  
+	  <section class="infoBlock queryForm"> 
+	    <div style="padding-left: 0.5em; padding-bottom: 0.5em;">
 	   
 	    <div class="wrapper" style="padding-left: 15px; padding-bottom: 8px;">
-	    	<form method="GET" action="${configBean.FEWI_URL}strain/summary" id="strainForm" name="strainQueryForm">
-
-	<div>
-		<label class="searchLabel">Strain Name</label>
-<br>
-		<div style='display: inline-block'>
-		<input type="text" size="40" name="strainName" style="margin-bottom:8px" id="strainNameAC"
-			placeholder="name, synonym, or ID"
-			value="<c:out value="${strainQueryForm.strainName}"/>" />
-		</div>
-		<div style='float: right; padding-right: 20px'>
-			<button id="searchButton" class="goButton">Search</button>
-			<button id="clearButton" class="clearButton">Clear</button>
-		</div>
-<br>
-		<label class="searchLabel">Attributes</label>
-		<div id="attributeContainer">
-			<div id="attributeTopDiv">
-			<div id="attributeDiv">
-	        	<select name="attributes" id="attributeDropList" multiple="" size="7">
-				<fewi:selectOptions items="${attributeChoices}" values="${strainQueryForm.attributes}" />
-				</select>
-			</div>
-			<div id="operatorDiv">
-				Match
-	        	<select name="attributeOperator" id="attributeOperatorList" size="1">
-				<fewi:selectOptions items="${attributeOperatorChoices}" values="${strainQueryForm.attributeOperator}" />
-				</select>
-				selected attributes.
-			</div>
-			</div>
-			<div id="definitionsDiv">
-				<a href="${configBean.USERHELP_URL}STRAIN_search_help.shtml#attributes" target="_blank" class="homeLink">See attribute definitions</a>.
-			</div>
-		</div>
-	</div>
-</form>
-<script>
-	// clear button should clear both strain box and attribute selection list
-	$('#clearButton').click(function () {
-		$('#attributeDropList').val([]);
-		$('[name=strainName]').val('');
-		$('#attributeOperatorList').val(['any']);
-		return false;
-	});
-	// pressing Enter in the strain box should submit the form
-	$('#strainForm').keypress(function (e) {
-		if (e.which == 13) {
-			$('#searchButton').focus().click();
-			return false;	// stop processing the keypress
-		}
-	});
-</script>
-<style>
-#attributeContainer {}
-#attributeTopDiv { display: flex; }
-#operatorDiv { padding-left: 10px; padding-top: 45px; }
-#definitionsDiv { padding-left: 20px; padding-top: 5px; }
-</style>
+	    	<%@ include file="/WEB-INF/jsp/strain/sub_strain_form.jsp" %>
 	    </div>
 	    </div>
 	    </section>
 	    </div>
-	    </div>
-	   
-	    <div class="row">
-  <div class="col-sm-5" style="">
-		<ul class="collections">
+  </div>
+  </div>
+  </div>
+</div>
+<div class="col-md-5" style="">
+  <div class="strainSectionSpacer"><h5>&nbsp;Strain Collections</h5></div>
+  <div class="row">
+  <div class="col-md-12" style="">
+  <ul class="collections">
 			<li><a href="${configBean.FEWI_URL}strain/summary?isSequenced=1" class="homeLink">Wellcome Sanger Institute's Mouse Genomes Project (MGP)</a></li>
 			<li><a href="${configBean.FEWI_URL}strain/summary?attributes=inbred strain" class="homeLink">Inbred strains</a></li>
 			<li><a href="${configBean.FEWI_URL}strain/summary?group=HDP" class="homeLink">Hybrid Diversity Panel (HDP)</a></li>
@@ -195,8 +138,8 @@
 			<li><a href="${configBean.FEWI_URL}strain/summary?group=DOCCFounders" class="homeLink">DO/CC Founders</a></li>
 			<li><a href="${configBean.FEWI_URL}strain/summary" class="homeLink">All strains</a></li>
 		</ul>
-  <div class="row">
- <div class="col-sm-11" style="">
+		<div class="row">
+ <div class="col-md-11" style="">
   <div class="strainSectionSpacer"><h5>&nbsp;SNPs, Strains &amp; Polymorphisms </h5></div>
   <div class="col-sm-1"></div>
   <div class="wrapper">
@@ -206,12 +149,13 @@
   </div>
 </div>
 </div>
- 
   </div>
+</div>
 </div>
 <div class="blankSectionSpacer"></div>
 <div class="container">
 <div class="gridRow">
+<div class="row">
 <div class="col-md-3" style="">
 	<a href="${configBean.FEWI_URL}snp"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/SNPQueryImage.png" alt="Mouse SNP Query"></a>
 	</div>
@@ -225,7 +169,9 @@
 	<a href="http://jbrowse.informatics.jax.org/"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/JBrowseLink.png" alt="JBrowse"></a>
 	</div>
 </div>
+</div>
 <div class="blankSectionSpacer"></div>
+<div class="row">
 <div class="col-md-3" style="">
 	<a href="http://www.findmice.org/index.jsp"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/IMSRLink.png" alt="IMSR"></a>
 	</div>
@@ -238,6 +184,7 @@
  <div class="col-md-3" style="">
 	<a href="${configBean.FAQ_URL}FAQ.shtml#faq_strain"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/FAQimage.png" alt="FAQ"></a>
 	</div>
+</div>
 </div>
 <div id="" class="blankSectionSpacer"></div>
 
