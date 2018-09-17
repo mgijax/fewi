@@ -9,6 +9,7 @@
 		</script>
 	</c:when>
 	<c:otherwise>
+		<span class='ysf'>SNP Density Heatmap</span><br/>
 		<table id="heatmap">
 			<tr id="heatmapColorRow">
 				<c:forEach var="count" items="${sliceCounts}" varStatus="loop">
@@ -45,13 +46,14 @@
 				</tr>
 				<script>
 					// allow extra room for the new line
-					$('#hideStrainsDiv').css('padding-bottom', '18px');
+					$('#hideStrainsDiv').css('padding-bottom', '32px');
 				</script>
 			</c:if>
 		</table>
 	</c:otherwise>
 </c:choose>
 <style>
+#heatmap { margin-top: 3px; }
 #heatmapColorRow { border: 1px solid black; }
 #heatmapInfoRow { text-align: center; }
 #unzoomRow { text-align: center; }
