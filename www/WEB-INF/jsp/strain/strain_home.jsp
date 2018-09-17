@@ -63,7 +63,7 @@
 .blankSectionSpacer {
     border: none;
     background-color: none;
-    height: 10px;
+    height: 5px;
   }
   
 .collections {
