@@ -525,9 +525,10 @@ public class SnpController {
 				List<Filter> refStrains = new ArrayList<Filter>();
 				
 				for (String referenceStrain : referenceStrains) {
-					// default behavior is to look for alleles in all reference strains (regardless of allele call)
-					Filter referenceStrainFilter = new Filter(SearchConstants.STRAINS, referenceStrain, Operator.OP_IN);
-					refStrains.add(referenceStrainFilter);
+					// default behavior is to look for alleles in all reference strains (regardless of allele call).
+					// To ensure we have an actual allele call (A, C, G, T) we need to ensure that each reference
+					// strain is in the 'same', not just in the bucket of all strains.
+					refStrains.add(new Filter(SearchConstants.SAME_STRAINS, referenceStrain, Operator.OP_IN));
 					selectedStrains.remove(referenceStrain);
 				}
 				if ("yes".equalsIgnoreCase(query.getAllowNullsForReferenceStrains())) {
