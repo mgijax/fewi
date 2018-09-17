@@ -26,6 +26,13 @@ public class SnpQueryForm implements Cloneable {
 	private String allowNullsForReferenceStrains;
 	private String allowNullsForComparisonStrains;
 	private List<String> alleleAgreementFilter;
+	
+	/* These fields are set by zooming in using the heatmap on the summary display.  They should not be
+	 * submitted as part of an actual query form submission.
+	 */
+	private Integer sliceMaxCount;
+	private Long sliceStartCoord;
+	private Long sliceEndCoord;
 
 	private static int allStrainsCount = 88;
 
@@ -49,6 +56,9 @@ public class SnpQueryForm implements Cloneable {
 		newQF.endMarker = this.endMarker;
 		newQF.allowNullsForReferenceStrains = this.allowNullsForReferenceStrains;
 		newQF.allowNullsForComparisonStrains = this.allowNullsForComparisonStrains;
+		newQF.sliceEndCoord = this.sliceEndCoord;
+		newQF.sliceStartCoord = this.sliceStartCoord;
+		newQF.sliceMaxCount = this.sliceMaxCount;
 
 		if (this.referenceStrains != null) {
 			newQF.referenceStrains = new ArrayList<String>(this.referenceStrains);
@@ -78,6 +88,30 @@ public class SnpQueryForm implements Cloneable {
 	}
 	public String getAllowNullsForReferenceStrains() {
 		return allowNullsForReferenceStrains;
+	}
+
+	public Integer getSliceMaxCount() {
+		return sliceMaxCount;
+	}
+
+	public void setSliceMaxCount(Integer sliceMaxCount) {
+		this.sliceMaxCount = sliceMaxCount;
+	}
+
+	public Long getSliceStartCoord() {
+		return sliceStartCoord;
+	}
+
+	public void setSliceStartCoord(Long sliceStartCoord) {
+		this.sliceStartCoord = sliceStartCoord;
+	}
+
+	public Long getSliceEndCoord() {
+		return sliceEndCoord;
+	}
+
+	public void setSliceEndCoord(Long sliceEndCoord) {
+		this.sliceEndCoord = sliceEndCoord;
 	}
 
 	public void setAllowNullsForReferenceStrains(String allowNullsForReferenceStrains) {

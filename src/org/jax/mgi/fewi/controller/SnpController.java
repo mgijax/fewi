@@ -459,6 +459,19 @@ public class SnpController {
 			}
 		}
 
+		// restrict to a particular slice due to zooming in via a heatmap cell
+		Long sliceStart = query.getSliceStartCoord();
+		Long sliceEnd = query.getSliceEndCoord();
+		if ((sliceStart != null) && (sliceEnd != null)) {
+			Filter sliceFilter = FilterUtil.genCoordFilter(sliceStart + "-" + sliceEnd, "bp", true);
+			if(sliceFilter!=null) {
+				filterList.add(sliceFilter);
+			} else {
+				result.addError(new ObjectError("snpQueryForm", "* Faulty selection of heatmap slice (internal error)"));
+				return null;
+			}
+		}
+
 		// Marker Range search
 		String startMarker = query.getStartMarker();
 		String endMarker = query.getEndMarker();
@@ -958,9 +971,13 @@ public class SnpController {
 		if (matchedMarkerIds.size() == 1) {
 			CoordinateRange range = getCoordinates(matchedMarkerIds.get(0));
 			if (range.error == null) {
+				int pad = 0;
+				if (query.getWithinRange() != null) {
+					pad = Integer.parseInt(query.getWithinRange());
+				}
 				chromosome = range.chromosome;
-				startCoordinate = range.startCoordinate;
-				endCoordinate = range.endCoordinate;
+				startCoordinate = range.startCoordinate - pad;
+				endCoordinate = range.endCoordinate + pad;
 			}
 
 		} else if ((query.getSelectedChromosome() != null) && (query.getCoordinate() != null)) {
@@ -998,6 +1015,12 @@ public class SnpController {
 			return mav;
 		}
 		
+		// adjust the range coordinates based on whether the user has zoomed in or not
+		if ((query.getSliceStartCoord() != null) && (query.getSliceEndCoord() != null)) {
+			startCoordinate = query.getSliceStartCoord();
+			endCoordinate = query.getSliceEndCoord();
+		}
+		
 		long rangeSize = endCoordinate - startCoordinate;
 		long numberOfBins = Math.min(rangeSize, 20);
 		
@@ -1008,39 +1031,29 @@ public class SnpController {
 
 		Paginator page = new Paginator(0);
 		
-		// find the count of SNPs matched for the full query range
-		
-		SearchParams fullParams = new SearchParams();
-		fullParams.setPaginator(page);
-		Filter fullSameDiffFilter = genSameDiffFilter(query);
-		Filter fullFilter = genFilters(query, matchedMarkerIds, result);
-		if(fullFilter != null) {
-			if(fullSameDiffFilter != null) {
-				ArrayList<Filter> list = new ArrayList<Filter>();
-				list.add(fullFilter);
-				list.add(fullSameDiffFilter);
-				fullParams.setFilter(Filter.and(list));
-			} else {
-				fullParams.setFilter(fullFilter);
-			}
-		}
-		SearchResults<ConsensusSNPSummaryRow> fullSearchResults = snpFinder.getMatchingSnpCount(fullParams, matchedMarkerIds);
-		int fullCount = fullSearchResults.getTotalCount();
-		logger.info("full count: " + fullCount);
-
 		// find counts for the slices of the query range
 		
 		SnpQueryForm sliceQF = query.clone();
 		sliceQF.setSelectedChromosome(chromosome);
 		
+		// Our maximum count (for determining the shading of the heatmap cells) is based on either:
+		//	1. the count passed in via the link from a heatmap click, or
+		//	2. the highest count for the cells (if we're not coming from an existing heatmap)
+		int maxCount = 0;
+		if (query.getSliceMaxCount() != null) {
+			maxCount = query.getSliceMaxCount();
+		}
+
 		long sliceStart = startCoordinate;
-		double sliceSize = (endCoordinate - startCoordinate) / numberOfBins;
+		double sliceSize = (endCoordinate - startCoordinate) / (numberOfBins * 1.0);
 
 		List<Integer> sliceCounts = new ArrayList<Integer>();
 		Map<Integer,String> sliceColors = new HashMap<Integer,String>();
+		Map<Integer,String> sliceStartCoord = new HashMap<Integer,String>();
+		Map<Integer,String> sliceEndCoord = new HashMap<Integer,String>();
 		
-		for (long i = 0; i < numberOfBins; i++) {
-			long sliceEnd = Math.round(startCoordinate + (i * sliceSize));
+		for (int i = 0; i < numberOfBins; i++) {
+			long sliceEnd = Math.round(startCoordinate + ((i + 1) * sliceSize));
 			
 			sliceQF.setCoordinate(sliceStart + "-" + sliceEnd);
 			
@@ -1062,14 +1075,27 @@ public class SnpController {
 			}
 
 			SearchResults<ConsensusSNPSummaryRow> searchResults = snpFinder.getMatchingSnpCount(params, matchedMarkerIds);
-			sliceCounts.add(searchResults.getTotalCount()); 
-			sliceColors.put(searchResults.getTotalCount(), FormatHelper.getSnpColorCode(searchResults.getTotalCount(), fullCount, fullCount));
+			int sliceCount = searchResults.getTotalCount();
+
+			sliceCounts.add(sliceCount);
+			maxCount = Math.max(maxCount, sliceCount);
+			sliceStartCoord.put(i, "" + sliceStart);
+			sliceEndCoord.put(i, "" + sliceEnd);
 
 			sliceStart = sliceEnd + 1;
 		}
 
+		// Now that we have computed the maximum bin count, we can also assign cell colors.
+		for (int i = 0; i < numberOfBins; i++) {
+			int sliceCount = sliceCounts.get(i);
+			sliceColors.put(sliceCount, FormatHelper.getSnpColorCode(sliceCount, maxCount, maxCount));
+		}
+		
 		mav.addObject("sliceCounts", sliceCounts);
 		mav.addObject("sliceColors", sliceColors);
+		mav.addObject("sliceStartCoords", sliceStartCoord);
+		mav.addObject("sliceEndCoords", sliceEndCoord);
+		mav.addObject("sliceMaxCount", maxCount);
 		
 		return mav;
 	}

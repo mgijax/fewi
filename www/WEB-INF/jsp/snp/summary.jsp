@@ -137,6 +137,40 @@ width: 1250px;
 	function getQuerystring() {
 		return snpQuerystring + filters.getUrlFragment() + "&hideStrains=" + getHideStrains();
 	}
+
+	// get the query string, but without any slice-specific parameters
+	function getFullRangeQuerystring() {
+		var s = getQuerystring();
+		var params = [ 'sliceMaxCount', 'sliceStartCoord', 'sliceEndCoord' ];
+		for (var i in params) {
+			s = stripParameter(s, params[i]);
+			console.log('s=' + s);
+		}
+		return s;
+	};
+	
+	// remove the parameter with the given 'name' from the 'url'
+	function stripParameter(url, name) {
+		var param = name + '=';
+		var start = url.indexOf(param);
+		console.log('url=' + url);
+		console.log('param=' + param);
+		console.log('start=' + start);
+		if (start >= 0) {
+			var end = url.indexOf('&', start + 1);
+			console.log('end=' + end);
+			if (end >= start) {
+				// Found both the start of the parameter and an ampersand before the next parameter.
+				// Just splice it out.
+				return url.slice(0,start) + url.slice(end + 1);
+			} else {
+				// Found the start of the parameter, but no ampersand, so it's at the end of the URL.
+				// Just trim the end of the string off.
+				return url.slice(0, start);
+			}
+		}
+		return url;
+	};
 </script>
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/snp_query.js"></script>
