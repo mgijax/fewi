@@ -1045,7 +1045,7 @@ public class SnpController {
 		}
 
 		long sliceStart = startCoordinate;
-		double sliceSize = (endCoordinate - startCoordinate) / (numberOfBins * 1.0);
+		double sliceSize = ((double) (endCoordinate - startCoordinate)) / (numberOfBins * (double) 1.0);
 
 		List<Integer> sliceCounts = new ArrayList<Integer>();
 		Map<Integer,String> sliceColors = new HashMap<Integer,String>();
@@ -1055,6 +1055,7 @@ public class SnpController {
 		for (int i = 0; i < numberOfBins; i++) {
 			long sliceEnd = Math.round(startCoordinate + ((i + 1) * sliceSize));
 			
+			sliceQF.setCoordinateUnit("bp");
 			sliceQF.setCoordinate(sliceStart + "-" + sliceEnd);
 			
 			Filter sliceFilter = genFilters(sliceQF, matchedMarkerIds, result);
