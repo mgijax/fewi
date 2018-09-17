@@ -318,6 +318,8 @@ public class SnpQueryForm implements Cloneable {
 			int strainCount = selectedStrains.size();
 			if (strainCount == allStrainsCount) {
 				out.add("Selected Strains: " + bold("ALL"));
+			} else if (showNullMessages){
+				out.add("Comparison Strains: " + bold("" + strainCount));
 			} else {
 				out.add("Selected Strains: " + bold("" + strainCount));
 			}
