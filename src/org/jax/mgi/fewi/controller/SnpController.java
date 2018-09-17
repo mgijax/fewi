@@ -986,12 +986,15 @@ public class SnpController {
 			if (pos > 0) {
 				try {
 					chromosome = query.getSelectedChromosome();
-					startCoordinate = Long.parseLong(coords.substring(0, pos));
-					endCoordinate = Long.parseLong(coords.substring(pos + 1));
+					Double startDouble = Double.parseDouble(coords.substring(0, pos));
+					Double endDouble = Double.parseDouble(coords.substring(pos + 1));
 					if ("Mbp".equalsIgnoreCase(query.getCoordinateUnit())) {
-						startCoordinate = startCoordinate * 1000000;
-						endCoordinate = endCoordinate * 1000000;
+						startDouble = startDouble * 1000000;
+						endDouble = endDouble * 1000000;
 					}
+					
+					startCoordinate = Math.round(startDouble);
+					endCoordinate = Math.round(endDouble);
 				} catch (Exception e) {}
 			}
 			
@@ -1097,6 +1100,13 @@ public class SnpController {
 		mav.addObject("sliceStartCoords", sliceStartCoord);
 		mav.addObject("sliceEndCoords", sliceEndCoord);
 		mav.addObject("sliceMaxCount", maxCount);
+		mav.addObject("prettyStart", FormatHelper.getPrettyCoordinate(startCoordinate));
+		mav.addObject("prettyEnd", FormatHelper.getPrettyCoordinate(endCoordinate));
+		if (startCoordinate == 0) {
+			mav.addObject("prettyRange", FormatHelper.getPrettyCoordinate(endCoordinate - startCoordinate));
+		} else {
+			mav.addObject("prettyRange", FormatHelper.getPrettyCoordinate(endCoordinate - startCoordinate + 1));
+		}
 		
 		return mav;
 	}

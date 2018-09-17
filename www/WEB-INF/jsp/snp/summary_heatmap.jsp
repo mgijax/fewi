@@ -32,10 +32,14 @@
 			</tr>
 			<tr id="heatmapInfoRow">
 				<td colspan="${numberOfBins}">
-					Chr${chromosome}
-					from <fmt:formatNumber type="number" groupingUsed="true" value="${startCoordinate}"/>
-					to <fmt:formatNumber type="number" groupingUsed="true" value="${endCoordinate}"/>
-					(<fmt:formatNumber type="number" groupingUsed="true" value="${endCoordinate - startCoordinate + 1}"/> bp)
+					<div>
+						<div style="float:left">
+							Chr${chromosome} from ${prettyStart} to ${prettyEnd}
+						</div>
+						<div style="float:right">
+							(${prettyRange}<c:if test="${!fn:endsWith(prettyRange, 'Mbp')}"> bp</c:if>)
+						</div>
+					</div>
 				</td>
 			</tr>
 			<c:if test="${not empty snpQueryForm.sliceMaxCount}">

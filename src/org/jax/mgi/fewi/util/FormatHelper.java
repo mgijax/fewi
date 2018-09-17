@@ -766,5 +766,37 @@ public class FormatHelper {
 		
 		return getShade(color1, color3, snpCount, allSnpCount, maxSnpCount);
 	}
+	
+	/* Get a pretty-printed version of the given coordinate.
+	 */
+	public static String getPrettyCoordinate(long coord) {
+		StringBuffer sb = new StringBuffer();
+		
+		// special case for zero -- no units needed.  Zero is zero.
+		if (coord == 0) {
+			sb.append("0");
+			
+		} else if (coord % 1000000 == 0) {
+			// if this is evenly divisible by a million, use Mbp
+			sb.append(String.format("%,d", (coord / 1000000)));
+			sb.append(" Mbp");
+
+		} else if (coord % 100000 == 0) {
+			// if evenly divisble by a hundred thousand, use Mbp with decimal
+
+			long hundredThousands = coord / 100000;
+			long millions = hundredThousands / 10;
+			long remainder = hundredThousands % 10;
+			sb.append(String.format("%,d", millions));
+			sb.append(".");
+			sb.append(String.format("%d", remainder));
+			sb.append(" Mbp");
+			
+		} else {
+			// fall back on bp
+			sb.append(String.format("%,d", coord));
+		}
+		return sb.toString(); 
+	}
 } // end of class FormatHelper
 
