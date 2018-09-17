@@ -77,7 +77,7 @@
 
 .right {
     position:absolute;
-    top: 1%;
+    top: 1px;
     right: 20px;
     max-height: 23px;
 }
@@ -166,6 +166,7 @@
 </div>
 </div>
 <div class="blankSectionSpacer"></div>
+<div class="gridRow">
 <div class="row">
 <div class="col-md-3" style="">
 	<a href="http://www.findmice.org/index.jsp"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/IMSRLink.png" alt="IMSR"></a>
@@ -179,6 +180,7 @@
  <div class="col-md-3" style="">
 	<a href="${configBean.FAQ_URL}FAQ.shtml#faq_strain"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/FAQimage.png" alt="FAQ"></a>
 	</div>
+</div>
 </div>
 </div>
 <div id="" class="blankSectionSpacer"></div>
