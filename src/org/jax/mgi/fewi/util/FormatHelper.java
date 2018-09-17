@@ -741,7 +741,16 @@ public class FormatHelper {
 		sb.append(hexComponent(color1, color2, 0, fraction));
 		sb.append(hexComponent(color1, color2, 1, fraction));
 		sb.append(hexComponent(color1, color2, 2, fraction));
-		return sb.toString();
+
+		String color = sb.toString();
+		if ("#000000".equals(color)) {
+			StringBuffer sb2 = new StringBuffer("#");
+			sb2.append(hexComponent(color1, color2, 0, 0.0));
+			sb2.append(hexComponent(color1, color2, 1, 0.0));
+			sb2.append(hexComponent(color1, color2, 2, 0.0));
+			return sb2.toString();
+		}
+		return color;
 	}
 	
 	/* get the hex color code for the given 'snpCount', where the highest number of SNPs per cell is given
