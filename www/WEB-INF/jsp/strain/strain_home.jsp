@@ -77,7 +77,7 @@
 
 .right {
     position:absolute;
-    top: 2%;
+    top: 1%;
     right: 20px;
     max-height: 23px;
 }
@@ -112,15 +112,10 @@
   <div class="container">
   <div class="row">
   <div class="col-md-12" style="">
-  <div class="strainColumn top">
-	  <section class="infoBlock queryForm"> 
-	    <div style="padding-left: 0.5em; padding-bottom: 0.5em;">
-	   
-	    <div class="wrapper" style="padding-left: 15px; padding-bottom: 8px;">
+  <div class="strainColumn top"> 
+	    <div class="wrapper" style="padding-left: 2px; padding-bottom: 8px;">
 	    	<%@ include file="/WEB-INF/jsp/strain/sub_strain_form.jsp" %>
 	    </div>
-	    </div>
-	    </section>
 	    </div>
   </div>
   </div>
