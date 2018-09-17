@@ -299,6 +299,7 @@ public class SnpQueryForm implements Cloneable {
 		}
 		
 		// Reference Strain
+		boolean showNullMessages = false;
 		if ((referenceStrains != null) && (referenceStrains.size() > 0)) {
 			String label = "Reference Strain";
 			if (referenceStrains.size() == 1) {
@@ -307,6 +308,9 @@ public class SnpQueryForm implements Cloneable {
 				label = label + "s";
 				out.add(label + ": " + bold("" + referenceStrains.size()));
 			}
+			showNullMessages = true;
+			out.add("Include SNPs With No Allele Call in Some Reference Strains: "
+				+ bold(allowNullsForReferenceStrains));
 		}
 
 		// Selected Strains
@@ -316,6 +320,10 @@ public class SnpQueryForm implements Cloneable {
 				out.add("Selected Strains: " + bold("ALL"));
 			} else {
 				out.add("Selected Strains: " + bold("" + strainCount));
+			}
+			if (showNullMessages) {
+				out.add("Include SNPs With No Allele Call in Some Comparison Strains: "
+					+ bold(allowNullsForComparisonStrains));
 			}
 		}
 
