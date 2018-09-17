@@ -31,5 +31,5 @@
 <style>
 #heatmapColorRow { border: 1px solid black; }
 #heatmapInfoRow { text-align: center; }
-.heatmapTD { border: none; cursor: pointer; height: 1em; width: 20px; cell-padding: 0px; cell-spacing: 0px; }
+.heatmapTD { border-right: 1px solid black; cursor: pointer; height: 1em; width: 20px; cell-padding: 0px; cell-spacing: 0px; }
 </style>
