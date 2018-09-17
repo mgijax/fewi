@@ -774,7 +774,7 @@ public class FormatHelper {
 		
 		// special case for zero -- no units needed.  Zero is zero.
 		if (coord == 0) {
-			sb.append("0");
+			sb.append("0 bp");
 			
 		} else if (coord % 1000000 == 0) {
 			// if this is evenly divisible by a million, use Mbp
@@ -795,6 +795,7 @@ public class FormatHelper {
 		} else {
 			// fall back on bp
 			sb.append(String.format("%,d", coord));
+			sb.append(" bp");
 		}
 		return sb.toString(); 
 	}

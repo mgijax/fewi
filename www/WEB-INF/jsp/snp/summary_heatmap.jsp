@@ -37,7 +37,7 @@
 							Chr${chromosome} from ${prettyStart} to ${prettyEnd}
 						</div>
 						<div style="float:right">
-							(${prettyRange}<c:if test="${!fn:endsWith(prettyRange, 'Mbp')}"> bp</c:if>)
+							(${prettyRange})
 						</div>
 					</div>
 				</td>
