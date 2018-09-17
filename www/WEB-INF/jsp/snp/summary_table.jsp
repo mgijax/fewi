@@ -7,6 +7,11 @@
 
 <%@ page trimDirectiveWhitespaces="true" %>
 <fewi:count count="${count}" />
+    <div id="heatmapDiv" style="float: left; display:inline; width: 400px;">
+    	<table id="heatmap"><tbody>
+    		<tr><td style="width: 400px; text-align: center; border: 1px solid black;">Loading...</td></tr>
+    	</tbody></table>
+    </div>
 <div id="hideStrainsDiv" style="display: inline-block; padding-left: 435px; padding-bottom: 3px">
 <%
     Map<Object,String> strainOptions = new LinkedHashMap<Object, String>();
@@ -130,7 +135,7 @@ $("input[name=hideStrains]").on("change", function() {
 });
 
 // line up the hide/show choices with leftmost strain
-$("#hideStrainsDiv").css({"padding-left" : $("#alleles").position().left + $("#alleles").width() - $("#dragInstructions").width() })
+$("#hideStrainsDiv").css({"padding-left" : $("#alleles").position().left + $("#alleles").width() - $("#dragInstructions").width() - $('#heatmapDiv').width() })
 
 // adjust the width of the export bar to match the table below
 $('#exportBar').attr("style", "width:" + ($('#snpSummaryTable').width() - 2) + "px");
@@ -140,4 +145,11 @@ var displayStrains = '${strains}'.replace('[','').replace(']','').replace(/ /g, 
 
 // fix the text button to be aware of filter selections
 $('#snpsToTextFile').attr('href', $('#snpsToTextFile').attr('href') + getQuerystring() + '&displayStrains=' + displayStrains)
+	
+// load the heatmap
+var qs = getQuerystring();
+$.get('${configBean.FEWI_URL}snp/heatmap?' + qs,
+	function(data) {
+		$('#heatmapDiv').html(data);
+	});
 </script>

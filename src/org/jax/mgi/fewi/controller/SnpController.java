@@ -523,10 +523,12 @@ public class SnpController {
 			List<String> referenceStrains = query.getReferenceStrains();
 			if(referenceStrains != null && (referenceStrains.size() > 0)) {
 				List<Filter> refStrains = new ArrayList<Filter>();
+				
 				for (String referenceStrain : referenceStrains) {
-					// default behavior is to look for alleles in all reference strains (regardless of allele call)
-					Filter referenceStrainFilter = new Filter(SearchConstants.STRAINS, referenceStrain, Operator.OP_IN);
-					refStrains.add(referenceStrainFilter);
+					// default behavior is to look for alleles in all reference strains (regardless of allele call).
+					// To ensure we have an actual allele call (A, C, G, T) we need to ensure that each reference
+					// strain is in the 'same', not just in the bucket of all strains.
+					refStrains.add(new Filter(SearchConstants.SAME_STRAINS, referenceStrain, Operator.OP_IN));
 					selectedStrains.remove(referenceStrain);
 				}
 				if ("yes".equalsIgnoreCase(query.getAllowNullsForReferenceStrains())) {
@@ -997,7 +999,7 @@ public class SnpController {
 		}
 		
 		long rangeSize = endCoordinate - startCoordinate;
-		long numberOfBins = Math.min(rangeSize, 80);
+		long numberOfBins = Math.min(rangeSize, 20);
 		
 		mav.addObject("chromosome", chromosome);
 		mav.addObject("startCoordinate", startCoordinate);
@@ -1006,12 +1008,37 @@ public class SnpController {
 
 		Paginator page = new Paginator(0);
 		
+		// find the count of SNPs matched for the full query range
+		
+		SearchParams fullParams = new SearchParams();
+		fullParams.setPaginator(page);
+		Filter fullSameDiffFilter = genSameDiffFilter(query);
+		Filter fullFilter = genFilters(query, matchedMarkerIds, result);
+		if(fullFilter != null) {
+			if(fullSameDiffFilter != null) {
+				ArrayList<Filter> list = new ArrayList<Filter>();
+				list.add(fullFilter);
+				list.add(fullSameDiffFilter);
+				fullParams.setFilter(Filter.and(list));
+			} else {
+				fullParams.setFilter(fullFilter);
+			}
+		}
+		SearchResults<ConsensusSNPSummaryRow> fullSearchResults = snpFinder.getMatchingSnpCount(fullParams, matchedMarkerIds);
+		int fullCount = fullSearchResults.getTotalCount();
+		logger.info("full count: " + fullCount);
+
+		// find counts for the slices of the query range
+		
 		SnpQueryForm sliceQF = query.clone();
 		sliceQF.setSelectedChromosome(chromosome);
 		
 		long sliceStart = startCoordinate;
 		double sliceSize = (endCoordinate - startCoordinate) / numberOfBins;
 
+		List<Integer> sliceCounts = new ArrayList<Integer>();
+		Map<Integer,String> sliceColors = new HashMap<Integer,String>();
+		
 		for (long i = 0; i < numberOfBins; i++) {
 			long sliceEnd = Math.round(startCoordinate + (i * sliceSize));
 			
@@ -1034,23 +1061,15 @@ public class SnpController {
 				}
 			}
 
-			SearchResults<ConsensusSNPSummaryRow> searchResults = snpFinder.getSummarySnps(params, matchedMarkerIds);
-			
-			
-			
-			
+			SearchResults<ConsensusSNPSummaryRow> searchResults = snpFinder.getMatchingSnpCount(params, matchedMarkerIds);
+			sliceCounts.add(searchResults.getTotalCount()); 
+			sliceColors.put(searchResults.getTotalCount(), FormatHelper.getSnpColorCode(searchResults.getTotalCount(), fullCount, fullCount));
+
 			sliceStart = sliceEnd + 1;
 		}
 
-		// TODO -- HERE
-		
-		
-		
-
-		// mav.addObject("snps", searchResults.getResultObjects());
-		
-		
-		
+		mav.addObject("sliceCounts", sliceCounts);
+		mav.addObject("sliceColors", sliceColors);
 		
 		return mav;
 	}

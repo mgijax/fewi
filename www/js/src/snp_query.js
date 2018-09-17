@@ -248,6 +248,12 @@ snpqry.resetQF = function (e) {
 	form.startMarker.value = "";
 	form.endMarker.value = "";
 
+	$('input[name=allowNullsForReferenceStrains][value=no]')[0].click();	// default: no nulls for reference strains
+	$('input[name=allowNullsForReferenceStrains][value=no]')[1].click();	// default: no nulls for reference strains
+
+	$('input[name=allowNullsForComparisonStrains][value=yes]')[0].click();	// default: nulls okay for comparison strains
+	$('input[name=allowNullsForComparisonStrains][value=yes]')[1].click();	// default: nulls okay for comparison strains
+
 	$('input[name=referenceMode][value=no]')[0].click();	// back to comparison-only mode (no reference)
 	$('input[name=referenceMode][value=no]')[1].click();	// back to comparison-only mode (no reference)
 	snpqry.selectAll();

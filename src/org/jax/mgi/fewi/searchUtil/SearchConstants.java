@@ -250,6 +250,7 @@ public class SearchConstants {
 	public static final String FUNCTIONCLASS = "functionclass";
 	public static final String MARKERID = "markerId";
 	public static final String STRAINS = "strains";
+	public static final String ALLELE = "allele";
 	public static final String DIFF_STRAINS = "diffstrains";
 	public static final String SAME_STRAINS = "samestrains";
 	public static final String CRE_SYSTEM = "creSystem";
