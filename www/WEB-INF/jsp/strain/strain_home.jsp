@@ -63,7 +63,7 @@
 .blankSectionSpacer {
     border: none;
     background-color: none;
-    height: 10px;
+    height: 5px;
   }
   
 .collections {
@@ -77,7 +77,7 @@
 
 .right {
     position:absolute;
-    top: 2%;
+    top: 1px;
     right: 20px;
     max-height: 23px;
 }
@@ -112,15 +112,10 @@
   <div class="container">
   <div class="row">
   <div class="col-md-12" style="">
-  <div class="strainColumn top">
-	  <section class="infoBlock queryForm"> 
-	    <div style="padding-left: 0.5em; padding-bottom: 0.5em;">
-	   
-	    <div class="wrapper" style="padding-left: 15px; padding-bottom: 8px;">
+  <div class="strainColumn top"> 
+	    <div class="wrapper" style="padding-left: 2px; padding-bottom: 8px;">
 	    	<%@ include file="/WEB-INF/jsp/strain/sub_strain_form.jsp" %>
 	    </div>
-	    </div>
-	    </section>
 	    </div>
   </div>
   </div>
@@ -163,7 +158,7 @@
 	<a href="${configBean.FEWI_URL}allele"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/Alleleqf.png" alt="Phenotypes, Alleles & Disease Models Search"></a>
 	</div>
 <div class="col-md-3" style="">
-	<a href="http://www.informatics.jax.org/mgv/#chr=4&start=37427566&end=46427572&dmode=comparison&ref=C57BL/6J&genomes=C57BL/6J+A/J+AKR/J+BALB/cJ+C3H/HeJ+C57BL/6NJ&highlight=MGI:1919151+MGI:192141"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/MGVLink.png" alt="MGV"></a>
+	<a href="http://proto.informatics.jax.org/prototypes/mgv/#ref=A/J&landmark=Pax2&flank=5000"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/MGVLink.png" alt="MGV"></a>
 	</div>
 <div class="col-md-3" style="">
 	<a href="http://jbrowse.informatics.jax.org/"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/JBrowseLink.png" alt="JBrowse"></a>
@@ -171,6 +166,7 @@
 </div>
 </div>
 <div class="blankSectionSpacer"></div>
+<div class="gridRow">
 <div class="row">
 <div class="col-md-3" style="">
 	<a href="http://www.findmice.org/index.jsp"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/IMSRLink.png" alt="IMSR"></a>
@@ -184,6 +180,7 @@
  <div class="col-md-3" style="">
 	<a href="${configBean.FAQ_URL}FAQ.shtml#faq_strain"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/FAQimage.png" alt="FAQ"></a>
 	</div>
+</div>
 </div>
 </div>
 <div id="" class="blankSectionSpacer"></div>
