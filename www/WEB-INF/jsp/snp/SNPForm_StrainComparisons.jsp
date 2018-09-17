@@ -97,7 +97,7 @@ $('input[name=referenceMode]').on('click', function(e) {
 		} else {
 			inasecond(function() { $('#form1 input[name=referenceMode][value=no]')[0].checked = true; });
 		}
-		snpqry.refDeselectAll();
+		$("input[name=referenceStrains]").each(function(){ this.checked = false; });
 	}
 });
 
