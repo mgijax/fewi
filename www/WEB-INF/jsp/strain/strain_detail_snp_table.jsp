@@ -78,7 +78,7 @@
 							<td title="${cellTitle}" class="cell ${flagCell}"
 								style="background-color: <%= FormatHelper.getSnpColorCode(cellCount, cell.getAllCount(), maxCount) %>"
 								<c:if test='${cellCount > 0}'>
-								onClick="window.open('${configBean.FEWI_URL}snp/summary?selectedChromosome=${cell.chromosome}&coordinate=0-200&coordinateUnit=Mbp&selectedStrains=${row.comparisonStrainName}&referenceStrains=${strain.name}&alleleAgreementFilter=${qfMode}&selectedTab=1');"
+								onClick="window.open('${configBean.FEWI_URL}snp/summary?selectedChromosome=${cell.chromosome}&coordinate=0-${chromosomeSize.get(cell.chromosome)}&coordinateUnit=bp&selectedStrains=${row.comparisonStrainName}&referenceStrains=${strain.name}&alleleAgreementFilter=${qfMode}&selectedTab=1');"
 								</c:if>
 								></td>
 						</c:forEach>

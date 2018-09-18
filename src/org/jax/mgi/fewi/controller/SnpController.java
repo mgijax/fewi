@@ -557,10 +557,13 @@ public class SnpController {
 				List<Filter> cmpStrains = new ArrayList<Filter>();
 				for (String comparisonStrain : selectedStrains) {
 					// default behavior is just to look for comparison strains (at least one) in the list
-					// of strain with an allele call for the SNP.  Use the list of strains with the same allele,
-					// as this will include only those with actual (A, C, G, T) allele calls, rather than '?'.
-					Filter cmpStrainFilter = new Filter(SearchConstants.SAME_STRAINS, comparisonStrain, Operator.OP_IN);
-					cmpStrains.add(cmpStrainFilter);
+					// of strain with an allele call for the SNP.  Use the lists of strains with the same allele
+					// or of different alleles,
+					// as these will include only those with actual (A, C, G, T) allele calls, rather than '?'.
+					List<Filter> cmpFilters = new ArrayList<Filter>();
+					cmpFilters.add(new Filter(SearchConstants.SAME_STRAINS, comparisonStrain, Operator.OP_IN));
+					cmpFilters.add(new Filter(SearchConstants.DIFF_STRAINS, comparisonStrain, Operator.OP_IN));
+					cmpStrains.add(Filter.or(cmpFilters));
 				}
 				if ("no".equalsIgnoreCase(query.getAllowNullsForComparisonStrains())) {
 					filterList.add(Filter.and(cmpStrains));

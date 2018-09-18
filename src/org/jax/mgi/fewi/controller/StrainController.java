@@ -71,6 +71,34 @@ public class StrainController {
 	private static int downloadRowMax = 250000;	// maximum number of strains to allow in download file
 	private static int maxSnpCount = -1;		// max number of SNPs in a cell for the SNP ribbon on detail page
 
+	private static Map<String,String> chromosomeSize;	// size the the chromosomes, for links to SNP summary (in bp)
+	static {
+		chromosomeSize = new HashMap<String,String>();
+		chromosomeSize.put("1", "196000000");
+		chromosomeSize.put("2", "183000000");
+		chromosomeSize.put("3", "161000000");
+		chromosomeSize.put("4", "157000000");
+		chromosomeSize.put("5", "152000000");
+		chromosomeSize.put("6", "150000000");
+		chromosomeSize.put("7", "146000000");
+		chromosomeSize.put("8", "130000000");
+		chromosomeSize.put("9", "125000000");
+		chromosomeSize.put("10", "131000000");
+		chromosomeSize.put("11", "123000000");
+		chromosomeSize.put("12", "121000000");
+		chromosomeSize.put("13", "121000000");
+		chromosomeSize.put("14", "125000000");
+		chromosomeSize.put("15", "105000000");
+		chromosomeSize.put("16", "99000000");
+		chromosomeSize.put("17", "96000000");
+		chromosomeSize.put("18", "91000000");
+		chromosomeSize.put("19", "62000000");
+		chromosomeSize.put("X", "172000000");
+		chromosomeSize.put("X", "172000000");
+		chromosomeSize.put("Y", "172000000");
+		chromosomeSize.put("MT", "17000");
+	}
+	
     //--------------------//
     // instance variables
     //--------------------//
@@ -246,6 +274,7 @@ public class StrainController {
         mav.addObject("dir", dir);
         mav.addObject("same_reference", SnpController.comparisonAllelesAgree);
         mav.addObject("diff_reference", SnpController.comparisonAllelesDiffer);
+		mav.addObject("chromosomeSize", chromosomeSize);
         
         //pull out the Strain, sort its SNP rows as requested, and add them to the mav
         Strain strain = strainList.get(0);
