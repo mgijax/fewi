@@ -557,8 +557,9 @@ public class SnpController {
 				List<Filter> cmpStrains = new ArrayList<Filter>();
 				for (String comparisonStrain : selectedStrains) {
 					// default behavior is just to look for comparison strains (at least one) in the list
-					// of strain with an allele call for the SNP
-					Filter cmpStrainFilter = new Filter(SearchConstants.STRAINS, comparisonStrain, Operator.OP_IN);
+					// of strain with an allele call for the SNP.  Use the list of strains with the same allele,
+					// as this will include only those with actual (A, C, G, T) allele calls, rather than '?'.
+					Filter cmpStrainFilter = new Filter(SearchConstants.SAME_STRAINS, comparisonStrain, Operator.OP_IN);
 					cmpStrains.add(cmpStrainFilter);
 				}
 				if ("no".equalsIgnoreCase(query.getAllowNullsForComparisonStrains())) {
