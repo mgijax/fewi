@@ -133,7 +133,7 @@ width: 1250px;
 	var fewiurl = "${configBean.FEWI_URL}";
 
 	var snpQuerystring = "${queryString}";
-	snpQuerystring = filters.setAllFiltersFromUrl(snpQuerystring);
+	console.log('set snpQuerystring = ' + snpQuerystring);
 
 	var assemblyVersion = "${assemblyVersion}";
 	var buildNumber = "${buildNumber}";
@@ -193,6 +193,9 @@ width: 1250px;
 	filters.addFilter('alleleAgreementFilter', 'Allele Agreement', 'alleleAgreementFilter', 'alleleAgreementFilter', fewiurl + 'snp/facet/alleleAgreement',
 		null, filters.parseResponseRadio, 'Filter for SNPs where');
 	filters.registerCallback("pfs", updateRequest);
+
+	snpQuerystring = filters.setAllFiltersFromUrl(snpQuerystring);
+	console.log('updated snpQuerystring = ' + snpQuerystring);
 
 	// need to wait a half-second before wiring up the checkbox updating functions, making sure to
 	// allow time for the tab buttons to be created

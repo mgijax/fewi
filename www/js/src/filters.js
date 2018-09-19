@@ -570,10 +570,13 @@ filters.getAllSummaryButtons = function() {
  */
 filters.setAllFiltersFromUrl = function(url) {
 	pRequest = filters.urlToHash(url);
+	
 	filters.setAllFilters(pRequest);
 	for (var i in filters.filterNames) {
 		var name = filters.filterNames[i];
-		delete pRequest[name];
+		if (name in pRequest) {
+			delete pRequest[name];
+		}
 	}
     return filters.hashToUrl(pRequest);
 };
