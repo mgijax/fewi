@@ -538,10 +538,7 @@ public class SnpController {
 				List<Filter> refStrains = new ArrayList<Filter>();
 				
 				for (String referenceStrain : referenceStrains) {
-					// default behavior is to look for alleles in all reference strains (regardless of allele call).
-					// To ensure we have an actual allele call (A, C, G, T) we need to ensure that each reference
-					// strain is in the 'same', not just in the bucket of all strains.
-					refStrains.add(new Filter(SearchConstants.SAME_STRAINS, referenceStrain, Operator.OP_IN));
+					refStrains.add(new Filter(SearchConstants.STRAINS, referenceStrain, Operator.OP_IN));
 					selectedStrains.remove(referenceStrain);
 				}
 				if ("yes".equalsIgnoreCase(query.getAllowNullsForReferenceStrains())) {
@@ -557,17 +554,14 @@ public class SnpController {
 				List<Filter> cmpStrains = new ArrayList<Filter>();
 				for (String comparisonStrain : selectedStrains) {
 					// default behavior is just to look for comparison strains (at least one) in the list
-					// of strain with an allele call for the SNP.  Use the lists of strains with the same allele
-					// or of different alleles,
-					// as these will include only those with actual (A, C, G, T) allele calls, rather than '?'.
-					List<Filter> cmpFilters = new ArrayList<Filter>();
-					cmpFilters.add(new Filter(SearchConstants.SAME_STRAINS, comparisonStrain, Operator.OP_IN));
-					cmpFilters.add(new Filter(SearchConstants.DIFF_STRAINS, comparisonStrain, Operator.OP_IN));
-					cmpStrains.add(Filter.or(cmpFilters));
+					// of strain with an allele call for the SNP.
+					cmpStrains.add(new Filter(SearchConstants.STRAINS, comparisonStrain, Operator.OP_IN));
 				}
 				if ("no".equalsIgnoreCase(query.getAllowNullsForComparisonStrains())) {
+					// Require all comparison strains to have allele calls for each SNP.
 					filterList.add(Filter.and(cmpStrains));
 				} else {
+					// Just require at least one comparison strain to have an allele call for each SNP.
 					filterList.add(Filter.or(cmpStrains));
 				}
 			}
