@@ -565,22 +565,63 @@ filters.getAllSummaryButtons = function() {
     return list;
 };
 
-/* set the values for all filters to be those specified in the given 'url'
+/* Set the values for all filters to be those specified in the given 'url'.  Returns a 
+ * copy of the 'url' without the filtering parameters (so the querystring can be reset).
  */
 filters.setAllFiltersFromUrl = function(url) {
-    var i = 0;		// walks through filters
-
-    for (var i = 0; i < filters.filterNames.length; i++) {
-	filters.setFilterFromUrl(filters.filterNames[i], url);
-    }
-    return;
+	pRequest = filters.urlToHash(url);
+	filters.setAllFilters(pRequest);
+	for (var i in filters.filterNames) {
+		var name = filters.filterNames[i];
+		delete pRequest[name];
+	}
+    return filters.hashToUrl(pRequest);
 };
 
-/* set the value for the filter with the given name to be those specified in
- * the given 'url'
+/* parse the parameters from the given 'url' and produce a hash like:
+ * 	{ name : [ values ] }
  */
-filters.setFilterFromUrl = function(filterName, url) {
-	// TBD
+filters.urlToHash = function(url) {
+	var pairs = url.split('&');
+	var map = {};
+	for (var i in pairs) {
+		var pair = pairs[i].split('=');
+		var name = pair[0];
+		var value = '';
+
+		if (pair.length > 1) {
+			value = pair[1];
+		}
+			
+		if (name in map) {
+			if (filters.listIndexOf(map[name], value) < 0) {
+				map[name].push(value);
+			}
+		} else {
+			map[name] = [ value ];
+		}
+	}
+	return map;
+};
+
+/* take the parameter map and turn it into a URL, which is returned
+ */
+filters.hashToUrl = function(pRequest) {
+	var s = '';
+	for (var name in pRequest) {
+		var values = pRequest[name];
+	    if (typeof(values) === 'string') {
+	    	s = s + name + '=' + values + '&';
+	    } else {
+	    	for (var i in values) {
+	    		s = s + name + '=' + values[i] + '&';
+	    	}
+	    }
+	}
+	if (s.endsWith('&')) {
+		s = s.slice(0, -1);
+	}
+	return s;
 };
 
 /* set the filters from a pRequest object
@@ -1388,5 +1429,13 @@ filters.populateFilterSummary = function() {
 	YAHOO.util.Dom.setStyle(fSum, 'display', 'inline');
     } else {
 	YAHOO.util.Dom.setStyle(fSum, 'display', 'none');
+    }
+};
+
+function setText(element, text){
+	element.textContent=text;
+    if (!YAHOO.lang.isUndefined(element.innerText)){                 
+        element.innerText = text;
+
     }
 };

@@ -131,7 +131,10 @@ width: 1250px;
 
 <script type="text/javascript">
 	var fewiurl = "${configBean.FEWI_URL}";
+
 	var snpQuerystring = "${queryString}";
+	snpQuerystring = filters.setAllFiltersFromUrl(snpQuerystring);
+
 	var assemblyVersion = "${assemblyVersion}";
 	var buildNumber = "${buildNumber}";
 	function getQuerystring() {
