@@ -520,6 +520,7 @@ public class MarkerController {
 		List<MarkerBiotypeConflict> conflicts = marker.getBiotypeConflicts();
 		if ((conflicts != null) && (conflicts.size() > 0)) {
 			StringBuffer conflictTable = new StringBuffer();
+			conflictTable.append ("Biotypes are flagged as conflicting when annotations from multiple sources for the same genome feature in the same strain are different. Biotype annotations that differ among different strains for the equivalent genome feature are considered polymorphisms, not conflicts.");
 			conflictTable.append ("<table class=bioMismatch>");
 			conflictTable.append ("<tr class=header><td>Source</td><td>BioType</td><td>Gene ID</td></tr>");
 			conflictTable.append ("<tr><td>MGI</td><td>" + marker.getMarkerSubtype() + "</td><td><a href=" + fewiUrl + "marker/" + marker.getPrimaryID() + ">" + marker.getPrimaryID() + "</a></td></tr>");
