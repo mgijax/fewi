@@ -158,7 +158,7 @@
 	<a href="${configBean.FEWI_URL}allele"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/Alleleqf.png" alt="Phenotypes, Alleles & Disease Models Search"></a>
 	</div>
 <div class="col-md-3" style="">
-	<a href="http://proto.informatics.jax.org/prototypes/mgv/#ref=A/J&genomes=C57BL/6J+BALB/cJ+C3H/HeJ+FVB/NJ&landmark=Pax2&flank=80000&highlight=MGI:97486"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/MGVLink.png" alt="MGV"></a>
+	<a href="<!--#include file='include/wi_url.html'-->mgv"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/MGVLink.png" alt="MGV"></a>
 	</div>
 <div class="col-md-3" style="">
 	<a href="http://jbrowse.informatics.jax.org/"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/JBrowseLink.png" alt="JBrowse"></a>
