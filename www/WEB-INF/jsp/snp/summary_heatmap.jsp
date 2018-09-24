@@ -1,4 +1,6 @@
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
+<%@ page import = "org.jax.mgi.fewi.util.FormatHelper" %>
+<%@ page import = "org.jax.mgi.fewi.forms.SnpQueryForm" %>
 <%@ page trimDirectiveWhitespaces="true" %>
 
 <!-- heatmap for SNP summary where one range is returned -->
@@ -9,7 +11,40 @@
 		</script>
 	</c:when>
 	<c:otherwise>
-		<span class='ysf'>SNP Density Heatmap</span><br/>
+		<c:set var="maxCount" value="${snpQueryForm.sliceMaxCount}" scope="request"/>
+		<c:if test="${empty maxCount}">
+			<c:set var="maxCount" value="1" scope="request"/>
+			<c:forEach var="count" items="${sliceCounts}" varStatus="loop">
+				<c:if test="${count > maxCount}">
+					<c:set var="maxCount" value="${count}" scope="request"/>
+				</c:if>
+			</c:forEach>
+		</c:if>
+
+		<% Integer maxCount = (Integer) request.getAttribute("maxCount"); %>
+		<div id="snpHeatmapHelp" style="visibility: hidden;">
+			<div class="hd">SNP Density Heatmap Overview</div>
+			<div class="bd" style="text-align: center">
+				Each cell represents an evenly-sized range of the genome location matching your search.<p/>
+				Hover over a colored cell to see the number of SNPs.<p/>
+				Click on a cell to see the SNPs in that range and to refine your search.<p/>
+				<b>Legend:</b><br/>
+				<table id="heatmapLegend">
+				<tr>
+					<td style="text-align: left; width: 100px;">1 SNP</td>
+					<td style="text-align: right; width: 100px">${maxCount} SNPs</td>
+				</tr>
+				<tr>
+					<td colspan="2" style="background: linear-gradient(to right,
+						<%= FormatHelper.getSnpColorCode(1, 1, maxCount) %>,
+						<%= FormatHelper.getSnpColorCode(maxCount, maxCount, maxCount) %>);"></td>
+				</tr>
+				</table>
+			</div>
+		</div>
+		<span class='ysf'>SNP Density Heatmap</span>
+		<img id="snpHeatmapHelpImage" src="${configBean.FEWI_URL}assets/images/help_icon_16.png" style="margin-bottom: -3px; margin-left: 3px; cursor: pointer;"/>
+		<br/>
 		<table id="heatmap">
 			<tr id="heatmapColorRow">
 				<c:forEach var="count" items="${sliceCounts}" varStatus="loop">
@@ -58,8 +93,19 @@
 </c:choose>
 <style>
 #heatmap { margin-top: 3px; }
+#snpHeatmapHelp_c { margin-left: 470px; }
 #heatmapColorRow { border: 1px solid black; }
 #heatmapInfoRow { text-align: center; }
 #unzoomRow { text-align: center; }
 .heatmapTD { border-right: 1px solid black; cursor: pointer; height: 1em; width: 20px; cell-padding: 0px; cell-spacing: 0px; }
+#heatmapLegend { margin-left: 70px; }
+#heatmapLegend tr { border: 1px solid black; }
+#heatmapLegend td { height: 1.3em; }
 </style>
+<script>
+	// set up popup for help icon in pheno grid area
+	YAHOO.namespace("heatmapHelp.container");
+	YAHOO.heatmapHelp.container.shHelp = new YAHOO.widget.Panel("snpHeatmapHelp", { width:"360px", draggable:false, visible:false, constraintoviewport:true } );
+	YAHOO.heatmapHelp.container.shHelp.render();
+	YAHOO.util.Event.addListener("snpHeatmapHelpImage", "click", YAHOO.heatmapHelp.container.shHelp.show, YAHOO.heatmapHelp.container.shHelp, true);
+</script>
