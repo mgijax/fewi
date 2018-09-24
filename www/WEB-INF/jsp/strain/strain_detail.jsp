@@ -84,7 +84,9 @@
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/yoyo.js"></script>
 <script>
 	initialize('${configBean.FEWI_URL}', '${strain.primaryID}');
+<c:if test="${not empty strain.snpRows}">
 	loadSnpTable('strain', 'all');
+</c:if>
 </script>
 
 <!--	close page template -->
