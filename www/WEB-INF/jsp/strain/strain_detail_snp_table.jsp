@@ -37,7 +37,7 @@
 				</table>
 				<div id="snpTableDiv">
 				  <table id="snpTable">
-					<% int maxCount = (int) request.getAttribute("maxSnpCount"); %>
+					<% Integer maxCount = (Integer) request.getAttribute("maxSnpCount"); %>
 					<c:forEach var="row" items="${snpRows}">
 						<tr>
 						<td class='snpLeftColumn'><a href="${configBean.FEWI_URL}strain/${row.comparisonStrainID}" target="_blank"><fewi:super value="${row.comparisonStrainName}"/></a></td>
