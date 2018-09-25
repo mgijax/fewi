@@ -21,7 +21,7 @@
 			</c:forEach>
 		</c:if>
 
-		<% Integer maxCount = (Integer) request.getAttribute("maxCount"); %>
+		<% Integer maxCount = Integer.parseInt("" + request.getAttribute("maxCount")); %>
 		<div id="snpHeatmapHelp" style="visibility: hidden;">
 			<div class="hd">SNP Density Heatmap Overview</div>
 			<div class="bd" style="text-align: center">
