@@ -637,6 +637,10 @@ filters.setAllFilters = function(pRequest) {
 	    var filterName = filters.fieldnameToFilterName[field];
 	    var fValues = pRequest[field];
 
+	    if ((fValues == []) || (fValues == '')) {
+	    	continue;
+	    }
+	    
 	    // need to handle strings and lists, split comma-separate terms,
 	    // and remove redundancy
 
