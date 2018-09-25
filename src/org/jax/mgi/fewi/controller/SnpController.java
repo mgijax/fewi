@@ -1022,7 +1022,7 @@ public class SnpController {
 			endCoordinate = query.getSliceEndCoord();
 		}
 		
-		long rangeSize = endCoordinate - startCoordinate + 1;
+		long rangeSize = endCoordinate - startCoordinate;
 		long numberOfBins = Math.min(rangeSize, 20);
 		
 		mav.addObject("chromosome", chromosome);
