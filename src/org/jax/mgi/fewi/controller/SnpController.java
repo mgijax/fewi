@@ -1102,8 +1102,10 @@ public class SnpController {
 		mav.addObject("prettyEnd", FormatHelper.getPrettyCoordinate(endCoordinate));
 		if (startCoordinate == 0) {
 			mav.addObject("prettyRange", FormatHelper.getPrettyCoordinate(endCoordinate - startCoordinate));
+			mav.addObject("binSize", FormatHelper.getPrettyCoordinate(Math.round((endCoordinate - startCoordinate) / numberOfBins) ));
 		} else {
 			mav.addObject("prettyRange", FormatHelper.getPrettyCoordinate(endCoordinate - startCoordinate + 1));
+			mav.addObject("binSize", FormatHelper.getPrettyCoordinate(Math.round((endCoordinate - startCoordinate + 1) / numberOfBins) ));
 		}
 		
 		return mav;

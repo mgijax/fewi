@@ -24,22 +24,41 @@
 		<% Integer maxCount = Integer.parseInt("" + request.getAttribute("maxCount")); %>
 		<div id="snpHeatmapHelp" style="visibility: hidden;">
 			<div class="hd">SNP Density Heatmap Overview</div>
-			<div class="bd" style="text-align: center">
-				Each cell represents an evenly-sized range of the genome location matching your search.<p/>
-				Hover over a colored cell to see the number of SNPs.<p/>
-				Click on a cell to see the SNPs in that range and to refine your search.<p/>
+			<div class="bd" style="text-align: left">
+				Each cell represents a ${binSize} span of the region matching your search.<p/>
+				The colors represent the relative SNP density across the sub-regions.<p/>
+				Hover over a cell to see the exact number of SNPs.<p/>
+				Click on a cell to refine your search to that sub-region.<p/>
+				<div style="text-align: center">
 				<b>Legend:</b><br/>
 				<table id="heatmapLegend">
 				<tr>
-					<td style="text-align: left; width: 100px;">1 SNP</td>
-					<td style="text-align: right; width: 100px">${maxCount} SNPs</td>
+					<c:choose>
+						<c:when test="${maxCount > 1}">
+							<td style="text-align: left; width: 100px;">1 SNP</td>
+							<td style="text-align: right; width: 100px">${maxCount} SNPs</td>
+						</c:when>
+						<c:otherwise>
+							<td style="text-align: left; width: 200px;">1 SNP</td>
+						</c:otherwise>
+					</c:choose>
 				</tr>
 				<tr>
-					<td colspan="2" style="background: linear-gradient(to right,
-						<%= FormatHelper.getSnpColorCode(1, 1, maxCount) %>,
-						<%= FormatHelper.getSnpColorCode(maxCount, maxCount, maxCount) %>);"></td>
+					<c:choose>
+						<c:when test="${maxCount > 1}">
+							<td colspan="2" style="background: linear-gradient(to right,
+								<%= FormatHelper.getSnpColorCode(1, 1, maxCount) %>,
+								<%= FormatHelper.getSnpColorCode(maxCount, maxCount, maxCount) %>);"></td>
+						</c:when>
+						<c:otherwise>
+							<td style="background: linear-gradient(to right,
+								<%= FormatHelper.getSnpColorCode(1, 1, maxCount) %>,
+								<%= FormatHelper.getSnpColorCode(maxCount, maxCount, maxCount) %>);"></td>
+						</c:otherwise>
+					</c:choose>
 				</tr>
 				</table>
+				</div>
 			</div>
 		</div>
 		<span class='ysf'>SNP Density Heatmap</span>
