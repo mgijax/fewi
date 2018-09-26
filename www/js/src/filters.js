@@ -578,6 +578,7 @@ filters.setAllFiltersFromUrl = function(url) {
 			delete pRequest[name];
 		}
 	}
+	delete pRequest['hideStrains'];		// also need to remove this, if it exists
     return filters.hashToUrl(pRequest);
 };
 
