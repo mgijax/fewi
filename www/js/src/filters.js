@@ -593,7 +593,7 @@ filters.urlToHash = function(url) {
 		var value = '';
 
 		if (pair.length > 1) {
-			value = pair[1];
+			value = pair[1].replace(/%20/g, ' ');
 		}
 			
 		if (name in map) {
