@@ -111,7 +111,7 @@
 	</c:otherwise>
 </c:choose>
 <style>
-#heatmap { margin-top: 3px; }
+#heatmap { margin-top: 3px; width: 400px; }
 #snpHeatmapHelp_c { margin-left: 470px; }
 #heatmapColorRow { border: 1px solid black; }
 #heatmapInfoRow { text-align: center; }
