@@ -965,6 +965,7 @@ public class SnpController {
 		String chromosome = null;
 		Long startCoordinate = null;
 		Long endCoordinate = null;
+		String error = null;
 		
 		if (matchedMarkerIds.size() == 1) {
 			CoordinateRange range = getCoordinates(matchedMarkerIds.get(0));
@@ -976,9 +977,11 @@ public class SnpController {
 				chromosome = range.chromosome;
 				startCoordinate = range.startCoordinate - pad;
 				endCoordinate = range.endCoordinate + pad;
+			} else {
+				error = range.error;
 			}
 
-		} else if ((query.getSelectedChromosome() != null) && (query.getCoordinate() != null)) {
+		} else if ((query.getSelectedChromosome() != null) && (query.getCoordinate() != null) && (query.getCoordinate().trim().length() > 0)) {
 			String coords = query.orientCoordinates(query.getCoordinate());
 			int pos = coords.indexOf("-");
 			if (pos > 0) {
@@ -993,7 +996,11 @@ public class SnpController {
 					
 					startCoordinate = Math.round(startDouble);
 					endCoordinate = Math.round(endDouble);
-				} catch (Exception e) {}
+				} catch (Exception e) {
+					error = "Data conversion errors";
+				}
+			} else {
+				error = "Invalid coordinates";
 			}
 			
 		} else if ((query.getStartMarker() != null) && (query.getEndMarker() != null)) {
@@ -1003,16 +1010,26 @@ public class SnpController {
 				if (range1.chromosome.equals(range2.chromosome)) {
 					chromosome = range1.chromosome;
 					startCoordinate = Math.min(range1.startCoordinate, range2.startCoordinate);
-					endCoordinate = Math.min(range1.endCoordinate, range2.endCoordinate);
+					endCoordinate = Math.max(range1.endCoordinate, range2.endCoordinate);
+				} else {
+					error = "Chromosomes differ: " + range1.chromosome + " vs " + range2.chromosome;
 				}
+			} else if (range1.error != null) {
+				error = range1.error;
+			} else if (range2.error != null) {
+				error = range2.error;
 			}
 		} else {
 			// failed to identify a single genomic region -- just let it fall through
 		}
 		
 		// If we don't have a single region, then bail out.
-		if ((chromosome == null) && (startCoordinate == null) && (endCoordinate == null)) {
-			mav.addObject("error", "No single region");
+		if ((error != null) || ((chromosome == null) && (startCoordinate == null) && (endCoordinate == null))) {
+			if (error != null) {
+				mav.addObject("error", "No single region (" + error + ")");
+			} else {
+				mav.addObject("error", "No single region");
+			}
 			return mav;
 		}
 		
@@ -1036,6 +1053,10 @@ public class SnpController {
 		
 		SnpQueryForm sliceQF = query.clone();
 		sliceQF.setSelectedChromosome(chromosome);
+		sliceQF.setSliceStartCoord(startCoordinate);
+		sliceQF.setSliceEndCoord(endCoordinate);
+		sliceQF.setStartMarker(null);
+		sliceQF.setEndMarker(null);
 		
 		// Our maximum count (for determining the shading of the heatmap cells) is based on either:
 		//	1. the count passed in via the link from a heatmap click, or
@@ -1060,6 +1081,11 @@ public class SnpController {
 			sliceQF.setCoordinate(sliceStart + "-" + sliceEnd);
 			
 			Filter sliceFilter = genFilters(sliceQF, matchedMarkerIds, result);
+			if (result.hasErrors()) {
+				for (ObjectError e : result.getAllErrors()) {
+					logger.info("Error: " + e.getDefaultMessage());
+				}
+			}
 
 			SearchParams params = new SearchParams();
 			params.setPaginator(page);
