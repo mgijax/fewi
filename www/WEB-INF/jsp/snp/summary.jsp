@@ -194,6 +194,14 @@ width: 1250px;
 		null, filters.parseResponseRadio, 'Filter for SNPs where');
 	filters.registerCallback("pfs", updateRequest);
 
+	// if we came in with a url that has hideStrains = false, then we need to ensure we show it that way
+	var parms = filters.urlToHash(snpQuerystring);
+	if ('hideStrains' in parms) {
+		if (parms['hideStrains'].indexOf('false') >= 0) {
+			hideStrains = false;
+		}
+	}
+	
 	snpQuerystring = filters.setAllFiltersFromUrl(snpQuerystring);
 	console.log('updated snpQuerystring = ' + snpQuerystring);
 

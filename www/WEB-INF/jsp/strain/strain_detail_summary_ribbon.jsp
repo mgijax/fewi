@@ -27,7 +27,6 @@
 										<c:set var="isStrainFamily" value="true" />
 									</c:if>
 								</c:forEach>
-								<a href="${configBean.USERHELP_URL}STRAIN_search_help.shtml#attributes" target="_blank" style="font-size: 80%;">(See attribute definitions.)</a>
 							</div>
 						</li>
 					</c:if>

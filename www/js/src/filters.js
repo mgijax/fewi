@@ -578,6 +578,7 @@ filters.setAllFiltersFromUrl = function(url) {
 			delete pRequest[name];
 		}
 	}
+	delete pRequest['hideStrains'];		// also need to remove this, if it exists
     return filters.hashToUrl(pRequest);
 };
 
@@ -593,7 +594,7 @@ filters.urlToHash = function(url) {
 		var value = '';
 
 		if (pair.length > 1) {
-			value = pair[1];
+			value = pair[1].replace(/%20/g, ' ');
 		}
 			
 		if (name in map) {
@@ -637,6 +638,10 @@ filters.setAllFilters = function(pRequest) {
 	    var filterName = filters.fieldnameToFilterName[field];
 	    var fValues = pRequest[field];
 
+	    if ((fValues == []) || (fValues == '')) {
+	    	continue;
+	    }
+	    
 	    // need to handle strings and lists, split comma-separate terms,
 	    // and remove redundancy
 

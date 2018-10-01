@@ -29,7 +29,7 @@
 	<fmt:formatNumber value="${marker.preferredCoordinates.endCoordinate + 2000}" pattern="#0" var="sangerEndCoord"/>
 </c:if>
 
-<c:if test="${snpsfound or hasStrainMarkers or polymorphismsfound or hasCoords or (not empty strainSpecificNote)}">
+<c:if test="${snpsfound or hasStrainMarkers or polymorphismsfound or (not empty strainSpecificNote)}">
 	<div class="row locationRibbon" id="strainRibbon">
 		<div class="header <%=leftTdStyles.getNext() %>">
 			Strain<br/>Comparison<br/>
