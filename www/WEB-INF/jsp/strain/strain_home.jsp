@@ -161,7 +161,7 @@
 	<a href="${configBean.WI_URL}mgv"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/MGVLink.png" alt="MGV"></a>
 	</div>
 <div class="col-md-3" style="">
-	<a href="http://jbrowse.informatics.jax.org/"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/JBrowseLink.png" alt="JBrowse"></a>
+	<a href="${configBean.JBROWSE_URL}"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/JBrowseLink.png" alt="JBrowse"></a>
 	</div>
 </div>
 </div>
