@@ -39,14 +39,14 @@
 						<div class="value">
 							<a href="http://phenome.jax.org/db/q?rtn=snp/ret01&amp;gohint=1&amp;ureg=${snp.accid}" target="_blank">MPD</a> |
 							<c:if test="${!snp.multiCoord}">
-								<a href="${snp.getJBrowserLink(JBrowserLinkTemplate)}" target="_blank"><nobr>Mouse Genome Browser</nobr></a> |
+								<a href="${snp.getJBrowserLink(JBrowserLinkTemplate)}" target="_blank"><nobr>JBrowse Genome Browser</nobr></a> |
 							</c:if>
 							<a href="http://www.ensembl.org/Mus_musculus/snpview?snp=${snp.accid}" target="_blank"><nobr>Ensembl SNPView</nobr></a> |
 							<a href="http://genome.ucsc.edu/cgi-bin/hgTracks?clade=vertebrate&amp;org=Mouse&amp;db=mm9&amp;position=${snp.accid}" target="_blank"><nobr>UCSC Browser</nobr></a> |
 							<a href="https://www.ncbi.nlm.nih.gov/genome/gdv/browser/?context=genome&acc=GCF_000001635.26&q=${snp.accid}" target="_blank"><nobr>NCBI Genome Data Viewer</nobr></a><br>
 							<c:if test="${snp.multiCoord}">
 								<div style="color:red; padding-top:3px;">
-									* SNP maps to multiple genome locations. Mouse Genome Browser link is not available.
+									* SNP maps to multiple genome locations. JBrowse Genome Browser link is not available.
 								</div>
 							</c:if>
 						</div>

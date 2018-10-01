@@ -31,7 +31,7 @@
 	</c:if>
 	<c:if test="${not empty jbrowseLink}">
 		<div id="jbrowseDiv" class="padded inlineblock">
-			View <a href="${jbrowseLink}" target="_blank">Mouse Genome Browser</a>
+			View <a href="${jbrowseLink}" target="_blank">JBrowse Genome Browser</a>
 		</div>
 	</c:if>
 	<c:if test="${not empty markerSummaryLink}">
