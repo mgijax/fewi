@@ -189,10 +189,10 @@
 
 <div class="container">
   <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#about">About</a></li>
+    <li><a data-toggle="tab" href="#about">About</a></li>
     <li><a data-toggle="tab" href="#help">Help Documents</a></li>
     <li><a data-toggle="tab" href="#collab">Collaborators</a></li>
-    <li><a data-toggle="tab" href="#links">Other Links</a></li>
+    <li class="active"><a data-toggle="tab" href="#links">Other Links</a></li>
   </ul>
   <div class="tab-content">
   <div id="about" class="tab-pane fade in active">
@@ -229,7 +229,7 @@
 		<tr><td>
 		  Detailed explanations for using Strains, SNPs &amp; Polymorphisms query forms and tools:	
 			<ul>
-			    <li>Strain Search <a href="${configBean.USERHELP_URL}Strain_search_help.shtml" target="_blank">help</a></li>
+			    <li>Strain Search <a href="${configBean.USERHELP_URL}STRAIN_search_help.shtml" target="_blank">help</a></li>
 				<li>SNP Query Form <a href="${configBean.USERHELP_URL}SNP_help.shtml" target="_blank">help</a></li>
 				<li>Guidelines for Nomenclature of Mouse and Rat Strains <a href="${configBean.MGIHOME_URL}nomen/strains.shtml" target="_blank">help</a></li>
 				<li>Mouse Strain 129 Substrain Nomenclature <a href="${configBean.MGIHOME_URL}nomen/strain_129.shtml" target="_blank">help</a></li>
