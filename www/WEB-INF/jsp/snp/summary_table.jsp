@@ -152,4 +152,14 @@ $.get('${configBean.FEWI_URL}snp/heatmap?' + qs,
 	function(data) {
 		$('#heatmapDiv').html(data);
 	});
+	
+// blank out the Allele Agreement filter button if we have no reference strain(s)
+<c:choose>
+	<c:when test="${fn:length(referenceStrains) == 0}">
+		$('#alleleAgreementFilter').css('display', 'none');
+	</c:when>
+	<c:otherwise>
+		$('#alleleAgreementFilter').css('display', 'inline');
+	</c:otherwise>
+</c:choose>
 </script>
