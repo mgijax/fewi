@@ -78,9 +78,18 @@
 			<c:if test="${(not empty sequence.sources) and (sequence.logicalDB=='Mouse Genome Project' || sequence.logicalDB=='MGI Strain Gene')}">
 				<c:set var="referenceStrain" value="${sequence.sources[0].strain}"/>
 			</c:if>
-			<a href="${externalUrls.MGV}#ref=${referenceStrain}&genomes=${externalUrls.MGV_Strains}&chr=${chromosome}&start=${startCoordWithFlank}&end=${endCoordWithFlank}&highlight=${sequence.primaryID}" target="_blank" id="mgvLink">
-			Multiple Genome Viewer (MGV)
-			</a>
+			<!--  standard, coordinate-based linking for sequences in general (gene traps) -->
+			<c:set var="mgvLink" value="${externalUrls.MGV}#ref=${referenceStrain}&genomes=${externalUrls.MGV_DOCCFounder_Strains}&chr=${chromosome}&start=${startCoordWithFlank}&end=${endCoordWithFlank}&highlight=${sequence.primaryID}"/>
+			<c:if test="${sequence.logicalDB=='Mouse Genome Project' || sequence.logicalDB=='MGI Strain Gene'}">
+				<c:if test="${(not empty markers) and (fn:length(markers) == 1)}">
+					<!--  special landmark-style link if this is a gene model sequence with a single marker -->
+					<c:forEach var="thisMarker" items="${markers}">
+						<c:set var="oneMarker" value="${thisMarker}"/>
+					</c:forEach>
+					<c:set var="mgvLink" value="${externalUrls.MGV}#ref=${referenceStrain}&genomes=${externalUrls.MGV_DOCCFounder_Strains}&landmark=${oneMarker.primaryID}&flank=50000&highlight=${oneMarker.primaryID}"/>
+				</c:if>
+			</c:if>
+			<a href="${mgvLink}" target="_blank" id="mgvLink">Multiple Genome Viewer (MGV)</a>
  		</td>
     </c:if>
     <td align=right>
