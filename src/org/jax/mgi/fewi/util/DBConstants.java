@@ -20,7 +20,7 @@ public class DBConstants
     public static final String PROVIDER_ENSEMBLPROTEIN    = "Ensembl Protein";
     public static final String PROVIDER_ENSEMBLTRANSCRIPT = "Ensembl Transcript";
     public static final String PROVIDER_UNIPROT	          = "Ensembl Transcript";
-    public static final String PROVIDER_MGP		          = "MGP Strain Gene Model";
+    public static final String PROVIDER_MGP		          = "Wellcome Sanger Institute's Mouse Genomes Project (MGP) Strain Gene Model";
     public static final String PROVIDER_MGI_SGM			  = "MGI C57BL/6J Strain Gene Model";
 }
 
