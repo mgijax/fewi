@@ -1222,15 +1222,35 @@ public class SnpController {
 			}
 		}
 
-		if(markerfeatureTypes != null && query.getSelectedChromosome() != null && query.getCoordinate() != null && query.getCoordinateUnit() != null && searchFilter != null) {
+		if(markerfeatureTypes != null && searchFilter != null) {
 			String dlim = "";
 			String queryString = "";
 			for(String id: markerfeatureTypes) {
 				queryString += dlim + "mcv=" + id;
 				dlim = "&";
 			}
-			String markerSummaryLink = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "marker/summary?chromosome=" + query.getSelectedChromosome() + "&coordinate=" + query.getCoordinate() + "&coordUnit=" + query.getCoordinateUnit() + "&" + queryString;
-			mav.addObject("markerSummaryLink", markerSummaryLink);
+
+			String qChromosome = query.getSelectedChromosome();
+			String qCoordinate = query.getCoordinate();
+			String qUnit = query.getCoordinateUnit();
+			String startMarker = query.getStartMarker();
+			String endMarker = query.getEndMarker();
+
+			String locationParameters = null;
+			
+			if ((qChromosome != null) && (qChromosome.trim().length() > 0)
+				&& (qCoordinate != null) && (qCoordinate.trim().length() > 0)
+				&& (qUnit != null) && (qUnit.trim().length() > 0)) {
+					locationParameters = "chromosome=" + qChromosome + "&coordinate=" + qCoordinate + "&coordUnit=" + qUnit;
+			} else if ((startMarker != null) && (startMarker.trim().length() > 0)
+				&& (endMarker != null) && (endMarker.trim().length() > 0)) {
+					locationParameters = "startMarker=" + startMarker + "&endMarker=" + endMarker;
+			}
+
+			if (locationParameters != null) {
+				String markerSummaryLink = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "marker/summary?chromosome=" + query.getSelectedChromosome() + "&" + locationParameters + "&" + queryString;
+				mav.addObject("markerSummaryLink", markerSummaryLink); 
+			}
 		}
 
 		SearchParams params = new SearchParams();
