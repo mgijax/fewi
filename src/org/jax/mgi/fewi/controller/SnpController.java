@@ -328,7 +328,7 @@ public class SnpController {
 		logger.debug("->snpSummary started");
 		//logger.debug("queryString: " + request.getQueryString());
 
-		if(queryForm.getWithinRange() == null || queryForm.getWithinRange().equals("")) {
+		if(queryForm.getWithinRange() == null || queryForm.getWithinRange().trim().equals("")) {
 			queryForm.setWithinRange("2000");
 		}
 		queryForm.setDefaults();
@@ -694,8 +694,8 @@ public class SnpController {
 				// return SNPs
 
 				Integer withinRange;
-				if ((qf.getWithinRange() != null) && (Integer.parseInt(qf.getWithinRange()) >= 0) ) {
-					withinRange = Integer.parseInt(qf.getWithinRange());
+				if ((qf.getWithinRange() != null) && (Integer.parseInt(qf.getWithinRange().trim()) >= 0) ) {
+					withinRange = Integer.parseInt(qf.getWithinRange().trim());
 				} else {
 					withinRange = 0;
 				}
@@ -972,7 +972,7 @@ public class SnpController {
 			if (range.error == null) {
 				int pad = 0;
 				if (query.getWithinRange() != null) {
-					pad = Integer.parseInt(query.getWithinRange());
+					pad = Integer.parseInt(query.getWithinRange().trim());
 				}
 				chromosome = range.chromosome;
 				startCoordinate = range.startCoordinate - pad;
@@ -1551,7 +1551,7 @@ public class SnpController {
 
 		if (matchedMarkerIds.size() > 0) {
 			mav.addObject("matchedMarkerIds", matchedMarkerIds);
-			mav.addObject("withinRange", query.getWithinRange());
+			mav.addObject("withinRange", query.getWithinRange().trim());
 		}
 		return mav; 
 	}
