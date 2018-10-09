@@ -37,7 +37,6 @@
 					<li>
 						<div class="label">Additional Resources</div>
 						<div class="value">
-							<a href="http://phenome.jax.org/db/q?rtn=snp/ret01&amp;gohint=1&amp;ureg=${snp.accid}" target="_blank">MPD</a> |
 							<c:if test="${!snp.multiCoord}">
 								<a href="${snp.getJBrowserLink(JBrowserLinkTemplate)}" target="_blank"><nobr>JBrowse Genome Browser</nobr></a> |
 							</c:if>

@@ -17,7 +17,6 @@ public class ConsensusSNPSummaryRow {
 	private ConsensusSNP consensusSNP;
 	
 	private String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
-	private String mpdSnpUrl = ContextLoader.getConfigBean().getProperty("MPD_SNP_URL");
 	private String dbSnpUrl = ContextLoader.getConfigBean().getProperty("DBSNP_URL");
 	private HashMap<String, String> matchingMarkerIdList = new HashMap<String, String>();
 	
@@ -40,8 +39,6 @@ public class ConsensusSNPSummaryRow {
 		String ret = consensusSNP.getAccid() + "<br>";
 		
 		ret += "<font class=\"small\">";
-		ret += "<a href=\"" + mpdSnpUrl + consensusSNP.getAccid() + "\" target=\"_blank\">MPD</a>";
-		ret += "&nbsp;|&nbsp;";
 		ret += "<a href=\"" + dbSnpUrl + consensusSNP.getAccid() + "\" target=\"_blank\">dbSNP</a>";
 		ret += "&nbsp;|&nbsp;";
 		ret += "<a href=\"" + fewiUrl + "snp/" + consensusSNP.getAccid() + "\" target=\"_blank\">MGI&nbsp;SNP&nbsp;Detail</a></font>";
