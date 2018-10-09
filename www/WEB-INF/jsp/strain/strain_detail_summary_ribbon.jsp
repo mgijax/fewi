@@ -9,10 +9,6 @@
 						<div class="label narrow">Strain Name</div>
 						<div class="valueNarrow" id="strainName">
 							<fewi:super value="${strain.name}"/> 
-			
-							<c:if test="${strain.isStandard==0}">
-								<span id="strainIsStandard"> (interim) </span>
-							</c:if>
 						</div>
 					</li>
 
