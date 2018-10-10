@@ -1040,7 +1040,7 @@ public class SnpController {
 		}
 		
 		long rangeSize = endCoordinate - startCoordinate;
-		long numberOfBins = Math.min(rangeSize, 20);
+		long numberOfBins = Math.max(1, Math.min(rangeSize, 20));	// at least 1 bin, no more than 20
 		
 		mav.addObject("chromosome", chromosome);
 		mav.addObject("startCoordinate", startCoordinate);
