@@ -16,8 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import mgi.frontend.datamodel.Allele;
+import mgi.frontend.datamodel.Genotype;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Reference;
+import mgi.frontend.datamodel.Strain;
 
 /*-------*/
 /* class */
@@ -47,6 +49,12 @@ public class AccessionFinder {
     @Autowired
     private SnpFinder snpFinder;
     
+    @Autowired
+    private GenotypeFinder genotypeFinder;
+    
+    @Autowired
+    private StrainFinder strainFinder;
+    
 //    @Autowired
 //    private HibernateAccessionSummaryHunter<Accession> accessionSummaryHunter;
 
@@ -69,6 +77,8 @@ public class AccessionFinder {
         getAlleles(accID, searchResults);
         getReferences(accID, searchResults);
         getSNPs(accID, searchResults);
+        getGenotypes(accID, searchResults);
+        getStrains(accID, searchResults);
        
         return searchResults;
     }
@@ -124,6 +134,34 @@ public class AccessionFinder {
     			searchResults.addResultObjects(
     				new Accession(ObjectTypes.SNP, "SNP", snp.getAccid(), "MGI",
     					snp.getConsensusKey(), snp.getAlleleSummary()) );
+    		}
+    	}
+    	return searchResults;
+    }
+
+    // Find any genotypes that match the given accession ID and add them to the searchResults.
+    private SearchResults<Accession> getGenotypes(String accID, SearchResults<Accession> searchResults) {
+    	List<Genotype> genotypeResults = genotypeFinder.getGenotypeByID(accID);
+    	if (genotypeResults.size() > 0) {
+    		searchResults.setTotalCount(searchResults.getTotalCount() + genotypeResults.size());
+    		for (Genotype genotype : genotypeResults) {
+    			searchResults.addResultObjects(
+    				new Accession(ObjectTypes.GENOTYPE, "Genotype", genotype.getPrimaryID(), "MGI",
+    					genotype.getGenotypeKey(), "genotype") );
+    		}
+    	}
+    	return searchResults;
+    }
+
+    // Find any mouse strains that match the given accession ID and add them to the searchResults.
+    private SearchResults<Accession> getStrains(String accID, SearchResults<Accession> searchResults) {
+    	List<Strain> strainResults = strainFinder.getStrainByID(accID);
+    	if (strainResults.size() > 0) {
+    		searchResults.setTotalCount(searchResults.getTotalCount() + strainResults.size());
+    		for (Strain strain : strainResults) {
+    			searchResults.addResultObjects(
+    				new Accession(ObjectTypes.STRAIN, "Strain", strain.getPrimaryID(), "MGI",
+    					strain.getStrainKey(), "strain") );
     		}
     	}
     	return searchResults;
