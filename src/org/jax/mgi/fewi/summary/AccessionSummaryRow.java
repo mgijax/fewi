@@ -1,6 +1,6 @@
 package org.jax.mgi.fewi.summary;
 
-import mgi.frontend.datamodel.Accession;
+import org.jax.mgi.fewi.summary.Accession;
 
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.ObjectTypes;

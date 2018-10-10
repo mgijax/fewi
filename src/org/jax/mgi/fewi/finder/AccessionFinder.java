@@ -1,21 +1,29 @@
 package org.jax.mgi.fewi.finder;
 
-import mgi.frontend.datamodel.Accession;
+import org.jax.mgi.fewi.summary.Accession;
 
-import org.jax.mgi.fewi.hunter.HibernateAccessionSummaryHunter;
-import org.jax.mgi.fewi.searchUtil.SearchParams;
+import java.util.List;
+
+//import org.jax.mgi.fewi.util.FewiUtil;
+//import org.jax.mgi.fewi.hunter.HibernateAccessionSummaryHunter;
+import org.jax.mgi.fewi.searchUtil.ObjectTypes;
+//import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import mgi.frontend.datamodel.Allele;
+import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.Reference;
+
 /*-------*/
 /* class */
 /*-------*/
 
 /*
- * This finder is responsible for finding foo(s)
+ * This finder is responsible for finding accessionable objects and bundling them into Accession objects.
  */
 @Repository
 public class AccessionFinder {
@@ -27,22 +35,78 @@ public class AccessionFinder {
     private Logger logger = LoggerFactory.getLogger(AccessionFinder.class);
 
     @Autowired
-    private HibernateAccessionSummaryHunter<Accession> accessionSummaryHunter;
+    private MarkerFinder markerFinder;
+    
+    @Autowired
+    private AlleleFinder alleleFinder;
+    
+    @Autowired
+    private ReferenceFinder referenceFinder;
+    
+//    @Autowired
+//    private HibernateAccessionSummaryHunter<Accession> accessionSummaryHunter;
 
     /*---------------------------------------*/
     /* Retrieval of multiple accession objects
     /*---------------------------------------*/
-    public SearchResults<Accession> getAccessions(SearchParams searchParams) {
-        logger.debug("->getAccessions");
+    public SearchResults<Accession> getAccessions(String accID) {
+        logger.debug("->getAccessions(" + accID + ")");
 
         // result object to be returned
         SearchResults<Accession> searchResults = new SearchResults<Accession>();
+        searchResults.setTotalCount(0);
 
-        // ask the hunter to identify which objects to return
-        accessionSummaryHunter.hunt(searchParams, searchResults);
-        logger.debug("->hunter found these resultKeys - " 
-        		+ searchResults.getResultKeys());
+        // could probably optimize this by studying which IDs can return multiple data types; any without
+        // multiple types could return early before doing any more searching...
+        
+        // could also monitor which types of objects are returned most frequently and prioritize them
+        
+        getMouseMarkers(accID, searchResults);
+        getAlleles(accID, searchResults);
+        getReferences(accID, searchResults);
        
         return searchResults;
+    }
+    
+    // Find any mouse markers that match the given accession ID and add them to the searchResults.
+    private SearchResults<Accession> getMouseMarkers(String accID, SearchResults<Accession> searchResults) {
+    	SearchResults<Marker> markerResults = markerFinder.getMarkerByID(accID);
+    	if (markerResults.getTotalCount() > 0) {
+    		searchResults.setTotalCount(searchResults.getTotalCount() + markerResults.getTotalCount());
+    		for (Marker marker : markerResults.getResultObjects()) {
+    			searchResults.addResultObjects(
+    				new Accession(ObjectTypes.MARKER, marker.getMarkerSubtype(), marker.getPrimaryID(), "MGI",
+    					marker.getMarkerKey(), marker.getSymbol() + ", " + marker.getName() + ", Chr " + marker.getChromosome()) );
+    		}
+    	}
+    	return searchResults;
+    }
+
+    // Find any alleles that match the given accession ID and add them to the searchResults.
+    private SearchResults<Accession> getAlleles(String accID, SearchResults<Accession> searchResults) {
+    	List<Allele> alleleResults = alleleFinder.getAlleleByID(accID);
+    	if (alleleResults.size() > 0) {
+    		searchResults.setTotalCount(searchResults.getTotalCount() + alleleResults.size());
+    		for (Allele allele : alleleResults) {
+    			searchResults.addResultObjects(
+    				new Accession(ObjectTypes.ALLELE, allele.getAlleleType(), allele.getPrimaryID(), "MGI",
+    					allele.getAlleleKey(), allele.getSymbol() + ", " + allele.getName()) );
+    		}
+    	}
+    	return searchResults;
+    }
+
+    // Find any references that match the given accession ID and add them to the searchResults.
+    private SearchResults<Accession> getReferences(String accID, SearchResults<Accession> searchResults) {
+    	SearchResults<Reference> refsResults = referenceFinder.getReferenceByID(accID);
+    	if (refsResults.getTotalCount() > 0) {
+    		searchResults.setTotalCount(searchResults.getTotalCount() + refsResults.getTotalCount());
+    		for (Reference ref : refsResults.getResultObjects()) {
+    			searchResults.addResultObjects(
+    				new Accession(ObjectTypes.REFERENCE, "Reference", ref.getJnumID(), "MGI",
+    					ref.getReferenceKey(), ref.getMiniCitation()) );
+    		}
+    	}
+    	return searchResults;
     }
 }
