@@ -16,8 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import mgi.frontend.datamodel.Allele;
+import mgi.frontend.datamodel.Antibody;
 import mgi.frontend.datamodel.Genotype;
 import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.Probe;
 import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.Strain;
 
@@ -55,6 +57,12 @@ public class AccessionFinder {
     @Autowired
     private StrainFinder strainFinder;
     
+    @Autowired
+    private AntibodyFinder antibodyFinder;
+    
+    @Autowired
+    private ProbeFinder probeFinder;
+    
 //    @Autowired
 //    private HibernateAccessionSummaryHunter<Accession> accessionSummaryHunter;
 
@@ -79,6 +87,8 @@ public class AccessionFinder {
         getSNPs(accID, searchResults);
         getGenotypes(accID, searchResults);
         getStrains(accID, searchResults);
+        getAntibodies(accID, searchResults);
+        getProbes(accID, searchResults);
        
         return searchResults;
     }
@@ -162,6 +172,34 @@ public class AccessionFinder {
     			searchResults.addResultObjects(
     				new Accession(ObjectTypes.STRAIN, "Strain", strain.getPrimaryID(), "MGI",
     					strain.getStrainKey(), "strain") );
+    		}
+    	}
+    	return searchResults;
+    }
+
+    // Find any antibodies that match the given accession ID and add them to the searchResults.
+    private SearchResults<Accession> getAntibodies(String accID, SearchResults<Accession> searchResults) {
+    	List<Antibody> antibodyResults = antibodyFinder.getAntibodyByID(accID);
+    	if (antibodyResults.size() > 0) {
+    		searchResults.setTotalCount(searchResults.getTotalCount() + antibodyResults.size());
+    		for (Antibody antibody : antibodyResults) {
+    			searchResults.addResultObjects(
+    				new Accession(ObjectTypes.ANTIBODY, "Antibody", antibody.getPrimaryID(), "MGI",
+    					antibody.getAntibodyKey(), "antibody") );
+    		}
+    	}
+    	return searchResults;
+    }
+
+    // Find any probes that match the given accession ID and add them to the searchResults.
+    private SearchResults<Accession> getProbes(String accID, SearchResults<Accession> searchResults) {
+    	List<Probe> probeResults = probeFinder.getProbeByID(accID);
+    	if (probeResults.size() > 0) {
+    		searchResults.setTotalCount(searchResults.getTotalCount() + probeResults.size());
+    		for (Probe probe : probeResults) {
+    			searchResults.addResultObjects(
+    				new Accession(ObjectTypes.PROBECLONE, "Probe/Clone", probe.getPrimaryID(), "MGI",
+    					probe.getProbeKey(), "probe/clone") );
     		}
     	}
     	return searchResults;
