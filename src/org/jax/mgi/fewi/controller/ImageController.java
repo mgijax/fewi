@@ -632,7 +632,7 @@ public class ImageController {
     }
 
     // retrieves an image list for a given ID
-    private List<Image> getImageForID (String imageID) {
+    public List<Image> getImageForID (String imageID) {
 
         // setup search parameters object
         SearchParams searchParams = new SearchParams();

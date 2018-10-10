@@ -5,6 +5,7 @@ import org.jax.mgi.snpdatamodel.ConsensusSNP;
 
 import java.util.List;
 
+import org.jax.mgi.fewi.controller.ImageController;
 //import org.jax.mgi.fewi.util.FewiUtil;
 //import org.jax.mgi.fewi.hunter.HibernateAccessionSummaryHunter;
 import org.jax.mgi.fewi.searchUtil.ObjectTypes;
@@ -19,8 +20,11 @@ import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.Antibody;
 import mgi.frontend.datamodel.ExpressionAssay;
 import mgi.frontend.datamodel.Genotype;
+import mgi.frontend.datamodel.HomologyCluster;
+import mgi.frontend.datamodel.Image;
 import mgi.frontend.datamodel.MappingExperiment;
 import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.OrganismOrtholog;
 import mgi.frontend.datamodel.Probe;
 import mgi.frontend.datamodel.ProbeSequence;
 import mgi.frontend.datamodel.Reference;
@@ -72,6 +76,12 @@ public class AccessionFinder {
     @Autowired
     private AssayFinder assayFinder;
     
+    @Autowired
+    private ImageController imageController;
+    
+    @Autowired
+    private HomologyFinder homologyFinder;
+    
 //    @Autowired
 //    private HibernateAccessionSummaryHunter<Accession> accessionSummaryHunter;
 
@@ -100,6 +110,8 @@ public class AccessionFinder {
         getProbes(accID, searchResults);
         getMapping(accID, searchResults);
         getAssays(accID, searchResults);
+        getImages(accID, searchResults);
+        getHomology(accID, searchResults);
        
         return searchResults;
     }
@@ -247,6 +259,41 @@ public class AccessionFinder {
     			searchResults.addResultObjects(
     				new Accession(ObjectTypes.ASSAY, "Assay", assay.getPrimaryID(), "MGI",
     					assay.getAssayKey(), "expression assay") );
+    		}
+    	}
+    	return searchResults;
+    }
+
+    // Find any images that match the given accession ID and add them to the searchResults.
+    private SearchResults<Accession> getImages(String accID, SearchResults<Accession> searchResults) {
+    	List<Image> imageResults = imageController.getImageForID(accID);
+    	if (imageResults.size() > 0) {
+    		searchResults.setTotalCount(searchResults.getTotalCount() + imageResults.size());
+    		for (Image image : imageResults) {
+    			searchResults.addResultObjects(
+    				new Accession(ObjectTypes.IMAGE, "Image", image.getMgiID(), "MGI",
+    					image.getImageKey(), image.getFigureLabel() + ", " + image.getCaption()) );
+    		}
+    	}
+    	return searchResults;
+    }
+
+    // Find any homology clusters that match the given accession ID and add them to the searchResults.
+    private SearchResults<Accession> getHomology(String accID, SearchResults<Accession> searchResults) {
+    	List<HomologyCluster> homologyResults = homologyFinder.getHomologyClusterByID(accID);
+    	if (homologyResults.size() > 0) {
+    		searchResults.setTotalCount(searchResults.getTotalCount() + homologyResults.size());
+    		for (HomologyCluster hg : homologyResults) {
+    			StringBuffer organisms = new StringBuffer();
+    			for (OrganismOrtholog oo : hg.getOrthologs()) {
+    				if (organisms.length() > 0) {
+    					organisms.append(", ");
+    				}
+    				organisms.append(oo.getOrganism().replaceAll(", laboratory", "").replaceAll(", domestic", ""));
+    			}
+    			searchResults.addResultObjects(
+    				new Accession(ObjectTypes.HOMOLOGY, "Homology Class", hg.getPrimaryID(), "MGI",
+    					hg.getClusterKey(), "Class with " + organisms.toString()) );
     		}
     	}
     	return searchResults;
