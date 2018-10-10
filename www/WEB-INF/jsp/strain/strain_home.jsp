@@ -195,7 +195,7 @@
     <li class="active"><a data-toggle="tab" href="#links">Other Links</a></li>
   </ul>
   <div class="tab-content">
-  <div id="about" class="tab-pane fade in active">
+  <div id="about" class="tab-pane fade">
     <table>
 	<tr>
 	<td>
@@ -257,7 +257,7 @@
 	</tr>
 </table>
   </div>
-  <div id="links" class="tab-pane fade">
+  <div id="links" class="tab-pane fade in active">
    <table>
 	<tr>
 		<td>
