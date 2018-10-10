@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.finder;
 
 import org.jax.mgi.fewi.summary.Accession;
+import org.jax.mgi.snpdatamodel.ConsensusSNP;
 
 import java.util.List;
 
@@ -43,6 +44,9 @@ public class AccessionFinder {
     @Autowired
     private ReferenceFinder referenceFinder;
     
+    @Autowired
+    private SnpFinder snpFinder;
+    
 //    @Autowired
 //    private HibernateAccessionSummaryHunter<Accession> accessionSummaryHunter;
 
@@ -64,6 +68,7 @@ public class AccessionFinder {
         getMouseMarkers(accID, searchResults);
         getAlleles(accID, searchResults);
         getReferences(accID, searchResults);
+        getSNPs(accID, searchResults);
        
         return searchResults;
     }
@@ -105,6 +110,20 @@ public class AccessionFinder {
     			searchResults.addResultObjects(
     				new Accession(ObjectTypes.REFERENCE, "Reference", ref.getJnumID(), "MGI",
     					ref.getReferenceKey(), ref.getMiniCitation()) );
+    		}
+    	}
+    	return searchResults;
+    }
+
+    // Find any SNPs that match the given accession ID and add them to the searchResults.
+    private SearchResults<Accession> getSNPs(String accID, SearchResults<Accession> searchResults) {
+    	SearchResults<ConsensusSNP> snpResults = snpFinder.getSnpByID(accID);
+    	if (snpResults.getTotalCount() > 0) {
+    		searchResults.setTotalCount(searchResults.getTotalCount() + snpResults.getTotalCount());
+    		for (ConsensusSNP snp : snpResults.getResultObjects()) {
+    			searchResults.addResultObjects(
+    				new Accession(ObjectTypes.SNP, "SNP", snp.getAccid(), "MGI",
+    					snp.getConsensusKey(), snp.getAlleleSummary()) );
     		}
     	}
     	return searchResults;

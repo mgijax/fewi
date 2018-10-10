@@ -46,6 +46,7 @@ public class FewiLinker {
 		idUrlMap.put(ObjectTypes.PROBECLONE, baseUrl +"probe/%s");
 		idUrlMap.put(ObjectTypes.MAPPING, baseUrl + "mapping/%s");
 		idUrlMap.put(ObjectTypes.STRAIN, baseUrl + "strain/%s");
+		idUrlMap.put(ObjectTypes.SNP, baseUrl + "snp/%s");
 
 		// Mapping that is key based
 
