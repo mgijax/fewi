@@ -22,6 +22,7 @@ import mgi.frontend.datamodel.Genotype;
 import mgi.frontend.datamodel.MappingExperiment;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Probe;
+import mgi.frontend.datamodel.ProbeSequence;
 import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.Strain;
 
@@ -209,7 +210,15 @@ public class AccessionFinder {
     		for (Probe probe : probeResults) {
     			searchResults.addResultObjects(
     				new Accession(ObjectTypes.PROBECLONE, "Probe/Clone", probe.getPrimaryID(), "MGI",
-    					probe.getProbeKey(), "probe/clone") );
+    					probe.getProbeKey(), probe.getName()) );
+    			List<ProbeSequence> seqs = probe.getSequences();
+    			if (seqs != null) {
+    				for (ProbeSequence seq : probe.getSequences()) {
+    					searchResults.addResultObjects(
+    						new Accession(ObjectTypes.SEQUENCE, "Sequence", seq.getPrimaryID(), "MGI",
+    							seq.getUniqueKey(), seq.getSequence().getDescription()) );
+    				}
+    			}
     		}
     	}
     	return searchResults;
