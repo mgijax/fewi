@@ -17,7 +17,9 @@ import org.springframework.stereotype.Repository;
 
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.Antibody;
+import mgi.frontend.datamodel.ExpressionAssay;
 import mgi.frontend.datamodel.Genotype;
+import mgi.frontend.datamodel.MappingExperiment;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Probe;
 import mgi.frontend.datamodel.Reference;
@@ -63,6 +65,12 @@ public class AccessionFinder {
     @Autowired
     private ProbeFinder probeFinder;
     
+    @Autowired
+    private MappingFinder mappingFinder;
+    
+    @Autowired
+    private AssayFinder assayFinder;
+    
 //    @Autowired
 //    private HibernateAccessionSummaryHunter<Accession> accessionSummaryHunter;
 
@@ -89,6 +97,8 @@ public class AccessionFinder {
         getStrains(accID, searchResults);
         getAntibodies(accID, searchResults);
         getProbes(accID, searchResults);
+        getMapping(accID, searchResults);
+        getAssays(accID, searchResults);
        
         return searchResults;
     }
@@ -200,6 +210,34 @@ public class AccessionFinder {
     			searchResults.addResultObjects(
     				new Accession(ObjectTypes.PROBECLONE, "Probe/Clone", probe.getPrimaryID(), "MGI",
     					probe.getProbeKey(), "probe/clone") );
+    		}
+    	}
+    	return searchResults;
+    }
+
+    // Find any mapping experiments that match the given accession ID and add them to the searchResults.
+    private SearchResults<Accession> getMapping(String accID, SearchResults<Accession> searchResults) {
+    	List<MappingExperiment> mappingResults = mappingFinder.getExperimentByID(accID);
+    	if (mappingResults.size() > 0) {
+    		searchResults.setTotalCount(searchResults.getTotalCount() + mappingResults.size());
+    		for (MappingExperiment expt : mappingResults) {
+    			searchResults.addResultObjects(
+    				new Accession(ObjectTypes.MAPPING, "Mapping Experiment", expt.getPrimaryID(), "MGI",
+    					expt.getExperimentKey(), "mapping experiment") );
+    		}
+    	}
+    	return searchResults;
+    }
+
+    // Find any expression assays that match the given accession ID and add them to the searchResults.
+    private SearchResults<Accession> getAssays(String accID, SearchResults<Accession> searchResults) {
+    	List<ExpressionAssay> assayResults = assayFinder.getAssayByID(accID);
+    	if (assayResults.size() > 0) {
+    		searchResults.setTotalCount(searchResults.getTotalCount() + assayResults.size());
+    		for (ExpressionAssay assay : assayResults) {
+    			searchResults.addResultObjects(
+    				new Accession(ObjectTypes.ASSAY, "Assay", assay.getPrimaryID(), "MGI",
+    					assay.getAssayKey(), "expression assay") );
     		}
     	}
     	return searchResults;
