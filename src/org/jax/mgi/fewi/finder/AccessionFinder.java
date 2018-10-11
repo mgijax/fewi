@@ -5,10 +5,13 @@ import org.jax.mgi.snpdatamodel.ConsensusSNP;
 
 import java.util.List;
 
+import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.controller.ImageController;
 //import org.jax.mgi.fewi.util.FewiUtil;
-//import org.jax.mgi.fewi.hunter.HibernateAccessionSummaryHunter;
+import org.jax.mgi.fewi.hunter.HibernateAccessionSummaryHunter;
 import org.jax.mgi.fewi.searchUtil.ObjectTypes;
+import org.jax.mgi.fewi.searchUtil.SearchConstants;
+import org.jax.mgi.fewi.searchUtil.SearchParams;
 //import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.slf4j.Logger;
@@ -90,8 +93,8 @@ public class AccessionFinder {
     @Autowired
     private SequenceFinder sequenceFinder;
     
-//    @Autowired
-//    private HibernateAccessionSummaryHunter<Accession> accessionSummaryHunter;
+    @Autowired
+    private HibernateAccessionSummaryHunter<mgi.frontend.datamodel.Accession> accessionSummaryHunter;
 
     /*---------------------------------------*/
     /* Retrieval of multiple accession objects
@@ -122,8 +125,30 @@ public class AccessionFinder {
         getHomology(accID, searchResults);
         getTerms(accID, searchResults);
         getSequences(accID, searchResults);
+        getOtherIDs(accID, searchResults);
        
         return searchResults;
+    }
+    
+    // Find any matches that can't be found via other objects' finders, including:
+    // 1. markers for InterPro IDs
+    // 2. non-mouse markers, linked to homology data
+    private SearchResults<Accession> getOtherIDs(String accID, SearchResults<Accession> searchResults) {
+		SearchParams params = new SearchParams();
+		params.setFilter(new Filter(SearchConstants.ACC_ID, accID.trim().toLowerCase(), Filter.Operator.OP_EQUAL));
+
+		// look up the odd IDs from the database
+        SearchResults<mgi.frontend.datamodel.Accession> dbResults = new SearchResults<mgi.frontend.datamodel.Accession>();
+        accessionSummaryHunter.hunt(params, dbResults);
+
+        // convert to the newer (non-Hibernate-backed) Accession object, and add them to our results
+        for (mgi.frontend.datamodel.Accession acc : dbResults.getResultObjects()) {
+        	searchResults.addResultObjects(
+   				new Accession(acc.getObjectType(), acc.getDisplayType(), acc.getDisplayID(), acc.getLogicalDB(),
+   					acc.getObjectKey(), acc.getDescription()) );
+        }
+        searchResults.setTotalCount(searchResults.getTotalCount() + dbResults.getTotalCount());
+    	return searchResults;
     }
     
     // Find any mouse markers that match the given accession ID and add them to the searchResults.
@@ -237,7 +262,7 @@ public class AccessionFinder {
     			if (seqs != null) {
     				for (ProbeSequence seq : probe.getSequences()) {
     					searchResults.addResultObjects(
-    						new Accession(ObjectTypes.SEQUENCE, "Sequence", seq.getPrimaryID(), "MGI",
+    						new Accession(ObjectTypes.SEQUENCE, "Sequence", seq.getPrimaryID(), seq.getLogicalDB(),
     							seq.getUniqueKey(), seq.getSequence().getDescription()) );
     				}
     			}
@@ -317,13 +342,18 @@ public class AccessionFinder {
     		for (Term term : termResults) {
     			String termID = term.getPrimaryID();
     			String displayType = "Vocabulary Term";
+    			String logicalDB = "MGI";
 
     			if ((termID != null) && (termID.indexOf(":") >= 0)) {
     				displayType = termID.substring(0, termID.indexOf(":") + 1);
     			}
-    			searchResults.addResultObjects(
-    				new Accession(ObjectTypes.VOCAB_TERM, displayType, term.getPrimaryID(), "MGI",
-    					term.getTermKey(), term.getTerm()) );
+
+    			// skip InterPro IDs, which will be picked up via getOtherIDs()
+    			if (!termID.startsWith("IPR")) {
+    				searchResults.addResultObjects(
+    					new Accession(ObjectTypes.VOCAB_TERM, displayType, term.getPrimaryID(), logicalDB,
+    						term.getTermKey(), term.getTerm()) );
+    			}
     		}
     	}
     	return searchResults;
@@ -347,7 +377,7 @@ public class AccessionFinder {
     					}
     			} else {
     				searchResults.addResultObjects(
-    					new Accession(ObjectTypes.SEQUENCE, "Sequence", sequence.getPrimaryID(), "MGI",
+    					new Accession(ObjectTypes.SEQUENCE, "Sequence", sequence.getPrimaryID(), sequence.getLogicalDB(),
     						sequence.getSequenceKey(), sequence.getDescription()) );
     			}
     		}
