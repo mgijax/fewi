@@ -96,6 +96,8 @@ public class AccessionFinder {
     @Autowired
     private HibernateAccessionSummaryHunter<mgi.frontend.datamodel.Accession> accessionSummaryHunter;
 
+    private static final String[] VOCAB_PREFIXES = { "GO:", "MP:", "DOID:", "HP:", "MA:", "EMAPA:", "EMAPS:" };
+
     /*---------------------------------------*/
     /* Retrieval of multiple accession objects
     /*---------------------------------------*/
@@ -105,27 +107,50 @@ public class AccessionFinder {
         // result object to be returned
         SearchResults<Accession> searchResults = new SearchResults<Accession>();
         searchResults.setTotalCount(0);
+        if ((accID == null) || (accID.trim().length() == 0)) {
+        	// no ID = no results
+        	return searchResults;
+        }
+        String upperID = accID.toUpperCase().trim();
 
-        // could probably optimize this by studying which IDs can return multiple data types; any without
-        // multiple types could return early before doing any more searching...
-        
-        // could also monitor which types of objects are returned most frequently and prioritize them
-        
+        // If we have one of the standard vocabulary IDs for our vocab browsers, we can just
+        // look for terms and skip all the others.
+        for (String vocabPrefix : VOCAB_PREFIXES) {
+        	if (upperID.startsWith(vocabPrefix)) {
+        		getTerms(accID, searchResults);
+        		return searchResults;
+        	}
+        }
+
+        // These types of objects have multiple types of IDs - some MGI IDs and some not.
+        // Pretty much always need to check them.
         getMouseMarkers(accID, searchResults);
         getAlleles(accID, searchResults);
         getReferences(accID, searchResults);
-        getSNPs(accID, searchResults);
-        getGenotypes(accID, searchResults);
         getStrains(accID, searchResults);
-        getAntibodies(accID, searchResults);
+       	getGenotypes(accID, searchResults);
         getProbes(accID, searchResults);
-        getMapping(accID, searchResults);
-        getAssays(accID, searchResults);
         getImages(accID, searchResults);
         getHomology(accID, searchResults);
         getTerms(accID, searchResults);
         getSequences(accID, searchResults);
-        getOtherIDs(accID, searchResults);
+        
+        // These types of data only have MGI IDs, so we can skip them for other prefixes.
+        if (upperID.startsWith("MGI:")) {
+        	getAntibodies(accID, searchResults);
+        	getMapping(accID, searchResults);
+        	getAssays(accID, searchResults);
+        }
+
+        // SNPs only have RS IDs, so we can skip them for other prefixes.
+        if (upperID.startsWith("RS")) {
+        	getSNPs(accID, searchResults);
+        }
+
+        // All of our 'other IDs' current start with HGNC or IPR, so we can skip them for other prefixes.
+        if (upperID.startsWith("HGNC") || upperID.startsWith("IPR")) {
+        	getOtherIDs(accID, searchResults);
+        }
        
         return searchResults;
     }
