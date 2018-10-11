@@ -335,9 +335,21 @@ public class AccessionFinder {
     	if (sequenceResults.size() > 0) {
     		searchResults.setTotalCount(searchResults.getTotalCount() + sequenceResults.size());
     		for (Sequence sequence : sequenceResults) {
-    			searchResults.addResultObjects(
-    				new Accession(ObjectTypes.SEQUENCE, "Sequence", sequence.getPrimaryID(), "MGI",
-    					sequence.getSequenceKey(), sequence.getDescription()) );
+    			// If this is a gene model sequence for a strain marker, then link to the associated marker.
+    			// Otherwise link to the sequence itself.
+    			
+    			if ((sequence.getPrimaryID().startsWith("MGP_") || sequence.getPrimaryID().startsWith("MGI_")) 
+   					&& (sequence.getMarkers().size() == 1) ) {
+    					for (Marker m : sequence.getMarkers()) {
+    						searchResults.addResultObjects(
+    							new Accession(ObjectTypes.MARKER, m.getMarkerSubtype(), m.getPrimaryID(), "MGI",
+    								m.getMarkerKey(), m.getSymbol() + ", " + m.getName() + ", Chr " + m.getChromosome()) );
+    					}
+    			} else {
+    				searchResults.addResultObjects(
+    					new Accession(ObjectTypes.SEQUENCE, "Sequence", sequence.getPrimaryID(), "MGI",
+    						sequence.getSequenceKey(), sequence.getDescription()) );
+    			}
     		}
     	}
     	return searchResults;
