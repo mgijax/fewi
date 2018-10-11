@@ -28,7 +28,9 @@ import mgi.frontend.datamodel.OrganismOrtholog;
 import mgi.frontend.datamodel.Probe;
 import mgi.frontend.datamodel.ProbeSequence;
 import mgi.frontend.datamodel.Reference;
+import mgi.frontend.datamodel.Sequence;
 import mgi.frontend.datamodel.Strain;
+import mgi.frontend.datamodel.Term;
 
 /*-------*/
 /* class */
@@ -82,6 +84,12 @@ public class AccessionFinder {
     @Autowired
     private HomologyFinder homologyFinder;
     
+    @Autowired
+    private TermFinder termFinder;
+    
+    @Autowired
+    private SequenceFinder sequenceFinder;
+    
 //    @Autowired
 //    private HibernateAccessionSummaryHunter<Accession> accessionSummaryHunter;
 
@@ -112,6 +120,8 @@ public class AccessionFinder {
         getAssays(accID, searchResults);
         getImages(accID, searchResults);
         getHomology(accID, searchResults);
+        getTerms(accID, searchResults);
+        getSequences(accID, searchResults);
        
         return searchResults;
     }
@@ -294,6 +304,40 @@ public class AccessionFinder {
     			searchResults.addResultObjects(
     				new Accession(ObjectTypes.HOMOLOGY, "Homology Class", hg.getPrimaryID(), "MGI",
     					hg.getClusterKey(), "Class with " + organisms.toString()) );
+    		}
+    	}
+    	return searchResults;
+    }
+
+    // Find any vocabulary terms that match the given accession ID and add them to the searchResults.
+    private SearchResults<Accession> getTerms(String accID, SearchResults<Accession> searchResults) {
+    	List<Term> termResults = termFinder.getTermsByID(accID);
+    	if (termResults.size() > 0) {
+    		searchResults.setTotalCount(searchResults.getTotalCount() + termResults.size());
+    		for (Term term : termResults) {
+    			String termID = term.getPrimaryID();
+    			String displayType = "Vocabulary Term";
+
+    			if ((termID != null) && (termID.indexOf(":") >= 0)) {
+    				displayType = termID.substring(0, termID.indexOf(":") + 1);
+    			}
+    			searchResults.addResultObjects(
+    				new Accession(ObjectTypes.VOCAB_TERM, displayType, term.getPrimaryID(), "MGI",
+    					term.getTermKey(), term.getTerm()) );
+    		}
+    	}
+    	return searchResults;
+    }
+
+    // Find any sequences that match the given accession ID and add them to the searchResults.
+    private SearchResults<Accession> getSequences(String accID, SearchResults<Accession> searchResults) {
+    	List<Sequence> sequenceResults = sequenceFinder.getSequencesByID(accID);
+    	if (sequenceResults.size() > 0) {
+    		searchResults.setTotalCount(searchResults.getTotalCount() + sequenceResults.size());
+    		for (Sequence sequence : sequenceResults) {
+    			searchResults.addResultObjects(
+    				new Accession(ObjectTypes.SEQUENCE, "Sequence", sequence.getPrimaryID(), "MGI",
+    					sequence.getSequenceKey(), sequence.getDescription()) );
     		}
     	}
     	return searchResults;
