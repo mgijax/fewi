@@ -46,6 +46,7 @@ public class FewiLinker {
 		idUrlMap.put(ObjectTypes.PROBECLONE, baseUrl +"probe/%s");
 		idUrlMap.put(ObjectTypes.MAPPING, baseUrl + "mapping/%s");
 		idUrlMap.put(ObjectTypes.STRAIN, baseUrl + "strain/%s");
+		idUrlMap.put(ObjectTypes.SNP, baseUrl + "snp/%s");
 
 		// Mapping that is key based
 
@@ -71,9 +72,33 @@ public class FewiLinker {
 
 		if (idUrlMap.containsKey(objectType)) {
 			return String.format(idUrlMap.get(objectType), id);
-		} else if (objectType.startsWith("EMAPS")) {
+		} else if (objectType.startsWith("EMAPS:")) {
 			if (id != null) {
 				return config.getProperty("FEWI_URL") + "vocab/gxd/anatomy/" + id;
+			}
+		} else if (objectType.startsWith("MA:")) {
+			if (id != null) {
+				return config.getProperty("FEWI_URL") + "vocab/gxd/ma_ontology/" + id;
+			}
+		} else if (objectType.startsWith("EMAPA:")) {
+			if (id != null) {
+				return config.getProperty("FEWI_URL") + "vocab/gxd/anatomy/" + id;
+			}
+		} else if (objectType.startsWith("GO:")) {
+			if (id != null) {
+				return config.getProperty("FEWI_URL") + "vocab/gene_ontology/" + id;
+			}
+		} else if (objectType.startsWith("MP:")) {
+			if (id != null) {
+				return config.getProperty("FEWI_URL") + "vocab/mp_ontology/" + id;
+			}
+		} else if (objectType.startsWith("DOID:")) {
+			if (id != null) {
+				return config.getProperty("FEWI_URL") + "disease/" + id;
+			}
+		} else if (objectType.startsWith("HP:")) {
+			if (id != null) {
+				return config.getProperty("FEWI_URL") + "vocab/hp_ontology/" + id;
 			}
 		}
 		return null;

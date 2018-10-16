@@ -8,7 +8,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import mgi.frontend.datamodel.Accession;
+import org.jax.mgi.fewi.summary.Accession;
 
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.AccessionFinder;
@@ -93,7 +93,7 @@ public class AccessionController {
 		params.setFilter( genFilters(queryForm));       
 		params.setSorts(genSorts(request));
 
-		SearchResults<Accession> searchResults = accessionFinder.getAccessions(params);        
+		SearchResults<Accession> searchResults = accessionFinder.getAccessions(queryForm.getId());
 		logger.debug("About to check the size");
 
 		ModelAndView mav;
@@ -188,7 +188,7 @@ public class AccessionController {
 		params.setFilter(genFilters(queryForm));
 
 		// perform query, and pull out the requested objects
-		SearchResults<Accession> searchResults = accessionFinder.getAccessions(params);
+		SearchResults<Accession> searchResults = accessionFinder.getAccessions(queryForm.getId());
 		List<Accession> fooList = searchResults.getResultObjects();
 
 		// create/load the list of SummaryRow wrapper objects
@@ -269,7 +269,7 @@ public class AccessionController {
 		params.setFilter( genFilters(queryForm));       
 		params.setSorts(genSorts(request));
 
-		SearchResults<Accession> searchResults = accessionFinder.getAccessions(params);
+		SearchResults<Accession> searchResults = accessionFinder.getAccessions(accID);
 
 		ModelAndView mav = new ModelAndView("error");
 		mav.addObject("errorMsg", "No accession id found.  Please verify " +

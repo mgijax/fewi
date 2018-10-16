@@ -58,17 +58,26 @@ public class SequenceFinder {
     public Sequence getSequenceByID(String seqID) {
         logger.debug("->SequenceFinder.getSequenceByID(" + seqID + ")");
 
-	SearchParams params = new SearchParams();
-	params.setFilter(new Filter(SearchConstants.SEQ_ID, seqID) );
-
-	SearchResults<Sequence> results = getSequenceByID(params);
-	List<Sequence> seqList = results.getResultObjects();
+	List<Sequence> seqList = this.getSequencesByID(seqID);
 
 	if (seqList.size() != 1) {
 	    logger.debug("->found " + seqList.size() + " sequences for ID " + seqID);
 	    return null;
 	}
 	return seqList.get(0);
+    }
+
+	/*-----------------------------------------*/
+	/* Retrieval of all sequences matching a given ID (submitted as a String)
+	/*-----------------------------------------*/
+    public List<Sequence> getSequencesByID(String seqID) {
+        logger.debug("->SequenceFinder.getSequencesByID(" + seqID + ")");
+
+        SearchParams params = new SearchParams();
+        params.setFilter(new Filter(SearchConstants.SEQ_ID, seqID) );
+        
+        SearchResults<Sequence> results = getSequenceByID(params);
+        return results.getResultObjects();
     }
 
 	/*-----------------------------------------*/
