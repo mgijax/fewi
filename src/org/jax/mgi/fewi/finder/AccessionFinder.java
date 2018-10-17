@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.finder;
 
 import org.jax.mgi.fewi.summary.Accession;
+import org.jax.mgi.snpdatamodel.ConsensusCoordinateSNP;
 import org.jax.mgi.snpdatamodel.ConsensusSNP;
 
 import java.util.List;
@@ -218,6 +219,32 @@ public class AccessionFinder {
     	return searchResults;
     }
 
+    // build the description string for the given SNP
+    private String getSNPDescription(ConsensusSNP snp) {
+		StringBuffer desc = new StringBuffer();
+		desc.append(snp.getAccid());
+		desc.append(", ");
+
+		List<ConsensusCoordinateSNP> coords = snp.getConsensusCoordinates();
+		if (coords.size() > 0) {
+			ConsensusCoordinateSNP coord = coords.get(0);
+			desc.append("Chr");
+			desc.append(coord.getChromosome());
+			desc.append(": ");
+			desc.append(coord.getStartCoordinate());
+
+			if (snp.isMultiCoord()) {
+				desc.append(" (multiple)");
+			}
+			desc.append(", ");
+		}
+		desc.append(snp.getVariationClass());
+		desc.append(", ");
+		desc.append(snp.getAlleleSummary());
+
+		return desc.toString();
+    }
+    
     // Find any SNPs that match the given accession ID and add them to the searchResults.
     private SearchResults<Accession> getSNPs(String accID, SearchResults<Accession> searchResults) {
     	SearchResults<ConsensusSNP> snpResults = snpFinder.getSnpByID(accID);
@@ -226,7 +253,7 @@ public class AccessionFinder {
     		for (ConsensusSNP snp : snpResults.getResultObjects()) {
     			searchResults.addResultObjects(
     				new Accession(ObjectTypes.SNP, "SNP", snp.getAccid(), "MGI",
-    					snp.getConsensusKey(), snp.getAlleleSummary()) );
+    					snp.getConsensusKey(), getSNPDescription(snp)) );
     		}
     	}
     	return searchResults;
