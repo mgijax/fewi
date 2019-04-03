@@ -35,4 +35,5 @@ public class ObjectTypes {
 	public static String EMAPS = "EMAPS";
 	public static String VOCAB_TERM = "Vocabulary Term";
 	public static String STRAIN = "Strain";
+	public static String SNP = "SNP";
 }

@@ -3,6 +3,8 @@ package org.jax.mgi.fewi.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import mgi.frontend.datamodel.AccessionID;
+
 /**
  * General purpose utility methods
  * 	 (for very basic things that don't fit a specific purpose)
@@ -23,5 +25,17 @@ public class FewiUtil {
 	    }
 
 	    return batches;
+	}
+	
+	/* Returns the logical database of the first accession ID that matches the given ID string
+	 * or null if no match.
+	 */
+	public static String getLogicalDB(List<AccessionID> ids, String desiredID) {
+		for (AccessionID id : ids) {
+			if (desiredID.equalsIgnoreCase(id.getAccID())) {
+				return id.getLogicalDB();
+			}
+		}
+		return null;
 	}
 }
