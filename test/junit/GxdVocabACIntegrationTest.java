@@ -277,23 +277,6 @@ public class GxdVocabACIntegrationTest
 //    }
 //
 //    @Test
-//    public void testMouseCycTerm() throws Exception
-//    {
-//    	String query = "biopterin recycling";
-//    	String vocab = "MouseCyc";
-//    	assertTermInVocab(query, vocab);
-//    }
-//
-//    @Test
-//    public void testMouseCycMarkerCount() throws Exception
-//    {
-//    	String query = "biopterin recycling";
-//    	String vocab = "MouseCyc";
-//    	int markerCount = 3;
-//    	assertTermMarkerCount(query,vocab,markerCount);
-//    }
-//    
-//    @Test
 //    public void testCommaInTerm() throws Exception
 //    {
 //    	String query=",Guanine nucleotide binding protein alpha subunit";
