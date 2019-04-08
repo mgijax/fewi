@@ -91,17 +91,18 @@
 
 	<!-- TSS items -->
 	<c:if test="${hasTss}">
-		<form style='display:none;' id="tssBatchWebForm" name='tssBatchWeb' enctype='multipart/form-data' target='_blank' method='post' action='${configBean.FEWI_URL}batch/summary'>
-			<input name='idType' value='current symbol' type='hidden'>
-			<input name='attributes' value='Nomenclature' type='hidden'>
-			<input name='attributes' value='Location' type='hidden'>
-			<input name='ids' value='${tssSymbols}' id='batchSymbolListWeb' type='hidden'>
-		</form>
-	
 		<div id="tssDiv" class="" style="visibility:hidden;">
 			<div class="hd">TSS for ${marker.symbol}:</div>
 			<div class="bd" style="overflow:auto">
-				<span id="tssBatchLink" style="cursor: pointer; color: #0000ff">More Data</span> for these features
+				<c:if test="${not empty marker.preferredCoordinates}">
+					<fmt:formatNumber value="${marker.preferredCoordinates.startCoordinate}" pattern="#0" var="startCoord"/>
+					<fmt:formatNumber value="${marker.preferredCoordinates.endCoordinate}" pattern="#0" var="endCoord"/>
+					<c:set var="tssAtJbrowse" value="${externalUrls.JBrowseTSS}"/>
+					<c:set var="tssAtJbrowse" value="${fn:replace(tssAtJbrowse, '<chromosome>', marker.preferredCoordinates.chromosome)}"/>
+					<c:set var="tssAtJbrowse" value="${fn:replace(tssAtJbrowse, '<start>', startCoord)}"/>
+					<c:set var="tssAtJbrowse" value="${fn:replace(tssAtJbrowse, '<end>', endCoord)}"/>
+					(View these features in <a id="tssBatchLink" style="cursor: pointer" href="${tssAtJbrowse}" target="_blank">JBrowse</a>)
+				</c:if>
 				<table id="tssTable">
 					<tr><td class="bold leftAlign allBorders">Transcription Start Site</td>
 						<td class="bold leftAlign allBorders">Location</td>

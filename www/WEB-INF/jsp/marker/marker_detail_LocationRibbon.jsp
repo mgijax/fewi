@@ -66,7 +66,7 @@
 										<tbody>
 											<tr>
 												<td align="center">
-													<a href="${jbrowseUrl}">Mouse Genome Browser</a><br />
+													View this region in <a href="${jbrowseUrl}">JBrowse</a><br />
 													<c:if test="${not empty gbrowseThumbnailUrl}">
 														<a href="${jbrowseUrl}"><img border="0" src="${gbrowseThumbnailUrl}" style="padding-top: 4px"/></a> <br/>
 													</c:if>

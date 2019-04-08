@@ -44,7 +44,7 @@
 	<th class="blueBG" id="alleles" style="width: 80px">Allele<br/>Summary<br/>(all strains)</th>
 	<c:forEach var="strain" items="${strains}" varStatus="status">
 		<c:set var="bgstyle" value="blueBG"/>
-		<c:if test="${strain == referenceStrain}">
+		<c:if test="${referenceStrains.contains(strain)}">
 			<c:set var="bgstyle" value="refBG"/>
 		</c:if>
 		<th id="${strainHeaders[strain]}" class="snpStrainVerticalHeader ${bgstyle}" style="font-weight: normal; vertical-align: bottom">
@@ -70,7 +70,7 @@
 	<td class="blueBG bold snpStrainHeader" style="width: 80px">Allele<br/>Summary<br/>(all strains)</td>
 	<c:forEach var="strain" items="${strains}">
 		<c:set var="bgstyle" value="blueBG"/>
-		<c:if test="${strain == referenceStrain}">
+		<c:if test="${referenceStrains.contains(strain)}">
 			<c:set var="bgstyle" value="refBG"/>
 		</c:if>
 		<td class="snpStrainVerticalHeader ${bgstyle}" style="font-weight: normal; vertical-align: bottom">
@@ -105,7 +105,20 @@
 </c:forEach>
 
 <c:if test="${empty snps}">
-<tr><td colspan='5'>No SNPs returned</td></tr>
+	<c:choose>
+		<c:when test="${not empty errors}">
+			<tr><td colspan='5'>Errors were detected:<br/>
+				<ul>
+				<c:forEach var="error" items="${errors}">
+					<li>${error}</li>
+				</c:forEach>
+				</ul>
+			</td></tr>
+		</c:when>
+		<c:otherwise>
+			<tr><td colspan='5'>No SNPs returned</td></tr>
+		</c:otherwise>
+	</c:choose>
 </c:if>
 
 </table>

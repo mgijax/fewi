@@ -4,9 +4,15 @@
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %> summaryRibbon" id="snpRibbonDetails">
 			<div id="snpToggle" title="Show More" class="toggleImage hdExpand">more</div>
+			<div id="snpTeaderWrapper" class="flex">
+				<div id="snpTableTeaser" class="summarySec1snp flex">
+					<img id="heatmap_icon" src="${configBean.FEWI_URL}assets/images/heatmap_icon.png"/>
+					<div id="snpProfileLabel" class="label">SNP Profile Heat Map</div>
+				</div>
+				<div id="snpCounts" class="summarySec2snp">
 				<ul>
 					<li>
-						<div class="label narrow">Involving 
+						<div class="label rightLabelSnp">SNPs Involving 
 							<c:if test='${fn:length(strain.name) > 21}'>
 								this strain
 							</c:if>
@@ -17,10 +23,12 @@
 						<div id="snpCount" class="valueNarrow"><fmt:formatNumber type="number" value="${strain.snpCount}" maxFractionDigits="0" groupingUsed="true"/> from ${snpBuildNumber}</div>
 					</li>
 					<li>
-						<div class="label narrow">Comparison Strains</div>
+						<div class="label rightLabelSnp">Comparison Strains</div>
 						<div id="comparisonStrainCount" class="valueNarrow">${strain.countOfSnpComparisonStrains}</a></div>
 					</li>
 				</ul>
+				</div>
+			</div>
 			<div id="snpContainer" class="extra closed">
 				<!-- populated by Ajax -->
 			</div>
@@ -55,11 +63,10 @@
     #sameDiffTable td { max-width: 225px; border: none; padding-right: 4px; vertical-align: top; line-height: 1.5em; }
     #sameDiffLabel { font-weight: bold; margin-left: 80px; }
     .slash { background-image: linear-gradient(to bottom right, rgb(0,0,0,0) 48%, black, rgb(0,0,0,0) 52% ); }
+    .flex { display: flex; }
+    #snpTableTeaser {}
+    #snpCounts {}
+    #heatmap_icon { height: 40px; width: 40px; margin-left: 80px; border: 1px solid #333333; }
+    #snpProfileLabel { margin-left: -20px; margin-top: 17px; }
 	</style>
 	
-	<c:if test='${(fn:length(strain.name) > 11) and (fn:length(strain.name) <= 21)}'>
-		<script>
-		// for long strain names, kick the more/less button down a bit to make room
-		$('#snpToggle').css('margin-top', '22px');
-		</script>
-	</c:if>

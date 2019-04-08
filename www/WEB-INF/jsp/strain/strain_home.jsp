@@ -13,7 +13,7 @@
 	keywords="MGI, mgi, mice, mouse, murine, mus musculus, genes, genome, genomic, strains, inbred strains, CC Founders, SNPs, single nucleotide polymorphisms, PCR, polymerase chain reactions, RFLP, restriction fragment length polymorphisms, coding SNPs, RefSNPs"
 />
 
-<link rel="stylesheet" type="text/css" href="${configBean.WEBSHARE_URL}css/jquery-ui-1.10.2.custom.min.css" />
+<link rel="stylesheet" type="text/css" href="${configBean.WEBSHARE_URL}css/jquery-ui-1.10.2.custom.min.css">
 
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/home/homepages.css">
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/home/strain.css">
@@ -66,6 +66,7 @@
 
 .collections {
 	padding-top: 0px;
+	font-size: 90%;
 }
 .collections li {
 	padding-bottom: 2px;
@@ -115,7 +116,6 @@
   <div class="col-sm-6" style="">
   <div class="strainColumn top">
 	  <section class="infoBlock queryForm">
-	    <h2>Find</h2>
 	    <div style="padding-left: 0.5em; padding-bottom: 0.5em;">
 	    <h3>Strains</h3>
 	    <div class="wrapper" style="padding-left: 20px; padding-bottom: 8px;">
@@ -153,27 +153,33 @@
 <div class="blankSectionSpacer"></div>
 <div class="container">
 <div class="gridRow">
-<div class="col-md-4" style="">
-				      <a href="${configBean.FEWI_URL}snp"><img style="width:350px; height:150;" src="${configBean.FEWI_URL}assets/images/static/SNPQueryImage.png" alt="Mouse SNP Query"></a>
-				    </div>
-				    <div class="col-md-4" style="">
-				      <a href="${configBean.FEWI_URL}allele"><img style="width:350px; height:150;" src="${configBean.FEWI_URL}assets/images/static/Alleleqf.png" alt="Phenotypes, Alleles & Disease Models Search"></a>
-				    </div>
-				    <div class="col-md-4" style="">
-				      <a href="http://www.findmice.org/index.jsp"><img style="width:350px; height:150;" src="${configBean.FEWI_URL}assets/images/static/IMSRLink.png" alt="IMSR"></a>
-				    </div>
-				    </div>
-	<div class="blankSectionSpacer"></div>
-<div class="col-md-4" style="">
-				       <a href="${configBean.MGIHOME_URL}nomen/strains.shtml"><img style="width:350px; height:150;" src="${configBean.FEWI_URL}assets/images/static/4Strains.png" alt="Nomenclature Guidelines"></a>
-				    </div>
-				    <div class="col-md-4" style="">
-				      <a href="${configBean.MGIHOME_URL}submissions/amsp_submission.cgi"><img style="width:350px; height:150;" src="${configBean.FEWI_URL}assets/images/static/SubmitLink.png" alt="Submit Your Data"></a>
-				    </div>
-				    <div class="col-md-4" style="">
-				      <a href="${configBean.FAQ_URL}FAQ.shtml#faq_strain"><img style="width:350px; height:150;" src="${configBean.FEWI_URL}assets/images/static/FAQimage.png" alt="FAQ"></a>
-				    </div>
-				    </div>
+<div class="col-md-3" style="">
+	<a href="${configBean.FEWI_URL}snp"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/SNPQueryImage.png" alt="Mouse SNP Query"></a>
+	</div>
+<div class="col-md-3" style="">
+	<a href="${configBean.FEWI_URL}allele"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/Alleleqf.png" alt="Phenotypes, Alleles & Disease Models Search"></a>
+	</div>
+<div class="col-md-3" style="">
+	<a href="http://www.informatics.jax.org/mgv/#chr=4&start=37427566&end=46427572&dmode=comparison&ref=C57BL/6J&genomes=C57BL/6J+A/J+AKR/J+BALB/cJ+C3H/HeJ+C57BL/6NJ&highlight=MGI:1919151+MGI:192141"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/MGVLink.png" alt="MGV"></a>
+	</div>
+<div class="col-md-3" style="">
+	<a href="http://jbrowse.informatics.jax.org/"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/JBrowseLink.png" alt="JBrowse"></a>
+	</div>
+</div>
+<div class="blankSectionSpacer"></div>
+<div class="col-md-3" style="">
+	<a href="http://www.findmice.org/index.jsp"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/IMSRLink.png" alt="IMSR"></a>
+	</div>
+<div class="col-md-3" style="">
+	 <a href="${configBean.MGIHOME_URL}nomen/strains.shtml"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/4Strains.png" alt="Nomenclature Guidelines"></a>
+	</div>
+<div class="col-md-3" style="">
+	<a href="${configBean.MGIHOME_URL}submissions/amsp_submission.cgi"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/SubmitLink.png" alt="Submit Your Data"></a>
+	</div>
+ <div class="col-md-3" style="">
+	<a href="${configBean.FAQ_URL}FAQ.shtml#faq_strain"><img style="width:260px; height:140;" src="${configBean.FEWI_URL}assets/images/static/FAQimage.png" alt="FAQ"></a>
+	</div>
+</div>
 <div id="" class="blankSectionSpacer"></div>
 
 <div style="clear:both"></div>
@@ -191,23 +197,23 @@
 	<tr>
 	<td>
 		<p><strong>Strains</strong></p>
-		<p>Inbred strains of mice represent unique fixed genotypes that  can be repeatedly accessed as homogeneous
-		experimental individuals, with  predictable phenotypes and defined allelic composition. Hundreds of inbred
-		strains of mice have been described and new strains continue to be developed,  taking advantage of the rich
-		genetic diversity among the existing strains and  the ease with which the mouse genome can be manipulated.<br /><br />
-		MGI serves as a  registry for mouse strains worldwide, maintaining the authoritative  nomenclature for
-		existing strains. Comparative data on inbred strain  characteristics, SNPs, polymorphisms, and quantitative
+		<p>Inbred strains of mice represent unique fixed genotypes that  can be repeatedly accessed as homogeneous experimental individuals, with  predictable phenotypes and defined allelic composition. Hundreds of inbred
+		strains of mice have been described and new strains continue to be developed,  taking advantage of the rich genetic diversity among the existing strains and  the ease with which the mouse genome can be manipulated.<br /><br />
+		
+		MGI serves as a  registry for mouse strains worldwide, maintaining the authoritative  nomenclature for existing strains. Comparative data on inbred strain  characteristics, SNPs, polymorphisms, and quantitative
 		phenotypes are  integrated with other genetic, genomic, and biological data in MGI.</p>
+		
 		<p><strong>SNPs (single nucleotide polymorphisms)</strong></p>
-		<p>MGI provides comprehensive information about reference SNPs including the reference flanking sequence, 
-		assays that define the SNP, and gene/marker associations with their corresponding function class annotations. 
-		Each SNP detail page includes links to popular gene browsers including the MGI 
-		Mouse Genome Browser.</p>
+		
+		<p>MGI provides comprehensive information about reference SNPs including the reference flanking sequence, assays that define the SNP, and gene/marker associations with their corresponding function class annotations. 
+		Each SNP detail page includes links to popular gene browsers including the MGI JBrowse Genome Browser.</p>
+		
 		<p><strong>Other molecular polymorphisms</strong></p>
+		
 		<p>MGI includes data on <abbr title="Restriction Fragment Length Polymorphism">RFLP</abbr> and PCR based polymorphisms. Probes and restriction enzymes used for <abbr title="Restriction Fragment Length Polymorphism">RFLP</abbr> analysis and primer sequences used for PCR are provided, with fragment sizes and variants for each strain tested. Links to these data can be found in the Polymorphisms section of gene and marker detail pages.</p>
+		
 		<p><strong>Strain characteristics and historical origins</strong></p>
-		<p>MGI holds information on comparative strain characteristics as originally curated by Dr. Michael Festing.
-		These narratives provide key phenotypic traits of major inbred strains, such as behavior, physiology, anatomy,
+		<p>MGI holds information on comparative strain characteristics as originally curated by Dr. Michael Festing. These narratives provide key phenotypic traits of major inbred strains, such as behavior, physiology, anatomy,
 		drug responses, immunology, infection, and reproduction. The Genealogy of Inbred Strains provides a "pedigree" of relationships of strains since their origin. The Genealogy
 		Chart graphically displays the movement and development of inbred strains and is particularly useful in looking at
 		dispersion of strains and how inbreeding (and allele fixation) occurred in relation to conserved sequence blocks observed in SNP analysis  Data are fully referenced.</p>
@@ -218,7 +224,7 @@
   <div id="help" class="tab-pane fade">
     <table>
 		<tr><td>
-		  Detailed explanations for using Strains, SNPs & Polymorphisms query forms and tools:	
+		  Detailed explanations for using Strains, SNPs &amp; Polymorphisms query forms and tools:	
 			<ul>
 				<li>SNP Query Form <a href="${configBean.USERHELP_URL}SNP_help.shtml" target="_blank">help</a></li>
 				<li>Guidelines for Nomenclature of Mouse and Rat Strains <a href="${configBean.MGIHOME_URL}nomen/strains.shtml" target="_blank">help</a></li>
@@ -274,7 +280,7 @@
 
 <!--AJAX TABS CALLS-->
 
-<script type="text/javascript" src="<!--#include file="include/javascript.html"-->">
+<script type="text/javascript" src="${configBean.WEBSHARE_URL}js/ajaxtabs.js">
     /***********************************************
     * Ajax Tabs Content script- © Dynamic Drive DHTML code library (www.dynamicdrive.com)
     * This notice MUST stay intact for legal use

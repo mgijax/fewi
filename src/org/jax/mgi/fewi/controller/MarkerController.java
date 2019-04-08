@@ -507,13 +507,6 @@ public class MarkerController {
 			Collections.sort(tssMarkers, tssMarkers.get(0).getComparator());
 			mav.addObject("tssMarkers", tssMarkers);
 		}
-		
-		List<String> tssSymbols = new ArrayList<String>();
-		for (TssMarkerWrapper tss : tssMarkers) {
-			tssSymbols.add(tss.getSymbol());
-		}
-		mav.addObject("tssSymbols", StringUtils.join(tssSymbols, ", "));
-
 	}
 
 	private void setupRibbon1(ModelAndView mav, Marker marker) {
@@ -660,6 +653,11 @@ public class MarkerController {
 			gbrowseUrl = externalUrls.getProperty("GBrowse").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
 
 			jbrowseUrl = externalUrls.getProperty("JBrowse").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
+
+			// if this marker is a TSS, then we need a different URL that will open up the TSS track
+			if ((marker.getTssFor() != null) && (marker.getTssFor().size() > 0)) {
+				jbrowseUrl = externalUrls.getProperty("JBrowseTSS").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
+			}
 
 			gbrowseThumbnailUrl = externalUrls.getProperty("GBrowse_Thumbnail").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
 

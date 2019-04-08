@@ -72,7 +72,7 @@
 						<li title="Multiple Genome Viewer">
 							<div class="label">Mouse Genome Browsers</div>
 							<div class="value">
-								<a href="${externalUrls.MGV}#ref=${strain.name}&genomes=${externalUrls.MGV_Strains}" target="_blank" id="mgvLink">Strain Genome Comparison (MGV)</a>
+								<a href="${externalUrls.MGV}#ref=${strain.name}&genomes=${externalUrls.MGV_Strains}" target="_blank" id="mgvLink">Multiple Genome Viewer (MGV)</a>
 							</div>
 						</li>
 					</c:if>

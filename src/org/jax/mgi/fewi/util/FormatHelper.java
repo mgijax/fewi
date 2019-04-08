@@ -368,7 +368,7 @@ public class FormatHelper {
 		}else if (seqProvider.equals(DBConstants.PROVIDER_NCBI) ||
 				seqProvider.equals(DBConstants.PROVIDER_ENSEMBL)) {
 			providerForward = "mousegenome";
-		}else if (seqProvider.equalsIgnoreCase("mgp strain gene model") ||
+		}else if (seqProvider.endsWith("(MGP) Strain Gene Model") ||
 				(seqProvider.startsWith("MGI") && seqProvider.endsWith("Gene Model")) ) {
 			providerForward = "straingene";
 		}

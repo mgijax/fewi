@@ -14,7 +14,7 @@ public class SnpQueryForm {
 	private String locationSearch;
 	private String geneSearch;
 	private String selectedTab;
-	private String referenceStrain;
+	private List<String> referenceStrains;
 	private String selectedChromosome;
 	private String searchGeneBy;
 	private String searchBySameDiff = "";
@@ -22,6 +22,8 @@ public class SnpQueryForm {
 	private List<String> selectedStrains;
 	private List<String> functionClassFilter;
 	private String displayStrains;			// for text file output
+	private String startMarker;
+	private String endMarker;
 
 	private static int allStrainsCount = 88;
 
@@ -79,11 +81,11 @@ public class SnpQueryForm {
 	public void setSelectedTab(String selectedTab) {
 		this.selectedTab = selectedTab;
 	}
-	public String getReferenceStrain() {
-		return referenceStrain;
+	public List<String> getReferenceStrains() {
+		return referenceStrains;
 	}
-	public void setReferenceStrain(String referenceStrain) {
-		this.referenceStrain = referenceStrain;
+	public void setReferenceStrains(List<String> referenceStrains) {
+		this.referenceStrains = referenceStrains;
 	}
 	public String getSelectedChromosome() {
 		return selectedChromosome;
@@ -162,8 +164,24 @@ public class SnpQueryForm {
 	       	return s;	// fallback: display original string
 	}
 
+	public String getStartMarker() {
+		return startMarker;
+	}
+
+	public void setStartMarker(String startMarker) {
+		this.startMarker = startMarker;
+	}
+
+	public String getEndMarker() {
+		return endMarker;
+	}
+
+	public void setEndMarker(String endMarker) {
+		this.endMarker = endMarker;
+	}
+
 	/* returns a List of Strings which describe in plain Engligh the
-	 * parameters encoded in this query form.  (These Strins can be used
+	 * parameters encoded in this query form.  (These Strings can be used
 	 * as the "You Searched For" text on the SNP summary page.)
 	 */
 	public List<String> getYouSearchedFor() {
@@ -176,7 +194,9 @@ public class SnpQueryForm {
 		if (nomen != null) {
 			String breadth = "";
 			if ("marker_symbol".equals(searchGeneBy)) {
-				breadth = " searching current symbols";
+				breadth = " searching current mouse symbols";
+			} else if ("homologSymbols".equals(searchGeneBy)) {
+				breadth = " searching current mouse and homolog symbols";
 			} else if ("nomenclature".equals(searchGeneBy)) {
 				breadth = " searching current symbols/names, synonyms &amp; homologs";
 			}
@@ -199,27 +219,39 @@ public class SnpQueryForm {
 		}
 
 		// Genome Region (chromosome + coordinates)
-		if ((coordinate != null) && (coordinateUnit != null) && (selectedChromosome != null)) {
+		if ((coordinate != null) && (coordinateUnit != null) && (selectedChromosome != null)
+				&& (!coordinate.trim().equals("")) && (!selectedChromosome.trim().equals("")) ) {
 			String cu = "bp";
 			if ("mbp".equalsIgnoreCase(coordinateUnit)) {
 				cu = "Mbp";
 			}
 			out.add("Genome Region: " + bold("Chr" + selectedChromosome + ":") + bold(orientCoordinates(coordinate)) + " " + cu);
 
-		} else if (selectedChromosome != null) {
+		} else if ( (selectedChromosome != null) && (!selectedChromosome.trim().equals("")) ) {
 			out.add("Genome Region: " + bold("Chr" + selectedChromosome));
 		}
 
+		// marker range
+		if ( (startMarker != null) && (endMarker != null) && (!startMarker.trim().equals("")) && (!endMarker.trim().equals("")) ) {
+			out.add("Marker Range: between " + bold(startMarker) + " and " + bold(endMarker));
+		}
+		
 		// Reference Strain
-		if ((referenceStrain != null) && (referenceStrain.length() > 0)) {
-			out.add("Reference Strain: " + bold(FormatHelper.superscript(referenceStrain)));
+		if ((referenceStrains != null) && (referenceStrains.size() > 0)) {
+			String label = "Reference Strain";
+			if (referenceStrains.size() == 1) {
+				out.add(label + ": " + bold(FormatHelper.superscript(referenceStrains.get(0))));
+			} else {
+				label = label + "s";
+				out.add(label + ": " + bold("" + referenceStrains.size()));
+			}
 
 			if(searchBySameDiff != null && searchBySameDiff.length() > 0) {
 				if(searchBySameDiff.equals("diff_reference")) {
-					out.add("SNPs with alleles " + bold("different from") + " the Reference Strain");
+					out.add("SNPs with alleles " + bold("different from") + " the " + label);
 				}
 				if(searchBySameDiff.equals("same_reference")) {
-					out.add("SNPs with alleles " + bold("same as") + " the Reference Strain");
+					out.add("SNPs with alleles " + bold("same as") + " the " + label);
 				}
 			}
 		}
@@ -255,7 +287,7 @@ public class SnpQueryForm {
 		if(selectedChromosome != null) ret += "selectedChromosome=" + selectedChromosome + "\n";
 		
 		if(selectedStrains != null) ret += "selectedStrains=" + selectedStrains + "\n";
-		if(referenceStrain != null) ret += "referenceStrain=" + referenceStrain + "\n";
+		if(referenceStrains != null) ret += "referenceStrains=" + referenceStrains + "\n";
 		
 		if(searchGeneBy != null) ret += "searchGeneBy=" + searchGeneBy + "\n";
 		if(searchBySameDiff != null) ret += "searchBySameDiff=" + searchBySameDiff + "\n";

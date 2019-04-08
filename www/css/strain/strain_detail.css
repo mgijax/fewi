@@ -226,6 +226,10 @@ border-bottom: 1px solid gray;
 	#body .narrow {
 		width: 16.219em;
 	}
+	
+	#body .rightLabelSnp {
+		width: 20.9em;
+	}
 
 	#gxdLogoImage {
 		width: 90%;
@@ -258,6 +262,14 @@ border-bottom: 1px solid gray;
 
 	#body .summarySec1mp {
 		min-width: 650px;
+	}
+
+	#body .summarySec1snp {
+		min-width: 495px;
+	}
+
+	#body .summarySec2snp {
+		min-width: 635px;
 	}
 
 	#body  .container li {
