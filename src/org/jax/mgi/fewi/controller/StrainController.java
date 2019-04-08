@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-
+import org.jax.mgi.shr.jsonmodel.AccessionID;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.StrainFinder;
@@ -176,9 +176,36 @@ public class StrainController {
         List<Strain> strainList = strainFinder.getStrainByID(strainID);
         // there can be only one...
         if (strainList.size() < 1) { // none found
-            ModelAndView mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No Strain Found for ID " + strainID);
-            return mav;
+
+        	// The incoming ID has a "JAX:" prefix, so try again as a search to find the right strain.
+        	if (strainID.toUpperCase().startsWith("JAX:")) {
+        		Paginator page = new Paginator(10);
+        		
+        		// For resiliency, test both with the JAX prefix and without when searching.
+        		List<String> jaxIDs = new ArrayList<String>();
+        		jaxIDs.add(strainID.toUpperCase().replaceAll("JAX:", ""));
+        		jaxIDs.add(strainID.toUpperCase());
+        		
+        		for (String jaxID : jaxIDs) {
+        			StrainQueryForm query = new StrainQueryForm();
+        			query.setStrainName(jaxID);
+
+        			SearchResults<SimpleStrain> searchResults = getSummaryResults(query, page);
+        			for (SimpleStrain strain : searchResults.getResultObjects()) {
+        				for (AccessionID accID : strain.getAccessionIDs()) {
+        					if (accID.getAccID().equalsIgnoreCase(jaxID) && accID.getLogicalDB().equals("JAX Registry")) {
+        						return this.getStrainDetailPage(strain.getPrimaryID());
+        					}
+        				}
+        			}
+        		}
+        	}
+        	
+        	// failed to find an ID (even searching as a Jax ID, if needed)
+       		ModelAndView mav = new ModelAndView("error");
+       		mav.addObject("errorMsg", "No Strain Found for ID " + strainID);
+       		return mav;
+
         } else if (strainList.size() > 1) { // dupe found
             ModelAndView mav = new ModelAndView("error");
             mav.addObject("errorMsg", "ID " + strainID + " is associated with multiple strains");
