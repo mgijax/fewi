@@ -82,11 +82,11 @@ var options = {
 			},
 			onChooseEvent: function() {
 				if (selectedID != null) {
-					searchResultClick(selectedID);
+					searchResultClick(selectedID, false);
 				} else {
 					selectedID = $('#searchTerm').getItemData(0).accID;
 					if ((selectedID !== null) && (selectedID !== undefined)) {
-						searchResultClick(selectedID);
+						searchResultClick(selectedID, false);
 						$('#searchTerm').val($('#searchTerm').getItemData(0).term);
 					}
 				}
