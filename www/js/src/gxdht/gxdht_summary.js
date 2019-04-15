@@ -61,6 +61,9 @@ var updateYouSearchedFor = function() {
 	if (params.hasOwnProperty('method')) {
 		ysf = ysf + 'Assayed by <b>(' + decode(params['method'][0]) + ')</b><br/>';
 	}
+	if (params.hasOwnProperty('arrayExpressID')) {
+		ysf = ysf + 'ArrayExpress or GEO ID <b>' + params['arrayExpressID'][0].trim() + '</b><br/>';
+	}
 	if (params.hasOwnProperty('text')) {
 		ysf = ysf + 'Text ';
 		if (params.hasOwnProperty('textScope')) {

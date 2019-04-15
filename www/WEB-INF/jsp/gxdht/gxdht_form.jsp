@@ -188,6 +188,12 @@ span.smallGrey { font-size: 75%; color: #999999; }
       		<fewi:checkboxOptions items="${queryForm.textScopeOptions}" name="textScope" values="${queryForm.textScope}" divider="&nbsp;&nbsp;" />
 		</td>
 	</tr>
+	<tr class="stripe1">
+		<td class="cat2Gxd">ArrayExpress or GEO ID</td>
+		<td>
+			<form:input id="arrayExpressID" path="arrayExpressID" class="formWidth" style="width:270px;"></form:input><br/>
+		</td>
+	</tr>
 	<tr class="buttonRow">
 		<td colspan="3" align="left">
 			<input class="buttonLabel" value="Search" type="submit"  id="submit2">

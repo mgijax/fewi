@@ -83,6 +83,9 @@ var gq_reset = function(e) {
 	// Text ribbon
 	$('input:text[name=text]').val('');
 	$('input:checkbox[name=textScope]').prop('checked', true);
+	
+	// ID ribbon
+	$('input:text[name=arrayExpressID]').val('');
 };
 
 // wire in the structure autocomplete (liberally copied from recombinase_form.js)

@@ -426,7 +426,7 @@ public class GXDHTController {
 		// search by ArrayExpress ID
 		String arrayExpressID = query.getArrayExpressID();
 		if ((arrayExpressID != null) && (arrayExpressID.length() > 0)) {
-			filterList.add(new Filter(SearchConstants.GXDHT_EXPERIMENT_ID, arrayExpressID, Filter.Operator.OP_EQUAL));
+			filterList.add(new Filter(SearchConstants.GXDHT_EXPERIMENT_ID, arrayExpressID, Filter.Operator.OP_EQUAL_WILDCARD_ALLOWED));
 		}
 		
 		// search by experiment key
