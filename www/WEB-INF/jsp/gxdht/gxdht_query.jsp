@@ -4,7 +4,7 @@
     pageEncoding="ISO-8859-1"%>
 <%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
-<title>Microarray and RNA-Seq Experiment ${pageType}</title>
+<title>RNA-Seq and Microarray Experiment ${pageType}</title>
 <meta http-equiv="X-UA-Compatible" content="chrome=1">
 <link rel="stylesheet" type="text/css" href="${configBean.WEBSHARE_URL}css/jquery-ui-1.10.2.custom.min.css" />
 
@@ -90,7 +90,7 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 <div id="titleBarWrapperGxd" userdoc="EXPRESSION_htexp_index_help.shtml" style="min-width: 1000px">
 	<a href="${configBean.HOMEPAGES_URL}expression.shtml"><img class="gxdLogo" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="75"></a>
 	<div id="pageHeaderWrapper" style='display:inline-block; margin-top: 20px;'>
-	<span class="titleBarMainTitleGxd">Microarray and RNA-Seq Experiment ${pageType}</span>
+	<span class="titleBarMainTitleGxd">RNA-Seq and Microarray Experiment ${pageType}</span>
 	<c:if test="${pageType == 'Search'}">
 	<br/><span class="titleBarSubTitleGxd">Using GXD Metadata Annotations</span>
 	</c:if>
