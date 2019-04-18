@@ -10,7 +10,6 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <fewi:count count="${count}" /> <fewi:count count="${totalCount}" />
 <div id="injectedResults">
-  <c:set var="linkOut" value="<img src='${configBean.FEWI_URL}assets/images/link_out.png'>" />
   <c:forEach var="exp" items="${experiments}" varStatus="status">
   	<c:set var="aeLink" value="${fn:replace(externalUrls.ArrayExpressExperiment, '@@@@', exp.arrayExpressID)}" />
   	<c:set var="geoLink" value="" />
@@ -61,8 +60,8 @@
 	    <div id="row${status.index}spacer" class="spacer">&nbsp;</div>
 	    <div id="row${status.index}linkWrapper" class="detailCellLast">
 	      <div id="row${status.index}linkHeader" class="detailHeading headerShade1">View experiment at</div>
-		  <div id="row${status.index}ids" class="ids">ArrayExpress: <a href="${aeLink}" target="_blank">${exp.arrayExpressID}</a> ${linkOut}
-			<c:if test="${not empty geoLink}"><br/>GEO: <a href="${geoLink}" target="_blank">${exp.geoID}</a> ${linkOut}</c:if>
+		  <div id="row${status.index}ids" class="ids">ArrayExpress: <a href="${aeLink}" target="_blank" class="extUrl">${exp.arrayExpressID}</a> 
+			<c:if test="${not empty geoLink}"><br/>GEO: <a href="${geoLink}" target="_blank" class="extUrl">${exp.geoID}</a> </c:if>
 		  </div>
 	    </div>
 	  </div>
