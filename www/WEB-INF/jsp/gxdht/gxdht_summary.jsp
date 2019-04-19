@@ -10,7 +10,7 @@ div.headerShade3 { background-color: #EBCA6D; }
 div.experimentWrapper { border: 1px solid gray; border-collapse: collapse; margin-bottom: 8px; }
 div.idWrapper { border: 1px solid gray; width: 100%; overflow: auto; }
 div.idLabels { width: 100px; text-align: right; float: left; font-weight: bold; }
-div.ids { float: left; text-align: left; }
+div.ids { float: left; text-align: left; padding-left: 2px; padding-top: 4px; }
 div.title { text-align: left; font-weight: bold; border-right: 1px solid gray; margin-left: 89px; }
 div.titleLabel { float: left; font-weight: bold; width: 85px; border-right: 1px solid gray; }
 div.noteWrapper { width: 100%; border-right: 1px solid gray; border-left: 1px solid gray; border-bottom: 1px solid gray; overflow: auto; }
@@ -22,6 +22,8 @@ div.detailCell { float: left; text-align: left; border-right: 1px solid gray; }
 div.detailCellLast { text-align: left; padding: 0px 0px 0px 0px; border-right: 1px solid gray; }
 div.detailHeading { text-align: left; padding: 0px 4px 0px 4px; font-weight: bold; }
 div.samples { text-align: left; padding: 4px 4px 0px 4px; }
+div.variables { text-align: left; padding: 4px 4px 0px 4px; }
+div.pmIDs { text-align: left; padding: 4px 4px 0px 4px; max-width: 300px; }
 div.variables { text-align: left; padding: 4px 4px 0px 4px; }
 ul.variables { padding-top: 0px; }
 ul.variables li { padding-top: 0px; margin-left: 0px; list-style-type: none; }

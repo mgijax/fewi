@@ -1,9 +1,12 @@
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 <%@ page import = "org.jax.mgi.fewi.searchUtil.entities.GxdHtExperiment" %>
 <%@ page import = "org.jax.mgi.fewi.util.StyleAlternator" %>
+<%@ page import = "org.jax.mgi.fewi.util.link.IDLinker" %>
 <%
 	StyleAlternator headingClass = new StyleAlternator("headerShade2", "headerShade1");
 	request.setAttribute("headingClass", headingClass);
+    IDLinker idLinker = (IDLinker) request.getAttribute("idLinker");
+    String pmID = null;
 %>
 <%@ page import = "java.util.List" %>
 
@@ -56,6 +59,18 @@
 	      <div id="row${status.index}methodHeader" class="detailHeading headerShade1">Method</div>
 	      <div id="row${status.index}method" class="method">${exp.method}
 	      </div>
+	    </div>
+	    <div id="row${status.index}pmWrapper" class="detailCell">
+	      <div id="row${status.index}pmHeader" class="detailHeading headerShade1">References</div>
+		  <div id="row${status.index}pmIDs" class="pmIDs">
+		  	<c:if test="${not empty exp.pubmedIDs}">
+		  		PubMed:
+		  		<c:forEach var="pmID" items="${exp.pubmedIDs}" varStatus="pmStatus">
+					<% pmID = (String) pageContext.getAttribute("pmID"); %>
+		  			<%= idLinker.getLink("PubMed", pmID) %><c:if test="${!pmStatus.last}">, </c:if>
+		  		</c:forEach>
+		  	</c:if>
+		  </div>
 	    </div>
 	    <div id="row${status.index}spacer" class="spacer">&nbsp;</div>
 	    <div id="row${status.index}linkWrapper" class="detailCellLast">

@@ -22,6 +22,7 @@ import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.GxdHtExperiment;
 import org.jax.mgi.fewi.searchUtil.entities.GxdHtSample;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
+import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.shr.fe.indexconstants.GxdHtFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +53,9 @@ public class GXDHTController {
 
 	@Value("${solr.factetNumberDefault}")
 	private Integer facetLimit; 
+
+    @Autowired
+    private IDLinker idLinker;
 
 	//--- public methods ---//
 
@@ -306,6 +310,7 @@ public class GXDHTController {
 		mav.addObject("count", summaryRows.size());
 		mav.addObject("totalCount", searchResults.getTotalCount());
 		mav.addObject("highlightSamples", highlightSamples);
+		mav.addObject("idLinker", idLinker);
 		
 		if (query.searchDescription() || query.searchTitle()) {
 			mav.addObject("textSearch", query.getText());

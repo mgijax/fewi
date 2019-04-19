@@ -217,7 +217,7 @@ var updateResultsDiv = function(startIndex, rowsPerPage) {
 			for (var i = 0; i < count; i++) {
 				standardizeHeights([ 'row' + i + 'detailLabel', 'row' + i + 'samplesWrapper', 
 					'row' + i + 'variablesWrapper', 'row' + i + 'typeWrapper', 'row' + i + 'methodWrapper',
-					'row' + i + 'spacer', 'row' + i + 'linkWrapper' ], 50);
+					'row' + i + 'spacer', 'row' + i + 'linkWrapper', 'row' + i + 'pmWrapper' ], 50);
 				
 				standardizeHeights([ 'row' + i + 'title', 'row' + i + 'titleLabel']);
 				standardizeHeights([ 'row' + i + 'description', 'row' + i + 'descriptionTitle' ]);
