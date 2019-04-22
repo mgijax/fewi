@@ -17,6 +17,8 @@ public class GxdHtQueryForm {
 	private List<String> age = new ArrayList<String>();
 	private List<Integer> theilerStage = new ArrayList<Integer>();
 	private List<String> variable = new ArrayList<String>();
+	private List<String> variableFilter = new ArrayList<String>();
+	private List<String> studyTypeFilter = new ArrayList<String>();
 	private String method = "";
 	private String mutatedIn = "";
     private String relevancy = "";
@@ -70,6 +72,15 @@ public class GxdHtQueryForm {
 	public Map<String,String> getSexOptions() {
 		return sexOptions;
 	}
+
+	public List<String> getVariableFilter() {
+		return variableFilter;
+	}
+
+	public List<String> getStudyTypeFilter() {
+		return studyTypeFilter;
+	}
+
 	public Map<Integer, String> getTheilerStages() {
 		return theilerStages;
 	}
@@ -218,6 +229,14 @@ public class GxdHtQueryForm {
 
 	public void setRelevancy(String relevancy) {
 		this.relevancy = relevancy;
+	}
+
+	public void setVariableFilter(List<String> variableFilter) {
+		this.variableFilter = variableFilter;
+	}
+
+	public void setStudyTypeFilter(List<String> studyTypeFilter) {
+		this.studyTypeFilter = studyTypeFilter;
 	}
 
 	@Override

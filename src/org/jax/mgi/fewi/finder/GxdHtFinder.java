@@ -7,10 +7,13 @@ import java.util.Set;
 
 import org.jax.mgi.fewi.forms.GxdHtQueryForm;
 import org.jax.mgi.fewi.hunter.SolrGxdHtExperimentHunter;
+import org.jax.mgi.fewi.hunter.SolrGxdHtExperimentStudyTypeFacetHunter;
+import org.jax.mgi.fewi.hunter.SolrGxdHtExperimentVariableFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdHtSampleHunter;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.Filter.Operator;
+import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
@@ -40,31 +43,18 @@ public class GxdHtFinder {
 	@Autowired
 	private SolrGxdHtExperimentHunter gxdHtExperimentHunter;
 
+	@Autowired
+	private SolrGxdHtExperimentStudyTypeFacetHunter studyTypeFacetHunter;
+
+	@Autowired
+	private SolrGxdHtExperimentVariableFacetHunter variableFacetHunter;
+
 	//--- public methods ---//
 	public SearchResults<GxdHtExperiment> getExperiments(SearchParams searchParams, GxdHtQueryForm query) {
 		logger.debug("->getExperiments");
 
-		// first, we need to search the samples and get the set of matching experiment keys (plus
-		// the count of matching samples for each).  If any sample-specific fields were submitted,
-		// we only want to consider relevant samples.
-		
-		if ((query.getAge() != null) || (query.getMutatedIn() != null) || (query.getSex() != null) ||
-			(query.getStructure() != null) || (query.getTheilerStage() != null) ||
-			(query.getStructureID() != null)) {
-				List<Filter> filters = new ArrayList<Filter>();
-				filters.add(searchParams.getFilter());
-				filters.add(new Filter(SearchConstants.GXDHT_RELEVANCY, "Yes", Filter.Operator.OP_EQUAL));
-				searchParams.setFilter(Filter.and(filters));
-		}
-		
-		Map<String, Integer> experimentKeyMap = gxdHtSampleHunter.getExperimentMap(searchParams);
-		logger.debug("  -> got map, size " + experimentKeyMap.size());
-		
-		List<String> experimentKeys = new ArrayList<String>();
-		for (String key : experimentKeyMap.keySet()) {
-			experimentKeys.add(key);
-		}
-		logger.debug("  -> compiled list, size " + experimentKeys.size());
+		Map<String, Integer> experimentKeyMap = this.getMatchingExperimentKeyMap(searchParams, query);
+		List<String> experimentKeys = this.getMatchingExperimentKeys(experimentKeyMap);
 		
 		// Now compose a new set of SearchParams based on the matching experiment keys.
 		SearchParams keySearchParams = new SearchParams();
@@ -94,6 +84,37 @@ public class GxdHtFinder {
 		return searchResults;
 	}
 
+	// convert an experimentKeyMap to just a list of keys
+	private List<String> getMatchingExperimentKeys(Map<String, Integer> experimentKeyMap) {
+		List<String> experimentKeys = new ArrayList<String>();
+		for (String key : experimentKeyMap.keySet()) {
+			experimentKeys.add(key);
+		}
+		logger.debug("  -> compiled list, size " + experimentKeys.size());
+		return experimentKeys;
+	}
+	
+	// get a mapping from experiment key to a count of matching samples
+	private Map<String, Integer> getMatchingExperimentKeyMap(SearchParams searchParams, GxdHtQueryForm query) {
+		// first, we need to search the samples and get the set of matching experiment keys (plus
+		// the count of matching samples for each).  If any sample-specific fields were submitted,
+		// we only want to consider relevant samples.
+		
+		if ((query.getAge() != null) || (query.getMutatedIn() != null) || (query.getSex() != null) ||
+			(query.getStructure() != null) || (query.getTheilerStage() != null) ||
+			(query.getVariableFilter() != null) || (query.getStudyTypeFilter() != null) ||
+			(query.getStructureID() != null)) {
+				List<Filter> filters = new ArrayList<Filter>();
+				filters.add(searchParams.getFilter());
+				filters.add(new Filter(SearchConstants.GXDHT_RELEVANCY, "Yes", Filter.Operator.OP_EQUAL));
+				searchParams.setFilter(Filter.and(filters));
+		}
+		
+		Map<String, Integer> experimentKeyMap = gxdHtSampleHunter.getExperimentMap(searchParams);
+		logger.debug("  -> got map, size " + experimentKeyMap.size());
+		return experimentKeyMap;
+	}
+		
 	public SearchResults<GxdHtSample> getSamples(SearchParams searchParams) {
 		logger.debug("->getSamples");
 
@@ -116,5 +137,35 @@ public class GxdHtFinder {
 		logger.debug("->getMatchingSampleKeys");
 		
 		return gxdHtSampleHunter.getSampleKeys(searchParams);
+	}
+
+    /* ---------------
+     * Facet functions
+     * ---------------
+     */
+    public SearchResults<GxdHtExperiment> getStudyTypeFacet(SearchParams params, GxdHtQueryForm query) {
+		Map<String, Integer> experimentKeyMap = this.getMatchingExperimentKeyMap(params, query);
+		List<String> experimentKeys = this.getMatchingExperimentKeys(experimentKeyMap);
+
+		SearchParams keySearchParams = new SearchParams();
+		keySearchParams.setPaginator(new Paginator(1));
+		keySearchParams.setFilter(new Filter(GxdHtFields.EXPERIMENT_KEY, experimentKeys, Operator.OP_IN));
+
+		SearchResults<GxdHtExperiment> results = new SearchResults<GxdHtExperiment>();
+		studyTypeFacetHunter.hunt(keySearchParams, results);
+		return results;
+	}
+
+    public SearchResults<GxdHtExperiment> getVariableFacet(SearchParams params, GxdHtQueryForm query) {
+		Map<String, Integer> experimentKeyMap = this.getMatchingExperimentKeyMap(params, query);
+		List<String> experimentKeys = this.getMatchingExperimentKeys(experimentKeyMap);
+
+		SearchParams keySearchParams = new SearchParams();
+		keySearchParams.setPaginator(new Paginator(1));
+		keySearchParams.setFilter(new Filter(GxdHtFields.EXPERIMENT_KEY, experimentKeys, Operator.OP_IN));
+
+		SearchResults<GxdHtExperiment> results = new SearchResults<GxdHtExperiment>();
+		variableFacetHunter.hunt(keySearchParams, results);
+		return results;
 	}
 }

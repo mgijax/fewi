@@ -3569,4 +3569,16 @@ public class GXDController {
 	public ModelAndView htExperimentsTable (HttpServletRequest request, @ModelAttribute GxdHtQueryForm query, @ModelAttribute Paginator page) {
 		return gxdhtController.experimentsTable(request, query, page);
 	}
+	
+	// filter values for experimental variables for a GXD HT summary (retrieve via Ajax)
+	@RequestMapping("/htexp_index/facet/variable")
+	public @ResponseBody Map<String, List<String>> htFacetVariable (HttpServletRequest request, @ModelAttribute GxdHtQueryForm query, @ModelAttribute Paginator page, HttpServletResponse response) {
+		return gxdhtController.getVariableFacet(query, null, response);
+	}
+	
+	// filter values for study types for a GXD HT summary (retrieve via Ajax)
+	@RequestMapping("/htexp_index/facet/studyType")
+	public @ResponseBody Map<String, List<String>> htFacetStudyType (HttpServletRequest request, @ModelAttribute GxdHtQueryForm query, @ModelAttribute Paginator page, HttpServletResponse response) {
+		return gxdhtController.getStudyTypeFacet(query, null, response);
+	}
 }
