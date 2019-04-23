@@ -378,6 +378,7 @@ public class GXDHTController {
 			// remove choices that we don't want to give the user
 			facetChoices.remove("Not Applicable");
 			facetChoices.remove("Not Specified");
+			facetChoices.remove("Not Curated");
 
 			Collections.sort(facetChoices);
 			out.put("resultFacets", facetChoices);

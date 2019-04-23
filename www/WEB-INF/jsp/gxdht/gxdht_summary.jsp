@@ -38,13 +38,20 @@ div.description { margin-left: 89px; text-align: left; padding-right: 4px; borde
 a { text-decoration: none; }
 .blue { color: blue; }
 .yellow { background-color: yellow; }
+#contentcolumn { margin: 0 425px 0 425px; }
+.facetFilter .yui-panel .bd { width: 284px; }
 </style>
 
 <div id="summary">
 	<div id="breadbox">
 		<div id="contentcolumn">
 			<div class="innertube">
-				<div id="filterSummary" class="filters">
+				<div id="filterDiv" style="width: 360px;">
+					<span id="filterLabel" class="label">Filter experiments by:</span>
+					<a id="variableFilter" class="filterButton">Variable&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
+					<a id="studyTypeFilter" class="filterButton">Study Type&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
+				</div><br/>
+				<div id="filterSummary" class="filters" style="clear:both;">
 					<span class="label">Filtered by:</span>
 					&nbsp;<span id="defaultText">No filters selected.</span>
 					<span id="filterList"></span><br/>
@@ -62,6 +69,15 @@ a { text-decoration: none; }
 
 
     <div class="facetFilter">
+    	<div id="facetDialog">
+			<div class="hd">Filter</div>
+			<div class="bd">
+				<form:form method="GET"
+					action="${configBean.FEWI_URL}gxd/htexp_index/summary?${queryString}">
+					<img src="/fewi/mgi/assets/images/loading.gif">
+				</form:form>
+			</div>
+		</div>
     </div>
 
     <div id="rightcolumn">

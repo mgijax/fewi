@@ -181,11 +181,16 @@ var updateResultsDiv = function(startIndex, rowsPerPage) {
 		yPos = $('#resultbar').position().top;
 	}
 	
+	var urlFragment = filters.getUrlFragment();
+	if (urlFragment == null) {
+		urlFragment = "";
+	}
+	
 	log("entered updateResultsDiv()");
 	$("#resultSummary").html("<img src='" + fewiurl + "assets/images/loading.gif' height='24' width='24'> Searching...");
 	log("added searching message");
 	$.ajax({
-		url: fewiurl + "gxd/htexp_index/table?" + querystring,	// can take state as param and append here for pagination
+		url: fewiurl + "gxd/htexp_index/table?" + querystring + urlFragment,	// can take state as param and append here for pagination
 		datatype : "html",
 		success: function(data) {
 			log("successful response");
@@ -335,6 +340,12 @@ var gs_setFewiUrl = function(url) {
 	fewiUrl = url;
 };
 
+// update the request & data on the page (after a filtering event)
+var gs_updateRequest = function() {
+	filters.populateFilterSummary();
+	instantiatedPaginator = false;
+	updateResultsDiv(0, 50);
+}
 /*** to execute on being loaded ***/
 
 updateAgeStageTab();

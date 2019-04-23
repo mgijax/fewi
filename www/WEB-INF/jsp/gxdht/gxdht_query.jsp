@@ -113,6 +113,7 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxdht/gxdht_query.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxdht/gxdht_summary.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/external/jquery.paging.min.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/filters.js"></script>
 
 <script type="text/javascript">
     var fewiurl = "${configBean.FEWI_URL}";
@@ -130,6 +131,25 @@ $(".gxdQf").on("reset",gq_reset);
   hideQF();
   gs_search();
 </c:if>
+
+function initializeFilterLibrary(delay) {
+	if (window.filtersLoaded) {
+		console.log('initializing filters');
+		function getQuerystring() {
+	  		return querystring + filters.getUrlFragment();
+		}
+		filters.setFewiUrl(fewiurl);
+		filters.setQueryStringFunction(getQuerystring);
+		filters.setSummaryNames('filterSummary', 'filterList');
+		filters.addFilter('variableFilter', 'Variable', 'variableFilter', 'variableFilter', fewiurl + 'gxd/htexp_index/facet/variable');
+		filters.addFilter('studyTypeFilter', 'Study Type', 'studyTypeFilter', 'studyTypeFilter', fewiurl + 'gxd/htexp_index/facet/studyType');
+		filters.registerCallback("htCallback", gs_updateRequest);
+		filters.setRemovalDivStyle('block');
+	} else {
+		setTimeout(function() { initializeFilterLibrary(delay) }, delay);
+	}
+}
+initializeFilterLibrary(250);	// check for filters.js library being loaded every 250ms
 </script>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

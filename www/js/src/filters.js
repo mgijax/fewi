@@ -73,6 +73,9 @@ filters.alternateCallback = null;	// if we are not managing a dataTable,
 					// ...what should we call when a
 					// ...filter's values are returned?
 
+// style for DIV containing filter removal buttons
+filters.removalDivStyle = 'inline';
+
 /* special handling for extra 'remove row/col filters' button for HMDC */
 
 filters.hmdcButtonID = null;		// ID of extra button
@@ -811,7 +814,7 @@ filters.encode = function(val) {
     return val.replace('&', '%26');
 };
 
-/* write the given string 'msg' out to the browser's error log and / or borwsers consolt log
+/* write the given string 'msg' out to the browser's error log and / or browser's console log
  */
 filters.log = function(msg) {
 	if (filters.logging) {
@@ -1434,11 +1437,16 @@ filters.populateFilterSummary = function() {
     }
 
     if (buttons.length > 0) {
-	YAHOO.util.Dom.setStyle(fSum, 'display', 'inline');
+	YAHOO.util.Dom.setStyle(fSum, 'display', filters.removalDivStyle);
     } else {
 	YAHOO.util.Dom.setStyle(fSum, 'display', 'none');
     }
 };
+
+// set to 'inline' or 'block' as needed for display of DIV with filter removal buttons
+filters.setRemovalDivStyle = function(s) {
+	filters.removalDivStyle = s;
+}
 
 function setText(element, text){
 	element.textContent=text;
@@ -1447,3 +1455,6 @@ function setText(element, text){
 
     }
 };
+
+// flag to be able to tell if module is loaded
+window.filtersLoaded = true;
