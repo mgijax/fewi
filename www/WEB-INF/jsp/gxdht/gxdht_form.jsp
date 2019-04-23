@@ -189,7 +189,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		</td>
 	</tr>
 	<tr class="stripe1">
-		<td class="cat2Gxd">ArrayExpress or GEO ID</td>
+		<td class="cat1Gxd">ArrayExpress or GEO ID</td>
 		<td>
 			<form:input id="arrayExpressID" path="arrayExpressID" class="formWidth" style="width:270px;"></form:input><br/>
 		</td>
