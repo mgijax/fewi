@@ -61,7 +61,7 @@
 	      </div>
 	    </div>
 	    <div id="row${status.index}pmWrapper" class="detailCell">
-	      <div id="row${status.index}pmHeader" class="detailHeading headerShade1">References</div>
+	      <div id="row${status.index}pmHeader" class="detailHeading headerShade1">Reference</div>
 		  <div id="row${status.index}pmIDs" class="pmIDs">
 		  	<c:if test="${not empty exp.pubmedIDs}">
 		  		PubMed:
