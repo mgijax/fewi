@@ -22,6 +22,7 @@ public class StrainQueryForm {
 	private List<String> attributeFilter;	// user's selections when filtering a result set by strain attribute
 	private String attributeOperator;		// any/all attributes?
 	private String referenceID;
+	private String tag;						// special tag for getting subset of strains (eg- GXDHT)
 
 	/***--- constructors ---***/
 	
@@ -95,6 +96,14 @@ public class StrainQueryForm {
 
 	public void setStrainName(String strainName) {
 		this.strainName = strainName;
+	}
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
 
 	/***--- toString ---***/

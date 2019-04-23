@@ -702,6 +702,12 @@ public class StrainController {
 			filterList.add(new Filter(SearchConstants.STRAIN_GROUPS, group, Filter.Operator.OP_EQUAL));
 		}
 		
+		// tag that identifies a particular subset of strains (eg- GXDHT)
+		String tag = query.getTag();
+		if ((tag != null) && (tag.length() > 0)) {
+			filterList.add(new Filter(SearchConstants.STRAIN_TAGS, tag, Filter.Operator.OP_EQUAL));
+		}
+		
 		// Has the strain been sequenced (1) or not (0)?
 		Integer isSequenced = query.getIsSequenced();
 		if (isSequenced != null) {
