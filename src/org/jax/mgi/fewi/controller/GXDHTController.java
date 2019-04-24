@@ -120,7 +120,9 @@ public class GXDHTController {
 		}
 		if ((queryForm.getMutatedIn() != null) && (queryForm.getMutatedIn().length() > 0)) {
 			return true;
-		} if ((queryForm.getSex() != null) && (queryForm.getSex().length() > 0)) {
+		} else if ((queryForm.getSex() != null) && (queryForm.getSex().length() > 0)) {
+			return true;
+		} else if ((queryForm.getStrain() != null) && (queryForm.getStrain().length() > 0)) {
 			return true;
 		} else if ((queryForm.getStructure() != null) && (queryForm.getStructure().length() > 0)) {
 			return true;
@@ -476,6 +478,12 @@ public class GXDHTController {
 		String mutatedIn = query.getMutatedIn();
 		if ((mutatedIn != null) && (mutatedIn.length() > 0)) {
 			filterList.add(new Filter(SearchConstants.GXDHT_MUTATED_GENE, mutatedIn, Filter.Operator.OP_EQUAL));
+		}
+		
+		// search by string
+		String strain = query.getStrain();
+		if ((strain != null) && (strain.length() > 0)) {
+			filterList.add(new Filter(SearchConstants.GXDHT_STRAIN, strain, Filter.Operator.OP_EQUAL_WILDCARD_ALLOWED));
 		}
 		
 		// search by method

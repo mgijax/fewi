@@ -86,10 +86,14 @@ var gq_reset = function(e) {
 	
 	// ID ribbon
 	$('input:text[name=arrayExpressID]').val('');
+	
+	// strain ribbon
+	$('input:text[name=strain]').val('');
 };
 
-// wire in the structure autocomplete (liberally copied from recombinase_form.js)
+// initialize the autocompletes
 $(function() {
+// wire in the structure autocomplete (liberally copied from recombinase_form.js)
     var structureAC = $( "#structureAC" ).autocomplete({
 	source: function( request, response ) {
 		$.ajax({
@@ -125,6 +129,26 @@ $(function() {
 		.append('<span>'+value+'</span>')
 		.appendTo(ul);
     };
+    
+    // wire in the strain name autocomplete
+    var strainNameUrl = fewiUrl + "autocomplete/strainName?tag=GXDHT&query=";
+    var strainNameAC = $( "#strainNameAC" ).autocomplete({
+    	source: function( request, response ) {
+    		jQuery.ajax({
+    			url: strainNameUrl + request.term,
+    			dataType: "json",
+    			success: function( data ) {
+    				response(data['resultObjects']);
+    			}
+    		});
+    	},
+    	minLength: 1
+    }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+		return jQuery('<li></li>')
+			.data("item.autocomplete", item)
+			.append("<a>" + item.label + "</a>")
+			.appendTo(ul);
+   	};
 });
 
 var showQF = function(callback) {

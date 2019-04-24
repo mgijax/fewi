@@ -28,6 +28,7 @@ public class GxdHtQueryForm {
     private String text = "";
     private String arrayExpressID = "";
     private String experimentKey = "";
+    private String strain = "";
     private List<String> textScope = new ArrayList<String>();
     private Map<String,String> sexOptions = new LinkedHashMap<String,String>();
     private Map<String,String> textScopeOptions = new LinkedHashMap<String,String>();
@@ -87,6 +88,14 @@ public class GxdHtQueryForm {
 
 	public void setTheilerStages(Map<Integer, String> theilerStages) {
 		this.theilerStages = theilerStages;
+	}
+
+	public String getStrain() {
+		return strain;
+	}
+
+	public void setStrain(String strain) {
+		this.strain = strain;
 	}
 
 	public Map<String, String> getAges() {

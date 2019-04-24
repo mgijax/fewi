@@ -101,7 +101,7 @@ public class GxdHtFinder {
 		// we only want to consider relevant samples.
 		
 		if ((query.getAge() != null) || (query.getMutatedIn() != null) || (query.getSex() != null) ||
-			(query.getStructure() != null) || (query.getTheilerStage() != null) ||
+			(query.getStructure() != null) || (query.getTheilerStage() != null) || (query.getStrain() != null) ||
 			(query.getVariableFilter() != null) || (query.getStudyTypeFilter() != null) ||
 			(query.getStructureID() != null)) {
 				List<Filter> filters = new ArrayList<Filter>();

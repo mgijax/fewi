@@ -54,6 +54,9 @@ var updateYouSearchedFor = function() {
 	if (params.hasOwnProperty('sex') && (params['sex'][0] != 'All')) {
 		ysf = ysf + 'Sex: <b>' + params['sex'][0] + '</b><br/>';
 	}
+	if (params.hasOwnProperty('strain') && (params['strain'].length > 0)) {
+		ysf = ysf + 'Strain: <b>' + decodeURIComponent(params['strain']) + '</b><br/>';
+	}
 	if (params.hasOwnProperty('mutatedIn')) {
 		ysf = ysf + 'Samples <b>mutated in ' + decode(params['mutatedIn'][0]) + '</b> ';
 		ysf = ysf + ' <span class="smallGrey">current symbol, synonyms, gene id</span><br/>';

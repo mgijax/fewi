@@ -131,6 +131,9 @@ $(".gxdQf").on("reset",gq_reset);
   hideQF();
   gs_search();
 </c:if>
+<c:if test="${empty queryString}">
+  var querystring = "";
+</c:if>
 
 function initializeFilterLibrary(delay) {
 	if (window.filtersLoaded) {

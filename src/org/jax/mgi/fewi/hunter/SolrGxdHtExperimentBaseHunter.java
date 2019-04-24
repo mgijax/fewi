@@ -100,18 +100,18 @@ public class SolrGxdHtExperimentBaseHunter extends SolrHunter<GxdHtExperiment> {
 	 */
 	protected void packFacetData(QueryResponse rsp, SearchResults<GxdHtExperiment> sr) {
 		if (this.facetString == null) {
-			logger.info("this.facetString = null");
+			logger.debug("this.facetString = null");
 			return;
 		}
 
-		logger.info("this.facetString = " + this.facetString);
+		logger.debug("this.facetString = " + this.facetString);
 		List<String> facet = new ArrayList<String>();
 
 		for (Count c : rsp.getFacetField(this.facetString).getValues()) {
 			facet.add(c.getName());
 		}
 
-		logger.info("facets -> "+StringUtils.join(facet,", "));
+		logger.debug("facets -> "+StringUtils.join(facet,", "));
 		if (facet.size() > 0) {
 			sr.setResultFacets(facet);
 		}

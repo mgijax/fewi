@@ -164,6 +164,20 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		</td>
 	</tr>
 
+ 	<tr class="stripe1">
+		<td class="cat1Gxd">Mutant</td>
+		<td>Samples mutated in <form:input id="mutatedIn" path="mutatedIn" class="formWidth" style="width:135px;"></form:input></td>
+	</tr>
+
+	<tr class="stripe2">
+		<td class="cat2Gxd">Strain</td>
+		<td><input type="text" size="40" name="strain" id="strainNameAC"
+			placeholder="name"
+			value="<c:out value="${queryForm.strain}"/>" /><br/>
+			<span style="font-size: 85%">Use * for wildcard.</span>
+		</td>
+	</tr>
+
 	<tr class="stripe1">
 		<td class="cat1Gxd">Sex</td>
 		<td>
@@ -171,25 +185,21 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		</td>
 	</tr>
 
- 	<tr class="stripe2">
-		<td class="cat2Gxd">Mutant</td>
-		<td>Samples mutated in <form:input id="mutatedIn" path="mutatedIn" class="formWidth" style="width:135px;"></form:input></td>
-	</tr>
-	<tr class="stripe1">
-		<td class="cat1Gxd">Method</td>
+	<tr class="stripe2">
+		<td class="cat2Gxd">Method</td>
 		<td>
 			<fewi:radio name="method" idPrefix="method" divider="<br/>" items="${queryForm.methodOptions}" value="${method}" />
 		</td>
 	</tr>
-	<tr class="stripe2">
-		<td class="cat2Gxd">Text</td>
+	<tr class="stripe1">
+		<td class="cat1Gxd">Text</td>
 		<td>
 			<form:input id="text" path="text" class="formWidth" style="width:270px;"></form:input><br/>
       		<fewi:checkboxOptions items="${queryForm.textScopeOptions}" name="textScope" values="${queryForm.textScope}" divider="&nbsp;&nbsp;" />
 		</td>
 	</tr>
-	<tr class="stripe1">
-		<td class="cat1Gxd">ArrayExpress or GEO ID</td>
+	<tr class="stripe2">
+		<td class="cat2Gxd">ArrayExpress or GEO ID</td>
 		<td>
 			<form:input id="arrayExpressID" path="arrayExpressID" class="formWidth" style="width:270px;"></form:input><br/>
 		</td>
