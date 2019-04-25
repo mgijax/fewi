@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -302,6 +304,53 @@ public class GOController {
 		// place data into JSON response, and return
 		jsonResponse.setSummaryRows(summaryRows);
 		jsonResponse.setTotalCount(searchResults.getTotalCount());
+		return jsonResponse;
+	}
+
+	// method retrieves MGI IDs for all markers in the table of GO annotations identified in 'request'
+	@RequestMapping("/jsonMarkers")
+	public @ResponseBody JsonSummaryResponse<String> goMarkersJson(HttpServletRequest request,
+			@ModelAttribute MarkerAnnotationQueryForm query, @ModelAttribute Paginator page) {
+
+		logger.debug("->goMarkersJson started");
+
+		// First, get a total count of matching documents (0 returned)
+		page.setResults(0);
+		SearchResults<Annotation> searchResults = getAnnotations(request, query, page);
+		int totalCount = searchResults.getTotalCount();
+		
+		// Now, to get all the markers for all the document, we're going to iterate through the matching
+		// document 'n' at a time, where 'n' is set in the Paginator.
+		page.setResults(10000);
+
+		Set<Integer> markerKeys = new HashSet<Integer>();	// marker keys processed so far
+		List<String> markerIDs = new ArrayList<String>();	// marker IDs collected so far
+		int docsSeen = 0;									// count of documents processed so far
+
+		while (docsSeen < totalCount) {
+			page.setStartIndex(docsSeen);
+			searchResults = getAnnotations(request, query, page);
+			List<Annotation> annotList = searchResults.getResultObjects();
+		
+			for (Annotation annot : annotList) {
+				for (Marker mrk : annot.getMarkers()) {
+					if (!markerKeys.contains(mrk.getMarkerKey())) {
+						markerKeys.add(mrk.getMarkerKey());
+						markerIDs.add(mrk.getPrimaryID());
+					}
+				}
+			}
+			
+			docsSeen = docsSeen + annotList.size();
+		}
+		
+		// The JSON return object will be serialized to a JSON response.
+		// Client-side JavaScript expects this object
+		JsonSummaryResponse<String> jsonResponse = new JsonSummaryResponse<String>();
+
+		// place data into JSON response, and return
+		jsonResponse.setSummaryRows(markerIDs);
+		jsonResponse.setTotalCount(markerIDs.size());
 		return jsonResponse;
 	}
 

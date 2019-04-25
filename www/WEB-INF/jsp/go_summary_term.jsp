@@ -66,11 +66,17 @@
 	</div>
 </div>
 
+<form action="${configBean.MOUSEMINE_URL}mousemine/portal.do" method="post" name="mousemine" target="_blank">
+	<input id="mousemineids" type="hidden" value="" name="externalids">
+	<input type="hidden" value="SequenceFeature" name="class">
+</form>
+
 <div id="toolbar" class="bluebar" style="width:1353px;">
 	<div id="downloadDiv">
 		<span class="label">Export:</span>
 		<a id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
 		<a id="excelDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a>
+		<a id="mouseMineLink" target="_blank" class="filterButton" style="display: none" onClick="javascript: mousemine.submit();"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> MouseMine</a>
 	</div>
 	<div id="filterDiv"></div>
 	<div id="otherDiv"></div>
@@ -88,8 +94,22 @@
 	var querystring = "${queryString}";
 </script>
 
+<script type="text/javascript">
+	// look up (via Ajax request) matching marker IDs for the MouseMine link
+	var mmUrl = fewiurl + "go/jsonMarkers?goID=${term.primaryID}";
+	$.ajax({
+		url : mmUrl,
+		type : 'GET',
+		dataType : 'json',
+		success : function(data) {
+			$("#mousemineids").val(data.summaryRows.join(','));
+//			$("#mousemineids").val(data.summaryRows.join(','));
+			$('#mouseMineLink').css({display: 'inline'});
+		} 
+	});
+</script>
+
 <!-- including this file will start the data injection -->
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/go_summary_term.js"></script>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
-
