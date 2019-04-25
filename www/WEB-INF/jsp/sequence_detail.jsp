@@ -294,8 +294,21 @@
 </tr>
 </c:if>
 
-
-
+<c:set var="width" value="95%"/>
+<c:set var="hideColumns" value="false"/>
+<c:if test="${sequence.organism != 'mouse'}">
+	<!-- For non-mouse sequence, assume we will hide the extra columns.  However, if it is
+		associated with at least one mouse marker, we'll show them.  (This happens for a
+		few sequences with a "Not Loaded" organism.) -->
+	<c:set var="hideColumns" value="true"/>
+	<c:set var="width" value="65%"/>
+	<c:forEach var="marker" items="${markers}">
+		<c:if test="${marker.organism == 'mouse'}">
+			<c:set var="hideColumns" value="false"/>
+			<c:set var="width" value="95%"/>
+		</c:if>
+	</c:forEach>
+</c:if>
 
 <!-- Markers -->
 <c:if test="${not empty markers}">
@@ -305,19 +318,23 @@
   </td>
   <td class="${rightTdStyles.next}" >
 
+  <c:if test="${hideColumns == 'false'}">
   <em>Follow the symbol links to get more information on the GO terms, 
   expression assays, orthologs, phenotypic alleles, and other information 
   for the genes or markers below.</em>
+  </c:if>
 
-  <table class="borderedTable" style="margin-top:5px; width:95%;" id="markerTable">
+  <table class="borderedTable" style="margin-top:5px; width:${width};" id="markerTable">
     <tr>
     <th>Type</th>
     <th>Symbol</th>
     <th>Name</th>
+	<c:if test="${hideColumns == 'false'}">
     <th>GO Terms</th>
     <th>Expression<BR>Assays</th>
     <th>Orthologs</th>
     <th>Phenotypic<BR>Alleles</th>
+	</c:if>
     </tr>
 
     <c:forEach var="marker" items="${markers}" >
@@ -326,10 +343,12 @@
       <td valign=top>${marker.markerType}</td>
       <td valign=top><%=idLinker.getDefaultMarkerLink(marker)%></td>
       <td valign=top>${marker.name}</td>
+	  <c:if test="${hideColumns == 'false'}">
       <td valign=top>${marker.countOfGOTerms}</td>
       <td valign=top>${marker.countOfGxdAssays}</td>
       <td valign=top>${marker.countOfOrthologs}</td>
       <td valign=top>${marker.countOfAlleles}</td>
+	  </c:if>
       </tr>
     </c:forEach>
   </table>
