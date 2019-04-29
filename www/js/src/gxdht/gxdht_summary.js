@@ -14,7 +14,7 @@ var instantiatedPaginator = false;
 var fewiUrl = null;
 
 var decode = function(s) {
-	return s.replace(/\+/g, ' ').replace(/[^A-Za-z0-9 ]/, ' ');
+	return decodeURIComponent(s).replace(/[^A-Za-z0-9:_ ]/, ' ');
 };
 
 // translate the float ages to have a prefixed 'E'
