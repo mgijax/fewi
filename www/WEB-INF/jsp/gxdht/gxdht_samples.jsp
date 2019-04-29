@@ -47,7 +47,7 @@ a { text-decoration: none; }
     <c:if test="${not empty samples}">
       <div id="sampleWrapper">
   	    <div id="sampleTitle">Sample information</div>
-  	    <table>
+  	    <table id="sampleTable">
   	      <tr>
   	  	    <th>Name</th>
   	  	    <c:if test="${not empty showOrganism}"><th>Organism</th></c:if>
