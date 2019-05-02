@@ -31,6 +31,7 @@ import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.BatchSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.AjaxUtils;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,13 +56,11 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(value="/batch")
 public class BatchController {
 
-
 	//--------------------//
 	// instance variables
 	//--------------------//
 
 	private final Logger logger = LoggerFactory.getLogger(BatchController.class);
-
 
 	@Autowired
 	SessionFactory sessionFactory;
@@ -69,17 +68,18 @@ public class BatchController {
 	@Autowired
 	private BatchFinder batchFinder;
 
-
 	//--------------------------------------------------------------------//
 	// public methods
 	//--------------------------------------------------------------------//
 
-
 	//--------------------//
-	// Foo Query Form
+	// Batch Query Form
 	//--------------------//
 	@RequestMapping(method=RequestMethod.GET)
-	public ModelAndView getQueryForm() {
+	public ModelAndView getQueryForm(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("-> getQueryForm started");
 
@@ -89,12 +89,14 @@ public class BatchController {
 		return mav;
 	}
 
-
 	//-------------------------//
-	// Foo Query Form Summary
+	// Batch Query Form Summary
 	//-------------------------//
 	@RequestMapping("/summary")
 	public ModelAndView batchSummary(MultipartHttpServletRequest request, HttpSession session, @ModelAttribute BatchQueryForm queryForm) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("-> batchSummary POST started");       
 		logger.debug("queryString: " + request.getQueryString());		
@@ -102,10 +104,13 @@ public class BatchController {
 	}
 
 	//-------------------------//
-	// Foo Query Form Summary
+	// Batch Query Form Summary
 	//-------------------------//
 	@RequestMapping(value="/summary", method=RequestMethod.GET)
-	public ModelAndView batchSummaryGet(HttpSession session, @ModelAttribute BatchQueryForm queryForm,Model model) {
+	public ModelAndView batchSummaryGet(HttpSession session, HttpServletRequest request, @ModelAttribute BatchQueryForm queryForm,Model model) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug(model.toString());
 		logger.debug("-> batchSummary GET started");        
@@ -118,6 +123,10 @@ public class BatchController {
 	//@RequestMapping(value="/forwardSummary", method=RequestMethod.GET)
 	@RequestMapping(value="/forwardSummary")
 	public ModelAndView batchSummary2Get(HttpSession session,HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 
 		BatchQueryForm queryForm = (BatchQueryForm) request.getAttribute("queryForm");
 		logger.debug("-> batchSummary GET started");        
@@ -306,6 +315,9 @@ public class BatchController {
 	@RequestMapping("/report*")
 	public ModelAndView batchSummaryReport(final HttpServletRequest request, final HttpSession session,
 			final @ModelAttribute BatchQueryForm queryForm, final @ModelAttribute Paginator page) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("batchSummaryReport");
 		//logger.debug(queryForm.toString());

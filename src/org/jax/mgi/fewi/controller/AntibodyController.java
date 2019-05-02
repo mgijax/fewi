@@ -2,9 +2,12 @@ package org.jax.mgi.fewi.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import mgi.frontend.datamodel.Antibody;
 
 import org.jax.mgi.fewi.finder.AntibodyFinder;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +52,11 @@ public class AntibodyController {
     // Antibody Detail by Antibody Key
     //--------------------------------------//
     @RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
-    public ModelAndView antibodyDetailByKey(@PathVariable("dbKey") String dbKey) {
+    public ModelAndView antibodyDetailByKey(HttpServletRequest request, @PathVariable("dbKey") String dbKey) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 	logger.debug ("-> antibodyDetailByKey started");
 
 	// find the requested antibody by database key
@@ -86,7 +93,10 @@ public class AntibodyController {
     // Antibody Detail By ID
     //--------------------//
     @RequestMapping(value="/{antibodyID:.+}", method = RequestMethod.GET)
-    public ModelAndView antibodyDetailByID(@PathVariable("antibodyID") String antibodyID) {
+    public ModelAndView antibodyDetailByID(HttpServletRequest request, @PathVariable("antibodyID") String antibodyID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
         logger.debug("->antibodyDetailByID started");
 
