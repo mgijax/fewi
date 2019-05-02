@@ -71,6 +71,7 @@ import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.GOGraphConverter;
 import org.jax.mgi.fewi.util.NotesTagConverter;
 import org.jax.mgi.fewi.util.TssMarkerWrapper;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.fewi.util.file.TextFileReader;
 import org.jax.mgi.fewi.util.link.FewiLinker;
 import org.jax.mgi.fewi.util.link.IDLinker;
@@ -134,7 +135,10 @@ public class MarkerController {
 	private String mpHeaders = null;
 
 	@RequestMapping(method=RequestMethod.GET)
-	public ModelAndView getQueryForm() {
+	public ModelAndView getQueryForm(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->getQueryForm started");
 		initQueryForm();
