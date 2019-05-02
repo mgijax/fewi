@@ -31,6 +31,7 @@ import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.GOSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +71,11 @@ public class GOController {
 	/////////////////////////////
 
 	@RequestMapping(value="/term/{termID}")
-	public ModelAndView goSummaryByTermId(@PathVariable("termID") String termID) {
+	public ModelAndView goSummaryByTermId(HttpServletRequest request, @PathVariable("termID") String termID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->goSummaryByTermId started");
 
 		// find the requested term
@@ -114,7 +119,11 @@ public class GOController {
 	/////////////////////////////
 
 	@RequestMapping(value="/reference/{referenceID}")
-	public ModelAndView goSummaryByReferenceId(@PathVariable("referenceID") String referenceID) {
+	public ModelAndView goSummaryByReferenceId(HttpServletRequest request, @PathVariable("referenceID") String referenceID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->goSummaryByReferenceId started");
 
 		// setup search parameters object to gather the requested object
@@ -132,8 +141,12 @@ public class GOController {
 	}
 
 	@RequestMapping(value="/reference/key/{referenceKey}")
-	public ModelAndView goSummaryByReferenceKey(
+	public ModelAndView goSummaryByReferenceKey(HttpServletRequest request,
 			@RequestParam("referenceKey") String referenceKey) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 
 		logger.debug("->goSummaryByReferenceKey started: " + referenceKey);
 
@@ -181,6 +194,10 @@ public class GOController {
 	@RequestMapping(value="/marker/{markerID}")
 	public ModelAndView goSummaryByMarkerId(HttpServletRequest request,
 	    @PathVariable("markerID") String markerID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->goSummaryByMarkerId started");
 
 		// look for an (optional) GO slimgrid header term, which would
@@ -204,6 +221,10 @@ public class GOController {
 	@RequestMapping(value="/marker")
 	public ModelAndView goSummaryByMarkerKey(HttpServletRequest request,
 	    @RequestParam("key") String markerKey) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->goSummaryByMarkerKey started: " + markerKey);
 
 		// look for an (optional) GO slimgrid header term, which would
@@ -378,6 +399,9 @@ public class GOController {
 
 	@RequestMapping("/report*")
 	public ModelAndView seqSummaryExport(HttpServletRequest request, @ModelAttribute MarkerAnnotationQueryForm query, @ModelAttribute Paginator page) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->JsonSummaryResponse started");
 

@@ -33,6 +33,7 @@ import org.jax.mgi.fewi.summary.GxdLitReferenceSummaryRow;
 import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.Highlighter;
 import org.jax.mgi.fewi.util.StyleAlternator;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,7 +91,10 @@ public class GXDLitController {
     // GXD Lit Query Form
     //--------------------//
     @RequestMapping(method=RequestMethod.GET)
-    public ModelAndView getQueryForm() {
+    public ModelAndView getQueryForm(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
         logger.debug("->getQueryForm started");
 
@@ -104,7 +108,10 @@ public class GXDLitController {
     // GXD Lit Detail By Key
     //--------------------//
     @RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
-    public ModelAndView gxdLitDetailByKey(@PathVariable("dbKey") String dbKey) {
+    public ModelAndView gxdLitDetailByKey(HttpServletRequest request, @PathVariable("dbKey") String dbKey) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
         logger.debug("->gxdLitDetailByKey started");
 
@@ -116,7 +123,11 @@ public class GXDLitController {
     }
     
     @RequestMapping(value="/key")
-    public ModelAndView gxdLitDetailByKeyParam(@RequestParam("_Index_key") String dbKey) {
+    public ModelAndView gxdLitDetailByKeyParam(HttpServletRequest request, @RequestParam("_Index_key") String dbKey) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
         logger.debug("->referenceSummaryByAlleleKey started: " + dbKey);
        
         // find the requested Lit Detail
@@ -160,6 +171,9 @@ public class GXDLitController {
     public ModelAndView gxdLitSummaryByMarkerId(HttpServletRequest request,
             @ModelAttribute GxdLitQueryForm queryForm,
             @PathVariable("markerID") String markerID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
         logger.debug("->gxdLitSummary by Marker started");
         logger.debug("getting marker for id: " + markerID);
@@ -180,6 +194,10 @@ public class GXDLitController {
     public ModelAndView gxdLitSummaryByMarkerKey(@RequestParam("_Marker_key") String markerKey,
     		HttpServletRequest request,
             @ModelAttribute GxdLitQueryForm queryForm){
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
         // find the requested reference
         SearchResults<Marker> searchResults
           = markerFinder.getMarkerByKey(markerKey);
@@ -262,6 +280,9 @@ public class GXDLitController {
     public ModelAndView gxdLitSummaryByReferenceId(HttpServletRequest request,
             @ModelAttribute GxdLitQueryForm queryForm,
             @PathVariable("refID") String refID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
         logger.debug("->gxdLitSummary by Reference started");
         logger.debug("getting reference for id: " + refID);
@@ -282,6 +303,10 @@ public class GXDLitController {
     public ModelAndView gxdLitSummaryByReferenceKey(@RequestParam("_Refs_key") String referenceKey,
     		HttpServletRequest request,
             @ModelAttribute GxdLitQueryForm queryForm){
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
         // find the requested reference
         SearchResults<Reference> searchResults
         = referenceFinder.getReferenceByKey(referenceKey);
@@ -362,6 +387,9 @@ public class GXDLitController {
     @RequestMapping("/summary/ageAssay")
     public ModelAndView gxdLitSummaryByAgeAndAssayType(HttpServletRequest request,
             @ModelAttribute GxdLitQueryForm queryForm) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
         logger.debug("->gxdLitSummary By Age and Assay started");
         logger.debug("queryString: " + request.getQueryString());
@@ -417,6 +445,9 @@ public class GXDLitController {
     @RequestMapping("/summary")
     public ModelAndView gxdLitSummary(HttpServletRequest request,
             @ModelAttribute GxdLitQueryForm queryForm) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
         logger.debug("->gxdLitSummary started");
         logger.debug("queryString: " + request.getQueryString());

@@ -25,6 +25,7 @@ import org.jax.mgi.fewi.searchUtil.entities.GxdHtExperiment;
 import org.jax.mgi.fewi.searchUtil.entities.GxdHtSample;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.AjaxUtils;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.shr.fe.indexconstants.GxdHtFields;
 import org.slf4j.Logger;
@@ -65,7 +66,10 @@ public class GXDHTController {
 
 	// retrieves the query form
 	@RequestMapping(method=RequestMethod.GET)
-	public ModelAndView getQueryForm(HttpServletResponse response) {
+	public ModelAndView getQueryForm(HttpServletRequest request, HttpServletResponse response) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->getQueryForm started");
 		response.addHeader("Access-Control-Allow-Origin", "*");
@@ -84,6 +88,10 @@ public class GXDHTController {
 	// summary page for results from a query form submission
 	@RequestMapping("/summary")
 	public ModelAndView gxdHtSummary(HttpServletRequest request, @ModelAttribute GxdHtQueryForm queryForm) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 
 		logger.debug("->gxdHtSummary started");
 		logger.debug("queryString: " + request.getQueryString());
@@ -140,7 +148,11 @@ public class GXDHTController {
 
 	// popup for samples, given an ArrayExpress experiment ID
 	@RequestMapping(value="/samples/{experimentID:.+}", method = RequestMethod.GET)
-	public ModelAndView gxdHtSamples(@PathVariable("experimentID") String experimentID, @ModelAttribute GxdHtQueryForm queryForm) {
+	public ModelAndView gxdHtSamples(HttpServletRequest request, @PathVariable("experimentID") String experimentID, @ModelAttribute GxdHtQueryForm queryForm) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->gxdHtSamples started (ID " + experimentID + ")");
 
 		GxdHtQueryForm query = new GxdHtQueryForm();
