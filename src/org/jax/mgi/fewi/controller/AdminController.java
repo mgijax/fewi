@@ -2,6 +2,7 @@ package org.jax.mgi.fewi.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -107,6 +108,17 @@ public class AdminController {
         ModelAndView mav = new ModelAndView("admin");
 	mav = populateMav(mav);
         mav.addObject("clear", "clear");
+
+        return mav;
+    }
+
+    @RequestMapping("/traffic")
+    public ModelAndView geTrafficReport(HttpServletRequest request) {
+
+        logger.debug("->getTrafficReport started");
+ 
+        ModelAndView mav = new ModelAndView("traffic_report");
+        mav.addObject("monitor", UserMonitor.getSharedInstance());
 
         return mav;
     }

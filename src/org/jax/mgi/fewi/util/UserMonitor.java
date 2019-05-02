@@ -117,6 +117,19 @@ public class UserMonitor {
 		return toCheck.size() + " addresses being monitored";
 	}
 	
+	// return the list of IP addresses being monitored (for reporting)
+	public List<String> getIPs() {
+		return toCheck;
+	}
+	
+	// return the list of times associated with ipAddress (for reporting)
+	public List<Long> getHits(String ipAddress) {
+		if (hits.containsKey(ipAddress)) {
+			return hits.get(ipAddress);
+		}
+		return new ArrayList();
+	}
+	
 	// get a ModelAndView object for forwarding control to the JSP that notifies the user of 
 	// exceeding access limits
 	public ModelAndView getLimitedMessage() {
