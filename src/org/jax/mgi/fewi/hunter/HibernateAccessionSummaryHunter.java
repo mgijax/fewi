@@ -1,5 +1,6 @@
 package org.jax.mgi.fewi.hunter;
 
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,30 +51,23 @@ public class HibernateAccessionSummaryHunter<T> {
 	public void hunt(SearchParams searchParams, SearchResults<T> searchResults) {
 
         logger.debug("-> hunt");         
-    	
-    	StringBuffer hql = new StringBuffer("FROM Accession WHERE");
-    	logger.debug("parse id"); 
+
     	String accId = searchParams.getFilter().getValue();
-    	
-    	if (accId != null && !"".equals(accId.trim())) { 
-    		hql.append(" lower(search_id) = '" + accId.trim() + "'");
-    	} else {
+    	if (accId == null && "".equals(accId.trim())) { 
     		logger.debug("return empty"); 
     		return;
     	}
- 	
+
+        Query query = sessionFactory.getCurrentSession().createQuery(
+        	"FROM Accession WHERE lower(search_id) = :searchID "
+        	+ "ORDER BY sequence_num DESC");
+        query.setString("searchID", accId);
+
     	logger.debug("run query");
-    	// Add in the default ordering   	
-    	hql.append(" order by sequence_num desc");
     	
     	int pageSize = searchParams.getPageSize();
     	int startIndex = searchParams.getStartIndex();
    	
-        Query query = sessionFactory.getCurrentSession().createQuery(hql.toString());       
-        logger.debug("This is the query: " + hql.toString());
-       
-        logger.debug("-> filter parsed" );   
-
         List<T> bm = new ArrayList<T>();
         
         @SuppressWarnings("unchecked")
