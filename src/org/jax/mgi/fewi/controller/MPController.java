@@ -23,6 +23,7 @@ import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.SolrMPAnnotation;
 import org.jax.mgi.fewi.summary.MPSummaryRow;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +69,9 @@ public class MPController {
     @RequestMapping(value="/annotations/{mpID}")
     public ModelAndView mpAnnotationsByTerm (HttpServletRequest request,
 	@PathVariable("mpID") String mpID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
         logger.debug("->mpAnnotationsByTerm started");
 
@@ -193,6 +197,10 @@ public class MPController {
     //---------------------------------------------//
     @RequestMapping(value="/annotations/by_anatomy/{emapaID}")
     public ModelAndView mpAnnotationsByAnatomyTerm (HttpServletRequest request, @PathVariable("emapaID") String emapaID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
         logger.debug("->mpAnnotationsByAnatomyTerm started");
 
         // 1. begin building the MAV, assuming a successful return

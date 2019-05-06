@@ -3,6 +3,8 @@ package org.jax.mgi.fewi.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.Genotype;
 import mgi.frontend.datamodel.Image;
@@ -24,6 +26,7 @@ import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.ImageSummaryRow;
 import org.jax.mgi.fewi.util.PaginationControls;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.slf4j.Logger;
@@ -76,7 +79,10 @@ public class ImageController {
 
     // Access Via Image ID
     @RequestMapping(value="/pheno/{imageID:.+}", method = RequestMethod.GET)
-    public ModelAndView phenoImageDetailByID(@PathVariable("imageID") String imageID) {
+    public ModelAndView phenoImageDetailByID(HttpServletRequest request, @PathVariable("imageID") String imageID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
         logger.debug("->phenoImageDetailByID started");
 
@@ -99,8 +105,12 @@ public class ImageController {
     
     // Access Via Image ID
     @RequestMapping(value="/molecular/{imageID:.+}", method = RequestMethod.GET)
-    public ModelAndView molecularImageDetailByID(@PathVariable("imageID") String imageID) 
+    public ModelAndView molecularImageDetailByID(HttpServletRequest request, @PathVariable("imageID") String imageID) 
     {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
         logger.debug("->molecularImageDetailByID started");
         
         // find the requested image
@@ -129,7 +139,10 @@ public class ImageController {
 
     // Access Via Image DB Key
     @RequestMapping(value="/pheno/key/{dbKey:.+}", method = RequestMethod.GET)
-    public ModelAndView phenoImageDetailByKey(@PathVariable("dbKey") String dbKey) {
+    public ModelAndView phenoImageDetailByKey(HttpServletRequest request, @PathVariable("dbKey") String dbKey) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
         logger.debug("->phenoImageDetailByKey started");
 
@@ -154,10 +167,12 @@ public class ImageController {
     }
 
     @RequestMapping(value="/pheno")
-    public ModelAndView phenoImageDetailByKeyParam(@RequestParam("key") String dbKey) {
-        logger.debug("->phenoImageDetailByKeyParam started: " + dbKey);
+    public ModelAndView phenoImageDetailByKeyParam(HttpServletRequest request, @RequestParam("key") String dbKey) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
-        logger.debug("->phenoImageDetailByKey started");
+        logger.debug("->phenoImageDetailByKeyParam started: " + dbKey);
 
         // find the requested image
         SearchResults<Image> searchResults
@@ -183,7 +198,11 @@ public class ImageController {
     // Expression Image Detail
     //------------------------//
     @RequestMapping(value="/expression/{imageID:.+}", method = RequestMethod.GET)
-    public ModelAndView expressionImageDetailByID(@PathVariable("imageID") String imageID) {
+    public ModelAndView expressionImageDetailByID(HttpServletRequest request, @PathVariable("imageID") String imageID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
         logger.debug("->expressionImageDetailByID started");
 
         // find the requested image
@@ -206,7 +225,11 @@ public class ImageController {
 
     // Access Via Image DB Key
     @RequestMapping(value="/expression/key/{dbKey:.+}", method = RequestMethod.GET)
-    public ModelAndView expressionImageDetailByKey(@PathVariable("dbKey") String dbKey) {
+    public ModelAndView expressionImageDetailByKey(HttpServletRequest request, @PathVariable("dbKey") String dbKey) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
         logger.debug("->expressionImageDetailByKey started");
 
         // find the requested image
@@ -233,7 +256,10 @@ public class ImageController {
     // image detail meta-handler 'allele' and 'marker' not in URL
     //----------------------------------------------------------//
     @RequestMapping(value="/{imageID:.+}", method = RequestMethod.GET)
-    public ModelAndView detailByID(@PathVariable("imageID") String imageID) {
+    public ModelAndView detailByID(HttpServletRequest request, @PathVariable("imageID") String imageID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
         logger.debug("->detailByID started");
 
@@ -276,9 +302,14 @@ public class ImageController {
     //-------------------------------//
     @RequestMapping(value="/phenoSummary/allele/{alleleID}")
     public ModelAndView phenoImageSummeryByAllele(
+    			HttpServletRequest request,
                 @PathVariable("alleleID") String alleleID,
                 @ModelAttribute Paginator page)
     {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
         logger.debug("->phenoImageSummeryByAllele started");
 
         ModelAndView mav = new ModelAndView("image_phenoSummary_by_allele");
@@ -347,7 +378,11 @@ public class ImageController {
     // Pheno Image Summary by Allele Key
     //-----------------------------------//
     @RequestMapping(value="/phenoSummary/allele")
-    public ModelAndView phenoImageSummeryByAlleleKey(@RequestParam("key") String dbKey) {
+    public ModelAndView phenoImageSummeryByAlleleKey(HttpServletRequest request, @RequestParam("key") String dbKey) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
         logger.debug("->phenoImageSummeryByAlleleKey started");
 
         ModelAndView mav = new ModelAndView("image_phenoSummary_by_allele");
@@ -411,9 +446,14 @@ public class ImageController {
     //-------------------------------//
     @RequestMapping(value="/phenoSummary/marker/{markerID}")
     public ModelAndView phenoImageSummeryByMarker(
+    			HttpServletRequest request,
                @PathVariable("markerID") String markerID,
                @ModelAttribute Paginator page)
     {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
         logger.debug("->phenoImageSummeryByMarker started");
 
         ModelAndView mav = new ModelAndView("image_phenoSummary_by_marker");
@@ -492,7 +532,11 @@ public class ImageController {
     // Pheno Image Summary by Marker Key
     //----------------------------------//
     @RequestMapping(value="/phenoSummary/marker")
-    public ModelAndView phenoImageSummeryByMarkerKey(@RequestParam("key") String dbKey) {
+    public ModelAndView phenoImageSummeryByMarkerKey(HttpServletRequest request, @RequestParam("key") String dbKey) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
         logger.debug("->phenoImageSummeryByMarker started");
 
         ModelAndView mav = new ModelAndView("image_phenoSummary_by_marker");

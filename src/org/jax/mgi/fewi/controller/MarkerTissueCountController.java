@@ -19,6 +19,7 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.MarkerTissueCountSummaryRow;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +69,6 @@ public class MarkerTissueCountController {
     @RequestMapping("/marker/report*")
     public String tissueSummaryReport(
             HttpServletRequest request, Model model) {
-                
         logger.debug("summaryReportText");
         
 
@@ -96,7 +96,11 @@ public class MarkerTissueCountController {
     //--------------------------------//
     
     @RequestMapping(value="/marker/{markerID}")
-    public ModelAndView tissueSummeryByMarkerId(@PathVariable("markerID") String markerID) {
+    public ModelAndView tissueSummeryByMarkerId(HttpServletRequest request, @PathVariable("markerID") String markerID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+                
         logger.debug("->tissueSummeryByMarkerId started");
 
         // setup search parameters object to gather the requested object
@@ -113,7 +117,11 @@ public class MarkerTissueCountController {
     }
     
     @RequestMapping(value="/marker")
-    public ModelAndView tissueSummeryByMarkerKey(@RequestParam("key") String markerKey) {
+    public ModelAndView tissueSummeryByMarkerKey(HttpServletRequest request, @RequestParam("key") String markerKey) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+                
         logger.debug("->tissueSummeryByMarkerKey started: " + markerKey);
 
         // find the requested reference
