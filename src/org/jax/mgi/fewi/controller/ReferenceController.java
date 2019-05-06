@@ -44,6 +44,7 @@ import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.ReferenceSummary;
 import org.jax.mgi.fewi.util.Highlighter;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,7 +98,11 @@ public class ReferenceController {
 
 	// add a new ReferenceQueryForm and MySirtPaginator objects to model for QF
 	@RequestMapping(method=RequestMethod.GET)
-	public String getQueryForm(Model model) {
+	public String getQueryForm(HttpServletRequest request, Model model) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedJSP();
+		}
+
 		model.addAttribute(new ReferenceQueryForm());
 		model.addAttribute("sort", new Paginator());
 		return "reference_query";
@@ -114,6 +119,9 @@ public class ReferenceController {
 	public String referenceSummary(HttpServletRequest request, Model model,
 			@ModelAttribute ReferenceQueryForm queryForm,
 			BindingResult result) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedJSP();
+		}
 
 		model.addAttribute("referenceQueryForm", queryForm);
 		parseReferenceQueryForm(queryForm, result);
@@ -147,6 +155,9 @@ public class ReferenceController {
 			@ModelAttribute ReferenceQueryForm query,
 			@ModelAttribute Paginator page,
 			BindingResult result) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedJSP();
+		}
 
 		logger.debug("summaryReport");
 		SearchResults<Reference> searchResults;
@@ -275,6 +286,10 @@ public class ReferenceController {
 
 	@RequestMapping("/key")
 	public String referenceByKeyParam( HttpServletRequest request, Model model) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedJSP();
+		}
+
 		String query = request.getQueryString();
 		logger.info("referenceByKeyParam: " + query);
 		model.addAttribute("queryString", "key=" + query);
@@ -282,8 +297,12 @@ public class ReferenceController {
 	}
 
 	@RequestMapping("/key/{refKey}")
-	public String referenceByKey(@PathVariable("refKey") String refKey,
+	public String referenceByKey(HttpServletRequest request, @PathVariable("refKey") String refKey,
 			Model model) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedJSP();
+		}
+
 		logger.info("referenceByKey: " + refKey);
 		model.addAttribute("queryString", "key=" + refKey);
 		return "reference_detail";
@@ -293,8 +312,12 @@ public class ReferenceController {
 	 * This method maps requests for a reference detail page by id.
 	 */
 	@RequestMapping("/{refID}")
-	public String referenceById(@PathVariable("refID") String refID,
+	public String referenceById(HttpServletRequest request, @PathVariable("refID") String refID,
 			Model model) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedJSP();
+		}
+
 		logger.info("ref by id: " + refID);
 		model.addAttribute("queryString", "id=" + refID);
 		return "reference_detail";
@@ -311,9 +334,10 @@ public class ReferenceController {
 	 */
 	@RequestMapping("/allele/{alleleID}")
 	public ModelAndView referenceSummaryByAlleleId(
+			HttpServletRequest request,
 			@PathVariable("alleleID") String alleleID,
 			@ModelAttribute ReferenceQueryForm queryForm,
-			HttpServletRequest request, Model model) {
+			Model model) {
 
         // setup search parameters object
         SearchParams searchParams = new SearchParams();
@@ -324,22 +348,28 @@ public class ReferenceController {
         SearchResults<Allele> searchResults
           = alleleFinder.getAlleleByID(searchParams);
 
-        return referenceSummaryByAllele(searchResults.getResultObjects(), alleleID, queryForm);
+        return referenceSummaryByAllele(request, searchResults.getResultObjects(), alleleID, queryForm);
 	}
 
     @RequestMapping(value="/summary",  params={"_Allele_key"})
-    public ModelAndView referenceSummaryByAlleleKey(@RequestParam("_Allele_key") String alleleKey,
+    public ModelAndView referenceSummaryByAlleleKey(HttpServletRequest request,
+    	@RequestParam("_Allele_key") String alleleKey,
 		@ModelAttribute ReferenceQueryForm queryForm) {
+
         logger.debug("->referenceSummaryByAlleleKey started: " + alleleKey);
 
         // find the requested reference
         SearchResults<Allele> searchResults
         	= alleleFinder.getAlleleByKey(alleleKey);
 
-        return referenceSummaryByAllele(searchResults.getResultObjects(), alleleKey, queryForm);
+        return referenceSummaryByAllele(request, searchResults.getResultObjects(), alleleKey, queryForm);
     }
 
-    private ModelAndView referenceSummaryByAllele(List<Allele> alleleList, String allele, ReferenceQueryForm query){
+    private ModelAndView referenceSummaryByAllele(HttpServletRequest request, List<Allele> alleleList, String allele, ReferenceQueryForm query){
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
     	ModelAndView mav = new ModelAndView("reference_summary_allele");
 
         if (alleleList.size() < 1) {
@@ -374,6 +404,9 @@ public class ReferenceController {
 	public String referenceSummaryForSequence(
 			@PathVariable("seqID") String seqID,
 			HttpServletRequest request, Model model) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedJSP();
+		}
 
 		logger.debug("reference_summary_sequence");
 
@@ -413,6 +446,9 @@ public class ReferenceController {
 		@PathVariable("strainID") String strainID,
 		@ModelAttribute ReferenceQueryForm query,
 		HttpServletRequest request, Model model) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 	    logger.debug("->referencesByStrainId started: " + strainID);
 	    
@@ -444,6 +480,9 @@ public class ReferenceController {
 		@PathVariable("mrkID") String mrkID,
 		@ModelAttribute ReferenceQueryForm query,
 		HttpServletRequest request, Model model) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 	    logger.debug("->goReferencesByMarkerId started: " + mrkID);
 
@@ -482,6 +521,9 @@ public class ReferenceController {
 		@PathVariable("mrkID") String mrkID,
 		@ModelAttribute ReferenceQueryForm query,
 		HttpServletRequest request, Model model) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 	    logger.debug("->phenoReferencesByMarkerId started: " + mrkID);
 
@@ -525,6 +567,10 @@ public class ReferenceController {
 			@PathVariable("markerID") String markerID,
 			@ModelAttribute ReferenceQueryForm queryForm,
 			HttpServletRequest request, Model model) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->referenceSummaryByMarkerId started: " + markerID);
 
         // setup search parameters object
@@ -540,8 +586,12 @@ public class ReferenceController {
 	}
 
     @RequestMapping(value="/summary",  params={"_Marker_key"})
-    public ModelAndView referenceSummaryByMarkerKey(@RequestParam("_Marker_key") String markerKey,
-	@ModelAttribute ReferenceQueryForm queryForm) {
+    public ModelAndView referenceSummaryByMarkerKey(HttpServletRequest request,
+    		@RequestParam("_Marker_key") String markerKey,
+    		@ModelAttribute ReferenceQueryForm queryForm) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
         logger.debug("->referenceSummaryByMarkerKey started: " + markerKey);
 
@@ -674,6 +724,10 @@ public class ReferenceController {
 			@PathVariable("markerID") String markerID,
 			@ModelAttribute ReferenceQueryForm query,
 			HttpServletRequest request, Model model) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->referenceSummaryByMarkerIdDiseaseRelevant started: " + markerID);
 
         // find the requested marker
@@ -709,6 +763,10 @@ public class ReferenceController {
    			@PathVariable("diseaseID") String diseaseID,
 			@ModelAttribute ReferenceQueryForm query,
    			HttpServletRequest request, Model model) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
    		logger.debug("->referenceSummaryByDiseaseID started: " + diseaseID);
 
    		List<Disease> diseaseList = diseaseFinder.getDiseaseByID(diseaseID);

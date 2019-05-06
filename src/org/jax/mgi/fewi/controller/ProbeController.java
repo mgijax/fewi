@@ -22,6 +22,7 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.shr.jsonmodel.MolecularProbe;
 import org.slf4j.Logger;
@@ -74,7 +75,11 @@ public class ProbeController {
 	/* summary page for a marker
 	 */
 	@RequestMapping(value="/marker/{markerID:.+}", method = RequestMethod.GET)
-	public ModelAndView markerSummary(@PathVariable("markerID") String markerID, @ModelAttribute ProbeQueryForm queryForm) {
+	public ModelAndView markerSummary(HttpServletRequest request, @PathVariable("markerID") String markerID, @ModelAttribute ProbeQueryForm queryForm) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->markerSummary started (" + markerID + ")");
 		if ((queryForm != null) && (queryForm.getSegmentType() != null)) {
 			logger.debug("  - " + queryForm.toString());
@@ -87,7 +92,11 @@ public class ProbeController {
 	/* summary page for a reference
 	 */
 	@RequestMapping(value="/reference/{referenceID:.+}", method = RequestMethod.GET)
-	public ModelAndView referenceSummary(@PathVariable("referenceID") String referenceID, @ModelAttribute ProbeQueryForm queryForm) {
+	public ModelAndView referenceSummary(HttpServletRequest request, @PathVariable("referenceID") String referenceID, @ModelAttribute ProbeQueryForm queryForm) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->referenceSummary started (" + referenceID + ")");
 		if ((queryForm != null) && (queryForm.getSegmentType() != null)) {
 			logger.debug("  - " + queryForm.toString());
@@ -117,7 +126,11 @@ public class ProbeController {
 	}
 
     @RequestMapping(value="/{probeID:.+}", method = RequestMethod.GET)
-    public ModelAndView probeDetail(@PathVariable("probeID") String probeID) {
+    public ModelAndView probeDetail(HttpServletRequest request, @PathVariable("probeID") String probeID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 
         logger.debug("->probeDetail started");
 
@@ -151,7 +164,10 @@ public class ProbeController {
     /* Probe Detail by key
      */
     @RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
-    public ModelAndView probeDetailByKey(@PathVariable("dbKey") String dbKey) {
+    public ModelAndView probeDetailByKey(HttpServletRequest request, @PathVariable("dbKey") String dbKey) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
         logger.debug("->probeDetailByKey started");
 

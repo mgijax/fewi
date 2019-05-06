@@ -136,6 +136,11 @@ public class UserMonitor {
 		return new ModelAndView("traffic_limited");
 	}
 
+	// get a String naming the JSP that notifies the user of exceeding access limits
+	public String getLimitedJSP() {
+		return "traffic_limited";
+	}
+
 	//----------------------
 	// public static methods
 	//----------------------

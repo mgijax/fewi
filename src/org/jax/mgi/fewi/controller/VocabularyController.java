@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletRequest;
+
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.VocabTerm;
 import mgi.frontend.datamodel.sort.SmartAlphaComparator;
@@ -28,6 +30,7 @@ import org.jax.mgi.fewi.summary.VocabBrowserSearchResult;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.JSTreeNode;
 import org.jax.mgi.fewi.util.TreeNode;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.shr.jsonmodel.BrowserParent;
 import org.jax.mgi.shr.jsonmodel.BrowserTerm;
@@ -106,8 +109,12 @@ public class VocabularyController {
     }
 
     @RequestMapping("/omim/{subsetLetter}")
-    public ModelAndView getOmimBrowser(@PathVariable("subsetLetter") String subsetLetter) 
+    public ModelAndView getOmimBrowser(HttpServletRequest request, @PathVariable("subsetLetter") String subsetLetter) 
     {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
         logger.debug("->getOmimBrowser->"+subsetLetter+" started");
         subsetLetter = subsetLetter.toUpperCase();
         
@@ -130,7 +137,11 @@ public class VocabularyController {
     /* PIRSF detail page */
 
     @RequestMapping("/pirsf/{id}")
-    public ModelAndView getPirsfDetail(@PathVariable("id") String id) {
+    public ModelAndView getPirsfDetail(HttpServletRequest request, @PathVariable("id") String id) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 	logger.debug("->getPirsfDetail(" + id + ") started");
 
         // enable filter that will only return protein IDs for markers
@@ -456,7 +467,11 @@ public class VocabularyController {
     /* term detail pane for new GXD Anatomy browser  */
 
     @RequestMapping("/gxd/anatomy/termPane/{id}")
-    public ModelAndView getAnatomyTermPane(@PathVariable("id") String id) {
+    public ModelAndView getAnatomyTermPane(HttpServletRequest request, @PathVariable("id") String id) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 	logger.debug("->getAnatomyTermPane(" + id + ") started");
 
 	List<VocabTerm> terms = vocabFinder.getTermByID(id);
@@ -669,7 +684,11 @@ public class VocabularyController {
     /* Adult Mouse Anatomy browser home page
      */
     @RequestMapping("/gxd/ma_ontology")
-    public ModelAndView getMouseAnatomyDetail() {
+    public ModelAndView getMouseAnatomyDetail(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
     	logger.debug("->getMouseAnatomyDetail() started");
 
     	// start with 'anatomical structure' as a default
@@ -725,7 +744,11 @@ public class VocabularyController {
     /* Adult Mouse Anatomy term detail pane
      */
     @RequestMapping("/gxd/ma_ontology/termPane/{id}")
-    public ModelAndView getMouseAnatomyTermPane(@PathVariable("id") String id) {
+    public ModelAndView getMouseAnatomyTermPane(HttpServletRequest request, @PathVariable("id") String id) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
     	logger.debug("->getMouseAnatomyTermPane(" + id + ") started");
     	ModelAndView mav = getSharedBrowserTermPane(id, MA_VOCAB);
     	mav.addObject("title", getMouseAnatomyTitle((BrowserTerm) mav.getModel().get("term")));
@@ -854,7 +877,11 @@ public class VocabularyController {
     /* Mammalian Phenotype term detail pane
      */
     @RequestMapping("/mp_ontology/termPane/{id}")
-    public ModelAndView getMPTermPane(@PathVariable("id") String id) {
+    public ModelAndView getMPTermPane(HttpServletRequest request, @PathVariable("id") String id) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
     	logger.debug("->getMPTermPane(" + id + ") started");
     	ModelAndView mav = getSharedBrowserTermPane(id, MP_VOCAB);
     	mav.addObject("title", getMPTitle((BrowserTerm) mav.getModel().get("term")));
@@ -947,7 +974,11 @@ public class VocabularyController {
     /* GO term detail pane
      */
     @RequestMapping("/gene_ontology/termPane/{id}")
-    public ModelAndView getGOTermPane(@PathVariable("id") String id) {
+    public ModelAndView getGOTermPane(HttpServletRequest request, @PathVariable("id") String id) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
     	logger.debug("->getGOTermPane(" + id + ") started");
     	ModelAndView mav = getSharedBrowserTermPane(id, GO_VOCAB);
     	mav.addObject("title", getGOTitle((BrowserTerm) mav.getModel().get("term")));
@@ -1043,7 +1074,11 @@ public class VocabularyController {
     /* HPO term detail pane
      */
     @RequestMapping("/hp_ontology/termPane/{id}")
-    public ModelAndView getHPTermPane(@PathVariable("id") String id) {
+    public ModelAndView getHPTermPane(HttpServletRequest request, @PathVariable("id") String id) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
     	logger.debug("->getHPTermPane(" + id + ") started");
     	ModelAndView mav = getSharedBrowserTermPane(id, HPO_VOCAB);
     	mav.addObject("title", getHPTitle((BrowserTerm) mav.getModel().get("term")));
@@ -1135,7 +1170,11 @@ public class VocabularyController {
     /* DO term detail pane
      */
     @RequestMapping("/mmxvii_disease_ontology/termPane/{id}")
-    public ModelAndView getDOTermPane(@PathVariable("id") String id) {
+    public ModelAndView getDOTermPane(HttpServletRequest request, @PathVariable("id") String id) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
     	logger.debug("->getDOTermPane(" + id + ") started");
     	ModelAndView mav = getSharedBrowserTermPane(id, DO_VOCAB);
     	mav.addObject("title", getDOTitle((BrowserTerm) mav.getModel().get("term")));

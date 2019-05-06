@@ -27,6 +27,7 @@ import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.StrainPhenoGroup;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.shr.fe.sort.SmartAlphaComparator;
 import org.jax.mgi.shr.jsonmodel.SimpleStrain;
@@ -127,8 +128,12 @@ public class StrainController {
 	// strain phenogrid popup
 	//------------------------//
 	@RequestMapping(value="/phenotype/{strainID:.+}", method = RequestMethod.GET)
-	public ModelAndView getStrainGridPopup(@PathVariable("strainID") String strainID,
+	public ModelAndView getStrainGridPopup(HttpServletRequest request, @PathVariable("strainID") String strainID,
 			@RequestParam("header") String header) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
         logger.debug("->getStrainGridPopup started");
 
         List<Strain> strainList = strainFinder.getStrainByID(strainID);
@@ -170,7 +175,13 @@ public class StrainController {
     // strain detail page
     //--------------------//
     @RequestMapping(value="/{strainID:.+}", method = RequestMethod.GET)
-    public ModelAndView getStrainDetailPage(@PathVariable("strainID") String strainID) {
+    public ModelAndView getStrainDetailPage(HttpServletRequest request, @PathVariable("strainID") String strainID) {
+    	if (request != null) {
+    		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+				return UserMonitor.getSharedInstance().getLimitedMessage();
+			}
+    	}
+
         logger.debug("->getStrainDetailPage started");
 
         List<Strain> strainList = strainFinder.getStrainByID(strainID);
@@ -194,7 +205,7 @@ public class StrainController {
         			for (SimpleStrain strain : searchResults.getResultObjects()) {
         				for (AccessionID accID : strain.getAccessionIDs()) {
         					if (accID.getAccID().equalsIgnoreCase(jaxID) && accID.getLogicalDB().equals("JAX Registry")) {
-        						return this.getStrainDetailPage(strain.getPrimaryID());
+        						return this.getStrainDetailPage(null, strain.getPrimaryID());
         					}
         				}
         			}
@@ -412,6 +423,10 @@ public class StrainController {
 	// shell of the strain summary page (The actual results are retrieved via Ajax from the /table endpoint.)
     @RequestMapping("/summary")
     public ModelAndView strainSummary(HttpServletRequest request, @ModelAttribute StrainQueryForm queryForm) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
         logger.debug("In strainSummary, query string: " + request.getQueryString());
 
         // objects needed by display
@@ -434,6 +449,10 @@ public class StrainController {
     public ModelAndView strainForReference(HttpServletRequest request,
     		@ModelAttribute StrainQueryForm queryForm,
     		@PathVariable("refID") String refID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
         logger.debug("In strainForReference, ref ID: " + refID);
         queryForm.setReferenceID(refID);
 
@@ -535,6 +554,10 @@ public class StrainController {
 	// strain summary reports (txt and xls -- specified by suffix)
 	@RequestMapping("/report*")
 	public ModelAndView strainSummaryExport(HttpServletRequest request, @ModelAttribute StrainQueryForm query, @ModelAttribute Paginator page) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("generating report");
 
 		SearchParams sp = new SearchParams();

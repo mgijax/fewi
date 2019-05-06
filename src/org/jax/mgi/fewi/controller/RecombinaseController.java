@@ -41,6 +41,7 @@ import org.jax.mgi.fewi.summary.RecombinaseSummary;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.QueryParser;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -169,6 +170,9 @@ public class RecombinaseController {
     		@RequestParam(value="id", required=false) String alleleId,
     		@RequestParam(value="systemKey", required=false) String alleleSystemKey,
     		@RequestParam(value="system", required=false) String system) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
         logger.debug("->creSpecificity() started");
 
@@ -315,6 +319,9 @@ public class RecombinaseController {
     public ModelAndView recombAlleleSystemsTable( HttpServletRequest request,
     		HttpServletResponse response,
             @PathVariable("allID") String allID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
         logger.debug("->recombAlleleSystemsTable() started");
 
