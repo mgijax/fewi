@@ -93,7 +93,7 @@ a { text-decoration: none; }
 	    <br clear="all" />
     </div>
 
-	<div id="resultSummary"></div>
+	<div id="resultSummary" style="width:100%"></div>
 
 	<div id="paginationBottom">
 		<div id="pageControlsBottom" class="paginator"></div>
