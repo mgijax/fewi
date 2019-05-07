@@ -38,4 +38,16 @@ public class FewiUtil {
 		}
 		return null;
 	}
+	
+	/* cleanses the given 'accID' of malicious Javascript (from a reflected cross-site scripting attack),
+	 * returning a sanitized version of accID.  Removes quotes (double and single), angle brackets, spaces,
+	 * equals signs, parentheses, etc.
+	 */
+	public String sanitizeID(String accID) {
+		if (accID == null) { return accID; }
+
+		// Allow all letters and numbers, plus underscore, colon, hyphen, and period.
+		// Strip out everything else.
+		return accID.replaceAll("[^A-Za-z0-9_:\\.\\-]", "");
+	}
 }
