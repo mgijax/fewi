@@ -149,7 +149,7 @@ public class VocabularyController {
 
 	List<VocabTerm> terms = vocabFinder.getTermByID(id);
 
-	if (terms.size() < 1) {
+	if ((terms == null) || (terms.size() < 1)) {
 	    return errorMav("No Term Found");
 	} else if (terms.size() > 1) {
 	    return errorMav("Duplicate ID");
@@ -180,11 +180,11 @@ public class VocabularyController {
 
 	List<VocabTerm> terms = vocabFinder.getTermByID(id);
 
-	if (terms.size() < 1) {
+	if ((terms == null) || (terms.size() < 1)) {
 	    terms = vocabFinder.getTermByID(id.toUpperCase());
 	}
 
-	if (terms.size() != 1) { return "[]"; }
+	if ((terms == null) || (terms.size() != 1)) { return "[]"; }
 
 	VocabTerm term = terms.get(0);
 
@@ -385,11 +385,11 @@ public class VocabularyController {
 
 	List<VocabTerm> terms = vocabFinder.getTermByID(id);
 
-	if (terms.size() < 1) {
+	if ((terms == null) || (terms.size() < 1)) {
 	    terms = vocabFinder.getTermByID(id.toUpperCase());
 	}
 
-	if (terms.size() < 1) { return "[]"; }
+	if ((terms == null) || (terms.size() < 1)) { return "[]"; }
 
 	// shouldn't be multiple terms for an ID, but if so, we just deal
 	// with the first anyway
@@ -436,11 +436,11 @@ public class VocabularyController {
 
 	List<VocabTerm> terms = vocabFinder.getTermByID(id);
 
-	if (terms.size() < 1) {
+	if ((terms == null) || (terms.size() < 1)) {
 	    terms = vocabFinder.getTermByID(id.toUpperCase());
 	}
 
-	if (terms.size() < 1) { return "{}"; }
+	if ((terms == null) || (terms.size() < 1)) { return "{}"; }
 
 	// shouldn't be multiple terms for an ID, but if so, we just deal
 	// with the first anyway
@@ -476,11 +476,11 @@ public class VocabularyController {
 
 	List<VocabTerm> terms = vocabFinder.getTermByID(id);
 
-	if (terms.size() < 1) {
+	if ((terms == null) || (terms.size() < 1)) {
 	    terms = vocabFinder.getTermByID(id.toUpperCase());
 	}
 
-	if (terms.size() < 1) { return errorMav("No Anatomy term found"); }
+	if ((terms == null) || (terms.size() < 1)) { return errorMav("No Anatomy term found"); }
 	else if (terms.size() > 1) { return errorMav("Duplicate ID"); }
 
 	VocabTerm term = terms.get(0);
@@ -574,7 +574,7 @@ public class VocabularyController {
 	
 	List<VocabTerm> terms = vocabFinder.getTermByID(results.get(0).getAccID());
 
-	if (terms.size() < 1) { return errorMav("No Anatomy term found"); }
+	if ((terms == null) || (terms.size() < 1)) { return errorMav("No Anatomy term found"); }
 	else if (terms.size() > 1) { return errorMav("Duplicate ID"); }
 
 	VocabTerm term = terms.get(0);
@@ -602,7 +602,7 @@ public class VocabularyController {
 	
 	List<VocabTerm> terms = vocabFinder.getTermByID(results.get(0).getAccID());
 
-	if (terms.size() < 1) { return errorMav("No Anatomy term found"); }
+	if ((terms == null) || (terms.size() < 1)) { return errorMav("No Anatomy term found"); }
 	else if (terms.size() > 1) { return errorMav("Duplicate ID"); }
 
 	VocabTerm term = terms.get(0);
@@ -635,7 +635,7 @@ public class VocabularyController {
 	// start with 'embryo' as a default
 	List<VocabTerm> terms = vocabFinder.getTermByID("EMAPA:16039");
 
-	if (terms.size() < 1) { return errorMav("No Anatomy term found"); }
+	if ((terms == null) || (terms.size() < 1)) { return errorMav("No Anatomy term found"); }
 	else if (terms.size() > 1) { return errorMav("Duplicate ID"); }
 
 	VocabTerm term = terms.get(0);
@@ -654,11 +654,11 @@ public class VocabularyController {
 
 	List<VocabTerm> terms = vocabFinder.getTermByID(id);
 
-	if (terms.size() < 1) {
+	if ((terms == null) || (terms.size() < 1)) {
 	    terms = vocabFinder.getTermByID(id.toUpperCase());
 	}
 
-	if (terms.size() < 1) { return errorMav("No Anatomy term found"); }
+	if ((terms == null) || (terms.size() < 1)) { return errorMav("No Anatomy term found"); }
 	else if (terms.size() > 1) { return errorMav("Duplicate ID"); }
 
 	VocabTerm term = terms.get(0);

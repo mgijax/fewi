@@ -43,11 +43,25 @@ public class FewiUtil {
 	 * returning a sanitized version of accID.  Removes quotes (double and single), angle brackets, spaces,
 	 * equals signs, parentheses, etc.
 	 */
-	public String sanitizeID(String accID) {
+	public static String sanitizeID(String accID) {
 		if (accID == null) { return accID; }
 
 		// Allow all letters and numbers, plus underscore, colon, hyphen, and period.
 		// Strip out everything else.
 		return accID.replaceAll("[^A-Za-z0-9_:\\.\\-]", "");
+	}
+	
+	/* returns true if 'i' can be converted to an integer, false if not
+	 */
+	public static boolean isPositiveInteger(String i) {
+		try {
+			int ii = Integer.parseInt(i);
+			if (ii < 0) {
+				return false;
+			}
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		return true;
 	}
 }

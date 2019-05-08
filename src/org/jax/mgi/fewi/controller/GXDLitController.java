@@ -30,6 +30,7 @@ import org.jax.mgi.fewi.summary.GxdLitAgeAssayTypePairTableCount;
 import org.jax.mgi.fewi.summary.GxdLitAssayTypeSummaryRow;
 import org.jax.mgi.fewi.summary.GxdLitGeneSummaryRow;
 import org.jax.mgi.fewi.summary.GxdLitReferenceSummaryRow;
+import org.jax.mgi.fewi.util.FewiUtil;
 import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.Highlighter;
 import org.jax.mgi.fewi.util.StyleAlternator;
@@ -114,11 +115,16 @@ public class GXDLitController {
 		}
 
         logger.debug("->gxdLitDetailByKey started");
+        
+        if (!FewiUtil.isPositiveInteger(dbKey)) {
+        	return errorMav("Cannot find GXD Lit Entry");
+        }
 
         // find the requested Lit Detail
-        SearchResults<GxdLitIndexRecord> searchResults
-          = gxdLitFinder.getGxdLitByKey(dbKey);
-
+        SearchResults<GxdLitIndexRecord> searchResults = gxdLitFinder.getGxdLitByKey(dbKey);
+        if ((searchResults == null) || (searchResults.getTotalCount() == 0)) {
+        	return errorMav("Cannot find GXD Lit Entry");
+        }
         return gxdLitDetail(searchResults.getResultObjects(), dbKey);
     }
     
@@ -128,12 +134,17 @@ public class GXDLitController {
 			return UserMonitor.getSharedInstance().getLimitedMessage();
 		}
 
+        if (!FewiUtil.isPositiveInteger(dbKey)) {
+        	return errorMav("Cannot find GXD Lit Entry");
+        }
+
         logger.debug("->referenceSummaryByAlleleKey started: " + dbKey);
        
         // find the requested Lit Detail
-        SearchResults<GxdLitIndexRecord> searchResults
-          = gxdLitFinder.getGxdLitByKey(dbKey);
-
+        SearchResults<GxdLitIndexRecord> searchResults = gxdLitFinder.getGxdLitByKey(dbKey);
+        if ((searchResults == null) || (searchResults.getTotalCount() == 0)) {
+        	return errorMav("Cannot find GXD Lit Entry");
+        }
         return gxdLitDetail(searchResults.getResultObjects(), dbKey);
     }
     
@@ -150,15 +161,18 @@ public class GXDLitController {
 
         GxdLitQueryForm queryForm = new GxdLitQueryForm();
 
-        GxdLitGeneSummaryRow record = new GxdLitGeneSummaryRow(indexRecordList.get(0), queryForm, null);
-        List <GxdLitGeneSummaryRow> detailList = new ArrayList<GxdLitGeneSummaryRow> ();
-        detailList.add(record);
+        try {
+        	GxdLitGeneSummaryRow record = new GxdLitGeneSummaryRow(indexRecordList.get(0), queryForm, null);
+        	List <GxdLitGeneSummaryRow> detailList = new ArrayList<GxdLitGeneSummaryRow> ();
+        	detailList.add(record);
 
-        mav.addObject("record", record.getReferenceRecords().get(0));
-        mav.addObject("pairTable", parseAgeAssay(detailList, Boolean.TRUE, queryForm));
-        mav.addObject("reference", indexRecordList.get(0).getReference());
-        mav.addObject("marker", indexRecordList.get(0).getMarker());
-
+        	mav.addObject("record", record.getReferenceRecords().get(0));
+        	mav.addObject("pairTable", parseAgeAssay(detailList, Boolean.TRUE, queryForm));
+        	mav.addObject("reference", indexRecordList.get(0).getReference());
+        	mav.addObject("marker", indexRecordList.get(0).getMarker());
+        } catch (Exception e) {
+        	return errorMav("Cannot find GXD Lit Entry");
+        }
         return mav;  	
     }
 
@@ -213,7 +227,7 @@ public class GXDLitController {
         // there can be only one...
         if (markerList.size() < 1) { // none found
             mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No Foo Found");
+            mav.addObject("errorMsg", "No Marker Found");
             return mav;
         }
         if (markerList.size() > 1) { // dupe found
@@ -543,6 +557,15 @@ public class GXDLitController {
 
         return totalCount;
     }
+
+	// convenience method -- construct a ModelAndView for the error page and
+	// include the given 'msg' as the error String to be reported
+	private ModelAndView errorMav (String msg) {
+		ModelAndView mav = new ModelAndView("error");
+		mav.addObject("errorMsg", msg);
+		return mav;
+	}
+
     //--------------------------------------------------------------------//
     // private methods
     //--------------------------------------------------------------------//

@@ -296,7 +296,7 @@ public class GXDController {
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView getSummaryPost(HttpSession session,
 			@ModelAttribute GxdQueryForm query,
-			MultipartHttpServletRequest request) {
+			HttpServletRequest request) {
 		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
 			return UserMonitor.getSharedInstance().getLimitedMessage();
 		}

@@ -17,6 +17,7 @@ import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.util.FewiUtil;
 import org.jax.mgi.fewi.util.GOGraphConverter;
 import org.jax.mgi.fewi.util.NotesTagConverter;
 import org.jax.mgi.fewi.util.UserMonitor;
@@ -147,7 +148,17 @@ public class HomologyController {
 			return UserMonitor.getSharedInstance().getLimitedMessage();
 		}
 
-		HomologyCluster homology = homologyFinder.getClusterByKey(clusterKey);
+		if (!FewiUtil.isPositiveInteger(clusterKey)) {
+			return errorMav("Cannot find homology cluster");
+		}
+		
+		HomologyCluster homology = null;
+		try {
+			homology = homologyFinder.getClusterByKey(clusterKey); 
+			if (homology == null) { throw new Exception ("is null"); }
+		} catch (Throwable t) {
+			return errorMav("Cannot find homology cluster");
+		}
 		return prepareHomologyClass(homology);
 	}
 

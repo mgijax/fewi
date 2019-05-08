@@ -54,6 +54,7 @@ import org.jax.mgi.fewi.summary.AlleleSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.MutationInvolvesSummaryRow;
 import org.jax.mgi.fewi.util.AjaxUtils;
+import org.jax.mgi.fewi.util.FewiUtil;
 import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.NotesTagConverter;
@@ -264,7 +265,7 @@ public class AlleleController {
 		List<Allele> alleleList = alleleFinder.getAlleleByID(alleleID);
 
 		// there can only be one Allele
-		if (alleleList.size() < 1) {
+		if ((alleleList == null) || (alleleList.size() < 1)) {
 			return errorMav("No Allele Found");
 		} else if (alleleList.size() > 1) {
 			return errorMav("Duplicate ID");
@@ -282,12 +283,16 @@ public class AlleleController {
 
 		logger.debug("->alleleDetailByKey started");
 
+		if (!FewiUtil.isPositiveInteger(dbKey)) {
+			return errorMav("No Allele Found");
+		}
+		
 		// find the requested Allele
 		SearchResults<Allele> searchResults = alleleFinder.getAlleleByKey(dbKey);
 		List<Allele> alleleList = searchResults.getResultObjects();
 
 		// there can only be one Allele
-		if (alleleList.size() < 1) {
+		if ((alleleList == null) || (alleleList.size() < 1)) {
 			return errorMav("No Allele Found");
 		} else if (alleleList.size() > 1) {
 			// should not happen
@@ -681,6 +686,9 @@ public class AlleleController {
 	 * either by key or by ID
 	 */
 	private ModelAndView prepareAllele(HttpServletRequest request,Allele allele) {
+		if (allele == null) {
+			return errorMav("Cannot find allele");
+		}
 		ModelAndView mav = new ModelAndView("allele_detail");
 		mav.addObject ("allele", allele);
 
