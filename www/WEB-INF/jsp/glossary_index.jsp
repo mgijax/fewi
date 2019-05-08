@@ -70,13 +70,6 @@ in the Gene Ontology Project.
   </li>
   <li>
 The
-<a href="http://www.genome.gov/glossary.cfm">Glossary of Genetic Terms</a>
-at the National Human Genome Research Institute defines basic genetic terms
-most relevant to human genetics. This glossary includes audio explanations
-and illustrations.
-  </li>
-  <li>
-The
 <a href="https://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=MeSH">MeSH Browser</a>
 at <a href="${configBean.FEWI_URL}glossary/ncbi">NCBI</a>
 contains useful definitions of many terms, organized as a hierarchical
