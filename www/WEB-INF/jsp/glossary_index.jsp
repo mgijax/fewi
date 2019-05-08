@@ -77,12 +77,6 @@ and illustrations.
   </li>
   <li>
 The
-<a href="http://web.ornl.gov/sci/techresources/Human_Genome/glossary.shtml">
-Genome Glossary</a> for the Human Genome Project defines many
-basic genetic terms.
-  </li>
-  <li>
-The
 <a href="https://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=MeSH">MeSH Browser</a>
 at <a href="${configBean.FEWI_URL}glossary/ncbi">NCBI</a>
 contains useful definitions of many terms, organized as a hierarchical
