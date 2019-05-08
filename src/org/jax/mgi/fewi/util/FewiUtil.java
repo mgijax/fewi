@@ -51,6 +51,18 @@ public class FewiUtil {
 		return accID.replaceAll("[^A-Za-z0-9_:\\.\\-]", "");
 	}
 	
+	/* cleanses the given 'symbol' of malicious Javascript (from a reflected cross-site scripting attack),
+	 * returning a sanitized version of accID.  Removes quotes (double and single), angle brackets, spaces,
+	 * equals signs, etc.
+	 */
+	public static String sanitizeSymbol(String symbol) {
+		if (symbol == null) { return symbol; }
+
+		// Allow all letters and numbers, plus underscore, colon, hyphen, period, slash, and parentheses.
+		// (The latter two are needed for transgenes.)  Strip out everything else.
+		return symbol.replaceAll("[^A-Za-z0-9_:\\.\\-/\\(\\)]", "");
+	}
+	
 	/* returns true if 'i' can be converted to an integer, false if not
 	 */
 	public static boolean isPositiveInteger(String i) {

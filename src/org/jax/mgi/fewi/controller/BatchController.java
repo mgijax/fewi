@@ -31,6 +31,7 @@ import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.BatchSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.AjaxUtils;
+import org.jax.mgi.fewi.util.FewiUtil;
 import org.jax.mgi.fewi.util.UserMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,8 +42,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 /*-------*/
@@ -93,7 +92,7 @@ public class BatchController {
 	// Batch Query Form Summary
 	//-------------------------//
 	@RequestMapping("/summary")
-	public ModelAndView batchSummary(MultipartHttpServletRequest request, HttpSession session, @ModelAttribute BatchQueryForm queryForm) {
+	public ModelAndView batchSummary(HttpServletRequest request, HttpSession session, @ModelAttribute BatchQueryForm queryForm) {
 		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
 			return UserMonitor.getSharedInstance().getLimitedMessage();
 		}
@@ -140,42 +139,13 @@ public class BatchController {
 	protected List<String> getIDList (BatchQueryForm queryForm) {
 		List<String> idList = null; 
 
-		MultipartFile mpFile = queryForm.getIdFile();
-
-		if (mpFile != null && !mpFile.isEmpty()){
-			logger.debug("process file: " + mpFile.getOriginalFilename());
-			String fileType = queryForm.getFileType();
-			Integer column = queryForm.getIdColumn();
-
-			String sep = "";
-			if (fileType != null && "".equals("cvs")) {
-				sep = ",";             
-			} else {
-				sep = "\t";
-			}
-
-			InputStream idStream;
-			StringWriter writer = new StringWriter();
-			try {
-				idStream = mpFile.getInputStream();
-				IOUtils.copy(idStream , writer);
-				idList = parseColumn(writer.toString(), column, sep);
-
-				writer.close();
-				idStream.close();
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}        	    	
-		} else {     	
-			idList = parseIds(queryForm.getIds());
-		}
+		idList = parseIds(queryForm.getIds());
 		
 		// remove an odd Unicode character from each ID, if it exists (shows up from copy & paste on
-		// some systems)
+		// some systems)  Then do generic sanitizing on them.
 		List<String> cleanedIDs = new ArrayList<String>();
 		for (String id : idList) {
-			cleanedIDs.add(id.replaceAll("\uFEFF", ""));
+			cleanedIDs.add(FewiUtil.sanitizeSymbol(id.replaceAll("\uFEFF", "")));
 		}
 		
 		return cleanedIDs;

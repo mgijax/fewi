@@ -102,3 +102,73 @@ var resetQF = function (e) {
 };
 
 YAHOO.util.Event.addListener("batchQueryForm", "reset", resetQF);
+
+/* read a delimited file where one column contains marker-related IDs, parse it,
+ * and update the 'ids' field in the batch QF.  Copied & modified from gxd_query.js.
+ */
+var readFile = function(e) {
+	var input = e.target;
+	var reader = new FileReader();
+
+	reader.onload = function() {
+		var separator = ',';
+		var extractedIDs = '';
+
+		if (document.querySelector('input[name = "fileType"]:checked').value == 'tab') {
+			separator = '\t';
+		}
+
+		// switch from 1-based column number from input to 0-based
+		var colNum = document.getElementById('idColumn').value - 1;
+		var text = reader.result.trimRight();	// no trailing newline
+		var lines = text.split(/[\n\r]+/g);
+		var badLines = 0;		// count of bad lines
+		var idsAdded = 0;		// count of IDs added
+
+		for (var lineNum in lines) {
+			var line = lines[lineNum];
+			var cols = line.split(separator);
+
+			if (cols.length > colNum) {
+				var tokens = cols[colNum].split(' ');
+				for (var tokenNum in tokens) {
+					if (extractedIDs.length > 0) {
+						extractedIDs = extractedIDs + '\n' + tokens[tokenNum];
+					} else {
+						extractedIDs = tokens[tokenNum];
+					}
+					idsAdded++;
+				}
+			} else {
+				badLines++;
+			}
+		}
+
+		// split lines then extract specified column using specified
+		// delimiter
+
+		var node = document.getElementById('ids');
+		node.value = extractedIDs;
+		
+		var myMsg = '';
+
+		if (idsAdded > 0) {
+			if (idsAdded > 1) {
+				myMsg = idsAdded + ' lines were added';
+			} else {
+				myMsg = idsAdded + ' line was added';
+			}
+		}
+
+		if (badLines > 0) {
+			if (myMsg.length > 0) { myMsg = myMsg + '; '; }
+			myMsg = myMsg + badLines + ' line(s) had too few columns';
+		}
+
+		var msg = document.getElementById('uploadMessage');
+		msg.innerHTML = myMsg;
+		msg.style.display = 'inline-block';
+		$('#enterTextButton').click();			// switch tabs to show the loaded IDs
+	};
+	reader.readAsText(input.files[0]);
+};

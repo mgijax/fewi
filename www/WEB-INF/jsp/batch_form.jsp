@@ -29,7 +29,7 @@
 							<td>
 								<div id="batchSource" class="yui-navset batch">
 									<ul class="yui-nav">
-										<li class="selected"><a href="#tab1"><em>Enter Text</em></a></li>
+										<li id="enterTextButton" class="selected"><a href="#tab1"><em>Enter Text</em></a></li>
 										<li><a href="#tab2"><em>Upload File</em></a></li>
 									</ul>
 									<div class="yui-content" style="height:10em; width:300px; padding:5px;">
@@ -39,12 +39,10 @@
 												&nbsp;&nbsp;<form:textarea id="ids" path="ids" class="formWidth"></form:textarea><br/>
 												&nbsp;&nbsp;<span class="example">*tab, space, and newline separated ids.</span>
 											</div>
+											<div id="uploadMessage" style="display: none">
+											</div>
 										</div>
 										<div>
-											<div>
-												<span class="label">ID/Symbols File:</span><br>
-												&nbsp;&nbsp;<input type="file" name="idFile" value=""><br/>
-											</div>
 											<div style="float:left;">
 												<span class="label"> File Type:</span><br/>
 												<span>&nbsp;&nbsp;<form:radiobutton path="fileType" value="tab"/>tab-delimited</span><br>
@@ -54,6 +52,10 @@
 												<span class="label nowrap"> ID/Symbols column:</span><br>
 												<span>&nbsp;&nbsp;<form:input path="idColumn" size="3"></form:input></span><br>
 												<span class="example">*ID/Symbols parsed from<br/>a single column</span>
+											</div>
+											<div>
+												<span class="label">ID/Symbols File:</span><br>
+												&nbsp;&nbsp;<input type="file" name="idFile" onChange="readFile(event)"><br/>
 											</div>
 										</div>
 									</div>
