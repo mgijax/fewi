@@ -50,17 +50,17 @@
 		<span class="label">Number of IDs/symbols entered:</span> 
 			${inputIdCount}<br/>
 		<span class="label">Input Type:</span>
-			${batchQueryForm.idTypeSelection}<br/>
+			${e:forHtml(batchQueryForm.idTypeSelection)}<br/>
 		<c:if test="${batchQueryForm.hasFile}">
 			<span class="label">Input File Name: </span> 
-				${batchQueryForm.fileName}<br/>
+				${e:forHtml(batchQueryForm.fileName)}<br/>
 			<span class="label">Input File Type:</span> 
-				${batchQueryForm.fileType}<br/>
+				${e:forHtml(batchQueryForm.fileType)}<br/>
 			<span class="label">ID/Symbol Column:</span> 
 				${batchQueryForm.idColumn}<br/>				
 		</c:if>
 		<span class="label">Output options:</span> 
-			${batchQueryForm.outputOptions}<br/>
+			${e:forHtml(batchQueryForm.outputOptions)}<br/>
 		<span id="markerCount"></span> matching genes/markers found.
 		</div>
 	</div>

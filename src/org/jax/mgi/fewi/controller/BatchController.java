@@ -177,7 +177,7 @@ public class BatchController {
 			StringBuffer ids = new StringBuffer();
 			ids.append("[");
 			for(String id : idList) {
-				ids.append("\"" + id + "\",");
+				ids.append("\"" + FewiUtil.sanitizeID(id) + "\",");
 			}
 			ids.append("]");
 			mav.addObject("markerIds", ids.toString());

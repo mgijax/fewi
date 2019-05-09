@@ -18,7 +18,7 @@
 
 
 
-${errorMsg}
+${e:forHtml(errorMsg)}
 
 
 
