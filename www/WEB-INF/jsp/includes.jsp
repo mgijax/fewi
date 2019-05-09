@@ -5,4 +5,3 @@
 <%@ taglib prefix="fewi" tagdir="/WEB-INF/tags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="https://www.owasp.org/index.php/OWASP_Java_Encoder_Project" prefix="e" %>
-<%@ page import = "org.owasp.encoder.Encode" %>

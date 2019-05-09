@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.jax.mgi.fewi.util.FewiUtil;
 import org.springframework.web.multipart.MultipartFile;
 
 /*-------*/
@@ -359,7 +360,7 @@ public class GxdQueryForm implements Cloneable {
 	}
 
 	public String getMarkerSymbol() {
-		return markerSymbol;
+		return FewiUtil.sanitizeSymbol(markerSymbol);
 	}
 
 	public void setMarkerSymbol(String markerSymbol) {
@@ -367,7 +368,7 @@ public class GxdQueryForm implements Cloneable {
 	}
 
 	public String getStructureID() {
-		return structureID;
+		return FewiUtil.sanitizeID(structureID);
 	}
 
 	public void setStructureID(String structureID) {
@@ -585,7 +586,7 @@ public class GxdQueryForm implements Cloneable {
 	}
 
 	public List<String> getMarkerSymbolFilter() {
-		return markerSymbolFilter;
+		return FewiUtil.sanitizeSymbols(markerSymbolFilter);
 	}
 
 	public void setMarkerSymbolFilter(List<String> markerSymbolFilter) {
@@ -609,7 +610,7 @@ public class GxdQueryForm implements Cloneable {
 	}
 
 	public String getDifStructureID() {
-		return difStructureID;
+		return FewiUtil.sanitizeID(difStructureID);
 	}
 
 	public void setDifStructureID(String difStructureID) {
@@ -617,7 +618,7 @@ public class GxdQueryForm implements Cloneable {
 	}
 
 	public List<String> getStructureIDFilter() {
-		return structureIDFilter;
+		return FewiUtil.sanitizeIDs(structureIDFilter);
 	}
 
 	public void setStructureIDFilter(List<String> structureIDFilter) {
@@ -625,7 +626,7 @@ public class GxdQueryForm implements Cloneable {
 	}
 
 	public List<String> getMatrixStructureId() {
-		return matrixStructureId;
+		return FewiUtil.sanitizeIDs(matrixStructureId);
 	}
 
 	public void setMatrixStructureId(List<String> matrixStructureId) {
@@ -633,7 +634,7 @@ public class GxdQueryForm implements Cloneable {
 	}
 
 	public String getMatrixMarkerSymbol() {
-		return matrixMarkerSymbol;
+		return FewiUtil.sanitizeSymbol(matrixMarkerSymbol);
 	}
 
 	public void setMatrixMarkerSymbol(String matrixMarkerSymbol) {
@@ -698,7 +699,7 @@ public class GxdQueryForm implements Cloneable {
 	//-------------------------------------------------//
 
 	public List<String> getMarkerIDs() {
-		return markerIDs;
+		return FewiUtil.sanitizeIDs(markerIDs);
 	}
 	public void setMarkerIDs(List<String> markerIDs) {
 		this.markerIDs = markerIDs;

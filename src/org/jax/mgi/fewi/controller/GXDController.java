@@ -83,6 +83,7 @@ import org.jax.mgi.fewi.summary.GxdCountsSummary;
 import org.jax.mgi.fewi.summary.GxdImageSummaryRow;
 import org.jax.mgi.fewi.summary.GxdMarkerSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
+import org.jax.mgi.fewi.util.FewiUtil;
 import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.QueryParser;
@@ -1861,6 +1862,9 @@ public class GXDController {
 			return UserMonitor.getSharedInstance().getLimitedMessage();
 		}
 
+		if (!FewiUtil.isPositiveInteger(genoclusterKey)) {
+			return errorMav("Invalid genocluster key");
+		}
 		logger.debug("->gxdPhenoGrid started");
 
 		ModelAndView mav = new ModelAndView("gxd/gxd_phenogrid");

@@ -76,4 +76,26 @@ public class FewiUtil {
 		}
 		return true;
 	}
+	
+	/* return new list for 'accIDs' where each one has been sanitized
+	 */
+	public static List<String> sanitizeIDs(List<String> accIDs) {
+		if (accIDs == null) { return accIDs; }
+		List<String> cleanIDs = new ArrayList<String>(accIDs.size());
+		for (String accID : accIDs) {
+			cleanIDs.add(sanitizeID(accID));
+		}
+		return cleanIDs;
+	}
+
+	/* return new list for 'symbols' where each one has been sanitized
+	 */
+	public static List<String> sanitizeSymbols(List<String> symbols) {
+		if (symbols == null) { return symbols; }
+		List<String> cleanSymbols = new ArrayList<String>(symbols.size());
+		for (String symbol : symbols) {
+			cleanSymbols.add(sanitizeSymbol(symbol));
+		}
+		return cleanSymbols;
+	}
 }

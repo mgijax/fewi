@@ -1,3 +1,5 @@
+<%@ page import = "org.owasp.encoder.Encode" %>
+
 <div id="toolbar" class="bluebar" style="">
 	<div id="downloadDiv">
 		<span class="label">Export:</span>
