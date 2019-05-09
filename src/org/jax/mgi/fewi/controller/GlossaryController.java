@@ -2,11 +2,13 @@ package org.jax.mgi.fewi.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import mgi.frontend.datamodel.GlossaryTerm;
 
 import org.jax.mgi.fewi.finder.GlossaryFinder;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +42,10 @@ public class GlossaryController {
     
     /* glossary index */
     @RequestMapping(method=RequestMethod.GET)
-    public ModelAndView getGlossaryIndex(HttpServletResponse response) {
+    public ModelAndView getGlossaryIndex(HttpServletRequest request, HttpServletResponse response) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
         logger.debug("->getGlossaryIndex started");
 
@@ -57,8 +62,12 @@ public class GlossaryController {
      * Glossary term pages
      */
     @RequestMapping(value="/{glossaryKey}")
-    public ModelAndView glossaryTermByKey(@PathVariable("glossaryKey") String glossaryKey) 
+    public ModelAndView glossaryTermByKey(HttpServletRequest request, @PathVariable("glossaryKey") String glossaryKey) 
     {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
         logger.debug("->glossaryTermByKey started");
 
         GlossaryTerm term = glossaryFinder.getGlossaryTerm(glossaryKey);

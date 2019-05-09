@@ -71,7 +71,7 @@
 														<c:set var="sgCells" value="${marker.slimgridCellsFunction}"/>
 														<c:set var="sgShowAbbrev" value="true"/>
 														<c:set var="sgTooltipTemplate" value="<count> annotation(s)"/>
-														<c:set var="sgUrl" value="${configBean.FEWI_URL}go/marker/<markerID>?header=<term>"/>
+														<c:set var="sgUrl" value="${configBean.FEWI_URL}go/marker/<markerID>?header=<abbrev>"/>
 														<%@ include file="../shared_slimgrid.jsp" %>
 													</div>
 													<div class="sgSpacer"></div>

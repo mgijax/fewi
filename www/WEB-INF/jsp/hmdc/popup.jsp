@@ -44,11 +44,11 @@
 <c:if test="${not empty fromMarkerDetail}">
 	<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 	<%@ include file="/WEB-INF/jsp/marker_header.jsp" %>
-	<div id="sgTitle">${pageTitle}</div>
+	<div id="sgTitle">${e:forHtml(pageTitle)}</div>
 	<script>
 	<% /* for slimgrid popup, override title shown on page to make custom title for browser tab */ %>
 	// change window title on page load
-	document.title = '${marker.symbol} ' + '${headerTerm} ' + 'phenotype data';
+	document.title = '${marker.symbol} ' + '${e:forJavaScript(headerTerm)} ' + 'phenotype data';
 	</script>
 </c:if>
 <c:if test="${empty fromMarkerDetail}">

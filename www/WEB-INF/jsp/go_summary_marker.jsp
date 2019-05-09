@@ -15,7 +15,7 @@
 <c:set var="helpHash" value=""/>
 </c:if>
 <c:if test="${not empty headerTerm}">
-<title>${marker.symbol} ${headerTerm} gene ontology</title>
+<title>${marker.symbol} ${e:forHtml(headerTerm)} gene ontology</title>
 <c:set var="helpHash" value="#tabular"/>
 </c:if>
 
@@ -78,7 +78,7 @@ div.allAnnot {
     float: right; font-size: 12px; font-weight: bold; padding-top: 8px;
 }
 </style>
-<div class="headerTerm">Gene Ontology (GO) annotations for ${headerTerm}
+<div class="headerTerm">Gene Ontology (GO) annotations for ${e:forHtml(headerTerm)}
 <div id="allClassificationsLink" class="allAnnot">
 All GO annotations for ${marker.symbol} (<a href="${configBean.FEWI_URL}go/marker/${marker.primaryID}#tabular">${marker.countOfGOTerms}</a>)
 </div>
@@ -153,7 +153,7 @@ All GO annotations for ${marker.symbol} (<a href="${configBean.FEWI_URL}go/marke
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/filters.js"></script>
 <script type="text/javascript">
 	var fewiurl = "${configBean.FEWI_URL}";
-	var querystring = "${queryString}";
+	var querystring = "${e:forJavaScript(queryString)}";
 	function getQuerystring() {
 		return querystring + filters.getUrlFragment();
 	}

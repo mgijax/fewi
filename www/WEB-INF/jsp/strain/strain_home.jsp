@@ -306,4 +306,7 @@
 </script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/strain/strain_form.js"></script>
 
+<style>
+#overDiv table tr td table tr td { background-color: #EFEFEF; }
+</style>
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

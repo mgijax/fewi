@@ -283,6 +283,11 @@ public class AccessionFinder {
     				new Accession(ObjectTypes.STRAIN, "Strain", strain.getPrimaryID(), "MGI",
     					strain.getStrainKey(), "strain") );
     		}
+    	} else if (accID.startsWith("JAX:")) {
+    		logger.info("Adding record");
+    		searchResults.setTotalCount(searchResults.getTotalCount() + 1);
+   			searchResults.addResultObjects(
+   				new Accession(ObjectTypes.STRAIN, "Strain", accID, "JAX Registry", 0, "strain") );
     	}
     	return searchResults;
     }

@@ -37,6 +37,7 @@ import org.jax.mgi.fewi.summary.SeqSummaryRow;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.BlastableSequence;
 import org.jax.mgi.fewi.util.StyleAlternator;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.shr.jsonmodel.SimpleSequence;
 import org.slf4j.Logger;
@@ -104,7 +105,10 @@ public class SequenceController {
      * Sequence Detail by ID
      */
     @RequestMapping(value="/{seqID:.+}", method = RequestMethod.GET)
-    public ModelAndView seqDetailByID(@PathVariable("seqID") String seqID) {
+    public ModelAndView seqDetailByID(HttpServletRequest request, @PathVariable("seqID") String seqID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
         logger.debug("->seqDetail started");
 
@@ -139,7 +143,10 @@ public class SequenceController {
      * Sequence Detail by key
      */
     @RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
-    public ModelAndView seqDetailByKey(@PathVariable("dbKey") String dbKey) {
+    public ModelAndView seqDetailByKey(HttpServletRequest request, @PathVariable("dbKey") String dbKey) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
         logger.debug("->seqDetailByKey started");
 
@@ -244,7 +251,11 @@ public class SequenceController {
      * Sequence Summary by Reference
      */
     @RequestMapping(value="/reference/{refID}")
-    public ModelAndView seqSummeryByRefId(@PathVariable("refID") String refID) {
+    public ModelAndView seqSummeryByRefId(HttpServletRequest request, @PathVariable("refID") String refID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
         logger.debug("->seqSummeryByRef started");
 
         // setup search parameters object to gather the requested reference
@@ -262,6 +273,10 @@ public class SequenceController {
     @RequestMapping(value={"/reference", "/summary"})
     public ModelAndView seqSummeryByRefKey(@RequestParam("_Refs_key") String dbKey,
     		HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
         logger.debug("->referenceSummaryByMarkerKey started: " + dbKey);       
         
         // find the requested reference
@@ -305,6 +320,9 @@ public class SequenceController {
 		HttpServletRequest request,
         @PathVariable("mrkID") String mrkID)
     {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
         logger.debug("->seqSummeryByMarker started");
 
@@ -325,6 +343,10 @@ public class SequenceController {
     @RequestMapping(value={"/marker", "/summary"})
     public ModelAndView seqSummeryByMarkerKey(@RequestParam("_Marker_key") String markerKey,
     		HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
         logger.debug("->referenceSummaryByMarkerKey started: " + markerKey);
 
         // find the requested reference

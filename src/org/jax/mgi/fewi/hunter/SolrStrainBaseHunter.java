@@ -46,6 +46,7 @@ public class SolrStrainBaseHunter extends SolrHunter<SimpleStrain> {
 		propertyMap.put(SearchConstants.STRAIN_TYPE, new SolrPropertyMapper(IndexConstants.STRAIN_TYPE));
 		propertyMap.put(SearchConstants.STRAIN_NAME, new SolrPropertyMapper(IndexConstants.STRAIN_NAME));
 		propertyMap.put(SearchConstants.STRAIN_NAME_LOWER, new SolrPropertyMapper(IndexConstants.STRAIN_NAME_LOWER));
+		propertyMap.put(SearchConstants.STRAIN_TAGS, new SolrPropertyMapper(IndexConstants.STRAIN_TAGS));
 
 		propertyMap.put(SearchConstants.VALIDATION, new SolrPropertyMapper(IndexConstants.VALIDATION));
 		propertyMap.put(SearchConstants.DATA_SOURCE, new SolrPropertyMapper(IndexConstants.SCORE_SOURCE));

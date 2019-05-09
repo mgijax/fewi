@@ -107,3 +107,18 @@
 		</div>
 	</div>
 
+<script>
+try {
+	// if name or synonyms have wrapped to a second line -- and if they contain superscripts -- adjust line height
+	// for readability
+	var oneLineHeight = $('#strainPrimaryID')[0].getBoundingClientRect().height;
+	var ids = [ '#strainName', '#strainSynonyms' ];
+	for (var i = 0; i < ids.length; i++) {
+		if ($(ids[i]).html().indexOf('<') >= 0) {
+			if ($(ids[i])[0].getBoundingClientRect().height > oneLineHeight) {
+				$(ids[i]).css({'line-height' :'1.8em'});
+			}
+		}
+	}
+} catch (err) {}
+</script>

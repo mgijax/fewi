@@ -1,3 +1,5 @@
+<%@ page import = "org.owasp.encoder.Encode" %>
+
 <div id="toolbar" class="bluebar" style="">
 	<div id="downloadDiv">
 		<span class="label">Export:</span>
@@ -13,7 +15,8 @@
 </div>
 
 <!-- including this file will start the data injection -->
+<% String queryString = (String) request.getAttribute("queryString"); %>
 <script type="text/javascript">
-    window.querystring="${queryString}";
+    window.querystring="<%= Encode.forJavaScript(queryString) %>";
     window.fewiurl="${configBean.FEWI_URL}";
 </script>

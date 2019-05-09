@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-
+import org.jax.mgi.shr.jsonmodel.AccessionID;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.StrainFinder;
@@ -27,6 +27,7 @@ import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.StrainPhenoGroup;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.shr.fe.sort.SmartAlphaComparator;
 import org.jax.mgi.shr.jsonmodel.SimpleStrain;
@@ -127,8 +128,12 @@ public class StrainController {
 	// strain phenogrid popup
 	//------------------------//
 	@RequestMapping(value="/phenotype/{strainID:.+}", method = RequestMethod.GET)
-	public ModelAndView getStrainGridPopup(@PathVariable("strainID") String strainID,
+	public ModelAndView getStrainGridPopup(HttpServletRequest request, @PathVariable("strainID") String strainID,
 			@RequestParam("header") String header) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
         logger.debug("->getStrainGridPopup started");
 
         List<Strain> strainList = strainFinder.getStrainByID(strainID);
@@ -170,15 +175,48 @@ public class StrainController {
     // strain detail page
     //--------------------//
     @RequestMapping(value="/{strainID:.+}", method = RequestMethod.GET)
-    public ModelAndView getStrainDetailPage(@PathVariable("strainID") String strainID) {
+    public ModelAndView getStrainDetailPage(HttpServletRequest request, @PathVariable("strainID") String strainID) {
+    	if (request != null) {
+    		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+				return UserMonitor.getSharedInstance().getLimitedMessage();
+			}
+    	}
+
         logger.debug("->getStrainDetailPage started");
 
         List<Strain> strainList = strainFinder.getStrainByID(strainID);
         // there can be only one...
         if (strainList.size() < 1) { // none found
-            ModelAndView mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No Strain Found for ID " + strainID);
-            return mav;
+
+        	// The incoming ID has a "JAX:" prefix, so try again as a search to find the right strain.
+        	if (strainID.toUpperCase().startsWith("JAX:")) {
+        		Paginator page = new Paginator(10);
+        		
+        		// For resiliency, test both with the JAX prefix and without when searching.
+        		List<String> jaxIDs = new ArrayList<String>();
+        		jaxIDs.add(strainID.toUpperCase().replaceAll("JAX:", ""));
+        		jaxIDs.add(strainID.toUpperCase());
+        		
+        		for (String jaxID : jaxIDs) {
+        			StrainQueryForm query = new StrainQueryForm();
+        			query.setStrainName(jaxID);
+
+        			SearchResults<SimpleStrain> searchResults = getSummaryResults(query, page);
+        			for (SimpleStrain strain : searchResults.getResultObjects()) {
+        				for (AccessionID accID : strain.getAccessionIDs()) {
+        					if (accID.getAccID().equalsIgnoreCase(jaxID) && accID.getLogicalDB().equals("JAX Registry")) {
+        						return this.getStrainDetailPage(null, strain.getPrimaryID());
+        					}
+        				}
+        			}
+        		}
+        	}
+        	
+        	// failed to find an ID (even searching as a Jax ID, if needed)
+       		ModelAndView mav = new ModelAndView("error");
+       		mav.addObject("errorMsg", "No Strain Found for ID " + strainID);
+       		return mav;
+
         } else if (strainList.size() > 1) { // dupe found
             ModelAndView mav = new ModelAndView("error");
             mav.addObject("errorMsg", "ID " + strainID + " is associated with multiple strains");
@@ -385,6 +423,10 @@ public class StrainController {
 	// shell of the strain summary page (The actual results are retrieved via Ajax from the /table endpoint.)
     @RequestMapping("/summary")
     public ModelAndView strainSummary(HttpServletRequest request, @ModelAttribute StrainQueryForm queryForm) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
         logger.debug("In strainSummary, query string: " + request.getQueryString());
 
         // objects needed by display
@@ -407,6 +449,10 @@ public class StrainController {
     public ModelAndView strainForReference(HttpServletRequest request,
     		@ModelAttribute StrainQueryForm queryForm,
     		@PathVariable("refID") String refID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
         logger.debug("In strainForReference, ref ID: " + refID);
         queryForm.setReferenceID(refID);
 
@@ -508,6 +554,10 @@ public class StrainController {
 	// strain summary reports (txt and xls -- specified by suffix)
 	@RequestMapping("/report*")
 	public ModelAndView strainSummaryExport(HttpServletRequest request, @ModelAttribute StrainQueryForm query, @ModelAttribute Paginator page) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("generating report");
 
 		SearchParams sp = new SearchParams();
@@ -673,6 +723,12 @@ public class StrainController {
 		String group = query.getGroup();
 		if ((group != null) && (group.length() > 0)) {
 			filterList.add(new Filter(SearchConstants.STRAIN_GROUPS, group, Filter.Operator.OP_EQUAL));
+		}
+		
+		// tag that identifies a particular subset of strains (eg- GXDHT)
+		String tag = query.getTag();
+		if ((tag != null) && (tag.length() > 0)) {
+			filterList.add(new Filter(SearchConstants.STRAIN_TAGS, tag, Filter.Operator.OP_EQUAL));
 		}
 		
 		// Has the strain been sequenced (1) or not (0)?

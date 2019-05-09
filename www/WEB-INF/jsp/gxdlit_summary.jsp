@@ -56,16 +56,16 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			<span class="title">You searched for:</span><br>
 			<c:if test="${not empty queryForm.nomen}">
 				<span class="label">Marker Symbol/Name:</span> 
-				${queryForm.nomen}<br/></c:if>
+				${e:forHtml(queryForm.nomen)}<br/></c:if>
 				<c:if test="${not empty queryForm.vocabTerm}">
-				<span>Genes annotated to <b>${queryForm.vocabTerm}</b><span class="smallGrey"> includes subterms</span></span>
+				<span>Genes annotated to <b>${e:forHtml(queryForm.vocabTerm)}</b><span class="smallGrey"> includes subterms</span></span>
 				<br/></c:if>
 			<c:if test="${not empty queryForm.assayTypesSelected}">
 				<span class="label">Assay Type(s):</span> 
-				${queryForm.assayTypesSelected}<br/></c:if>
+				${e:forHtml(queryForm.assayTypesSelected)}<br/></c:if>
 			<c:if test="${not empty queryForm.agesSelected}">
 				<span class="label">Ages:</span> 
-				${queryForm.agesSelected}<br/></c:if>	
+				${e:forHtml(queryForm.agesSelected)}<br/></c:if>	
 			<c:if test="${not empty queryForm.author}">
 				<c:if test="${queryForm.authorScope eq 'any'}">
 					<span class="label">Any Author:</span></c:if>
@@ -73,13 +73,13 @@ span.smallGrey { font-size: 75%; color: #999999; }
 					<span class="label">First Author:</span></c:if>
 				<c:if test="${queryForm.authorScope eq 'last'}">
 					<span class="label">Last Author:</span></c:if>					
-				${queryForm.author}<br/></c:if>
+				${e:forHtml(queryForm.author)}<br/></c:if>
 			<c:if test="${not empty queryForm.journal}">
 				<span class="label">Journal:</span>
-				${queryForm.journal}<br/></c:if>
+				${e:forHtml(queryForm.journal)}<br/></c:if>
 			<c:if test="${not empty queryForm.year}">
 				<span class="label">Year:</span> 
-				${queryForm.year}<br/></c:if>
+				${e:forHtml(queryForm.year)}<br/></c:if>
 			<c:if test="${not empty queryForm.text}">
 				<span class="label">Text 
 				<c:choose>
@@ -93,7 +93,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 					</c:when>				
 				</c:choose>
 				:</span>
-				${queryForm.text}<br/>
+				${e:forHtml(queryForm.text)}<br/>
 			</c:if>		
 			<span class="count">${totalCount} 
 		    <c:if test="${totalCount == limit}"> of ${limit}+ </c:if> 

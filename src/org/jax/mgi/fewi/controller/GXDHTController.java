@@ -2,6 +2,8 @@ package org.jax.mgi.fewi.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -22,12 +24,16 @@ import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.GxdHtExperiment;
 import org.jax.mgi.fewi.searchUtil.entities.GxdHtSample;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
+import org.jax.mgi.fewi.util.AjaxUtils;
+import org.jax.mgi.fewi.util.UserMonitor;
+import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.shr.fe.indexconstants.GxdHtFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -53,11 +59,17 @@ public class GXDHTController {
 	@Value("${solr.factetNumberDefault}")
 	private Integer facetLimit; 
 
+    @Autowired
+    private IDLinker idLinker;
+
 	//--- public methods ---//
 
 	// retrieves the query form
 	@RequestMapping(method=RequestMethod.GET)
-	public ModelAndView getQueryForm(HttpServletResponse response) {
+	public ModelAndView getQueryForm(HttpServletRequest request, HttpServletResponse response) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->getQueryForm started");
 		response.addHeader("Access-Control-Allow-Origin", "*");
@@ -76,6 +88,10 @@ public class GXDHTController {
 	// summary page for results from a query form submission
 	@RequestMapping("/summary")
 	public ModelAndView gxdHtSummary(HttpServletRequest request, @ModelAttribute GxdHtQueryForm queryForm) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 
 		logger.debug("->gxdHtSummary started");
 		logger.debug("queryString: " + request.getQueryString());
@@ -112,7 +128,9 @@ public class GXDHTController {
 		}
 		if ((queryForm.getMutatedIn() != null) && (queryForm.getMutatedIn().length() > 0)) {
 			return true;
-		} if ((queryForm.getSex() != null) && (queryForm.getSex().length() > 0)) {
+		} else if ((queryForm.getSex() != null) && (queryForm.getSex().length() > 0)) {
+			return true;
+		} else if ((queryForm.getStrain() != null) && (queryForm.getStrain().length() > 0)) {
 			return true;
 		} else if ((queryForm.getStructure() != null) && (queryForm.getStructure().length() > 0)) {
 			return true;
@@ -127,9 +145,14 @@ public class GXDHTController {
 		}
 		return false;
 	}
+
 	// popup for samples, given an ArrayExpress experiment ID
 	@RequestMapping(value="/samples/{experimentID:.+}", method = RequestMethod.GET)
-	public ModelAndView gxdHtSamples(@PathVariable("experimentID") String experimentID, @ModelAttribute GxdHtQueryForm queryForm) {
+	public ModelAndView gxdHtSamples(HttpServletRequest request, @PathVariable("experimentID") String experimentID, @ModelAttribute GxdHtQueryForm queryForm) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->gxdHtSamples started (ID " + experimentID + ")");
 
 		GxdHtQueryForm query = new GxdHtQueryForm();
@@ -306,6 +329,7 @@ public class GXDHTController {
 		mav.addObject("count", summaryRows.size());
 		mav.addObject("totalCount", searchResults.getTotalCount());
 		mav.addObject("highlightSamples", highlightSamples);
+		mav.addObject("idLinker", idLinker);
 		
 		if (query.searchDescription() || query.searchTitle()) {
 			mav.addObject("textSearch", query.getText());
@@ -315,10 +339,67 @@ public class GXDHTController {
 		return mav;
 	}
 
+	/* get the set of experimental variable filter options for the current result set
+	 */
+	@RequestMapping("/facet/variable")
+	public @ResponseBody Map<String, List<String>> getVariableFacet (@ModelAttribute GxdHtQueryForm qf, BindingResult result, HttpServletResponse response) {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return this.getFacets(qf, "variable");
+	}
+
+	/* get the set of study type filter options for the current result set
+	 */
+	@RequestMapping("/facet/studyType")
+	public @ResponseBody Map<String, List<String>> getStudyTypeFacet (@ModelAttribute GxdHtQueryForm qf, BindingResult result, HttpServletResponse response) {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return this.getFacets(qf, "studyType");
+	}
+
 	//--------------------------------------------------------------------//
 	// private methods
 	//--------------------------------------------------------------------//
 
+	/* handles gathering the various sets of filter choices
+	 */
+	private Map<String, List<String>> getFacets (@ModelAttribute GxdHtQueryForm qf, String filterName) {
+		Map<String, List<String>> out = new HashMap<String, List<String>>();
+		List<String> messages = new ArrayList<String>();
+		
+		SearchParams params = new SearchParams();
+		params.setPageSize(0);
+		params.setFilter(genFilters(qf));
+		List<String> facetChoices = null;
+		
+		if ("variable".equals(filterName)) {
+			facetChoices = gxdHtFinder.getVariableFacet(params, qf).getResultFacets();
+		} else if ("studyType".equals(filterName)) {
+			facetChoices = gxdHtFinder.getStudyTypeFacet(params, qf).getResultFacets();
+		}
+
+		if (facetChoices == null) {
+			messages.add("Coding error: Invalid filterName (" + filterName + ") in getFacets");
+			out.put("error", messages);
+			
+		} else if (facetChoices.size() > facetLimit) {
+			messages.add("Too many results to display.  Modify your search or try another filter first.");
+			out.put("error", messages);
+
+		} else if (facetChoices.size() == 0) {
+			messages.add("No values in results to filter.");
+			out.put("error", messages);
+			
+		} else {
+			// remove choices that we don't want to give the user
+			facetChoices.remove("Not Applicable");
+			facetChoices.remove("Not Specified");
+			facetChoices.remove("Not Curated");
+
+			Collections.sort(facetChoices);
+			out.put("resultFacets", facetChoices);
+		}
+		return out;
+	}
+	
 	/*
 	 * This is a convenience method to handle packing the SearchParams object
 	 * and return the SearchResults from the finder.
@@ -411,6 +492,12 @@ public class GXDHTController {
 			filterList.add(new Filter(SearchConstants.GXDHT_MUTATED_GENE, mutatedIn, Filter.Operator.OP_EQUAL));
 		}
 		
+		// search by string
+		String strain = query.getStrain();
+		if ((strain != null) && (strain.length() > 0)) {
+			filterList.add(new Filter(SearchConstants.GXDHT_STRAIN, strain, Filter.Operator.OP_EQUAL_WILDCARD_ALLOWED));
+		}
+		
 		// search by method
 		String method = query.getMethod();
 		if ((method != null) && (method.length() > 0)) {
@@ -426,7 +513,7 @@ public class GXDHTController {
 		// search by ArrayExpress ID
 		String arrayExpressID = query.getArrayExpressID();
 		if ((arrayExpressID != null) && (arrayExpressID.length() > 0)) {
-			filterList.add(new Filter(SearchConstants.GXDHT_EXPERIMENT_ID, arrayExpressID, Filter.Operator.OP_EQUAL));
+			filterList.add(new Filter(SearchConstants.GXDHT_EXPERIMENT_ID, arrayExpressID, Filter.Operator.OP_EQUAL_WILDCARD_ALLOWED));
 		}
 		
 		// search by experiment key
@@ -504,6 +591,30 @@ public class GXDHTController {
 				}
 				filterList.add(Filter.or(ageFilters));
 			}
+		}
+		
+		// filter by experimental variables
+		List<String> variables = query.getVariableFilter();
+		if ((variables != null) && (variables.size() > 0)) {
+			List<Filter> variableFilters = new ArrayList<Filter>();
+			for(String ev : variables)
+			{
+				Filter evFilter = new Filter(SearchConstants.GXDHT_EXPERIMENTAL_VARIABLE, ev, Filter.Operator.OP_EQUAL);
+				variableFilters.add(evFilter);
+			}
+			filterList.add(Filter.or(variableFilters));		// any one of the experimental variables is a match 
+		}
+		
+		// filter by study type
+		List<String> studyTypes = query.getStudyTypeFilter();
+		if ((studyTypes != null) && (studyTypes.size() > 0)) {
+			List<Filter> studyTypeFilters = new ArrayList<Filter>();
+			for(String st : studyTypes)
+			{
+				Filter stFilter = new Filter(SearchConstants.GXDHT_STUDY_TYPE, st, Filter.Operator.OP_EQUAL);
+				studyTypeFilters.add(stFilter);
+			}
+			filterList.add(Filter.or(studyTypeFilters));		// any one of the study types is a match 
 		}
 		
 		// if we have filters, collapse them into a single filter

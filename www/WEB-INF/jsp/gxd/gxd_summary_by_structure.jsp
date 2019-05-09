@@ -118,7 +118,7 @@ body.yui-skin-sam div#outer {position:relative;}
 
 <script type="text/javascript">
     var fewiurl = "${configBean.FEWI_URL}";
-    var querystring = "structureID=${structure.primaryID}&tab=${tab}";
+    var querystring = "structureID=${structure.primaryID}&tab=${e:forJavaScript(tab)}";
     var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>
 

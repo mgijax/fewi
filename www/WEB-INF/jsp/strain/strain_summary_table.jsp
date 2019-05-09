@@ -15,7 +15,7 @@
 <div id="injectedResults">
 	<table id="strainSummaryTable">
 		<tr>
-			<th>Official Strain Name</th>
+			<th>Strain/Stock Name</th>
 			<th>Synonyms</th>
 			<th>Attributes</th>
 			<th>IDs</th>

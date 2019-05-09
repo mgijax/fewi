@@ -38,4 +38,64 @@ public class FewiUtil {
 		}
 		return null;
 	}
+	
+	/* cleanses the given 'accID' of malicious Javascript (from a reflected cross-site scripting attack),
+	 * returning a sanitized version of accID.  Removes quotes (double and single), angle brackets, spaces,
+	 * equals signs, parentheses, etc.
+	 */
+	public static String sanitizeID(String accID) {
+		if (accID == null) { return accID; }
+
+		// Allow all letters and numbers, plus underscore, colon, hyphen, and period.
+		// Strip out everything else.
+		return accID.replaceAll("[^A-Za-z0-9_:\\.\\-]", "");
+	}
+	
+	/* cleanses the given 'symbol' of malicious Javascript (from a reflected cross-site scripting attack),
+	 * returning a sanitized version of accID.  Removes quotes (double and single), angle brackets, spaces,
+	 * equals signs, etc.
+	 */
+	public static String sanitizeSymbol(String symbol) {
+		if (symbol == null) { return symbol; }
+
+		// Allow all letters and numbers, plus underscore, colon, hyphen, period, slash, and parentheses.
+		// (The latter two are needed for transgenes.)  Strip out everything else.
+		return symbol.replaceAll("[^A-Za-z0-9_:\\.\\-/\\(\\)]", "");
+	}
+	
+	/* returns true if 'i' can be converted to an integer, false if not
+	 */
+	public static boolean isPositiveInteger(String i) {
+		try {
+			int ii = Integer.parseInt(i);
+			if (ii < 0) {
+				return false;
+			}
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		return true;
+	}
+	
+	/* return new list for 'accIDs' where each one has been sanitized
+	 */
+	public static List<String> sanitizeIDs(List<String> accIDs) {
+		if (accIDs == null) { return accIDs; }
+		List<String> cleanIDs = new ArrayList<String>(accIDs.size());
+		for (String accID : accIDs) {
+			cleanIDs.add(sanitizeID(accID));
+		}
+		return cleanIDs;
+	}
+
+	/* return new list for 'symbols' where each one has been sanitized
+	 */
+	public static List<String> sanitizeSymbols(List<String> symbols) {
+		if (symbols == null) { return symbols; }
+		List<String> cleanSymbols = new ArrayList<String>(symbols.size());
+		for (String symbol : symbols) {
+			cleanSymbols.add(sanitizeSymbol(symbol));
+		}
+		return cleanSymbols;
+	}
 }

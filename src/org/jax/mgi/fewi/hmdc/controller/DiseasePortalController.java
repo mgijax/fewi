@@ -34,6 +34,7 @@ import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.util.FewiUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.HmdcAnnotationGroup;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
@@ -222,6 +223,10 @@ public class DiseasePortalController {
     public ModelAndView genoClusterView(@PathVariable("genoClusterKey") String genoClusterKey,
     	@RequestParam(value="structureID", required=false) String structureID)
     {
+    	if (!FewiUtil.isPositiveInteger(genoClusterKey)) {
+            return errorMav("No GenoCluster Found");
+    	}
+
     	List<HdpGenoCluster> genoClusters = hdpFinder.getGenoClusterByKey(genoClusterKey);
     	// there can be only one...
         if (genoClusters.size() < 1) { // none found
@@ -364,17 +369,21 @@ public class DiseasePortalController {
 	 * The 'isPhenotype' parameter should be true for phenotype popups and false for disease popups.
 	 */
 	@RequestMapping(value="/popup", method=RequestMethod.GET)
-	public ModelAndView popup(HttpServletRequest request, HttpSession session, @RequestParam(value = "isPhenotype") boolean isPhenotype, @RequestParam(value = "queryToken", required=false) String queryToken) throws Exception {
+	public ModelAndView popup(HttpServletRequest request, HttpSession session, @RequestParam(value = "isPhenotype") String isPhenotype, @RequestParam(value = "queryToken", required=false) String queryToken) throws Exception {
 	//public ModelAndView popup(HttpServletRequest request) {
 		// from a marker detail page slimgrid, we'll need to get the marker ID and
 		// convert it to its corresponding gridClusterKey
 		//String queryToken = "";
-		//boolean isPhenotype = false;
+
+		boolean isPheno = false;
+		if ("true".equalsIgnoreCase(isPhenotype)) {
+			isPheno = true;
+		}
 		
 		String gridClusterKey = null;
 		String markerID = request.getParameter("markerID");
 		boolean fromMarkerDetail = false;
-		System.out.println("isPhenotype: " + isPhenotype);
+		System.out.println("isPhenotype: " + isPheno);
 		if (markerID != null) {
 			Integer gck = getGridClusterKey(markerID);
 			if (gck != null) {
@@ -609,9 +618,9 @@ public class DiseasePortalController {
 		diseaseGroup.consolidateHumanRows();
 		
 		// compose the popup title (could do in JSP, but it was getting complex...)
-		mav.addObject("pageTitle", buildPopupTitle(humanMarkers, mouseMarkers, header, isPhenotype, mpGroup, hpoGroup, diseaseGroup, fromMarkerDetail));
+		mav.addObject("pageTitle", buildPopupTitle(humanMarkers, mouseMarkers, header, isPheno, mpGroup, hpoGroup, diseaseGroup, fromMarkerDetail));
 		
-		if (isPhenotype) {
+		if (isPheno) {
 			mav.addObject("isPhenotype", 1);
 			if (!mpGroup.isEmpty()) mav.addObject("mpGroup", mpGroup);
 			if (!hpoGroup.isEmpty()) mav.addObject("hpoGroup", hpoGroup);

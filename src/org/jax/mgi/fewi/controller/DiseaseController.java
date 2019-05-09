@@ -12,6 +12,7 @@ import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.fewi.util.DotInputStrFactory;
+import org.jax.mgi.fewi.util.UserMonitor;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -50,7 +51,11 @@ public class DiseaseController {
 	
 	// default to DOID:7 if no ID provided in URL
 	@RequestMapping(method=RequestMethod.GET)
-	public ModelAndView getDefaultBrowserPage() {
+	public ModelAndView getDefaultBrowserPage(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		return prepareDisease("DOID:7", "disease_browser", "");
 	}
 	
@@ -60,6 +65,9 @@ public class DiseaseController {
 	public ModelAndView diseaseBrowserByID(
 			HttpServletRequest request,
 			@PathVariable("diseaseID") String diseaseID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->diseaseBrowserByID started");
 		
@@ -202,6 +210,9 @@ public class DiseaseController {
 	public ModelAndView diseaseBrowserModelsPopup(
 			@PathVariable("diseaseRowKey") String diseaseRowKey,
 			HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 				
 		logger.debug("->diseaseBrowserModelsPopup started");
 		
@@ -225,6 +236,9 @@ public class DiseaseController {
 
 	@RequestMapping("genes/report*")
 	public ModelAndView geneTabExport(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.info("in geneTabExport");
 		
@@ -242,6 +256,9 @@ public class DiseaseController {
 	
 	@RequestMapping("models/report*")
 	public ModelAndView modelTabExport(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.info("in modelTabExport");
 		

@@ -35,6 +35,7 @@ import org.jax.mgi.fewi.summary.ConsensusSNPSummaryRow;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.shr.jsonmodel.SimpleStrain;
 import org.jax.mgi.snpdatamodel.AlleleSNP;
 import org.jax.mgi.snpdatamodel.ConsensusAlleleSNP;
@@ -301,7 +302,10 @@ public class SnpController {
 	// Snp Query Form
 	//--------------------//
 	@RequestMapping(method=RequestMethod.GET)
-	public ModelAndView getQueryForm(HttpServletResponse response) {
+	public ModelAndView getQueryForm(HttpServletRequest request, HttpServletResponse response) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->getQueryForm started");
 		response.addHeader("Access-Control-Allow-Origin", "*");
@@ -324,6 +328,9 @@ public class SnpController {
 	//-------------------------//
 	@RequestMapping("/summary")
 	public ModelAndView snpSummary(HttpServletRequest request, @ModelAttribute SnpQueryForm queryForm, @ModelAttribute Paginator page, BindingResult result) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->snpSummary started");
 		//logger.debug("queryString: " + request.getQueryString());
@@ -734,7 +741,10 @@ public class SnpController {
 	}
 
 	@RequestMapping(value="/{snpID:.+}", method = RequestMethod.GET)
-	public ModelAndView snpDetailByID(@PathVariable("snpID") String snpID) {
+	public ModelAndView snpDetailByID(HttpServletRequest request, @PathVariable("snpID") String snpID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->snpDetailByID started");
 
@@ -893,7 +903,10 @@ public class SnpController {
 	// get the SNP summary page when coming from a link on the marker
 	// detail page, rather than from the query form
 	@RequestMapping(value="/marker/{mrkID}")
-	public ModelAndView snpSummaryByMarker(@PathVariable("mrkID") String mrkID) {
+	public ModelAndView snpSummaryByMarker(HttpServletRequest request, @PathVariable("mrkID") String mrkID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->snpSummaryByMarker started");
 
@@ -1383,55 +1396,6 @@ public class SnpController {
 		return sb.toString();
 	}
 
-	//-------------------------------------//
-	// total count of SNPs for summary page
-	//-------------------------------------//
-	//	@RequestMapping("/count")
-	//	public @ResponseBody Integer snpSummaryCount(HttpServletRequest request, @ModelAttribute SnpQueryForm query, BindingResult result) {
-	//
-	//		logger.debug("->snpSummaryCount started");
-	//
-	//		// list of IDs for markers which matched the query
-	//		List<String> matchedMarkerIds = new ArrayList<String>();
-	//		
-	//		// build the set of filters for the search
-	//		Filter searchFilters = genFilters(query, matchedMarkerIds, result);
-	//
-	//		// build the set of parameters for the query
-	//		SearchParams params = new SearchParams();
-	//
-	//		// we don't want any actual results, just the count
-	//		params.setPageSize(0);
-	//
-	//		if(searchFilters != null) {
-	//			params.setFilter(searchFilters);
-	//		}
-	//
-	//		SearchResults<ConsensusSNPSummaryRow> searchResults = snpFinder.getSummarySnps(params, matchedMarkerIds);
-	//
-	//		return searchResults.getTotalCount();
-	//	}
-
-	//	// This method handles requests various reports; txt, xls.  It is intended 
-	//	// to perform the same query as the json method above, but only place the 
-	//	// result obljects list on the model.  It returns a string to indicate the
-	//	// view name to look up in the view class in the excel or text.properties
-	//	@RequestMapping("/report*")
-	//	public String snpSummaryReport(
-	//			HttpServletRequest request, Model model,
-	//			@ModelAttribute SnpQueryForm query,
-	//			@ModelAttribute Paginator page) {
-	//
-	//		logger.debug("snpSummaryReport");		
-	//		
-	//		SearchParams params = new SearchParams();
-	//		params.setPaginator(page);
-	//		SearchResults<ConsensusSNP> searchResults = snpFinder.getSnps(params);
-	//		
-	//		model.addAttribute("results", searchResults.getResultObjects());
-	//		return "snpSummaryReport";			
-	//	}
-
 	// This method maps requests for the function class facet list for
 	// SNPs matching the query.
 	@RequestMapping("/facet/functionClass")
@@ -1517,6 +1481,9 @@ public class SnpController {
 	@RequestMapping("/report*")
 	public ModelAndView snpsToTabDelimitedFile (HttpServletRequest request,
 			@ModelAttribute SnpQueryForm query, BindingResult result) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("generating tab-delimited report");
 

@@ -83,9 +83,11 @@ import org.jax.mgi.fewi.summary.GxdCountsSummary;
 import org.jax.mgi.fewi.summary.GxdImageSummaryRow;
 import org.jax.mgi.fewi.summary.GxdMarkerSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
+import org.jax.mgi.fewi.util.FewiUtil;
 import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.QueryParser;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.shr.fe.query.SolrLocationTranslator;
 import org.jax.mgi.shr.jsonmodel.Clone;
@@ -195,7 +197,10 @@ public class GXDController {
 	 * GXD Query Form
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView getQueryForm() {
+	public ModelAndView getQueryForm(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->getQueryForm started");
 
@@ -210,7 +215,10 @@ public class GXDController {
 
 	// "expanded" query form
 	@RequestMapping("differential")
-	public ModelAndView getDifferentialQueryForm() {
+	public ModelAndView getDifferentialQueryForm(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->getDifferentialQueryForm started");
 
@@ -232,6 +240,9 @@ public class GXDController {
 			HttpSession session,
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("generating report");
 		// build a batch finder object and pass it to the view for iteration
@@ -286,7 +297,10 @@ public class GXDController {
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView getSummaryPost(HttpSession session,
 			@ModelAttribute GxdQueryForm query,
-			MultipartHttpServletRequest request) {
+			HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->getSummaryPost started");
 
@@ -307,6 +321,9 @@ public class GXDController {
 	public ModelAndView getBatchSearchForm(HttpSession session,
 			@ModelAttribute GxdQueryForm query,
 			HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->getBatchSearchForm started");
 
@@ -339,6 +356,9 @@ public class GXDController {
 	public ModelAndView genericSummary(
 			@ModelAttribute GxdQueryForm query,
 			HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("generating generic GXD summary");
 		logger.debug("query string: " + request.getQueryString());
@@ -406,6 +426,9 @@ public class GXDController {
 			HttpSession session,
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("generating GXD marker report");
 		// build a batch finder object and pass it to the view for iteration
@@ -436,6 +459,9 @@ public class GXDController {
 	public ModelAndView summeryByStructureId(
 			HttpServletRequest request,
 			@PathVariable("emapID") String emapID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->summaryByStructureId started");
 
@@ -474,6 +500,9 @@ public class GXDController {
 	public ModelAndView summeryByRefId(
 			HttpServletRequest request,
 			@PathVariable("refID") String refID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->summeryByRefId started");
 
@@ -515,6 +544,9 @@ public class GXDController {
 	public ModelAndView summeryByAllId(
 			HttpServletRequest request,
 			@PathVariable("allID") String allID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->summeryByallId started");
 
@@ -583,6 +615,9 @@ public class GXDController {
 	public ModelAndView cdnaSummaryByMarkerID(
 			HttpServletRequest request,
 			@PathVariable("mrkID") String mrkID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->cdnaSummaryByMarkerID started");
 		
@@ -599,7 +634,7 @@ public class GXDController {
 		return mav;
 	}
 	
-	/* cDNA table of results (to be requested by JSON)
+	/* cDNA table of results (to be requested by Ajax)
 	 */
 	@RequestMapping(value="/cdna/table")
 	public ModelAndView cdnaSummaryTable (HttpServletRequest request, @ModelAttribute Paginator page) {
@@ -650,6 +685,9 @@ public class GXDController {
 	public ModelAndView summeryByMrkId(
 			HttpServletRequest request,
 			@PathVariable("mrkID") String mrkID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->summeryByMrkId started");
 
@@ -1820,6 +1858,13 @@ public class GXDController {
 			@PathVariable("mrkID") String mrkID,
 			@RequestParam(value="genoclusterKey", required=false) String genoclusterKey) {
 
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
+		if (!FewiUtil.isPositiveInteger(genoclusterKey)) {
+			return errorMav("Invalid genocluster key");
+		}
 		logger.debug("->gxdPhenoGrid started");
 
 		ModelAndView mav = new ModelAndView("gxd/gxd_phenogrid");
@@ -1856,6 +1901,10 @@ public class GXDController {
 			HttpServletRequest request,
 			@PathVariable("mrkID") String mrkID,
 			@RequestParam(value="alleleID", required=false) String alleleID) {
+
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->gxdGeneRecomGrid started");
 
@@ -3548,8 +3597,8 @@ public class GXDController {
 	
 	// HT query form
 	@RequestMapping(value="/htexp_index", method=RequestMethod.GET)
-	public ModelAndView htQueryForm(HttpServletResponse response) {
-		return gxdhtController.getQueryForm(response);
+	public ModelAndView htQueryForm(HttpServletRequest request, HttpServletResponse response) {
+		return gxdhtController.getQueryForm(request, response);
 	}
 	
 	// HT summary page (no results table -- that's injected by Javascript)
@@ -3560,13 +3609,25 @@ public class GXDController {
 	
 	// HT sample popup (expects ArrayExpress ID)
 	@RequestMapping(value="/htexp_index/samples/{experimentID:.+}", method = RequestMethod.GET)
-	public ModelAndView htSamplePopup(@PathVariable("experimentID") String experimentID, @ModelAttribute GxdHtQueryForm queryForm) {
-		return gxdhtController.gxdHtSamples(experimentID, queryForm);
+	public ModelAndView htSamplePopup(HttpServletRequest request, @PathVariable("experimentID") String experimentID, @ModelAttribute GxdHtQueryForm queryForm) {
+		return gxdhtController.gxdHtSamples(request, experimentID, queryForm);
 	}
 	
 	// HT result table to inject into summary page (retrieve via Ajax)
 	@RequestMapping("/htexp_index/table")
 	public ModelAndView htExperimentsTable (HttpServletRequest request, @ModelAttribute GxdHtQueryForm query, @ModelAttribute Paginator page) {
 		return gxdhtController.experimentsTable(request, query, page);
+	}
+	
+	// filter values for experimental variables for a GXD HT summary (retrieve via Ajax)
+	@RequestMapping("/htexp_index/facet/variable")
+	public @ResponseBody Map<String, List<String>> htFacetVariable (HttpServletRequest request, @ModelAttribute GxdHtQueryForm query, @ModelAttribute Paginator page, HttpServletResponse response) {
+		return gxdhtController.getVariableFacet(query, null, response);
+	}
+	
+	// filter values for study types for a GXD HT summary (retrieve via Ajax)
+	@RequestMapping("/htexp_index/facet/studyType")
+	public @ResponseBody Map<String, List<String>> htFacetStudyType (HttpServletRequest request, @ModelAttribute GxdHtQueryForm query, @ModelAttribute Paginator page, HttpServletResponse response) {
+		return gxdhtController.getStudyTypeFacet(query, null, response);
 	}
 }

@@ -2,9 +2,12 @@ package org.jax.mgi.fewi.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import mgi.frontend.datamodel.ExpressionAssay;
 
 import org.jax.mgi.fewi.finder.AssayFinder;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +38,6 @@ public class AssayController {
 
     @Autowired
     private AssayFinder assayFinder;
-//
-//    @Autowired
-//    private ReferenceFinder referenceFinder;
-
 
     //--------------------------------------------------------------------//
     // public methods
@@ -48,7 +47,10 @@ public class AssayController {
     // Assay Detail By ID
     //--------------------//
     @RequestMapping(value="/{assayID:.+}", method = RequestMethod.GET)
-    public ModelAndView assayDetailByID(@PathVariable("assayID") String assayID) {
+    public ModelAndView assayDetailByID(HttpServletRequest request, @PathVariable("assayID") String assayID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
         logger.debug("->assayDetailByID started - requested ID " + assayID);
 
@@ -78,7 +80,11 @@ public class AssayController {
     }
     
     @RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
-    public ModelAndView assayDetailByKey(@PathVariable("dbKey") String dbKey) {
+    public ModelAndView assayDetailByKey(HttpServletRequest request, @PathVariable("dbKey") String dbKey) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
     	logger.debug("->assayDetailByKey started - requested dbKey " + dbKey);
     	
     	ExpressionAssay assay = assayFinder.getAssayByKey(dbKey);
@@ -112,5 +118,4 @@ public class AssayController {
 
         return mav;
     }
-
 }

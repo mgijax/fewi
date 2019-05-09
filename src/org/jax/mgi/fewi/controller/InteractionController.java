@@ -35,6 +35,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrInteraction;
 import org.jax.mgi.fewi.summary.InteractionSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.AjaxUtils;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,6 +94,10 @@ public class InteractionController {
 	//--------------------//
 	@RequestMapping(value="/explorer")
 	public ModelAndView byMarkerID(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->byMarkerID started");
 
 		// collect the marker IDs given by the user
@@ -292,6 +297,10 @@ public class InteractionController {
 
 	@RequestMapping("/report*")
 	public ModelAndView relationshipSummaryReport(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("relationshipSummaryReport");
 
 		String markerIDs = request.getParameter("markerIDs");

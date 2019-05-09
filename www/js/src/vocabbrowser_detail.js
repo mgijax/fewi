@@ -11,6 +11,18 @@ var log = function(msg) {
     if (logging) { console.log(msg); }
 }
 
+/* Send a pageview for the current URL to Google Analytics.  If fail, fail silently.
+ */
+var logPageview = function() {
+	try {
+		var pieces = window.location.href.split('.org');
+		if (pieces.length == 2) {
+			ga_logPageview(pieces[1]);
+			log('GA pageview: ' + pieces[1]);
+		}
+	} catch (err) {}
+}
+
 /* set the initial term ID for when the browser was brought up
  */
 var setInitialTermID = function(id) {
@@ -72,7 +84,7 @@ var setBrowserTitle = function(pageTitle) {
 
 /* update the panes that need to be updated when the user clicks on a result in the search pane
  */
-var searchResultClick = function(id) {
+var searchResultClick = function(id, logPV) {
 	if ((id !== null) && (id !== undefined)) {
 		fetchTermPane(id);
    		setBrowserTitle(id);
@@ -80,6 +92,9 @@ var searchResultClick = function(id) {
    		try {
         	window.history.pushState(id, 'title', browserUrl + id);
     	} catch (err) {}
+    	if ((logPV == undefined) || (logPV == null) || logPV) {
+    		logPageview();
+    	}
     }
 };
  
@@ -92,6 +107,7 @@ var parentClick = function(id) {
     try {
         window.history.pushState(id, 'title', browserUrl + id);
     } catch (err) {}
+	logPageview();
 };
 
 /* update the panes that need to be updated when the user clicks on a term in the tree view pane
@@ -102,6 +118,7 @@ var treeTermClick = function(id) {
     try {
         window.history.pushState(id, 'title', browserUrl + id);
     } catch (err) {}
+	logPageview();
 };
 
 /* add an event listener to enable reasonable results when stepping back through browser history

@@ -71,6 +71,7 @@ import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.GOGraphConverter;
 import org.jax.mgi.fewi.util.NotesTagConverter;
 import org.jax.mgi.fewi.util.TssMarkerWrapper;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.fewi.util.file.TextFileReader;
 import org.jax.mgi.fewi.util.link.FewiLinker;
 import org.jax.mgi.fewi.util.link.IDLinker;
@@ -134,7 +135,10 @@ public class MarkerController {
 	private String mpHeaders = null;
 
 	@RequestMapping(method=RequestMethod.GET)
-	public ModelAndView getQueryForm() {
+	public ModelAndView getQueryForm(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->getQueryForm started");
 		initQueryForm();
@@ -153,6 +157,10 @@ public class MarkerController {
 
 	@RequestMapping("/phenoPopup")
 	public ModelAndView phenoPopup (HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		if (mpHeaders == null) {
 			SearchResults<QueryFormOption> mpResults = queryFormOptionFinder.getQueryFormOptions("allele", "phenotype");
 			List<QueryFormOption> headers = mpResults.getResultObjects();
@@ -177,6 +185,10 @@ public class MarkerController {
 
 	@RequestMapping("/summary")
 	public ModelAndView markerSummary(HttpServletRequest request, @ModelAttribute MarkerQueryForm queryForm) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->markerSummary started");
 		logger.debug("queryString: " + request.getQueryString());
 
@@ -300,6 +312,10 @@ public class MarkerController {
 	@RequestMapping(value="/phenotypes/report.xlsx", params={"markerId"})
 	public ModelAndView downloadPhenotypes(HttpServletRequest request,
 		@RequestParam("markerId") String mrkID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 
 		logger.debug("->downloadPhenotypes started");
 
@@ -344,6 +360,9 @@ public class MarkerController {
 	@RequestMapping(value="/phenotypes/{mrkID:[MGImgi0-9:]+}")
 	public ModelAndView tableOfPhenotypes(HttpServletRequest request,
 		@PathVariable("mrkID") String mrkID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->tableOfPhenotypes started");
 
@@ -380,7 +399,10 @@ public class MarkerController {
 	}
 
 	@RequestMapping(value="/{markerID:.+}", method = RequestMethod.GET)
-	public ModelAndView markerDetailByID(@PathVariable("markerID") String markerID) {
+	public ModelAndView markerDetailByID(HttpServletRequest request, @PathVariable("markerID") String markerID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->markerDetailByID started");
 
@@ -442,10 +464,6 @@ public class MarkerController {
 		// set specific hibernate filters to omit data that does not appear on this page. (for performance)
 		sessionFactory.getCurrentSession().enableFilter("markerDetailRefs");
 		sessionFactory.getCurrentSession().enableFilter("markerDetailMarkerInteractions");
-
-
-
-
 
 		// search engine optimization data
 		ArrayList<String> seoKeywords = new ArrayList<String>();
@@ -1241,7 +1259,10 @@ public class MarkerController {
 
 
 	@RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
-	public ModelAndView markerDetailByKey(@PathVariable("dbKey") String dbKey) {
+	public ModelAndView markerDetailByKey(HttpServletRequest request, @PathVariable("dbKey") String dbKey) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->markerDetailByKey started");
 
@@ -1260,7 +1281,10 @@ public class MarkerController {
 	}
 
 	@RequestMapping(value="/reference/{refID}")
-	public ModelAndView markerSummaryByRefId(@PathVariable("refID") String refID) {
+	public ModelAndView markerSummaryByRefId(HttpServletRequest request, @PathVariable("refID") String refID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->markerSummaryByRefId started");
 
@@ -1292,6 +1316,10 @@ public class MarkerController {
 
 	@RequestMapping(value="/reference/key/{refKey}")
 	public ModelAndView markerSummeryByRefKey(HttpServletRequest request, @PathVariable("refKey") String refKey) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->markerSummeryByRefKey started");
 
 		SearchResults<Reference> referenceResults = referenceFinder.getReferenceByKey(refKey);
@@ -1325,12 +1353,20 @@ public class MarkerController {
 	}
 
 	@RequestMapping(value="/polymorphisms/pcr/{markerID}")
-	public ModelAndView markerPolymorphismsPcr(@PathVariable("markerID") String markerID) {
+	public ModelAndView markerPolymorphismsPcr(HttpServletRequest request, @PathVariable("markerID") String markerID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		return markerPolymorphisms(markerID, PCR);
 	}
 
 	@RequestMapping(value="/polymorphisms/rflp/{markerID}")
-	public ModelAndView markerPolymorphismsRflp(@PathVariable("markerID") String markerID) {
+	public ModelAndView markerPolymorphismsRflp(HttpServletRequest request, @PathVariable("markerID") String markerID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		return markerPolymorphisms(markerID, RFLP);
 	}
 
@@ -1373,7 +1409,10 @@ public class MarkerController {
 	}
 
 	@RequestMapping(value="/probeset/{markerID}")
-	public ModelAndView markerProbesets(@PathVariable("markerID") String markerID) {
+	public ModelAndView markerProbesets(HttpServletRequest request, @PathVariable("markerID") String markerID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->markerProbesets started");
 
@@ -1504,6 +1543,9 @@ public class MarkerController {
 
 	@RequestMapping("/report*")
 	public ModelAndView markerSummaryExport(HttpServletRequest request, @ModelAttribute MarkerQueryForm query) throws org.antlr.runtime.RecognitionException {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("generating report");
 
@@ -1531,7 +1573,11 @@ public class MarkerController {
 	/* GO graph for an individual marker (by MGI ID)
 	 */
 	@RequestMapping(value="/gograph/{markerID:.+}", method = RequestMethod.GET)
-	public ModelAndView markerGOGraphByID(@PathVariable("markerID") String markerID) {
+	public ModelAndView markerGOGraphByID(HttpServletRequest request, @PathVariable("markerID") String markerID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("markerGOGraphByID started");
 
 		// setup search parameters object
@@ -1894,6 +1940,10 @@ public class MarkerController {
 	 */
 	@RequestMapping(value="/wksilversTable")
 	public ModelAndView wksilversTable(HttpServletRequest request, HttpServletResponse response) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->wksilversTable() started");
 
 		// need to add headers to allow AJAX access

@@ -24,6 +24,7 @@ public class GxdHtExperiment
 	private String note;
 	private Integer byDefault;
 	private Integer matchingSampleCount = 0;
+	private List<String> pubmedIDs;
 
 	public Integer getExperimentKey() {
 		return experimentKey;
@@ -100,6 +101,12 @@ public class GxdHtExperiment
 	}
 	public void setMatchingSampleCount(Integer matchingSampleCount) {
 		this.matchingSampleCount = matchingSampleCount;
+	}
+	public List<String> getPubmedIDs() {
+		return pubmedIDs;
+	}
+	public void setPubmedIDs(List<String> pubmedIDs) {
+		this.pubmedIDs = pubmedIDs;
 	}
 	@Override
 	public String toString() {

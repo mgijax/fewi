@@ -207,11 +207,13 @@ public class SearchConstants {
 	public static final String GXDHT_SEX = "sex";
 	public static final String GXDHT_MUTATED_GENE = "mutatedGene";
 	public static final String GXDHT_METHOD = "method";
+	public static final String GXDHT_STRAIN = "strainSearch";
 	public static final String GXDHT_TITLE = "title";
 	public static final String GXDHT_DESCRIPTION = "description";
 	public static final String GXDHT_TITLE_DESCRIPTION = "titleDescription";
 	public static final String GXDHT_EXPERIMENTAL_VARIABLE = "experimentalVariable";
 	public static final String GXDHT_RELEVANCY = "relevancy";
+	public static final String GXDHT_STUDY_TYPE = "studyType";
 	
 	// Homology constants
 	public static final String HOMOLOGY_ID            = "homologyID";
@@ -296,6 +298,7 @@ public class SearchConstants {
 	public static final String STRAIN_NAME_LOWER = "strainNameLower";
 	public static final String STRAIN_ATTRIBUTE_LOWER = "attributeLower";
 	public static final String STRAIN_GROUPS = "groups";
+	public static final String STRAIN_TAGS = "tags";
 	public static final String STRAIN_IS_SEQUENCED = "isSequenced";
 	
 	// general

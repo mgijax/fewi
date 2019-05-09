@@ -166,18 +166,6 @@
          </span>
        </td>
       </tr>
-      <tr>
-       <td class='rightBorderThinGray' align='right' nowrap='nowrap'>
-         <span class='label'>
-           Modification date: 
-         </span>
-       </td>
-       <td>
-         <span class='' id='assayModDate'>
-           ${assay.modificationDate} </span>
-         </span>
-       </td>
-      </tr>
     </table>
      
 

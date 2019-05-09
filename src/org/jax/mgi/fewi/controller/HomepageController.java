@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.controller;
 
 import java.text.SimpleDateFormat;
+import org.jax.mgi.fewi.util.UserMonitor;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -50,42 +51,66 @@ public class HomepageController {
 	private Integer facetLimit; 
 
 	@RequestMapping(method=RequestMethod.GET)
-	public ModelAndView index() {
+	public ModelAndView index(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->/home index started");
 		ModelAndView mav = new ModelAndView("home_index");
 		return mav;
 	}
 
 	@RequestMapping("/allele")
-	public ModelAndView alleleHome() {
+	public ModelAndView alleleHome(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->alleleHome started");
 		ModelAndView mav = new ModelAndView("allele/allele_home");
 		return mav;
 	}
 
 	@RequestMapping("/batchData")
-	public ModelAndView Home() {
+	public ModelAndView Home(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->batchDataHome started");
 		ModelAndView mav = new ModelAndView("batch_data/batch_data_home");
 		return mav;
 	}
 
 	@RequestMapping("/gxd")
-	public ModelAndView gxdHome() {
+	public ModelAndView gxdHome(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->gxdHome started");
 		ModelAndView mav = new ModelAndView("expression/gxd_home");
 		return mav;
 	}
 
 	@RequestMapping("/genes")
-	public ModelAndView genesHome() {
+	public ModelAndView genesHome(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->genesHome started");
 		ModelAndView mav = new ModelAndView("genes/genes_home");
 		return mav;
 	}
 
 	@RequestMapping("/diseasePortal")
-	public ModelAndView diseasePortalHome() {
+	public ModelAndView diseasePortalHome(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->diseasePortalHome started");
 		ModelAndView mav = new ModelAndView("diseasePortal/disease_portal_home");
 		mav.addObject(new DiseasePortalQueryForm());
@@ -93,35 +118,44 @@ public class HomepageController {
 	}
 
 	@RequestMapping("/go")
-	public ModelAndView goHome() {
+	public ModelAndView goHome(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->goHome started");
 		ModelAndView mav = new ModelAndView("go/go_home");
 		return mav;
 	}
 
 	@RequestMapping("/help")
-	public ModelAndView helpHome() {
+	public ModelAndView helpHome(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->helpHome started");
 		ModelAndView mav = new ModelAndView("help/help_home");
 		return mav;
 	}
 
 	@RequestMapping("/homology")
-	public ModelAndView homologyHome() {
+	public ModelAndView homologyHome(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->homologyHome started");
 		ModelAndView mav = new ModelAndView("homology/homology_home");
 		return mav;
 	}
 
-	@RequestMapping("/pathways")
-	public ModelAndView pathwaysHome() {
-		logger.debug("->pathwaysHome started");
-		ModelAndView mav = new ModelAndView("pathways/pathways_home");
-		return mav;
-	}
-
 	@RequestMapping("/recombinase")
-	public ModelAndView recombinaseHome() {
+	public ModelAndView recombinaseHome(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->recombinaseHome started");
 		ModelAndView mav = new ModelAndView("recombinase/recombinase_home");
 		RecombinaseQueryForm recombinaseQueryForm = new RecombinaseQueryForm();
@@ -135,7 +169,11 @@ public class HomepageController {
 	}
 
 	@RequestMapping("/strain")
-	public ModelAndView strainHome() {
+	public ModelAndView strainHome(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->strainHome started");
 		ModelAndView mav = new ModelAndView("strain/strain_home");
 		setDatabaseDate(mav);
@@ -150,7 +188,11 @@ public class HomepageController {
 	}
 
 	@RequestMapping("/static/{pageUrl:.+}")
-	public ModelAndView homeStaticPages(@PathVariable("pageUrl") String pageUrl) {
+	public ModelAndView homeStaticPages(HttpServletRequest request, @PathVariable("pageUrl") String pageUrl) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->homeStaticPages started");
 		logger.debug("pageUrl = " + pageUrl);
 		ModelAndView mav = new ModelAndView("static_home_page");
@@ -186,6 +228,10 @@ public class HomepageController {
 	// provide tab-delimited page of all statistics (mirrors the "All Statistics" page)
 	@RequestMapping("/statistics_report.txt")
 	public ModelAndView getStatisticsReport (HttpServletRequest request, HttpServletResponse response) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		List<Statistic> allStats = new ArrayList<Statistic>();
 		allStats.addAll(statisticFinder.getStatisticsByGroup("stats page markers"));
 		allStats.addAll(statisticFinder.getStatisticsByGroup("stats page phenotypes"));

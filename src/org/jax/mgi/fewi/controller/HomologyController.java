@@ -3,6 +3,8 @@ package org.jax.mgi.fewi.controller;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import mgi.frontend.datamodel.HomologyCluster;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerID;
@@ -15,8 +17,10 @@ import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.util.FewiUtil;
 import org.jax.mgi.fewi.util.GOGraphConverter;
 import org.jax.mgi.fewi.util.NotesTagConverter;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.fewi.util.file.TextFileReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +48,11 @@ public class HomologyController {
 	private MarkerFinder markerFinder;
 
 	@RequestMapping(value="/marker/{markerID:.+}", method = RequestMethod.GET)
-	public ModelAndView homologyClusterDetailByMarker(@PathVariable("markerID") String markerID) {
+	public ModelAndView homologyClusterDetailByMarker(HttpServletRequest request, @PathVariable("markerID") String markerID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug ("-> homologyClusterDetailByMarker started");
 
 		// find the requested marker by ID
@@ -81,7 +89,11 @@ public class HomologyController {
 	}
 
 	@RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
-	public ModelAndView homologyClusterDetailByMarkerKey(@PathVariable("dbKey") String dbKey) {
+	public ModelAndView homologyClusterDetailByMarkerKey(HttpServletRequest request, @PathVariable("dbKey") String dbKey) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug ("-> homologyDetailByKey started");
 
 		// find the requested marker by database key
@@ -117,7 +129,10 @@ public class HomologyController {
 	// HomoloGene Detail By ID
 	//--------------------//
 	@RequestMapping(value="/{homologyID:.+}", method = RequestMethod.GET)
-	public ModelAndView homologyClusterDetailByID(@PathVariable("homologyID") String homologyID) {
+	public ModelAndView homologyClusterDetailByID(HttpServletRequest request, @PathVariable("homologyID") String homologyID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->homologyDetailByID started");
 
@@ -128,9 +143,22 @@ public class HomologyController {
 	// homology cluster (either HGNC or HomoloGene) by cluster key
 	//------------------------------------------------------------
 	@RequestMapping(value="/cluster/key/{clusterKey:.+}", method = RequestMethod.GET)
-	private ModelAndView homologyClusterDetailByKey(@PathVariable("clusterKey") String clusterKey) {
+	private ModelAndView homologyClusterDetailByKey(HttpServletRequest request, @PathVariable("clusterKey") String clusterKey) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
-		HomologyCluster homology = homologyFinder.getClusterByKey(clusterKey);
+		if (!FewiUtil.isPositiveInteger(clusterKey)) {
+			return errorMav("Cannot find homology cluster");
+		}
+		
+		HomologyCluster homology = null;
+		try {
+			homology = homologyFinder.getClusterByKey(clusterKey); 
+			if (homology == null) { throw new Exception ("is null"); }
+		} catch (Throwable t) {
+			return errorMav("Cannot find homology cluster");
+		}
 		return prepareHomologyClass(homology);
 	}
 
@@ -201,7 +229,10 @@ public class HomologyController {
 	// Comparative GO Graph for a HomoloGene class (by HomoloGene ID)
 	//---------------------------------------------------------------
 	@RequestMapping(value="/GOGraph/{homologyID:.+}", method = RequestMethod.GET)
-	public ModelAndView comparativeGOGraphByID(@PathVariable("homologyID") String homologyID) {
+	public ModelAndView comparativeGOGraphByID(HttpServletRequest request, @PathVariable("homologyID") String homologyID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->comparativeGOGraphByID started");
 

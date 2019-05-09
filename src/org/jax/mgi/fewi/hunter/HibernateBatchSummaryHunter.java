@@ -179,12 +179,16 @@ public class HibernateBatchSummaryHunter
         logger.debug("markers: " + markerKey.size());
         searchResults.getResultSetMeta().addCount("marker", markerKey.size());
         
-        int endIndex = searchParams.getStartIndex() + searchParams.getPageSize();
+        int startIndex = searchParams.getStartIndex();
+        if (startIndex > returnList.size()) {
+        	startIndex = returnList.size();
+        }
+        
+        int endIndex = startIndex + searchParams.getPageSize();
         if (endIndex > returnList.size()){
         	endIndex = returnList.size();
         }
-        searchResults.setResultObjects(returnList.subList(searchParams.getStartIndex(), 
-        		endIndex));
+        searchResults.setResultObjects(returnList.subList(startIndex, endIndex));
     }
 
 	private class BatchMarkerIdComparator implements Comparator<BatchMarkerId> {

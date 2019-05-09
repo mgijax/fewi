@@ -100,7 +100,7 @@ public class MarkerAnnotationFinder {
 
 		// ask the hunter to identify which objects to return
 		markerAnnotationSummaryHunter.hunt(searchParams, searchResults);
-		logger.info("->hunter found these resultKeys - " + searchResults.getResultKeys());
+		logger.debug("->hunter found these resultKeys - " + searchResults.getResultKeys());
 
 		// gather objects identified by the hunter, add them to the results
 

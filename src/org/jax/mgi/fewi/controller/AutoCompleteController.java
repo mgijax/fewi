@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
@@ -76,14 +77,23 @@ public class AutoCompleteController {
 	@RequestMapping("/strainName")
 	public @ResponseBody SearchResults<AutocompleteResult> strainAutoComplete(
 			HttpServletResponse response,
-			@RequestParam("query") String query) {
+			@RequestParam("query") String query,
+			@RequestParam(value="tag", required=false) String tag) {
 
 		int maxCount = 500;
+		
+		Filter tagFilter = null;
+		if (tag != null) {
+			tagFilter = new Filter(SearchConstants.STRAIN_TAGS, tag.trim(), Filter.Operator.OP_EQUAL);
+		}
 		
 		// get exact matches
 		SearchParams exact = new SearchParams();
 		exact.setPageSize(maxCount);
-		exact.setFilter(new Filter(SearchConstants.STRAIN_NAME_LOWER, query.toLowerCase(), Filter.Operator.OP_EQUAL) );
+		List<Filter> exactFilters = new ArrayList<Filter>();
+		exactFilters.add(new Filter(SearchConstants.STRAIN_NAME_LOWER, query.toLowerCase(), Filter.Operator.OP_EQUAL));
+		if (tagFilter != null) exactFilters.add(tagFilter);
+		exact.setFilter(Filter.and(exactFilters));
 		exact.setSorts(strainController.genSorts(null));
 		SearchResults<SimpleStrain> srExact = strainFinder.getStrains(exact);
 		List<SimpleStrain> exactMatches = srExact.getResultObjects();
@@ -94,6 +104,7 @@ public class AutoCompleteController {
 		List<Filter> beginsFilters = new ArrayList<Filter>();
 		beginsFilters.add(new Filter(SearchConstants.STRAIN_NAME_LOWER, query.toLowerCase(), Filter.Operator.OP_GREEDY_BEGINS) );
 		beginsFilters.add(Filter.notEqual(SearchConstants.STRAIN_NAME_LOWER, query.toLowerCase()));
+		if (tagFilter != null) beginsFilters.add(tagFilter);
 		begins.setFilter(Filter.and(beginsFilters));
 		begins.setSorts(strainController.genSorts(null));
 		SearchResults<SimpleStrain> srBegins = strainFinder.getStrains(begins);
@@ -106,6 +117,7 @@ public class AutoCompleteController {
 		containsFilters.add(new Filter(SearchConstants.STRAIN_NAME_LOWER, query.toLowerCase(), Filter.Operator.OP_STRING_CONTAINS) );
 		containsFilters.add(new Filter(SearchConstants.STRAIN_NAME_LOWER, query.toLowerCase(), Filter.Operator.OP_GREEDY_BEGINS) );
 		containsFilters.get(1).negate();
+		if (tagFilter != null) containsFilters.add(tagFilter);
 		contains.setFilter(Filter.and(containsFilters));
 		contains.setSorts(strainController.genSorts(null));
 		SearchResults<SimpleStrain> srContains = strainFinder.getStrains(contains);

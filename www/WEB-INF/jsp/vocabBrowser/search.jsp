@@ -18,7 +18,7 @@
 <form name="vocabBrowserSearchForm" onSubmit="refreshSearchPane(); return false;">
 	<div id="searchWrapper">
 		<div id="searchBoxDiv" style="float: left; padding-left: 10px;">
-			<input type="text" size="35" id="searchTerm" name="term" value="${searchFieldValue}" style="width: auto; position: relative;">
+			<input type="text" size="35" id="searchTerm" name="term" value="${e:forHtml(searchFieldValue)}" style="width: auto; position: relative;">
 		</div>
 		<div id="clearButtonDiv" style="padding-top: 4px">
     		<input type="button" id="clearButton" value="Clear" name="Clear" onClick="resetSearch()">
@@ -82,11 +82,11 @@ var options = {
 			},
 			onChooseEvent: function() {
 				if (selectedID != null) {
-					searchResultClick(selectedID);
+					searchResultClick(selectedID, false);
 				} else {
 					selectedID = $('#searchTerm').getItemData(0).accID;
 					if ((selectedID !== null) && (selectedID !== undefined)) {
-						searchResultClick(selectedID);
+						searchResultClick(selectedID, false);
 						$('#searchTerm').val($('#searchTerm').getItemData(0).term);
 					}
 				}

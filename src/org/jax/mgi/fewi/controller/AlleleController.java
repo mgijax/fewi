@@ -54,10 +54,12 @@ import org.jax.mgi.fewi.summary.AlleleSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.MutationInvolvesSummaryRow;
 import org.jax.mgi.fewi.util.AjaxUtils;
+import org.jax.mgi.fewi.util.FewiUtil;
 import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.NotesTagConverter;
 import org.jax.mgi.fewi.util.QueryParser;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,6 +133,10 @@ public class AlleleController {
 
 	@RequestMapping(method=RequestMethod.GET)
 	public ModelAndView getQueryForm(HttpServletRequest request, HttpServletResponse response, @ModelAttribute AlleleQueryForm query) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		ModelAndView mav = new ModelAndView("allele_query");
 
 		initQFCache();
@@ -147,6 +153,10 @@ public class AlleleController {
 
 	@RequestMapping("/phenoPopup")
 	public ModelAndView phenoPopup (HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->systemPopup started");
 		String formName = request.getParameter("formName");
 
@@ -160,6 +170,10 @@ public class AlleleController {
 
 	@RequestMapping(value="/summary", method=RequestMethod.GET)
 	public ModelAndView alleleSummary(HttpServletRequest request, HttpServletResponse response, @ModelAttribute AlleleQueryForm query) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		ModelAndView mav = new ModelAndView("allele_summary");
 
 		// direct to marker summary if marker is in link
@@ -193,6 +207,10 @@ public class AlleleController {
 	//------------------------------------//
 	@RequestMapping(value="/reference/{refID}")
 	public ModelAndView alleleSummeryByRefId(HttpServletRequest request, @PathVariable("refID") String refID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 		logger.debug("->alleleSummeryByRefId started");
 
 		// setup view object
@@ -237,6 +255,9 @@ public class AlleleController {
 
 	@RequestMapping(value="/{alleleID:.+}", method=RequestMethod.GET)
 	public ModelAndView alleleDetailByID(HttpServletRequest request, HttpServletResponse response, @PathVariable("alleleID") String alleleID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->alleleDetailByID started");
 
@@ -244,7 +265,7 @@ public class AlleleController {
 		List<Allele> alleleList = alleleFinder.getAlleleByID(alleleID);
 
 		// there can only be one Allele
-		if (alleleList.size() < 1) {
+		if ((alleleList == null) || (alleleList.size() < 1)) {
 			return errorMav("No Allele Found");
 		} else if (alleleList.size() > 1) {
 			return errorMav("Duplicate ID");
@@ -256,15 +277,22 @@ public class AlleleController {
 
 	@RequestMapping(value="/key/{dbKey:.+}", method=RequestMethod.GET)
 	public ModelAndView alleleDetailByKey(HttpServletRequest request, HttpServletResponse response, @PathVariable("dbKey") String dbKey) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->alleleDetailByKey started");
 
+		if (!FewiUtil.isPositiveInteger(dbKey)) {
+			return errorMav("No Allele Found");
+		}
+		
 		// find the requested Allele
 		SearchResults<Allele> searchResults = alleleFinder.getAlleleByKey(dbKey);
 		List<Allele> alleleList = searchResults.getResultObjects();
 
 		// there can only be one Allele
-		if (alleleList.size() < 1) {
+		if ((alleleList == null) || (alleleList.size() < 1)) {
 			return errorMav("No Allele Found");
 		} else if (alleleList.size() > 1) {
 			// should not happen
@@ -281,6 +309,9 @@ public class AlleleController {
 
 	@RequestMapping(value="/mutationInvolves/{alleleID:.+}", method=RequestMethod.GET)
 	public ModelAndView mutationInvolvesByID(HttpServletRequest request, HttpServletResponse response, @PathVariable("alleleID") String alleleID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->mutationInvolvesByID started");
 
@@ -446,6 +477,9 @@ public class AlleleController {
 	//--------------------------------//
 	@RequestMapping("/report*")
 	public ModelAndView alleleSummaryExport(HttpServletRequest request, @ModelAttribute AlleleQueryForm query, @ModelAttribute Paginator page) throws RecognitionException {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("generating report");
 
@@ -652,6 +686,9 @@ public class AlleleController {
 	 * either by key or by ID
 	 */
 	private ModelAndView prepareAllele(HttpServletRequest request,Allele allele) {
+		if (allele == null) {
+			return errorMav("Cannot find allele");
+		}
 		ModelAndView mav = new ModelAndView("allele_detail");
 		mav.addObject ("allele", allele);
 
@@ -1368,6 +1405,9 @@ public class AlleleController {
 
 	@RequestMapping(value="/phenotable/{allID}")
 	public ModelAndView phenoTableByAllId(HttpServletRequest request,HttpServletResponse response, @PathVariable("allID") String allID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->phenoTableByAllId started");
 
@@ -1432,6 +1472,9 @@ public class AlleleController {
 	 */
 	@RequestMapping(value="/genoview/{genoID}")
 	public ModelAndView genoview(HttpServletRequest request, HttpServletResponse response, @PathVariable("genoID") String genoID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->genoview started");
 
@@ -1516,6 +1559,9 @@ public class AlleleController {
 
 	@RequestMapping(value="/allgenoviews/{alleleID}")
 	public ModelAndView allGenoviews(HttpServletRequest request, HttpServletResponse response, @PathVariable("alleleID") String alleleID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->all genoviews started");
 
@@ -1556,6 +1602,9 @@ public class AlleleController {
 
 	@RequestMapping(value="/alldiseasegenoviews/{alleleID}")
 	public ModelAndView allDiseaseGenoviews(HttpServletRequest request, HttpServletResponse response, @PathVariable("alleleID") String alleleID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->all disease genoviews started");
 
@@ -1599,6 +1648,9 @@ public class AlleleController {
 	//---------------------//
 	@RequestMapping(value="/diseasetable/{allID}")
 	public ModelAndView diseaseTableByAllId(HttpServletRequest request,HttpServletResponse response, @PathVariable("allID") String allID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->diseaseTableByAllId started");
 

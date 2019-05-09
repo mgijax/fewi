@@ -23,6 +23,7 @@ import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.AccessionSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.fewi.util.link.FewiLinker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +66,11 @@ public class AccessionController {
 	// Accession Query Form
 	//--------------------//
 	@RequestMapping(method=RequestMethod.GET)
-	public ModelAndView getQueryForm() {
+	public ModelAndView getQueryForm(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
 
 		logger.debug("->getQueryForm started");
 
@@ -81,6 +86,9 @@ public class AccessionController {
 	@RequestMapping("/summary")
 	public ModelAndView accessionSummary(HttpServletRequest request,
 			@ModelAttribute AccessionQueryForm queryForm) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->accessionSummary main started");
 		logger.debug("queryString: " + request.getQueryString());
@@ -237,6 +245,9 @@ public class AccessionController {
 	public ModelAndView accessionSummaryByID(@PathVariable("accID") String accID,
 			HttpServletRequest request,
 			@ModelAttribute AccessionQueryForm queryForm) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("->accessionSummary by ID started");
 		logger.debug("queryString: " + request.getQueryString());
@@ -260,6 +271,9 @@ public class AccessionController {
 	public ModelAndView accessionSummaryByDoiParam(@RequestParam("id") String accID,
 			HttpServletRequest request,
 			@ModelAttribute AccessionQueryForm queryForm) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
 
 		logger.debug("-> accessionSummaryByIDParam started");
 		logger.debug("queryString: " + request.getQueryString());

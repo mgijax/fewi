@@ -14,7 +14,7 @@ var instantiatedPaginator = false;
 var fewiUrl = null;
 
 var decode = function(s) {
-	return s.replace(/\+/g, ' ').replace(/[^A-Za-z0-9 ]/, ' ');
+	return decodeURIComponent(s).replace(/[^A-Za-z0-9:_ ]/, ' ').replace(/\+/g, ' ');
 };
 
 // translate the float ages to have a prefixed 'E'
@@ -54,12 +54,18 @@ var updateYouSearchedFor = function() {
 	if (params.hasOwnProperty('sex') && (params['sex'][0] != 'All')) {
 		ysf = ysf + 'Sex: <b>' + params['sex'][0] + '</b><br/>';
 	}
+	if (params.hasOwnProperty('strain') && (params['strain'].length > 0)) {
+		ysf = ysf + 'Strain: <b>' + decodeURIComponent(params['strain']) + '</b><br/>';
+	}
 	if (params.hasOwnProperty('mutatedIn')) {
 		ysf = ysf + 'Samples <b>mutated in ' + decode(params['mutatedIn'][0]) + '</b> ';
 		ysf = ysf + ' <span class="smallGrey">current symbol, synonyms, gene id</span><br/>';
 	}
 	if (params.hasOwnProperty('method')) {
 		ysf = ysf + 'Assayed by <b>(' + decode(params['method'][0]) + ')</b><br/>';
+	}
+	if (params.hasOwnProperty('arrayExpressID')) {
+		ysf = ysf + 'ArrayExpress or GEO ID <b>' + params['arrayExpressID'][0].trim() + '</b><br/>';
 	}
 	if (params.hasOwnProperty('text')) {
 		ysf = ysf + 'Text ';
@@ -178,11 +184,16 @@ var updateResultsDiv = function(startIndex, rowsPerPage) {
 		yPos = $('#resultbar').position().top;
 	}
 	
+	var urlFragment = filters.getUrlFragment();
+	if (urlFragment == null) {
+		urlFragment = "";
+	}
+	
 	log("entered updateResultsDiv()");
 	$("#resultSummary").html("<img src='" + fewiurl + "assets/images/loading.gif' height='24' width='24'> Searching...");
 	log("added searching message");
 	$.ajax({
-		url: fewiurl + "gxd/htexp_index/table?" + querystring,	// can take state as param and append here for pagination
+		url: fewiurl + "gxd/htexp_index/table?" + querystring + urlFragment,	// can take state as param and append here for pagination
 		datatype : "html",
 		success: function(data) {
 			log("successful response");
@@ -214,7 +225,7 @@ var updateResultsDiv = function(startIndex, rowsPerPage) {
 			for (var i = 0; i < count; i++) {
 				standardizeHeights([ 'row' + i + 'detailLabel', 'row' + i + 'samplesWrapper', 
 					'row' + i + 'variablesWrapper', 'row' + i + 'typeWrapper', 'row' + i + 'methodWrapper',
-					'row' + i + 'spacer', 'row' + i + 'linkWrapper' ], 50);
+					'row' + i + 'spacer', 'row' + i + 'linkWrapper', 'row' + i + 'pmWrapper' ], 50);
 				
 				standardizeHeights([ 'row' + i + 'title', 'row' + i + 'titleLabel']);
 				standardizeHeights([ 'row' + i + 'description', 'row' + i + 'descriptionTitle' ]);
@@ -332,6 +343,12 @@ var gs_setFewiUrl = function(url) {
 	fewiUrl = url;
 };
 
+// update the request & data on the page (after a filtering event)
+var gs_updateRequest = function() {
+	filters.populateFilterSummary();
+	instantiatedPaginator = false;
+	updateResultsDiv(0, 50);
+}
 /*** to execute on being loaded ***/
 
 updateAgeStageTab();

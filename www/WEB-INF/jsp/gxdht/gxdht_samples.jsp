@@ -25,7 +25,6 @@ td.center { text-align: center; }
 a { text-decoration: none; }
 </style>
 
-<c:set var="linkOut" value="<img src='${configBean.FEWI_URL}assets/images/link_out.png'>" />
 <c:set var="aeLink" value="${fn:replace(externalUrls.ArrayExpressExperiment, '@@@@', experiment.arrayExpressID)}" />
 <c:set var="geoLink" value="" />
 <c:if test="${not empty experiment.geoID}">
@@ -37,8 +36,8 @@ a { text-decoration: none; }
     <div id="experimentWrapper" class="idWrapper headerShade2">
       <c:if test="${not empty experiment}">
 	    <div id="idLabels" class="idLabels">ArrayExpress:<c:if test="${not empty geoLink}"><br/>GEO:</c:if></div>
-	    <div id="ids" class="ids"><a href="${aeLink}" target="_blank">${experiment.arrayExpressID}</a> ${linkOut}
-		  <c:if test="${not empty geoLink}"><br/><a href="${geoLink}" target="_blank">${experiment.geoID}</a> ${linkOut}</c:if></div>
+	    <div id="ids" class="ids"><a href="${aeLink}" target="_blank" class="extUrl">${experiment.arrayExpressID}</a> 
+		  <c:if test="${not empty geoLink}"><br/><a href="${geoLink}" target="_blank" class="extUrl">${experiment.geoID}</a> </c:if></div>
 	    <div id="title" class="title">${experiment.title}</div>
       </c:if>
       <c:if test="${empty experiment}">
@@ -48,7 +47,7 @@ a { text-decoration: none; }
     <c:if test="${not empty samples}">
       <div id="sampleWrapper">
   	    <div id="sampleTitle">Sample information</div>
-  	    <table>
+  	    <table id="sampleTable">
   	      <tr>
   	  	    <th>Name</th>
   	  	    <c:if test="${not empty showOrganism}"><th>Organism</th></c:if>
