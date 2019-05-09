@@ -20,80 +20,74 @@
 	  	<c:set var="geoLink" value="${fn:replace(externalUrls.GEOSeries, '@@@@', exp.geoID)}" />
   	</c:if>
 
-    <div id="row${status.index}" class="experimentWrapper dataShade1}">
-	  <div id="row${status.index}titleWrapper" class="idWrapper headerShade2">
-	  	<div id="row${status.index}titleLabel" class="titleLabel">Title</div>
-		<div id="row${status.index}title" class="title">
-	      	<c:if test="${highlightTitle}"><fewi:highlight value='${exp.title}' searchString="${textSearch}" highlightClass="yellow"/></c:if>
-	      	<c:if test="${empty highlightTitle}">${exp.title}</c:if>
-		</div>
-	  </div>
-	  
-	  <div id="row${status.index}detailWrapper" class="detailWrapper">
-	    <div id="row${status.index}detailLabel" class="detailTitle headerShade3">Details</div>
-	    <div id="row${status.index}samplesWrapper" class="detailCell">
-	      <div id="row${status.index}samplesHeader" class="detailHeading headerShade1">Samples</div>
-	      <div id="row${status.index}samples" class="samples">
-	  	  	<a id="row${status.index}sampleCount" onClick="gs_samplePopup('${exp.arrayExpressID}')">${exp.sampleCount}</a> samples&nbsp;&nbsp;
-	  	  	<a id="row${status.index}button" class="filterButton" onClick="gs_samplePopup('${exp.arrayExpressID}')">View</a>
-	  	  	<c:if test="${highlightSamples}"><br/>
-	  	  		${exp.matchingSampleCount} match the search criteria
-	  	  	</c:if>
-	  	  </div>
-	    </div>
-	    <div id="row${status.index}variablesWrapper" class="detailCell">
-	      <div id="row${status.index}variablesHeader" class="detailHeading headerShade1">Experimental variables</div>
-	      <div id="row${status.index}variables" class="variables">
-	  	  	<ul class="variables">
-	  	  	<c:forEach var="ev" items="${exp.experimentalVariables}">
-	  	  	  <li>${ev}</li>
-	  	  	</c:forEach>
-	  	  	</ul>
-	  	  </div>
-	    </div>
-	    <div id="row${status.index}typeWrapper" class="detailCell">
-	      <div id="row${status.index}typeHeader" class="detailHeading headerShade1">Study type</div>
-	      <div id="row${status.index}type" class="type">${exp.studyType}</div>
-	    </div>
-	    <div id="row${status.index}methodWrapper" class="detailCell">
-	      <div id="row${status.index}methodHeader" class="detailHeading headerShade1">Method</div>
-	      <div id="row${status.index}method" class="method">${exp.method}
-	      </div>
-	    </div>
-	    <div id="row${status.index}pmWrapper" class="detailCell">
-	      <div id="row${status.index}pmHeader" class="detailHeading headerShade1">PubMed ID</div>
-		  <div id="row${status.index}pmIDs" class="pmIDs">
-		  	<c:if test="${not empty exp.pubmedIDs}">
-		  		<c:forEach var="pmID" items="${exp.pubmedIDs}" varStatus="pmStatus">
-					<% pmID = (String) pageContext.getAttribute("pmID"); %>
-		  			<%= idLinker.getLink("PubMed", pmID, pmID, "extUrl") %><c:if test="${!pmStatus.last}">, </c:if>
-		  		</c:forEach>
-		  	</c:if>
-		  </div>
-	    </div>
-	    <div id="row${status.index}spacer" class="spacer">&nbsp;</div>
-	    <div id="row${status.index}linkWrapper" class="detailCellLast">
-	      <div id="row${status.index}linkHeader" class="detailHeading headerShade1">View experiment at</div>
-		  <div id="row${status.index}ids" class="ids">ArrayExpress: <a href="${aeLink}" target="_blank" class="extUrl">${exp.arrayExpressID}</a> 
-			<c:if test="${not empty geoLink}"><br/>GEO: <a href="${geoLink}" target="_blank" class="extUrl">${exp.geoID}</a> </c:if>
-		  </div>
-	    </div>
-	  </div>
+	<table id="experimentTable${status.index}" class="experimentWrapper">
+		<tr id="titleRow${status.index}" class="titleRow">
+			<td id="titleLabel${status.index}" class="titleLabel">Title</td>
+			<td id="title${status.index}" class="title" colspan="6">
+		      	<c:if test="${highlightTitle}"><fewi:highlight value='${exp.title}' searchString="${textSearch}" highlightClass="yellow"/></c:if>
+		      	<c:if test="${empty highlightTitle}">${exp.title}</c:if>
+			</td>
+		</tr>
+
+		<tr id="detailLabelRow${status.index}" class="detailLabelRow">
+			<td id="detailLabel${status.index}" rowspan="2" class="detailTitle">Details</td>
+			<td id="sampleLabel${status.index}">Samples</td>
+			<td id="variableLabel${status.index}">Experimental variables</td>
+			<td id="studyTypeLabel${status.index}">Study type</td>
+			<td id="methodLabel${status.index}">Method</td>
+			<td id="pubMedLabel${status.index}">PubMed ID</td>
+			<td id="viewLabel${status.index}">View experiment at</td>
+		</tr>
+
+		<tr id="detailDataRow${status.index}" class="detailDataRow">
+			<td id="sampleData${status.index}">
+		  	  	<a id="row${status.index}sampleCount" onClick="gs_samplePopup('${exp.arrayExpressID}')">${exp.sampleCount}</a> samples&nbsp;&nbsp;
+		  	  	<a id="row${status.index}button" class="filterButton" onClick="gs_samplePopup('${exp.arrayExpressID}')">View</a>
+		  	  	<c:if test="${highlightSamples}"><br/>
+		  	  		${exp.matchingSampleCount} match the search criteria
+		  	  	</c:if>
+	  	  	</td>
+			<td id="variableData${status.index}">
+		  	  	<ul class="variables">
+	  		  	<c:forEach var="ev" items="${exp.experimentalVariables}">
+	  	  		  <li>${ev}</li>
+	  	  		</c:forEach>
+	  	  		</ul>
+	  	  	</td>
+			<td id="studyTypeData${status.index}">${exp.studyType}</td>
+			<td id="methodData${status.index}">${exp.method}</td>
+			<td id="pubMedData${status.index}">
+			  	<c:if test="${not empty exp.pubmedIDs}">
+			  		<c:forEach var="pmID" items="${exp.pubmedIDs}" varStatus="pmStatus">
+						<% pmID = (String) pageContext.getAttribute("pmID"); %>
+		  				<%= idLinker.getLink("PubMed", pmID, pmID, "extUrl") %><c:if test="${!pmStatus.last}">, </c:if>
+		  			</c:forEach>
+		  		</c:if>
+		  	</td>
+			<td id="viewData${status.index}">
+				ArrayExpress: <a href="${aeLink}" target="_blank" class="extUrl">${exp.arrayExpressID}</a> 
+				<c:if test="${not empty geoLink}"><br/>GEO: <a href="${geoLink}" target="_blank" class="extUrl">${exp.geoID}</a> </c:if>
+			</td>
+		</tr>
+
 	  <c:if test="${not empty exp.description}">
-	  <div id="row${status.index}descriptionWrapper" class="descriptionWrapper headerShade1">
-	    <div id="row${status.index}descriptionTitle" class="descriptionTitle headerShade2">Description</div>
-	    <div id="row${status.index}description" class="description">
-	    	<c:if test="${highlightDescription}"><fewi:highlight value='${exp.linkedDescription}' searchString="${textSearch}" highlightClass="yellow"/></c:if>
-	    	<c:if test="${empty highlightDescription}">${exp.linkedDescription}</c:if>
-	    </div>
-	  </div>
+		<tr id="descriptionRow${status.index}" class="descriptionRow">
+			<td id="descriptionLabel${status.index}" class="descriptionTitle">Description</td>
+			<td id="description${status.index}" class="description" colspan="6">
+		    	<c:if test="${highlightDescription}"><fewi:highlight value='${exp.linkedDescription}' searchString="${textSearch}" highlightClass="yellow"/></c:if>
+		    	<c:if test="${empty highlightDescription}">${exp.linkedDescription}</c:if>
+			</td>
+		</tr>
 	  </c:if>
+
 	  <c:if test="${not empty exp.note}">
-	  <div id="row${status.index}noteWrapper" class="noteWrapper detailShade1">
-	    <div id="row${status.index}noteTitle" class="noteTitle headerShade3">Note</div>
-	    <div id="row${status.index}note" class="note">${exp.note}</div>
-	  </div>
+		<tr id="noteRow${status.index}" class="noteRow">
+			<td id="noteLabel${status.index}" class="noteTitle">Note</td>
+			<td id="note${status.index}" class="note" colspan="6">
+				${exp.note}
+			</td>
+		</tr>
 	  </c:if>
-    </div> 
+	</table>
   </c:forEach>
 </div>
