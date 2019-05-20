@@ -90,7 +90,7 @@
 				<c:if test="${not empty recombinaseQueryForm.driver}"><span class="label">Driver</span> equals
 					<span class="label">${fn:replace(recombinaseQueryForm.driver,";", ",") }</span><br/></c:if>
 				<c:if test="${not empty recombinaseQueryForm.structure}">
-					<b>Activity ${operator}</b> in <b>${recombinaseQueryForm.structure}</b>
+					<b>Activity ${operator}</b> in <b>${e:forHtml(recombinaseQueryForm.structure)}</b>
 					<c:if test="${not empty recombinaseQueryForm.nowhereElse}">
 						and <b>nowhere else</b>
 					</c:if>
@@ -161,7 +161,7 @@ These JS files and local definitions need be defined in this order
 
 <script type="text/javascript">
 	var fewiurl = "${configBean.FEWI_URL}";
-	var querystring = "${queryString}";
+	var querystring = "${e:forJavaScript(queryString)}";
 	function getQuerystring() {
 		return querystring + filters.getUrlFragment();
 	}

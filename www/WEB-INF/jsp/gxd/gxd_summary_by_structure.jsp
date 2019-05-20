@@ -102,7 +102,7 @@ body.yui-skin-sam div#outer {position:relative;}
 	  </td>
 	  <td class="summaryHeaderData1" style="vertical-align:bottom">
 	    <div style="">
-		<a style="font-size:large;  font-weight: bold;" href="${configBean.FEWI_URL}vocab/gxd/anatomy/${structure.primaryID}">${structure.term}</a>
+		<a style="font-size:large;  font-weight: bold;" href="${configBean.FEWI_URL}vocab/gxd/anatomy/${structure.primaryID}">${e:forHtml(structure.term)}</a>
 		<span style="color: gray; font-size: 90%">includes substructures</span></div>
 	    <div style="padding-top:3px;">${structure.stageRange}</div>
 	    <div style="padding-top:2px;">${structure.primaryID}</div>
@@ -118,7 +118,7 @@ body.yui-skin-sam div#outer {position:relative;}
 
 <script type="text/javascript">
     var fewiurl = "${configBean.FEWI_URL}";
-    var querystring = "structureID=${structure.primaryID}&tab=${e:forJavaScript(tab)}";
+    var querystring = "structureID=${e:forJavaScript(structure.primaryID)}&tab=${e:forJavaScript(tab)}";
     var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>
 

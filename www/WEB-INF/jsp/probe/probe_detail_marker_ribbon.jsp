@@ -8,9 +8,9 @@
 				<table id="markerTable">
 				<c:forEach var="markerAssoc" items="${probe.markerAssociations}">
 					<tr><td>
-					<a href="${configBean.FEWI_URL}marker/${markerAssoc.marker.primaryID}">${markerAssoc.marker.symbol}</a> 
+					<a href="${configBean.FEWI_URL}marker/${e:forHtml(markerAssoc.marker.primaryID)}">${e:forHtml(markerAssoc.marker.symbol)}</a> 
 					</td><td>
-					${markerAssoc.marker.name}
+					${e:forHtml(markerAssoc.marker.name)}
 					</td><td>
 					<c:if test="${markerAssoc.qualifier == 'P'}">(PUTATIVE)</c:if>
 					</td></tr>

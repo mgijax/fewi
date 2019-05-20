@@ -117,7 +117,7 @@
 	var uniprot = ${batchQueryForm.uniprot};
 
 	var fewiurl = "${configBean.FEWI_URL}";
-	var querystring = "${queryString}";
+	var querystring = "${e:forJavaScript(queryString)}";
 	var qDisplay = true;
 
 </script>

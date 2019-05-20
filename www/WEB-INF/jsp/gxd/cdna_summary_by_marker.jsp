@@ -86,7 +86,7 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 
 <script type="text/javascript">
 	var markerID = "${marker.primaryID}";
-	var querystring = "${querystring}";
+	var querystring = "${e:forJavaScript(querystring)}";
 	if (querystring == "") {
 		querystring = "markerID=${marker.primaryID}";
 	}

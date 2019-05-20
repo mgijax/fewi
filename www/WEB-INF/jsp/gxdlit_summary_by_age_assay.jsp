@@ -39,11 +39,11 @@
        <div style="padding-top: 7px;">Age</div>
   </div></td>
   <td class="summaryHeaderData1">
-	<div class="extraLarge">${assayType}</div>
+	<div class="extraLarge">${e:forHtml(assayType)}</div>
 	<div class="extraLarge">
 	<c:if test="${age == 'E'}">Embryonic, DPC unknown</c:if>
 	<c:if test="${age == 'P'}">Postnatal</c:if>
-	<c:if test="${age != 'E' && age !='P'}">${age} DPC</c:if>
+	<c:if test="${age != 'E' && age !='P'}">${e:forHtml(age)} DPC</c:if>
 	</div>
   </td>
 </tr>

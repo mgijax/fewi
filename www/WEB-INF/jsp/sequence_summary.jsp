@@ -103,7 +103,7 @@
 
 <script type="text/javascript">
 	var fewiurl = "${configBean.FEWI_URL}";
-	var querystring = "${queryString}";
+	var querystring = "${e:forJavaScript(queryString)}";
 </script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/filters.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/sequence_summary.js"></script>

@@ -14,7 +14,7 @@ a { text-decoration: none; }
 	 	 	<c:if test="${empty segmentType}">
 	  			<c:set var="segmentType" value="All nucleic"/>
 	  		</c:if>
-	  		<div id="sequenceType">Sequence Type: <b>${segmentType}</b></div>
+	  		<div id="sequenceType">Sequence Type: <b>${e:forHtml(segmentType)}</b></div>
 	  	</c:if>
 		<div id="contentcolumn">
 			<div class="innertube">

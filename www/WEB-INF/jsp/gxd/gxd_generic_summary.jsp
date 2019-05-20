@@ -117,7 +117,7 @@ body.yui-skin-sam div#outer {position:relative;}
     var searchedStructure = "${structure}";
     var searchedStructureId = "${structureId}";
     var nomenclature = "${nomenclature}";
-    var querystring = "${queryString}";
+    var querystring = "${e:forJavaScript(queryString)}";
     var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>
 
