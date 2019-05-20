@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.controller;
 
 import java.util.ArrayList;
+import org.owasp.encoder.Encode;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -26,6 +27,7 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.util.AjaxUtils;
+import org.jax.mgi.fewi.util.FewiUtil;
 import org.jax.mgi.fewi.util.StrainPhenoGroup;
 import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.fewi.util.link.IDLinker;
@@ -627,7 +629,7 @@ public class StrainController {
 		
 		if ((refID != null) && (refID.length() > 0)) {
 			sb.append("Reference: <b>");
-			sb.append(refID);
+			sb.append(FewiUtil.sanitizeID(refID));
 			sb.append("</b><br/>");
 		}
 		
@@ -649,7 +651,7 @@ public class StrainController {
 			sb.append("Name/Synonym/ID: ");
 			sb.append(op);
 			sb.append(" <b>");
-			sb.append(strainName);
+			sb.append(Encode.forHtml(strainName));
 			sb.append("</b>");
 			sb.append(" <span class='smallGray'>searching current names and synonyms</span>");
 			sb.append("<br/>");
@@ -662,11 +664,11 @@ public class StrainController {
 					op = qf.getAttributeOperator();
 				}
 				sb.append("Attributes: " + op + " of <b>[");
-				sb.append(StringUtils.join(attributes, ", "));
+				sb.append(Encode.forHtml(StringUtils.join(attributes, ", ")));
 				sb.append("]</b><br/>");
 			} else {
 				sb.append("Attributes: <b>");
-				sb.append(attributes.get(0));
+				sb.append(Encode.forHtml(attributes.get(0)));
 				sb.append("</b><br/>");
 			}
 		}
@@ -674,7 +676,7 @@ public class StrainController {
 		// Did we identify a collection to mention?
 		if ((collection != null) && (collection.length() > 0)) {
 			sb.append("Collection: <b>");
-			sb.append(collection);
+			sb.append(Encode.forHtml(collection));
 			sb.append("</b><br/>");
 		}
 

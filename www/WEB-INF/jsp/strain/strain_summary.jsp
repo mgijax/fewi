@@ -101,7 +101,7 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/filters.js"></script>
 
 <script type="text/javascript">
-	var querystring = "${queryString}";
+	var querystring = "${e:forJavaScript(queryString)}";
 	fewiurl = "${configBean.FEWI_URL}";
 	ss_search();
 	<c:if test="${not empty reference}">
