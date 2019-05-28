@@ -56,6 +56,15 @@ public class GxdHtExperiment
 	public void setSampleCount(Integer sampleCount) {
 		this.sampleCount = sampleCount;
 	}
+	public List<String> getFilteredExperimentalVariables() {
+		List<String> displayable = new ArrayList<String>();
+		for (String ev : this.getExperimentalVariables()) {
+			if (!ev.equals("Not Applicable") && !ev.equals("Not Curated")) {
+				displayable.add(ev);
+			}
+		}
+		return displayable;
+	}
 	public List<String> getExperimentalVariables() {
 		Collections.sort(experimentalVariables);
 		return experimentalVariables;

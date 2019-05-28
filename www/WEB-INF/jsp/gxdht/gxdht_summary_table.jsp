@@ -49,7 +49,7 @@
 	  	  	</td>
 			<td id="variableData${status.index}">
 		  	  	<ul class="variables">
-	  		  	<c:forEach var="ev" items="${exp.experimentalVariables}">
+	  		  	<c:forEach var="ev" items="${exp.filteredExperimentalVariables}">
 	  	  		  <li>${ev}</li>
 	  	  		</c:forEach>
 	  	  		</ul>
