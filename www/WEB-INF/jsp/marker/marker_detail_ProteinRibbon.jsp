@@ -22,7 +22,7 @@
 						<li>
 							<div class="label">Protein Ontology</div>
 							<c:forEach var="item" items="${marker.proteinOntologyAnnotations}">
-								<div class="value"><a href="${fn:replace(urls.Protein_Ontology, '@@@@', ${fn:replace(item.termID, ':', '_')})}" target="_blank">${item.termID}</a> ${item.term}</div>
+								<div class="value"><a href="${fn:replace(urls.Protein_Ontology, '@@@@', item.termID)}" target="_blank">${item.termID}</a> ${item.term}</div>
 								<div class="value"><a href="${fn:replace(urls.PRO_Browser, '@@@@', item.termID)}" target="_blank">(term hierarchy)</a></div>
 							</c:forEach>
 						</li>
