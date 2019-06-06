@@ -376,6 +376,10 @@ public class NotesTagConverter
 		{
 			display = superscript(display);
 		}
+
+                //HACK: need to replace this in link, but not in display 
+		id = id.replace("PR:", "PR_"); 
+
 		// Apply parms to replacement string
 		convertedTag = String.format(replaceStr,this.cssAnchorClass, id, target, display);
 
