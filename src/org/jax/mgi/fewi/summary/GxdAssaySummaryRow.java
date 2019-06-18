@@ -46,6 +46,10 @@ public class GxdAssaySummaryRow {
 	}
 
 	public String getAssayID() {
+		if (assay.getAssayType().startsWith("RNA-Seq")) {
+			return "<a href='" + fewiUrl + "gxd/htexp_index/summary?arrayExpressID=" + assay.getJNum()
+				+ "'>data</a><span> (" + assay.getJNum() + ")</span>";
+		}
 		if (assay.getHasImage()) {
 			return "<a href='" + fewiUrl + "assay/" + assay.getAssayMgiid()
 					+ "'>data</a><span> (" + assay.getAssayMgiid() + ")</span>"
