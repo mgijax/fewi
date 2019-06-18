@@ -61,9 +61,12 @@ public class GxdAssaySummaryRow {
 	}
 
 	public String getReference() {
-		return "<a href='" + fewiUrl + "reference/" + assay.getJNum() + "'>"
+		if (assay.getJNum().startsWith("J:")) {
+			return "<a href='" + fewiUrl + "reference/" + assay.getJNum() + "'>"
 				+ assay.getJNum() + "</a> " + assay.getMiniCitation();
-
+		}
+		return "<a href='" + fewiUrl + "gxd/htexp_index/summary?arrayExpressID=" + assay.getJNum() + "'>"
+			+ assay.getJNum() + "</a> " + assay.getMiniCitation();
 	}
 
 }
