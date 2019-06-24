@@ -668,7 +668,7 @@ var updateQuerySummary = function() {
 				assayTypes.push(box.value);
 			}
 		}
-		if(assayTypes.length > 0 && !YAHOO.util.Dom.get("assayType-ALL").checked)
+		if(assayTypes.length > 0)
 		{
 
 			el = new YAHOO.util.Element(document.createElement('span'));
@@ -1342,11 +1342,11 @@ var resetQF = function (e) {
 	form.locations.value = "";
 	$('#locationUnit').val('bp');
 	selectTheilerStage();
-	allAssayTypesBox.checked = true;
-	for(var key in assayTypesBoxes)
-	{
-		assayTypesBoxes[key].checked = true;
-	}
+	
+	setAll('.allInSitu', '.inSituAssayType', true);
+	setAll('.allBlot', '.blotAssayType', true);
+	setAll('.allWholeGenome', '.wholeGenomeAssayType', false);
+	
 	form.detected3.checked=true;
 	form.allSpecimen.checked=true;
 	form.mutatedIn.value = "";
@@ -1412,10 +1412,9 @@ var getQueryString = function(form) {
 			{
 				if(element.type=="checkbox" || element.type=="radio")
 				{
-					// don't add any assay type params if the all box is checked
-					// also ignore their "all/either" options
-					if( (element.name=="assayType" && allAssayTypesBox.checked)
-							|| element.id == "assayType-ALL" || element.id == "detected3") continue;
+					// exclude certain form parameters that are really only intended for on-form use only
+					if(element.id == "inSituAll" || element.id == "blotAll" 
+							|| element.id == "wholeGenomeAll" || element.id == "detected3") continue;
 					else if(element.name=="geneticBackground")
 					{
 						if(element.id=="isWildType")
@@ -1461,39 +1460,69 @@ var getQueryString = function(form) {
 	return _qs.join("&");
 };
 
+// force a "checked" setting on the checkbox for 'allClass' and all of its sub-checkboxes for
+// the given 'subClass'
 
-// add the check box listeners for assay types
-var allAssayTypesBox = YAHOO.util.Dom.get("assayType-ALL");
-var assayTypesBoxes = YAHOO.util.Selector.query(".assayType");
-var allAssayTypesLabel = YAHOO.util.Dom.get("allAssayTypeLabel");
-var assayTypesLabels = YAHOO.util.Selector.query(".assayTypeLabel");
-var allAssayTypesCheck = function(e)
-{
-	// set everything to the same checked value as the all box
-	var allChecked = allAssayTypesBox.checked;
-	for(var key in assayTypesBoxes)
-	{
-		assayTypesBoxes[key].checked = allChecked;
+var setAll = function(allClass, subClass, checked) {
+	$(allClass)[0].checked = checked;
+	var checkboxes = $(subClass);
+	
+	for (var i = 0; i < checkboxes.length; i++) {
+		checkboxes[i].checked = checked;
 	}
-};
-YAHOO.util.Event.addListener(allAssayTypesLabel, "click", allAssayTypesCheck);
-var assayTypesCheck = function(e)
-{
-	// check the current value of all check boxes to see if all needs to be checked/unchecked
-	var allChecked = true;
-	for(key in assayTypesBoxes)
-	{
-		if(assayTypesBoxes[key].checked==false)
-		{
-			allChecked = false;
-		}
-	}
-	allAssayTypesBox.checked = allChecked;
-};
-for(var key in assayTypesLabels)
-{
-	YAHOO.util.Event.addListener(assayTypesLabels[key], "click", assayTypesCheck);
 }
+
+// wire up the "all" assay type checkboxes to (un)check their corresponding subsets of boxes
+
+var clickAll = function(allClass, subClass) {
+	// Checkbox for 'allClass' has been clicked, so make sure checkboxes of 'subClass' are
+	// set likewise.
+	
+	var checkboxes = $(subClass);
+	var checked = $(allClass)[0].checked;
+	
+	for (var i = 0; i < checkboxes.length; i++) {
+		checkboxes[i].checked = checked;
+	}
+}
+
+$('.allInSitu').click(function() {
+	clickAll('.allInSitu', '.inSituAssayType');
+});
+$('.allBlot').click(function() {
+	clickAll('.allBlot', '.blotAssayType');
+});
+$('.allWholeGenome').click(function() {
+	clickAll('.allWholeGenome', '.wholeGenomeAssayType');
+});
+
+// wire up the individual assay type checkboxes to (un) check their corresponding "all" checkboxes
+
+var clickOne = function(allClass, subClass) {
+	// Checkbox of 'subClass' has been clicked, so make sure corresponding checkbox of 'allClass'
+	// is set appropriately.
+	
+	var allChecked = true;
+	var checkboxes = $(subClass);
+	
+	for (var i = 0; i < checkboxes.length; i++) {
+		allChecked = allChecked && checkboxes[i].checked;
+	}
+	
+	if ($(allClass).length > 0) {
+		$(allClass)[0].checked = allChecked;
+	}
+}
+
+$('.inSituAssayType').click(function() {
+	clickOne('.allInSitu', '.inSituAssayType');
+});
+$('.blotAssayType').click(function() {
+	clickOne('.allBlot', '.blotAssayType');
+});
+$('.wholeGenomeAssayType').click(function() {
+	clickOne('.allWholeGenome', '.wholeGenomeAssayType');
+});
 
 // Add the listener for mutatedIn onFocus
 var mutatedInOnFocus = function(e)

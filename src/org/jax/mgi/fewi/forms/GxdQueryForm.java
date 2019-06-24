@@ -186,12 +186,13 @@ public class GxdQueryForm implements Cloneable {
 	private void populateAssayTypes() {
 		assayTypes.add("Immunohistochemistry");
 		assayTypes.add("In situ reporter (knock in)");
+		assayTypes.add("RNA in situ");
 		assayTypes.add("Northern blot");
 		assayTypes.add("Nuclease S1");
-		assayTypes.add("RNA in situ");
 		assayTypes.add("RNase protection");
 		assayTypes.add("RT-PCR");
 		assayTypes.add("Western blot");
+		assayTypes.add("RNA-Seq");
 	}
 
 	private void populateDifferentialFields() {
@@ -310,6 +311,18 @@ public class GxdQueryForm implements Cloneable {
 
 	public List<String> getAssayTypes() {
 		return assayTypes;
+	}
+
+	public List<String> getInSituAssayTypes() {
+		return assayTypes.subList(0, 3);
+	}
+
+	public List<String> getBlotAssayTypes() {
+		return assayTypes.subList(3, 8);
+	}
+
+	public List<String> getWholeGenomeAssayTypes() {
+		return assayTypes.subList(8, 9);
 	}
 
 	public String getAssayTypesSelected() {
