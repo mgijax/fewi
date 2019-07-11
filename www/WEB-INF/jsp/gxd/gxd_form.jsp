@@ -315,6 +315,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 	</tr>
 	<tr class="stripe1">
 		<td class="cat1Gxd">Assay types</td>
+		<c:set var="assayTypeCount" value="0"/>
 		<td>
 			<label id="findAssayTypeLabel">Find expression data by assay type</label><p/>
 			<div>
@@ -323,8 +324,9 @@ span.smallGrey { font-size: 75%; color: #999999; }
 						In situ assays</label>
 					<ul id="assayTypes1" >
 					<c:forEach items="${gxdQueryForm.inSituAssayTypes}" var="assayType" varStatus="status">
+						<c:set var="assayTypeCount" value="${assayTypeCount + 1}"/>
 						<li>
-							<label class="assayTypeLabel"><input type="checkbox" id="assayType" name="assayType" class="inSituAssayType" value="<c:out value="${assayType}"/>" checked="true"/>
+							<label class="assayTypeLabel"><input type="checkbox" id="assayType${assayTypeCount}" name="assayType" class="inSituAssayType assayType" value="<c:out value="${assayType}"/>" checked="true"/>
 				       		<c:out value="${assayType}"/>
 				       		<c:if test="${assayType == 'RNA in situ'}"> hybridization</c:if>
 				       		</label>
@@ -337,8 +339,9 @@ span.smallGrey { font-size: 75%; color: #999999; }
 						Blot assays</label>
 					<ul id="assayTypes2" >
 					<c:forEach items="${gxdQueryForm.blotAssayTypes}" var="assayType" varStatus="status">
+						<c:set var="assayTypeCount" value="${assayTypeCount + 1}"/>
 						<li>
-							<label class="assayTypeLabel"><input type="checkbox" id="assayType" name="assayType" class="blotAssayType" value="<c:out value="${assayType}"/>" checked="true"/>
+							<label class="assayTypeLabel"><input type="checkbox" id="assayType${assayTypeCount}" name="assayType" class="blotAssayType assayType" value="<c:out value="${assayType}"/>" checked="true"/>
 				       		<c:out value="${assayType}"/>
 				       		</label>
 				       	</li>
@@ -350,8 +353,9 @@ span.smallGrey { font-size: 75%; color: #999999; }
 						Whole genome assays</label>
 					<ul id="assayTypes3" >
 					<c:forEach items="${gxdQueryForm.wholeGenomeAssayTypes}" var="assayType" varStatus="status">
+						<c:set var="assayTypeCount" value="${assayTypeCount + 1}"/>
 						<li>
-							<label class="assayTypeLabel"><input type="checkbox" id="assayType" name="assayType" class="wholeGenomeAssayType" value="<c:out value="${assayType}"/>" checked="false"/>
+							<label class="assayTypeLabel"><input type="checkbox" id="assayType${assayTypeCount}" name="assayType" class="wholeGenomeAssayType assayType" value="<c:out value="${assayType}"/>" checked="false"/>
 				       		<c:out value="${assayType}"/>
 				       		</label>
 				       	</li>

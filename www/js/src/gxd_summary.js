@@ -247,6 +247,9 @@ function reverseEngineerFormInput(request)
 								box.checked = false;
 							}
 						}
+						resetSuper('.allInSitu', '.inSituAssayType');
+						resetSuper('.allBlot', '.blotAssayType');
+						resetSuper('.allWholeGenome', '.wholeGenomeAssayType');
 					}
 					else
 					{
@@ -313,6 +316,20 @@ function reverseEngineerFormInput(request)
 	return foundParams;
 }
 
+// reset the checkbox identified by the 'superClass' to be checked if all instances of 'subClass' are also
+// checked (or to not checked if not all the 'subClass' ones are checked.
+var resetSuper = function(superClass, subClass) {
+	if ($(superClass).length == 0) { return; }
+
+	var superBox = $(superClass)[0];
+	var allChecked = true;
+	var subBoxes = $(subClass);
+	for (var i = 0; allChecked && i < subBoxes.length; i++) {
+		allChecked = allChecked && subBoxes[i].checked;
+	}
+	superBox.checked = allChecked;
+}
+
 // Get a string that represents the range of records displayed (to tell when we've had a pagination event).
 var getRecordsDisplayed = function() {
 	var pages = "";
@@ -351,9 +368,10 @@ handleNavigation = function (request, calledLocally) {
 
 	var foundParams = true;
 	// test if there is a form that needs to be populated
-	if (typeof reverseEngineerFormInput == 'function')
+	if (typeof reverseEngineerFormInput == 'function') {
 		log("request: " + request);
 		foundParams = reverseEngineerFormInput(request);
+	}
 
 	//Set the global querystring parameter for later navigation
 	// if there is no getQueryString function, we assume that window.querystring is already set
