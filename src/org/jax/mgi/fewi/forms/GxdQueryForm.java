@@ -94,6 +94,10 @@ public class GxdQueryForm implements Cloneable {
 	private List<String> markerIDs = null;
 	private boolean batchSubmission = false;
 
+	// pagination functionality
+	private List<String> geneMatrixDisplayList = new ArrayList<String>();
+
+	
 	// --------
 	// methods
 	// --------
@@ -736,6 +740,21 @@ public class GxdQueryForm implements Cloneable {
 		return "";
 	}
 
+	//-------------------------------------------------//
+	//--- pagination functionality                  ---//
+	//-------------------------------------------------//
+	
+	public List<String> getMatrixDisplayList() {
+		return this.geneMatrixDisplayList;
+	}
+	public void setMatrixDisplayList(List<String> inputDisplayList) {
+		this.geneMatrixDisplayList = inputDisplayList;
+	}	
+
+	//-------------------------------------------------//
+	//--- Generic Util                              ---//
+	//-------------------------------------------------//
+
 	@Override
 	public String toString() {
 		return "GxdQueryForm [theilerStages=" + theilerStages
@@ -759,6 +778,7 @@ public class GxdQueryForm implements Cloneable {
 				+ ", idColumn=" + idColumn
 				+ ", idFile=" + (idFile == null ? "null" : idFile.getOriginalFilename())
 				+ ", idTypeSelection=" + getIdTypeSelection()
+				+ ", geneMatrixDisplayList=" + getMatrixDisplayList()
 				+ "]";
 	}
 
