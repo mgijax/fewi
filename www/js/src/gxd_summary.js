@@ -25,6 +25,10 @@ var History = YAHOO.util.History;
 //HTML/YUI page widgets
 YAHOO.namespace("gxd.container");
 
+//Shortcut variable for matrix grid pagination
+var geneGridRowsPerPage = null;
+var geneGridRecordOffset = null;
+
 //------ tab definitions + functions ------------
 var mgiTab = new MGITabSummary({
 	"tabViewId":"resultSummary",
@@ -496,7 +500,7 @@ function buildSummary(request,tabState)
 	}
 	else if(doGeneGrid)
 	{
-		structureGeneGrid();
+		loadDatatable (handleSctructGeneTab,request);
 		showNowhereElseMessage(request, 'Tissue x Gene Matrix');
 	}
 	else
@@ -1326,22 +1330,123 @@ var structureStageGrid = function()
  * Configure the structure by gene matrix
  *
  * Rendering and logic details are in gxd_summary_matrix.js
+ * 
+ * In order to facilitate pagination, we tie into the HistoryManager by using
+ * a hidden YUI data table.  As the data table is paginated, the values are 
+ * passed to the functionality that builds the grid.
  */
 var currentGeneGrid;
 window.prevGeneGridQuery="";
 
+var handleSctructGeneTab = function() {
+
+	var facets = {};
+	var numConfig = {thousandsSeparator: ','};
+
+	// Column definitions
+	var myColumnDefs = [ // sortable:true enables sorting
+	                     {key:"primaryID", label:"MGI ID", sortable:false, width:75},
+	                     {key:"symbol", label:"Gene", sortable:true, width:100}
+	                     ];
+
+	// DataSource instance
+	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/markers/json", xhrConfig);
+	gxdDataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
+	gxdDataSource.responseSchema = {
+			resultsList: "summaryRows",
+			fields: [
+			         {key:"primaryID"},
+			         {key:"symbol"}
+			         ],
+			         metaFields: {
+			        	 totalRecords: "totalCount",
+			        	 paginationRecordOffset : "startIndex",
+			        	 paginationRowsPerPage : "pageSize",
+			        	 sortKey: "sort",
+			        	 sortDir: "dir"
+			         }
+	};
+
+	var paginator = mgiTab.createPaginator(
+			[50,100,250,500], // rows per page options
+			GENES_PAGE_SIZE // rows per page
+	);
+
+	// DataTable configurations
+	var myConfigs = {
+			paginator : paginator,
+			dynamicData : true,
+			initialLoad : false,
+			MSG_LOADING:  LOADING_IMG+' Searching...',
+			MSG_EMPTY:    'No genes with expression data found.'
+	};
+
+	// DataTable instance & pagination 
+	gxdDataTable = new YAHOO.widget.DataTable("hiddenGeneMatrixPaginator", myColumnDefs, gxdDataSource, myConfigs);
+	mgiTab.initPaginator(gxdDataTable,paginator);
+
+	// Define a custom function to route sorting through the Browser History Manager
+	var handleSorting = function (oColumn) {
+		// The next state will reflect the new sort values
+		// while preserving existing pagination rows-per-page
+		// As a best practice, a new sort will reset to page 0
+		var sortedBy = {dir: this.getColumnSortDir(oColumn), key: oColumn.key};
+
+		// Pass the state along to the Browser History Manager
+		History.navigate("gxd", generateRequest(sortedBy, 0, paginator.getRowsPerPage()));
+	};
+	gxdDataTable.sortColumn = handleSorting;
+
+	gxdDataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
+		var pRequest = parseRequest(oRequest);
+
+		extractFilters(pRequest);
+
+		var meta = oResponse.meta;
+		oPayload.totalRecords = meta.totalRecords || oPayload.totalRecords;
+
+		var filterCount = YAHOO.util.Dom.get('filterCount');
+		if (!YAHOO.lang.isNull(filterCount)){
+			setText(filterCount, YAHOO.util.Number.format(oPayload.totalRecords, numConfig));
+		}
+
+		oPayload.sortedBy = {
+				key: pRequest['sort'] || "symbol",
+				dir: pRequest['dir'] ? "yui-dt-" + pRequest['dir'] : "yui-dt-desc" // Convert from server value to DataTable format
+		};
+
+		oPayload.pagination = {
+				rowsPerPage: Number(pRequest['results']) || GENES_PAGE_SIZE,
+				recordOffset: Number(pRequest['startIndex']) || 0
+		};
+
+		// TODO - setting globally for ease;  pass as parameters 
+		geneGridRowsPerPage = oPayload.pagination.rowsPerPage;
+		geneGridRecordOffset = oPayload.pagination.recordOffset;
+
+		// When the hidden YUI table is loading, build the grid with the pagination controls
+		structureGeneGrid()
+
+		return true;
+	};
+
+	return {"datatable": gxdDataTable, "datasource": gxdDataSource};
+};
+
+// This function actually builds the structure / gene grid, and is called
+// as the hidden YUI datatable is loaded
 var structureGeneGrid = function()
 {
-	// hide page controls
-	$(".yui-pg-container").hide()
-
 	var querystringWithFilters = getQueryStringWithFilters();
-	if(querystringWithFilters==window.prevGeneGridQuery)
-	{
-		// don't refresh grid if query is the same.
-		return;
-	}
 	window.prevGeneGridQuery=querystringWithFilters;
+	
+	// Pagination values are for matrix columns.
+	// It is not the underlying number of results, as would be typical.
+	var geneGridDataUrl = fewiurl + "gxd/genegrid/json?" + querystringWithFilters 
+		+ "&results=" + geneGridRowsPerPage + "&startIndex=" + geneGridRecordOffset
+
+	console.log("------------------------------");
+	console.log(geneGridDataUrl);
 
 	var buildGrid = function()
 	{
@@ -1352,10 +1457,10 @@ var structureGeneGrid = function()
 			// the datasource allows supergrid to make ajax calls for the initial data,
 			// 	as well as subsequent calls for expanding rows
 			dataSource: {
-				url: fewiurl + "gxd/genegrid/json?" + querystringWithFilters,
+				url: geneGridDataUrl,
 				batchSize: 50000,
-				offsetField: "startIndex",
-				limitField: "results",
+				offsetField: "startIndexMatrix",
+				limitField: "resultsMatrix",
 				MSG_LOADING: LOADING_IMG+' Searching for data (may take a couple minutes for large datasets)... ' +
 				'<br/>If the dataset contains thousands of genes, the Tissue x Gene Matrix may not load. ' +
 				'<br/>Consider filtering the data set.',
@@ -1399,8 +1504,6 @@ var structureGeneGrid = function()
 	        }
 	    });
 	}
-
-
 
 	if(currentGeneGrid)
 	{

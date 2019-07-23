@@ -133,6 +133,7 @@
 					</div>
 				</div>
 	        </div>
+	        <div id="hiddenGeneMatrixPaginator" class="facetFilter" style="display: none;"></div>
         </div>
     </div>
 </div>
@@ -157,7 +158,6 @@
 <div id="geneLegendPopupPanel" style="visibility: hidden;" class="facetFilter">
   <jsp:include page="gxd_legend_popup.jsp"></jsp:include>
 </div>
-
 
 <!-- Patterns for matrix sash icon -->
 <svg height="0" width="0" xmlns="http://www.w3.org/2000/svg" version="1.1">
