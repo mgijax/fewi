@@ -59,6 +59,7 @@ import org.jax.mgi.fewi.matrix.RecombinaseMatrixPopup;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
+import org.jax.mgi.fewi.searchUtil.MatrixPaginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
@@ -88,6 +89,7 @@ import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.fewi.util.UserMonitor;
+import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.shr.fe.query.SolrLocationTranslator;
 import org.jax.mgi.shr.jsonmodel.Clone;
@@ -1758,16 +1760,46 @@ public class GXDController {
 		return sb.toString();
 	}
 
+	
+	private List<String> getGridColDisplayList( 
+			 GxdQueryForm query,
+			Paginator page)
+	{
+		logger.debug("getGridColDisplayList() started");
+
+		// parse the various query parameter to generate SearchParams object
+		SearchParams params = new SearchParams();
+		params.setPaginator(page);
+		params.setFilter(parseGxdQueryForm(query));
+		List<Sort> sorts = new ArrayList<Sort>();
+		sorts.add(new Sort(GxdResultFields.M_BY_MRK_SYMBOL, false));
+		params.setSorts(sorts);
+
+		SearchResults<SolrGxdMarker> searchResults = gxdFinder.searchMarkers(params);
+		List<SolrGxdMarker> markerList = searchResults.getResultObjects();
+
+		List<String> matrixDisplayList = new ArrayList<String>();
+		for (SolrGxdMarker marker : markerList) {
+			if (marker != null){
+				matrixDisplayList.add(marker.getMgiid());
+			}
+		}
+		return matrixDisplayList;
+	}	
+
+	
 	@RequestMapping("/genegrid/json")
 	public @ResponseBody GxdStageGridJsonResponse<GxdMatrixCell> gxdGeneGridJson(
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query,
 			@ModelAttribute Paginator page,
+			@ModelAttribute MatrixPaginator matrixPage,
 			@RequestParam(value="mapChildrenOf",required=false) String childrenOf,
 			@RequestParam(value="pathToOpen",required=false) List<String> pathsToOpen,
 			HttpSession session) throws CloneNotSupportedException
 			{
 		logger.debug("gxdGeneGridJson() started");
+
 		populateMarkerIDs(session, query);
 
 		boolean isFirstPage = page.getStartIndex() == 0;
@@ -1792,10 +1824,19 @@ public class GXDController {
 			gxdMatrixHandler.addMapChildrenOfFilterForMatrix(query,childrenOf);
 			pathsToOpen = null;
 		}
-
+		
+		// paginatin
+		Paginator geneMatrixColumnPaginator = new Paginator(); // separate paginator 
+		geneMatrixColumnPaginator.setStartIndex(page.getStartIndex());
+		geneMatrixColumnPaginator.setResults(page.getResults());
+		query.setMatrixDisplayList(getGridColDisplayList(query, geneMatrixColumnPaginator));
+		
 		// get the matrix results for this page
 		SearchParams params = new SearchParams();
-		params.setPaginator(page);
+		Paginator geneMatrixResultPaginator = new Paginator(); // separate paginator 
+		geneMatrixResultPaginator.setStartIndex(matrixPage.getStartIndexMatrix());
+		geneMatrixResultPaginator.setResults(matrixPage.getResultsMatrix());
+		params.setPaginator(geneMatrixResultPaginator);
 		params.setFilter(parseGxdQueryForm(query));
 		SearchResults<SolrGxdGeneMatrixResult> searchResults = gxdFinder.searchGeneMatrixResults(params);
 		logger.debug("got matrix results");
@@ -3000,7 +3041,7 @@ public class GXDController {
 			// we get all results)
 			queryFilters.add(new Filter(SearchConstants.PRIMARY_KEY, "[-10 TO -10]", Filter.Operator.OP_HAS_WORD));
 		}
-
+		
 		// And all base filter sections
 		Filter gxdFilter = new Filter();
 		if(queryFilters.size() > 0)
@@ -3017,6 +3058,13 @@ public class GXDController {
 			gxdFilter = new Filter(SearchConstants.PRIMARY_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD);
 		}
 
+		// pagination list
+		List<String> matrixDisplayList = query.getMatrixDisplayList();
+		if ((matrixDisplayList != null) && (matrixDisplayList.size() > 0)) {
+			Filter matrixDisplayListFilter = new Filter(SearchConstants.MRK_ID, matrixDisplayList, Filter.Operator.OP_IN);
+			queryFilters.add(matrixDisplayListFilter);
+		}
+		
 		return gxdFilter;
 	}
 
