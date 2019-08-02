@@ -2714,6 +2714,11 @@ public class GXDController {
 					query.getAssayTypeFilter(), Filter.Operator.OP_IN));
 		}
 
+		if (query.getMarkerTypeFilter().size() > 0) {
+			facetList.add(new Filter(FacetConstants.GXD_MARKER_TYPE,
+					query.getMarkerTypeFilter(), Filter.Operator.OP_IN));
+		}
+		
 		if (query.getDetectedFilter().size() > 0) {
 			facetList.add(new Filter(FacetConstants.GXD_DETECTED,
 					query.getDetectedFilter(), Filter.Operator.OP_IN));
@@ -3430,6 +3435,9 @@ public class GXDController {
 		} else if (FacetConstants.GXD_ASSAY_TYPE.equals(facetType)) {
 			facetResults = gxdFinder.getAssayTypeFacet(params);
 
+		} else if (FacetConstants.GXD_MARKER_TYPE.equals(facetType)) {
+			facetResults = gxdFinder.getMarkerTypeFacet(params);
+			
 		} else if (FacetConstants.GXD_DETECTED.equals(facetType)) {
 			facetResults = gxdFinder.getDetectedFacet(params);
 			order = DETECTED;
@@ -3472,6 +3480,20 @@ public class GXDController {
 		populateMarkerIDs(session, query);
 		return facetGeneric(query, result,
 				FacetConstants.GXD_ASSAY_TYPE);
+	}
+
+	/* gets a list of marker types for the system facet list, returned as
+	 * JSON
+	 */
+	@RequestMapping("/facet/markerType")
+	public @ResponseBody Map<String, List<String>> facetMarkerType(
+			HttpSession session,
+			@ModelAttribute GxdQueryForm query,
+			BindingResult result) {
+
+		populateMarkerIDs(session, query);
+		return facetGeneric(query, result,
+				FacetConstants.GXD_MARKER_TYPE);
 	}
 
 	/* gets a list of detection levels for the system facet list, returned

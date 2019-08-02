@@ -17,6 +17,7 @@ public class FacetConstants {
 	public static final String GXD_DETECTED = "detectionLevelFacet";
 	public static final String GXD_THEILER_STAGE = "theilerStage";
 	public static final String GXD_WILDTYPE = "isWildType";
+	public static final String GXD_MARKER_TYPE = "markerType";
 
 	// interaction facets
 

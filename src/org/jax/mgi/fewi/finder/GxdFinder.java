@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.hunter.SolrGxdAssayTypeFacetHunter;
+import org.jax.mgi.fewi.hunter.SolrGxdMarkerTypeFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdDetectedFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdDifferentialHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdMatrixResultHunter;
@@ -55,6 +56,9 @@ public class GxdFinder {
 
 	@Autowired
 	private SolrGxdAssayTypeFacetHunter gxdAssayTypeFacetHunter;
+
+	@Autowired
+	private SolrGxdMarkerTypeFacetHunter gxdMarkerTypeFacetHunter;
 
 	@Autowired
 	private SolrGxdDetectedFacetHunter gxdDetectedFacetHunter;
@@ -318,6 +322,14 @@ public class GxdFinder {
 	public SearchResults<SolrString> getAssayTypeFacet(SearchParams params) {
 		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
 		gxdAssayTypeFacetHunter.hunt(params, results);
+		SearchResults<SolrString> srSS = new SearchResults<SolrString>();
+		srSS.cloneFrom(results, SolrString.class);
+		return srSS;
+	}
+
+	public SearchResults<SolrString> getMarkerTypeFacet(SearchParams params) {
+		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
+		gxdMarkerTypeFacetHunter.hunt(params, results);
 		SearchResults<SolrString> srSS = new SearchResults<SolrString>();
 		srSS.cloneFrom(results, SolrString.class);
 		return srSS;

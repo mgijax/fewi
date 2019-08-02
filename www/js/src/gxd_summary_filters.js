@@ -49,7 +49,7 @@ var displayStageDayMap = {
 
 function gsfLog(msg) {
     // log a message to the browser console
-//	console.log(msg);
+	console.log(msg); 
 }
 
 // encode an individual value selected for a filter, to be URL-safe
@@ -404,6 +404,7 @@ var prepFilters = function(qfRequest) {
 
     var facetSystemDS = buildFacetDataSource("system");
     var facetAssayTypeDS = buildFacetDataSource("assayType");
+    var facetMarkerTypeDS = buildFacetDataSource("markerType");
     var facetDetectedDS = buildFacetDataSource("detected");
     var facetWildtypeDS = buildFacetDataSource("wildtype");
     var facetTheilerStageDS = buildFacetDataSource("theilerStage");
@@ -434,6 +435,7 @@ var prepFilters = function(qfRequest) {
 
     var systemCallback = buildSystemCallback('systemFilter', 'Anatomical System');
     var assayTypeCallback = buildCallback('assayTypeFilter', 'Assay Type');
+    var markerTypeCallback = buildCallback('markerTypeFilter', 'Gene Type');
     var detectedCallback = buildCallback('detectedFilter', 'Detected?');
     var wildtypeCallback = buildCallback('wildtypeFilter', 'Wild type?');
     var theilerStageCallback = buildCallback('theilerStageFilter', 'Theiler Stage');
@@ -450,6 +452,13 @@ var prepFilters = function(qfRequest) {
 	facetAssayTypeDS.flushCache();
 	facetAssayTypeDS.sendRequest(getQS() + getFilterCriteria(), assayTypeCallback);
 	gsfLog("populateAssayTypeDialog() : 2");
+    };
+
+    var populateMarkerTypeDialog = function() {
+	gsfLog("populateMarkerTypeDialog() : 1");
+ 	facetMarkerTypeDS.flushCache();
+	facetMarkerTypeDS.sendRequest(getQS() + getFilterCriteria(), markerTypeCallback);
+	gsfLog("populateMarkerTypeDialog() : 2");
     };
 
     var populateDetectedDialog = function() {
@@ -478,6 +487,7 @@ var prepFilters = function(qfRequest) {
 
     YAHOO.util.Event.removeListener('systemFilter', 'click');
     YAHOO.util.Event.removeListener('assayTypeFilter', 'click');
+    YAHOO.util.Event.removeListener('markerTypeFilter', 'click');
     YAHOO.util.Event.removeListener('detectedFilter', 'click');
     YAHOO.util.Event.removeListener('wildtypeFilter', 'click');
     YAHOO.util.Event.removeListener('theilerStageFilter', 'click');
@@ -486,6 +496,8 @@ var prepFilters = function(qfRequest) {
 	populateSystemDialog, true);
     YAHOO.util.Event.addListener('assayTypeFilter', 'click',
 	populateAssayTypeDialog, true);
+    YAHOO.util.Event.addListener('markerTypeFilter', 'click',
+	populateMarkerTypeDialog, true);
     YAHOO.util.Event.addListener('detectedFilter', 'click',
 	populateDetectedDialog, true);
     YAHOO.util.Event.addListener('wildtypeFilter', 'click',

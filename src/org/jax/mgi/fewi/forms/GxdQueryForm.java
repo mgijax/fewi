@@ -75,6 +75,7 @@ public class GxdQueryForm implements Cloneable {
 	// filters for a result set
 	private List<String> systemFilter = new ArrayList<String>();
 	private List<String> assayTypeFilter = new ArrayList<String>();
+	private List<String> markerTypeFilter = new ArrayList<String>();
 	private List<String> detectedFilter = new ArrayList<String>();
 	private List<String> theilerStageFilter = new ArrayList<String>();
 	private List<String> wildtypeFilter = new ArrayList<String>();
@@ -594,6 +595,14 @@ public class GxdQueryForm implements Cloneable {
 		this.assayTypeFilter = assayTypeFilter;
 	}
 
+	public List<String> getMarkerTypeFilter() {
+		return markerTypeFilter;
+	}
+
+	public void setMarkerTypeFilter(List<String> markerTypeFilter) {
+		this.markerTypeFilter = markerTypeFilter;
+	}
+	
 	public List<String> getDetectedFilter() {
 		return detectedFilter;
 	}
@@ -770,6 +779,7 @@ public class GxdQueryForm implements Cloneable {
 				+ ", probeKey=" + probeKey + ", antibodyKey=" + antibodyKey
 				+ ", systemFilter=" + systemFilter + ", assayTypeFilter="
 				+ assayTypeFilter + ", detectedFilter=" + detectedFilter
+				+ ", markerTypeFilter=" + markerTypeFilter
 				+ ", theilerStageFilter=" + theilerStageFilter
 				+ ", structureIDFilter=" + structureIDFilter
 				+ ", wildtypeFilter=" + wildtypeFilter 
