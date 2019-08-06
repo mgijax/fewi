@@ -133,6 +133,7 @@ public class GXDController {
 	private static String ALPHA = "alphabetic";	// sort alphabetically
 	private static String RAW = "raw";		// as returned by solr
 	private static String DETECTED = "detected";	// custom case
+	private static String MARKERTYPE_DISPLAY = "markerTypeDisplay";	// custom case
 
 	// --------------------//
 	// instance variables
@@ -3437,6 +3438,7 @@ public class GXDController {
 
 		} else if (FacetConstants.GXD_MARKER_TYPE.equals(facetType)) {
 			facetResults = gxdFinder.getMarkerTypeFacet(params);
+			order = MARKERTYPE_DISPLAY; 
 			
 		} else if (FacetConstants.GXD_DETECTED.equals(facetType)) {
 			facetResults = gxdFinder.getDetectedFacet(params);
@@ -3538,6 +3540,8 @@ public class GXDController {
 				FacetConstants.GXD_WILDTYPE);
 	}
 
+	/* facet response parsing
+	 */
 	private Map<String, List<String>> parseFacetResponse (
 			SearchResults<SolrString> facetResults, String order) {
 
@@ -3555,18 +3559,52 @@ public class GXDController {
 			m.put("resultFacets", facetResults.getSortedResultFacets());
 		} else if (RAW.equals(order)) {
 			m.put("resultFacets", facetResults.getResultFacets());
+		} else if (MARKERTYPE_DISPLAY.equals(order)) {
+			// MARKER_TYPE filter list has unique sort
+			List<String> values = facetResults.getResultFacets();
+			Collections.sort (values, new MarkerTypeFilterComparator());
+			facetResults.setResultFacets(values);
+			m.put("resultFacets", facetResults.getResultFacets());
 		} else {
 			// DETECTED.equals(order)
-
 			List<String> values = facetResults.getResultFacets();
 			Collections.sort (values, new DetectedComparator());
 			facetResults.setResultFacets(values);
 			m.put("resultFacets", facetResults.getResultFacets());
 		}
-
+		
 		return m;
 	}
 
+	/* facet sorting (marker type filter)
+	 */
+	private class MarkerTypeFilterComparator implements Comparator<String> {
+
+		private final List<String> orderedItems = Arrays.asList (
+				new String[] { "protein coding gene", "non-coding RNA gene" });
+
+		public int compare (String a, String b) {
+			int aIndex = orderedItems.indexOf(a);
+			int bIndex = orderedItems.indexOf(b);
+
+			// normal case: both a and b were in the orderedItems list
+			if ((aIndex >= 0) && (bIndex >= 0)) {
+				if (aIndex < bIndex) { return -1; }
+				else if (aIndex > bIndex) { return 1; }
+				else { return 0; }
+			}
+
+			// secondary cases: only one of them was in the list
+			if (aIndex >= 0) { return -1; }
+			if (bIndex >= 0) { return 1; }
+
+			// tertiary case: neither was in the list -- sort alpha
+			return a.compareToIgnoreCase(b);
+		}
+	}
+
+	/* facet sorting (detected filter)
+	 */
 	private class DetectedComparator implements Comparator<String> {
 
 		private final List<String> orderedItems = Arrays.asList (
@@ -3577,7 +3615,6 @@ public class GXDController {
 			int bIndex = orderedItems.indexOf(b);
 
 			// normal case: both a and b were in the orderedItems list
-
 			if ((aIndex >= 0) && (bIndex >= 0)) {
 				if (aIndex < bIndex) { return -1; }
 				else if (aIndex > bIndex) { return 1; }
@@ -3585,12 +3622,10 @@ public class GXDController {
 			}
 
 			// secondary cases: only one of them was in the list
-
 			if (aIndex >= 0) { return -1; }
 			if (bIndex >= 0) { return 1; }
 
 			// tertiary case: neither was in the list -- sort alpha
-
 			return a.compareToIgnoreCase(b);
 		}
 	}

@@ -8,6 +8,7 @@ var defaultSort = "";
 var GENES_PAGE_SIZE = 100;
 var ASSAYS_PAGE_SIZE = 100;
 var RESULTS_PAGE_SIZE = 100;
+var GENE_MATRIX_SIZE = 50;
 var IMAGES_PAGE_SIZE = 25;
 
 var LOADING_IMG_SRC = "/fewi/mgi/assets/images/loading.gif";
@@ -33,7 +34,7 @@ var geneGridRecordOffset = null;
 var mgiTab = new MGITabSummary({
 	"tabViewId":"resultSummary",
 	"tabIds":["genestab","assaystab","resultstab","imagestab","stagegridtab","genegridtab"],
-	"pageSizes":[GENES_PAGE_SIZE,ASSAYS_PAGE_SIZE,RESULTS_PAGE_SIZE,IMAGES_PAGE_SIZE,0,0], // mirrors "tabIds"
+	"pageSizes":[GENES_PAGE_SIZE,ASSAYS_PAGE_SIZE,RESULTS_PAGE_SIZE,IMAGES_PAGE_SIZE,0,GENE_MATRIX_SIZE], // mirrors "tabIds"
 	"historyId":"gxd"
 });
 
@@ -1369,7 +1370,7 @@ var handleSctructGeneTab = function() {
 
 	var paginator = mgiTab.createPaginator(
 			[50,100,250,500], // rows per page options
-			GENES_PAGE_SIZE // rows per page
+			GENE_MATRIX_SIZE // rows per page
 	);
 
 	// DataTable configurations
