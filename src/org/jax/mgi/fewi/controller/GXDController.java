@@ -3562,8 +3562,9 @@ public class GXDController {
 		} else if (MARKERTYPE_DISPLAY.equals(order)) {
 			// MARKER_TYPE filter list has unique sort
 			List<String> values = facetResults.getResultFacets();
-			Collections.sort (values, new MarkerTypeFilterComparator());
-			facetResults.setResultFacets(values);
+			List<String> cleanedFacetList = cleanMarkerTypeFacetList(values);
+			Collections.sort (cleanedFacetList, new MarkerTypeFilterComparator());
+			facetResults.setResultFacets(cleanedFacetList);
 			m.put("resultFacets", facetResults.getResultFacets());
 		} else {
 			// DETECTED.equals(order)
@@ -3576,6 +3577,17 @@ public class GXDController {
 		return m;
 	}
 
+	
+	private List<String> cleanMarkerTypeFacetList(List<String> facetList) {
+		facetList.remove("lincRNA gene");
+		facetList.remove("antisense lncRNA gene");
+		facetList.remove("sense intronic lncRNA gene");
+		facetList.remove("sense overlapping lncRNA gene");
+		facetList.remove("bidirectional promoter lncRNA gene");
+		return facetList;
+
+	}	
+	
 	/* facet sorting (marker type filter)
 	 */
 	private class MarkerTypeFilterComparator implements Comparator<String> {
