@@ -142,6 +142,12 @@ public class GxdFinder {
 
 		SearchResults<SolrGxdAssay> srGA = new SearchResults<SolrGxdAssay>();
 		srGA.cloneFrom(results, SolrGxdAssay.class);
+
+		for (SolrGxdAssay result : srGA.getResultObjects()) {
+			if ("RNA-Seq".equals(result.getAssayType())) {
+				result.setMarkerSymbol("Whole Genome");
+			}
+		}
 		return srGA;
 	}
 
