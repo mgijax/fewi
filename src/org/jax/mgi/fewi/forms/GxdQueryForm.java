@@ -79,6 +79,8 @@ public class GxdQueryForm implements Cloneable {
 	private List<String> detectedFilter = new ArrayList<String>();
 	private List<String> theilerStageFilter = new ArrayList<String>();
 	private List<String> wildtypeFilter = new ArrayList<String>();
+	private List<String> mpFilter = new ArrayList<String>();
+
 	// filters used by matrices
 	private List<String> structureIDFilter = new ArrayList<String>();
 	private List<String> markerSymbolFilter = new ArrayList<String>();
@@ -635,6 +637,14 @@ public class GxdQueryForm implements Cloneable {
 		this.wildtypeFilter = wildtypeFilter;
 	}
 
+	public List<String> getMpFilter() {
+		return mpFilter;
+	}
+
+	public void setMpFilter(List<String> mpFilter) {
+		this.mpFilter = mpFilter;
+	}
+	
 	public String getDifStructureID() {
 		return FewiUtil.sanitizeID(difStructureID);
 	}
@@ -783,6 +793,7 @@ public class GxdQueryForm implements Cloneable {
 				+ ", theilerStageFilter=" + theilerStageFilter
 				+ ", structureIDFilter=" + structureIDFilter
 				+ ", wildtypeFilter=" + wildtypeFilter 
+				+ ", mpFilter=" + mpFilter 
 				+ ", len(IDs)=" + (ids == null ? "0" : ids.length() )
 				+ ", fileType=" + fileType
 				+ ", idColumn=" + idColumn

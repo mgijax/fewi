@@ -408,6 +408,7 @@ var prepFilters = function(qfRequest) {
     var facetDetectedDS = buildFacetDataSource("detected");
     var facetWildtypeDS = buildFacetDataSource("wildtype");
     var facetTheilerStageDS = buildFacetDataSource("theilerStage");
+    var facetMpDS = buildFacetDataSource("mp");
 
     var handleError = function (oRequest, oResponse, oPayload) {
 	buttons = gsfFacetDialog.getButtons();
@@ -436,6 +437,7 @@ var prepFilters = function(qfRequest) {
     var systemCallback = buildSystemCallback('systemFilter', 'Anatomical System');
     var assayTypeCallback = buildCallback('assayTypeFilter', 'Assay Type');
     var markerTypeCallback = buildCallback('markerTypeFilter', 'Gene Type');
+    var mpCallback = buildCallback('mpFilter', 'Phenotype');
     var detectedCallback = buildCallback('detectedFilter', 'Detected?');
     var wildtypeCallback = buildCallback('wildtypeFilter', 'Wild type?');
     var theilerStageCallback = buildCallback('theilerStageFilter', 'Theiler Stage');
@@ -459,6 +461,13 @@ var prepFilters = function(qfRequest) {
  	facetMarkerTypeDS.flushCache();
 	facetMarkerTypeDS.sendRequest(getQS() + getFilterCriteria(), markerTypeCallback);
 	gsfLog("populateMarkerTypeDialog() : 2");
+    };
+
+    var populateMpDialog = function() {
+   	gsfLog("populateMpDialog() : 1");
+	facetMpDS.flushCache();
+	facetMpDS.sendRequest(getQS() + getFilterCriteria(), mpCallback);
+	gsfLog("populateMpDialog() : 2");
     };
 
     var populateDetectedDialog = function() {
@@ -488,22 +497,25 @@ var prepFilters = function(qfRequest) {
     YAHOO.util.Event.removeListener('systemFilter', 'click');
     YAHOO.util.Event.removeListener('assayTypeFilter', 'click');
     YAHOO.util.Event.removeListener('markerTypeFilter', 'click');
+    YAHOO.util.Event.removeListener('mpFilter', 'click');
     YAHOO.util.Event.removeListener('detectedFilter', 'click');
     YAHOO.util.Event.removeListener('wildtypeFilter', 'click');
     YAHOO.util.Event.removeListener('theilerStageFilter', 'click');
 
-    YAHOO.util.Event.addListener('systemFilter', 'click',
-	populateSystemDialog, true);
-    YAHOO.util.Event.addListener('assayTypeFilter', 'click',
-	populateAssayTypeDialog, true);
-    YAHOO.util.Event.addListener('markerTypeFilter', 'click',
-	populateMarkerTypeDialog, true);
-    YAHOO.util.Event.addListener('detectedFilter', 'click',
-	populateDetectedDialog, true);
-    YAHOO.util.Event.addListener('wildtypeFilter', 'click',
-	populateWildtypeDialog, true);
-    YAHOO.util.Event.addListener('theilerStageFilter', 'click',
-	populateTheilerStageDialog, true);
+	YAHOO.util.Event.addListener('systemFilter', 'click',
+    		populateSystemDialog, true);
+	YAHOO.util.Event.addListener('assayTypeFilter', 'click',
+    		populateAssayTypeDialog, true);
+	YAHOO.util.Event.addListener('markerTypeFilter', 'click',
+			populateMarkerTypeDialog, true);
+	YAHOO.util.Event.addListener('mpFilter', 'click',
+			populateMpDialog, true);
+	YAHOO.util.Event.addListener('detectedFilter', 'click',
+			populateDetectedDialog, true);
+	YAHOO.util.Event.addListener('wildtypeFilter', 'click',
+			populateWildtypeDialog, true);
+	YAHOO.util.Event.addListener('theilerStageFilter', 'click',
+			populateTheilerStageDialog, true);
 
     gsfLog("prepFilters() : exited");
 };

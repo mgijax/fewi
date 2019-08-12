@@ -2719,6 +2719,11 @@ public class GXDController {
 			facetList.add(new Filter(FacetConstants.GXD_MARKER_TYPE,
 					query.getMarkerTypeFilter(), Filter.Operator.OP_IN));
 		}
+
+		if (query.getMpFilter().size() > 0) {
+			facetList.add(new Filter(FacetConstants.GXD_MP,
+					query.getMpFilter(), Filter.Operator.OP_IN));
+		}
 		
 		if (query.getDetectedFilter().size() > 0) {
 			facetList.add(new Filter(FacetConstants.GXD_DETECTED,
@@ -3419,45 +3424,6 @@ public class GXDController {
 	// facets for GXD Summary page
 	// ---------------------------
 
-	private Map<String, List<String>> facetGeneric (GxdQueryForm query,
-			BindingResult result, String facetType) {
-
-		logger.debug(query.toString());
-		String order = ALPHA;
-
-		SearchParams params = new SearchParams();
-		params.setFilter(parseGxdQueryForm(query));
-
-		SearchResults<SolrString> facetResults = null;
-
-		if (FacetConstants.GXD_SYSTEM.equals(facetType)) {
-			facetResults = gxdFinder.getSystemFacet(params);
-
-		} else if (FacetConstants.GXD_ASSAY_TYPE.equals(facetType)) {
-			facetResults = gxdFinder.getAssayTypeFacet(params);
-
-		} else if (FacetConstants.GXD_MARKER_TYPE.equals(facetType)) {
-			facetResults = gxdFinder.getMarkerTypeFacet(params);
-			order = MARKERTYPE_DISPLAY; 
-			
-		} else if (FacetConstants.GXD_DETECTED.equals(facetType)) {
-			facetResults = gxdFinder.getDetectedFacet(params);
-			order = DETECTED;
-
-		} else if (FacetConstants.GXD_THEILER_STAGE.equals(facetType)) {
-			facetResults = gxdFinder.getTheilerStageFacet(params);
-			order = RAW;
-
-		} else if (FacetConstants.GXD_WILDTYPE.equals(facetType)) {
-			facetResults = gxdFinder.getWildtypeFacet(params);
-		}
-		else {
-			facetResults = new SearchResults<SolrString>();
-		}
-
-		return parseFacetResponse(facetResults, order);
-	}
-
 	/* gets a list of systems for the system facet list, returned as JSON
 	 */
 	@RequestMapping("/facet/system")
@@ -3540,10 +3506,89 @@ public class GXDController {
 				FacetConstants.GXD_WILDTYPE);
 	}
 
+	/* gets a list of wild type values for the system facet list, returned
+	 * as JSON
+	 */
+	@RequestMapping("/facet/mp")
+	public @ResponseBody Map<String, List<String>> facetMp(
+			HttpSession session,
+			@ModelAttribute GxdQueryForm query,
+			BindingResult result) {
+
+		populateMarkerIDs(session, query);
+		return facetGeneric(query, result,
+				FacetConstants.GXD_MP);
+	}
+
+	/* gets a list of wild type values for the system facet list, returned
+	 * as JSON
+	 */
+	@RequestMapping("/facet/do")
+	public @ResponseBody Map<String, List<String>> facetDo(
+			HttpSession session,
+			@ModelAttribute GxdQueryForm query,
+			BindingResult result) {
+
+		populateMarkerIDs(session, query);
+		return facetGeneric(query, result,
+				FacetConstants.GXD_DO);
+	}
+	
+
+	/* generic facet handling
+	 */
+	private Map<String, List<String>> facetGeneric (GxdQueryForm query,
+			BindingResult result, String facetType) {
+
+		logger.debug(query.toString());
+		String order = ALPHA;
+		String emptyListMsg = "No values in results to filter.";
+
+		SearchParams params = new SearchParams();
+		params.setFilter(parseGxdQueryForm(query));
+
+		SearchResults<SolrString> facetResults = null;
+
+		if (FacetConstants.GXD_SYSTEM.equals(facetType)) {
+			facetResults = gxdFinder.getSystemFacet(params);
+
+		} else if (FacetConstants.GXD_ASSAY_TYPE.equals(facetType)) {
+			facetResults = gxdFinder.getAssayTypeFacet(params);
+
+		} else if (FacetConstants.GXD_MARKER_TYPE.equals(facetType)) {
+			facetResults = gxdFinder.getMarkerTypeFacet(params);
+			order = MARKERTYPE_DISPLAY; 
+			
+		} else if (FacetConstants.GXD_DETECTED.equals(facetType)) {
+			facetResults = gxdFinder.getDetectedFacet(params);
+			order = DETECTED;
+
+		} else if (FacetConstants.GXD_THEILER_STAGE.equals(facetType)) {
+			facetResults = gxdFinder.getTheilerStageFacet(params);
+			order = RAW;
+
+		} else if (FacetConstants.GXD_WILDTYPE.equals(facetType)) {
+			facetResults = gxdFinder.getWildtypeFacet(params);
+
+		} else if (FacetConstants.GXD_MP.equals(facetType)) {
+			emptyListMsg = "No genes found with ontology associations.";
+			facetResults = gxdFinder.getMpFacet(params);
+
+		} else if (FacetConstants.GXD_DO.equals(facetType)) {
+			emptyListMsg = "No genes found with ontology associations.";
+			facetResults = gxdFinder.getDoFacet(params);
+
+		} else {
+			facetResults = new SearchResults<SolrString>();
+		}
+
+		return parseFacetResponse(facetResults, order, emptyListMsg);
+	}
+	
 	/* facet response parsing
 	 */
 	private Map<String, List<String>> parseFacetResponse (
-			SearchResults<SolrString> facetResults, String order) {
+			SearchResults<SolrString> facetResults, String order, String emptyListMsg) {
 
 		Map<String, List<String>> m = new HashMap<String, List<String>>();
 		List<String> l = new ArrayList<String>();
@@ -3553,7 +3598,7 @@ public class GXDController {
 			l.add("Too many results to display. Modify your search or try another filter first.");
 			m.put("error", l);
 		} else if (facetResults.getResultFacets().size() == 0) {
-			l.add("No values in results to filter.");
+			l.add(emptyListMsg);
 			m.put("error", l);
 		} else if (ALPHA.equals(order)) {
 			m.put("resultFacets", facetResults.getSortedResultFacets());
@@ -3577,7 +3622,9 @@ public class GXDController {
 		return m;
 	}
 
-	
+	/* gene type facet requires we suppress a few low-level terms,
+	 * but only from filter dialog (not result set)
+	 */
 	private List<String> cleanMarkerTypeFacetList(List<String> facetList) {
 		facetList.remove("lincRNA gene");
 		facetList.remove("antisense lncRNA gene");

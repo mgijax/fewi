@@ -10,11 +10,14 @@
 	<a id="rnaSeqLevelFilter"  class="filterButton">RNA-Seq&nbsp;Level&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> <br> 
 	<a id="wildtypeFilter"     class="filterButton">Wild&nbsp;type?&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
   </td>
+  <td>&nbsp;&nbsp;</td>
   <td>
 	<a id="markerTypeFilter"   class="filterButton">Gene&nbsp;Type&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> <br>
-	<a id="functionFilter"     class="filterButton">Function&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> <br>
-	<a id="phenotypeFilter"    class="filterButton">Phenotype&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> <br>
-	<a id="diseaseFilter"      class="filterButton">Disease&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> <br>
+	<a id="goMfFilter"         class="filterButton">Molecular&nbsp;Function&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> <br>
+	<a id="goBpFilter"         class="filterButton">Biological&nbsp;Process&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> <br>
+	<a id="goCcFilter"         class="filterButton">Cellular&nbsp;Component&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> <br>
+	<a id="mpFilter"    	   class="filterButton">Phenotype&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> <br>
+	<a id="doFilter"           class="filterButton">Disease&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> <br>
   </td>
 </tr>
 </table>
