@@ -27,7 +27,7 @@ public class GxdAssayResultSummaryRow {
 	// config values
 	String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
 	String pywiUrl = ContextLoader.getConfigBean().getProperty("WI_URL");
-        private final String arrayExpressUrl = ContextLoader.getExternalUrls().getProperty("ArrayExpressExperiment");
+        private final String expressionAtlasUrl = ContextLoader.getExternalUrls().getProperty("ExpressionAtlas");
 
 	private String score;
 
@@ -73,9 +73,7 @@ public class GxdAssayResultSummaryRow {
 
 	public String getAssayID() {
 		if (result.getAssayType().startsWith("RNA-Seq")) {
-			return "<a class='extUrl' target='_blank' href='" + arrayExpressUrl.replace("@@@@", result.getJNum()) + "'>data</a><br/><span class='nowrap'> (" + result.getJNum() + ")</span>";
-//			return "<a href='" + fewiUrl + "gxd/htexp_index/summary?arrayExpressID=" + result.getJNum()
-//				+ "'>data</a><span> (" + result.getJNum() + ")</span>";
+			return "<a class='extUrl' target='_blank' href='" + expressionAtlasUrl.replace("@@@@", result.getJNum()) + "'>data</a><br/><span class='nowrap'> (" + result.getJNum() + ")</span>";
 		}
 		return "<a href='" + fewiUrl + "assay/" + result.getAssayMgiid()
 				+ "'>data</a><span> (" + result.getAssayMgiid() + ")</span>";
