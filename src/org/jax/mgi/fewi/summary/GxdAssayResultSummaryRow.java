@@ -12,6 +12,7 @@ import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.NotesTagConverter;
+import org.jax.mgi.fewi.matrix.DetectionConverter;
 
 /**
  * wrapper around a marker; represents on row in summary
@@ -92,6 +93,14 @@ public class GxdAssayResultSummaryRow {
 	}
 
 	public String getDetectionLevel() {
+		if (result.getAssayType().startsWith("RNA-Seq")) {
+			if (DetectionConverter.isDetected(result.getDetectionLevel())) {
+				return "Yes";
+			} else if (DetectionConverter.isNotDetected(result.getDetectionLevel())) {
+				return "No";
+			}
+			return "Not Specified";
+		}
 		return result.getDetectionLevel();
 	}
 
