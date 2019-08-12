@@ -39,11 +39,11 @@ public class GxdStageMatrixPopup {
         for (SolrGxdMatrixResult assayResult : assayResultList) {
 			if (assayResult != null){
 
-				if (assayResult.getDetectionLevel().equals("Yes")) {
+				if (DetectionConverter.isDetected(assayResult.getDetectionLevel())) {
 					uniquePosMarkers.add(assayResult.getGeneSymbol());
 					posCount++;
 				}
-				else if (assayResult.getDetectionLevel().equals("No")&&
+				else if (DetectionConverter.isNotDetected(assayResult.getDetectionLevel())&&
 						assayResult.getStructureId().equals(termId)) {
 					uniqueNegMarkers.add(assayResult.getGeneSymbol());
 					negCount++;

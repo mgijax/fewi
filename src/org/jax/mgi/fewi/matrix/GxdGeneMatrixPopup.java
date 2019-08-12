@@ -33,10 +33,10 @@ public class GxdGeneMatrixPopup {
         for (SolrGxdMatrixResult assayResult : assayResultList) {
 			if (assayResult != null){
 
-				if (assayResult.getDetectionLevel().equals("Yes")) {
+				if (DetectionConverter.isDetected(assayResult.getDetectionLevel())) {
 					posCount++;
 				}
-				else if (assayResult.getDetectionLevel().equals("No")&&
+				else if (DetectionConverter.isNotDetected(assayResult.getDetectionLevel())&&
 						assayResult.getStructureId().equals(termId)) {
 					negCount++;
 				}

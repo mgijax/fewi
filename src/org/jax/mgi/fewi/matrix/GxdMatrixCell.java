@@ -1,5 +1,4 @@
 package org.jax.mgi.fewi.matrix;
-
 /*
  * Extra data points relevant to GXD tissue matrices
  */
@@ -37,13 +36,13 @@ public class GxdMatrixCell extends GridDataCell {
 
 		if (detectionLevel == null)
 			return;
-		if (detectionLevel.equals("Yes")) {
+		if (DetectionConverter.isDetected(detectionLevel)) {
 			detectedCount += countToAdd;
 		} else if (isChild) {
 			childCount += countToAdd;
 		}
 		// only count No and Ambiguous if not a child annotation
-		else if (detectionLevel.equals("No")) {
+		else if (DetectionConverter.isNotDetected(detectionLevel)) {
 			notDetectedCount += countToAdd;
 		} else {
 			ambiguousCount += countToAdd;
