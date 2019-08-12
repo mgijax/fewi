@@ -2724,6 +2724,11 @@ public class GXDController {
 			facetList.add(new Filter(FacetConstants.GXD_MP,
 					query.getMpFilter(), Filter.Operator.OP_IN));
 		}
+
+		if (query.getDoFilter().size() > 0) {
+			facetList.add(new Filter(FacetConstants.GXD_DO,
+					query.getDoFilter(), Filter.Operator.OP_IN));
+		}
 		
 		if (query.getDetectedFilter().size() > 0) {
 			facetList.add(new Filter(FacetConstants.GXD_DETECTED,

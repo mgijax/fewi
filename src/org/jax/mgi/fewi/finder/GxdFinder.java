@@ -376,6 +376,7 @@ public class GxdFinder {
 	}
 
 	public SearchResults<SolrString> getMpFacet(SearchParams params) {
+		logger.debug("Starting: getMpFacet");
 		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
 		gxdMpFacetHunter.hunt(params, results);
 		SearchResults<SolrString> srSS = new SearchResults<SolrString>();
@@ -384,6 +385,7 @@ public class GxdFinder {
 	}
 
 	public SearchResults<SolrString> getDoFacet(SearchParams params) {
+		logger.debug("Starting: getDoFacet");
 		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
 		gxdDoFacetHunter.hunt(params, results);
 		SearchResults<SolrString> srSS = new SearchResults<SolrString>();

@@ -409,6 +409,7 @@ var prepFilters = function(qfRequest) {
     var facetWildtypeDS = buildFacetDataSource("wildtype");
     var facetTheilerStageDS = buildFacetDataSource("theilerStage");
     var facetMpDS = buildFacetDataSource("mp");
+    var facetDoDS = buildFacetDataSource("do");
 
     var handleError = function (oRequest, oResponse, oPayload) {
 	buttons = gsfFacetDialog.getButtons();
@@ -438,6 +439,7 @@ var prepFilters = function(qfRequest) {
     var assayTypeCallback = buildCallback('assayTypeFilter', 'Assay Type');
     var markerTypeCallback = buildCallback('markerTypeFilter', 'Gene Type');
     var mpCallback = buildCallback('mpFilter', 'Phenotype');
+    var doCallback = buildCallback('doFilter', 'Disease');
     var detectedCallback = buildCallback('detectedFilter', 'Detected?');
     var wildtypeCallback = buildCallback('wildtypeFilter', 'Wild type?');
     var theilerStageCallback = buildCallback('theilerStageFilter', 'Theiler Stage');
@@ -469,7 +471,14 @@ var prepFilters = function(qfRequest) {
 	facetMpDS.sendRequest(getQS() + getFilterCriteria(), mpCallback);
 	gsfLog("populateMpDialog() : 2");
     };
-
+    
+    var populateDoDialog = function() {
+   	gsfLog("populateDoDialog() : 1");
+	facetDoDS.flushCache();
+ 	facetDoDS.sendRequest(getQS() + getFilterCriteria(), doCallback);
+ 	gsfLog("populateDoDialog() : 2");
+    };
+    
     var populateDetectedDialog = function() {
 	gsfLog("populateDetectedDialog() : 1");
 	facetDetectedDS.flushCache();
@@ -498,6 +507,7 @@ var prepFilters = function(qfRequest) {
     YAHOO.util.Event.removeListener('assayTypeFilter', 'click');
     YAHOO.util.Event.removeListener('markerTypeFilter', 'click');
     YAHOO.util.Event.removeListener('mpFilter', 'click');
+    YAHOO.util.Event.removeListener('doFilter', 'click');
     YAHOO.util.Event.removeListener('detectedFilter', 'click');
     YAHOO.util.Event.removeListener('wildtypeFilter', 'click');
     YAHOO.util.Event.removeListener('theilerStageFilter', 'click');
@@ -510,6 +520,8 @@ var prepFilters = function(qfRequest) {
 			populateMarkerTypeDialog, true);
 	YAHOO.util.Event.addListener('mpFilter', 'click',
 			populateMpDialog, true);
+	YAHOO.util.Event.addListener('doFilter', 'click',
+			populateDoDialog, true);
 	YAHOO.util.Event.addListener('detectedFilter', 'click',
 			populateDetectedDialog, true);
 	YAHOO.util.Event.addListener('wildtypeFilter', 'click',
