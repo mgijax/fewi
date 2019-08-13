@@ -642,6 +642,8 @@ var populateFilterSummary = function() {
 		    // some filters use camelcase; need to insert a space for them
 		    if(filterTitle == 'AssayType') filterTitle = 'Assay Type';
 		    else if(filterTitle == 'TheilerStage') filterTitle = "TS";
+		    else if(filterTitle == 'MarkerType') filterTitle = "Gene Type";
+		    else if(filterTitle == 'Mp') filterTitle = "Phenotype";
 		    else if(filterTitle == 'MarkerSymbol') filterTitle = "Gene";
 		    else if(filterTitle == 'Wildtype') filterTitle = '';
 		    else if(filterTitle == 'StructureID')
