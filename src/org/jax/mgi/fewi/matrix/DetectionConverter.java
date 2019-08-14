@@ -8,8 +8,10 @@ import java.util.Arrays;
  * considered to be "detected" or "not detected"
  */
 public class DetectionConverter {
-	protected static final Set<String> detectedValues = new HashSet<>(Arrays.asList("Yes", "Low", "Medium", "High"));
-	protected static final Set<String> notDetectedValues = new HashSet<>(Arrays.asList("No", "Below Cutoff"));
+	protected static final Set<String> detectedValues = new HashSet<>(Arrays.asList("yes", "Yes",
+		"low", "Low", "medium", "Medium", "high", "High"));
+	protected static final Set<String> notDetectedValues = new HashSet<>(Arrays.asList("no", "No",
+		"below cutoff", "Below cutoff", "Below Cutoff"));
 
 	public static boolean isDetected(String value) {
 		return detectedValues.contains(value); 
