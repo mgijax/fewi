@@ -1813,7 +1813,8 @@ public class GXDController {
 		// check if we have a totalCount set (if so, we return early to indicate end of data)
 		String totalCountSessionId = "GxdGeneMatrixTotalCount_"+sessionQueryString;
 		Integer totalCount = (Integer) session.getAttribute(totalCountSessionId);
-		if(totalCount!=null && totalCount<page.getStartIndex())
+
+		if(Integer.parseInt(query.getMatrixMarkerTotal()) < page.getStartIndex())
 		{
 			logger.debug("reached end of result set");
 			return new GxdStageGridJsonResponse<GxdMatrixCell>();

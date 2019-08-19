@@ -29,6 +29,7 @@ YAHOO.namespace("gxd.container");
 //Shortcut variable for matrix grid pagination
 var geneGridRowsPerPage = null;
 var geneGridRecordOffset = null;
+var geneGridRecordTotal = null;
 
 //------ tab definitions + functions ------------
 var mgiTab = new MGITabSummary({
@@ -1405,7 +1406,6 @@ var handleSctructGeneTab = function() {
 
 		var meta = oResponse.meta;
 		oPayload.totalRecords = meta.totalRecords || oPayload.totalRecords;
-
 		var filterCount = YAHOO.util.Dom.get('filterCount');
 		if (!YAHOO.lang.isNull(filterCount)){
 			setText(filterCount, YAHOO.util.Number.format(oPayload.totalRecords, numConfig));
@@ -1421,11 +1421,12 @@ var handleSctructGeneTab = function() {
 				recordOffset: Number(pRequest['startIndex']) || 0
 		};
 
-		// TODO - setting globally for ease;  pass as parameters 
+		// Set grid parameters
 		geneGridRowsPerPage = oPayload.pagination.rowsPerPage;
 		geneGridRecordOffset = oPayload.pagination.recordOffset;
-
-		// When the hidden YUI table is loading, build the grid with the pagination controls
+		geneGridRecordTotal = oPayload.totalRecords;
+		
+		// When the hidden YUI table is loaded, build the grid with the pagination controls
 		structureGeneGrid()
 
 		return true;
@@ -1435,7 +1436,7 @@ var handleSctructGeneTab = function() {
 };
 
 // This function actually builds the structure / gene grid, and is called
-// as the hidden YUI datatable is loaded
+// after the hidden YUI datatable is loaded
 var structureGeneGrid = function()
 {
 	var querystringWithFilters = getQueryStringWithFilters();
@@ -1444,7 +1445,7 @@ var structureGeneGrid = function()
 	// Pagination values are for matrix columns.
 	// It is not the underlying number of results, as would be typical.
 	var geneGridDataUrl = fewiurl + "gxd/genegrid/json?" + querystringWithFilters 
-		+ "&results=" + geneGridRowsPerPage + "&startIndex=" + geneGridRecordOffset
+		+ "&results=" + geneGridRowsPerPage + "&startIndex=" + geneGridRecordOffset + "&matrixMarkerTotal=" + geneGridRecordTotal;
 
 	console.log("------------------------------");
 	console.log(geneGridDataUrl);

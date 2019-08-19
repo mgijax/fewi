@@ -87,6 +87,7 @@ public class GxdQueryForm implements Cloneable {
 	private List<String> markerSymbolFilter = new ArrayList<String>();
 	private List<String> matrixStructureId = new ArrayList<String>(); // used by popups and row expansions
 	private String matrixMarkerSymbol = "";
+	private String matrixMarkerTotal = "";
 
 	// needed for batch ID/symbol upload functionality
 	private String idType = "auto";
@@ -686,6 +687,15 @@ public class GxdQueryForm implements Cloneable {
 		this.matrixMarkerSymbol = matrixMarkerSymbol;
 	}
 
+	public String getMatrixMarkerTotal() {
+		return matrixMarkerTotal;
+	}
+
+	public void setMatrixMarkerTotal(String matrixMarkerTotal) {
+		this.matrixMarkerTotal = matrixMarkerTotal;
+	}
+	
+	
 	//-------------------------------------------//
 	//--- fields related to batch submissions ---//
 	//-------------------------------------------//
