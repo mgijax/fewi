@@ -137,39 +137,77 @@ var populateFacetDialog = function (title, body, error) {
 var parseFacetResponse = function (oRequest, oResponse, oPayload) {
 	var results = oResponse.results;
 	var facetName = oPayload.name;
+	var facetValue = '';
 	var options = [];
+	var hasCheckedFacet = false;
 
+	// First, loop through all facet rows to see if any are 'checked'; if so,
+	// we will only display those that are checked
 	results.forEach(function(facet){
-		// check any existing filters
-		var checked = '';
-		var fVal = encode(facet);
+		facetValue = encode(facet);
 		if (facetName in window.facets) {
 			var fil = facets[oPayload.name];
 			var i = fil.length;
 			while (i--) {
-				if (fil[i] === fVal) {
-					checked = ' checked ';
+				if (fil[i] === facetValue) {
+					hasCheckedFacet = true;
 				}
 			}
 		}
-
-		// create each row of filter
-		if (facetName == 'theilerStageFilter') {
-			var facetLabel = 'TS' + facet + ' ' + displayStageDayMap[facet];
-			options[options.length] = '<label><input type="checkbox" name="'
-				+ facetName + '" value="'
-				+ facet.replace(/,/g, '*') + '"'
-				+ checked + '> '
-				+ facetLabel + '</label>';
-		}
-		else {
-			options[options.length] = '<label><input type="checkbox" name="'
-				+ facetName + '" value="'
-				+ facet.replace(/,/g, '*') + '"'
-				+ checked + '> '
-				+ facet + '</label>';
-		}
 	});
+
+	// display only 'checked' facet values if ANY are checked
+	if (hasCheckedFacet) {  
+		results.forEach(function(facet){
+			facetValue = encode(facet);
+			if (facetName in window.facets) {
+				var fil = facets[oPayload.name];
+				var i = fil.length;
+				while (i--) {
+					if (fil[i] === facetValue) {
+						// create each row of filter
+						if (facetName == 'theilerStageFilter') {
+							var facetLabel = 'TS' + facet + ' ' + displayStageDayMap[facet];
+							options[options.length] = '<label><input type="checkbox" name="'
+								+ facetName + '" value="'
+								+ facet.replace(/,/g, '*') + '"'
+								+ ' checked > '
+								+ facetLabel + '</label>';
+						}
+						else {
+							options[options.length] = '<label><input type="checkbox" name="' + facetName 
+								+ '" value="' + facet.replace(/,/g, '*') + '"' + ' checked >'
+								+ facetValue + '</label>';
+						}
+					}
+				}
+			}
+		});
+		
+	}
+	else { // no 'checked' facet values; display all
+		
+		results.forEach(function(facet){
+
+			// create each row of filter
+			if (facetName == 'theilerStageFilter') {
+				var facetLabel = 'TS' + facet + ' ' + displayStageDayMap[facet];
+				options[options.length] = '<label><input type="checkbox" name="'
+					+ facetName + '" value="'
+					+ facet.replace(/,/g, '*') + '"'
+					+ '> '
+					+ facetLabel + '</label>';
+			}
+			else {
+				options[options.length] = '<label><input type="checkbox" name="'
+					+ facetName + '" value="'
+					+ facet.replace(/,/g, '*') + '"'
+					+ '> '
+					+ facet + '</label>';
+			}
+		});
+		
+	}
 
 	populateFacetDialog(oPayload.title, options.join('<br/>'), false);
 };
