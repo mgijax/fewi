@@ -1864,10 +1864,14 @@ public class GXDController {
 		String totalCountSessionId = "GxdGeneMatrixTotalCount_"+sessionQueryString;
 		Integer totalCount = (Integer) session.getAttribute(totalCountSessionId);
 
+		try {
 		if(Integer.parseInt(query.getMatrixMarkerTotal()) < page.getStartIndex())
 		{
 			logger.debug("reached end of result set");
 			return new GxdStageGridJsonResponse<GxdMatrixCell>();
+		}
+		} catch (NumberFormatException e) {
+			// keep going if string-to-integer conversion failed
 		}
 
 		// if we have a mapChildrenOf query, we filter by structureIds of the child rows of this parentId
