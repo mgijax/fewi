@@ -717,6 +717,10 @@ var populateFilterSummary = function() {
 		    else if(filterTitle == 'MarkerType') filterTitle = "Gene Type";
 		    else if(filterTitle == 'Mp') filterTitle = "Phenotype";
 		    else if(filterTitle == 'MarkerSymbol') filterTitle = "Gene";
+		    else if(filterTitle == 'Do') filterTitle = "Disease";
+		    else if(filterTitle == 'GoMf') filterTitle = "Molecular Function";
+		    else if(filterTitle == 'GoBp') filterTitle = "Biological Process";
+		    else if(filterTitle == 'GoCc') filterTitle = "Cellular Component";
 		    else if(filterTitle == 'Wildtype') filterTitle = '';
 		    else if(filterTitle == 'StructureID')
 		    {
