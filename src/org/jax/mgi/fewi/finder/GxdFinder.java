@@ -1,13 +1,17 @@
 package org.jax.mgi.fewi.finder;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.hunter.SolrGxdAssayTypeFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdMarkerTypeFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdMpFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdDoFacetHunter;
+import org.jax.mgi.fewi.hunter.SolrGxdGoFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdDetectedFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdDifferentialHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdMatrixResultHunter;
@@ -76,8 +80,9 @@ public class GxdFinder {
 		
 	@Autowired
 	private SolrGxdDoFacetHunter gxdDoFacetHunter;
-	
-	
+
+	@Autowired
+	private SolrGxdGoFacetHunter gxdGoFacetHunter;
 	
 	// /*
 	// * Only returning keys to start
@@ -393,4 +398,15 @@ public class GxdFinder {
 		return srSS;
 	}
 
+	public SearchResults<SolrString> getGoFacet(SearchParams params) {
+		logger.debug("Starting: getGoFacet");
+		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
+		gxdGoFacetHunter.hunt(params, results);
+		SearchResults<SolrString> srSS = new SearchResults<SolrString>();
+		srSS.cloneFrom(results, SolrString.class);
+		return srSS;
+	}
+	
+	
+	
 }

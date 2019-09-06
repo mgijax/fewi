@@ -448,6 +448,9 @@ var prepFilters = function(qfRequest) {
     var facetTheilerStageDS = buildFacetDataSource("theilerStage");
     var facetMpDS = buildFacetDataSource("mp");
     var facetDoDS = buildFacetDataSource("do");
+    var facetGoMfDS = buildFacetDataSource("goMf");
+    var facetGoBpDS = buildFacetDataSource("goBp");
+    var facetGoCcDS = buildFacetDataSource("goCc");
 
     var handleError = function (oRequest, oResponse, oPayload) {
 	buttons = gsfFacetDialog.getButtons();
@@ -457,27 +460,30 @@ var prepFilters = function(qfRequest) {
 	populateFacetDialog(oPayload.title, oPayload.error, true);
     };
 
-    var buildCallback = function (filterName, title) {
-	return { success: parseFacetResponse,
-	    failure: handleError,
-	    scope: this,
-	    argument: { name: filterName, title: title }
-	};
+	var buildCallback = function (filterName, title) {
+		return { success: parseFacetResponse,
+			failure: handleError,
+			scope: this,
+			argument: { name: filterName, title: title }
+		};
     };
 
-    var buildSystemCallback = function (filterName, title) {
-	return { success: parseSystemFacetResponse,
-	    failure: handleError,
-	    scope: this,
-	    argument: { name: filterName, title: title }
+	var buildSystemCallback = function (filterName, title) {
+		return { success: parseSystemFacetResponse,
+			failure: handleError,
+			scope: this,
+			argument: { name: filterName, title: title }
+		};
 	};
-    };
 
     var systemCallback = buildSystemCallback('systemFilter', 'Anatomical System');
     var assayTypeCallback = buildCallback('assayTypeFilter', 'Assay Type');
     var markerTypeCallback = buildCallback('markerTypeFilter', 'Gene Type');
     var mpCallback = buildCallback('mpFilter', 'Phenotype');
     var doCallback = buildCallback('doFilter', 'Disease');
+    var goMfCallback = buildCallback('goMfFilter', 'Molecular Function');
+    var goBpCallback = buildCallback('goBpFilter', 'Biological Process'); 
+    var goCcCallback = buildCallback('goCcFilter', 'Cellular Component');
     var detectedCallback = buildCallback('detectedFilter', 'Detected?');
     var wildtypeCallback = buildCallback('wildtypeFilter', 'Wild type?');
     var theilerStageCallback = buildCallback('theilerStageFilter', 'Theiler Stage');
@@ -517,6 +523,25 @@ var prepFilters = function(qfRequest) {
  	gsfLog("populateDoDialog() : 2");
     };
     
+    var populateGoMfDialog = function() {
+       	gsfLog("populateGoMfDialog() : 1");
+    	facetGoMfDS.flushCache();
+    	facetGoMfDS.sendRequest(getQS() + getFilterCriteria(), goMfCallback);
+     	gsfLog("populateGoMfDialog() : 2");
+    };
+    var populateGoBpDialog = function() {
+       	gsfLog("populateGoBpDialog() : 1");
+    	facetGoBpDS.flushCache();
+     	facetGoBpDS.sendRequest(getQS() + getFilterCriteria(), goBpCallback);
+     	gsfLog("populateGoBpDialog() : 2");
+    };
+    var populateGoCcDialog = function() {
+       	gsfLog("populateGoCcDialog() : 1");
+    	facetGoCcDS.flushCache();
+     	facetGoCcDS.sendRequest(getQS() + getFilterCriteria(), goCcCallback);
+     	gsfLog("populateGoCcDialog() : 2");
+    };
+    
     var populateDetectedDialog = function() {
 	gsfLog("populateDetectedDialog() : 1");
 	facetDetectedDS.flushCache();
@@ -546,6 +571,9 @@ var prepFilters = function(qfRequest) {
     YAHOO.util.Event.removeListener('markerTypeFilter', 'click');
     YAHOO.util.Event.removeListener('mpFilter', 'click');
     YAHOO.util.Event.removeListener('doFilter', 'click');
+    YAHOO.util.Event.removeListener('goMfFilter', 'click');
+    YAHOO.util.Event.removeListener('goBpFilter', 'click');
+    YAHOO.util.Event.removeListener('goCcFilter', 'click');
     YAHOO.util.Event.removeListener('detectedFilter', 'click');
     YAHOO.util.Event.removeListener('wildtypeFilter', 'click');
     YAHOO.util.Event.removeListener('theilerStageFilter', 'click');
@@ -560,6 +588,12 @@ var prepFilters = function(qfRequest) {
 			populateMpDialog, true);
 	YAHOO.util.Event.addListener('doFilter', 'click',
 			populateDoDialog, true);
+	YAHOO.util.Event.addListener('goMfFilter', 'click',
+			populateGoMfDialog, true);
+	YAHOO.util.Event.addListener('goBpFilter', 'click',
+			populateGoBpDialog, true);
+	YAHOO.util.Event.addListener('goCcFilter', 'click',
+			populateGoCcDialog, true);
 	YAHOO.util.Event.addListener('detectedFilter', 'click',
 			populateDetectedDialog, true);
 	YAHOO.util.Event.addListener('wildtypeFilter', 'click',
