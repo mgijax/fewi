@@ -135,6 +135,56 @@ public class GXDController {
 	private static String DETECTED = "detected";	// custom case
 	private static String MARKERTYPE_DISPLAY = "markerTypeDisplay";	// custom case
 
+	protected static final Set<String> goMfValues = new HashSet<>(Arrays.asList(
+		"carbohydrate derivative binding",
+		"cytoskeletal protein binding",
+		"DNA binding",
+		"enzyme regulator",
+		"hydrolase",
+		"ligase",
+		"lipid binding",
+		"oxidoreductase",
+		"RNA binding",
+		"signaling receptor activity",
+		"signaling receptor binding",
+		"transcription",
+		"transferase",
+		"transporter"));
+	
+	protected static final Set<String> goBpValues = new HashSet<>(Arrays.asList(
+		"carbohydrate derivative metabolism",
+		"cell death",
+		"cell differentiation",
+		"cell population proliferation",
+		"cellular component organization",
+		"establishment of localization",
+		"homeostatic process",
+		"immune system process",
+		"lipid metabolic process",
+		"nucleic acid-templated transcription",
+		"protein metabolic process",
+		"response to stimulus",
+		"signaling",
+		"system development"));
+
+	protected static final Set<String> goCcValues = new HashSet<>(Arrays.asList(
+		"cell projection",
+		"cytoplasmic vesicle",
+		"cytoskeleton",
+		"cytosol",
+		"endoplasmic reticulum",
+		"endosome",
+		"extracellular region",
+		"Golgi apparatus",
+		"mitochondrion",
+		"non-membrane-bounded organelle",
+		"nucleus",
+		"organelle envelope",
+		"organelle lumen",
+		"plasma membrane",
+		"synapse",
+		"vacuole"));
+
 	// --------------------//
 	// instance variables
 	// --------------------//
@@ -2734,6 +2784,11 @@ public class GXDController {
 			facetList.add(new Filter(FacetConstants.GXD_DO,
 					query.getDoFilter(), Filter.Operator.OP_IN));
 		}
+
+		if (query.getGoFilter().size() > 0) {
+			facetList.add(new Filter(FacetConstants.GXD_GO,
+					query.getGoFilter(), Filter.Operator.OP_IN));
+		}
 		
 		if (query.getDetectedFilter().size() > 0) {
 			facetList.add(new Filter(FacetConstants.GXD_DETECTED,
@@ -3434,7 +3489,7 @@ public class GXDController {
 	// facets for GXD Summary page
 	// ---------------------------
 
-	/* gets a list of systems for the system facet list, returned as JSON
+	/* gets a list of systems for the facet list, returned as JSON
 	 */
 	@RequestMapping("/facet/system")
 	public @ResponseBody Map<String, List<String>> facetSystem(
@@ -3446,7 +3501,7 @@ public class GXDController {
 		return facetGeneric(query, result, FacetConstants.GXD_SYSTEM);
 	}
 
-	/* gets a list of assay types for the system facet list, returned as
+	/* gets a list of assay types for the facet list, returned as
 	 * JSON
 	 */
 	@RequestMapping("/facet/assayType")
@@ -3460,7 +3515,7 @@ public class GXDController {
 				FacetConstants.GXD_ASSAY_TYPE);
 	}
 
-	/* gets a list of marker types for the system facet list, returned as
+	/* gets a list of marker types for the facet list, returned as
 	 * JSON
 	 */
 	@RequestMapping("/facet/markerType")
@@ -3474,7 +3529,7 @@ public class GXDController {
 				FacetConstants.GXD_MARKER_TYPE);
 	}
 
-	/* gets a list of detection levels for the system facet list, returned
+	/* gets a list of detection levels for the facet list, returned
 	 * as JSON
 	 */
 	@RequestMapping("/facet/detected")
@@ -3488,7 +3543,7 @@ public class GXDController {
 				FacetConstants.GXD_DETECTED);
 	}
 
-	/* gets a list of theiler stages for the system facet list, returned
+	/* gets a list of theiler stages for the facet list, returned
 	 * as JSON
 	 */
 	@RequestMapping("/facet/theilerStage")
@@ -3502,7 +3557,7 @@ public class GXDController {
 				FacetConstants.GXD_THEILER_STAGE);
 	}
 
-	/* gets a list of wild type values for the system facet list, returned
+	/* gets a list of wild type values for the facet list, returned
 	 * as JSON
 	 */
 	@RequestMapping("/facet/wildtype")
@@ -3516,7 +3571,7 @@ public class GXDController {
 				FacetConstants.GXD_WILDTYPE);
 	}
 
-	/* gets a list of wild type values for the system facet list, returned
+	/* gets a list of MP values for the facet list, returned
 	 * as JSON
 	 */
 	@RequestMapping("/facet/mp")
@@ -3530,7 +3585,7 @@ public class GXDController {
 				FacetConstants.GXD_MP);
 	}
 
-	/* gets a list of wild type values for the system facet list, returned
+	/* gets a list of DO values for the facet list, returned
 	 * as JSON
 	 */
 	@RequestMapping("/facet/do")
@@ -3544,7 +3599,49 @@ public class GXDController {
 				FacetConstants.GXD_DO);
 	}
 	
+	/* gets a list of GO Molecular Function values for the facet list, returned
+	 * as JSON
+	 */
+	@RequestMapping("/facet/goMf")
+	public @ResponseBody Map<String, List<String>> facetGoMf(
+			HttpSession session,
+			@ModelAttribute GxdQueryForm query,
+			BindingResult result) {
 
+		populateMarkerIDs(session, query);
+		return facetGeneric(query, result,
+				FacetConstants.GXD_GO_MF);
+	}
+
+	/* gets a list of GO Biological Process values for the facet list, returned
+	 * as JSON
+	 */
+	@RequestMapping("/facet/goBp")
+	public @ResponseBody Map<String, List<String>> facetGoBp(
+			HttpSession session,
+			@ModelAttribute GxdQueryForm query,
+			BindingResult result) {
+
+		populateMarkerIDs(session, query);
+		return facetGeneric(query, result,
+				FacetConstants.GXD_GO_BP);
+	}
+
+	/* gets a list of GO Cellular Component values for the facet list, returned
+	 * as JSON
+	 */
+	@RequestMapping("/facet/goCc")
+	public @ResponseBody Map<String, List<String>> facetGoCc(
+			HttpSession session,
+			@ModelAttribute GxdQueryForm query,
+			BindingResult result) {
+
+		populateMarkerIDs(session, query);
+		return facetGeneric(query, result,
+				FacetConstants.GXD_GO_CC);
+	}
+
+	
 	/* generic facet handling
 	 */
 	private Map<String, List<String>> facetGeneric (GxdQueryForm query,
@@ -3588,6 +3685,33 @@ public class GXDController {
 			emptyListMsg = "No genes found with ontology associations.";
 			facetResults = gxdFinder.getDoFacet(params);
 
+		} else if (FacetConstants.GXD_GO_MF.equals(facetType)) {
+			emptyListMsg = "No genes found with ontology associations.";
+			facetResults = gxdFinder.getGoFacet(params);
+
+			// Remove values not applicable to this filter
+			List<String> facetValues = facetResults.getResultFacets();
+			for (String goValue: goBpValues) {facetValues.remove(goValue);}
+			for (String goValue: goCcValues) {facetValues.remove(goValue);}
+			
+		} else if (FacetConstants.GXD_GO_BP.equals(facetType)) {
+			emptyListMsg = "No genes found with ontology associations.";
+			facetResults = gxdFinder.getGoFacet(params);
+
+			// Remove values not applicable to this filter
+			List<String> facetValues = facetResults.getResultFacets();
+			for (String goValue: goMfValues) {facetValues.remove(goValue);}
+			for (String goValue: goCcValues) {facetValues.remove(goValue);}
+			
+		} else if (FacetConstants.GXD_GO_CC.equals(facetType)) {
+			emptyListMsg = "No genes found with ontology associations.";
+			facetResults = gxdFinder.getGoFacet(params);
+
+			// Remove values not applicable to this filter
+			List<String> facetValues = facetResults.getResultFacets();
+			for (String goValue: goBpValues) {facetValues.remove(goValue);}
+			for (String goValue: goMfValues) {facetValues.remove(goValue);}
+			
 		} else {
 			facetResults = new SearchResults<SolrString>();
 		}

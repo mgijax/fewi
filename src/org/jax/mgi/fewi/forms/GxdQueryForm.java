@@ -81,6 +81,7 @@ public class GxdQueryForm implements Cloneable {
 	private List<String> wildtypeFilter = new ArrayList<String>();
 	private List<String> mpFilter = new ArrayList<String>();
 	private List<String> doFilter = new ArrayList<String>();
+	private List<String> goFilter = new ArrayList<String>();
 
 	// filters used by matrices
 	private List<String> structureIDFilter = new ArrayList<String>();
@@ -653,6 +654,25 @@ public class GxdQueryForm implements Cloneable {
 
 	public void setDoFilter(List<String> doFilter) {
 		this.doFilter = doFilter;
+	}
+
+	public List<String> getGoFilter() {
+		return goFilter;
+	}
+
+	public void setGoFilter(List<String> goFilter) {
+		this.goFilter = goFilter;
+	}
+	
+	// three GO filters point to same field
+	public void setGoMfFilter(List<String> goFilter) {
+		this.goFilter = goFilter;
+	}
+	public void setGoBpFilter(List<String> goFilter) {
+		this.goFilter = goFilter;
+	}
+	public void setGoCcFilter(List<String> goFilter) {
+		this.goFilter = goFilter;
 	}
 	
 	public String getDifStructureID() {
