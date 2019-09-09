@@ -65,10 +65,6 @@ public class GxdAssayResultSummaryRow {
 	}
 
 	public String getGene() {
-
-		// return "<a href='" + fewiUrl + "marker/" + mrk.getPrimaryID() + "'>"
-		// + mrk.getSymbol() + "</a>";
-
 		return result.getMarkerSymbol();
 	}
 
@@ -141,4 +137,36 @@ public class GxdAssayResultSummaryRow {
 			+ result.getJNum() + "</a> " + result.getShortCitation();
 	}
 
+	public String getTpmLevel() {
+		return result.getTpmLevel();
+	}
+
+	public String getBiologicalReplicates() {
+		String br = result.getBiologicalReplicates();
+		if ((br == null) || ("".equals(br))) {
+			if ("RNA-Seq".equals(result.getAssayType())) {
+				// RNA-Seq defaults to 1
+				return "1";
+			}
+			// other expt types have no biological replicates
+			return null;
+		}
+		return br;
+	}
+
+	public String getStrain() {
+		String strain = result.getStrain();
+		if ((strain == null) || ("".equals(strain))) {
+			return strain;
+		}
+		return FormatHelper.superscript(strain);
+	}
+
+	public String getSex() {
+		return result.getSex();
+	}
+
+	public String getNotes() {
+		return result.getNotes();
+	}
 }

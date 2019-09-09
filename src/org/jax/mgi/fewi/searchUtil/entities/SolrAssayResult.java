@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
 import java.util.List;
+import java.text.NumberFormat;
 
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
 
@@ -24,11 +25,22 @@ public class SolrAssayResult implements SolrGxdEntity
 	private String assayMgiid;
 	private String assayKey;
 	private String assayType;
-	//private String pattern;
 
 	private String detectionLevel;
 	private String shortCitation;
 	
+	// fields related to RNA-Seq data
+	private String tpmLevel;
+	private String biologicalReplicates;
+	private String strain;
+	private String sex;
+	private String notes;
+
+	//*** static variables ***//
+	private static NumberFormat fmt = null;
+
+	//*** methods ***//
+
 	public String getJNum() {
 		return jNum;
 	}
@@ -126,16 +138,66 @@ public class SolrAssayResult implements SolrGxdEntity
 		this.figuresPlain = figuresPlain;
 	}
 
-//	public String getPattern() {
-//		return pattern;
-//	}
-//	public void setPattern(String pattern) {
-//		this.pattern = pattern;
-//	}
 	public String getPubmedId() {
 		return pubmedId;
 	}
 	public void setPubmedId(String pubmedId) {
 		this.pubmedId = pubmedId;
+	}
+	public String getTpmLevel() {
+		// not just a getter -- also trim off extra digits
+		if ((tpmLevel != null) && (!"".equals(tpmLevel))) {
+			try {
+				Double t = Double.parseDouble(tpmLevel);
+				if (fmt == null) {
+					fmt = NumberFormat.getInstance();
+					fmt.setGroupingUsed(false);
+					fmt.setMaximumFractionDigits(2);
+					fmt.setMinimumFractionDigits(2);
+					fmt.setMinimumIntegerDigits(1);
+					fmt.setMaximumIntegerDigits(10);
+				}
+				return fmt.format(t);
+			
+			} catch (NumberFormatException e) {
+				return tpmLevel;
+			}
+		}
+		return tpmLevel;
+	}
+	public void setTpmLevel(String tpmLevel) {
+		this.tpmLevel = tpmLevel;
+	}
+	public String getBiologicalReplicates() {
+		return biologicalReplicates;
+	}
+	public void setBiologicalReplicates(String biologicalReplicates) {
+		this.biologicalReplicates = biologicalReplicates;
+	}
+	public String getStrain() {
+		// not just a getter -- also convert Not Specified to a space
+		if ("Not Specified".equals(strain)) {
+			return "";
+		}
+		return strain;
+	}
+	public void setStrain(String strain) {
+		this.strain = strain;
+	}
+	public String getSex() {
+		// not just a getter -- also convert Not Specified to a space
+		if ("Not Specified".equals(sex)) {
+			return "";
+		}
+		return sex;
+	}
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+	public String getNotes() {
+		return notes;
+	}
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
 }

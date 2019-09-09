@@ -1010,7 +1010,12 @@ var gxdResultsTable = function() {
 	                    {key: "figures", label: "Images",sortable: false},
 	                    {key: "genotype",label: "Mutant Allele(s)",sortable: false},
 	                    {key: "reference",label: "Reference",sortable: true},
-	                    {key: "score",label: "score",sortable: false,hidden: true}
+	                    {key: "score",label: "score",sortable: false,hidden: true},
+	                    {key: "tpmLevel",label: "TPM Level<br/>(RNA-Seq)",sortable: false,hidden: false},
+	                    {key: "biologicalReplicates",label: "Biological Replicates<br/>(RNA-Seq)",sortable: false,hidden: false},
+	                    {key: "strain",label: "Strain",sortable: false,hidden: false},
+	                    {key: "sex",label: "Sex",sortable: false,hidden: false},
+	                    {key: "notes",label: "Notes<br/>(RNA-Seq)",sortable: false,hidden: false}
 	                    ];
 
 	// DataSource instance
@@ -1028,7 +1033,12 @@ var gxdResultsTable = function() {
 			         {key: "figures"},
 			         {key: "genotype"},
 			         {key: "reference"},
-			         {key: "score"}
+			         {key: "score"},
+			         {key: "tpmLevel"},
+			         {key: "biologicalReplicates"},
+			         {key: "strain"},
+			         {key: "sex"},
+			         {key: "notes"}
 			         ],
 			         metaFields: {
 			        	 totalRecords: "totalCount",

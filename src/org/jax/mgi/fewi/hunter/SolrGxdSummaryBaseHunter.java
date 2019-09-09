@@ -259,7 +259,6 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 					.getFieldValue(GxdResultFields.SHORT_CITATION);
 			String genotype = (String) doc
 					.getFieldValue(GxdResultFields.GENOTYPE);
-			// String pattern = (String) doc.getFieldValue("pattern");
 			@SuppressWarnings("unchecked")
 			List<String> figuresPlain = (List<String>) doc
 					.getFieldValue(GxdResultFields.FIGURE_PLAIN);
@@ -283,6 +282,13 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 			resultObject.setMarkerName(markerName);
 			resultObject.setFiguresPlain(figuresPlain);
 			resultObject.setPubmedId(pubmedId);
+
+			// fields specific to RNA-Seq data
+			resultObject.setTpmLevel((String) doc.getFieldValue(GxdResultFields.TPM_LEVEL));
+			resultObject.setBiologicalReplicates((String) doc.getFieldValue(GxdResultFields.BIOLOGICAL_REPLICATES));
+			resultObject.setStrain((String) doc.getFieldValue(GxdResultFields.STRAIN));
+			resultObject.setSex((String) doc.getFieldValue(GxdResultFields.SEX));
+			resultObject.setNotes((String) doc.getFieldValue(GxdResultFields.NOTES));
 
 			// Add result to SearchResults
 			sr.addResultObjects(resultObject);

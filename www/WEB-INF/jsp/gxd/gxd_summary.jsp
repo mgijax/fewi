@@ -23,6 +23,7 @@
   background:url(${configBean.WEBSHARE_URL}images/cre/creUpArrow.png)
   no-repeat right;
 }
+.yui-skin-sam .yui-pg-last { display: none; }
 </style>
 
 
