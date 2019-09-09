@@ -31,6 +31,46 @@ var geneGridRowsPerPage = null;
 var geneGridRecordOffset = null;
 var geneGridRecordTotal = null;
 
+// column definitions and optional column status for results table
+var resultsTableDefs = [
+	// sortable:true enables sorting
+	{key: "gene", label: "Gene", sortable: true },
+	{key: "assayID", label: "Result Details", sortable: false },
+	{key: "assayType", label: "Assay Type", sortable: true },
+	{key: "age", label: "Age", sortable: true },
+	{key: "structure", label: "Structure",sortable: true},
+	{key: "detectionLevel",label: "Detected?",sortable: true},
+	{key: "figures", label: "Images",sortable: false},
+	{key: "genotype",label: "Mutant Allele(s)",sortable: false},
+	{key: "reference",label: "Reference",sortable: true},
+	{key: "score",label: "score",sortable: false,hidden: true},
+	{key: "tpmLevel",label: "TPM Level<br/>(RNA-Seq)",sortable: false,hidden: false},
+	{key: "biologicalReplicates",label: "Biological Replicates<br/>(RNA-Seq)",sortable: false,hidden: true},
+	{key: "strain",label: "Strain",sortable: false,hidden: true},
+	{key: "sex",label: "Sex",sortable: false,hidden: true},
+	{key: "notes",label: "Notes<br/>(RNA-Seq)",sortable: false,hidden: true}
+	];
+
+var hideOptionalColumns = true;
+
+var flipColumn = function(key) {
+	for (var i = 0; i < resultsTableDefs.length; i++) {
+		if (resultsTableDefs[i].key == key) {
+			resultsTableDefs[i].hidden = hideOptionalColumns;
+			break;
+		}
+	}
+}
+
+var flipOptionalColumns = function() {
+	hideOptionalColumns = !hideOptionalColumns;
+	flipColumn('biologicalReplicates');
+	flipColumn('strain');
+	flipColumn('sex');
+	flipColumn('notes');
+	historyInit();
+}
+
 //------ tab definitions + functions ------------
 var mgiTab = new MGITabSummary({
 	"tabViewId":"resultSummary",
@@ -999,24 +1039,7 @@ var gxdResultsTable = function() {
 	var numConfig = {thousandsSeparator: ','};
 
 	// Column definitions
-	var myColumnDefs = [
-	                    // sortable:true enables sorting
-	                    {key: "gene", label: "Gene", sortable: true },
-	                    {key: "assayID", label: "Result Details", sortable: false },
-	                    {key: "assayType", label: "Assay Type", sortable: true },
-	                    {key: "age", label: "Age", sortable: true },
-	                    {key: "structure", label: "Structure",sortable: true},
-	                    {key: "detectionLevel",label: "Detected?",sortable: true},
-	                    {key: "figures", label: "Images",sortable: false},
-	                    {key: "genotype",label: "Mutant Allele(s)",sortable: false},
-	                    {key: "reference",label: "Reference",sortable: true},
-	                    {key: "score",label: "score",sortable: false,hidden: true},
-	                    {key: "tpmLevel",label: "TPM Level<br/>(RNA-Seq)",sortable: false,hidden: false},
-	                    {key: "biologicalReplicates",label: "Biological Replicates<br/>(RNA-Seq)",sortable: false,hidden: false},
-	                    {key: "strain",label: "Strain",sortable: false,hidden: false},
-	                    {key: "sex",label: "Sex",sortable: false,hidden: false},
-	                    {key: "notes",label: "Notes<br/>(RNA-Seq)",sortable: false,hidden: false}
-	                    ];
+	var myColumnDefs = resultsTableDefs;
 
 	// DataSource instance
 	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/results/json", xhrConfig);
