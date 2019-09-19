@@ -84,16 +84,6 @@ public class GxdFinder {
 	@Autowired
 	private SolrGxdGoFacetHunter gxdGoFacetHunter;
 	
-	// /*
-	// * Only returning keys to start
-	// */
-	// public SearchResults<String> search(SearchParams params)
-	// {
-	// SearchResults<String> results = new SearchResults<String>();
-	// gxdResultHunter.hunt(params, results);
-	// return results;
-	// }
-	//
 	/*
 	 * Only does the Solr query to return the total document (or group) count
 	 */

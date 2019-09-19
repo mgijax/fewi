@@ -832,9 +832,9 @@ public class GXDController {
 
 
 	/*
-	 * This method maps ajax requests from the reference summary page.  It
-	 * parses the ReferenceQueryForm, generates SearchParams object, and issues
-	 * the query to the ReferenceFinder.  The results are returned as JSON
+	 * This method maps ajax requests from the expression summary page.  It
+	 * parses the GxdQueryForm, generates SearchParams object, and issues
+	 * the query to the GxdFinder.  The results are returned as JSON
 	 */
 	@RequestMapping("/markers/json")
 	public @ResponseBody JsonSummaryResponse<GxdMarkerSummaryRow> gxdMarkerSummaryJson(
