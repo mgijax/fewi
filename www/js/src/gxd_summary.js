@@ -717,24 +717,6 @@ function refreshTabCounts()
 	YAHOO.util.Dom.get("totalGenesCount").innerHTML = "";
 	YAHOO.util.Dom.get("totalImagesCount").innerHTML = "";
 
-	/*
-	resultsRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/results/totalCount?"+querystringWithFilters,
-			{	success:handleCountRequest,
-		failure:function(o){}
-			},null);
-	assaysRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/assays/totalCount?"+querystringWithFilters,
-			{	success:handleCountRequest,
-		failure:function(o){}
-			},null);
-	genesRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/markers/totalCount?"+querystringWithFilters,
-			{	success:handleCountRequest,
-		failure:function(o){}
-			},null);
-	imagesRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/images/totalCount?"+querystringWithFilters,
-			{	success:handleCountRequest,
-		failure:function(o){}
-			},null);
-	*/
 	resultsRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/results/totalCount",
 			{	success:handleCountRequest,
 		failure:function(o){}
