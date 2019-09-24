@@ -24,6 +24,18 @@
   no-repeat right;
 }
 .yui-skin-sam .yui-pg-last { display: none; }
+#tooManyResultsWrapper {
+  padding-bottom: 10px;
+}
+#tooManyResults {
+  border: 1px solid red;
+  color: red;
+  font-weight: bold;
+  display: none;
+  padding: 4px;
+  margin-left: 5px;
+}
+.canHide {}
 </style>
 
 
@@ -44,7 +56,7 @@
 
     <div id="rightcolumn">
         <div class="innertube">
-        	<div id="paginationTop">&nbsp;</div>
+        	<div id="paginationTop" class="canHide">&nbsp;</div>
         </div>
     </div>
 
@@ -68,6 +80,10 @@
 
 	    <br clear="all" />
     </div>
+    <div id="tooManyResultsWrapper">
+    	<div id="tooManyResults">Your search returned too many assay results.  Some functionality has been disabled until you refine or filter your search to bring the number of results under <span id="maxCount">TBD</span>.
+    	</div>
+    </div>
 <div id="resultSummary" class="yui-navset">
     <ul class="yui-nav">
         <li><a id="genestab" href="#genes"><em>Genes (<span id="totalGenesCount"></span>)</em></a></li>
@@ -87,11 +103,11 @@
 
 	        	<div id="downloadDiv">
 			<form name="markerExportForm" id="markerExportForm" action="" method="POST">
-                   <span class="label">Export:</span>
-                   <a id="markersTextDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
-                   <a id="markersExcelDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a>
-                   <a id="markersBatchForward" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> MGI Batch Query</a>
-						<a id="mouseMineLink" target="_blank" class="filterButton" onClick="javascript: mousemine.submit();"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> MouseMine</a>
+                   <span class="label canHide">Export:</span>
+                   <a id="markersTextDownload" class="canHide filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
+                   <a id="markersExcelDownload" class="canHide filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a>
+                   <a id="markersBatchForward" class="canHide filterButton"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> MGI Batch Query</a>
+						<a id="mouseMineLink" target="_blank" class="canHide filterButton" onClick="javascript: mousemine.submit();"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> MouseMine</a>
 			</form><!-- markerExportForm -->
                 </div>
              </div>
@@ -104,9 +120,9 @@
             <div id="toolbar" class="goldbar">
                 <div id="downloadDiv">
 		    <form name="resultsExportForm" id="resultsExportForm" action="" method="POST">
-                    <span class="label">Export:</span>
-                    <a id="resultsTextDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
-                    <a id="resultsExcelDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a>
+                    <span class="label canHide">Export:</span>
+                    <a id="resultsTextDownload" class="canHide filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
+                    <a id="resultsExcelDownload" class="canHide filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a>
 		    <span class="label" style="padding-left: 100px;">Show/Hide Additional Sample Data <input id="showHide" type="checkbox" onClick="flipOptionalColumns()"></span>
 		    </form><!-- resultsExportForm -->
                 </div>
@@ -139,7 +155,7 @@
         </div>
     </div>
 </div>
-	<div id="paginationBottom">&nbsp;</div>
+	<div id="paginationBottom" class="canHide">&nbsp;</div>
     <div class="gxdLitRow">
     	<br/>
     	<span id="gxdLitInfo"></span>

@@ -4,6 +4,10 @@ var gxdDataTable;
 var gxdDataSource;
 var defaultSort = "";
 
+// max number of results allowed for full functionality
+var maxResults = 21000000;
+var controlsDisabled = false;
+
 //default page size for each summary
 var GENES_PAGE_SIZE = 100;
 var ASSAYS_PAGE_SIZE = 100;
@@ -71,13 +75,17 @@ var flipOptionalColumns = function() {
 	historyInit();
 }
 
+var isDisabled = function() {
+	return controlsDisabled;
+}
+
 //------ tab definitions + functions ------------
 var mgiTab = new MGITabSummary({
 	"tabViewId":"resultSummary",
 	"tabIds":["genestab","assaystab","resultstab","imagestab","stagegridtab","genegridtab"],
 	"pageSizes":[GENES_PAGE_SIZE,ASSAYS_PAGE_SIZE,RESULTS_PAGE_SIZE,IMAGES_PAGE_SIZE,0,GENE_MATRIX_SIZE], // mirrors "tabIds"
 	"historyId":"gxd"
-});
+}, isDisabled);
 
 var stageDayMap = {
 		1:"E0-2.5",
@@ -673,6 +681,36 @@ function getYsfGeneCount() {
 	return ysfGeneCount;
 }
 
+function hideTooManyResultsMessage() {
+	$('#tooManyResults').css('display', 'none');
+	$('#tooManyResultsWrapper').css('display', 'none');
+}
+
+function showTooManyResultsMessage() {
+	$('#tooManyResults').css('display', 'inline');
+	$('#tooManyResultsWrapper').css('display', 'block');
+}
+
+function disableControls() {
+	YAHOO.util.Dom.get("totalGenesCount").innerHTML = 'N/A';
+	YAHOO.util.Dom.get("totalAssaysCount").innerHTML = 'N/A';
+	YAHOO.util.Dom.get("totalImagesCount").innerHTML = 'N/A';
+
+	// Hide what we can immediately, then come back in a second and
+	// hide anything added dynamically (like the paginators).
+	$('.canHide').css('display', 'none');
+	setTimeout(function() { 
+		$('.canHide').css('display', 'none');
+		}, 1000);
+
+	controlsDisabled = true;
+}
+
+function enableControls() {
+	$('.canHide').css('display', 'inline');
+	controlsDisabled = false;
+}
+
 function refreshTabCounts()
 {
 	var querystringWithFilters = getQueryStringWithFilters();
@@ -693,6 +731,26 @@ function refreshTabCounts()
 			// if no results, we don't need the grid-specific message for 'nowhere else' queries
 			if (parseInt(o.responseText) == 0) {
 				$('#nowhereElseMessage').css('display', 'none');
+			}
+
+			// if number of results excees max to be handled, disable some controls;
+			// otherwise go ahead and ask for the other counts
+			if (parseInt(o.responseText) > maxResults) {
+				// disable pagination and other tabs until the count comes down
+				showTooManyResultsMessage();
+				disableControls();
+			} else {
+				hideTooManyResultsMessage();
+				enableControls();
+				assaysRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/assays/totalCount", {	success:handleCountRequest,
+					failure:function(o){}
+					}, querystringWithFilters);
+				genesRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/markers/totalCount", {	success:handleCountRequest,
+					failure:function(o){}
+					}, querystringWithFilters);
+				imagesRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/images/totalCount", {	success:handleCountRequest,
+					failure:function(o){}
+					}, querystringWithFilters);
 			}
 		}
 		else if(o.tId==assaysRq.tId) YAHOO.util.Dom.get("totalAssaysCount").innerHTML = o.responseText;
@@ -718,18 +776,6 @@ function refreshTabCounts()
 	YAHOO.util.Dom.get("totalImagesCount").innerHTML = "";
 
 	resultsRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/results/totalCount",
-			{	success:handleCountRequest,
-		failure:function(o){}
-			}, querystringWithFilters);
-	assaysRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/assays/totalCount",
-			{	success:handleCountRequest,
-		failure:function(o){}
-			}, querystringWithFilters);
-	genesRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/markers/totalCount",
-			{	success:handleCountRequest,
-		failure:function(o){}
-			}, querystringWithFilters);
-	imagesRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/images/totalCount",
 			{	success:handleCountRequest,
 		failure:function(o){}
 			}, querystringWithFilters);
@@ -1605,3 +1651,5 @@ window.addEventListener("pageshow", function(evt){
     },10);
 }
 }, false);
+
+$('#maxCount').html(numberWithCommas(maxResults));
