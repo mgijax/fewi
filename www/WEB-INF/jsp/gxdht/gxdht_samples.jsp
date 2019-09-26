@@ -30,13 +30,17 @@ a { text-decoration: none; }
 <c:if test="${not empty experiment.geoID}">
 	<c:set var="geoLink" value="${fn:replace(externalUrls.GEOSeries, '@@@@', experiment.geoID)}" />
 </c:if>
+<c:set var="atlasLink" value="" />
+<c:if test="${experiment.isInAtlas == 1}">
+	<c:set var="atlasLink" value="${fn:replace(externalUrls.ExpressionAtlas, '@@@@', exp.arrayExpressID)}" />
+</c:if>
 
 <c:if test="${empty error}">
   <div id="pageWrapper" class="experimentWrapper dataShade1">
     <div id="experimentWrapper" class="idWrapper headerShade2">
       <c:if test="${not empty experiment}">
-	    <div id="idLabels" class="idLabels">ArrayExpress:<c:if test="${not empty geoLink}"><br/>GEO:</c:if></div>
-	    <div id="ids" class="ids"><a href="${aeLink}" target="_blank" class="extUrl">${experiment.arrayExpressID}</a> 
+	    <div id="idLabels" class="idLabels"><c:if test="${not empty atlasLink}">Expression Atlas:<br/><script>$('#idLabels').width('120px');</script></c:if>ArrayExpress:<c:if test="${not empty geoLink}"><br/>GEO:</c:if></div>
+	    <div id="ids" class="ids"><c:if test="${not empty atlasLink}"><a href="${atlasLink}" target="_blank" class="extUrl">${experiment.arrayExpressID}</a><br/></c:if><a href="${aeLink}" target="_blank" class="extUrl">${experiment.arrayExpressID}</a> 
 		  <c:if test="${not empty geoLink}"><br/><a href="${geoLink}" target="_blank" class="extUrl">${experiment.geoID}</a> </c:if></div>
 	    <div id="title" class="title">${experiment.title}</div>
       </c:if>
