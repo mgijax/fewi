@@ -46,16 +46,22 @@ public class GxdAssaySummaryRow {
 	}
 
 	public String getAssayID() {
+		// RNA-Seq data have no images, and the data link should add
+		// a special filter for this experiment ID.
 		if (assay.getAssayType().startsWith("RNA-Seq")) {
 			return "<a href='" + fewiUrl + "gxd/htexp_index/summary?arrayExpressID=" + assay.getJNum()
 				+ "'>data</a><span> (" + assay.getJNum() + ")</span>";
 		}
+
+		// classical assays with images get a camera icon
 		if (assay.getHasImage()) {
 			return "<a href='" + fewiUrl + "assay/" + assay.getAssayMgiid()
 					+ "'>data</a><span> (" + assay.getAssayMgiid() + ")</span>"
 					+ " <img class=\"cameraIcon\" src=\"" + webshareUrl
 					+ "/images/mgi_camera.gif\" /> ";
 		}
+
+		// classical assays with no images
 		return "<a href='" + fewiUrl + "assay/" + assay.getAssayMgiid()
 				+ "'>data</a><span> (" + assay.getAssayMgiid() + ")</span>";
 	}
