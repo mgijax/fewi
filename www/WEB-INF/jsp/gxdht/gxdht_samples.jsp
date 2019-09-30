@@ -32,7 +32,7 @@ a { text-decoration: none; }
 </c:if>
 <c:set var="atlasLink" value="" />
 <c:if test="${experiment.isInAtlas == 1}">
-	<c:set var="atlasLink" value="${fn:replace(externalUrls.ExpressionAtlas, '@@@@', exp.arrayExpressID)}" />
+	<c:set var="atlasLink" value="${fn:replace(externalUrls.ExpressionAtlas, '@@@@', experiment.arrayExpressID)}" />
 </c:if>
 
 <c:if test="${empty error}">
