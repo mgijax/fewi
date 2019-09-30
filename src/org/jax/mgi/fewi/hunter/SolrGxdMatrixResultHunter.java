@@ -239,12 +239,12 @@ public class SolrGxdMatrixResultHunter extends SolrGxdSummaryBaseHunter {
 		this.packFacetData(rsp, sr);
 	}
 
-	@Value("${solr.gxd_result.url}")
+	@Value("${solr.gxdResult.url}")
 	public void setSolrUrl(String solrUrl) {
 		super.solrUrl = solrUrl;
 	}
 
-	@Value("${solr.dag_edge.url}")
+	@Value("${solr.gxdDagEdge.url}")
 	public void setVocabTermChildUrl(String vocabTermChildUrl) {
 		/*
 		 * Joined indices List of indices that can be joined to this index. This

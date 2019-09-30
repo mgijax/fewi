@@ -25,7 +25,7 @@ public class SolrGxdWildtypeFacetHunter extends SolrGxdSummaryBaseHunter {
 
 	}
 
-	@Value("${solr.gxd_result.url}")
+	@Value("${solr.gxdResult.url}")
 	public void setSolrUrl(String solrUrl) {
 		super.solrUrl = solrUrl;
 	}

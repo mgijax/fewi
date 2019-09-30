@@ -477,7 +477,7 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 		}
 	}
 
-	@Value("${solr.gxd_result.url}")
+	@Value("${solr.gxdResult.url}")
 	public void setSolrUrl(String solrUrl) {
 		super.solrUrl = solrUrl;
 	}
