@@ -36,6 +36,7 @@ public class GxdQueryForm implements Cloneable {
 
 	private final List<String> assayTypes = new ArrayList<String>();
 	private List<String> assayType = new ArrayList<String>();
+	private List<String> experimentFilter = new ArrayList<String>();
 
 	private String nomenclature = "";
 	private String vocabTerm = "";
@@ -294,6 +295,14 @@ public class GxdQueryForm implements Cloneable {
 
 	public void setAssayType(List<String> assayType) {
 		this.assayType = assayType;
+	}
+
+	public List<String> getExperimentFilter() {
+		return experimentFilter;
+	}
+
+	public void setExperimentFilter(List<String> experimentFilter) {
+		this.experimentFilter = experimentFilter;
 	}
 
 	public List<String> getAge() {

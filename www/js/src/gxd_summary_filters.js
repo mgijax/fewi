@@ -314,6 +314,24 @@ var parseSystemFacetResponse = function (oRequest, oResponse, oPayload) {
 	populateFacetDialog(oPayload.title, options.join('<br/>'), false);
 };
 
+/* add a new experiment ID as a facet
+ */
+var filterByExperiment = function(exptID) {
+	var found = false;
+	for (k in facets) {
+		if (k == 'experimentFilter') {
+			facets[k].concat(exptID);
+    			facets[k] = FewiUtil.uniqueValues(facets[k]);
+			found = true;
+		}
+	}
+	if (!found) {
+		facets['experimentFilter'] = [ exptID ];
+	}
+	submitFacets(facets);
+	$('#resultstab')[0].click();
+}
+
 /*
  * Actually submit a new query with the specified facet list
  */

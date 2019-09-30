@@ -2760,6 +2760,11 @@ public class GXDController {
 		// restrict results by filters (added to facetList)
 		// ---------------------------
 
+		if (query.getExperimentFilter().size() > 0) {
+			facetList.add(new Filter(GxdResultFields.ASSAY_MGIID,
+				query.getExperimentFilter(), Filter.Operator.OP_IN));
+		}
+
 		if (query.getSystemFilter().size() > 0) {
 			facetList.add(new Filter(FacetConstants.GXD_SYSTEM,
 					query.getSystemFilter(), Filter.Operator.OP_IN));
