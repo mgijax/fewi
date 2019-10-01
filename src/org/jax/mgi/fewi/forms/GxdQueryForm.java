@@ -36,7 +36,12 @@ public class GxdQueryForm implements Cloneable {
 
 	private final List<String> assayTypes = new ArrayList<String>();
 	private List<String> assayType = new ArrayList<String>();
+
+	// The top one of these if for filtering by RNA-Seq experiment ID(s),
+	// while the bottom one is for display of a single RNA-Seq experiment
+	// (by ID -- linked from the GXD HT summary page).
 	private List<String> experimentFilter = new ArrayList<String>();
+	private String experimentID = "";
 
 	private String nomenclature = "";
 	private String vocabTerm = "";
@@ -303,6 +308,14 @@ public class GxdQueryForm implements Cloneable {
 
 	public void setExperimentFilter(List<String> experimentFilter) {
 		this.experimentFilter = experimentFilter;
+	}
+
+	public String getExperimentID() {
+		return experimentID;
+	}
+
+	public void setExperimentID(String experimentID) {
+		this.experimentID = experimentID;
 	}
 
 	public List<String> getAge() {

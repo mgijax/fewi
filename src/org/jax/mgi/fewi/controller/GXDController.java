@@ -547,6 +547,53 @@ public class GXDController {
 	}
 
 	/*
+	 * Summary by RNA-Seq experiment ID
+	 */
+	@RequestMapping(value="/experiment/{experimentID}")
+	public ModelAndView summaryByExperimentId(
+			HttpServletRequest request,
+			@PathVariable("experimentID") String experimentID,
+			@ModelAttribute GxdQueryForm query,
+			BindingResult result) throws BindException {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
+		logger.debug("->summaryByExperimentId started");
+
+		// setup view object
+		ModelAndView mav = new ModelAndView("gxd/gxd_summary_by_experiment");
+
+		// set up QF object to search for a single RNA-Seq experiment
+		Paginator page = new Paginator(1);
+
+		List<String> assayType = new ArrayList<String>();
+		assayType.add("RNA-Seq");
+		GxdQueryForm qf = new GxdQueryForm();
+		qf.setAssayType(assayType);
+		qf.setExperimentID(experimentID);
+
+		SearchResults<SolrGxdAssay> searchResults = getGxdAssays(request, qf, page, result);
+		List<SolrGxdAssay> assayList = searchResults.getResultObjects();
+
+		// there can be only one...
+		if (assayList.size() < 1) {
+			// forward to error page
+			return errorMav("No RNA-Seq experiment found for " + experimentID);
+		}
+		if (assayList.size() > 1) {
+			// forward to error page
+			return errorMav("Duplicate experiment found for " + experimentID);
+		}
+		SolrGxdAssay assay = assayList.get(0);
+		mav.addObject("experiment", assay);
+		mav.addObject("queryString", request.getQueryString());
+
+		logger.debug("summaryByExperimentId routing to view ");
+		return mav;
+	}
+
+	/*
 	 * Summary by Reference
 	 */
 	@RequestMapping(value="/reference/{refID}")
@@ -2879,6 +2926,12 @@ public class GXDController {
 		String probeKey = query.getProbeKey();
 		String antibodyKey = query.getAntibodyKey();
 		String markerSymbol = query.getMarkerSymbol();
+		String experimentID = query.getExperimentID();
+
+		if ((experimentID != null) && (!"".equals(experimentID))) {
+			queryFilters.add(new Filter(GxdResultFields.ASSAY_MGIID,
+				experimentID));
+		}
 
 		if(structureKey !=null && !structureKey.equals("")) {
 			Filter structureKeyFilter = new Filter(SearchConstants.STRUCTURE_KEY, structureKey);
