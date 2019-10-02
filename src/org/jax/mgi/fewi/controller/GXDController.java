@@ -2006,7 +2006,7 @@ public class GXDController {
 			return UserMonitor.getSharedInstance().getLimitedMessage();
 		}
 
-		if (!FewiUtil.isPositiveInteger(genoclusterKey)) {
+		if ((genoclusterKey != null) && !FewiUtil.isPositiveInteger(genoclusterKey)) {
 			return errorMav("Invalid genocluster key");
 		}
 		logger.debug("->gxdPhenoGrid started");
