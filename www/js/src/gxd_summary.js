@@ -727,7 +727,7 @@ function refreshTabCounts()
 		if(o.responseText == "-1") o.responseText = "0"; // set count to zero if errors
 		// resolve the request ID to its appropriate handler
 		if(o.tId==resultsRq.tId) {
-			YAHOO.util.Dom.get("totalResultsCount").innerHTML = o.responseText;
+			YAHOO.util.Dom.get("totalResultsCount").innerHTML = commaDelimit(o.responseText);
 			// if no results, we don't need the grid-specific message for 'nowhere else' queries
 			if (parseInt(o.responseText) == 0) {
 				$('#nowhereElseMessage').css('display', 'none');
@@ -753,10 +753,10 @@ function refreshTabCounts()
 					}, querystringWithFilters);
 			}
 		}
-		else if(o.tId==assaysRq.tId) YAHOO.util.Dom.get("totalAssaysCount").innerHTML = o.responseText;
+		else if(o.tId==assaysRq.tId) YAHOO.util.Dom.get("totalAssaysCount").innerHTML = commaDelimit(o.responseText);
 		else if(o.tId==genesRq.tId) {
 			log('handling gene count');
-			YAHOO.util.Dom.get("totalGenesCount").innerHTML = o.responseText;
+			YAHOO.util.Dom.get("totalGenesCount").innerHTML = commaDelimit(o.responseText);
 			log('updatedYSF: ' + updatedYSF);
 			if (!updatedYSF) {
 				updatedYSF = true;
@@ -766,7 +766,7 @@ function refreshTabCounts()
 			} // end - updated YSF
 			log('updatedYSF: ' + updatedYSF);
 		}
-		else if(o.tId==imagesRq.tId) YAHOO.util.Dom.get("totalImagesCount").innerHTML = o.responseText;
+		else if(o.tId==imagesRq.tId) YAHOO.util.Dom.get("totalImagesCount").innerHTML = commaDelimit(o.responseText);
 	}
 
 	// clear these until the data comes back

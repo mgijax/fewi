@@ -102,6 +102,17 @@ var MGIRequestParser = function()
 
 }
 
+// Add commas to integer i (which is actually a string).
+// Taken from stackoverflow.
+function commaDelimit(i) {
+    if ((i == null) || (i == undefined) || (i.length == 0)) { return; }
+    var parts = i.toString().split(".");
+    if (parts[0].indexOf(',') < 0) {
+    	parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+    return parts.join(".");
+}
+
 /*
  * This is intended to manage most of the behavior of having a multi-tabbed summary with queryform.
  * 	Examples are www.informatics.jax.org/gxd and www.informatics.jax.org/diseasePortal
@@ -293,7 +304,7 @@ var MGITabSummary = function(config, isDisabled)
 		// Create the Paginator
 		var paginator = new YAHOO.widget.Paginator({
 		   template: "{FirstPageLink} {PreviousPageLink}<strong>{PageLinks}</strong> {NextPageLink} {LastPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
-		   pageReportTemplate: "Showing results(s) {startRecord} - {endRecord} of {totalRecords}",
+		   pageReportTemplate: "Showing result(s) {startRecord} - {endRecord} of {totalRecords}",
 		   rowsPerPageOptions: rowsPerPageOptions,
 		   containers: ["paginationTop", "paginationBottom"],
 		   rowsPerPage: rowsPerPage,
