@@ -405,7 +405,8 @@ public class GxdQueryForm implements Cloneable {
 	}
 
 	public String getMarkerSymbol() {
-		return FewiUtil.sanitizeSymbol(markerSymbol);
+		this.markerSymbol = FewiUtil.sanitizeSymbol(markerSymbol);
+		return this.markerSymbol;
 	}
 
 	public void setMarkerSymbol(String markerSymbol) {
@@ -413,7 +414,8 @@ public class GxdQueryForm implements Cloneable {
 	}
 
 	public String getStructureID() {
-		return FewiUtil.sanitizeID(structureID);
+		this.structureID = FewiUtil.sanitizeID(structureID);
+		return this.structureID;
 	}
 
 	public void setStructureID(String structureID) {
@@ -639,7 +641,8 @@ public class GxdQueryForm implements Cloneable {
 	}
 
 	public List<String> getMarkerSymbolFilter() {
-		return FewiUtil.sanitizeSymbols(markerSymbolFilter);
+		this.markerSymbolFilter = FewiUtil.sanitizeSymbols(markerSymbolFilter);
+		return this.markerSymbolFilter;
 	}
 
 	public void setMarkerSymbolFilter(List<String> markerSymbolFilter) {
@@ -698,7 +701,8 @@ public class GxdQueryForm implements Cloneable {
 	}
 	
 	public String getDifStructureID() {
-		return FewiUtil.sanitizeID(difStructureID);
+		this.difStructureID = FewiUtil.sanitizeID(difStructureID);
+		return this.difStructureID;
 	}
 
 	public void setDifStructureID(String difStructureID) {
@@ -706,7 +710,8 @@ public class GxdQueryForm implements Cloneable {
 	}
 
 	public List<String> getStructureIDFilter() {
-		return FewiUtil.sanitizeIDs(structureIDFilter);
+		this.structureIDFilter = FewiUtil.sanitizeIDs(structureIDFilter);
+		return this.structureIDFilter;
 	}
 
 	public void setStructureIDFilter(List<String> structureIDFilter) {
@@ -714,7 +719,8 @@ public class GxdQueryForm implements Cloneable {
 	}
 
 	public List<String> getMatrixStructureId() {
-		return FewiUtil.sanitizeIDs(matrixStructureId);
+		this.matrixStructureId = FewiUtil.sanitizeIDs(matrixStructureId);
+		return this.matrixStructureId;
 	}
 
 	public void setMatrixStructureId(List<String> matrixStructureId) {
@@ -722,7 +728,8 @@ public class GxdQueryForm implements Cloneable {
 	}
 
 	public String getMatrixMarkerSymbol() {
-		return FewiUtil.sanitizeSymbol(matrixMarkerSymbol);
+		this.matrixMarkerSymbol = FewiUtil.sanitizeSymbol(matrixMarkerSymbol);
+		return this.matrixMarkerSymbol;
 	}
 
 	public void setMatrixMarkerSymbol(String matrixMarkerSymbol) {
@@ -796,7 +803,8 @@ public class GxdQueryForm implements Cloneable {
 	//-------------------------------------------------//
 
 	public List<String> getMarkerIDs() {
-		return FewiUtil.sanitizeIDs(markerIDs);
+		this.markerIDs = FewiUtil.sanitizeIDs(markerIDs);
+		return this.markerIDs;
 	}
 	public void setMarkerIDs(List<String> markerIDs) {
 		this.markerIDs = markerIDs;

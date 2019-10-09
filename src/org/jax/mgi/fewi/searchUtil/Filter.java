@@ -458,4 +458,26 @@ public class Filter {
 		}
 	}
 
+	/* make a copy of Filter 'a' and return it, such that any modifications
+	 * to the copy will not affect Filter 'a'.
+	 */
+	public static Filter copy(Filter a) {
+		Filter b = new Filter();
+
+		b.property = a.property;
+		b.negate = a.negate;
+		b.quoted = a.quoted;
+		b.proximity = a.proximity;
+		b.operator = a.operator;
+		b.filterJoinClause = a.filterJoinClause;
+
+		for (String v : a.values) {
+			b.values.add(v);
+		}
+
+		for (Filter f : a.nestedFilters) {
+			b.nestedFilters.add(Filter.copy(f));
+		}
+		return b;
+	}
 }

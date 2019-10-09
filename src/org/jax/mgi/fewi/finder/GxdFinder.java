@@ -19,6 +19,8 @@ import org.jax.mgi.fewi.hunter.SolrGxdResultHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdSystemFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdTheilerStageFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdWildtypeFacetHunter;
+import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
@@ -208,6 +210,29 @@ public class GxdFinder {
 		return srMR;
 	}
 	
+	/* get the count of (distinct result_key or marker_key, specified by
+	 * groupBy) having the specified value for detectionLevel for the stage
+	 * by structure matrix (should be a single cell selected in 'params')
+	 */
+	public Integer getCountForStageMatrix(SearchParams p, String detectionLevel, String groupBy) {
+		// We don't actually need any results returned, just a count.
+		Paginator page = new Paginator(0);
+
+		// Get a copy of the parameters we can tweak.
+		SearchParams params = SearchParams.copy(p);
+		params.setPaginator(page);
+
+		List<Filter> combo = new ArrayList<Filter>();
+		combo.add(params.getFilter());
+		combo.add(new Filter(SearchConstants.GXD_DETECTED, detectionLevel, Filter.Operator.OP_EQUAL));
+		params.setFilter(Filter.and(combo));
+
+		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
+		gxdMatrixResultHunter.hunt(params, results, groupBy);
+
+		return results.getTotalCount();
+	}
+
 	/*
 	 * Group by the tissue x stage relevant fields
 	 */

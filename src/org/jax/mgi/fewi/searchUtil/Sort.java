@@ -87,5 +87,10 @@ public class Sort {
 		return "Sort [desc=" + desc + ", sort=" + sort + "]";
 	}
 
-
+	/* make and return a copy of Sort 'a', such that changes to the object
+	 * returned will not affect 'a'.
+	 */
+	public static Sort copy(Sort a) {
+		return new Sort(a.sort, a.desc);
+	}
 }
