@@ -1106,10 +1106,10 @@ public class GXDController {
 		params.setPaginator(page);
 		params.setFilter(parseGxdQueryForm(query));
 		logger.info("gxdStageMatrixPopupJson: set up params");
-		logger.info("- detected results: " + gxdFinder.getCountForStageMatrix(params, "Yes", "result_key"));
-		logger.info("- not detected results: " + gxdFinder.getCountForStageMatrix(params, "No", "result_key"));
-		logger.info("- detected markers: " + gxdFinder.getCountForStageMatrix(params, "Yes", "marker_key"));
-		logger.info("- not detected markers: " + gxdFinder.getCountForStageMatrix(params, "No", "marker_key"));
+		logger.info("- detected results: " + gxdFinder.getCountForStageMatrix(params, "Yes", "result_key", rowId));
+		logger.info("- not detected results: " + gxdFinder.getCountForStageMatrix(params, "No", "result_key", rowId));
+		logger.info("- detected markers: " + gxdFinder.getCountForStageMatrix(params, "Yes", "marker_key", rowId));
+		logger.info("- not detected markers: " + gxdFinder.getCountForStageMatrix(params, "No", "marker_key", rowId));
 
 		logger.info("gxdStageMatrixPopupJson: got result count");
 		SearchResults<SolrGxdMatrixResult> searchResults = gxdFinder.searchMatrixResults(params);

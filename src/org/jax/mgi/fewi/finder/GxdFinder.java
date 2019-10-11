@@ -214,7 +214,7 @@ public class GxdFinder {
 	 * groupBy) having the specified value for detectionLevel for the stage
 	 * by structure matrix (should be a single cell selected in 'params')
 	 */
-	public Integer getCountForStageMatrix(SearchParams p, String detectionLevel, String groupBy) {
+	public Integer getCountForStageMatrix(SearchParams p, String detectionLevel, String groupBy, String emapaID) {
 		// We don't actually need any results returned, just a count.
 		Paginator page = new Paginator(0);
 
@@ -225,6 +225,13 @@ public class GxdFinder {
 		List<Filter> combo = new ArrayList<Filter>();
 		combo.add(params.getFilter());
 		combo.add(new Filter(SearchConstants.GXD_DETECTED, detectionLevel, Filter.Operator.OP_EQUAL));
+
+		// Only "yes" annotations percolate upward; the other detection
+		// levels are only for the exact term.
+		if (!"Yes".equals(detectionLevel)) {
+			combo.add(new Filter(SearchConstants.STRUCTURE_EXACT, emapaID, Filter.Operator.OP_EQUAL));
+		}
+
 		params.setFilter(Filter.and(combo));
 
 		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
