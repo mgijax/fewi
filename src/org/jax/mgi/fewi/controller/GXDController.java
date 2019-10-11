@@ -1079,46 +1079,34 @@ public class GXDController {
 			@RequestParam(value="colId") String colId
 			) {
 		logger.debug("gxdStageMatrixPopupJson() started");
-		logger.info("gxdStageMatrixPopupJson: starting");
 		populateMarkerIDs(session, query);
-		logger.info("gxdStageMatrixPopupJson: got marker IDs");
 
 		// find the requested structure
 		List<VocabTerm> structureTermList = vocabFinder.getTermByID(rowId);
 		VocabTerm structureTerm = structureTermList.get(0);
-		logger.info("gxdStageMatrixPopupJson: got term");
 
 		// force only the current row and column as filters
 		query.getMatrixStructureId().add(rowId);
 		query.setTheilerStageFilter(Arrays.asList(colId));
-		logger.info("gxdStageMatrixPopupJson: set up filter");
 
 		// the object to return as a JSON object
 		GxdStageMatrixPopup gxdStageMatrixPopup = new GxdStageMatrixPopup(structureTerm.getPrimaryID(), structureTerm.getTerm());
 
-//		int imageCount = getGxdImageCount(session, request,query);
-		int imageCount = 1;
-		logger.info("gxdStageMatrixPopupJson: skipped image query");
-
 		// get the results for structure/stage
-		Paginator page = new Paginator(10000000);
+		Paginator page = new Paginator();
 		SearchParams params = new SearchParams();
 		params.setPaginator(page);
 		params.setFilter(parseGxdQueryForm(query));
-		logger.info("gxdStageMatrixPopupJson: set up params");
-		logger.info("- detected results: " + gxdFinder.getCountForStageMatrix(params, "Yes", "result_key", rowId));
-		logger.info("- not detected results: " + gxdFinder.getCountForStageMatrix(params, "No", "result_key", rowId));
-		logger.info("- detected markers: " + gxdFinder.getCountForStageMatrix(params, "Yes", "marker_key", rowId));
-		logger.info("- not detected markers: " + gxdFinder.getCountForStageMatrix(params, "No", "marker_key", rowId));
 
-		logger.info("gxdStageMatrixPopupJson: got result count");
-		SearchResults<SolrGxdMatrixResult> searchResults = gxdFinder.searchMatrixResults(params);
-		logger.info("gxdStageMatrixPopupJson: did result search");
-		List<SolrGxdMatrixResult> assayResultList = searchResults.getResultObjects();
-		logger.info("gxdStageMatrixPopupJson: got result objects");
-		gxdStageMatrixPopup.setAssayResultList(assayResultList);
-		logger.info("gxdStageMatrixPopupJson: set result list");
-		gxdStageMatrixPopup.setHasImage(imageCount > 0);
+		gxdStageMatrixPopup.setCountPosResults(gxdFinder.getCountForStageMatrix(params, "Yes", "result_key", rowId));
+		gxdStageMatrixPopup.setCountNegResults(gxdFinder.getCountForStageMatrix(params, "No", "result_key", rowId));
+		gxdStageMatrixPopup.setCountAmbResults(gxdFinder.getCountForStageMatrix(params, "Ambiguous", "result_key", rowId));
+
+		gxdStageMatrixPopup.setCountPosGenes(gxdFinder.getCountForStageMatrix(params, "Yes", "marker_key", rowId));
+		gxdStageMatrixPopup.setCountNegGenes(gxdFinder.getCountForStageMatrix(params, "No", "marker_key", rowId));
+		gxdStageMatrixPopup.setCountAmbGenes(gxdFinder.getCountForStageMatrix(params, "Ambiguous", "marker_key", rowId));
+
+		gxdStageMatrixPopup.setHasImage(gxdFinder.getImageFlagForStageMatrix(params));
 
 		return gxdStageMatrixPopup;
 	}

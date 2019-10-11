@@ -210,6 +210,28 @@ public class GxdFinder {
 		return srMR;
 	}
 	
+	/* get a flag to indicate whether the single matrix cell selected in
+	 * 'params' has an associated image or not
+	 */
+	public boolean getImageFlagForStageMatrix(SearchParams p) {
+		// We only need a single results returned, just to show a match.
+		Paginator page = new Paginator(1);
+
+		// Get a copy of the parameters we can tweak.
+		SearchParams params = SearchParams.copy(p);
+		params.setPaginator(page);
+
+		List<Filter> combo = new ArrayList<Filter>();
+		combo.add(params.getFilter());
+		combo.add(new Filter(SearchConstants.HAS_IMAGE, "true", Filter.Operator.OP_EQUAL));
+		params.setFilter(Filter.and(combo));
+
+		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
+		gxdMatrixResultHunter.hunt(params, results);
+
+		return (results.getTotalCount() > 0);
+	}
+
 	/* get the count of (distinct result_key or marker_key, specified by
 	 * groupBy) having the specified value for detectionLevel for the stage
 	 * by structure matrix (should be a single cell selected in 'params')

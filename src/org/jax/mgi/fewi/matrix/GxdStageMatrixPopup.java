@@ -26,51 +26,34 @@ public class GxdStageMatrixPopup {
 		this.term = term;
 	}
 
-	// parse the set of results for display counts
-	public void setAssayResultList(List<SolrGxdMatrixResult> assayResultList) {
+	// count of genes with positive results
+	public void setCountPosGenes(Integer countPosGenes) {
+		this.countPosGenes = countPosGenes;
+	}
 
-        // generate counts
-		Set<String> uniquePosMarkers = new HashSet<String>();
-		Set<String> uniqueNegMarkers = new HashSet<String>();
-		Set<String> uniqueAmbMarkers = new HashSet<String>();
-		int posCount = 0;
-		int negCount = 0;
-		int ambCount = 0;
-        for (SolrGxdMatrixResult assayResult : assayResultList) {
-			if (assayResult != null){
+	// count of genes with negative results
+	public void setCountNegGenes(Integer countNegGenes) {
+		this.countNegGenes = countNegGenes;
+	}
 
-				if (DetectionConverter.isDetected(assayResult.getDetectionLevel())) {
-					uniquePosMarkers.add(assayResult.getGeneSymbol());
-					posCount++;
-				}
-				else if (DetectionConverter.isNotDetected(assayResult.getDetectionLevel())&&
-						assayResult.getStructureId().equals(termId)) {
-					uniqueNegMarkers.add(assayResult.getGeneSymbol());
-					negCount++;
-				}
-				else if (assayResult.getDetectionLevel().equals("Ambiguous") &&
-						assayResult.getStructureId().equals(termId)) {
-					uniqueAmbMarkers.add(assayResult.getGeneSymbol());
-					ambCount++;
-				}
-				else if (assayResult.getDetectionLevel().equals("Not Specified")&&
-						assayResult.getStructureId().equals(termId)) {
-					uniqueAmbMarkers.add(assayResult.getGeneSymbol());
-					ambCount++;
-				}
+	// count of genes involved in undetermined results
+	public void setCountAmbGenes(Integer countAmbGenes) {
+		this.countAmbGenes = countAmbGenes;
+	}
 
-			} else {
-				System.out.println("--> Null assayResult object in GxdStageMatrixPopup");
-			}
-		}
+	// positive result count
+	public void setCountPosResults(Integer countPosResults) {
+		this.countPosResults = countPosResults;
+	}
 
-		// set fields
-		countPosGenes = uniquePosMarkers.size();
-		countNegGenes = uniqueNegMarkers.size();
-		countAmbGenes = uniqueAmbMarkers.size();
-		countPosResults = new Integer(posCount);
-		countNegResults = new Integer(negCount);
-		countAmbResults = new Integer(ambCount);
+	// negative result count
+	public void setCountNegResults(Integer countNegResults) {
+		this.countNegResults = countNegResults;
+	}
+
+	// count of undetermined results
+	public void setCountAmbResults(Integer countAmbResults) {
+		this.countAmbResults = countAmbResults;
 	}
 
 	// count of genes with positive results
