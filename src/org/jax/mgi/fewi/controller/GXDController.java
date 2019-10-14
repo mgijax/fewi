@@ -1098,15 +1098,33 @@ public class GXDController {
 		params.setPaginator(page);
 		params.setFilter(parseGxdQueryForm(query));
 
-		gxdStageMatrixPopup.setCountPosResults(gxdFinder.getCountForStageMatrix(params, "Yes", "result_key", rowId));
-		gxdStageMatrixPopup.setCountNegResults(gxdFinder.getCountForStageMatrix(params, "No", "result_key", rowId));
-		gxdStageMatrixPopup.setCountAmbResults(gxdFinder.getCountForStageMatrix(params, "Ambiguous", "result_key", rowId));
+		Integer posResults =  gxdFinder.getCountForStageMatrix(params, "Yes", "result_key", rowId);
+		Integer negResults = gxdFinder.getCountForStageMatrix(params, "No", "result_key", rowId);
+		Integer ambResults = gxdFinder.getCountForStageMatrix(params, "Ambiguous", "result_key", rowId);
 
-		gxdStageMatrixPopup.setCountPosGenes(gxdFinder.getCountForStageMatrix(params, "Yes", "marker_key", rowId));
-		gxdStageMatrixPopup.setCountNegGenes(gxdFinder.getCountForStageMatrix(params, "No", "marker_key", rowId));
-		gxdStageMatrixPopup.setCountAmbGenes(gxdFinder.getCountForStageMatrix(params, "Ambiguous", "marker_key", rowId));
+		gxdStageMatrixPopup.setCountPosResults(posResults);
+		gxdStageMatrixPopup.setCountNegResults(negResults);
+		gxdStageMatrixPopup.setCountAmbResults(ambResults);
 
-		gxdStageMatrixPopup.setHasImage(gxdFinder.getImageFlagForStageMatrix(params));
+		// Only look for marker counts in a category if we already
+		// know it had > 0 results.  (for efficiency)
+
+		if (posResults > 0) {
+			gxdStageMatrixPopup.setCountPosGenes(gxdFinder.getCountForStageMatrix(params, "Yes", "marker_key", rowId));
+		}
+		if (negResults > 0) {
+			gxdStageMatrixPopup.setCountNegGenes(gxdFinder.getCountForStageMatrix(params, "No", "marker_key", rowId));
+		}
+		if (ambResults > 0) {
+			gxdStageMatrixPopup.setCountAmbGenes(gxdFinder.getCountForStageMatrix(params, "Ambiguous", "marker_key", rowId));
+		}
+
+		// Only look for images if we already know at least one
+		// category had > 0 results.  (for efficiency)
+
+		if ((posResults > 0) || (negResults > 0) || (ambResults > 0)) {
+			gxdStageMatrixPopup.setHasImage(gxdFinder.getImageFlagForStageMatrix(params));
+		}
 
 		return gxdStageMatrixPopup;
 	}
