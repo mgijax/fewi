@@ -10,7 +10,7 @@ public class GxdStageMatrixPopup {
 
 	private String term = new String("");
 	private String termId = new String("");
-	private boolean hasImage = true;
+	private boolean hasImage = false;
 	private Integer countPosGenes = new Integer(0);
 	private Integer countNegGenes = new Integer(0);
 	private Integer countAmbGenes = new Integer(0);

@@ -1141,10 +1141,12 @@ public class GXDController {
 		populateMarkerIDs(session, query);
 
 		logger.debug("request=" + request.getQueryString());
+		logger.info("colId= " + colId + ", rowId= " + rowId);
 
 		// find the requested structure
 		List<VocabTerm> structureTermList = vocabFinder.getTermByID(rowId);
 		VocabTerm structureTerm = structureTermList.get(0);
+		logger.info("got term= " + structureTerm.getTerm());
 
 		// force only the current row and column as filters
 		query.getMatrixStructureId().add(rowId);
@@ -1152,18 +1154,34 @@ public class GXDController {
 
 		// the object to return as a JSON object
 		GxdGeneMatrixPopup gxdGeneMatrixPopup = new GxdGeneMatrixPopup(structureTerm.getPrimaryID(), structureTerm.getTerm());
+		gxdGeneMatrixPopup.setSymbol(colId);
 
-		int imageCount = getGxdImageCount(session, request,query);
+//		int imageCount = getGxdImageCount(session, request,query);
 
-		// get the results for structure/gene
-		Paginator page = new Paginator(10000000);
+		// get the results for structure/stage
+		Paginator page = new Paginator();
 		SearchParams params = new SearchParams();
 		params.setPaginator(page);
 		params.setFilter(parseGxdQueryForm(query));
-		SearchResults<SolrGxdMatrixResult> searchResults = gxdFinder.searchMatrixResults(params);
-		List<SolrGxdMatrixResult> assayResultList = searchResults.getResultObjects();
-		gxdGeneMatrixPopup.setAssayResultList(assayResultList);
-		gxdGeneMatrixPopup.setHasImage(imageCount > 0);
+
+		Integer posResults =  gxdFinder.getCountForMatrixPopup(params, "Yes", "result_key", rowId);
+		logger.info("got + results= " + posResults);
+		Integer negResults = gxdFinder.getCountForMatrixPopup(params, "No", "result_key", rowId);
+		logger.info("got - results= " + negResults);
+		Integer ambResults = gxdFinder.getCountForMatrixPopup(params, "Ambiguous", "result_key", rowId);
+		logger.info("got amb results= " + ambResults);
+
+		gxdGeneMatrixPopup.setCountPosResults(posResults);
+		gxdGeneMatrixPopup.setCountNegResults(negResults);
+		gxdGeneMatrixPopup.setCountAmbResults(ambResults);
+
+		// Only look for images if we already know at least one
+		// category had > 0 results.  (for efficiency)
+
+		if ((posResults > 0) || (negResults > 0) || (ambResults > 0)) {
+			gxdGeneMatrixPopup.setHasImage(gxdFinder.getImageFlagForMatrixPopup(params));
+			logger.info("got images");
+		}
 
 		return gxdGeneMatrixPopup;
 	}
