@@ -213,7 +213,7 @@ public class GxdFinder {
 	/* get a flag to indicate whether the single matrix cell selected in
 	 * 'params' has an associated image or not
 	 */
-	public boolean getImageFlagForStageMatrix(SearchParams p) {
+	public boolean getImageFlagForMatrixPopup(SearchParams p) {
 		// We only need a single results returned, just to show a match.
 		Paginator page = new Paginator(1);
 
@@ -236,7 +236,7 @@ public class GxdFinder {
 	 * groupBy) having the specified value for detectionLevel for the stage
 	 * by structure matrix (should be a single cell selected in 'params')
 	 */
-	public Integer getCountForStageMatrix(SearchParams p, String detectionLevel, String groupBy, String emapaID) {
+	public Integer getCountForMatrixPopup(SearchParams p, String detectionLevel, String groupBy, String emapaID) {
 		// We don't actually need any results returned, just a count.
 		Paginator page = new Paginator(0);
 
