@@ -267,13 +267,13 @@ function structStagePopupHandler(d, i) {
 		if (countPosResults > 0 || countNegResults > 0 || countAmbResults > 0) {
 			popupHtml +=  "<tr><th># of Genes</th><th>Detected?</th><th># of Results</th></tr>";
 			if (countPosResults > 0) {
-				popupHtml +=  "<tr><td>" + countPosGenes + "</td><td>Yes</td><td>" + countPosResults + "</td></tr>";
+				popupHtml +=  "<tr><td>" + commaDelimit(countPosGenes) + "</td><td>Yes</td><td>" + commaDelimit(countPosResults) + "</td></tr>";
 			}
 			if (countNegResults > 0) {
-				popupHtml +=  "<tr><td>" + countNegGenes + "</td><td>No</td><td>" + countNegResults + "</td></tr>";
+				popupHtml +=  "<tr><td>" + commaDelimit(countNegGenes) + "</td><td>No</td><td>" + commaDelimit(countNegResults) + "</td></tr>";
 			}
 			if (countAmbResults > 0) {
-				popupHtml +=  "<tr><td>" + countAmbGenes + "</td><td>Ambiguous</td><td>" + countAmbResults + "</td></tr>";
+				popupHtml +=  "<tr><td>" + commaDelimit(countAmbGenes) + "</td><td>Ambiguous</td><td>" + commaDelimit(countAmbResults) + "</td></tr>";
 			}
 			popupHtml +=  "</table>";
 		}
@@ -352,13 +352,13 @@ function structGenePopupHandler(d, i) {
 		if (countPosResults > 0 || countNegResults > 0 || countAmbResults > 0) {
 			popupHtml +=  "<tr><th>Detected?</th><th># of Results</th></tr>";
 			if (countPosResults > 0) {
-				popupHtml +=  "<tr><td>Yes</td><td>" + countPosResults + "</td></tr>";
+				popupHtml +=  "<tr><td>Yes</td><td>" + commaDelimit(countPosResults) + "</td></tr>";
 			}
 			if (countNegResults > 0) {
-				popupHtml +=  "<tr><td>No</td><td>" + countNegResults + "</td></tr>";
+				popupHtml +=  "<tr><td>No</td><td>" + commaDelimit(countNegResults) + "</td></tr>";
 			}
 			if (countAmbResults > 0) {
-				popupHtml +=  "<tr><td>Ambiguous</td><td>" + countAmbResults + "</td></tr>";
+				popupHtml +=  "<tr><td>Ambiguous</td><td>" + commaDelimit(countAmbResults) + "</td></tr>";
 			}
 			popupHtml +=  "</table>";
 		}
