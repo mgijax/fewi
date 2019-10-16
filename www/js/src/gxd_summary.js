@@ -66,13 +66,15 @@ var flipColumn = function(key) {
 	}
 }
 
-var flipOptionalColumns = function() {
+var flipOptionalColumns = function(dontMove) {
 	hideOptionalColumns = !hideOptionalColumns;
 	flipColumn('biologicalReplicates');
 	flipColumn('strain');
 	flipColumn('sex');
 	flipColumn('notes');
-	historyInit();
+	if (!dontMove) {
+		historyInit();
+	}
 }
 
 var isDisabled = function() {

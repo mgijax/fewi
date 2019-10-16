@@ -1378,6 +1378,11 @@ var resetQF = function (e) {
 		msg.style.display = 'none';
 	}
 
+	// uncheck the "Show/Hide Additional Sample Data" box, if it exists
+	if ($('#showHide').length > 0) {
+		$('#showHide')[0].checked = !hideOptionalColumns;
+	}
+
 	// clear the validation errors
 	clearValidation();
 
@@ -1385,11 +1390,22 @@ var resetQF = function (e) {
 	resetFacets();
 };
 
-YAHOO.util.Event.addListener("gxdQueryForm", "reset", resetQF);
-YAHOO.util.Event.addListener("gxdBatchQueryForm1", "reset", resetQF);
-YAHOO.util.Event.addListener("gxdDifferentialQueryForm1", "reset", resetQF);
-YAHOO.util.Event.addListener("gxdDifferentialQueryForm2", "reset", resetQF);
-YAHOO.util.Event.addListener("gxdDifferentialQueryForm3", "reset", resetQF);
+// not only reset the QF, but also uncheck the show/hide additional columns
+// button
+var fullResetQF = function(e) {
+	if ($('#showHide').length > 0) {
+		if ($('#showHide')[0].checked) {
+			flipOptionalColumns(true);
+		}
+	}
+	resetQF(e);
+}
+
+YAHOO.util.Event.addListener("gxdQueryForm", "reset", fullResetQF);
+YAHOO.util.Event.addListener("gxdBatchQueryForm1", "reset", fullResetQF);
+YAHOO.util.Event.addListener("gxdDifferentialQueryForm1", "reset", fullResetQF);
+YAHOO.util.Event.addListener("gxdDifferentialQueryForm2", "reset", fullResetQF);
+YAHOO.util.Event.addListener("gxdDifferentialQueryForm3", "reset", fullResetQF);
 
 //
 // Return the passed in form argument values in key/value URL format
@@ -1622,3 +1638,10 @@ var inCheckboxClick = function() {
 		}
 	}
 };
+
+// on page (re)load, uncheck the "Show/Hide Additional Sample Data" box,
+// if it exists
+//if ($('#showHide').length > 0) {
+//	$('#showHide')[0].checked = false;
+//}
+
