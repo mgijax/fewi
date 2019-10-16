@@ -329,7 +329,6 @@ var filterByExperiment = function(exptID) {
 		facets['experimentFilter'] = [ exptID ];
 	}
 	submitFacets(facets);
-	$('#resultstab')[0].click();
 }
 
 /*

@@ -1378,7 +1378,7 @@ var resetQF = function (e) {
 		msg.style.display = 'none';
 	}
 
-	// uncheck the "Show/Hide Additional Sample Data" box, if it exists
+	// uncheck the "Show Additional Sample Data" box, if it exists
 	if ($('#showHide').length > 0) {
 		$('#showHide')[0].checked = !hideOptionalColumns;
 	}
@@ -1638,10 +1638,4 @@ var inCheckboxClick = function() {
 		}
 	}
 };
-
-// on page (re)load, uncheck the "Show/Hide Additional Sample Data" box,
-// if it exists
-//if ($('#showHide').length > 0) {
-//	$('#showHide')[0].checked = false;
-//}
 
