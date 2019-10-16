@@ -49,18 +49,10 @@ public class GxdAssaySummaryRow {
 		// RNA-Seq data have no images, and the data link should add
 		// a special filter for this experiment ID.
 		if (assay.getAssayType().startsWith("RNA-Seq")) {
-			return "<a href='#" + assay.getJNum() + "' onClick='filterByExperiment(\"" + assay.getJNum() + "\"); return false;'>data set</a><span> (" + assay.getJNum() + ")</span>";
+			return "data set <span>(" + assay.getJNum() + ")</span> <a href='#" + assay.getJNum() + "' onClick='filterByExperiment(\"" + assay.getJNum() + "\"); return false;' onContextMenu='return false;'><img src='" + webshareUrl + "images/filter.png' width='10' height='10' title='Click to Filter Results by Experiment'/></a>";
 		}
 
-		// classical assays with images get a camera icon
-		if (assay.getHasImage()) {
-			return "<a href='" + fewiUrl + "assay/" + assay.getAssayMgiid()
-					+ "'>data</a><span> (" + assay.getAssayMgiid() + ")</span>"
-					+ " <img class=\"cameraIcon\" src=\"" + webshareUrl
-					+ "/images/mgi_camera.gif\" /> ";
-		}
-
-		// classical assays with no images
+		// classical assays
 		return "<a href='" + fewiUrl + "assay/" + assay.getAssayMgiid()
 				+ "'>data</a><span> (" + assay.getAssayMgiid() + ")</span>";
 	}
