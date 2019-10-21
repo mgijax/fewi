@@ -49,7 +49,7 @@ public class GxdAssaySummaryRow {
 		// RNA-Seq data have no images, and the data link should add
 		// a special filter for this experiment ID.
 		if (assay.getAssayType().startsWith("RNA-Seq")) {
-			return "data set <span>(" + assay.getJNum() + ")</span> <a href='#" + assay.getJNum() + "' onClick='filterByExperiment(\"" + assay.getJNum() + "\"); return false;' onContextMenu='return false;'><img src='" + webshareUrl + "images/filter.png' width='10' height='10' title='Click to Filter Results by Experiment'/></a>";
+			return "<a href='#" + assay.getJNum() + "' onClick='filterByExperiment(\"" + assay.getJNum() + "\"); return false;' onContextMenu='return false;'><img src='" + webshareUrl + "images/filter.png' width='10' height='10' title='Click to Filter Results by Experiment'/></a> data set <span>(" + assay.getJNum() + ")</span>";
 		}
 
 		// classical assays
