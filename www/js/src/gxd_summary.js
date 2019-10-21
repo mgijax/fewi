@@ -962,7 +962,7 @@ var gxdAssaysTable = function() {
 	var myColumnDefs = [
 	                    // sortable:true enables sorting
 	                    {key: "gene", label: "Gene", sortable: true },
-	                    {key: "assayID", label: "Assay Details", sortable: false },
+	                    {key: "assayID", label: "Assay Details", sortable: false, minWidth:155 },
 	                    {key: "assayType", label: "Assay Type", sortable: true },
 	                    {key: "reference",label: "Reference",sortable: true},
 	                    {key: "score",label: "score",sortable: false,hidden: true}
