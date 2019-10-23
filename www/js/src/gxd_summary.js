@@ -4,9 +4,9 @@ var gxdDataTable;
 var gxdDataSource;
 var defaultSort = "";
 
-// max number of results allowed for full functionality
-var maxResults = 21000000;
-var controlsDisabled = false;
+var maxResults = 21000000;	// max number of results allowed for full functionality
+var controlsDisabled = false;	// all controls enabled (false) or disabled (true)
+var resultsCount = -1;		// count of results for current query
 
 //default page size for each summary
 var GENES_PAGE_SIZE = 100;
@@ -466,9 +466,6 @@ handleNavigation = function (request, calledLocally) {
 		if (typeof openSummaryControl == 'function')
 			openSummaryControl();
 
-		// build the summary inside the tab
-		buildSummary(request,tabState);
-
 		// update the report buttons
 		var querystringWithFilters = getQueryStringWithFilters();
 		if (querystringWithFilters != previousFilterString)
@@ -501,7 +498,39 @@ handleNavigation = function (request, calledLocally) {
 			}
 		}
 
+		// get counts first
 		refreshTabCounts();
+
+		var countsReceived = function(request, tabState) {
+			if ((resultsCount >= 0) && (resultsCount <= maxResults)) {
+				$(".yui-pg-container").show();
+				console.log('Got results count: ' + resultsCount);
+				buildSummary(request,tabState);
+			} else if ((resultsCount >= 0) && ((tabState == undefined) || (tabState == 'resultstab'))) {
+				console.log('found ' + resultsCount + ' results, tabState: ' + tabState);
+				buildSummary(request,tabState);
+			} else {
+				console.log('error state: no results found, tabState: ' + tabState);
+			}
+		}
+
+		var checkCount = function(delay, toGo, request, tabState) {
+			console.log('checkCount(' + delay + ',' + toGo + ')');
+			if ((resultsCount >= 0) || (toGo <= 0)) {
+				countsReceived(request, tabState);
+			} else {
+				setTimeout(function() {
+					checkCount(delay, toGo - 1, request, tabState);
+					}, delay);
+			}
+		}
+
+		var waitForResultCount = function(request, tabState) {
+			checkCount(100, 100, request, tabState);
+		};
+
+		// build the summary inside the tab (if below max results)
+		waitForResultCount(request, tabState);
 
 		// Shh, do not tell anyone about this. We are sneaking in secret Google Analytics calls, even though there is no approved User Story for it.
 		var GAState = "/gxd/summary/" + tabState + "?" + querystringWithFilters + '&records=' + getRecordsDisplayed();
@@ -700,8 +729,11 @@ function disableControls() {
 	// Hide what we can immediately, then come back in a second and
 	// hide anything added dynamically (like the paginators).
 	$('.canHide').css('display', 'none');
+	$(".yui-pg-container").hide();
+
 	setTimeout(function() { 
 		$('.canHide').css('display', 'none');
+		$(".yui-pg-container").hide();
 		}, 1000);
 
 	controlsDisabled = true;
@@ -710,6 +742,14 @@ function disableControls() {
 function enableControls() {
 	$('.canHide').css('display', 'inline');
 	controlsDisabled = false;
+}
+
+// automatically show the results tab
+function showResultsTab() {
+	$('#resultstab')[0].click();
+}
+
+function clearOtherTabs() {
 }
 
 function refreshTabCounts()
@@ -734,12 +774,16 @@ function refreshTabCounts()
 				$('#nowhereElseMessage').css('display', 'none');
 			}
 
-			// if number of results excees max to be handled, disable some controls;
+			resultsCount = parseInt(o.responseText);
+
+			// if number of results exceeds max to be handled, disable some controls;
 			// otherwise go ahead and ask for the other counts
-			if (parseInt(o.responseText) > maxResults) {
+			if (resultsCount > maxResults) {
 				// disable pagination and other tabs until the count comes down
 				showTooManyResultsMessage();
 				disableControls();
+				showResultsTab();
+				clearOtherTabs();
 			} else {
 				hideTooManyResultsMessage();
 				enableControls();
@@ -771,12 +815,14 @@ function refreshTabCounts()
 		else if(o.tId==imagesRq.tId) YAHOO.util.Dom.get("totalImagesCount").innerHTML = commaDelimit(o.responseText);
 	}
 
-	// clear these until the data comes back
+	// clear these until the data come back
 	YAHOO.util.Dom.get("totalResultsCount").innerHTML = "";
 	YAHOO.util.Dom.get("totalAssaysCount").innerHTML = "";
 	YAHOO.util.Dom.get("totalGenesCount").innerHTML = "";
 	YAHOO.util.Dom.get("totalImagesCount").innerHTML = "";
 
+	// do results request first, then we can skip the others if too many results
+	resultsCount = -1;	// reset before request
 	resultsRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/results/totalCount",
 			{	success:handleCountRequest,
 		failure:function(o){}
