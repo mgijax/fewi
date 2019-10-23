@@ -502,7 +502,6 @@ handleNavigation = function (request, calledLocally) {
 		}
 
 		refreshTabCounts();
-		refreshGxdLitLink();
 
 		// Shh, do not tell anyone about this. We are sneaking in secret Google Analytics calls, even though there is no approved User Story for it.
 		var GAState = "/gxd/summary/" + tabState + "?" + querystringWithFilters + '&records=' + getRecordsDisplayed();
@@ -694,9 +693,9 @@ function showTooManyResultsMessage() {
 }
 
 function disableControls() {
-	YAHOO.util.Dom.get("totalGenesCount").innerHTML = 'N/A';
-	YAHOO.util.Dom.get("totalAssaysCount").innerHTML = 'N/A';
-	YAHOO.util.Dom.get("totalImagesCount").innerHTML = 'N/A';
+	YAHOO.util.Dom.get("totalGenesCount").innerHTML = '-';
+	YAHOO.util.Dom.get("totalAssaysCount").innerHTML = '-';
+	YAHOO.util.Dom.get("totalImagesCount").innerHTML = '-';
 
 	// Hide what we can immediately, then come back in a second and
 	// hide anything added dynamically (like the paginators).
@@ -753,6 +752,7 @@ function refreshTabCounts()
 				imagesRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/images/totalCount", {	success:handleCountRequest,
 					failure:function(o){}
 					}, querystringWithFilters);
+				refreshGxdLitLink();
 			}
 		}
 		else if(o.tId==assaysRq.tId) YAHOO.util.Dom.get("totalAssaysCount").innerHTML = commaDelimit(o.responseText);

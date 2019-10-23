@@ -81,7 +81,7 @@
 	    <br clear="all" />
     </div>
     <div id="tooManyResultsWrapper">
-    	<div id="tooManyResults">Your search returned too many assay results.  Some functionality has been disabled until you refine or filter your search to bring the number of results under <span id="maxCount">TBD</span>.
+    	<div id="tooManyResults">Large search returns make our pages slow to load. Therefore, some functionality has been disabled until you refine your search to bring the number of returned assay results under <span id="maxCount">TBD</span>.
     	</div>
     </div>
 <div id="resultSummary" class="yui-navset">
@@ -158,7 +158,7 @@
 	<div id="paginationBottom" class="canHide">&nbsp;</div>
     <div class="gxdLitRow">
     	<br/>
-    	<span id="gxdLitInfo"></span>
+    	<span id="gxdLitInfo" class="canHide"></span>
     </div>
 
 <div id="structStagePopup" class="visHidden facetFilter structPopup">
