@@ -749,7 +749,23 @@ function showResultsTab() {
 	$('#resultstab')[0].click();
 }
 
+function refreshCurrentTab() {
+	// click the results tab, immediately followed by the current tab,
+	// to ensure it refreshes it
+	console.log('Refreshing current tab');
+	var currentTab = $('#resultSummary .yui-nav .selected a').attr('id');
+	$('#resultstab')[0].click();
+	$('#' + currentTab)[0].click();
+}
+
 function clearOtherTabs() {
+	var tabs = ["genesdata", "assaysdata", "imagesdata"];
+	var message = 'Some functionality has been disabled until you refine your search to bring the number of returned assay results under 21,000,000.';
+	for (var i = 0; i < tabs.length; i++) {
+		showMessageInTable(tabs[i], message);
+	}
+	$('#ggTarget').html(message);
+	$('#sgTarget').html(message);
 }
 
 function refreshTabCounts()
@@ -782,7 +798,7 @@ function refreshTabCounts()
 				// disable pagination and other tabs until the count comes down
 				showTooManyResultsMessage();
 				disableControls();
-				showResultsTab();
+				//showResultsTab();
 				clearOtherTabs();
 			} else {
 				hideTooManyResultsMessage();
@@ -797,6 +813,7 @@ function refreshTabCounts()
 					failure:function(o){}
 					}, querystringWithFilters);
 				refreshGxdLitLink();
+				refreshCurrentTab();
 			}
 		}
 		else if(o.tId==assaysRq.tId) YAHOO.util.Dom.get("totalAssaysCount").innerHTML = commaDelimit(o.responseText);
@@ -868,6 +885,19 @@ window.previousGxdLitQuery=""
  * Definitions of all the datatables
  */
 
+// replace the contents of the table with the given name with the given message
+var showMessageInTable = function (tablename, message) {
+	var myConfigs = {
+		dynamicData : false,
+		initialLoad : false
+		};
+
+	var gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/markers/json", xhrConfig);
+
+	var gxdDataTable = new YAHOO.widget.DataTable(tablename, [], gxdDataSource, myConfigs);
+
+	gxdDataTable.showTableMessage(message);
+}
 
 //Gene results table population function
 
