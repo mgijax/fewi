@@ -1509,7 +1509,7 @@ var handleSctructGeneTab = function() {
 	};
 
 	var paginator = mgiTab.createPaginator(
-			[50,100,250,500], // rows per page options
+			[50,100,250], // rows per page options
 			GENE_MATRIX_SIZE // rows per page
 	);
 
