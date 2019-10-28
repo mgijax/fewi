@@ -246,7 +246,17 @@ public class GxdFinder {
 
 		List<Filter> combo = new ArrayList<Filter>();
 		combo.add(params.getFilter());
-		combo.add(new Filter(SearchConstants.GXD_DETECTED, detectionLevel, Filter.Operator.OP_EQUAL));
+
+		// For "Yes" and "No" annotations, we search for them directly.
+		// For "Ambiguous", we need to look for either "Ambiguous" or "Not Specified".
+		if (!"Ambiguous".equals(detectionLevel)) {
+			combo.add(new Filter(SearchConstants.GXD_DETECTED, detectionLevel, Filter.Operator.OP_EQUAL));
+		} else {
+			List<Filter> eitherOr = new ArrayList<Filter>();
+			eitherOr.add(new Filter(SearchConstants.GXD_DETECTED, detectionLevel, Filter.Operator.OP_EQUAL));
+			eitherOr.add(new Filter(SearchConstants.GXD_DETECTED, "Not Specified", Filter.Operator.OP_EQUAL));
+			combo.add(Filter.or(eitherOr));
+		}
 
 		// Only "yes" annotations percolate upward; the other detection
 		// levels are only for the exact term.

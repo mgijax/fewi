@@ -100,7 +100,7 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 
 		// is Expressed (from QF)
 		propertyMap.put(SearchConstants.GXD_DETECTED, new SolrPropertyMapper(
-				GxdResultFields.IS_EXPRESSED));
+				GxdResultFields.DETECTION_LEVEL));
 
 		// detection level (from facet)
 		propertyMap.put(FacetConstants.GXD_DETECTED, new SolrPropertyMapper(
