@@ -727,13 +727,13 @@ function disableControls() {
 	YAHOO.util.Dom.get("totalImagesCount").innerHTML = '-';
 
 	// Hide what we can immediately, then come back in a second and
-	// hide anything added dynamically (like the paginators).
+	// hide anything added dynamically
 	$('.canHide').css('display', 'none');
-	$(".yui-pg-container").hide();
+
+	// $(".yui-pg-container").hide(); -- no longer hide paginators
 
 	setTimeout(function() { 
 		$('.canHide').css('display', 'none');
-		$(".yui-pg-container").hide();
 		}, 1000);
 
 	controlsDisabled = true;
