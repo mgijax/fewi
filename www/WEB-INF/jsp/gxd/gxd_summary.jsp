@@ -56,7 +56,7 @@
 
     <div id="rightcolumn">
         <div class="innertube">
-        	<div id="paginationTop" class="canHide">&nbsp;</div>
+        	<div id="paginationTop">&nbsp;</div>
         </div>
     </div>
 
@@ -155,7 +155,7 @@
         </div>
     </div>
 </div>
-	<div id="paginationBottom" class="canHide">&nbsp;</div>
+	<div id="paginationBottom">&nbsp;</div>
     <div class="gxdLitRow">
     	<br/>
     	<span id="gxdLitInfo" class="canHide"></span>
