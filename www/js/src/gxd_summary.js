@@ -744,18 +744,16 @@ function enableControls() {
 	controlsDisabled = false;
 }
 
-// automatically show the results tab
-function showResultsTab() {
-	$('#resultstab')[0].click();
-}
-
 function refreshCurrentTab() {
 	// click the results tab, immediately followed by the current tab,
 	// to ensure it refreshes it
-	console.log('Refreshing current tab');
-	var currentTab = $('#resultSummary .yui-nav .selected a').attr('id');
+	var currentTab = getCurrentTab();
+	console.log('Refreshing current tab: ' + currentTab);
 	$('#resultstab')[0].click();
-	$('#' + currentTab)[0].click();
+	// allow a slight delay before clicking on the original tab again
+	setTimeout(function () {
+		$('#' + currentTab)[0].click();
+		}, 100);
 }
 
 function clearOtherTabs() {
@@ -798,7 +796,6 @@ function refreshTabCounts()
 				// disable pagination and other tabs until the count comes down
 				showTooManyResultsMessage();
 				disableControls();
-				//showResultsTab();
 				clearOtherTabs();
 			} else {
 				hideTooManyResultsMessage();
