@@ -135,56 +135,6 @@ public class GXDController {
 	private static String DETECTED = "detected";	// custom case
 	private static String MARKERTYPE_DISPLAY = "markerTypeDisplay";	// custom case
 
-	protected static final Set<String> goMfValues = new HashSet<>(Arrays.asList(
-		"carbohydrate derivative binding",
-		"cytoskeletal protein binding",
-		"DNA binding",
-		"enzyme regulator",
-		"hydrolase",
-		"ligase",
-		"lipid binding",
-		"oxidoreductase",
-		"RNA binding",
-		"signaling receptor activity",
-		"signaling receptor binding",
-		"transcription",
-		"transferase",
-		"transporter"));
-	
-	protected static final Set<String> goBpValues = new HashSet<>(Arrays.asList(
-		"carbohydrate derivative metabolism",
-		"cell death",
-		"cell differentiation",
-		"cell population proliferation",
-		"cellular component organization",
-		"establishment of localization",
-		"homeostatic process",
-		"immune system process",
-		"lipid metabolic process",
-		"nucleic acid-templated transcription",
-		"protein metabolic process",
-		"response to stimulus",
-		"signaling",
-		"system development"));
-
-	protected static final Set<String> goCcValues = new HashSet<>(Arrays.asList(
-		"cell projection",
-		"cytoplasmic vesicle",
-		"cytoskeleton",
-		"cytosol",
-		"endoplasmic reticulum",
-		"endosome",
-		"extracellular region",
-		"Golgi apparatus",
-		"mitochondrion",
-		"non-membrane-bounded organelle",
-		"nucleus",
-		"organelle envelope",
-		"organelle lumen",
-		"plasma membrane",
-		"synapse",
-		"vacuole"));
-
 	// --------------------//
 	// instance variables
 	// --------------------//
@@ -2875,9 +2825,19 @@ public class GXDController {
 					query.getDoFilter(), Filter.Operator.OP_IN));
 		}
 
-		if (query.getGoFilter().size() > 0) {
-			facetList.add(new Filter(FacetConstants.GXD_GO,
-					query.getGoFilter(), Filter.Operator.OP_IN));
+		if (query.getGoBpFilter().size() > 0) {
+			facetList.add(new Filter(GxdResultFields.GO_HEADERS_BP,
+					query.getGoBpFilter(), Filter.Operator.OP_IN));
+		}
+		
+		if (query.getGoCcFilter().size() > 0) {
+			facetList.add(new Filter(GxdResultFields.GO_HEADERS_CC,
+					query.getGoCcFilter(), Filter.Operator.OP_IN));
+		}
+		
+		if (query.getGoMfFilter().size() > 0) {
+			facetList.add(new Filter(GxdResultFields.GO_HEADERS_MF,
+					query.getGoMfFilter(), Filter.Operator.OP_IN));
 		}
 		
 		if (query.getDetectedFilter().size() > 0) {
@@ -2922,6 +2882,23 @@ public class GXDController {
 			queryFilters.add(new Filter(SearchConstants.MRK_SYMBOL, query.getMatrixMarkerSymbol()));
 		}
 
+		// Move processing of a batch of marker IDs up above the differential
+		// handling, so we can do pagination on the tissue x gene matrix.
+
+		// do we have a list of marker IDs (via the Batch Search tab)
+
+		List<String> markerIDs = query.getMarkerIDs();
+		if ((markerIDs != null) && (markerIDs.size() > 0)) {
+			Filter markerIDsFilter = new Filter(SearchConstants.MRK_ID, markerIDs, Filter.Operator.OP_IN);
+			queryFilters.add(markerIDsFilter);
+
+		} else if (query.getBatchSubmission()) {
+			// no markers were found for the submitted IDs, so
+			// add a filter that prevents any matches (otherwise
+			// we get all results)
+			queryFilters.add(new Filter(SearchConstants.PRIMARY_KEY, "[-10 TO -10]", Filter.Operator.OP_HAS_WORD));
+		}
+		
 		// process normal query form parameter.  the resulting filter objects
 		// are added to queryList.
 		// the first this we need to check is if we have differential params
@@ -2931,7 +2908,7 @@ public class GXDController {
 			// Process DIFFERENTIAL QUERY FORM params
 			// Do part 1 of the differential (I.e. find out what markers to bring back)
 			List<String> markerKeys = resolveDifferentialMarkers(query);
-			logger.info("Found marker keys: " + markerKeys.toString());
+			logger.info("Found " + markerKeys.size() + " marker keys");
 			if(markerKeys !=null && markerKeys.size()>0)
 			{
 				queryFilters.add( new Filter(SearchConstants.MRK_KEY,markerKeys,Filter.Operator.OP_IN));
@@ -3200,20 +3177,6 @@ public class GXDController {
 			queryFilters.add(Filter.or(aFilters));
 		}
 
-		// do we have a list of marker IDs (via the Batch Search tab)
-
-		List<String> markerIDs = query.getMarkerIDs();
-		if ((markerIDs != null) && (markerIDs.size() > 0)) {
-			Filter markerIDsFilter = new Filter(SearchConstants.MRK_ID, markerIDs, Filter.Operator.OP_IN);
-			queryFilters.add(markerIDsFilter);
-
-		} else if (query.getBatchSubmission()) {
-			// no markers were found for the submitted IDs, so
-			// add a filter that prevents any matches (otherwise
-			// we get all results)
-			queryFilters.add(new Filter(SearchConstants.PRIMARY_KEY, "[-10 TO -10]", Filter.Operator.OP_HAS_WORD));
-		}
-		
 		// And all base filter sections
 		Filter gxdFilter = new Filter();
 		if(queryFilters.size() > 0)
@@ -3705,8 +3668,7 @@ public class GXDController {
 			BindingResult result) {
 
 		populateMarkerIDs(session, query);
-		return facetGeneric(query, result,
-				FacetConstants.GXD_GO_MF);
+		return facetGeneric(query, result, FacetConstants.GXD_GO_MF);
 	}
 
 	/* gets a list of GO Biological Process values for the facet list, returned
@@ -3719,8 +3681,7 @@ public class GXDController {
 			BindingResult result) {
 
 		populateMarkerIDs(session, query);
-		return facetGeneric(query, result,
-				FacetConstants.GXD_GO_BP);
+		return facetGeneric(query, result, FacetConstants.GXD_GO_BP);
 	}
 
 	/* gets a list of GO Cellular Component values for the facet list, returned
@@ -3733,8 +3694,7 @@ public class GXDController {
 			BindingResult result) {
 
 		populateMarkerIDs(session, query);
-		return facetGeneric(query, result,
-				FacetConstants.GXD_GO_CC);
+		return facetGeneric(query, result, FacetConstants.GXD_GO_CC);
 	}
 
 	
@@ -3783,31 +3743,13 @@ public class GXDController {
 
 		} else if (FacetConstants.GXD_GO_MF.equals(facetType)) {
 			emptyListMsg = "No genes found with ontology associations.";
-			facetResults = gxdFinder.getGoFacet(params);
-
-			// Remove values not applicable to this filter
-			List<String> facetValues = facetResults.getResultFacets();
-			for (String goValue: goBpValues) {facetValues.remove(goValue);}
-			for (String goValue: goCcValues) {facetValues.remove(goValue);}
-			
+			facetResults = gxdFinder.getGoFacet(params, "MF");
 		} else if (FacetConstants.GXD_GO_BP.equals(facetType)) {
 			emptyListMsg = "No genes found with ontology associations.";
-			facetResults = gxdFinder.getGoFacet(params);
-
-			// Remove values not applicable to this filter
-			List<String> facetValues = facetResults.getResultFacets();
-			for (String goValue: goMfValues) {facetValues.remove(goValue);}
-			for (String goValue: goCcValues) {facetValues.remove(goValue);}
-			
+			facetResults = gxdFinder.getGoFacet(params, "BP");
 		} else if (FacetConstants.GXD_GO_CC.equals(facetType)) {
 			emptyListMsg = "No genes found with ontology associations.";
-			facetResults = gxdFinder.getGoFacet(params);
-
-			// Remove values not applicable to this filter
-			List<String> facetValues = facetResults.getResultFacets();
-			for (String goValue: goBpValues) {facetValues.remove(goValue);}
-			for (String goValue: goMfValues) {facetValues.remove(goValue);}
-			
+			facetResults = gxdFinder.getGoFacet(params, "CC");
 		} else {
 			facetResults = new SearchResults<SolrString>();
 		}

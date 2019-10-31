@@ -30,4 +30,8 @@ public class SolrGxdGoFacetHunter extends SolrGxdSummaryBaseHunter {
 		super.solrUrl = solrUrl;
 	}
 
+	// change the facet field without creating more GO facet hunter classes
+	public void setFacetField(String indexFieldName) {
+		facetString = indexFieldName;
+	}
 }

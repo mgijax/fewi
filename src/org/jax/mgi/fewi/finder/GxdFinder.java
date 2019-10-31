@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.HashSet;
 
 import org.apache.commons.lang.StringUtils;
+import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.fewi.hunter.SolrGxdAssayTypeFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdMarkerTypeFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdMpFacetHunter;
@@ -452,9 +453,16 @@ public class GxdFinder {
 		return srSS;
 	}
 
-	public SearchResults<SolrString> getGoFacet(SearchParams params) {
+	public SearchResults<SolrString> getGoFacet(SearchParams params, String dag) {
 		logger.debug("Starting: getGoFacet");
 		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
+		if ("BP".equals(dag)) {
+			gxdGoFacetHunter.setFacetField(GxdResultFields.GO_HEADERS_BP);
+		} else if ("CC".equals(dag)) {
+			gxdGoFacetHunter.setFacetField(GxdResultFields.GO_HEADERS_CC);
+		} else {
+			gxdGoFacetHunter.setFacetField(GxdResultFields.GO_HEADERS_MF);
+		}
 		gxdGoFacetHunter.hunt(params, results);
 		SearchResults<SolrString> srSS = new SearchResults<SolrString>();
 		srSS.cloneFrom(results, SolrString.class);
