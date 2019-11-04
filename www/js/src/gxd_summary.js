@@ -397,6 +397,26 @@ var getRecordsDisplayed = function() {
 	return pages;
 }
 
+// Show the paginators (if rules allow it).
+var showPaginators = function() {
+	// If we are showing the tissue x gene grid from a differential search,
+	// do not show the paginators. Hide them instead.
+	if ((currentQF == 'differential') && (getCurrentTab() == 'genegridtab')) {
+		hidePaginators();
+		return;
+	}
+	$(".yui-pg-container").show();
+}
+
+// Hide the paginators (if the rules allow it).
+var hidePaginators = function() {
+	// If we are showing the tissue x gene grid from a differential search,
+	// do not show the paginators. Hide them instead.
+	if ((currentQF == 'differential') && (getCurrentTab() == 'genegridtab')) {
+		$(".yui-pg-container").hide();
+	}
+}
+
 //a globabl variable to help the summary know when to generate a new datatable
 var previousQueryString = "none";
 var previousFilterString = "none";
@@ -503,7 +523,7 @@ handleNavigation = function (request, calledLocally) {
 
 		var countsReceived = function(request, tabState) {
 			if ((resultsCount >= 0) && (resultsCount <= maxResults)) {
-				$(".yui-pg-container").show();
+				showPaginators();
 				console.log('Got results count: ' + resultsCount);
 				buildSummary(request,tabState);
 			} else if ((resultsCount >= 0) && ((tabState == undefined) || (tabState == 'resultstab'))) {
@@ -580,7 +600,7 @@ function buildSummary(request,tabState)
 	}
 	else if(doGeneGrid)
 	{
-		loadDatatable (handleSctructGeneTab,request);
+		loadDatatable (handleStructGeneTab,request);
 		showNowhereElseMessage(request, 'Tissue x Gene Matrix');
 	}
 	else
@@ -589,6 +609,7 @@ function buildSummary(request,tabState)
 		// not showing a grid, so hide the "nowhere else" message (that applies only to the grids)
 		$('#nowhereElseMessage').hide();
 	}
+	showPaginators();
 }
 
 // Works with clickNotDetectedFilter() to allow easy, programmatic removal of the auto-added Not Detected filter.
@@ -664,7 +685,7 @@ function showNowhereElseMessage(request, matrixType) {
 function loadDatatable(dataTableInitFunction,request)
 {
 	// show page controls
-	$(".yui-pg-container").show()
+	showPaginators();
 
 	// returns object of {"datatable": ..., "datasource":...}
 	var o = dataTableInitFunction();
@@ -729,8 +750,6 @@ function disableControls() {
 	// Hide what we can immediately, then come back in a second and
 	// hide anything added dynamically
 	$('.canHide').css('display', 'none');
-
-	// $(".yui-pg-container").hide(); -- no longer hide paginators
 
 	setTimeout(function() { 
 		$('.canHide').css('display', 'none');
@@ -1383,7 +1402,7 @@ window.prevStageGridQuery="";
 var structureStageGrid = function()
 {
 	// hide page controls
-	$(".yui-pg-container").hide()
+	hidePaginators();
 
 	var querystringWithFilters = getQueryStringWithFilters();
 	if(querystringWithFilters==window.prevStageGridQuery)
@@ -1476,7 +1495,7 @@ var structureStageGrid = function()
 var currentGeneGrid;
 window.prevGeneGridQuery="";
 
-var handleSctructGeneTab = function() {
+var handleStructGeneTab = function() {
 
 	var facets = {};
 	var numConfig = {thousandsSeparator: ','};
@@ -1522,6 +1541,7 @@ var handleSctructGeneTab = function() {
 	// DataTable instance & pagination 
 	gxdDataTable = new YAHOO.widget.DataTable("hiddenGeneMatrixPaginator", myColumnDefs, gxdDataSource, myConfigs);
 	mgiTab.initPaginator(gxdDataTable,paginator);
+	showPaginators();		// hide/show as needed
 
 	// Define a custom function to route sorting through the Browser History Manager
 	var handleSorting = function (oColumn) {
@@ -1562,7 +1582,8 @@ var handleSctructGeneTab = function() {
 		geneGridRecordOffset = oPayload.pagination.recordOffset;
 		geneGridRecordTotal = oPayload.totalRecords;
 		
-		// When the hidden YUI table is loaded, build the grid with the pagination controls
+		// When the hidden YUI table is loaded, build the grid with the pagination controls (if needed)
+		showPaginators();		// hide/show as needed
 		structureGeneGrid()
 
 		return true;
@@ -1585,6 +1606,7 @@ var structureGeneGrid = function()
 
 	console.log("------------------------------");
 	console.log(geneGridDataUrl);
+	showPaginators();			// hide or show as needed
 
 	var buildGrid = function()
 	{
@@ -1639,6 +1661,7 @@ var structureGeneGrid = function()
 	        	if (SHOW_MATRIX_LEGENDS) {
 	        		geneMatrixLegendPopupPanel.show();
 	        	}
+			showPaginators();	// hide or show as needed
 	        }
 	    });
 	}
@@ -1647,6 +1670,7 @@ var structureGeneGrid = function()
 	{
 		currentGeneGrid.cancelDataSource();
 	}
+	showPaginators();			// hide or show as needed
 	buildGrid();
 }
 
