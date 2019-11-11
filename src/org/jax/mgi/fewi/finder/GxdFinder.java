@@ -17,6 +17,7 @@ import org.jax.mgi.fewi.hunter.SolrGxdDetectedFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdDifferentialHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdMatrixResultHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdResultHunter;
+import org.jax.mgi.fewi.hunter.SolrGxdResultHasImageHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdSystemFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdTheilerStageFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdWildtypeFacetHunter;
@@ -53,6 +54,9 @@ public class GxdFinder {
 
 	@Autowired
 	private SolrGxdResultHunter gxdResultHunter;
+
+	@Autowired
+	private SolrGxdResultHasImageHunter gxdResultHasImageHunter;
 
 	@Autowired
 	private SolrGxdMatrixResultHunter gxdMatrixResultHunter;
@@ -120,7 +124,7 @@ public class GxdFinder {
 
 	public Integer getImageCount(SearchParams params) {
 		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
-		gxdResultHunter.joinHunt(params, results, "gxdImagePane");
+		gxdResultHasImageHunter.joinHunt(params, results, "gxdImagePane");
 		logger.debug("gxd finder image count =" + results.getTotalCount());
 		return results.getTotalCount();
 	}
@@ -179,7 +183,7 @@ public class GxdFinder {
 
 	public SearchResults<SolrGxdImage> searchImages(SearchParams params) {
 		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
-		gxdResultHunter.joinHunt(params, results, "gxdImagePane");
+		gxdResultHasImageHunter.joinHunt(params, results, "gxdImagePane");
 
 		SearchResults<SolrGxdImage> srGI = new SearchResults<SolrGxdImage>();
 		srGI.cloneFrom(results, SolrGxdImage.class);

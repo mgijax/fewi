@@ -490,7 +490,7 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 		 * joined index (the "to").
 		 */
 		this.joinIndices.put("gxdImagePane", new SolrJoinMapper(imagePaneUrl,
-				GxdResultFields.RESULT_KEY, "gxdResult",
+				GxdResultFields.RESULT_KEY, "gxdResultHasImage",
 				GxdResultFields.RESULT_KEY));
 	}
 }
