@@ -105,7 +105,6 @@
 			<form name="markerExportForm" id="markerExportForm" action="" method="POST">
                    <span class="label canHide">Export:</span>
                    <a id="markersTextDownload" class="canHide filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
-                   <a id="markersExcelDownload" class="canHide filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a>
                    <a id="markersBatchForward" class="canHide filterButton"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> MGI Batch Query</a>
 						<a id="mouseMineLink" target="_blank" class="canHide filterButton" onClick="javascript: mousemine.submit();"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> MouseMine</a>
 			</form><!-- markerExportForm -->
@@ -122,7 +121,6 @@
 		    <form name="resultsExportForm" id="resultsExportForm" action="" method="POST">
                     <span class="label canHide">Export:</span>
                     <a id="resultsTextDownload" class="canHide filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
-                    <a id="resultsExcelDownload" class="canHide filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a>
 		    <span class="label" style="padding-left: 100px;">Show Additional Sample Data <input id="showHide" type="checkbox" onClick="flipOptionalColumns()"></span>
 		    </form><!-- resultsExportForm -->
                 </div>

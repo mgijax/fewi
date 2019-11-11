@@ -500,17 +500,9 @@ handleNavigation = function (request, calledLocally) {
 			if (!YAHOO.lang.isNull(resultsTextReportButton)) {
 				resultsTextReportButton.setAttribute('onClick', "buildAndSubmit('resultsExportForm', '" + fewiurl + "gxd/report.txt')");
 			}
-			var resultsExcelReportButton = YAHOO.util.Dom.get('resultsExcelDownload');
-			if (!YAHOO.lang.isNull(resultsExcelReportButton)) {
-				resultsExcelReportButton.setAttribute('onClick', "buildAndSubmit('resultsExportForm', '" + fewiurl + "gxd/report.xlsx')");
-			}
 			var markersTextReportButton = YAHOO.util.Dom.get('markersTextDownload');
 			if (!YAHOO.lang.isNull(markersTextReportButton)) {
 				markersTextReportButton.setAttribute('onClick', "buildAndSubmit('markerExportForm', '" + fewiurl + "gxd/marker/report.txt')");
-			}
-			var markersExcelReportButton = YAHOO.util.Dom.get('markersExcelDownload');
-			if (!YAHOO.lang.isNull(markersExcelReportButton)) {
-				markersExcelReportButton.setAttribute('onClick', "buildAndSubmit('markerExportForm', '" + fewiurl + "gxd/marker/report.xlsx')");
 			}
 			var markersBatchForward = YAHOO.util.Dom.get('markersBatchForward');
 			if (!YAHOO.lang.isNull(markersBatchForward)) {
