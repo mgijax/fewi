@@ -95,16 +95,16 @@ var getFilterCriteria = function() {
     var s = '';
     var isFirst = 1;
 
-    for (key in facets) {
+	for (key in facets) {
 	list = facets[key];
-	for (i = 0; i < list.length; i++) {
-	    if (isFirst == 0) {
-		s = s + '&';
-	    } else {
-		isFirst = 0;
-	    }
-	    s = s + key + '=' + encode(list[i].replace('*', ','));
-	}
+		for (i = 0; i < list.length; i++) {
+			if (isFirst == 0) {
+				s = s + '&';
+			} else {
+				isFirst = 0;
+			}
+			s = s + key + '=' + encode(list[i].replace('*', ','));
+		}
     }
     gsfLog("getFilterCriteria() : " + s);
     return s;
@@ -188,7 +188,6 @@ var parseFacetResponse = function (oRequest, oResponse, oPayload) {
 	else { // no 'checked' facet values; display all
 		
 		results.forEach(function(facet){
-
 			// create each row of filter
 			if (facetName == 'theilerStageFilter') {
 				var facetLabel = 'TS' + facet + ' ' + displayStageDayMap[facet];
@@ -206,7 +205,10 @@ var parseFacetResponse = function (oRequest, oResponse, oPayload) {
 					+ facet + '</label>';
 			}
 		});
-		
+
+		// add hidden option;  this is to get around YUI's issue with models
+		// with single inputs (returns boolean rather than list)
+		options[options.length] = '<label hidden><input type="checkbox" name="' + facetName + '" value="bar">bar</label>';		
 	}
 
 	populateFacetDialog(oPayload.title, options.join('<br/>'), false);
