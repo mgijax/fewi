@@ -401,9 +401,15 @@ var getRecordsDisplayed = function() {
 var showPaginators = function() {
 	// If we are showing the tissue x gene grid from a differential search,
 	// do not show the paginators. Hide them instead.
-	if ((currentQF == 'differential') && (getCurrentTab() == 'genegridtab')) {
-		hidePaginators();
-		return;
+	try {
+		if ((currentQF == 'differential') && (getCurrentTab() == 'genegridtab')) {
+			hidePaginators();
+			return;
+		}
+	} catch (e) {
+		// If we got here, then currentQF is not defined (because we
+		// came via a link from another page like the marker detail),
+		// so we know we didn't come from the differential QF.
 	}
 	$(".yui-pg-container").show();
 }
@@ -412,8 +418,14 @@ var showPaginators = function() {
 var hidePaginators = function() {
 	// If we are showing the tissue x gene grid from a differential search,
 	// do not show the paginators. Hide them instead.
-	if ((currentQF == 'differential') && (getCurrentTab() == 'genegridtab')) {
-		$(".yui-pg-container").hide();
+	try {
+		if ((currentQF == 'differential') && (getCurrentTab() == 'genegridtab')) {
+			$(".yui-pg-container").hide();
+		}
+	} catch (e) {
+		// If we got here, then currentQF is not defined (because we
+		// came via a link from another page like the marker detail),
+		// so we know we didn't come from the differential QF.
 	}
 }
 
