@@ -17,6 +17,11 @@ import org.jax.mgi.fewi.util.NotesTagConverter;
 
 public class TextGxdResultsSummary extends AbstractTextView
 {
+	// returns an empty string if 's' is null, or 's' otherwise
+	private String nullProtected(String s) {
+		if (s == null) return "";
+		return s;
+	}
 
 	@Override
 	protected void buildTextDocument(Map<String, Object> model, BufferedWriter writer,
@@ -43,8 +48,14 @@ public class TextGxdResultsSummary extends AbstractTextView
 				"Theiler Stage",
 				"Structure",
 				"Detected",
+				"TPM Level (RNA-Seq)",
+				"Biological Replicates (RNA-Seq)",
 				"Images",
 				"Mutant Allele(s)",
+				"Strain",
+				"Sex",
+				"Notes (RNA-Seq)",
+				"TPM (avg_quantile normalization)",
 				"MGI Reference ID",
 				"PubMed ID",
 				"Citation"};
@@ -72,6 +83,9 @@ public class TextGxdResultsSummary extends AbstractTextView
 				writer.write(r.getPrintname() + "\t");
 				writer.write(format(r.getDetectionLevel()) + "\t");
 
+				writer.write(nullProtected(r.getTpmLevel()) + "\t");
+				writer.write(nullProtected(r.getBiologicalReplicates()) + "\t");
+
 				// generate the figure text
 				String figureText = "";
 				List<String> formattedFigures = new ArrayList<String>(0);
@@ -97,6 +111,12 @@ public class TextGxdResultsSummary extends AbstractTextView
 					genotypeText = FormatHelper.newline2Comma(ntc.convertNotes(r.getGenotype(), '|',true,true));
 				}
 				writer.write(genotypeText+"\t");
+
+				writer.write(nullProtected(r.getStrain()) + "\t");
+				writer.write(nullProtected(r.getSex()) + "\t");
+				writer.write(nullProtected(r.getNotes()) + "\t");
+				writer.write(nullProtected(r.getAvgQnTpmLevel()) + "\t");
+
 				writer.write(r.getJNum() + "\t");
 				writer.write(format(r.getPubmedId()) + "\t"); //pub med id
 				writer.write(r.getShortCitation());

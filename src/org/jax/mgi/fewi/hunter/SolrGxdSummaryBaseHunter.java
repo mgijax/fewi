@@ -285,6 +285,7 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 
 			// fields specific to RNA-Seq data
 			resultObject.setTpmLevel((String) doc.getFieldValue(GxdResultFields.TPM_LEVEL));
+			resultObject.setAvgQnTpmLevel((String) doc.getFieldValue(GxdResultFields.AVG_QN_TPM_LEVEL));
 			resultObject.setBiologicalReplicates((String) doc.getFieldValue(GxdResultFields.BIOLOGICAL_REPLICATES));
 			resultObject.setStrain((String) doc.getFieldValue(GxdResultFields.STRAIN));
 			resultObject.setSex((String) doc.getFieldValue(GxdResultFields.SEX));

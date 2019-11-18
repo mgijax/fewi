@@ -31,6 +31,7 @@ public class SolrAssayResult implements SolrGxdEntity
 	
 	// fields related to RNA-Seq data
 	private String tpmLevel;
+	private String avgQnTpmLevel;
 	private String biologicalReplicates;
 	private String strain;
 	private String sex;
@@ -145,28 +146,19 @@ public class SolrAssayResult implements SolrGxdEntity
 		this.pubmedId = pubmedId;
 	}
 	public String getTpmLevel() {
-		// not just a getter -- also trim off extra digits
-		if ((tpmLevel != null) && (!"".equals(tpmLevel))) {
-			try {
-				Double t = Double.parseDouble(tpmLevel);
-				if (fmt == null) {
-					fmt = NumberFormat.getInstance();
-					fmt.setGroupingUsed(false);
-					fmt.setMaximumFractionDigits(2);
-					fmt.setMinimumFractionDigits(2);
-					fmt.setMinimumIntegerDigits(1);
-					fmt.setMaximumIntegerDigits(10);
-				}
-				return fmt.format(t);
-			
-			} catch (NumberFormatException e) {
-				return tpmLevel;
-			}
-		}
+		// returns High, Medium, Low, or Below Cutoff
 		return tpmLevel;
 	}
 	public void setTpmLevel(String tpmLevel) {
 		this.tpmLevel = tpmLevel;
+	}
+	public String getAvgQnTpmLevel() {
+		// The indexer already trims digits appropriately for this
+		// value and stores the result as a string.
+		return avgQnTpmLevel;
+	}
+	public void setAvgQnTpmLevel(String avgQnTpmLevel) {
+		this.avgQnTpmLevel = avgQnTpmLevel;
 	}
 	public String getBiologicalReplicates() {
 		return biologicalReplicates;
