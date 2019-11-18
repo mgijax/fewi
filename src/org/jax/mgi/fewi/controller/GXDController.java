@@ -1921,7 +1921,7 @@ public class GXDController {
 		geneMatrixColumnPaginator.setStartIndex(page.getStartIndex());
 		geneMatrixColumnPaginator.setResults(page.getResults());
 		query.setMatrixDisplayList(getGridColDisplayList(query, geneMatrixColumnPaginator));
-		
+
 		// get the matrix results for this page
 		SearchParams params = new SearchParams();
 		Paginator geneMatrixResultPaginator = new Paginator(); // separate paginator 
@@ -3177,6 +3177,13 @@ public class GXDController {
 			queryFilters.add(Filter.or(aFilters));
 		}
 
+		// pagination list
+		List<String> matrixDisplayList = query.getMatrixDisplayList();
+		if ((matrixDisplayList != null) && (matrixDisplayList.size() > 0)) {
+			Filter matrixDisplayListFilter = new Filter(SearchConstants.MRK_ID, matrixDisplayList, Filter.Operator.OP_IN);
+			queryFilters.add(matrixDisplayListFilter);
+		}
+		
 		// And all base filter sections
 		Filter gxdFilter = new Filter();
 		if(queryFilters.size() > 0)
@@ -3193,12 +3200,6 @@ public class GXDController {
 			gxdFilter = new Filter(SearchConstants.PRIMARY_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD);
 		}
 
-		// pagination list
-		List<String> matrixDisplayList = query.getMatrixDisplayList();
-		if ((matrixDisplayList != null) && (matrixDisplayList.size() > 0)) {
-			Filter matrixDisplayListFilter = new Filter(SearchConstants.MRK_ID, matrixDisplayList, Filter.Operator.OP_IN);
-			queryFilters.add(matrixDisplayListFilter);
-		}
 		
 		return gxdFilter;
 	}
