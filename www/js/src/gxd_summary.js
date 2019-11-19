@@ -1501,7 +1501,7 @@ var structureStageGrid = function()
 function handleStructGeneTabFromDiffQF(request)
 {
 	$('#ggTarget').html(" ");
-
+	
 	var querystringWithFilters = getQueryStringWithFilters();
 
 	//success callback
@@ -1510,10 +1510,10 @@ function handleStructGeneTabFromDiffQF(request)
 		//alert(o.responseText);
 		diffMarkerCount = parseInt(o.responseText);
 
-		// if number of results exceeds max to be handled, disable some controls;
-		// otherwise go ahead and ask for the other counts
+		// If number of genes exceeds max to be handled, display error.  
+		// Otherwise go ahead and display tissue/gene matrix
 		if (diffMarkerCount > 5000) {
-			$('#ggTarget').html(diffMarkerCount + " genes???  Slim to below 5000 please.");
+			$('#ggTarget').html("Please refine your search to bring the number of returned genes under 5,000.  Larger gene lists make the tissue x gene matrix too slow to load; therefore, we have disabled it.");
 		} else {
 			loadDatatable (handleStructGeneTab,request);
 		}
