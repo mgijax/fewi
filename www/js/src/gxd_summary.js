@@ -604,8 +604,15 @@ function buildSummary(request,tabState)
 	}
 	else if(doGeneGrid)
 	{
-		loadDatatable (handleStructGeneTab,request);
-		showNowhereElseMessage(request, 'Tissue x Gene Matrix');
+		// Gene Grids requests from Diff QF need special handling
+		if (currentQF == 'differential') {
+			handleStructGeneTabFromDiffQF(request);
+			showNowhereElseMessage(request, 'Tissue x Gene Matrix');
+			
+		} else {
+			loadDatatable (handleStructGeneTab,request);
+			showNowhereElseMessage(request, 'Tissue x Gene Matrix');
+		}
 	}
 	else
 	{
@@ -1486,6 +1493,38 @@ var structureStageGrid = function()
 	}
 	buildGrid();
 }
+
+/**
+ * Special handling for structure by gene matrix when submitted via Differential QF
+ */
+
+function handleStructGeneTabFromDiffQF(request)
+{
+	$('#ggTarget').html(" ");
+
+	var querystringWithFilters = getQueryStringWithFilters();
+
+	//success callback
+	var handleDiffQfMarkerCheck = function(o)
+	{
+		//alert(o.responseText);
+		diffMarkerCount = parseInt(o.responseText);
+
+		// if number of results exceeds max to be handled, disable some controls;
+		// otherwise go ahead and ask for the other counts
+		if (diffMarkerCount > 5000) {
+			$('#ggTarget').html(diffMarkerCount + " genes???  Slim to below 5000 please.");
+		} else {
+			loadDatatable (handleStructGeneTab,request);
+		}
+		
+	}
+
+	thisRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/markers/totalCount",
+			{	success:handleDiffQfMarkerCheck, failure:function(o){}}, 
+			querystringWithFilters);
+}
+
 
 /**
  * Configure the structure by gene matrix
