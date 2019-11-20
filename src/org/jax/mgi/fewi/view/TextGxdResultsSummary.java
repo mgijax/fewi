@@ -35,7 +35,7 @@ public class TextGxdResultsSummary extends AbstractTextView
 		GxdBatchFinder finder = (GxdBatchFinder) model.get("resultFinder");
 
 		// set the batchSize
-		int batchSize = 1000;
+		int batchSize = 50000;
 		finder.batchSize = batchSize;
 
 		// write the headers
