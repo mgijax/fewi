@@ -121,8 +121,18 @@ var stageDayMap = {
 };
 
 //TODO: refactor these to use the mgiTab.summaryTabs object instead of resultsTabs
+
 var resultsTabs = mgiTab.summaryTabs;
 var getCurrentTab = mgiTab.getCurrentTab;
+
+var getCurrentForm = function() {
+	var form = "";
+	try {
+		form = currentQF;	// currentQF may or may not be defined
+	} catch (e) {
+	}
+	return form;
+}
 
 /*
  * Some helper functions for dealing with YUI history manager
@@ -401,15 +411,9 @@ var getRecordsDisplayed = function() {
 var showPaginators = function() {
 	// If we are showing the tissue x gene grid from a differential search,
 	// do not show the paginators. Hide them instead.
-	try {
-		if ((currentQF == 'differential') && (getCurrentTab() == 'genegridtab')) {
-			hidePaginators();
-			return;
-		}
-	} catch (e) {
-		// If we got here, then currentQF is not defined (because we
-		// came via a link from another page like the marker detail),
-		// so we know we didn't come from the differential QF.
+	if ((getCurrentForm() == 'differential') && (getCurrentTab() == 'genegridtab')) {
+		hidePaginators();
+		return;
 	}
 	$(".yui-pg-container").show();
 }
@@ -418,14 +422,8 @@ var showPaginators = function() {
 var hidePaginators = function() {
 	// If we are showing the tissue x gene grid from a differential search,
 	// do not show the paginators. Hide them instead.
-	try {
-		if ((currentQF == 'differential') && (getCurrentTab() == 'genegridtab')) {
-			$(".yui-pg-container").hide();
-		}
-	} catch (e) {
-		// If we got here, then currentQF is not defined (because we
-		// came via a link from another page like the marker detail),
-		// so we know we didn't come from the differential QF.
+	if ((getCurrentForm() == 'differential') && (getCurrentTab() == 'genegridtab')) {
+		$(".yui-pg-container").hide();
 	}
 }
 
@@ -605,7 +603,7 @@ function buildSummary(request,tabState)
 	else if(doGeneGrid)
 	{
 		// Gene Grids requests from Diff QF need special handling
-		if (currentQF == 'differential') {
+		if (getCurrentForm() == 'differential') {
 			handleStructGeneTabFromDiffQF(request);
 			showNowhereElseMessage(request, 'Tissue x Gene Matrix');
 			
