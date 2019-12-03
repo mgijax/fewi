@@ -2459,6 +2459,23 @@ public class GXDController {
 		// start filter list for query filters
 		List<Filter> queryFilters = new ArrayList<Filter>();
 
+		// if a symbol is specified (e.g.- a column heading in differential search grid), use it to reduce the set
+		String mmSymbol = query.getMatrixMarkerSymbol();
+		if ((mmSymbol == null) || ("".equals(mmSymbol))) {
+			List<String> symbols = query.getMarkerSymbolFilter();
+			if ((symbols != null) && (symbols.size() == 1)) {
+				mmSymbol = symbols.get(0);
+			}
+		}
+		if ((mmSymbol != null) && (!"".equals(mmSymbol))) {
+			SearchResults<Marker> mmMarkers = markerFinder.getMarkerBySymbol(mmSymbol);
+			logger.info("mmMarkers.size = " + mmMarkers.getResultObjects().size());
+			if (mmMarkers.getResultObjects().size() == 1) {
+				queryFilters.add(new Filter(GxdResultFields.MARKER_MGIID, mmMarkers.getResultObjects().get(0).getPrimaryID()));
+				logger.info("added markerMgiid criteria: " + mmMarkers.getResultObjects().get(0).getPrimaryID());
+			}
+		}
+
 		// init form fields
 		String structure = query.getStructureID();
 		String difStructure = query.getDifStructureID();
@@ -2790,6 +2807,11 @@ public class GXDController {
 		List<Filter> facetList = new ArrayList<Filter>();
 
 		logger.debug("get params");
+
+		// exclude RNA-Seq data from differential searches
+		if (isDifferentialQuery(query)) {
+			queryFilters.add(new Filter(SearchConstants.GXD_ASSAY_TYPE, "RNA-Seq", Filter.Operator.OP_NOT_EQUAL));
+		}
 
 		// ---------------------------
 		// restrict results by filters (added to facetList)
