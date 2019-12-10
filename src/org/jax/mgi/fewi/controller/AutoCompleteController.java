@@ -330,36 +330,34 @@ public class AutoCompleteController {
 	}
 
 	/*
-	 * This method handles requests for the EMAPA strucure autocomplete
+	 * This method handles requests for the EMAPA structure autocomplete
 	 * fields on the CRE query form.  Results are returned as JSON.
 	 * move mgihome cre homepage to cre-specific controller url method
 	 */
 	@RequestMapping("/emapa")
 	public @ResponseBody SearchResults<EmapaACResult> emapaAutoCompleteRequest(
 			HttpServletResponse response,
-			@RequestParam("query") String query)
-			{
+			@RequestParam("query") String query) {
 		logger.debug("autoCompleteController.emapaAutoCompleteRequest");
 		AjaxUtils.prepareAjaxHeaders(response);
 		return performEmapaAutoComplete(query);
-			}
+	}
 
 	/*
-	 * This method handles requests for the EMAPA strucure autocomplete
+	 * This method handles requests for the EMAPA structure autocomplete
 	 * fields on the GXD query form.  Results are returned as JSON.
 	 */
 	@RequestMapping("/gxdEmapa")
 	public @ResponseBody SearchResults<EmapaACResult> gxdEmapaAutoCompleteRequest(
 			HttpServletResponse response,
-			@RequestParam("query") String query)
-			{
+			@RequestParam("query") String query) {
 		logger.debug("autoCompleteController.gxdEmapaAutoCompleteRequest");
 		AjaxUtils.prepareAjaxHeaders(response);
 		return performGxdEmapaAutoComplete(query);
-			}
+	}
 
 	/*
-	 * Duplicate of the above url for cre compatibility
+	 * Duplicate of the above url (/emapa) for cre compatibility
 	 * move mgihome cre homepage to cre-specific controller url method
 	 */
 	@RequestMapping("/structure")
