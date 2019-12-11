@@ -436,14 +436,18 @@ handleNavigation = function (request, calledLocally) {
 
 	// Always show a spinner and message when changing tabs (so old results aren't still there to
 	// confuse the user.
-	var currentTab = mgiTab.getCurrentTab().replace('tab', '');
 	var messageDiv = null;
-	if ((currentTab == 'results') || (currentTab == 'assays') || (currentTab == 'genes') || (currentTab == 'images')) {
-		messageDiv = currentTab + 'data';
-	} else if (currentTab == 'stagegrid') {
-		messageDiv = 'sgTarget';
-	} else if (currentTab == 'genegrid') {
-		messageDiv = 'ggTarget';
+	if (mgiTab.getCurrentTab() != null) {
+		var currentTab = mgiTab.getCurrentTab().replace('tab', '');
+		if ((currentTab == 'results') || (currentTab == 'assays') || (currentTab == 'genes') || (currentTab == 'images')) {
+			messageDiv = currentTab + 'data';
+		} else if (currentTab == 'stagegrid') {
+			messageDiv = 'sgTarget';
+		} else if (currentTab == 'genegrid') {
+			messageDiv = 'ggTarget';
+		}
+	} else {
+		messageDiv = 'resultsdata';
 	}
 	if (messageDiv != null) {
 		$('#' + messageDiv).html(LOADING_IMG + ' Searching...');
