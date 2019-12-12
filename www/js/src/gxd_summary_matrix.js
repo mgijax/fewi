@@ -470,6 +470,7 @@ function GxdTissueMatrix(config)
 			openyClosey: true,
 	        closeImageUrl: GxdRender.RowClosedImgUrl,
 			openImageUrl: GxdRender.RowOpenedImgUrl,
+			spinnerImageUrl: LOADING_IMG_SRC,
 	        legendButtonIconUrl: GxdRender.LegendIconUrl,
 	        filterButtonIconUrl: GxdRender.FilterIconUrl,
 	        filterUncheckedUrl: GxdRender.FilterUncheckedUrl,

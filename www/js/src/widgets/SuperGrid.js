@@ -935,6 +935,7 @@ function SuperGrid(config)
         _self.closeRowListener = config.closeRowListener || function(){};
         _self.closeImageUrl = config.closeImageUrl || "";
         _self.openImageUrl = config.openImageUrl || "";
+        _self.spinnerImageUrl = config.spinnerImageUrl || "/fewi/mgi/assets/images/loading.gif";
         _self.legendButtonIconUrl = config.legendButtonIconUrl || "";
         _self.filterButtonIconUrl = config.filterButtonIconUrl || "";
         _self.filterUncheckedUrl = config.filterUncheckedUrl || "";
@@ -1702,7 +1703,10 @@ function SuperGrid(config)
 
         	_self.locked=true;
 	    	var img = d3.select(this.parentNode).select(".ocImage");
-	    	img.attr("xlink:href",_self.openImageUrl);
+	    	
+	    	// Initially change the icon to be a spinner, until we receive the new data, so
+	    	// the user will know we're working on it.
+	    	img.attr("xlink:href",_self.spinnerImageUrl);
 	    	d3.select(this).on("click",_self.closeRowHandler);
 
 	    	// Query datasource to populate rows to be opened
@@ -1731,6 +1735,9 @@ function SuperGrid(config)
     		    	_self.expandRow(row);
     		    	_self.refreshMatrixData();
     		    	_self.locked=false;
+
+    		    	// Change the icon back to be the appropriate arrow.
+    				img.attr("xlink:href",_self.openImageUrl);
     			}
     		});
     	}
