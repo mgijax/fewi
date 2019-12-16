@@ -567,7 +567,7 @@ handleNavigation = function (request, calledLocally) {
 		}
 
 		var waitForResultCount = function(request, tabState) {
-			checkCount(100, 100, request, tabState);
+			checkCount(100, 300, request, tabState);
 		};
 
 		// build the summary inside the tab (if below max results)
@@ -1517,7 +1517,7 @@ var structureStageGrid = function()
 
 function handleStructGeneTabFromDiffQF(request)
 {
-	$('#ggTarget').html(" ");
+	$('#ggTarget').html(LOADING_IMG + " Searching...");
 	
 	var querystringWithFilters = getQueryStringWithFilters();
 
