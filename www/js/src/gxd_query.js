@@ -1655,6 +1655,7 @@ function checkBatchInput(){
 	var maxBatch = 5000;
 
 	var idList = YAHOO.util.Dom.get('ids').value.trim().replace(/[\n]+/g, '\n').replace(/\s+/, '\n').split('\n');
+	//alert("Number of IDs: " + idList.length);
 	if (idList.length > maxBatch){
 		alert("Please reduce input to " + maxBatch + " ids/symbols");
 		return false;

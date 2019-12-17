@@ -72,7 +72,7 @@ div.middle { vertical-align: middle }
 
 	<tr>
 		<td colspan="3" align="left">
-			<input class="buttonLabel" value="Search" type="submit"  id="submit6">
+			<input class="buttonLabel" value="Search" type="submit"  id="submit6" onClick="return checkBatchInput()">
 			&nbsp;&nbsp;
 			<input type="reset" id="reset6">
 		</td>
