@@ -1653,14 +1653,21 @@ var inCheckboxClick = function() {
 function checkBatchInput(){
 
 	var maxBatch = 5000;
-
 	var idList = YAHOO.util.Dom.get('ids').value.trim().replace(/[\n]+/g, '\n').replace(/\s+/, '\n').split('\n');
-	//alert("Number of IDs: " + idList.length);
+
+	// alert if over threshold cap
 	if (idList.length > maxBatch){
 		alert("Please reduce input to " + maxBatch + " ids/symbols");
 		return false;
 	}
 
+	// alert, if empty
+	if (YAHOO.util.Dom.get('ids').value.trim() == ""){
+		alert("Please ensure you've entered query parameters.");
+		return false;
+	}
+	
+	
 	return true;
 };
 
