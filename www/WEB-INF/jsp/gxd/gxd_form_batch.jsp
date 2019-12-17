@@ -6,11 +6,11 @@ div.middle { vertical-align: middle }
 </style>
 <form:form commandName="gxdBatchQueryForm" class="gxdQf" method="POST" enctype="multipart/form-data" id="gxdBatchQueryForm1">
 <!-- query form table -->
-<form:hidden path="batchSubmission" value="true"/>
+<form:hidden path="batchSubmission" onSubmit="return false;" />
 <table class="pad5 borderedTable" width="100%">
 	<tr>
 		<td colspan="2" align="left">
-			<input class="buttonLabel" value="Search" type="submit" id="submit6">
+			<input class="buttonLabel" value="Search" type="submit" id="submit6" onClick="return checkBatchInput()">
 			&nbsp;&nbsp;
 			<input type="reset" id="reset6">
 		</td>
@@ -35,7 +35,9 @@ div.middle { vertical-align: middle }
 				<br/>
 				&nbsp;&nbsp;<form:textarea id="ids" path="ids" class="formWidth" value="${gxdBatchQueryForm.ids}" style="margin-bottom: 0px"></form:textarea>
 				<br/>
-				&nbsp;&nbsp;<span class="example">* tab, space, and newline separated ids.</span>
+				&nbsp;&nbsp;<span class="example">* tab, space, and newline separated ids</span>
+				<br/>
+				&nbsp;&nbsp;<span class="example">* limit input to 5000 ids/symbols</span>
 				<div id="uploadMessage" style="display: none">
 				</div>
 			</div>

@@ -1553,6 +1553,7 @@ YAHOO.util.Event.addFocusListener(YAHOO.util.Dom.get("mutatedIn"),mutatedInOnFoc
 var readFile = function(e) {
 	var input = e.target;
 	var reader = new FileReader();
+	var maxBatch = 5000;
 
 	reader.onload = function() {
 		var separator = ',';
@@ -1569,6 +1570,8 @@ var readFile = function(e) {
 		var badLines = 0;		// count of bad lines
 		var idsAdded = 0;		// count of IDs added
 
+		// split lines then extract specified column using specified
+		// delimiter
 		for (var lineNum in lines) {
 			var line = lines[lineNum];
 			var cols = line.split(separator);
@@ -1588,30 +1591,37 @@ var readFile = function(e) {
 			}
 		}
 
-		// split lines then extract specified column using specified
-		// delimiter
+		// if user submitted less than max batch threshold, we update text 
+		// area and page messages
+		if (lines.length > maxBatch){
+			alert("Please reduce input to " + maxBatch + " ids/symbols");
+		}
+		else { // proceed are normal
 
-		var node = document.getElementById('ids');
-		node.value = extractedIDs;
-		
-		var myMsg = '';
+			// insert IDs into text area
+			var node = document.getElementById('ids');
+			node.value = extractedIDs;
 
-		if (idsAdded > 0) {
-			if (idsAdded > 1) {
-				myMsg = idsAdded + ' lines were added';
-			} else {
-				myMsg = idsAdded + ' line was added';
+			// messages
+			var myMsg = '';
+			if (idsAdded > 0) {
+				if (idsAdded > 1) {
+					myMsg = idsAdded + ' lines were added';
+				} else {
+					myMsg = idsAdded + ' line was added';
+				}
 			}
-		}
 
-		if (badLines > 0) {
-			if (myMsg.length > 0) { myMsg = myMsg + '; '; }
-			myMsg = myMsg + badLines + ' line(s) had too few columns';
-		}
+			if (badLines > 0) {
+				if (myMsg.length > 0) { myMsg = myMsg + '; '; }
+				myMsg = myMsg + badLines + ' line(s) had too few columns';
+			}
 
-		var msg = document.getElementById('uploadMessage');
-		msg.innerHTML = myMsg;
-		msg.style.display = 'inline-block';
+			var msg = document.getElementById('uploadMessage');
+			msg.innerHTML = myMsg;
+			msg.style.display = 'inline-block';
+		}
+		
 	};
 	reader.readAsText(input.files[0]);
 };
@@ -1638,4 +1648,30 @@ var inCheckboxClick = function() {
 		}
 	}
 };
+
+// ensure user hasn't input more than the server can easily handle
+function checkBatchInput(){
+
+	var maxBatch = 5000;
+
+	var idList = YAHOO.util.Dom.get('ids').value.trim().replace(/[\n]+/g, '\n').replace(/\s+/, '\n').split('\n');
+	if (idList.length > maxBatch){
+		alert("Please reduce input to " + maxBatch + " ids/symbols");
+		return false;
+	}
+
+	return true;
+};
+
+
+
+
+
+
+
+
+
+
+
+
 
