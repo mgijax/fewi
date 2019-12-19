@@ -738,7 +738,7 @@ var populateFilterSummary = function() {
 			else if(filterTitle == 'Wildtype') filterTitle = '';
 			else if(filterTitle == 'StructureID')
 			{
-				filterTitle = '';
+				filterTitle = 'Anatomy';
 				// try to map emapaIDs to names
 				if(emapaIDMap.hasOwnProperty(filterValue))
 				{
