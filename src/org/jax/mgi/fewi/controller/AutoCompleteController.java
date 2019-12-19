@@ -485,54 +485,6 @@ public class AutoCompleteController {
 		return results;
 	}
 
-	/* Wrapper for GXD EMAPA autocomplete search.
-	 * Shared by gxdEmapa & automated testing
-	 */
-	private SearchResults<EmapaACResult> old_performGxdEmapaAutoComplete(String query)
-	{
-		// split input on any non-alpha characters
-		Collection<String> words =
-				QueryParser.parseAutoCompleteSearch(query);
-
-		logger.debug("structure query:" + words.toString());
-
-		// if no query string, return an empty result set
-		if(words.size() == 0) {
-			SearchResults<EmapaACResult> sr = new SearchResults<EmapaACResult>();
-			sr.setTotalCount(0);
-			return sr;
-		}
-
-		// otherwise, do the search and request the top 200 matches
-		SearchParams params = new SearchParams();
-		params.setPageSize(200);
-
-		Filter f = new Filter();
-		List<Filter> fList = new ArrayList<Filter>();
-
-		// build an AND-ed list of tokens for BEGINS searching in fList
-		for (String q : words) {
-			Filter wordFilter = new Filter(SearchConstants.STRUCTURE, q,
-					Filter.Operator.OP_GREEDY_BEGINS);
-			fList.add(wordFilter);
-		}
-		f.setNestedFilters(fList,Filter.JoinClause.FC_AND);
-		params.setFilter(f);
-
-		// default sorts are "score","autocomplete text"
-		List<Sort> sorts = new ArrayList<Sort>();
-		sorts.add(new Sort("score", true));
-		sorts.add(new Sort(IndexConstants.STRUCTUREAC_BY_SYNONYM, false));
-		params.setSorts(sorts);
-
-		SearchResults<EmapaACResult> results = autocompleteFinder.getGxdEmapaAutoComplete(params);
-		// need a unique list of terms.
-		results.uniqueifyResultObjects();
-
-		results = floatBeginsMatches(query, results);
-		return results;
-	}
-
 	/*
 	 * This method maps requests for vocab term auto complete results. The results
 	 * are returned as JSON.
