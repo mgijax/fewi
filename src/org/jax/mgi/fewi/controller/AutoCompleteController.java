@@ -33,6 +33,7 @@ import org.jax.mgi.fewi.summary.VocabACSummaryRow;
 import org.jax.mgi.fewi.summary.VocabACSummaryRow.ACType;
 import org.jax.mgi.fewi.summary.VocabBrowserACResult;
 import org.jax.mgi.fewi.summary.VocabBrowserSearchResult;
+import org.jax.mgi.fewi.util.ACHelper;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.shr.fe.IndexConstants;
@@ -70,6 +71,9 @@ public class AutoCompleteController {
 	@Autowired
 	private VocabularyController vocabController;
 
+	// provides in-memory searching of EMAPA structures, so we're not dependent on Solr for performance
+	private static ACHelper emapaHelper = null;
+	
 	/*
 	 * This method maps requests for strain auto complete results. The results
 	 * are returned as JSON.
@@ -403,6 +407,33 @@ public class AutoCompleteController {
 
 	/* wrapper for CRE EMAPA autocomplete search
 	 */
+	private SearchResults<EmapaACResult> performGxdEmapaAutoComplete(String query)
+	{
+		if (emapaHelper == null) {
+			logger.info("Initializing: emapaHelper is null");
+
+			// First call, so need to populate the ACHelper's data using all records from the Solr index.
+			SearchParams params = new SearchParams();
+			params.setPageSize(15000);
+			params.setFilter(new Filter(SearchConstants.STRUCTURE, "*", Filter.Operator.OP_EQUAL_WILDCARD_ALLOWED));
+			
+			SearchResults<EmapaACResult> results = autocompleteFinder.getGxdEmapaAutoComplete(params);
+			logger.info("Got " + results.getTotalCount() + " docs from Solr");
+
+			emapaHelper = new ACHelper();
+			emapaHelper.setEmapaACResults(results.getResultObjects());
+			logger.info("Processed docs in emapaHelper");
+		}
+		List<EmapaACResult> resultList = emapaHelper.asEmapaACResults(emapaHelper.search(query, 200));
+		SearchResults<EmapaACResult> searchResults = new SearchResults<EmapaACResult>();
+		searchResults.setResultObjects(resultList);
+		searchResults.setTotalCount(resultList.size());
+
+		return searchResults;
+	}
+
+	/* wrapper for CRE EMAPA autocomplete search
+	 */
 	private SearchResults<EmapaACResult> performEmapaAutoComplete(String query)
 	{
 		// split input on any non-alpha characters
@@ -457,7 +488,7 @@ public class AutoCompleteController {
 	/* Wrapper for GXD EMAPA autocomplete search.
 	 * Shared by gxdEmapa & automated testing
 	 */
-	private SearchResults<EmapaACResult> performGxdEmapaAutoComplete(String query)
+	private SearchResults<EmapaACResult> old_performGxdEmapaAutoComplete(String query)
 	{
 		// split input on any non-alpha characters
 		Collection<String> words =
