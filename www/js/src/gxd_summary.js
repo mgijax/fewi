@@ -621,15 +621,8 @@ function buildSummary(request,tabState)
 	}
 	else if(doGeneGrid)
 	{
-		// Gene Grids requests from Diff QF need special handling
-		if (getCurrentForm() == 'differential') {
-			handleStructGeneTabFromDiffQF(request);
-			showNowhereElseMessage(request, 'Tissue x Gene Matrix');
-			
-		} else {
-			loadDatatable (handleStructGeneTab,request);
-			showNowhereElseMessage(request, 'Tissue x Gene Matrix');
-		}
+		loadDatatable (handleStructGeneTab,request);
+		showNowhereElseMessage(request, 'Tissue x Gene Matrix');
 	}
 	else
 	{
@@ -1509,37 +1502,6 @@ var structureStageGrid = function()
 		currentStageGrid.cancelDataSource();
 	}
 	buildGrid();
-}
-
-/**
- * Special handling for structure by gene matrix when submitted via Differential QF
- */
-
-function handleStructGeneTabFromDiffQF(request)
-{
-	$('#ggTarget').html(LOADING_IMG + " Searching...");
-	
-	var querystringWithFilters = getQueryStringWithFilters();
-
-	//success callback
-	var handleDiffQfMarkerCheck = function(o)
-	{
-		//alert(o.responseText);
-		diffMarkerCount = parseInt(o.responseText);
-
-		// If number of genes exceeds max to be handled, display error.  
-		// Otherwise go ahead and display tissue/gene matrix
-		if (diffMarkerCount > 5000) {
-			$('#ggTarget').html("Please refine your search to bring the number of returned genes under 5,000.  Larger gene lists make the tissue x gene matrix too slow to load; therefore, we have disabled it.");
-		} else {
-			loadDatatable (handleStructGeneTab,request);
-		}
-		
-	}
-
-	thisRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/markers/totalCount",
-			{	success:handleDiffQfMarkerCheck, failure:function(o){}}, 
-			querystringWithFilters);
 }
 
 
