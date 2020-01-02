@@ -230,7 +230,9 @@ public class ACHelper {
 
 		// First, sort the searchable entries by smart-alpha, so we only need to do binning of matches once they're found.
 		if (this.searchableTerms.size() > 0) {
-			this.searchableTerms.sort(this.searchableTerms.get(0).getComparator());
+// Changed this because the servers are still on Java 1.7:
+//			this.searchableTerms.sort(this.searchableTerms.get(0).getComparator());
+			Collections.sort(this.searchableTerms, this.searchableTerms.get(0).getComparator());
 		}
 		
 		this.keystone = new HashMap<String, List<Integer>>();
