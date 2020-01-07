@@ -267,15 +267,16 @@
 				<li><a href="${configBean.FTP_URL}datasets/index.html#Moore" target="_blank">Polymorphisms in Microsatellite Markers for 129X1/SvJ vs Other Inbred Strains</a></li>
 				<li><a href="${configBean.FTP_URL}reports/index.html#strain" target="_blank">ES Cell Lines Used for Genetic Engineering and their Strain of Origin</a></li>
 				<li><a href="https://phenome.jax.org" target="_blank">Mouse Phenome Database</a> (MPD)</li>
+				<li><a href="${configBean.MGIHOME_URL}nomen/strain_129.shtml" target="_blank">Mouse Strain 129 Substrain Nomenclature</a></li>
 			</ul>
 		</td>
 		<td>
 			<ul>
-				<li><a href="${configBean.MGIHOME_URL}nomen/strain_129.shtml" target="_blank">Mouse Strain 129 Substrain Nomenclature</a></li>
 				<li><a href="http://www.informatics.jax.org/inbred_strains/" target="_blank">Characteristics of Inbred Strains</a> of Mice and Rats by M. Festing</li>
 				<li><a href="https://csbio.unc.edu/CCstatus/index.py" target="_blank">Collaborative Cross Project</a> at the University of North Carolina</li> 
                 <li><a href="https://www.sanger.ac.uk/sanger/Mouse_SnpViewer/rel-1505" target="_blank">Mouse Genomes Project</a> at the Wellcome Sanger Institute</li>
                 <li><a href="https://www.ebi.ac.uk/eva/" target="_blank">European Variation Archive</a> (EVA) at EBI</li>
+                <li>Ensembl <a href="https://www.ensembl.org/info/docs/tools/vep/index.html" target="_blank">Variant Effect Predictor</a> (VEP)</li>
 			</ul>
 		</td>
 	</tr>
