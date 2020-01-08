@@ -73,7 +73,7 @@ public class SolrGxdRnaSeqHeatMapResultHunter extends SolrGxdSummaryBaseHunter {
 			 if (genotype == null) {
 				 genotype = wildType;
 			 } else {
-				 genotype = FormatHelper.stripAlleleTags(genotype);
+				 genotype = FormatHelper.stripAlleleTags(genotype).replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 			 }
 
 			 resultObject.setStructureID(structureID);
