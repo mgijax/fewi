@@ -8,6 +8,7 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRnaSeqHeatMapResult;
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
+import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.springframework.stereotype.Repository;
 
@@ -51,6 +52,7 @@ public class SolrGxdRnaSeqHeatMapResultHunter extends SolrGxdSummaryBaseHunter {
 		 logger.debug("packing GXD RNA-Seq Heat Map data");
 		
 		 // Iterate through the response documents, extracting the information that was configured above.
+		 String wildType = "wild type";
 		
 		 for (SolrDocument doc : sdl)
 		 {
@@ -67,6 +69,12 @@ public class SolrGxdRnaSeqHeatMapResultHunter extends SolrGxdSummaryBaseHunter {
 			 String structure = (String) doc.getFieldValue(GxdResultFields.STRUCTURE_PRINTNAME);
 			 String consolidatedSampleKey = (String) doc.getFieldValue(GxdResultFields.CONSOLIDATED_SAMPLE_KEY);
 			 String sex = (String) doc.getFieldValue(GxdResultFields.SEX);
+
+			 if (genotype == null) {
+				 genotype = wildType;
+			 } else {
+				 genotype = FormatHelper.stripAlleleTags(genotype);
+			 }
 
 			 resultObject.setStructureID(structureID);
 			 resultObject.setTheilerStage(theilerStage);
