@@ -17,6 +17,7 @@ import org.jax.mgi.fewi.hunter.SolrGxdDetectedFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdDifferentialHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdMatrixResultHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdResultHunter;
+import org.jax.mgi.fewi.hunter.SolrGxdRnaSeqHeatMapResultHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdResultHasImageHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdSystemFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdTheilerStageFacetHunter;
@@ -35,6 +36,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdPhenoMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRecombinaseMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRnaSeqHeatMapResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdStageMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrString;
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
@@ -60,6 +62,9 @@ public class GxdFinder {
 
 	@Autowired
 	private SolrGxdMatrixResultHunter gxdMatrixResultHunter;
+
+	@Autowired
+	private SolrGxdRnaSeqHeatMapResultHunter gxdRnaSeqHeatMapResultHunter;
 
 	@Autowired
 	private SolrGxdDifferentialHunter gxdDifferentialHunter;
@@ -197,6 +202,17 @@ public class GxdFinder {
 		SearchResults<SolrGxdMarker> srGM = new SearchResults<SolrGxdMarker>();
 		srGM.cloneFrom(results, SolrGxdMarker.class);
 		return srGM;
+	}
+
+	/* get RNA-Seq results for heat map
+	 */
+	public SearchResults<SolrGxdRnaSeqHeatMapResult> searchRnaSeqHeatMapResults(SearchParams params) {
+		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
+		gxdRnaSeqHeatMapResultHunter.hunt(params, results);
+
+		SearchResults<SolrGxdRnaSeqHeatMapResult> srMR = new SearchResults<SolrGxdRnaSeqHeatMapResult>();
+		srMR.cloneFrom(results, SolrGxdRnaSeqHeatMapResult.class);
+		return srMR;
 	}
 
 	/**

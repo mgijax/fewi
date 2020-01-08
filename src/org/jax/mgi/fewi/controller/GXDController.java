@@ -71,6 +71,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrGxdAssay;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdGeneMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdPhenoMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRecombinaseMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRnaSeqHeatMapResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMatrixResult;
@@ -83,6 +84,7 @@ import org.jax.mgi.fewi.summary.GxdAssaySummaryRow;
 import org.jax.mgi.fewi.summary.GxdCountsSummary;
 import org.jax.mgi.fewi.summary.GxdImageSummaryRow;
 import org.jax.mgi.fewi.summary.GxdMarkerSummaryRow;
+import org.jax.mgi.fewi.summary.GxdRnaSeqHeatMapData;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.FewiUtil;
 import org.jax.mgi.fewi.util.FilterUtil;
@@ -1018,6 +1020,30 @@ public class GXDController {
 			}
 		}
 		return null;
+	}
+
+	@RequestMapping("/rnaSeqHeatMap/json")
+	public @ResponseBody GxdRnaSeqHeatMapData gxdRnaSeqHeatMapJson(
+			HttpSession session,
+			HttpServletRequest request,
+			@ModelAttribute GxdQueryForm query
+			) {
+		logger.info("gxdRnaSeqHeatMapJson() started");
+		populateMarkerIDs(session, query);
+
+		// get the results for structure/stage
+		Paginator page = new Paginator(1000000);
+		SearchParams params = new SearchParams();
+		params.setPaginator(page);
+		params.setFilter(parseGxdQueryForm(query));
+	
+		// get the individual heat map cells
+		SearchResults<SolrGxdRnaSeqHeatMapResult> results = gxdFinder.searchRnaSeqHeatMapResults(params);
+		logger.info("Got heat map cells: " + results.getTotalCount());
+		
+		// repackage them into the JSON object
+		GxdRnaSeqHeatMapData dataPacket = new GxdRnaSeqHeatMapData(results.getResultObjects());
+		return dataPacket;
 	}
 
 	@RequestMapping("/stageMatrixPopup/json")

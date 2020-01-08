@@ -1,9 +1,5 @@
 package org.jax.mgi.fewi.summary;
 
-//public class GxdMarkerSummary {
-//
-//}
-
 import java.util.ArrayList;
 import java.util.List;
 
