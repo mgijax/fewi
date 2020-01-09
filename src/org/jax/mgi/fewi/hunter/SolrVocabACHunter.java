@@ -75,12 +75,18 @@ public class SolrVocabACHunter extends SolrHunter<VocabACResult> {
 				resultObject.setDerivedTerms((List<String>)doc.getFieldValue(IndexConstants.VOCABAC_DERIVED_TERMS));
 			}
 			
+			// Either an entry in the GXD Lit Index or in full-coded classical data or in RNA-Seq data is good enough
+			// to flag this term for having expression data.
+			boolean hasExpressionResults = (Integer) doc.getFieldValue(IndexConstants.VOCABAC_GXDLIT_MARKER_COUNT) > 0;
+			if (!hasExpressionResults) {
+				hasExpressionResults = (Integer) doc.getFieldValue(IndexConstants.VOCABAC_EXPRESSION_MARKER_COUNT) > 0;
+			}
+			
 			resultObject.setIsSynonym((Boolean) doc.getFieldValue(IndexConstants.VOCABAC_IS_SYNONYM));
 			resultObject.setOriginalTerm((String) doc.getFieldValue(IndexConstants.VOCABAC_ORIGINAL_TERM));
 			resultObject.setRootVocab((String) doc.getFieldValue(IndexConstants.VOCABAC_ROOT_VOCAB));
-			//resultObject.setDisplayVocab((String) doc.getFieldValue(IndexConstants.VOCABAC_VOCAB));
 			resultObject.setMarkerCount((Integer) doc.getFieldValue(IndexConstants.VOCABAC_MARKER_COUNT));
-			resultObject.setHasExpressionResults((Integer) doc.getFieldValue(IndexConstants.VOCABAC_GXDLIT_MARKER_COUNT) > 0);
+			resultObject.setHasExpressionResults(hasExpressionResults);
 			sr.addResultObjects(resultObject);
 		}
 	}
