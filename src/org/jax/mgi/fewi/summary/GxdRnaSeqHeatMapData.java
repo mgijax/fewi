@@ -139,7 +139,12 @@ public class GxdRnaSeqHeatMapData {
 		List<String> sampleKeys = new ArrayList<String>();
 
 		for (Sample s : this.samples) {
-			labels.add(s.getLabel());
+			if (!"wild type".equals(s.alleles)) {
+				// add a black star to the end to flag those with mutant alleles
+				labels.add(s.getLabel() + "\u2605");
+			} else {
+				labels.add(s.getLabel());
+			}
 			structures.add(s.structure);
 			ages.add(s.age);
 			stages.add(Integer.toString(s.stage));
