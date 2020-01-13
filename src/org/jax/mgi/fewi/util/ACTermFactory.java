@@ -38,7 +38,9 @@ public class ACTermFactory {
 		
 		// add an entry for the term itself (but only once, as EmapaACResults are already denormalized)
 		String accID = emapaTerm.getAccID();
-		if (!emapaIDCache.contains(accID)) {
+		
+		// If this is an entry for the term itself, then we index it without any synonyms first.
+		if (!emapaTerm.getIsStrictSynonym()) {
 			if (emapaTerm.getStructure() != null) {
 				terms.add(new ACTerm(emapaTerm, true, emapaTerm.getStructure()));
 				emapaIDCache.add(accID);
