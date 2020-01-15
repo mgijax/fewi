@@ -52,7 +52,7 @@ public class SolrGxdRnaSeqHeatMapResultHunter extends SolrGxdSummaryBaseHunter {
 		 logger.debug("packing GXD RNA-Seq Heat Map data");
 		
 		 // Iterate through the response documents, extracting the information that was configured above.
-		 String wildType = "wild type";
+		 String wildType = "wild-type";
 		
 		 for (SolrDocument doc : sdl)
 		 {
