@@ -1899,7 +1899,6 @@ public class GXDController {
 		return matrixDisplayList;
 	}	
 
-	
 	@RequestMapping("/genegrid/json")
 	public @ResponseBody GxdStageGridJsonResponse<GxdMatrixCell> gxdGeneGridJson(
 			HttpServletRequest request,
@@ -1911,7 +1910,6 @@ public class GXDController {
 			HttpSession session) throws CloneNotSupportedException
 			{
 		logger.debug("gxdGeneGridJson() started");
-
 		populateMarkerIDs(session, query);
 
 		boolean isFirstPage = page.getStartIndex() == 0;
@@ -1942,7 +1940,7 @@ public class GXDController {
 			pathsToOpen = null;
 		}
 		
-		// paginatin
+		// pagination
 		Paginator geneMatrixColumnPaginator = new Paginator(); // separate paginator 
 		geneMatrixColumnPaginator.setStartIndex(page.getStartIndex());
 		geneMatrixColumnPaginator.setResults(page.getResults());
@@ -1964,7 +1962,6 @@ public class GXDController {
 
 		// get the parent rows to be displayed
 		List<GxdMatrixRow> parentTerms = gxdMatrixHandler.getParentTermsToDisplay(query,childrenOf,pathsToOpen);
-
 		List<GxdMatrixRow> flatRows = gxdMatrixHandler.getFlatTermList(parentTerms);
 
 		// this gets all edges, but we only need all of them for the first page
@@ -1984,8 +1981,6 @@ public class GXDController {
 			parentTerms = gxdMatrixHandler.pruneEmptyRows(parentTerms,idsWithData);
 			//logger.debug("pruned Rows = "+parentTerms.get(0).printTree());
 		}
-		//logger.debug("edges for mapper size="+edges.size());
-		//logger.debug(StringUtils.join(edges,", "));
 
 		// get matrix cells; add stages to mapper if this is a row-expansion
 		GxdMatrixMapper mapper = new GxdMatrixMapper(edges);
