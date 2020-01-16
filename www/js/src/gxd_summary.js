@@ -1641,6 +1641,7 @@ var structureGeneGrid = function()
 			dataSource: {
 				url: geneGridDataUrl,
 				batchSize: 50000,
+				isGeneGrid: true,
 				offsetField: "startIndexMatrix",
 				limitField: "resultsMatrix",
 				MSG_LOADING: LOADING_IMG+' Searching for data (may take a couple minutes for large datasets)... ' +

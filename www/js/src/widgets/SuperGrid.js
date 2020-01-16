@@ -941,6 +941,9 @@ function SuperGrid(config)
         _self.filterUncheckedUrl = config.filterUncheckedUrl || "";
         _self.filterCheckedUrl = config.filterCheckedUrl || "";
         _self.filterDashedUrl = config.filterDashedUrl || _self.filterUncheckedUrl;
+        
+        // flag to indicate whether this is a tissue x gene grid (to allow for extra column-based optimization)
+        _self.isGeneGrid = config.isGeneGrid || false;
 
         _self.openCloseStateKey = config.openCloseStateKey || null;
 
@@ -1709,11 +1712,30 @@ function SuperGrid(config)
 	    	img.attr("xlink:href",_self.spinnerImageUrl);
 	    	d3.select(this).on("click",_self.closeRowHandler);
 
+	    	// If this is a tissue x gene grid, we can look up the marker symbols from the column
+	    	// headers and pass them in as an extra optimization.
+	    	var markerSymbols = '';
+	    	if (_self.isGeneGrid) {
+	    		var columnHeadings = $('.colText text');
+
+	    		for (var i in columnHeadings) {
+	    			var symbol = columnHeadings[i].innerHTML;
+	    			if (symbol != undefined) {
+	    				if (markerSymbols.length > 0) {
+	    					markerSymbols = markerSymbols + ',' + symbol;
+	    				} else {
+	    					markerSymbols = symbol;
+	    				}
+	    			}
+	    		}
+	    	}
+	    	
 	    	// Query datasource to populate rows to be opened
     		var ri = _self.data.ur[row.rid];
     		_self.updateRowsFound=0;
     		_self.dataSource.fireQuery({
-    			args: {mapChildrenOf: row.oid || row.rid},
+    			args: {mapChildrenOf: row.oid || row.rid,
+    				markerSymbolFilter: markerSymbols},
     			initialCallback: function(e,data){
     				console.log(data);
     				_self.updateRowsFound = data.rows.length;
