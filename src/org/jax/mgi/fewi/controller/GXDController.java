@@ -136,6 +136,7 @@ public class GXDController {
 	private static String RAW = "raw";		// as returned by solr
 	private static String DETECTED = "detected";	// custom case
 	private static String MARKERTYPE_DISPLAY = "markerTypeDisplay";	// custom case
+	private static String TPM_LEVEL_SORT = "tpmLevelSort";	// custom case
 
 	// --------------------//
 	// instance variables
@@ -3804,6 +3805,7 @@ public class GXDController {
 			emptyListMsg = "No genes found with ontology associations.";
 			facetResults = gxdFinder.getGoFacet(params, "CC");
 		} else if (FacetConstants.GXD_TMP_LEVEL.equals(facetType)) {
+			order = TPM_LEVEL_SORT; 
 			emptyListMsg = "No RNA-Seq results to filter.";
 			facetResults = gxdFinder.getTmpLevelFacet(params);
 		} else {
@@ -3837,6 +3839,12 @@ public class GXDController {
 			List<String> values = facetResults.getResultFacets();
 			List<String> cleanedFacetList = cleanMarkerTypeFacetList(values);
 			Collections.sort (cleanedFacetList, new MarkerTypeFilterComparator());
+			facetResults.setResultFacets(cleanedFacetList);
+			m.put("resultFacets", facetResults.getResultFacets());
+		} else if (TPM_LEVEL_SORT.equals(order)) {
+			List<String> values = facetResults.getResultFacets();
+			List<String> cleanedFacetList = cleanMarkerTypeFacetList(values);
+			Collections.sort (cleanedFacetList, new TpmLevelComparator());
 			facetResults.setResultFacets(cleanedFacetList);
 			m.put("resultFacets", facetResults.getResultFacets());
 		} else {
@@ -3917,6 +3925,39 @@ public class GXDController {
 		}
 	}
 
+	/* facet sorting (tpm level filter)
+	 */
+	private class TpmLevelComparator implements Comparator<String> {
+
+		private final List<String> orderedItems = Arrays.asList (
+				new String[] { "High", "Medium", "Low", "Below Cutoff" });
+
+		public int compare (String a, String b) {
+			int aIndex = orderedItems.indexOf(a);
+			int bIndex = orderedItems.indexOf(b);
+
+			// normal case: both a and b were in the orderedItems list
+			if ((aIndex >= 0) && (bIndex >= 0)) {
+				if (aIndex < bIndex) { return -1; }
+				else if (aIndex > bIndex) { return 1; }
+				else { return 0; }
+			}
+
+			// secondary cases: only one of them was in the list
+			if (aIndex >= 0) { return -1; }
+			if (bIndex >= 0) { return 1; }
+
+			// tertiary case: neither was in the list -- sort alpha
+			return a.compareToIgnoreCase(b);
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
 	/*
 	 * Matrix related methods 
 	 */
