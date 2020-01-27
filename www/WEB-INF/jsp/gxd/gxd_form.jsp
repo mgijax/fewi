@@ -469,7 +469,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			&nbsp;&nbsp;
 			<input type="reset" id="reset4">
 			&nbsp;&nbsp;
-			<span style='font-weight: bold;'>RNA-Seq data not yet included in these searches. </span>			
+			<span style='font-weight: bold;'>RNA-Seq data not yet included in this search. </span>			
 		</td>
 	</tr>
 </table>
