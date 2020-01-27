@@ -746,6 +746,7 @@ var populateFilterSummary = function() {
 			else if(filterTitle == 'GoMf') filterTitle = "Molecular Function";
 			else if(filterTitle == 'GoBp') filterTitle = "Biological Process";
 			else if(filterTitle == 'GoCc') filterTitle = "Cellular Component";
+			else if(filterTitle == 'TmpLevel') filterTitle = "TPM Level";
 			else if(filterTitle == 'Wildtype') filterTitle = '';
 			else if(filterTitle == 'StructureID')
 			{
