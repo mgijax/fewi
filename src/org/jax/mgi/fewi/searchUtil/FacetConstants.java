@@ -22,6 +22,7 @@ public class FacetConstants {
 	public static final String GXD_GO_MF = "goMfHeaders"; 
 	public static final String GXD_GO_BP = "goBpHeaders"; 
 	public static final String GXD_GO_CC = "goCcHeaders"; 
+	public static final String GXD_TMP_LEVEL = "tpmLevel"; 
 	
 	
 	// TODO - this will be split into three

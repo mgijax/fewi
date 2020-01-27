@@ -13,6 +13,7 @@ import org.jax.mgi.fewi.hunter.SolrGxdMarkerTypeFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdMpFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdDoFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdGoFacetHunter;
+import org.jax.mgi.fewi.hunter.SolrGxdTmpLevelFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdDetectedFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdDifferentialHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdMatrixResultHunter;
@@ -95,6 +96,10 @@ public class GxdFinder {
 
 	@Autowired
 	private SolrGxdGoFacetHunter gxdGoFacetHunter;
+
+	@Autowired
+	private SolrGxdTmpLevelFacetHunter gxdTmpLevelFacetHunter;
+	
 	
 	/*
 	 * Only does the Solr query to return the total document (or group) count
@@ -422,7 +427,15 @@ public class GxdFinder {
 		srSS.cloneFrom(results, SolrString.class);
 		return srSS;
 	}
-
+	
+	public SearchResults<SolrString> getTmpLevelFacet(SearchParams params) {
+		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
+		gxdTmpLevelFacetHunter.hunt(params, results);
+		SearchResults<SolrString> srSS = new SearchResults<SolrString>();
+		srSS.cloneFrom(results, SolrString.class);
+		return srSS;
+	}
+	
 	public SearchResults<SolrString> getMarkerTypeFacet(SearchParams params) {
 		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
 		gxdMarkerTypeFacetHunter.hunt(params, results);

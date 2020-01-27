@@ -468,6 +468,8 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			<input class="buttonLabel" value="Search" type="submit"  id="submit4">
 			&nbsp;&nbsp;
 			<input type="reset" id="reset4">
+			&nbsp;&nbsp;
+			<span style='font-weight: bold;'>RNA-Seq data not yet included in these searches. </span>			
 		</td>
 	</tr>
 </table>

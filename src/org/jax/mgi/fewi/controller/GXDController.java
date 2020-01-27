@@ -2853,6 +2853,11 @@ public class GXDController {
 					query.getAssayTypeFilter(), Filter.Operator.OP_IN));
 		}
 
+		if (query.getTmpLevelFilter().size() > 0) {
+			facetList.add(new Filter(FacetConstants.GXD_TMP_LEVEL,
+					query.getTmpLevelFilter(), Filter.Operator.OP_IN));
+		}
+
 		if (query.getMarkerTypeFilter().size() > 0) {
 			facetList.add(new Filter(FacetConstants.GXD_MARKER_TYPE,
 					query.getMarkerTypeFilter(), Filter.Operator.OP_IN));
@@ -3741,6 +3746,18 @@ public class GXDController {
 		return facetGeneric(query, result, FacetConstants.GXD_GO_CC);
 	}
 
+	/* gets a list of TMP Level values for the facet list, returned
+	 * as JSON
+	 */
+	@RequestMapping("/facet/tmpLevel")
+	public @ResponseBody Map<String, List<String>> facetTmpLevel(
+			HttpSession session,
+			@ModelAttribute GxdQueryForm query,
+			BindingResult result) {
+
+		populateMarkerIDs(session, query);
+		return facetGeneric(query, result, FacetConstants.GXD_TMP_LEVEL);
+	}
 	
 	/* generic facet handling
 	 */
@@ -3758,33 +3775,25 @@ public class GXDController {
 
 		if (FacetConstants.GXD_SYSTEM.equals(facetType)) {
 			facetResults = gxdFinder.getSystemFacet(params);
-
 		} else if (FacetConstants.GXD_ASSAY_TYPE.equals(facetType)) {
 			facetResults = gxdFinder.getAssayTypeFacet(params);
-
 		} else if (FacetConstants.GXD_MARKER_TYPE.equals(facetType)) {
 			facetResults = gxdFinder.getMarkerTypeFacet(params);
 			order = MARKERTYPE_DISPLAY; 
-			
 		} else if (FacetConstants.GXD_DETECTED.equals(facetType)) {
 			facetResults = gxdFinder.getDetectedFacet(params);
 			order = DETECTED;
-
 		} else if (FacetConstants.GXD_THEILER_STAGE.equals(facetType)) {
 			facetResults = gxdFinder.getTheilerStageFacet(params);
 			order = RAW;
-
 		} else if (FacetConstants.GXD_WILDTYPE.equals(facetType)) {
 			facetResults = gxdFinder.getWildtypeFacet(params);
-
 		} else if (FacetConstants.GXD_MP.equals(facetType)) {
 			emptyListMsg = "No genes found with ontology associations.";
 			facetResults = gxdFinder.getMpFacet(params);
-
 		} else if (FacetConstants.GXD_DO.equals(facetType)) {
 			emptyListMsg = "No genes found with ontology associations.";
 			facetResults = gxdFinder.getDoFacet(params);
-
 		} else if (FacetConstants.GXD_GO_MF.equals(facetType)) {
 			emptyListMsg = "No genes found with ontology associations.";
 			facetResults = gxdFinder.getGoFacet(params, "MF");
@@ -3794,6 +3803,9 @@ public class GXDController {
 		} else if (FacetConstants.GXD_GO_CC.equals(facetType)) {
 			emptyListMsg = "No genes found with ontology associations.";
 			facetResults = gxdFinder.getGoFacet(params, "CC");
+		} else if (FacetConstants.GXD_TMP_LEVEL.equals(facetType)) {
+			emptyListMsg = "No RNA-Seq results to filter.";
+			facetResults = gxdFinder.getTmpLevelFacet(params);
 		} else {
 			facetResults = new SearchResults<SolrString>();
 		}
