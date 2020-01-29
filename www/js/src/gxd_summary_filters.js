@@ -479,6 +479,7 @@ var prepFilters = function(qfRequest) {
 	var facetGoMfDS = buildFacetDataSource("goMf");
 	var facetGoBpDS = buildFacetDataSource("goBp");
 	var facetGoCcDS = buildFacetDataSource("goCc");
+	var facetTmpLevelDS = buildFacetDataSource("tmpLevel");
 
 	var handleError = function (oRequest, oResponse, oPayload) {
 		// We are in an error state, so disable the buttons.
@@ -509,6 +510,7 @@ var prepFilters = function(qfRequest) {
 	var assayTypeCallback = buildCallback('assayTypeFilter', 'Assay Type');
 	var markerTypeCallback = buildCallback('markerTypeFilter', 'Gene Type');
 	var mpCallback = buildCallback('mpFilter', 'Phenotype');
+	var tmpLevelCallback = buildCallback('tmpLevelFilter', 'TPM Level');
 	var doCallback = buildCallback('doFilter', 'Disease');
 	var goMfCallback = buildCallback('goMfFilter', 'Molecular Function');
 	var goBpCallback = buildCallback('goBpFilter', 'Biological Process'); 
@@ -581,6 +583,12 @@ var prepFilters = function(qfRequest) {
 		facetTheilerStageDS.sendRequest(getQS() + getFilterCriteria(), theilerStageCallback);
 	};
 
+	var populateTmpFilterDialog = function() {
+		showLoadingMessage();
+		facetTmpLevelDS.flushCache();
+		facetTmpLevelDS.sendRequest(getQS() + getFilterCriteria(), tmpLevelCallback);
+	};
+
 	// must clear any existing listeners, otherwise we'll execute multiple
 	// function calls for each click...  and not all have the right parameters
 
@@ -595,6 +603,7 @@ var prepFilters = function(qfRequest) {
 	YAHOO.util.Event.removeListener('detectedFilter', 'click');
 	YAHOO.util.Event.removeListener('wildtypeFilter', 'click');
 	YAHOO.util.Event.removeListener('theilerStageFilter', 'click');
+	YAHOO.util.Event.removeListener('tmpLevelFilter', 'click');
 
 	YAHOO.util.Event.addListener('systemFilter', 'click',
 			populateSystemDialog, true);
@@ -618,6 +627,8 @@ var prepFilters = function(qfRequest) {
 			populateWildtypeDialog, true);
 	YAHOO.util.Event.addListener('theilerStageFilter', 'click',
 			populateTheilerStageDialog, true);
+	YAHOO.util.Event.addListener('tmpLevelFilter', 'click',
+			populateTmpFilterDialog, true);
 
 	gsfLog("prepFilters() : exited");
 };
@@ -735,6 +746,7 @@ var populateFilterSummary = function() {
 			else if(filterTitle == 'GoMf') filterTitle = "Molecular Function";
 			else if(filterTitle == 'GoBp') filterTitle = "Biological Process";
 			else if(filterTitle == 'GoCc') filterTitle = "Cellular Component";
+			else if(filterTitle == 'TmpLevel') filterTitle = "TPM Level";
 			else if(filterTitle == 'Wildtype') filterTitle = '';
 			else if(filterTitle == 'StructureID')
 			{

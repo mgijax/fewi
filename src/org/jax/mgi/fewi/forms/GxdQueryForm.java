@@ -90,6 +90,7 @@ public class GxdQueryForm implements Cloneable {
 	private List<String> goBpFilter = new ArrayList<String>();
 	private List<String> goCcFilter = new ArrayList<String>();
 	private List<String> goMfFilter = new ArrayList<String>();
+	private List<String> tmpLevelFilter = new ArrayList<String>();
 
 	// filters used by matrices
 	private List<String> structureIDFilter = new ArrayList<String>();
@@ -695,9 +696,18 @@ public class GxdQueryForm implements Cloneable {
 		return goMfFilter;
 	}
 
+	public List<String> getTmpLevelFilter() {
+		return tmpLevelFilter;
+	}
+	
+	public void setTmpLevelFilter(List<String> tmpLevelFilter) {
+		this.tmpLevelFilter = tmpLevelFilter;
+	}
+
 	public void setGoMfFilter(List<String> goMfFilter) {
 		this.goMfFilter = goMfFilter;
 	}
+	
 	public void setGoBpFilter(List<String> goBpFilter) {
 		this.goBpFilter = goBpFilter;
 	}

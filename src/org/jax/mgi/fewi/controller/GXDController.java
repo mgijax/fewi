@@ -136,6 +136,7 @@ public class GXDController {
 	private static String RAW = "raw";		// as returned by solr
 	private static String DETECTED = "detected";	// custom case
 	private static String MARKERTYPE_DISPLAY = "markerTypeDisplay";	// custom case
+	private static String TPM_LEVEL_SORT = "tpmLevelSort";	// custom case
 
 	// --------------------//
 	// instance variables
@@ -2868,6 +2869,11 @@ public class GXDController {
 					query.getAssayTypeFilter(), Filter.Operator.OP_IN));
 		}
 
+		if (query.getTmpLevelFilter().size() > 0) {
+			facetList.add(new Filter(FacetConstants.GXD_TMP_LEVEL,
+					query.getTmpLevelFilter(), Filter.Operator.OP_IN));
+		}
+
 		if (query.getMarkerTypeFilter().size() > 0) {
 			facetList.add(new Filter(FacetConstants.GXD_MARKER_TYPE,
 					query.getMarkerTypeFilter(), Filter.Operator.OP_IN));
@@ -3756,6 +3762,18 @@ public class GXDController {
 		return facetGeneric(query, result, FacetConstants.GXD_GO_CC);
 	}
 
+	/* gets a list of TMP Level values for the facet list, returned
+	 * as JSON
+	 */
+	@RequestMapping("/facet/tmpLevel")
+	public @ResponseBody Map<String, List<String>> facetTmpLevel(
+			HttpSession session,
+			@ModelAttribute GxdQueryForm query,
+			BindingResult result) {
+
+		populateMarkerIDs(session, query);
+		return facetGeneric(query, result, FacetConstants.GXD_TMP_LEVEL);
+	}
 	
 	/* generic facet handling
 	 */
@@ -3773,33 +3791,25 @@ public class GXDController {
 
 		if (FacetConstants.GXD_SYSTEM.equals(facetType)) {
 			facetResults = gxdFinder.getSystemFacet(params);
-
 		} else if (FacetConstants.GXD_ASSAY_TYPE.equals(facetType)) {
 			facetResults = gxdFinder.getAssayTypeFacet(params);
-
 		} else if (FacetConstants.GXD_MARKER_TYPE.equals(facetType)) {
 			facetResults = gxdFinder.getMarkerTypeFacet(params);
 			order = MARKERTYPE_DISPLAY; 
-			
 		} else if (FacetConstants.GXD_DETECTED.equals(facetType)) {
 			facetResults = gxdFinder.getDetectedFacet(params);
 			order = DETECTED;
-
 		} else if (FacetConstants.GXD_THEILER_STAGE.equals(facetType)) {
 			facetResults = gxdFinder.getTheilerStageFacet(params);
 			order = RAW;
-
 		} else if (FacetConstants.GXD_WILDTYPE.equals(facetType)) {
 			facetResults = gxdFinder.getWildtypeFacet(params);
-
 		} else if (FacetConstants.GXD_MP.equals(facetType)) {
 			emptyListMsg = "No genes found with ontology associations.";
 			facetResults = gxdFinder.getMpFacet(params);
-
 		} else if (FacetConstants.GXD_DO.equals(facetType)) {
 			emptyListMsg = "No genes found with ontology associations.";
 			facetResults = gxdFinder.getDoFacet(params);
-
 		} else if (FacetConstants.GXD_GO_MF.equals(facetType)) {
 			emptyListMsg = "No genes found with ontology associations.";
 			facetResults = gxdFinder.getGoFacet(params, "MF");
@@ -3809,6 +3819,10 @@ public class GXDController {
 		} else if (FacetConstants.GXD_GO_CC.equals(facetType)) {
 			emptyListMsg = "No genes found with ontology associations.";
 			facetResults = gxdFinder.getGoFacet(params, "CC");
+		} else if (FacetConstants.GXD_TMP_LEVEL.equals(facetType)) {
+			order = TPM_LEVEL_SORT; 
+			emptyListMsg = "No RNA-Seq results to filter.";
+			facetResults = gxdFinder.getTmpLevelFacet(params);
 		} else {
 			facetResults = new SearchResults<SolrString>();
 		}
@@ -3840,6 +3854,12 @@ public class GXDController {
 			List<String> values = facetResults.getResultFacets();
 			List<String> cleanedFacetList = cleanMarkerTypeFacetList(values);
 			Collections.sort (cleanedFacetList, new MarkerTypeFilterComparator());
+			facetResults.setResultFacets(cleanedFacetList);
+			m.put("resultFacets", facetResults.getResultFacets());
+		} else if (TPM_LEVEL_SORT.equals(order)) {
+			List<String> values = facetResults.getResultFacets();
+			List<String> cleanedFacetList = cleanMarkerTypeFacetList(values);
+			Collections.sort (cleanedFacetList, new TpmLevelComparator());
 			facetResults.setResultFacets(cleanedFacetList);
 			m.put("resultFacets", facetResults.getResultFacets());
 		} else {
@@ -3920,6 +3940,39 @@ public class GXDController {
 		}
 	}
 
+	/* facet sorting (tpm level filter)
+	 */
+	private class TpmLevelComparator implements Comparator<String> {
+
+		private final List<String> orderedItems = Arrays.asList (
+				new String[] { "High", "Medium", "Low", "Below Cutoff" });
+
+		public int compare (String a, String b) {
+			int aIndex = orderedItems.indexOf(a);
+			int bIndex = orderedItems.indexOf(b);
+
+			// normal case: both a and b were in the orderedItems list
+			if ((aIndex >= 0) && (bIndex >= 0)) {
+				if (aIndex < bIndex) { return -1; }
+				else if (aIndex > bIndex) { return 1; }
+				else { return 0; }
+			}
+
+			// secondary cases: only one of them was in the list
+			if (aIndex >= 0) { return -1; }
+			if (bIndex >= 0) { return 1; }
+
+			// tertiary case: neither was in the list -- sort alpha
+			return a.compareToIgnoreCase(b);
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
 	/*
 	 * Matrix related methods 
 	 */
