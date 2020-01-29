@@ -1670,16 +1670,3 @@ function checkBatchInput(){
 	
 	return true;
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
