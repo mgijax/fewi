@@ -176,13 +176,13 @@ public class GxdRnaSeqHeatMapData {
 		// integers, then we toss it as the only item in another list.
 		
 		// Each row is a list of integers.  Each integer is the value for a single column.  We'll
-		// initialize all the values to zero, then we can overwrite them as we walk through the data.
+		// initialize all the values to -1 (not studied), then we can overwrite them as we walk through the data.
 		List<List<Float>> rows = new ArrayList<List<Float>>();
-		Float zero = new Float(0.0);
+		Float notStudied = new Float(-1.0);
 		for (int i = 0; i < this.rows; i++) {
 			List<Float> row = new ArrayList<Float>();
 			for (int col = 0; col < this.columns; col++) {
-				row.add(zero);
+				row.add(notStudied);
 			}
 			rows.add(row);
 		}
@@ -195,7 +195,7 @@ public class GxdRnaSeqHeatMapData {
 		for (SolrGxdRnaSeqHeatMapResult result : results) {
 			String markerID = result.getMarkerMgiID();
 			String sampleID = result.getConsolidatedSampleKey();
-			Float avgQnTpm = zero;
+			Float avgQnTpm = notStudied;
 			try {
 				avgQnTpm = Float.parseFloat(result.getAvergageQNTPM());
 			} catch (Exception e) {
