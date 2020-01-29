@@ -1022,6 +1022,21 @@ public class GXDController {
 		return null;
 	}
 
+	@RequestMapping("/rnaSeqHeatMap")
+	public ModelAndView gxdRnaSeqHeatMap(
+			HttpSession session,
+			HttpServletRequest request,
+			@ModelAttribute GxdQueryForm query
+			) {
+		logger.info("gxdRnaSeqHeatMap() started");
+		
+		ModelAndView mav = new ModelAndView("gxd/gxd_rnaseq_heatmap");
+		mav.addObject("queryString", request.getQueryString());
+		mav.addObject("ysf", "You Searched For");
+		
+		return mav;
+	}
+
 	@RequestMapping("/rnaSeqHeatMap/json")
 	public @ResponseBody GxdRnaSeqHeatMapData gxdRnaSeqHeatMapJson(
 			HttpSession session,
