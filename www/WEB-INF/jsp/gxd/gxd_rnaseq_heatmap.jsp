@@ -143,10 +143,11 @@ function buildHeatMap(json) {
 	      max: 5000,
 	      map: colorMap,
     },
-  });
-	  
-  // fix for odd font issue in tab-close button ('Ã—' instead of 'x')
-  $('[data-target]')[0].innerHTML = 'x';
+  }); 
+
+  // Hide the tab title at the top of the heat map, as it has odd characters that I can't get
+  // to disappear (and it's not overly useful anyway, for our purposes).
+  $('li.morpheus-sortable[role=presentation]').css('display', 'none');
 }
 
 $('#heatmapWrapper').empty();
