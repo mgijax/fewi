@@ -178,7 +178,7 @@ public class GxdRnaSeqHeatMapData {
 		// Each row is a list of integers.  Each integer is the value for a single column.  We'll
 		// initialize all the values to -1 (not studied), then we can overwrite them as we walk through the data.
 		List<List<Float>> rows = new ArrayList<List<Float>>();
-		Float notStudied = new Float(-1.0);
+		Float notStudied = null;
 		for (int i = 0; i < this.rows; i++) {
 			List<Float> row = new ArrayList<Float>();
 			for (int col = 0; col < this.columns; col++) {
