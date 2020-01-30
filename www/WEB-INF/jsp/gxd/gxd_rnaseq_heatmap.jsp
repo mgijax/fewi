@@ -47,6 +47,7 @@
     text-align: center;
     border: 1px solid black;
     white-space: nowrap;
+    margin-left: 150px;
   }
   #tipsIcon {
   	margin-top: -4px;
@@ -62,7 +63,7 @@
 <!-- header bar -->
 <div id="titleBarWrapperGxd">
 	<a href="${configBean.HOMEPAGES_URL}expression.shtml"><img class="gxdLogo" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="75"></a>
-    <span class="titleBarMainTitleGxd" style="display:inline-block; margin-top:20px;">
+    <span class="titleBarMainTitleGxd" style="display:inline-block; margin-top:20px; margin-right:60px;">
     Gene Expression Data
     </span>
 </div>
