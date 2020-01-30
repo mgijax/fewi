@@ -38,17 +38,18 @@
   #tipsButton {
   	padding-top: 6px;
   	padding-bottom: 6px;
-  	padding-left: 30px;
-  	padding-right: 30px;
   	background-color: #DFEFFF;
     font-weight: bold;
-    width: 60px;
+    width: 90px;
     text-align: center;
     border: 1px solid black;
+    white-space: nowrap;
   }
   #tipsIcon {
-  	float: right;
   	margin-top: -4px;
+  }
+  #morpheusIcon {
+  	margin-bottom: -5px;
   }
 </style>
 
@@ -71,10 +72,10 @@
 	<div id="ysfDiv">${ysf}
 	</div>
 	<div id="poweredByDiv">Visualization and analysis powered by <B>Morpheus</B>
-		<svg width="32px" height="32px">
+		<svg id="morpheusIcon" width="24px" height="24px">
 			<g>
-			<rect x="0" y="0" width="32" height="14" style="fill:#ca0020;stroke:none"></rect>
-			<rect x="0" y="18" width="32" height="14" style="fill:#0571b0;stroke:none"></rect>
+			<rect x="0" y="0" width="24" height="10" style="fill:#ca0020;stroke:none"></rect>
+			<rect x="0" y="13" width="24" height="10" style="fill:#0571b0;stroke:none"></rect>
 			</g>
 		</svg>
 	</div>
@@ -93,10 +94,9 @@
 <script type="text/javascript" src="${externalUrls.MORPHEUS}/js/morpheus-latest.min.js"></script>
 <script type="text/javascript" src="${externalUrls.MORPHEUS}/js/morpheus-external-latest.min.js"></script>
 <script type="text/javascript">
+// Note that colorMap should not contain definitions less than zero.  (Below zero numbers make
+// all the cells show up as white.)
 var colorMap = [
-	{ value: -1.0,
-		color: '#FFFFFF'
-		},
 	{ value: 0,
 		color: '#E0E0E0'
 		},
@@ -141,9 +141,10 @@ function buildHeatMap(json) {
 	      stepped: false,
 	      min: 0,
 	      max: 5000,
-	      map: colorMap,
-    },
-  }); 
+	      missingColor: '#FFFFFF',
+	      map: colorMap
+  		  }
+	  }); 
 
   // Hide the tab title at the top of the heat map, as it has odd characters that I can't get
   // to disappear (and it's not overly useful anyway, for our purposes).

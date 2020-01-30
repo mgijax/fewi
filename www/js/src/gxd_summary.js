@@ -771,9 +771,11 @@ function disableControls() {
 	// Hide what we can immediately, then come back in a second and
 	// hide anything added dynamically
 	$('.canHide').css('display', 'none');
+	$('#heatMapLink').addClass('heatMapLinkHidden');
 
 	setTimeout(function() { 
 		$('.canHide').css('display', 'none');
+		$('#heatMapLink').addClass('heatMapLinkHidden');
 		}, 1000);
 
 	controlsDisabled = true;
@@ -781,6 +783,7 @@ function disableControls() {
 
 function enableControls() {
 	$('.canHide').css('display', 'inline');
+	$('#heatMapLink').removeClass('heatMapLinkHidden');
 	controlsDisabled = false;
 }
 
@@ -819,6 +822,25 @@ function refreshTabCounts()
 	//get the tab counts via ajax
 	var handleCountRequest = function(o)
 	{
+		// Hide the button for the RNA-Seq heat map until we find if there are RNA-Seq data in the results.
+		$('#heatMapLink').addClass('heatMapLinkHidden');
+		
+		$.get(fewiurl + 'gxd/facet/assayType?' + getQueryStringWithFilters(),
+			function(x) {
+				try {
+					if (x.resultFacets.indexOf('RNA-Seq') >= 0) {
+						$('#heatMapLink').removeClass('heatMapLinkHidden'); 
+						console.log('Showed heat map button');
+					} else {
+						console.log('Hid heat map button');
+						$('#heatMapLink').addClass('heatMapLinkHidden');
+					}
+				} catch (e) {
+					console.log('Caught error (' + e + ') : ' + x);
+				}
+			}
+		);
+
 		if(o.responseText == "-1") o.responseText = "0"; // set count to zero if errors
 		// resolve the request ID to its appropriate handler
 		if(o.tId==resultsRq.tId) {
