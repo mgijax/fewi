@@ -25,7 +25,10 @@
   body.yui-skin-sam div#outerGxd {overflow:visible;}
   .yui-dt table {width: 100%;}
   
-  #subheader { min-width: 750px; }
+  #subheader {
+  	min-width: 750px;
+  	margin-top: 3px;
+  }
   #ysfDiv {
   	float: left; min-width: 350px;
   }
@@ -71,13 +74,16 @@
 	</div>
 	<div id="ysfDiv">${ysf}
 	</div>
-	<div id="poweredByDiv">Visualization and analysis powered by <B>Morpheus</B>
+	<div id="poweredByDiv">Visualization and analysis powered by 
+	  <a href="${externalUrls.MORPHEUS}" target="_blank">
+		<B>Morpheus</B>
 		<svg id="morpheusIcon" width="24px" height="24px">
 			<g>
 			<rect x="0" y="0" width="24" height="10" style="fill:#ca0020;stroke:none"></rect>
 			<rect x="0" y="13" width="24" height="10" style="fill:#0571b0;stroke:none"></rect>
 			</g>
 		</svg>
+	  </a>
 	</div>
 </div>
 
@@ -87,7 +93,7 @@
 </div>
 
 <!-- RNA-Seq Heat Map legend injected into this element -->
-<div id="legendPopupPanel" style="visibility: hidden;" class="facetFilter">
+<div id="legendPopupPanel" style="display:none;visibility: hidden;" class="facetFilter">
   <jsp:include page="gxd_rnaseq_heatmap_legend_popup.jsp"></jsp:include>
 </div>
 
@@ -152,7 +158,7 @@ function buildHeatMap(json) {
 }
 
 $('#heatmapWrapper').empty();
-$('#heatmapWrapper').html("<img src='/fewi/mgi/assets/images/loading.gif' height='24' width='24'> Loading data from MGI...");
+$('#heatmapWrapper').html("<img src='/fewi/mgi/assets/images/loading.gif' height='24' width='24'> Loading data from GXD...");
 
 var url = fewiurl + '/gxd/rnaSeqHeatMap/json?' + '${queryString}';
 $.get(url, function(data) { buildHeatMap(data); })

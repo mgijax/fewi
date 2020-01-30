@@ -830,9 +830,7 @@ function refreshTabCounts()
 				try {
 					if (x.resultFacets.indexOf('RNA-Seq') >= 0) {
 						$('#heatMapLink').removeClass('heatMapLinkHidden'); 
-						console.log('Showed heat map button');
 					} else {
-						console.log('Hid heat map button');
 						$('#heatMapLink').addClass('heatMapLinkHidden');
 					}
 				} catch (e) {
@@ -1797,3 +1795,11 @@ window.addEventListener("pageshow", function(evt){
 }, false);
 
 $('#maxCount').html(numberWithCommas(maxResults));
+
+// handle the button for popping up an RNA-Seq heat map window
+var popupHeatMap = function() {
+	var page = fewiurl + 'gxd/rnaSeqHeatMap?';
+	var parameters = getQueryStringWithFilters();
+	
+	window.open(page + parameters, '_blank', 'width=1200,height=800,resizable=yes,scrollbars=yes,alwaysRaised=yes');
+};

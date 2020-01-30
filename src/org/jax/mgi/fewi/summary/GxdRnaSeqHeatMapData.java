@@ -199,9 +199,7 @@ public class GxdRnaSeqHeatMapData {
 			try {
 				avgQnTpm = Float.parseFloat(result.getAvergageQNTPM());
 			} catch (Exception e) {
-				if (result.getAvergageQNTPM() == null) {
-					logger.info("Null Avg QN TPM for (" + markerID + ", " + sampleID + ")");
-				} else {
+				if (result.getAvergageQNTPM() != null) {
 					logger.info("Odd Avg QN TPM for (" + markerID + ", " + sampleID + "): " + result.getAvergageQNTPM());
 				}
 			}
