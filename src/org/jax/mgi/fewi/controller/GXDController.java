@@ -1927,10 +1927,12 @@ public class GXDController {
 			{
 		logger.debug("gxdGeneGridJson() started");
 		populateMarkerIDs(session, query);
-
+		
 		boolean isFirstPage = page.getStartIndex() == 0;
 		boolean isChildrenOfQuery = childrenOf!=null && !childrenOf.equals("");
-
+		//logger.debug("--isFirstPage:" + String.valueOf(isFirstPage));
+		//logger.debug("--isChildrenOfQuery:" + String.valueOf(isChildrenOfQuery));
+		
 		// save original query in case we are expanding a row
 		GxdQueryForm originalQuery = (GxdQueryForm) query.clone();
 		String sessionQueryString = originalQuery.toString();
@@ -2004,10 +2006,10 @@ public class GXDController {
 		List<GxdMatrixCell> gxdMatrixCells = mapper.mapCells(flatRows, resultList);
 
 		// only generate row relationships on first page/batch
-		if (isFirstPage)
-		{
+//		if (isFirstPage)
+//		{
 			gxdMatrixHandler.assignOpenCloseState(parentTerms,query,edges);
-		}
+//		}
 
 		// add to the response object
 		GxdStageGridJsonResponse<GxdMatrixCell> jsonResponse = new GxdStageGridJsonResponse<GxdMatrixCell>();
