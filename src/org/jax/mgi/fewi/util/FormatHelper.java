@@ -786,5 +786,13 @@ public class FormatHelper {
 		if (i == null) { return ""; }
 		return String.format("%d", i);
 	}
+	
+	public static String bold(String s) {
+		return "<B>" + s + "</B>";
+	}
+	
+	public static String smallGrey(String s) {
+		return "<span class='smallGrey'>" + s + "</span>";
+	}
 } // end of class FormatHelper
 

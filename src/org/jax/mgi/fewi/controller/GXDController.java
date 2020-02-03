@@ -1033,11 +1033,101 @@ public class GXDController {
 		
 		ModelAndView mav = new ModelAndView("gxd/gxd_rnaseq_heatmap");
 		mav.addObject("queryString", request.getQueryString());
-		mav.addObject("ysf", "You Searched For");
+		mav.addObject("ysf", getRnaSeqHeatMapYSF(query));
 		
 		return mav;
 	}
 
+	// Returns a String representing the "You Searched For" text describing the given 'query'.
+	// Notes:
+	//	1. This is only for the RNA-Seq heat map, not the regular QF summary.
+	//	2. Since we do not support heat maps from the differential QF or the batch QF, their idiosyncrasies are not considered.
+	private String getRnaSeqHeatMapYSF(GxdQueryForm query) {
+		// list of lines to concatenate
+		List<String> lines = new ArrayList<String>();
+		lines.add(FormatHelper.bold("You Searched For:"));
+
+		// temporary variable for composing each line
+		StringBuffer sb = null;
+		
+		// gene nomenclature
+		String nomenclature = query.getNomenclature();
+		if ((nomenclature != null) && !"".equals(nomenclature)) {
+			sb = new StringBuffer();
+			sb.append("Gene nomenclature: ");
+			sb.append(FormatHelper.bold(nomenclature));
+			sb.append(FormatHelper.smallGrey(" current symbol, name, synonyms"));
+			lines.add(sb.toString());
+		}
+		
+		// chromosomal locations
+		String locations = query.getLocations();
+		if ((locations != null) && !"".equals(locations)) {
+			String units = query.getLocationUnit();
+			if (units == null) { units = "bp"; }
+			
+			sb = new StringBuffer();
+			sb.append("Genome location(s): ");
+			if (locations.indexOf(":") >= 0) {
+				// location contains coordinate
+				sb.append(FormatHelper.bold(locations + " " + units));
+			} else {
+				// location is just a chromosome
+				sb.append(FormatHelper.bold(locations));
+			}
+			lines.add(sb.toString());
+		}
+		
+		// vocab term -- annotation ID
+		String vocabTerm = query.getVocabTerm();
+		String annotationID = query.getAnnotationId();
+		if ((vocabTerm != null) && (annotationID != null) && !"".equals(vocabTerm) && !"".equals(annotationID)) {
+			String[] pieces = vocabTerm.split(" - ");
+			sb = new StringBuffer();
+			sb.append("Genes annotated to: ");
+			if (pieces.length > 1) {
+				sb.append(FormatHelper.bold(pieces[1] + ": " + pieces[0]));
+			} else {
+				sb.append(FormatHelper.bold(pieces[0]));
+			}
+			sb.append(FormatHelper.smallGrey(" includes subterms"));
+			lines.add(sb.toString());
+		}
+		
+		// detected?
+		String detectedText = query.getDetected();
+		if ("Yes".equals(detectedText)) {
+			detectedText = "Detected";
+		} else if ("No".equals(detectedText)) {
+			detectedText = "Not detected";
+		} else {
+			detectedText = "Assayed";
+		}
+		
+		// structure
+		String structure = query.getStructure();
+		sb = new StringBuffer();
+		sb.append(FormatHelper.bold(detectedText));
+		sb.append(" in ");
+		if ((structure != null) && !"".equals(structure)) {
+			sb.append(FormatHelper.bold(structure));
+			sb.append(FormatHelper.smallGrey(" includes substructures"));
+		} else {
+			sb.append(FormatHelper.bold("any structures"));
+		}
+		lines.add(sb.toString());
+		
+		// age
+		
+		// Theiler stage
+		
+		// genetic background -- wild type
+		
+		// filters
+	
+		return String.join("<br/>", lines);
+	}
+	
 	@RequestMapping("/rnaSeqHeatMap/json")
 	public @ResponseBody GxdRnaSeqHeatMapData gxdRnaSeqHeatMapJson(
 			HttpSession session,

@@ -55,6 +55,10 @@
   #morpheusIcon {
   	margin-bottom: -5px;
   }
+  .smallGrey {
+    font-size: 75%;
+    color: #999999;
+  }
 </style>
 
 
