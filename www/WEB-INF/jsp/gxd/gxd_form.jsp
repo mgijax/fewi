@@ -17,6 +17,7 @@
 span.smallGrey { font-size: 75%; color: #999999; }
 #assayTypes1 > li,
 #assayTypes2 > li,
+#assayTypes3 > li,
 #geneticBackground > li
 {
 	list-style-type: none;
@@ -314,22 +315,53 @@ span.smallGrey { font-size: 75%; color: #999999; }
 	</tr>
 	<tr class="stripe1">
 		<td class="cat1Gxd">Assay types</td>
+		<c:set var="assayTypeCount" value="0"/>
 		<td>
-			<label id="allAssayTypeLabel"><input type="checkbox" id="assayType-ALL" name="assayType-ALL" class="assayType-ALL" checked="true"/>
-				Find expression data in any assay type</label>
-			<div id="assayTypes" style="width:800px;text-align:left;position:relative;">
-			<ul id="assayTypes1" >
-			<c:forEach items="${gxdQueryForm.assayTypes}" var="assayType" varStatus="status">
-				<c:if test="${status.count == 5 }">
-					</ul><ul style="position:absolute; left:300px; top:0px;" id="assayTypes2">
-				</c:if>
-		       <li>
-		       		<label class="assayTypeLabel"><input type="checkbox" id="assayType" name="assayType" class="assayType" value="<c:out value="${assayType}"/>" checked="true"/>
-		       		<c:out value="${assayType}"/></label>
-		       	</li>
-
-		   </c:forEach>
-		   </ul>
+			<label id="findAssayTypeLabel">Find expression data by assay type</label><p/>
+			<div>
+				<div style="padding-left: 20px; float:left;">
+					<label id="allInSituLabel"><input type="checkbox" id="inSituAll" name="inSituAll" class="allInSitu" checked="true"/>
+						In situ assays</label>
+					<ul id="assayTypes1" >
+					<c:forEach items="${gxdQueryForm.inSituAssayTypes}" var="assayType" varStatus="status">
+						<c:set var="assayTypeCount" value="${assayTypeCount + 1}"/>
+						<li>
+							<label class="assayTypeLabel"><input type="checkbox" id="assayType${assayTypeCount}" name="assayType" class="inSituAssayType assayType" value="<c:out value="${assayType}"/>" checked="true"/>
+				       		<c:out value="${assayType}"/>
+				       		<c:if test="${assayType == 'RNA in situ'}"> hybridization</c:if>
+				       		</label>
+				       	</li>
+					</c:forEach>
+					</ul>
+				</div>
+				<div style="padding-left: 40px; float:left;">
+					<label id="allBlotLabel"><input type="checkbox" id="blotAll" name="blotAll" class="allBlot" checked="true"/>
+						Blot assays</label>
+					<ul id="assayTypes2" >
+					<c:forEach items="${gxdQueryForm.blotAssayTypes}" var="assayType" varStatus="status">
+						<c:set var="assayTypeCount" value="${assayTypeCount + 1}"/>
+						<li>
+							<label class="assayTypeLabel"><input type="checkbox" id="assayType${assayTypeCount}" name="assayType" class="blotAssayType assayType" value="<c:out value="${assayType}"/>" checked="true"/>
+				       		<c:out value="${assayType}"/>
+				       		</label>
+				       	</li>
+					</c:forEach>
+					</ul>
+				</div>
+				<div style="padding-left: 40px; float:left;">
+					<label id="allWholeGenomeLabel"><input type="checkbox" id="wholeGenomeAll" name="allWholeGenome" class="allWholeGenome" checked="false"/>
+						Whole genome assays</label>
+					<ul id="assayTypes3" >
+					<c:forEach items="${gxdQueryForm.wholeGenomeAssayTypes}" var="assayType" varStatus="status">
+						<c:set var="assayTypeCount" value="${assayTypeCount + 1}"/>
+						<li>
+							<label class="assayTypeLabel"><input type="checkbox" id="assayType${assayTypeCount}" name="assayType" class="wholeGenomeAssayType assayType" value="<c:out value="${assayType}"/>" checked="false"/>
+				       		<c:out value="${assayType}"/>
+				       		</label>
+				       	</li>
+					</c:forEach>
+					</ul>
+				</div>
 			</div>
 		</td>
 	</tr>
@@ -436,6 +468,8 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			<input class="buttonLabel" value="Search" type="submit"  id="submit4">
 			&nbsp;&nbsp;
 			<input type="reset" id="reset4">
+			&nbsp;&nbsp;
+			<span style='font-weight: bold;'>RNA-Seq data not yet included in this search. </span>			
 		</td>
 	</tr>
 </table>

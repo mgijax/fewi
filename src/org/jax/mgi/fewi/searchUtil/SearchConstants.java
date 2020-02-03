@@ -303,4 +303,5 @@ public class SearchConstants {
 	
 	// general
 	public static final String COLUMN_ID = "columnID";
+	public static final String HAS_IMAGE = "hasImage";
 }

@@ -1,0 +1,40 @@
+package org.jax.mgi.fewi.matrix;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Arrays;
+
+/*
+ * shared converter that identifies whether a String value should be
+ * considered to be "detected" or "not detected"
+ */
+public class DetectionConverter {
+	protected static final Set<String> detectedValues = new HashSet<>(Arrays.asList("yes", "low", "medium", "high"));
+	protected static final Set<String> notDetectedValues = new HashSet<>(Arrays.asList("no", "below cutoff"));
+
+	public static boolean isDetected(String value) {
+		boolean found = detectedValues.contains(value); 
+		if (found) return true;
+		
+		// Make this adaptive so other capitalizations of the same
+		// words will be added to the set (for faster access next time).
+		found = detectedValues.contains(value.toLowerCase());
+		if (found) {
+			detectedValues.add(value);
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean isNotDetected(String value) {
+		if (notDetectedValues.contains(value)) return true;
+		//
+		// Make this adaptive so other capitalizations of the same
+		// words will be added to the set (for faster access next time).
+		boolean found = notDetectedValues.contains(value.toLowerCase());
+		if (found) {
+			notDetectedValues.add(value);
+			return true;
+		}
+		return false;
+	}
+}

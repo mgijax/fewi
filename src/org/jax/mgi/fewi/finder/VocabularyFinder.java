@@ -56,7 +56,8 @@ public class VocabularyFinder
 
     /* 
      * returns all vocab terms for the vocabulary beginning with the subsetLetter
-     * e.g All terms beginning with A or B, etc
+     * e.g All terms beginning with A or B, etc.  If subsetLetter is null, gets
+     * all terms in the specified vocabulary.
      */
     @SuppressWarnings("unchecked")
 	public List<VocabTerm> getVocabSubset(String vocabName, String subsetLetter)
@@ -65,7 +66,10 @@ public class VocabularyFinder
     	Criteria query = s.createCriteria(VocabTerm.class);
     	query.add(Restrictions.eq("vocabName",vocabName))
     		.add(Restrictions.eq("isObsolete",0));
-    	if(subsetLetter.equals("0-9"))
+    	if (subsetLetter == null) {
+    		logger.debug("Retrieving all terms in: " + vocabName);
+
+    	} else if(subsetLetter.equals("0-9"))
     	{
     		// need to OR all the numbers
     		query.add(Restrictions.disjunction()

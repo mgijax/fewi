@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.lang.Math;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -774,6 +775,16 @@ public class FormatHelper {
 		sb.append(String.format("%,d", coord));
 		sb.append(" bp");
 		return sb.toString(); 
+	}
+
+	public static String doubleToString(Double d) {
+		if (d == null) { return ""; }
+		return String.format("%d", Math.round(d));
+	}
+
+	public static String integerToString(Integer i) {
+		if (i == null) { return ""; }
+		return String.format("%d", i);
 	}
 } // end of class FormatHelper
 

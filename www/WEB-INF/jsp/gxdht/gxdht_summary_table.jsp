@@ -18,7 +18,15 @@
   	<c:set var="geoLink" value="" />
   	<c:if test="${not empty exp.geoID}">
 	  	<c:set var="geoLink" value="${fn:replace(externalUrls.GEOSeries, '@@@@', exp.geoID)}" />
+	</c:if>
+  	<c:set var="atlasLink" value="" />
+  	<c:if test="${exp.isInAtlas == 1}">
+	  	<c:set var="atlasLink" value="${fn:replace(externalUrls.ExpressionAtlas, '@@@@', exp.arrayExpressID)}" />
   	</c:if>
+	<c:set var="gxdLink" value="" />
+	<c:if test="${exp.isLoaded == 1}">
+		<c:set var="gxdLink" value="${configBean.FEWI_URL}gxd/experiment/${exp.arrayExpressID}" />
+	</c:if>
 
 	<table id="experimentTable${status.index}" class="experimentWrapper">
 		<tr id="titleRow${status.index}" class="titleRow">
@@ -65,6 +73,8 @@
 		  		</c:if>
 		  	</td>
 			<td id="viewData${status.index}">
+				<c:if test="${not empty gxdLink}">GXD: <a href="${gxdLink}">${exp.arrayExpressID}</a> <br/></c:if>
+				<c:if test="${not empty atlasLink}">Expression Atlas: <a href="${atlasLink}" target="_blank" class="extUrl">${exp.arrayExpressID}</a> <br/></c:if>
 				ArrayExpress: <a href="${aeLink}" target="_blank" class="extUrl">${exp.arrayExpressID}</a> 
 				<c:if test="${not empty geoLink}"><br/>GEO: <a href="${geoLink}" target="_blank" class="extUrl">${exp.geoID}</a> </c:if>
 			</td>

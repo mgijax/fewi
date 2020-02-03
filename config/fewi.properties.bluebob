@@ -16,25 +16,16 @@
 #FEWI_URL=http://server.informatics.jax.org/
 #FEWI_URL=http://cardolan.informatics.jax.org:8080/fewi/mgi/
 
-
 #----- solr server urls -----#
 
-# Weekly Proto
-#solr.server1.url=http://bhmgiapp06ld.jax.org:13999/solr
-solr.server1.url=http://bhmgipwi02lt.jax.org:13999/solr
-#solr.server2.url=http://bhmgiapp06ld.jax.org:28983/solr
-#solr.server2.url=http://bhmgisnpdb01lt.jax.org:18983/solr
-solr.server2.url=http://bhmgipwi02lt.jax.org:8983/solr
-
 # Front-end development indexes
-#solr.server1.url=http://cardolan:8985/solr/
-#solr.server2.url=http://cardolan:8983/solr/
-
+solr.server1.url=http://bhmgipwi02lt.jax.org:13999/solr
+solr.server2.url=http://bhmgipwi02lt.jax.org:8983/solr
+solr.server3.url=http://bhmgigxdsolr01ld.jax.org:14999/solr
 
 #-------------------------------------------------------------------------------
 #----- INSTALL VALUES
 #-------------------------------------------------------------------------------
 
 # directory in which to find the standard mgi template
-#template.dir=/home/<user>/devwi/mgiconfig/web/
 template.dir=/home/jsb/jax/pub/mgiconfig/web/

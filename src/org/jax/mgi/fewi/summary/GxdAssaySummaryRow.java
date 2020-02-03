@@ -46,12 +46,13 @@ public class GxdAssaySummaryRow {
 	}
 
 	public String getAssayID() {
-		if (assay.getHasImage()) {
-			return "<a href='" + fewiUrl + "assay/" + assay.getAssayMgiid()
-					+ "'>data</a><span> (" + assay.getAssayMgiid() + ")</span>"
-					+ " <img class=\"cameraIcon\" src=\"" + webshareUrl
-					+ "/images/mgi_camera.gif\" /> ";
+		// RNA-Seq data have no images, and the data link should add
+		// a special filter for this experiment ID.
+		if (assay.getAssayType().startsWith("RNA-Seq")) {
+			return "<a href='#" + assay.getJNum() + "' onClick='filterByExperiment(\"" + assay.getJNum() + "\"); return false;' onContextMenu='return false;' class='rsFilterLink'><img src='" + webshareUrl + "images/filter.png' width='10' height='10' title='Click to Filter Results by Experiment' class='rsFilterIcon'/></a> data set <span>(" + assay.getJNum() + ")</span>";
 		}
+
+		// classical assays
 		return "<a href='" + fewiUrl + "assay/" + assay.getAssayMgiid()
 				+ "'>data</a><span> (" + assay.getAssayMgiid() + ")</span>";
 	}
@@ -61,9 +62,12 @@ public class GxdAssaySummaryRow {
 	}
 
 	public String getReference() {
-		return "<a href='" + fewiUrl + "reference/" + assay.getJNum() + "'>"
+		if (assay.getJNum().startsWith("J:")) {
+			return "<a href='" + fewiUrl + "reference/" + assay.getJNum() + "'>"
 				+ assay.getJNum() + "</a> " + assay.getMiniCitation();
-
+		}
+		return "<a href='" + fewiUrl + "gxd/htexp_index/summary?arrayExpressID=" + assay.getJNum() + "'>"
+			+ assay.getJNum() + "</a> " + assay.getMiniCitation();
 	}
 
 }

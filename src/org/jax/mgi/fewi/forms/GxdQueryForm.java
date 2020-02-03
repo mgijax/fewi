@@ -37,6 +37,12 @@ public class GxdQueryForm implements Cloneable {
 	private final List<String> assayTypes = new ArrayList<String>();
 	private List<String> assayType = new ArrayList<String>();
 
+	// The top one of these if for filtering by RNA-Seq experiment ID(s),
+	// while the bottom one is for display of a single RNA-Seq experiment
+	// (by ID -- linked from the GXD HT summary page).
+	private List<String> experimentFilter = new ArrayList<String>();
+	private String experimentID = "";
+
 	private String nomenclature = "";
 	private String vocabTerm = "";
 	private String structure = "";
@@ -75,14 +81,23 @@ public class GxdQueryForm implements Cloneable {
 	// filters for a result set
 	private List<String> systemFilter = new ArrayList<String>();
 	private List<String> assayTypeFilter = new ArrayList<String>();
+	private List<String> markerTypeFilter = new ArrayList<String>();
 	private List<String> detectedFilter = new ArrayList<String>();
 	private List<String> theilerStageFilter = new ArrayList<String>();
 	private List<String> wildtypeFilter = new ArrayList<String>();
+	private List<String> mpFilter = new ArrayList<String>();
+	private List<String> doFilter = new ArrayList<String>();
+	private List<String> goBpFilter = new ArrayList<String>();
+	private List<String> goCcFilter = new ArrayList<String>();
+	private List<String> goMfFilter = new ArrayList<String>();
+	private List<String> tmpLevelFilter = new ArrayList<String>();
+
 	// filters used by matrices
 	private List<String> structureIDFilter = new ArrayList<String>();
 	private List<String> markerSymbolFilter = new ArrayList<String>();
 	private List<String> matrixStructureId = new ArrayList<String>(); // used by popups and row expansions
 	private String matrixMarkerSymbol = "";
+	private String matrixMarkerTotal = "";
 
 	// needed for batch ID/symbol upload functionality
 	private String idType = "auto";
@@ -94,6 +109,10 @@ public class GxdQueryForm implements Cloneable {
 	private List<String> markerIDs = null;
 	private boolean batchSubmission = false;
 
+	// pagination functionality
+	private List<String> geneMatrixDisplayList = new ArrayList<String>();
+
+	
 	// --------
 	// methods
 	// --------
@@ -186,12 +205,13 @@ public class GxdQueryForm implements Cloneable {
 	private void populateAssayTypes() {
 		assayTypes.add("Immunohistochemistry");
 		assayTypes.add("In situ reporter (knock in)");
+		assayTypes.add("RNA in situ");
 		assayTypes.add("Northern blot");
 		assayTypes.add("Nuclease S1");
-		assayTypes.add("RNA in situ");
 		assayTypes.add("RNase protection");
 		assayTypes.add("RT-PCR");
 		assayTypes.add("Western blot");
+		assayTypes.add("RNA-Seq");
 	}
 
 	private void populateDifferentialFields() {
@@ -285,6 +305,22 @@ public class GxdQueryForm implements Cloneable {
 		this.assayType = assayType;
 	}
 
+	public List<String> getExperimentFilter() {
+		return experimentFilter;
+	}
+
+	public void setExperimentFilter(List<String> experimentFilter) {
+		this.experimentFilter = experimentFilter;
+	}
+
+	public String getExperimentID() {
+		return experimentID;
+	}
+
+	public void setExperimentID(String experimentID) {
+		this.experimentID = experimentID;
+	}
+
 	public List<String> getAge() {
 		return age;
 	}
@@ -310,6 +346,18 @@ public class GxdQueryForm implements Cloneable {
 
 	public List<String> getAssayTypes() {
 		return assayTypes;
+	}
+
+	public List<String> getInSituAssayTypes() {
+		return assayTypes.subList(0, 3);
+	}
+
+	public List<String> getBlotAssayTypes() {
+		return assayTypes.subList(3, 8);
+	}
+
+	public List<String> getWholeGenomeAssayTypes() {
+		return assayTypes.subList(8, 9);
 	}
 
 	public String getAssayTypesSelected() {
@@ -360,7 +408,8 @@ public class GxdQueryForm implements Cloneable {
 	}
 
 	public String getMarkerSymbol() {
-		return FewiUtil.sanitizeSymbol(markerSymbol);
+		this.markerSymbol = FewiUtil.sanitizeSymbol(markerSymbol);
+		return this.markerSymbol;
 	}
 
 	public void setMarkerSymbol(String markerSymbol) {
@@ -368,7 +417,8 @@ public class GxdQueryForm implements Cloneable {
 	}
 
 	public String getStructureID() {
-		return FewiUtil.sanitizeID(structureID);
+		this.structureID = FewiUtil.sanitizeID(structureID);
+		return this.structureID;
 	}
 
 	public void setStructureID(String structureID) {
@@ -577,6 +627,14 @@ public class GxdQueryForm implements Cloneable {
 		this.assayTypeFilter = assayTypeFilter;
 	}
 
+	public List<String> getMarkerTypeFilter() {
+		return markerTypeFilter;
+	}
+
+	public void setMarkerTypeFilter(List<String> markerTypeFilter) {
+		this.markerTypeFilter = markerTypeFilter;
+	}
+	
 	public List<String> getDetectedFilter() {
 		return detectedFilter;
 	}
@@ -586,7 +644,8 @@ public class GxdQueryForm implements Cloneable {
 	}
 
 	public List<String> getMarkerSymbolFilter() {
-		return FewiUtil.sanitizeSymbols(markerSymbolFilter);
+		this.markerSymbolFilter = FewiUtil.sanitizeSymbols(markerSymbolFilter);
+		return this.markerSymbolFilter;
 	}
 
 	public void setMarkerSymbolFilter(List<String> markerSymbolFilter) {
@@ -609,8 +668,56 @@ public class GxdQueryForm implements Cloneable {
 		this.wildtypeFilter = wildtypeFilter;
 	}
 
+	public List<String> getMpFilter() {
+		return mpFilter;
+	}
+
+	public void setMpFilter(List<String> mpFilter) {
+		this.mpFilter = mpFilter;
+	}
+	
+	public List<String> getDoFilter() {
+		return doFilter;
+	}
+
+	public void setDoFilter(List<String> doFilter) {
+		this.doFilter = doFilter;
+	}
+
+	public List<String> getGoBpFilter() {
+		return goBpFilter;
+	}
+
+	public List<String> getGoCcFilter() {
+		return goCcFilter;
+	}
+
+	public List<String> getGoMfFilter() {
+		return goMfFilter;
+	}
+
+	public List<String> getTmpLevelFilter() {
+		return tmpLevelFilter;
+	}
+	
+	public void setTmpLevelFilter(List<String> tmpLevelFilter) {
+		this.tmpLevelFilter = tmpLevelFilter;
+	}
+
+	public void setGoMfFilter(List<String> goMfFilter) {
+		this.goMfFilter = goMfFilter;
+	}
+	
+	public void setGoBpFilter(List<String> goBpFilter) {
+		this.goBpFilter = goBpFilter;
+	}
+	public void setGoCcFilter(List<String> goCcFilter) {
+		this.goCcFilter = goCcFilter;
+	}
+	
 	public String getDifStructureID() {
-		return FewiUtil.sanitizeID(difStructureID);
+		this.difStructureID = FewiUtil.sanitizeID(difStructureID);
+		return this.difStructureID;
 	}
 
 	public void setDifStructureID(String difStructureID) {
@@ -618,7 +725,8 @@ public class GxdQueryForm implements Cloneable {
 	}
 
 	public List<String> getStructureIDFilter() {
-		return FewiUtil.sanitizeIDs(structureIDFilter);
+		this.structureIDFilter = FewiUtil.sanitizeIDs(structureIDFilter);
+		return this.structureIDFilter;
 	}
 
 	public void setStructureIDFilter(List<String> structureIDFilter) {
@@ -626,7 +734,8 @@ public class GxdQueryForm implements Cloneable {
 	}
 
 	public List<String> getMatrixStructureId() {
-		return FewiUtil.sanitizeIDs(matrixStructureId);
+		this.matrixStructureId = FewiUtil.sanitizeIDs(matrixStructureId);
+		return this.matrixStructureId;
 	}
 
 	public void setMatrixStructureId(List<String> matrixStructureId) {
@@ -634,13 +743,23 @@ public class GxdQueryForm implements Cloneable {
 	}
 
 	public String getMatrixMarkerSymbol() {
-		return FewiUtil.sanitizeSymbol(matrixMarkerSymbol);
+		this.matrixMarkerSymbol = FewiUtil.sanitizeSymbol(matrixMarkerSymbol);
+		return this.matrixMarkerSymbol;
 	}
 
 	public void setMatrixMarkerSymbol(String matrixMarkerSymbol) {
 		this.matrixMarkerSymbol = matrixMarkerSymbol;
 	}
 
+	public String getMatrixMarkerTotal() {
+		return matrixMarkerTotal;
+	}
+
+	public void setMatrixMarkerTotal(String matrixMarkerTotal) {
+		this.matrixMarkerTotal = matrixMarkerTotal;
+	}
+	
+	
 	//-------------------------------------------//
 	//--- fields related to batch submissions ---//
 	//-------------------------------------------//
@@ -699,7 +818,8 @@ public class GxdQueryForm implements Cloneable {
 	//-------------------------------------------------//
 
 	public List<String> getMarkerIDs() {
-		return FewiUtil.sanitizeIDs(markerIDs);
+		this.markerIDs = FewiUtil.sanitizeIDs(markerIDs);
+		return this.markerIDs;
 	}
 	public void setMarkerIDs(List<String> markerIDs) {
 		this.markerIDs = markerIDs;
@@ -723,6 +843,21 @@ public class GxdQueryForm implements Cloneable {
 		return "";
 	}
 
+	//-------------------------------------------------//
+	//--- pagination functionality                  ---//
+	//-------------------------------------------------//
+	
+	public List<String> getMatrixDisplayList() {
+		return this.geneMatrixDisplayList;
+	}
+	public void setMatrixDisplayList(List<String> inputDisplayList) {
+		this.geneMatrixDisplayList = inputDisplayList;
+	}	
+
+	//-------------------------------------------------//
+	//--- Generic Util                              ---//
+	//-------------------------------------------------//
+
 	@Override
 	public String toString() {
 		return "GxdQueryForm [theilerStages=" + theilerStages
@@ -738,14 +873,18 @@ public class GxdQueryForm implements Cloneable {
 				+ ", probeKey=" + probeKey + ", antibodyKey=" + antibodyKey
 				+ ", systemFilter=" + systemFilter + ", assayTypeFilter="
 				+ assayTypeFilter + ", detectedFilter=" + detectedFilter
+				+ ", markerTypeFilter=" + markerTypeFilter
 				+ ", theilerStageFilter=" + theilerStageFilter
 				+ ", structureIDFilter=" + structureIDFilter
 				+ ", wildtypeFilter=" + wildtypeFilter 
+				+ ", mpFilter=" + mpFilter 
+				+ ", doFilter=" + doFilter 
 				+ ", len(IDs)=" + (ids == null ? "0" : ids.length() )
 				+ ", fileType=" + fileType
 				+ ", idColumn=" + idColumn
 				+ ", idFile=" + (idFile == null ? "null" : idFile.getOriginalFilename())
 				+ ", idTypeSelection=" + getIdTypeSelection()
+				+ ", geneMatrixDisplayList=" + getMatrixDisplayList()
 				+ "]";
 	}
 

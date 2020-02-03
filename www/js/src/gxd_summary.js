@@ -4,10 +4,15 @@ var gxdDataTable;
 var gxdDataSource;
 var defaultSort = "";
 
+var maxResults = 21000000;	// max number of results allowed for full functionality
+var controlsDisabled = false;	// all controls enabled (false) or disabled (true)
+var resultsCount = -1;		// count of results for current query
+
 //default page size for each summary
 var GENES_PAGE_SIZE = 100;
 var ASSAYS_PAGE_SIZE = 100;
 var RESULTS_PAGE_SIZE = 100;
+var GENE_MATRIX_SIZE = 50;
 var IMAGES_PAGE_SIZE = 25;
 
 var LOADING_IMG_SRC = "/fewi/mgi/assets/images/loading.gif";
@@ -25,13 +30,64 @@ var History = YAHOO.util.History;
 //HTML/YUI page widgets
 YAHOO.namespace("gxd.container");
 
+//Shortcut variable for matrix grid pagination
+var geneGridRowsPerPage = null;
+var geneGridRecordOffset = null;
+var geneGridRecordTotal = null;
+
+// column definitions and optional column status for results table
+var resultsTableDefs = [
+	// sortable:true enables sorting
+	{key: "gene", label: "Gene", sortable: true },
+	{key: "assayID", label: "Result Details", sortable: false },
+	{key: "assayType", label: "Assay Type", sortable: true },
+	{key: "age", label: "Age", sortable: true },
+	{key: "structure", label: "Structure",sortable: true},
+	{key: "detectionLevel",label: "Detected?",sortable: true},
+	{key: "tpmLevel",label: "TPM Level<br/>(RNA-Seq)",sortable: false,hidden: false},
+	{key: "biologicalReplicates",label: "Biological Replicates<br/>(RNA-Seq)",sortable: false,hidden: true},
+	{key: "figures", label: "Images",sortable: false},
+	{key: "genotype",label: "Mutant Allele(s)",sortable: false},
+	{key: "strain",label: "Strain",sortable: false,hidden: true},
+	{key: "sex",label: "Sex",sortable: false,hidden: true},
+	{key: "notes",label: "Notes<br/>(RNA-Seq)",sortable: false,hidden: true},
+	{key: "reference",label: "Reference",sortable: true},
+	{key: "score",label: "score",sortable: false,hidden: true}
+	];
+
+var hideOptionalColumns = true;
+
+var flipColumn = function(key) {
+	for (var i = 0; i < resultsTableDefs.length; i++) {
+		if (resultsTableDefs[i].key == key) {
+			resultsTableDefs[i].hidden = hideOptionalColumns;
+			break;
+		}
+	}
+}
+
+var flipOptionalColumns = function(dontMove) {
+	hideOptionalColumns = !hideOptionalColumns;
+	flipColumn('biologicalReplicates');
+	flipColumn('strain');
+	flipColumn('sex');
+	flipColumn('notes');
+	if (!dontMove) {
+		historyInit();
+	}
+}
+
+var isDisabled = function() {
+	return controlsDisabled;
+}
+
 //------ tab definitions + functions ------------
 var mgiTab = new MGITabSummary({
 	"tabViewId":"resultSummary",
 	"tabIds":["genestab","assaystab","resultstab","imagestab","stagegridtab","genegridtab"],
-	"pageSizes":[GENES_PAGE_SIZE,ASSAYS_PAGE_SIZE,RESULTS_PAGE_SIZE,IMAGES_PAGE_SIZE,0,0], // mirrors "tabIds"
+	"pageSizes":[GENES_PAGE_SIZE,ASSAYS_PAGE_SIZE,RESULTS_PAGE_SIZE,IMAGES_PAGE_SIZE,0,GENE_MATRIX_SIZE], // mirrors "tabIds"
 	"historyId":"gxd"
-});
+}, isDisabled);
 
 var stageDayMap = {
 		1:"E0-2.5",
@@ -65,8 +121,18 @@ var stageDayMap = {
 };
 
 //TODO: refactor these to use the mgiTab.summaryTabs object instead of resultsTabs
+
 var resultsTabs = mgiTab.summaryTabs;
 var getCurrentTab = mgiTab.getCurrentTab;
+
+var getCurrentForm = function() {
+	var form = "";
+	try {
+		form = currentQF;	// currentQF may or may not be defined
+	} catch (e) {
+	}
+	return form;
+}
 
 /*
  * Some helper functions for dealing with YUI history manager
@@ -247,6 +313,9 @@ function reverseEngineerFormInput(request)
 								box.checked = false;
 							}
 						}
+						resetSuper('.allInSitu', '.inSituAssayType');
+						resetSuper('.allBlot', '.blotAssayType');
+						resetSuper('.allWholeGenome', '.wholeGenomeAssayType');
 					}
 					else
 					{
@@ -313,6 +382,20 @@ function reverseEngineerFormInput(request)
 	return foundParams;
 }
 
+// reset the checkbox identified by the 'superClass' to be checked if all instances of 'subClass' are also
+// checked (or to not checked if not all the 'subClass' ones are checked.
+var resetSuper = function(superClass, subClass) {
+	if ($(superClass).length == 0) { return; }
+
+	var superBox = $(superClass)[0];
+	var allChecked = true;
+	var subBoxes = $(subClass);
+	for (var i = 0; allChecked && i < subBoxes.length; i++) {
+		allChecked = allChecked && subBoxes[i].checked;
+	}
+	superBox.checked = allChecked;
+}
+
 // Get a string that represents the range of records displayed (to tell when we've had a pagination event).
 var getRecordsDisplayed = function() {
 	var pages = "";
@@ -324,6 +407,26 @@ var getRecordsDisplayed = function() {
 	return pages;
 }
 
+// Show the paginators (if rules allow it).
+var showPaginators = function() {
+	// If we are showing the tissue x gene grid from a differential search,
+	// do not show the paginators. Hide them instead.
+	if ((getCurrentForm() == 'differential') && (getCurrentTab() == 'genegridtab')) {
+		hidePaginators();
+		return;
+	}
+	$(".yui-pg-container").show();
+}
+
+// Hide the paginators (if the rules allow it).
+var hidePaginators = function() {
+	// If we are showing the tissue x gene grid from a differential search,
+	// do not show the paginators. Hide them instead.
+	if ((getCurrentForm() == 'differential') && (getCurrentTab() == 'genegridtab')) {
+		$(".yui-pg-container").hide();
+	}
+}
+
 //a globabl variable to help the summary know when to generate a new datatable
 var previousQueryString = "none";
 var previousFilterString = "none";
@@ -331,6 +434,25 @@ var previousGAState = "";
 //Called by Browser History Manager to trigger a new state
 handleNavigation = function (request, calledLocally) {
 
+	// Always show a spinner and message when changing tabs (so old results aren't still there to
+	// confuse the user.
+	var messageDiv = null;
+	if (mgiTab.getCurrentTab() != null) {
+		var currentTab = mgiTab.getCurrentTab().replace('tab', '');
+		if ((currentTab == 'results') || (currentTab == 'assays') || (currentTab == 'genes') || (currentTab == 'images')) {
+			messageDiv = currentTab + 'data';
+		} else if (currentTab == 'stagegrid') {
+			messageDiv = 'sgTarget';
+		} else if (currentTab == 'genegrid') {
+			messageDiv = 'ggTarget';
+		}
+	} else {
+		messageDiv = 'resultsdata';
+	}
+	if (messageDiv != null) {
+		$('#' + messageDiv).html(LOADING_IMG + ' Searching...');
+	}
+	
 	// ensure any popups get hidden
 	stagePopupPanel.hide();
 	genePopupPanel.hide();
@@ -351,9 +473,10 @@ handleNavigation = function (request, calledLocally) {
 
 	var foundParams = true;
 	// test if there is a form that needs to be populated
-	if (typeof reverseEngineerFormInput == 'function')
+	if (typeof reverseEngineerFormInput == 'function') {
 		log("request: " + request);
 		foundParams = reverseEngineerFormInput(request);
+	}
 
 	//Set the global querystring parameter for later navigation
 	// if there is no getQueryString function, we assume that window.querystring is already set
@@ -392,9 +515,6 @@ handleNavigation = function (request, calledLocally) {
 		if (typeof openSummaryControl == 'function')
 			openSummaryControl();
 
-		// build the summary inside the tab
-		buildSummary(request,tabState);
-
 		// update the report buttons
 		var querystringWithFilters = getQueryStringWithFilters();
 		if (querystringWithFilters != previousFilterString)
@@ -409,17 +529,9 @@ handleNavigation = function (request, calledLocally) {
 			if (!YAHOO.lang.isNull(resultsTextReportButton)) {
 				resultsTextReportButton.setAttribute('onClick', "buildAndSubmit('resultsExportForm', '" + fewiurl + "gxd/report.txt')");
 			}
-			var resultsExcelReportButton = YAHOO.util.Dom.get('resultsExcelDownload');
-			if (!YAHOO.lang.isNull(resultsExcelReportButton)) {
-				resultsExcelReportButton.setAttribute('onClick', "buildAndSubmit('resultsExportForm', '" + fewiurl + "gxd/report.xlsx')");
-			}
 			var markersTextReportButton = YAHOO.util.Dom.get('markersTextDownload');
 			if (!YAHOO.lang.isNull(markersTextReportButton)) {
 				markersTextReportButton.setAttribute('onClick', "buildAndSubmit('markerExportForm', '" + fewiurl + "gxd/marker/report.txt')");
-			}
-			var markersExcelReportButton = YAHOO.util.Dom.get('markersExcelDownload');
-			if (!YAHOO.lang.isNull(markersExcelReportButton)) {
-				markersExcelReportButton.setAttribute('onClick', "buildAndSubmit('markerExportForm', '" + fewiurl + "gxd/marker/report.xlsx')");
 			}
 			var markersBatchForward = YAHOO.util.Dom.get('markersBatchForward');
 			if (!YAHOO.lang.isNull(markersBatchForward)) {
@@ -427,8 +539,39 @@ handleNavigation = function (request, calledLocally) {
 			}
 		}
 
+		// get counts first
 		refreshTabCounts();
-		refreshGxdLitLink();
+
+		var countsReceived = function(request, tabState) {
+			if ((resultsCount >= 0) && (resultsCount <= maxResults)) {
+				showPaginators();
+				console.log('Got results count: ' + resultsCount);
+				buildSummary(request,tabState);
+			} else if ((resultsCount >= 0) && ((tabState == undefined) || (tabState == 'resultstab'))) {
+				console.log('found ' + resultsCount + ' results, tabState: ' + tabState);
+				buildSummary(request,tabState);
+			} else {
+				console.log('error state: no results found, tabState: ' + tabState);
+			}
+		}
+
+		var checkCount = function(delay, toGo, request, tabState) {
+			console.log('checkCount(' + delay + ',' + toGo + ')');
+			if ((resultsCount >= 0) || (toGo <= 0)) {
+				countsReceived(request, tabState);
+			} else {
+				setTimeout(function() {
+					checkCount(delay, toGo - 1, request, tabState);
+					}, delay);
+			}
+		}
+
+		var waitForResultCount = function(request, tabState) {
+			checkCount(100, 300, request, tabState);
+		};
+
+		// build the summary inside the tab (if below max results)
+		waitForResultCount(request, tabState);
 
 		// Shh, do not tell anyone about this. We are sneaking in secret Google Analytics calls, even though there is no approved User Story for it.
 		var GAState = "/gxd/summary/" + tabState + "?" + querystringWithFilters + '&records=' + getRecordsDisplayed();
@@ -478,7 +621,7 @@ function buildSummary(request,tabState)
 	}
 	else if(doGeneGrid)
 	{
-		structureGeneGrid();
+		loadDatatable (handleStructGeneTab,request);
 		showNowhereElseMessage(request, 'Tissue x Gene Matrix');
 	}
 	else
@@ -487,6 +630,7 @@ function buildSummary(request,tabState)
 		// not showing a grid, so hide the "nowhere else" message (that applies only to the grids)
 		$('#nowhereElseMessage').hide();
 	}
+	showPaginators();
 }
 
 // Works with clickNotDetectedFilter() to allow easy, programmatic removal of the auto-added Not Detected filter.
@@ -562,7 +706,7 @@ function showNowhereElseMessage(request, matrixType) {
 function loadDatatable(dataTableInitFunction,request)
 {
 	// show page controls
-	$(".yui-pg-container").show()
+	showPaginators();
 
 	// returns object of {"datatable": ..., "datasource":...}
 	var o = dataTableInitFunction();
@@ -609,6 +753,62 @@ function getYsfGeneCount() {
 	return ysfGeneCount;
 }
 
+function hideTooManyResultsMessage() {
+	$('#tooManyResults').css('display', 'none');
+	$('#tooManyResultsWrapper').css('display', 'none');
+}
+
+function showTooManyResultsMessage() {
+	$('#tooManyResults').css('display', 'inline');
+	$('#tooManyResultsWrapper').css('display', 'block');
+}
+
+function disableControls() {
+	YAHOO.util.Dom.get("totalGenesCount").innerHTML = '-';
+	YAHOO.util.Dom.get("totalAssaysCount").innerHTML = '-';
+	YAHOO.util.Dom.get("totalImagesCount").innerHTML = '-';
+
+	// Hide what we can immediately, then come back in a second and
+	// hide anything added dynamically
+	$('.canHide').css('display', 'none');
+	$('#heatMapLink').addClass('heatMapLinkHidden');
+
+	setTimeout(function() { 
+		$('.canHide').css('display', 'none');
+		$('#heatMapLink').addClass('heatMapLinkHidden');
+		}, 1000);
+
+	controlsDisabled = true;
+}
+
+function enableControls() {
+	$('.canHide').css('display', 'inline');
+	$('#heatMapLink').removeClass('heatMapLinkHidden');
+	controlsDisabled = false;
+}
+
+function refreshCurrentTab() {
+	// click the results tab, immediately followed by the current tab,
+	// to ensure it refreshes it
+	var currentTab = getCurrentTab();
+	console.log('Refreshing current tab: ' + currentTab);
+	$('#resultstab')[0].click();
+	// allow a slight delay before clicking on the original tab again
+	setTimeout(function () {
+		$('#' + currentTab)[0].click();
+		}, 100);
+}
+
+function clearOtherTabs() {
+	var tabs = ["genesdata", "assaysdata", "imagesdata"];
+	var message = 'Some functionality has been disabled until you refine your search to bring the number of returned assay results under 21,000,000.';
+	for (var i = 0; i < tabs.length; i++) {
+		showMessageInTable(tabs[i], message);
+	}
+	$('#ggTarget').html(message);
+	$('#sgTarget').html(message);
+}
+
 function refreshTabCounts()
 {
 	var querystringWithFilters = getQueryStringWithFilters();
@@ -622,19 +822,61 @@ function refreshTabCounts()
 	//get the tab counts via ajax
 	var handleCountRequest = function(o)
 	{
+		// Hide the button for the RNA-Seq heat map until we find if there are RNA-Seq data in the results.
+		$('#heatMapLink').addClass('heatMapLinkHidden');
+		
+		$.get(fewiurl + 'gxd/facet/assayType?' + getQueryStringWithFilters(),
+			function(x) {
+				try {
+					if (x.resultFacets.indexOf('RNA-Seq') >= 0) {
+						$('#heatMapLink').removeClass('heatMapLinkHidden'); 
+					} else {
+						$('#heatMapLink').addClass('heatMapLinkHidden');
+					}
+				} catch (e) {
+					console.log('Caught error (' + e + ') : ' + x);
+				}
+			}
+		);
+
 		if(o.responseText == "-1") o.responseText = "0"; // set count to zero if errors
 		// resolve the request ID to its appropriate handler
 		if(o.tId==resultsRq.tId) {
-			YAHOO.util.Dom.get("totalResultsCount").innerHTML = o.responseText;
+			YAHOO.util.Dom.get("totalResultsCount").innerHTML = commaDelimit(o.responseText);
 			// if no results, we don't need the grid-specific message for 'nowhere else' queries
 			if (parseInt(o.responseText) == 0) {
 				$('#nowhereElseMessage').css('display', 'none');
 			}
+
+			resultsCount = parseInt(o.responseText);
+
+			// if number of results exceeds max to be handled, disable some controls;
+			// otherwise go ahead and ask for the other counts
+			if (resultsCount > maxResults) {
+				// disable pagination and other tabs until the count comes down
+				showTooManyResultsMessage();
+				disableControls();
+				clearOtherTabs();
+			} else {
+				hideTooManyResultsMessage();
+				enableControls();
+				assaysRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/assays/totalCount", {	success:handleCountRequest,
+					failure:function(o){}
+					}, querystringWithFilters);
+				genesRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/markers/totalCount", {	success:handleCountRequest,
+					failure:function(o){}
+					}, querystringWithFilters);
+				imagesRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/images/totalCount", {	success:handleCountRequest,
+					failure:function(o){}
+					}, querystringWithFilters);
+				refreshGxdLitLink();
+				refreshCurrentTab();
+			}
 		}
-		else if(o.tId==assaysRq.tId) YAHOO.util.Dom.get("totalAssaysCount").innerHTML = o.responseText;
+		else if(o.tId==assaysRq.tId) YAHOO.util.Dom.get("totalAssaysCount").innerHTML = commaDelimit(o.responseText);
 		else if(o.tId==genesRq.tId) {
 			log('handling gene count');
-			YAHOO.util.Dom.get("totalGenesCount").innerHTML = o.responseText;
+			YAHOO.util.Dom.get("totalGenesCount").innerHTML = commaDelimit(o.responseText);
 			log('updatedYSF: ' + updatedYSF);
 			if (!updatedYSF) {
 				updatedYSF = true;
@@ -644,46 +886,18 @@ function refreshTabCounts()
 			} // end - updated YSF
 			log('updatedYSF: ' + updatedYSF);
 		}
-		else if(o.tId==imagesRq.tId) YAHOO.util.Dom.get("totalImagesCount").innerHTML = o.responseText;
+		else if(o.tId==imagesRq.tId) YAHOO.util.Dom.get("totalImagesCount").innerHTML = commaDelimit(o.responseText);
 	}
 
-	// clear these until the data comes back
+	// clear these until the data come back
 	YAHOO.util.Dom.get("totalResultsCount").innerHTML = "";
 	YAHOO.util.Dom.get("totalAssaysCount").innerHTML = "";
 	YAHOO.util.Dom.get("totalGenesCount").innerHTML = "";
 	YAHOO.util.Dom.get("totalImagesCount").innerHTML = "";
 
-	/*
-	resultsRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/results/totalCount?"+querystringWithFilters,
-			{	success:handleCountRequest,
-		failure:function(o){}
-			},null);
-	assaysRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/assays/totalCount?"+querystringWithFilters,
-			{	success:handleCountRequest,
-		failure:function(o){}
-			},null);
-	genesRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/markers/totalCount?"+querystringWithFilters,
-			{	success:handleCountRequest,
-		failure:function(o){}
-			},null);
-	imagesRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/images/totalCount?"+querystringWithFilters,
-			{	success:handleCountRequest,
-		failure:function(o){}
-			},null);
-	*/
+	// do results request first, then we can skip the others if too many results
+	resultsCount = -1;	// reset before request
 	resultsRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/results/totalCount",
-			{	success:handleCountRequest,
-		failure:function(o){}
-			}, querystringWithFilters);
-	assaysRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/assays/totalCount",
-			{	success:handleCountRequest,
-		failure:function(o){}
-			}, querystringWithFilters);
-	genesRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/markers/totalCount",
-			{	success:handleCountRequest,
-		failure:function(o){}
-			}, querystringWithFilters);
-	imagesRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/images/totalCount",
 			{	success:handleCountRequest,
 		failure:function(o){}
 			}, querystringWithFilters);
@@ -728,6 +942,19 @@ window.previousGxdLitQuery=""
  * Definitions of all the datatables
  */
 
+// replace the contents of the table with the given name with the given message
+var showMessageInTable = function (tablename, message) {
+	var myConfigs = {
+		dynamicData : false,
+		initialLoad : false
+		};
+
+	var gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/markers/json", xhrConfig);
+
+	var gxdDataTable = new YAHOO.widget.DataTable(tablename, [], gxdDataSource, myConfigs);
+
+	gxdDataTable.showTableMessage(message);
+}
 
 //Gene results table population function
 
@@ -868,7 +1095,7 @@ var gxdAssaysTable = function() {
 	var myColumnDefs = [
 	                    // sortable:true enables sorting
 	                    {key: "gene", label: "Gene", sortable: true },
-	                    {key: "assayID", label: "Assay Details", sortable: false },
+	                    {key: "assayID", label: "Assay Details", sortable: false, minWidth:155 },
 	                    {key: "assayType", label: "Assay Type", sortable: true },
 	                    {key: "reference",label: "Reference",sortable: true},
 	                    {key: "score",label: "score",sortable: false,hidden: true}
@@ -975,19 +1202,7 @@ var gxdResultsTable = function() {
 	var numConfig = {thousandsSeparator: ','};
 
 	// Column definitions
-	var myColumnDefs = [
-	                    // sortable:true enables sorting
-	                    {key: "gene", label: "Gene", sortable: true },
-	                    {key: "assayID", label: "Result Details", sortable: false },
-	                    {key: "assayType", label: "Assay Type", sortable: true },
-	                    {key: "age", label: "Age", sortable: true },
-	                    {key: "structure", label: "Structure",sortable: true},
-	                    {key: "detectionLevel",label: "Detected?",sortable: true},
-	                    {key: "figures", label: "Images",sortable: false},
-	                    {key: "genotype",label: "Mutant Allele(s)",sortable: false},
-	                    {key: "reference",label: "Reference",sortable: true},
-	                    {key: "score",label: "score",sortable: false,hidden: true}
-	                    ];
+	var myColumnDefs = resultsTableDefs;
 
 	// DataSource instance
 	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/results/json", xhrConfig);
@@ -1004,7 +1219,12 @@ var gxdResultsTable = function() {
 			         {key: "figures"},
 			         {key: "genotype"},
 			         {key: "reference"},
-			         {key: "score"}
+			         {key: "score"},
+			         {key: "tpmLevel"},
+			         {key: "biologicalReplicates"},
+			         {key: "strain"},
+			         {key: "sex"},
+			         {key: "notes"}
 			         ],
 			         metaFields: {
 			        	 totalRecords: "totalCount",
@@ -1223,7 +1443,7 @@ window.prevStageGridQuery="";
 var structureStageGrid = function()
 {
 	// hide page controls
-	$(".yui-pg-container").hide()
+	hidePaginators();
 
 	var querystringWithFilters = getQueryStringWithFilters();
 	if(querystringWithFilters==window.prevStageGridQuery)
@@ -1304,26 +1524,131 @@ var structureStageGrid = function()
 	buildGrid();
 }
 
+
 /**
  * Configure the structure by gene matrix
  *
  * Rendering and logic details are in gxd_summary_matrix.js
+ * 
+ * In order to facilitate pagination, we tie into the HistoryManager by using
+ * a hidden YUI data table.  As the data table is paginated, the values are 
+ * passed to the functionality that builds the grid.
  */
 var currentGeneGrid;
 window.prevGeneGridQuery="";
 
+var handleStructGeneTab = function() {
+
+	var facets = {};
+	var numConfig = {thousandsSeparator: ','};
+
+	// Column definitions
+	var myColumnDefs = [ // sortable:true enables sorting
+	                     {key:"primaryID", label:"MGI ID", sortable:false, width:75},
+	                     {key:"symbol", label:"Gene", sortable:true, width:100}
+	                     ];
+
+	// DataSource instance
+	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/markers/json", xhrConfig);
+	gxdDataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
+	gxdDataSource.responseSchema = {
+			resultsList: "summaryRows",
+			fields: [
+			         {key:"primaryID"},
+			         {key:"symbol"}
+			         ],
+			         metaFields: {
+			        	 totalRecords: "totalCount",
+			        	 paginationRecordOffset : "startIndex",
+			        	 paginationRowsPerPage : "pageSize",
+			        	 sortKey: "sort",
+			        	 sortDir: "dir"
+			         }
+	};
+
+	var paginator = mgiTab.createPaginator(
+			[50,100,250], // rows per page options
+			GENE_MATRIX_SIZE // rows per page
+	);
+
+	// DataTable configurations
+	var myConfigs = {
+			paginator : paginator,
+			dynamicData : true,
+			initialLoad : false,
+			MSG_LOADING:  LOADING_IMG+' Searching...',
+			MSG_EMPTY:    'No genes with expression data found.'
+	};
+
+	// DataTable instance & pagination 
+	gxdDataTable = new YAHOO.widget.DataTable("hiddenGeneMatrixPaginator", myColumnDefs, gxdDataSource, myConfigs);
+	mgiTab.initPaginator(gxdDataTable,paginator);
+	showPaginators();		// hide/show as needed
+
+	// Define a custom function to route sorting through the Browser History Manager
+	var handleSorting = function (oColumn) {
+		// The next state will reflect the new sort values
+		// while preserving existing pagination rows-per-page
+		// As a best practice, a new sort will reset to page 0
+		var sortedBy = {dir: this.getColumnSortDir(oColumn), key: oColumn.key};
+
+		// Pass the state along to the Browser History Manager
+		History.navigate("gxd", generateRequest(sortedBy, 0, paginator.getRowsPerPage()));
+	};
+	gxdDataTable.sortColumn = handleSorting;
+
+	gxdDataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
+		var pRequest = parseRequest(oRequest);
+
+		extractFilters(pRequest);
+
+		var meta = oResponse.meta;
+		oPayload.totalRecords = meta.totalRecords || oPayload.totalRecords;
+		var filterCount = YAHOO.util.Dom.get('filterCount');
+		if (!YAHOO.lang.isNull(filterCount)){
+			setText(filterCount, YAHOO.util.Number.format(oPayload.totalRecords, numConfig));
+		}
+
+		oPayload.sortedBy = {
+				key: pRequest['sort'] || "symbol",
+				dir: pRequest['dir'] ? "yui-dt-" + pRequest['dir'] : "yui-dt-desc" // Convert from server value to DataTable format
+		};
+
+		oPayload.pagination = {
+				rowsPerPage: Number(pRequest['results']) || GENES_PAGE_SIZE,
+				recordOffset: Number(pRequest['startIndex']) || 0
+		};
+
+		// Set grid parameters
+		geneGridRowsPerPage = oPayload.pagination.rowsPerPage;
+		geneGridRecordOffset = oPayload.pagination.recordOffset;
+		geneGridRecordTotal = oPayload.totalRecords;
+		
+		// When the hidden YUI table is loaded, build the grid with the pagination controls (if needed)
+		showPaginators();		// hide/show as needed
+		structureGeneGrid()
+
+		return true;
+	};
+
+	return {"datatable": gxdDataTable, "datasource": gxdDataSource};
+};
+
+// This function actually builds the structure / gene grid, and is called
+// after the hidden YUI datatable is loaded
 var structureGeneGrid = function()
 {
-	// hide page controls
-	$(".yui-pg-container").hide()
-
 	var querystringWithFilters = getQueryStringWithFilters();
-	if(querystringWithFilters==window.prevGeneGridQuery)
-	{
-		// don't refresh grid if query is the same.
-		return;
-	}
 	window.prevGeneGridQuery=querystringWithFilters;
+	
+	// Pagination values are for matrix columns.
+	// It is not the underlying number of results, as would be typical.
+	var geneGridDataUrl = fewiurl + "gxd/genegrid/json?" + querystringWithFilters 
+		+ "&results=" + geneGridRowsPerPage + "&startIndex=" + geneGridRecordOffset + "&matrixMarkerTotal=" + geneGridRecordTotal;
+
+	console.log("------------------------------");
+	console.log(geneGridDataUrl);
+	showPaginators();			// hide or show as needed
 
 	var buildGrid = function()
 	{
@@ -1334,10 +1659,11 @@ var structureGeneGrid = function()
 			// the datasource allows supergrid to make ajax calls for the initial data,
 			// 	as well as subsequent calls for expanding rows
 			dataSource: {
-				url: fewiurl + "gxd/genegrid/json?" + querystringWithFilters,
+				url: geneGridDataUrl,
 				batchSize: 50000,
-				offsetField: "startIndex",
-				limitField: "results",
+				isGeneGrid: true,
+				offsetField: "startIndexMatrix",
+				limitField: "resultsMatrix",
 				MSG_LOADING: LOADING_IMG+' Searching for data (may take a couple minutes for large datasets)... ' +
 				'<br/>If the dataset contains thousands of genes, the Tissue x Gene Matrix may not load. ' +
 				'<br/>Consider filtering the data set.',
@@ -1378,16 +1704,16 @@ var structureGeneGrid = function()
 	        	if (SHOW_MATRIX_LEGENDS) {
 	        		geneMatrixLegendPopupPanel.show();
 	        	}
+			showPaginators();	// hide or show as needed
 	        }
 	    });
 	}
-
-
 
 	if(currentGeneGrid)
 	{
 		currentGeneGrid.cancelDataSource();
 	}
+	showPaginators();			// hide or show as needed
 	buildGrid();
 }
 
@@ -1467,3 +1793,13 @@ window.addEventListener("pageshow", function(evt){
     },10);
 }
 }, false);
+
+$('#maxCount').html(numberWithCommas(maxResults));
+
+// handle the button for popping up an RNA-Seq heat map window
+var popupHeatMap = function() {
+	var page = fewiurl + 'gxd/rnaSeqHeatMap?';
+	var parameters = getQueryStringWithFilters();
+	
+	window.open(page + parameters, '_blank', 'width=1200,height=800,resizable=yes,scrollbars=yes,alwaysRaised=yes');
+};

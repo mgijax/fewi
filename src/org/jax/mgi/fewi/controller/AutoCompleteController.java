@@ -33,6 +33,7 @@ import org.jax.mgi.fewi.summary.VocabACSummaryRow;
 import org.jax.mgi.fewi.summary.VocabACSummaryRow.ACType;
 import org.jax.mgi.fewi.summary.VocabBrowserACResult;
 import org.jax.mgi.fewi.summary.VocabBrowserSearchResult;
+import org.jax.mgi.fewi.util.ACHelper;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.shr.fe.IndexConstants;
@@ -70,6 +71,9 @@ public class AutoCompleteController {
 	@Autowired
 	private VocabularyController vocabController;
 
+	// provides in-memory searching of EMAPA structures, so we're not dependent on Solr for performance
+	private static ACHelper emapaHelper = null;
+	
 	/*
 	 * This method maps requests for strain auto complete results. The results
 	 * are returned as JSON.
@@ -330,36 +334,34 @@ public class AutoCompleteController {
 	}
 
 	/*
-	 * This method handles requests for the EMAPA strucure autocomplete
+	 * This method handles requests for the EMAPA structure autocomplete
 	 * fields on the CRE query form.  Results are returned as JSON.
 	 * move mgihome cre homepage to cre-specific controller url method
 	 */
 	@RequestMapping("/emapa")
 	public @ResponseBody SearchResults<EmapaACResult> emapaAutoCompleteRequest(
 			HttpServletResponse response,
-			@RequestParam("query") String query)
-			{
+			@RequestParam("query") String query) {
 		logger.debug("autoCompleteController.emapaAutoCompleteRequest");
 		AjaxUtils.prepareAjaxHeaders(response);
 		return performEmapaAutoComplete(query);
-			}
+	}
 
 	/*
-	 * This method handles requests for the EMAPA strucure autocomplete
+	 * This method handles requests for the EMAPA structure autocomplete
 	 * fields on the GXD query form.  Results are returned as JSON.
 	 */
 	@RequestMapping("/gxdEmapa")
 	public @ResponseBody SearchResults<EmapaACResult> gxdEmapaAutoCompleteRequest(
 			HttpServletResponse response,
-			@RequestParam("query") String query)
-			{
+			@RequestParam("query") String query) {
 		logger.debug("autoCompleteController.gxdEmapaAutoCompleteRequest");
 		AjaxUtils.prepareAjaxHeaders(response);
 		return performGxdEmapaAutoComplete(query);
-			}
+	}
 
 	/*
-	 * Duplicate of the above url for cre compatibility
+	 * Duplicate of the above url (/emapa) for cre compatibility
 	 * move mgihome cre homepage to cre-specific controller url method
 	 */
 	@RequestMapping("/structure")
@@ -400,6 +402,33 @@ public class AutoCompleteController {
 
 		begins.addAll(other);
 		searchResults.setResultObjects(begins);
+		return searchResults;
+	}
+
+	/* wrapper for CRE EMAPA autocomplete search
+	 */
+	private SearchResults<EmapaACResult> performGxdEmapaAutoComplete(String query)
+	{
+		if (emapaHelper == null) {
+			logger.info("Initializing: emapaHelper is null");
+
+			// First call, so need to populate the ACHelper's data using all records from the Solr index.
+			SearchParams params = new SearchParams();
+			params.setPageSize(15000);
+			params.setFilter(new Filter(SearchConstants.STRUCTURE, "*", Filter.Operator.OP_EQUAL_WILDCARD_ALLOWED));
+			
+			SearchResults<EmapaACResult> results = autocompleteFinder.getGxdEmapaAutoComplete(params);
+			logger.info("Got " + results.getTotalCount() + " docs from Solr");
+
+			emapaHelper = new ACHelper();
+			emapaHelper.setEmapaACResults(results.getResultObjects());
+			logger.info("Processed docs in emapaHelper");
+		}
+		List<EmapaACResult> resultList = emapaHelper.asEmapaACResults(emapaHelper.search(query, 200));
+		SearchResults<EmapaACResult> searchResults = new SearchResults<EmapaACResult>();
+		searchResults.setResultObjects(resultList);
+		searchResults.setTotalCount(resultList.size());
+
 		return searchResults;
 	}
 
@@ -449,54 +478,6 @@ public class AutoCompleteController {
 
 		SearchResults<EmapaACResult> results = autocompleteFinder.getEmapaAutoComplete(params);
 
-		// need a unique list of terms.
-		results.uniqueifyResultObjects();
-
-		results = floatBeginsMatches(query, results);
-		return results;
-	}
-
-	/* Wrapper for GXD EMAPA autocomplete search.
-	 * Shared by gxdEmapa & automated testing
-	 */
-	private SearchResults<EmapaACResult> performGxdEmapaAutoComplete(String query)
-	{
-		// split input on any non-alpha characters
-		Collection<String> words =
-				QueryParser.parseAutoCompleteSearch(query);
-
-		logger.debug("structure query:" + words.toString());
-
-		// if no query string, return an empty result set
-		if(words.size() == 0) {
-			SearchResults<EmapaACResult> sr = new SearchResults<EmapaACResult>();
-			sr.setTotalCount(0);
-			return sr;
-		}
-
-		// otherwise, do the search and request the top 200 matches
-		SearchParams params = new SearchParams();
-		params.setPageSize(200);
-
-		Filter f = new Filter();
-		List<Filter> fList = new ArrayList<Filter>();
-
-		// build an AND-ed list of tokens for BEGINS searching in fList
-		for (String q : words) {
-			Filter wordFilter = new Filter(SearchConstants.STRUCTURE, q,
-					Filter.Operator.OP_GREEDY_BEGINS);
-			fList.add(wordFilter);
-		}
-		f.setNestedFilters(fList,Filter.JoinClause.FC_AND);
-		params.setFilter(f);
-
-		// default sorts are "score","autocomplete text"
-		List<Sort> sorts = new ArrayList<Sort>();
-		sorts.add(new Sort("score", true));
-		sorts.add(new Sort(IndexConstants.STRUCTUREAC_BY_SYNONYM, false));
-		params.setSorts(sorts);
-
-		SearchResults<EmapaACResult> results = autocompleteFinder.getGxdEmapaAutoComplete(params);
 		// need a unique list of terms.
 		results.uniqueifyResultObjects();
 

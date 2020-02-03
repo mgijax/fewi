@@ -190,4 +190,26 @@ public class SearchParams {
 		this.returnFilterQuery = returnFilterQuery;
 	}
 
+	/* make and return a copy of SearchParams 'a', such that any changes
+	 * to the returned object will not affect 'a'.
+	 */
+	public static SearchParams copy (SearchParams a) {
+		SearchParams b = new SearchParams();
+		b.includeRowMeta = a.includeRowMeta;
+		b.includeSetMeta = a.includeSetMeta;
+		b.includeMetaScore = a.includeMetaScore;
+		b.includeMetaHighlight = a.includeMetaHighlight;
+		b.includeHighlightMarkup = a.includeHighlightMarkup;
+		b.includeGenerated = a.includeGenerated;
+		b.fetchKeysOnly = a.fetchKeysOnly;
+		b.suppressLogs = a.suppressLogs;
+		b.returnFilterQuery = a.returnFilterQuery;
+
+		b.filter = Filter.copy(a.filter);
+		b.paginator = Paginator.copy(a.paginator);
+		for (Sort s : a.sorts) {
+			b.sorts.add(Sort.copy(s));
+		}
+		return b;
+	}
 }

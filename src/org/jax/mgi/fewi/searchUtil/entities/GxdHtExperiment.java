@@ -25,6 +25,8 @@ public class GxdHtExperiment
 	private Integer byDefault;
 	private Integer matchingSampleCount = 0;
 	private List<String> pubmedIDs;
+	private Integer isInAtlas;
+	private Integer isLoaded;
 
 	public Integer getExperimentKey() {
 		return experimentKey;
@@ -43,6 +45,18 @@ public class GxdHtExperiment
 	}
 	public void setGeoID(String geoID) {
 		this.geoID = geoID;
+	}
+	public Integer getIsInAtlas() {
+		return isInAtlas;
+	}
+	public void setIsInAtlas(Integer isInAtlas) {
+		this.isInAtlas = isInAtlas;
+	}
+	public Integer getIsLoaded() {
+		return isLoaded;
+	}
+	public void setIsLoaded(Integer isLoaded) {
+		this.isLoaded = isLoaded;
 	}
 	public String getTitle() {
 		return title;

@@ -76,6 +76,8 @@ public class SolrGxdHtExperimentBaseHunter extends SolrHunter<GxdHtExperiment> {
 			experiment.setSampleCount((Integer) doc.getFieldValue(GxdHtFields.SAMPLE_COUNT));
 			experiment.setStudyType((String) doc.getFieldValue(GxdHtFields.STUDY_TYPE));
 			experiment.setTitle((String) doc.getFieldValue(GxdHtFields.TITLE));
+			experiment.setIsInAtlas((Integer) doc.getFieldValue(GxdHtFields.IS_IN_ATLAS));
+			experiment.setIsLoaded((Integer) doc.getFieldValue(GxdHtFields.IS_LOADED));
 			
 			if (doc.getFieldValues(GxdHtFields.PUBMED_IDS) != null) {
 				ArrayList<String> pmIDs = new ArrayList<String>();

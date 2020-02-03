@@ -45,4 +45,15 @@ public class Paginator {
 		return "Paginator [results=" + results + ", startIndex=" + startIndex
 				+ "]";
 	}
+
+	/* make and return a copy of Paginator 'a', such that changes to the
+	 * returned object will not affect 'a'.
+	 */
+	public static Paginator copy (Paginator a) {
+		Paginator b = new Paginator();
+		b.startIndex = a.startIndex;
+		b.results = a.results;
+		b.resultsDefault = a.resultsDefault;
+		return b;
+	}
 }

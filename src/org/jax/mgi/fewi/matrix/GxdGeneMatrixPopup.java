@@ -9,7 +9,7 @@ public class GxdGeneMatrixPopup {
 	private String term = new String("");
 	private String termId = new String("");
 	private String symbol = new String("");
-	private boolean hasImage = true;
+	private boolean hasImage = false;
 	private Integer countPosResults = new Integer(0);
 	private Integer countNegResults = new Integer(0);
 	private Integer countAmbResults = new Integer(0);
@@ -20,44 +20,6 @@ public class GxdGeneMatrixPopup {
 	{
 		this.termId = termId;
 		this.term = term;
-	}
-
-
-	// parse the set of results for display counts
-	public void setAssayResultList(List<SolrGxdMatrixResult> assayResultList) {
-
-        // generate counts
-		int posCount = 0;
-		int negCount = 0;
-		int ambCount = 0;
-        for (SolrGxdMatrixResult assayResult : assayResultList) {
-			if (assayResult != null){
-
-				if (assayResult.getDetectionLevel().equals("Yes")) {
-					posCount++;
-				}
-				else if (assayResult.getDetectionLevel().equals("No")&&
-						assayResult.getStructureId().equals(termId)) {
-					negCount++;
-				}
-				else if (assayResult.getDetectionLevel().equals("Ambiguous") &&
-						assayResult.getStructureId().equals(termId)) {
-					ambCount++;
-				}
-				else if (assayResult.getDetectionLevel().equals("Not Specified")&&
-						assayResult.getStructureId().equals(termId)) {
-					ambCount++;
-				}
-
-			} else {
-				System.out.println("--> Null assayResult object in GxdGeneMatrixPopup");
-			}
-		}
-
-		// set fields
-		countPosResults = new Integer(posCount);
-		countNegResults = new Integer(negCount);
-		countAmbResults = new Integer(ambCount);
 	}
 
 	// positive result count
@@ -73,6 +35,21 @@ public class GxdGeneMatrixPopup {
 	// count of undetermined results
 	public Integer getCountAmbResults() {
 		return countAmbResults;
+	}
+
+	// positive result count
+	public void setCountPosResults(Integer countPosResults) {
+		this.countPosResults = countPosResults;
+	}
+
+	// negative result count
+	public void setCountNegResults(Integer countNegResults) {
+		this.countNegResults = countNegResults;
+	}
+
+	// count of undetermined results
+	public void setCountAmbResults(Integer countAmbResults) {
+		this.countAmbResults = countAmbResults;
 	}
 
 	// term

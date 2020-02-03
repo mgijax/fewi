@@ -23,6 +23,20 @@
   background:url(${configBean.WEBSHARE_URL}images/cre/creUpArrow.png)
   no-repeat right;
 }
+.yui-skin-sam .yui-pg-last { display: none; }
+#tooManyResultsWrapper {
+  padding-bottom: 10px;
+}
+#tooManyResults {
+  border: 1px solid red;
+  color: red;
+  font-weight: bold;
+  display: none;
+  padding: 4px;
+  margin-left: 5px;
+}
+.canHide {}
+.heatMapLinkHidden { display : none; }
 </style>
 
 
@@ -67,6 +81,10 @@
 
 	    <br clear="all" />
     </div>
+    <div id="tooManyResultsWrapper">
+    	<div id="tooManyResults">Large search returns make our pages slow to load. Therefore, some functionality has been disabled until you refine your search to bring the number of returned assay results under <span id="maxCount">TBD</span>.
+    	</div>
+    </div>
 <div id="resultSummary" class="yui-navset">
     <ul class="yui-nav">
         <li><a id="genestab" href="#genes"><em>Genes (<span id="totalGenesCount"></span>)</em></a></li>
@@ -86,11 +104,10 @@
 
 	        	<div id="downloadDiv">
 			<form name="markerExportForm" id="markerExportForm" action="" method="POST">
-                   <span class="label">Export:</span>
-                   <a id="markersTextDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
-                   <a id="markersExcelDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a>
-                   <a id="markersBatchForward" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> MGI Batch Query</a>
-						<a id="mouseMineLink" target="_blank" class="filterButton" onClick="javascript: mousemine.submit();"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> MouseMine</a>
+                   <span class="label canHide">Export:</span>
+                   <a id="markersTextDownload" class="canHide filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
+                   <a id="markersBatchForward" class="canHide filterButton"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> MGI Batch Query</a>
+						<a id="mouseMineLink" target="_blank" class="canHide filterButton" onClick="javascript: mousemine.submit();"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> MouseMine</a>
 			</form><!-- markerExportForm -->
                 </div>
              </div>
@@ -103,9 +120,10 @@
             <div id="toolbar" class="goldbar">
                 <div id="downloadDiv">
 		    <form name="resultsExportForm" id="resultsExportForm" action="" method="POST">
-                    <span class="label">Export:</span>
-                    <a id="resultsTextDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
-                    <a id="resultsExcelDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a>
+                    <span class="label canHide">Export:</span>
+                    <a id="resultsTextDownload" class="canHide filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
+                    <a id="heatMapLink" class="filterButton heatMapLinkHidden" onClick="popupHeatMap()"> RNA-Seq <img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" style="margin-bottom: -1px;"/> Heat Map</a>
+		    <span class="label" style="padding-left: 100px;">Show Additional Sample Data <input id="showHide" type="checkbox" onClick="flipOptionalColumns()"></span>
 		    </form><!-- resultsExportForm -->
                 </div>
             </div>
@@ -133,13 +151,14 @@
 					</div>
 				</div>
 	        </div>
+	        <div id="hiddenGeneMatrixPaginator" class="facetFilter" style="display: none;"></div>
         </div>
     </div>
 </div>
 	<div id="paginationBottom">&nbsp;</div>
     <div class="gxdLitRow">
     	<br/>
-    	<span id="gxdLitInfo"></span>
+    	<span id="gxdLitInfo" class="canHide"></span>
     </div>
 
 <div id="structStagePopup" class="visHidden facetFilter structPopup">
@@ -158,7 +177,6 @@
   <jsp:include page="gxd_legend_popup.jsp"></jsp:include>
 </div>
 
-
 <!-- Patterns for matrix sash icon -->
 <svg height="0" width="0" xmlns="http://www.w3.org/2000/svg" version="1.1">
   <defs>
@@ -174,6 +192,3 @@
     </pattern>
   </defs>
 </svg>
-
-
-

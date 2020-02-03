@@ -1,9 +1,5 @@
 package org.jax.mgi.fewi.summary;
 
-//public class GxdMarkerSummary {
-//
-//}
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +8,7 @@ import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.NotesTagConverter;
+import org.jax.mgi.fewi.matrix.DetectionConverter;
 
 /**
  * wrapper around a marker; represents on row in summary
@@ -27,6 +24,7 @@ public class GxdAssayResultSummaryRow {
 	// config values
 	String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
 	String pywiUrl = ContextLoader.getConfigBean().getProperty("WI_URL");
+        private final String expressionAtlasUrl = ContextLoader.getExternalUrls().getProperty("ExpressionAtlas");
 
 	private String score;
 
@@ -63,14 +61,13 @@ public class GxdAssayResultSummaryRow {
 	}
 
 	public String getGene() {
-
-		// return "<a href='" + fewiUrl + "marker/" + mrk.getPrimaryID() + "'>"
-		// + mrk.getSymbol() + "</a>";
-
 		return result.getMarkerSymbol();
 	}
 
 	public String getAssayID() {
+		if (result.getAssayType().startsWith("RNA-Seq")) {
+			return "<a class='extUrl' target='_blank' href='" + expressionAtlasUrl.replace("@@@@", result.getJNum()) + "'>data</a><br/><span class='nowrap'> (" + result.getJNum() + ")</span>";
+		}
 		return "<a href='" + fewiUrl + "assay/" + result.getAssayMgiid()
 				+ "'>data</a><span> (" + result.getAssayMgiid() + ")</span>";
 	}
@@ -88,6 +85,14 @@ public class GxdAssayResultSummaryRow {
 	}
 
 	public String getDetectionLevel() {
+		if (result.getAssayType().startsWith("RNA-Seq")) {
+			if (DetectionConverter.isDetected(result.getDetectionLevel())) {
+				return "Yes";
+			} else if (DetectionConverter.isNotDetected(result.getDetectionLevel())) {
+				return "No";
+			}
+			return "Not Specified";
+		}
 		return result.getDetectionLevel();
 	}
 
@@ -120,9 +125,44 @@ public class GxdAssayResultSummaryRow {
 	}
 
 	public String getReference() {
-		return "<a href='" + fewiUrl + "reference/" + result.getJNum() + "'>"
+		if (result.getJNum().startsWith("J:")) {
+			return "<a href='" + fewiUrl + "reference/" + result.getJNum() + "'>"
 				+ result.getJNum() + "</a> " + result.getShortCitation();
-
+		}
+		return "<a href='" + fewiUrl + "gxd/htexp_index/summary?arrayExpressID=" + result.getJNum() + "'>"
+			+ result.getJNum() + "</a> " + result.getShortCitation();
 	}
 
+	public String getTpmLevel() {
+		return result.getTpmLevel();
+	}
+
+	public String getBiologicalReplicates() {
+		String br = result.getBiologicalReplicates();
+		if ((br == null) || ("".equals(br))) {
+			if ("RNA-Seq".equals(result.getAssayType())) {
+				// RNA-Seq defaults to 1
+				return "1";
+			}
+			// other expt types have no biological replicates
+			return null;
+		}
+		return br;
+	}
+
+	public String getStrain() {
+		String strain = result.getStrain();
+		if ((strain == null) || ("".equals(strain))) {
+			return strain;
+		}
+		return FormatHelper.superscript(strain);
+	}
+
+	public String getSex() {
+		return result.getSex();
+	}
+
+	public String getNotes() {
+		return result.getNotes();
+	}
 }

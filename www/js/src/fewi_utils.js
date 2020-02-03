@@ -102,6 +102,17 @@ var MGIRequestParser = function()
 
 }
 
+// Add commas to integer i (which is actually a string).
+// Taken from stackoverflow.
+function commaDelimit(i) {
+    if ((i == null) || (i == undefined) || (i.length == 0)) { return; }
+    var parts = i.toString().split(".");
+    if (parts[0].indexOf(',') < 0) {
+    	parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+    return parts.join(".");
+}
+
 /*
  * This is intended to manage most of the behavior of having a multi-tabbed summary with queryform.
  * 	Examples are www.informatics.jax.org/gxd and www.informatics.jax.org/diseasePortal
@@ -112,11 +123,13 @@ var MGIRequestParser = function()
  * 	Optional config parameters:
  * 		-pageSizes (default page sizes defined in same order as "tabIds")
  * 		-historyId (history manager namespace, e.g. "gxd" or "hdp")
- * 
+ * 	Optional parameters:
+ * 		- isDisabled : returns true if tabs should be disabled, false
+ * 			if not
  *  // assumes existence of the following methods:
  *  	-handleNavigation
  */
-var MGITabSummary = function(config)
+var MGITabSummary = function(config, isDisabled)
 {
 	// init parameters
 	this.tabViewId = config["tabViewId"];
@@ -124,6 +137,8 @@ var MGITabSummary = function(config)
 	this.defaultTab = "defaultTab" in config ? config["defaultTab"] : this.tabIds[0];
 	if("pageSizes" in config) this.pageSizes = config["pageSizes"];
 	
+	this.isDisabled = null;
+	if (isDisabled != null) { this.isDisabled = isDisabled; }
 	
 	this.doHistory = "historyId" in config;
 	this.historyMgrId = config["historyId"];
@@ -134,6 +149,11 @@ var MGITabSummary = function(config)
 	//return the current tab from the history manager
 	this.getCurrentTab = function() 
 	{
+		if ((this.isDisabled != null) && (this.isDisabled())) {
+			// if controls are disabled, bail out
+			return;
+		}
+
 		var activeIndex = _self.summaryTabs.get("activeIndex");
 		return _self.tabs[activeIndex];
 	};
@@ -191,6 +211,11 @@ var MGITabSummary = function(config)
 		//$("#debug").html("0");
 		this.handleTabViewActiveTabChange = function(e)
 		{
+			if ((this.isDisabled != null) && (this.isDisabled())) {
+				// if controls are disabled, bail out
+				return;
+			}
+
 			//var cnt = parseInt($("#debug").html());
 			//cnt = cnt+1;
 			//$("#debug").html(cnt);
@@ -279,7 +304,7 @@ var MGITabSummary = function(config)
 		// Create the Paginator
 		var paginator = new YAHOO.widget.Paginator({
 		   template: "{FirstPageLink} {PreviousPageLink}<strong>{PageLinks}</strong> {NextPageLink} {LastPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
-		   pageReportTemplate: "Showing results(s) {startRecord} - {endRecord} of {totalRecords}",
+		   pageReportTemplate: "Showing result(s) {startRecord} - {endRecord} of {totalRecords}",
 		   rowsPerPageOptions: rowsPerPageOptions,
 		   containers: ["paginationTop", "paginationBottom"],
 		   rowsPerPage: rowsPerPage,
@@ -463,4 +488,9 @@ window.FewiUtil = new function()
 	   }
 	   return a;
 	};
+}
+
+// pulled from stackoverflow -- add commas to an integer
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(?:\d{3})+(?!\d))/g, ",");
 }

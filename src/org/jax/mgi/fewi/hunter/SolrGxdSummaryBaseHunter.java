@@ -100,7 +100,7 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 
 		// is Expressed (from QF)
 		propertyMap.put(SearchConstants.GXD_DETECTED, new SolrPropertyMapper(
-				GxdResultFields.IS_EXPRESSED));
+				GxdResultFields.DETECTION_LEVEL));
 
 		// detection level (from facet)
 		propertyMap.put(FacetConstants.GXD_DETECTED, new SolrPropertyMapper(
@@ -259,7 +259,6 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 					.getFieldValue(GxdResultFields.SHORT_CITATION);
 			String genotype = (String) doc
 					.getFieldValue(GxdResultFields.GENOTYPE);
-			// String pattern = (String) doc.getFieldValue("pattern");
 			@SuppressWarnings("unchecked")
 			List<String> figuresPlain = (List<String>) doc
 					.getFieldValue(GxdResultFields.FIGURE_PLAIN);
@@ -283,6 +282,14 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 			resultObject.setMarkerName(markerName);
 			resultObject.setFiguresPlain(figuresPlain);
 			resultObject.setPubmedId(pubmedId);
+
+			// fields specific to RNA-Seq data
+			resultObject.setTpmLevel((String) doc.getFieldValue(GxdResultFields.TPM_LEVEL));
+			resultObject.setAvgQnTpmLevel((String) doc.getFieldValue(GxdResultFields.AVG_QN_TPM_LEVEL));
+			resultObject.setBiologicalReplicates((String) doc.getFieldValue(GxdResultFields.BIOLOGICAL_REPLICATES));
+			resultObject.setStrain((String) doc.getFieldValue(GxdResultFields.STRAIN));
+			resultObject.setSex((String) doc.getFieldValue(GxdResultFields.SEX));
+			resultObject.setNotes((String) doc.getFieldValue(GxdResultFields.NOTES));
 
 			// Add result to SearchResults
 			sr.addResultObjects(resultObject);
@@ -471,7 +478,7 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 		}
 	}
 
-	@Value("${solr.gxd_result.url}")
+	@Value("${solr.gxdResult.url}")
 	public void setSolrUrl(String solrUrl) {
 		super.solrUrl = solrUrl;
 	}
@@ -484,7 +491,7 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 		 * joined index (the "to").
 		 */
 		this.joinIndices.put("gxdImagePane", new SolrJoinMapper(imagePaneUrl,
-				GxdResultFields.RESULT_KEY, "gxdResult",
+				GxdResultFields.RESULT_KEY, "gxdResultHasImage",
 				GxdResultFields.RESULT_KEY));
 	}
 }

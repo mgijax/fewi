@@ -26,7 +26,7 @@ public class SolrGxdResultHunter extends SolrGxdSummaryBaseHunter {
 		keyString = GxdResultFields.RESULT_KEY;
 	}
 
-	@Value("${solr.gxd_result.url}")
+	@Value("${solr.gxdResult.url}")
 	public void setSolrUrl(String solrUrl) {
 		super.solrUrl = solrUrl;
 	}

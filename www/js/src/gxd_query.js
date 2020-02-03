@@ -668,7 +668,7 @@ var updateQuerySummary = function() {
 				assayTypes.push(box.value);
 			}
 		}
-		if(assayTypes.length > 0 && !YAHOO.util.Dom.get("assayType-ALL").checked)
+		if(assayTypes.length > 0)
 		{
 
 			el = new YAHOO.util.Element(document.createElement('span'));
@@ -1342,11 +1342,11 @@ var resetQF = function (e) {
 	form.locations.value = "";
 	$('#locationUnit').val('bp');
 	selectTheilerStage();
-	allAssayTypesBox.checked = true;
-	for(var key in assayTypesBoxes)
-	{
-		assayTypesBoxes[key].checked = true;
-	}
+	
+	setAll('.allInSitu', '.inSituAssayType', true);
+	setAll('.allBlot', '.blotAssayType', true);
+	setAll('.allWholeGenome', '.wholeGenomeAssayType', false);
+	
 	form.detected3.checked=true;
 	form.allSpecimen.checked=true;
 	form.mutatedIn.value = "";
@@ -1378,6 +1378,11 @@ var resetQF = function (e) {
 		msg.style.display = 'none';
 	}
 
+	// uncheck the "Show Additional Sample Data" box, if it exists
+	if ($('#showHide').length > 0) {
+		$('#showHide')[0].checked = !hideOptionalColumns;
+	}
+
 	// clear the validation errors
 	clearValidation();
 
@@ -1385,11 +1390,22 @@ var resetQF = function (e) {
 	resetFacets();
 };
 
-YAHOO.util.Event.addListener("gxdQueryForm", "reset", resetQF);
-YAHOO.util.Event.addListener("gxdBatchQueryForm1", "reset", resetQF);
-YAHOO.util.Event.addListener("gxdDifferentialQueryForm1", "reset", resetQF);
-YAHOO.util.Event.addListener("gxdDifferentialQueryForm2", "reset", resetQF);
-YAHOO.util.Event.addListener("gxdDifferentialQueryForm3", "reset", resetQF);
+// not only reset the QF, but also uncheck the show/hide additional columns
+// button
+var fullResetQF = function(e) {
+	if ($('#showHide').length > 0) {
+		if ($('#showHide')[0].checked) {
+			flipOptionalColumns(true);
+		}
+	}
+	resetQF(e);
+}
+
+YAHOO.util.Event.addListener("gxdQueryForm", "reset", fullResetQF);
+YAHOO.util.Event.addListener("gxdBatchQueryForm1", "reset", fullResetQF);
+YAHOO.util.Event.addListener("gxdDifferentialQueryForm1", "reset", fullResetQF);
+YAHOO.util.Event.addListener("gxdDifferentialQueryForm2", "reset", fullResetQF);
+YAHOO.util.Event.addListener("gxdDifferentialQueryForm3", "reset", fullResetQF);
 
 //
 // Return the passed in form argument values in key/value URL format
@@ -1412,10 +1428,9 @@ var getQueryString = function(form) {
 			{
 				if(element.type=="checkbox" || element.type=="radio")
 				{
-					// don't add any assay type params if the all box is checked
-					// also ignore their "all/either" options
-					if( (element.name=="assayType" && allAssayTypesBox.checked)
-							|| element.id == "assayType-ALL" || element.id == "detected3") continue;
+					// exclude certain form parameters that are really only intended for on-form use only
+					if(element.id == "inSituAll" || element.id == "blotAll" 
+							|| element.id == "wholeGenomeAll" || element.id == "detected3") continue;
 					else if(element.name=="geneticBackground")
 					{
 						if(element.id=="isWildType")
@@ -1461,39 +1476,69 @@ var getQueryString = function(form) {
 	return _qs.join("&");
 };
 
+// force a "checked" setting on the checkbox for 'allClass' and all of its sub-checkboxes for
+// the given 'subClass'
 
-// add the check box listeners for assay types
-var allAssayTypesBox = YAHOO.util.Dom.get("assayType-ALL");
-var assayTypesBoxes = YAHOO.util.Selector.query(".assayType");
-var allAssayTypesLabel = YAHOO.util.Dom.get("allAssayTypeLabel");
-var assayTypesLabels = YAHOO.util.Selector.query(".assayTypeLabel");
-var allAssayTypesCheck = function(e)
-{
-	// set everything to the same checked value as the all box
-	var allChecked = allAssayTypesBox.checked;
-	for(var key in assayTypesBoxes)
-	{
-		assayTypesBoxes[key].checked = allChecked;
+var setAll = function(allClass, subClass, checked) {
+	$(allClass)[0].checked = checked;
+	var checkboxes = $(subClass);
+	
+	for (var i = 0; i < checkboxes.length; i++) {
+		checkboxes[i].checked = checked;
 	}
-};
-YAHOO.util.Event.addListener(allAssayTypesLabel, "click", allAssayTypesCheck);
-var assayTypesCheck = function(e)
-{
-	// check the current value of all check boxes to see if all needs to be checked/unchecked
-	var allChecked = true;
-	for(key in assayTypesBoxes)
-	{
-		if(assayTypesBoxes[key].checked==false)
-		{
-			allChecked = false;
-		}
-	}
-	allAssayTypesBox.checked = allChecked;
-};
-for(var key in assayTypesLabels)
-{
-	YAHOO.util.Event.addListener(assayTypesLabels[key], "click", assayTypesCheck);
 }
+
+// wire up the "all" assay type checkboxes to (un)check their corresponding subsets of boxes
+
+var clickAll = function(allClass, subClass) {
+	// Checkbox for 'allClass' has been clicked, so make sure checkboxes of 'subClass' are
+	// set likewise.
+	
+	var checkboxes = $(subClass);
+	var checked = $(allClass)[0].checked;
+	
+	for (var i = 0; i < checkboxes.length; i++) {
+		checkboxes[i].checked = checked;
+	}
+}
+
+$('.allInSitu').click(function() {
+	clickAll('.allInSitu', '.inSituAssayType');
+});
+$('.allBlot').click(function() {
+	clickAll('.allBlot', '.blotAssayType');
+});
+$('.allWholeGenome').click(function() {
+	clickAll('.allWholeGenome', '.wholeGenomeAssayType');
+});
+
+// wire up the individual assay type checkboxes to (un) check their corresponding "all" checkboxes
+
+var clickOne = function(allClass, subClass) {
+	// Checkbox of 'subClass' has been clicked, so make sure corresponding checkbox of 'allClass'
+	// is set appropriately.
+	
+	var allChecked = true;
+	var checkboxes = $(subClass);
+	
+	for (var i = 0; i < checkboxes.length; i++) {
+		allChecked = allChecked && checkboxes[i].checked;
+	}
+	
+	if ($(allClass).length > 0) {
+		$(allClass)[0].checked = allChecked;
+	}
+}
+
+$('.inSituAssayType').click(function() {
+	clickOne('.allInSitu', '.inSituAssayType');
+});
+$('.blotAssayType').click(function() {
+	clickOne('.allBlot', '.blotAssayType');
+});
+$('.wholeGenomeAssayType').click(function() {
+	clickOne('.allWholeGenome', '.wholeGenomeAssayType');
+});
 
 // Add the listener for mutatedIn onFocus
 var mutatedInOnFocus = function(e)
@@ -1508,6 +1553,7 @@ YAHOO.util.Event.addFocusListener(YAHOO.util.Dom.get("mutatedIn"),mutatedInOnFoc
 var readFile = function(e) {
 	var input = e.target;
 	var reader = new FileReader();
+	var maxBatch = 5000;
 
 	reader.onload = function() {
 		var separator = ',';
@@ -1524,6 +1570,8 @@ var readFile = function(e) {
 		var badLines = 0;		// count of bad lines
 		var idsAdded = 0;		// count of IDs added
 
+		// split lines then extract specified column using specified
+		// delimiter
 		for (var lineNum in lines) {
 			var line = lines[lineNum];
 			var cols = line.split(separator);
@@ -1543,30 +1591,37 @@ var readFile = function(e) {
 			}
 		}
 
-		// split lines then extract specified column using specified
-		// delimiter
+		// if user submitted less than max batch threshold, we update text 
+		// area and page messages
+		if (lines.length > maxBatch){
+			alert("Please reduce input to " + maxBatch + " ids/symbols");
+		}
+		else { // proceed are normal
 
-		var node = document.getElementById('ids');
-		node.value = extractedIDs;
-		
-		var myMsg = '';
+			// insert IDs into text area
+			var node = document.getElementById('ids');
+			node.value = extractedIDs;
 
-		if (idsAdded > 0) {
-			if (idsAdded > 1) {
-				myMsg = idsAdded + ' lines were added';
-			} else {
-				myMsg = idsAdded + ' line was added';
+			// messages
+			var myMsg = '';
+			if (idsAdded > 0) {
+				if (idsAdded > 1) {
+					myMsg = idsAdded + ' lines were added';
+				} else {
+					myMsg = idsAdded + ' line was added';
+				}
 			}
-		}
 
-		if (badLines > 0) {
-			if (myMsg.length > 0) { myMsg = myMsg + '; '; }
-			myMsg = myMsg + badLines + ' line(s) had too few columns';
-		}
+			if (badLines > 0) {
+				if (myMsg.length > 0) { myMsg = myMsg + '; '; }
+				myMsg = myMsg + badLines + ' line(s) had too few columns';
+			}
 
-		var msg = document.getElementById('uploadMessage');
-		msg.innerHTML = myMsg;
-		msg.style.display = 'inline-block';
+			var msg = document.getElementById('uploadMessage');
+			msg.innerHTML = myMsg;
+			msg.style.display = 'inline-block';
+		}
+		
 	};
 	reader.readAsText(input.files[0]);
 };
@@ -1592,4 +1647,26 @@ var inCheckboxClick = function() {
 			$('#anywhereElse')[0].checked = false;
 		}
 	}
+};
+
+// ensure user hasn't input more than the server can easily handle
+function checkBatchInput(){
+
+	var maxBatch = 5000;
+	var idList = YAHOO.util.Dom.get('ids').value.trim().replace(/[\n]+/g, '\n').replace(/\s+/, '\n').split('\n');
+
+	// alert if over threshold cap
+	if (idList.length > maxBatch){
+		alert("Please reduce input to " + maxBatch + " ids/symbols");
+		return false;
+	}
+
+	// alert, if empty
+	if (YAHOO.util.Dom.get('ids').value.trim() == ""){
+		alert("Please ensure you've entered query parameters.");
+		return false;
+	}
+	
+	
+	return true;
 };
