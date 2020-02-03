@@ -1123,7 +1123,8 @@ public class GXDController {
 		
 		// genetic background -- wild type
 		
-		// filters
+		// filters (anatomical system, theiler stage, assay type, detected, RNA-Seq level, wild type,
+		// gene type, molecular function, biological process, cellular component, phenotype, disease)
 	
 		return String.join("<br/>", lines);
 	}

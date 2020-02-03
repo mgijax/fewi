@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.jax.mgi.fewi.searchUtil.entities.EmapaACResult;
 
@@ -19,6 +21,8 @@ import mgi.frontend.datamodel.VocabTerm;
  * Note: All searching is case-insensitive and only considers alphanumeric characters.  Returns are lowercase.
  */
 public class ACHelper {
+	private final Logger logger = LoggerFactory.getLogger(ACHelper.class);
+
 	//--- instance variables, all of which can be instantiated once and then the ACHelper shared across many threads ---//
 	
 	// list of objects we can use to find VocabTerms for a user's search string; each one ACTerm represents
@@ -227,12 +231,12 @@ public class ACHelper {
 	
 	// Analyze the List of 'searchableTerms' to populate the indexes in 'keystone', 'prefixes', and 'termCount'.
 	private void createIndexes() {
+		logger.info("Building indexes for " + this.searchableTerms.size() + " terms");
 
 		// First, sort the searchable entries by smart-alpha, so we only need to do binning of matches once they're found.
 		if (this.searchableTerms.size() > 0) {
-// Changed this because the servers are still on Java 1.7:
-//			this.searchableTerms.sort(this.searchableTerms.get(0).getComparator());
 			Collections.sort(this.searchableTerms, this.searchableTerms.get(0).getComparator());
+			logger.info(" - sorted terms");
 		}
 		
 		this.keystone = new HashMap<String, List<Integer>>();
@@ -291,6 +295,8 @@ public class ACHelper {
 				} // end -- if (tokenLenth >= 1)
 			} // end -- for (String token : ...)
 		} // end -- for (int i = 0; ...)
+
+		logger.info(" - populated keystone and prefix maps");
 		
 		// Now that we have the 'keystone' and 'prefixes' we can compute the number of ACTerms that we'd need to search
 		// for any token's prefix of 1-, 2-, or 3-characters.
@@ -313,5 +319,91 @@ public class ACHelper {
 		for (String prefix3 : this.keystone.keySet()) {
 			this.termCount.put(prefix3, this.keystone.get(prefix3).size());
 		}
+		
+		logger.info(" - populated term counts");
+// commented out of production, but keeping for future use in debugging
+//		analyzeIndexes();
 	} // end -- createIndexes() method
+	
+	// Report to the log file some statistics about the indexes.
+	private void analyzeIndexes() {
+		List<Integer> ints = new ArrayList<Integer>();		// for computations
+		
+		logger.info("Analyzing keystone index:");
+		logger.info(" - " + this.keystone.size() + " keys");
+		for (String key : this.keystone.keySet()) {
+			ints.add(this.keystone.get(key).size());
+		}
+		logger.info(" - max of " + this.max(ints) + " terms referred to");
+		logger.info(" - min of " + this.min(ints) + " terms referred to");
+		logger.info(" - average of " + this.average(ints) + " terms referred to");
+		logger.info(" - std dev of " + this.stddev(ints) + " terms referred to");
+
+		ints = new ArrayList<Integer>();
+		logger.info("Analyzing prefixes index:");
+		logger.info(" - " + this.prefixes.size() + " keys");
+		for (String key : this.prefixes.keySet()) {
+			ints.add(this.prefixes.get(key).size());
+		}
+		logger.info(" - max of " + this.max(ints) + " keystone entries referred to");
+		logger.info(" - min of " + this.min(ints) + " keystone entries referred to");
+		logger.info(" - average of " + this.average(ints) + " keystone entries referred to");
+		logger.info(" - std dev of " + this.stddev(ints) + " keystone entries referred to");
+
+		ints = new ArrayList<Integer>();
+		logger.info("Analyzing term counts index:");
+		logger.info(" - " + this.termCount.size() + " keys");
+		for (String key : this.termCount.keySet()) {
+			ints.add(this.termCount.get(key));
+		}
+		logger.info(" - max of " + this.max(ints) + " terms to search");
+		logger.info(" - min of " + this.min(ints) + " terms to search");
+		logger.info(" - average of " + this.average(ints) + " terms to search");
+		logger.info(" - std dev of " + this.stddev(ints) + " terms to search");
+
+		logger.info("Finished analysis of indexes");
+	}
+	
+	private String min(List<Integer> ints) {
+		int mn = Integer.MAX_VALUE;
+		for (Integer i : ints) {
+			if (i < mn) mn = i;
+		}
+		return Integer.toString(mn);
+	}
+
+	private String max(List<Integer> ints) {
+		int mx = Integer.MIN_VALUE;
+		for (Integer i : ints) {
+			if (i > mx) mx = i;
+		}
+		return Integer.toString(mx);
+	}
+
+	private String average(List<Integer> ints) {
+		int sum = 0;
+		for (Integer i : ints) {
+			sum = sum + i;
+		}
+		return Float.toString(((float) sum) / ints.size());
+	}
+
+	private String stddev(List<Integer> ints) {
+		// find average first; go with double precision for accuracy
+		int sum = 0;
+		for (Integer i : ints) {
+			sum = sum + i;
+		}
+		double mean = ((double) sum) / ints.size();
+		
+		// find sum of squares of differences from mean
+		double dsum = 0;	
+		for (Integer i : ints) {
+			dsum = dsum + Math.pow(i - mean, 2);
+		}
+		
+		// stddev is square root of average distance from mean
+		double avgDistance = dsum / ints.size();
+		return Double.toString(Math.sqrt(avgDistance));
+	}
 }
