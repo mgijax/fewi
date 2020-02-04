@@ -1118,14 +1118,43 @@ public class GXDController {
 		lines.add(sb.toString());
 		
 		// age
+		if ((query.getAgesSelected() != null) && (!"".equals(query.getAgesSelected())) ) {
+			sb = new StringBuffer();
+			sb.append("at age(s): ");
+			sb.append(FormatHelper.bold(query.getAgesSelected()));
+			lines.add(sb.toString());
+		}
 		
 		// Theiler stage
+		if ((query.getTheilerStage() != null) && (query.getTheilerStage().size() > 0)) {
+			// skip display in only default TS of zero
+			if ((query.getTheilerStage().size() > 1) || (query.getTheilerStage().get(0) != 0)) {
+				sb = new StringBuffer();
+				sb.append("at Theiler Stage(s): ");
+				boolean isFirst = true;
+				for (Integer ts : query.getTheilerStage()) {
+					if (!isFirst) {
+						sb.append(" or ");
+					} else {
+						isFirst = false;
+					}
+					sb.append(FormatHelper.bold("TS" + ts.toString()));
+				}
+				lines.add(sb.toString());
+			}
+		}
 		
 		// genetic background -- wild type
 		
 		// filters (anatomical system, theiler stage, assay type, detected, RNA-Seq level, wild type,
 		// gene type, molecular function, biological process, cellular component, phenotype, disease)
 	
+		// assay type
+		sb = new StringBuffer();
+		sb.append("Assayed by ");
+		sb.append(FormatHelper.bold("(RNA-Seq)"));
+		lines.add(sb.toString());
+		
 		return String.join("<br/>", lines);
 	}
 	
