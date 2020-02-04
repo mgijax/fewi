@@ -351,15 +351,46 @@ public class ACHelper {
 		logger.info(" - std dev of " + this.stddev(ints) + " keystone entries referred to");
 
 		ints = new ArrayList<Integer>();
+		List<Integer> ints1 = new ArrayList<Integer>();
+		List<Integer> ints2 = new ArrayList<Integer>();
+		List<Integer> ints3 = new ArrayList<Integer>();
 		logger.info("Analyzing term counts index:");
 		logger.info(" - " + this.termCount.size() + " keys");
 		for (String key : this.termCount.keySet()) {
 			ints.add(this.termCount.get(key));
+			if (key.length() == 1) {
+				ints1.add(this.termCount.get(key));
+			} else if (key.length() == 2) {
+				ints2.add(this.termCount.get(key));
+			} else if (key.length() == 3) {
+				ints3.add(this.termCount.get(key));
+			}
 		}
 		logger.info(" - max of " + this.max(ints) + " terms to search");
 		logger.info(" - min of " + this.min(ints) + " terms to search");
 		logger.info(" - average of " + this.average(ints) + " terms to search");
 		logger.info(" - std dev of " + this.stddev(ints) + " terms to search");
+
+		logger.info("Analyzing 1-char subset of term counts index:");
+		logger.info(" - " + ints1.size() + " keys");
+		logger.info(" - max of " + this.max(ints1) + " terms to search");
+		logger.info(" - min of " + this.min(ints1) + " terms to search");
+		logger.info(" - average of " + this.average(ints1) + " terms to search");
+		logger.info(" - std dev of " + this.stddev(ints1) + " terms to search");
+
+		logger.info("Analyzing 2-char subset of term counts index:");
+		logger.info(" - " + ints2.size() + " keys");
+		logger.info(" - max of " + this.max(ints2) + " terms to search");
+		logger.info(" - min of " + this.min(ints2) + " terms to search");
+		logger.info(" - average of " + this.average(ints2) + " terms to search");
+		logger.info(" - std dev of " + this.stddev(ints2) + " terms to search");
+
+		logger.info("Analyzing 3-char subset of term counts index:");
+		logger.info(" - " + ints3.size() + " keys");
+		logger.info(" - max of " + this.max(ints3) + " terms to search");
+		logger.info(" - min of " + this.min(ints3) + " terms to search");
+		logger.info(" - average of " + this.average(ints3) + " terms to search");
+		logger.info(" - std dev of " + this.stddev(ints3) + " terms to search");
 
 		logger.info("Finished analysis of indexes");
 	}
