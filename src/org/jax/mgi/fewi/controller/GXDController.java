@@ -1125,8 +1125,8 @@ public class GXDController {
 			lines.add(sb.toString());
 		}
 		
-		// Theiler stage
-		if ((query.getTheilerStage() != null) && (query.getTheilerStage().size() > 0)) {
+		// Theiler stage (if not already showing age)
+		else if ((query.getTheilerStage() != null) && (query.getTheilerStage().size() > 0)) {
 			// skip display in only default TS of zero
 			if ((query.getTheilerStage().size() > 1) || (query.getTheilerStage().get(0) != 0)) {
 				sb = new StringBuffer();
@@ -1144,7 +1144,19 @@ public class GXDController {
 			}
 		}
 		
-		// genetic background -- wild type
+		// genetic background & wild type
+		if ((query.getMutatedIn() != null) && (!"".equals(query.getMutatedIn())) ) {
+			sb = new StringBuffer();
+			sb.append("Specimens: ");
+			sb.append(FormatHelper.bold("Mutated in " + query.getMutatedIn()));
+			sb.append(FormatHelper.smallGrey(" current symbol, name, synonyms"));
+			lines.add(sb.toString());
+		} else if ((query.getIsWildType() != null) && (!"".equals(query.getIsWildType())) ) {
+			sb = new StringBuffer();
+			sb.append("Specimens: ");
+			sb.append(FormatHelper.bold("Wild type only"));
+			lines.add(sb.toString());
+		}
 		
 		// filters (anatomical system, theiler stage, assay type, detected, RNA-Seq level, wild type,
 		// gene type, molecular function, biological process, cellular component, phenotype, disease)
