@@ -1028,7 +1028,7 @@ public class GXDController {
 			HttpSession session,
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query
-			) {
+			) throws CloneNotSupportedException {
 		logger.info("gxdRnaSeqHeatMap() started");
 		
 		ModelAndView mav = new ModelAndView("gxd/gxd_rnaseq_heatmap");
@@ -1042,7 +1042,46 @@ public class GXDController {
 	// Notes:
 	//	1. This is only for the RNA-Seq heat map, not the regular QF summary.
 	//	2. Since we do not support heat maps from the differential QF or the batch QF, their idiosyncrasies are not considered.
-	private String getRnaSeqHeatMapYSF(GxdQueryForm query) {
+	private String getRnaSeqHeatMapYSF(GxdQueryForm originalQF) throws CloneNotSupportedException {
+		// Create a clone of the given query object and overwrite base values with more specific filter values as appropriate.
+		GxdQueryForm query = (GxdQueryForm) originalQF.clone();
+		
+		// Overwrite form's detected selection (if any) with filter value.
+		if ((query.getDetectedFilter() != null) && (query.getDetectedFilter().size() > 0)) {
+			if (query.getDetectedFilter().size() > 1) {
+				query.setDetected("Yes</B> or <B>No");
+			} else {
+				query.setDetected(query.getDetectedFilter().get(0));
+			}
+		}
+		
+		// Did we have a filter for only mutant specimens?  (will need to override background if so)
+		boolean mutantFilter = false;
+		
+		// Overwrite form's wild type selection (if any) with filter value.  If form's value is more specific,
+		// keep that one.  (Do not overwrite a selected marker with "any".)
+		if ((query.getWildtypeFilter() != null) && (query.getWildtypeFilter().size() > 0)) {
+			if (query.getWildtypeFilter().size() == 2) {
+				// Both mutant and wild type are selected.  This is only possible when the original field's
+				// selection is "all specimens," so we don't really need to change it.  No op.
+			} else if ("mutant".equals(query.getWildtypeFilter().get(0))) {
+				mutantFilter = true;
+			} else {
+				query.setIsWildType("true");
+			}
+		}
+		
+		// Overwrite form's TS selection (if any) with filter value (convert to integers first).
+		if ((query.getTheilerStageFilter() != null) && (query.getTheilerStageFilter().size() > 0)) {
+			List<Integer> filteredTS = new ArrayList<Integer>();
+			for (String ts : query.getTheilerStageFilter()) {
+				try {
+					filteredTS.add(Integer.parseInt(ts));
+				} catch (Exception e) {}
+			}
+			query.setTheilerStage(filteredTS);
+		}
+	
 		// list of lines to concatenate
 		List<String> lines = new ArrayList<String>();
 		lines.add(FormatHelper.bold("You Searched For:"));
@@ -1057,6 +1096,22 @@ public class GXDController {
 			sb.append("Gene nomenclature: ");
 			sb.append(FormatHelper.bold(nomenclature));
 			sb.append(FormatHelper.smallGrey(" current symbol, name, synonyms"));
+			lines.add(sb.toString());
+		}
+		
+		// gene type filter
+		if ((query.getMarkerTypeFilter() != null) && (query.getMarkerTypeFilter().size() > 0)) {
+			sb = new StringBuffer();
+			sb.append("Gene type: ");
+			boolean isFirst = true;
+			for (String mt : query.getMarkerTypeFilter()) {
+				if (!isFirst) {
+					sb.append(" or ");
+				} else {
+					isFirst = false;
+				}
+				sb.append(FormatHelper.bold(mt));
+			}
 			lines.add(sb.toString());
 		}
 		
@@ -1094,6 +1149,13 @@ public class GXDController {
 			lines.add(sb.toString());
 		}
 		
+		// annotation-based filters
+		addAnnotationFilter(lines, "Molecular Function", query.getGoMfFilter());
+		addAnnotationFilter(lines, "Biological Process", query.getGoBpFilter());
+		addAnnotationFilter(lines, "Cellular Component", query.getGoCcFilter());
+		addAnnotationFilter(lines, "Phenotype", query.getMpFilter());
+		addAnnotationFilter(lines, "Disease", query.getDoFilter());
+		
 		// detected?
 		String detectedText = query.getDetected();
 		if ("Yes".equals(detectedText)) {
@@ -1117,6 +1179,22 @@ public class GXDController {
 		}
 		lines.add(sb.toString());
 		
+		// anatomical system
+		if ((query.getSystemFilter() != null) && (query.getSystemFilter().size() > 0)) {
+			sb = new StringBuffer();
+			sb.append("within anatomical systems: ");
+			boolean isFirst = true;
+			for (String system : query.getSystemFilter()) {
+				if (!isFirst) {
+					sb.append(" or ");
+				} else {
+					isFirst = false;
+				}
+				sb.append(FormatHelper.bold(system));
+			}
+			lines.add(sb.toString());
+		}
+		
 		// age
 		if ((query.getAgesSelected() != null) && (!"".equals(query.getAgesSelected())) ) {
 			sb = new StringBuffer();
@@ -1125,8 +1203,8 @@ public class GXDController {
 			lines.add(sb.toString());
 		}
 		
-		// Theiler stage (if not already showing age)
-		else if ((query.getTheilerStage() != null) && (query.getTheilerStage().size() > 0)) {
+		// Theiler stage (could show both age & TS because of filters)
+		if ((query.getTheilerStage() != null) && (query.getTheilerStage().size() > 0)) {
 			// skip display in only default TS of zero
 			if ((query.getTheilerStage().size() > 1) || (query.getTheilerStage().get(0) != 0)) {
 				sb = new StringBuffer();
@@ -1156,18 +1234,54 @@ public class GXDController {
 			sb.append("Specimens: ");
 			sb.append(FormatHelper.bold("Wild type only"));
 			lines.add(sb.toString());
+		} else if (mutantFilter) {
+			sb = new StringBuffer();
+			sb.append("Specimens: ");
+			sb.append(FormatHelper.bold("Mutant only"));
+			lines.add(sb.toString());
 		}
 		
-		// filters (anatomical system, theiler stage, assay type, detected, RNA-Seq level, wild type,
-		// gene type, molecular function, biological process, cellular component, phenotype, disease)
-	
 		// assay type
 		sb = new StringBuffer();
 		sb.append("Assayed by ");
 		sb.append(FormatHelper.bold("(RNA-Seq)"));
 		lines.add(sb.toString());
 		
-		return String.join("<br/>", lines);
+		// RNA-Seq (TPM) level
+		if ((query.getTmpLevelFilter() != null) && (query.getTmpLevelFilter().size() > 0)) {
+			sb = new StringBuffer();
+			boolean isFirst = true;
+			for (String level : query.getTmpLevelFilter()) {
+				if (!isFirst) {
+					sb.append(" or ");
+				} else {
+					isFirst = false;
+				}
+				sb.append(FormatHelper.bold(level));
+			}
+			lines.add(sb.toString());
+		}
+		
+		return StringUtils.join(lines, "<br/>");
+	}
+	
+	// helper for getRnaSeqHeatMapYSF -- adds needed info to lines for the given filter (if it has values)
+	private void addAnnotationFilter(List<String> lines, String filterName, List<String> terms) {
+		if ((terms != null) && (terms.size() > 0)) {
+			StringBuffer sb = new StringBuffer();
+			sb.append("Genes associated with " + filterName + ": ");
+			boolean isFirst = true;
+			for (String term : terms) {
+				if (!isFirst) {
+					sb.append(" or ");
+				} else {
+					isFirst = false;
+				}
+				sb.append(FormatHelper.bold(term));
+			}
+			sb.append(FormatHelper.smallGrey(" includes subterms"));
+			lines.add(sb.toString());
+		}
 	}
 	
 	@RequestMapping("/rnaSeqHeatMap/json")
