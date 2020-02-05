@@ -30,13 +30,18 @@
   	margin-top: 3px;
   }
   #ysfDiv {
-  	float: left; min-width: 350px;
+  	float: left;
+  	width: 34%;
+  	text-align: left;
   }
   #poweredByDiv {
   	float: none; 
+  	text-align: center;
   }
   #tipsDiv {
-  	float: right; min-width: 350px; text-align: right;
+  	width: 33%;
+  	float: right;
+  	text-align: center;
   }
   #tipsButton {
   	padding-top: 6px;
@@ -47,7 +52,7 @@
     text-align: center;
     border: 1px solid black;
     white-space: nowrap;
-    margin-left: 150px;
+  	margin-left: 250px;
   }
   #tipsIcon {
   	margin-top: -4px;
@@ -58,6 +63,9 @@
   .smallGrey {
     font-size: 75%;
     color: #999999;
+  }
+  #loadingMessage {
+  	text-align: center;
   }
 </style>
 
@@ -92,9 +100,11 @@
 	</div>
 </div>
 
-<!-- RNA-Seq hat map injected into this element -->
+<!-- RNA-Seq heat map injected into this element -->
 <div id="heatmapWrapper">
-	<img src='/fewi/mgi/assets/images/loading.gif' height='24' width='24'> Loading Morpheus libraries...
+	<div id="loadingMessage">
+		<img src='/fewi/mgi/assets/images/loading.gif' height='24' width='24'> Loading Morpheus libraries...
+	</div>
 </div>
 
 <!-- RNA-Seq Heat Map legend injected into this element -->
@@ -162,14 +172,14 @@ function buildHeatMap(json) {
   $('li.morpheus-sortable[role=presentation]').css('display', 'none');
 }
 
-$('#heatmapWrapper').empty();
-$('#heatmapWrapper').html("<img src='/fewi/mgi/assets/images/loading.gif' height='24' width='24'> Loading data from GXD...");
+$('#loadingMessage').empty();
+$('#loadingMessage').html("<img src='/fewi/mgi/assets/images/loading.gif' height='24' width='24'> Loading data from GXD...");
 
 var url = fewiurl + '/gxd/rnaSeqHeatMap/json?' + '${queryString}';
 $.get(url, function(data) { buildHeatMap(data); })
 	.fail(function() {
-		$('#heatmapWrapper').empty();
-		$('#heatmapWrapper').text('Error in retrieval. Please contact User Support with the parameters of your search.');
+		$('#loadingMessage').empty();
+		$('#loadingMessage').text('Error in retrieval. Please contact User Support with the parameters of your search.');
 	});
 </script>
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

@@ -1,5 +1,8 @@
 <%--GXD matrix legend popup --%>
-<div class="hd">Matrix Legend</div>
+<div class="hd">
+<div style="float:right">Morpheus <img src="${configBean.FEWI_URL}images/morpheus.png" /></div>
+<div style="float:left"><img src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="40" /></div>
+</div>
 
 <div class="bd" style="overflow: hidden;">
 
@@ -104,73 +107,7 @@
 
 </div>
 
-<div style="width: 48%; float:right;">
-
-  <div class='legendSection'>
-
-	<h4>Phenotype</h4>
-	<h6>Number of annotations mapped to</h6>
-	<h6>structure and/or substructure</h6>
-	</br>
-		
-	<div class='legendSelectionRow'>
-		<div class='legendExampleCell phenoBlue4'></div>
-		<span class='legendExampleRange'> > 100 </span>
-	</div>
-	<div class='legendSelectionRow'>
-		<div class='legendExampleCell phenoBlue3'></div>
-		<span class='legendExampleRange'> 6-99 </span>
-	</div>
-	<div class='legendSelectionRow'>
-		<div class='legendExampleCell phenoBlue2'></div>
-		<span class='legendExampleRange'> 2-5 </span>
-	</div>
-	<div class='legendSelectionRow'>
-		<div class='legendExampleCell phenoBlue1'></div>
-		<span class='legendExampleRange'> 1 </span>
-	</div>
-  </div>
-
-  <br/>
-  <div class='legendSection'>
-  <h4>Other Symbols</h4>
-  </div>
-
-  <div class='legendSection'>
-	<div class='legendExampleCell '>
-	<div class='validStageWrapper'>
-	<span class='noResultsIndicator' >N</span>
-	</div>
-	</div>
-	<span class='legendExampleRange'> no abnormalities detected, </span> <br/>
-	<span class='legendExampleRange'> contrary to expectations</span>
-  </div>
-
-  <div class='legendSection'>
-	<div class='legendExampleCell '>
-	<div class='validStageWrapper'>
-	<span class='backgroundSensativeIndicator' >!</span>
-	</div>
-	</div>
-	<span class='legendExampleRange'> phenotype varies with </span> <br/>
-	<span class='legendExampleRange'> strain background</span>
-  </div>
-
-	<div class='legendSection geneOnly' >
-		<div class='legendExampleCell'>
-		  <div class='inSubStructIndicatorWrapper'>
-		  </div>
-		</div>
-		<span class='legendExampleRange'> no annotations mapped to this </span>
-		<br/>
-		<span class='legendExampleRange'> structure or substructure </span>
-	</div>
-
-
-
-</div>
-
-</div>
+</div><!-- div bd -->
 
 
 
