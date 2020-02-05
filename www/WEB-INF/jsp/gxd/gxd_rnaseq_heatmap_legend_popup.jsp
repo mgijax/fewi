@@ -1,13 +1,10 @@
 <%--GXD matrix legend popup --%>
 <div class="hd">
-<div style="float:right">Morpheus <img src="${configBean.FEWI_URL}images/morpheus.png" /></div>
+<div style="float:right">Morpheus <img src="${configBean.FEWI_URL}assets/images/static/morpheus_icon.png" height="40" /></div>
 <div style="float:left"><img src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="40" /></div>
 </div>
 
-<div class="bd" style="overflow: hidden;">
-
-<div style="width: 49%; float:left; padding-right: 4px; border-right: 2px solid black;">
-	
+<div class="bd">
 	<div class='legendSection'>
 	
 		<h4>Gene Expression</h4>
@@ -104,9 +101,6 @@
 		<br/>
 		<span class='legendExampleRange'> tissue </span>
 	</div>
-
-</div>
-
 </div><!-- div bd -->
 
 

@@ -83,7 +83,7 @@
 <!-- subheader bar -->
 <div id="subheader">
 	<div id="tipsDiv">
-		<div id="tipsButton">Tips <img id="tipsIcon" src="${configBean.WEBSHARE_URL}images/help_small_transp.gif" border="0"/></div>
+		<div id="tipsButton" onClick="showPopup()">Tips <img id="tipsIcon" src="${configBean.WEBSHARE_URL}images/help_small_transp.gif" border="0"/></div>
 	</div>
 	<div id="ysfDiv">${ysf}
 	</div>
@@ -108,7 +108,7 @@
 </div>
 
 <!-- RNA-Seq Heat Map legend injected into this element -->
-<div id="legendPopupPanel" style="display:none;visibility: hidden;" class="facetFilter">
+<div id="tipsPopup" style="display:none;">
   <jsp:include page="gxd_rnaseq_heatmap_legend_popup.jsp"></jsp:include>
 </div>
 
@@ -170,6 +170,15 @@ function buildHeatMap(json) {
   // Hide the tab title at the top of the heat map, as it has odd characters that I can't get
   // to disappear (and it's not overly useful anyway, for our purposes).
   $('li.morpheus-sortable[role=presentation]').css('display', 'none');
+  showPopup();
+}
+
+function showPopup() {
+	$('#tipsPopup').dialog( {
+		title : 'Heat Map Legend',
+		width : '400px',
+		position : { my: 'right center', at: 'right center', of: window }
+	} );
 }
 
 $('#loadingMessage').empty();
