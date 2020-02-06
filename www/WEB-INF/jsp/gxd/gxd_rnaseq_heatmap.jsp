@@ -170,14 +170,18 @@ function buildHeatMap(json) {
   // Hide the tab title at the top of the heat map, as it has odd characters that I can't get
   // to disappear (and it's not overly useful anyway, for our purposes).
   $('li.morpheus-sortable[role=presentation]').css('display', 'none');
-  showPopup();
+  
+  // Show the Tips popup after a brief delay, so we give the browser's scrollbars time to get
+  // into place.
+  setTimeout(function() { showPopup() }, 500);
 }
 
 function showPopup() {
 	$('#tipsPopup').dialog( {
 		title : 'Heat Map Legend',
 		width : '400px',
-		position : { my: 'right center', at: 'right center', of: window }
+	//	position : { my: 'right center', at: 'right center', of: window }
+		position : { my: 'right center', at: 'right center', within: window }
 	} );
 }
 

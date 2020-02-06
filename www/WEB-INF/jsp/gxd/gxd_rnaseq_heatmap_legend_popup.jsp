@@ -8,8 +8,10 @@
 	<div class='legendSection'>
 	
 		<h4>Gene Expression</h4>
+		<div style="clear:both">
 		<h6>Number of expression results annotated as</h6>
 		</br>
+		</div>
 		
 		<div>present in structure and/or substructures</div>
 		<div class='legendSelectionRow'>
@@ -102,15 +104,3 @@
 		<span class='legendExampleRange'> tissue </span>
 	</div>
 </div><!-- div bd -->
-
-
-
-
-
-
-
-
-
-
-
-
