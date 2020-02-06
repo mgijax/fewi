@@ -180,7 +180,6 @@ function showPopup() {
 	$('#tipsPopup').dialog( {
 		title : 'Heat Map Legend',
 		width : '400px',
-	//	position : { my: 'right center', at: 'right center', of: window }
 		position : { my: 'right center', at: 'right center', within: window }
 	} );
 }
