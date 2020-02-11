@@ -34,18 +34,101 @@ public class GxdRnaSeqHeatMapData {
 	private List<Marker> markers;		// list of marker data
 	private List<Sample> samples;		// list of sample data
 	
+	// We really don't need this, except for efficiency.  (An addition should be faster than a function call.)
+	private int markerCount = 0;			// count of markers identified so far
+	private int sampleCount = 0;			// count of samples identified so far
+
+	private Map<String,Integer> mgiIDs = new HashMap<String,Integer>();		// maps from MGI marker ID to index into this.markers
+	private Map<String,Integer> sampleIDs = new HashMap<String,Integer>();	// maps from bioreplicate set ID to index into this.samples
+	private boolean analyzed = false;	// has this data set been analyzed yet?
+	
+	// Temporary cache of TPM values while we are collecting results (before composing the heat map).
+	// Key 1 is the marker's position in this.markers; key 2 is the sample's position in this.samples.
+	private Map<Integer,Map<Integer,String>> tpmCache = new HashMap<Integer,Map<Integer,String>>();
+	
 	//-------------------
 	// methods
 	//-------------------
 	
-	// constructor; takes a list of results from Solr and slices & dices it into fields
-	// expected by Morpheus
-	public GxdRnaSeqHeatMapData(List<SolrGxdRnaSeqHeatMapResult> results) {
+	// constructor; initializes the object so it will be ready for collecting batches of results
+	public GxdRnaSeqHeatMapData() {
+		this.markers = new ArrayList<Marker>();
+		this.samples = new ArrayList<Sample>();
+	}
+	
+	// add a batch of results from Solr to the heat map we're building
+	public void addResults(List<SolrGxdRnaSeqHeatMapResult> results) throws Exception {
+		if (this.analyzed) {
+			throw new Exception("GxdRnaSeqHeatMapData object has already been analyzed; cannot add more results");
+		}
+		this.addData(results);
+	}
+	
+	// Add a new batch of results to this object.
+	private void addData(List<SolrGxdRnaSeqHeatMapResult> results) {
+		// Walk through the list of results once, collecting lists of unique markers and samples.
+		for (SolrGxdRnaSeqHeatMapResult result : results) {
+			String mgiID = result.getMarkerMgiID();
+			String sampleID = result.getConsolidatedSampleKey();
+			
+			Marker m = null;
+			if (!mgiIDs.containsKey(mgiID)) {
+				m = new Marker();
+				m.ensemblGMID = result.getMarkerEnsemblGeneModelID();
+				m.symbol = result.getMarkerSymbol();
+				m.mgiID = mgiID;
+				m.index = this.markerCount++;
+				this.markers.add(m);
+				this.mgiIDs.put(mgiID, m.index);
+			} else {
+				m = this.markers.get(this.mgiIDs.get(mgiID));
+			}
+			
+			Sample s = null;
+			if (!sampleIDs.containsKey(sampleID)) {
+				s = new Sample();
+				s.age = result.getAge();
+				s.alleles = result.getAlleles();
+				s.bioreplicateSetID = sampleID;
+				s.expID = result.getAssayMgiID();
+				s.sex = result.getSex();
+				s.stage = result.getTheilerStage();
+				s.strain = result.getStrain();
+				s.structure = result.getStructure();
+				s.index = this.sampleCount++;
+				this.samples.add(s);
+				this.sampleIDs.put(sampleID, s.index);
+			} else {
+				s = this.samples.get(this.sampleIDs.get(sampleID));
+			}
+			
+			if (!this.tpmCache.containsKey(m.index)) {
+				this.tpmCache.put(m.index, new HashMap<Integer,String>());
+			}
+			this.tpmCache.get(m.index).put(s.index, result.getAvergageQNTPM());
+		}
+	}
+	
+	// Must be called once finished adding batches of results; this analyzes the data and
+	// populates the data structures for the heat map.
+	public void analyzeData() throws Exception {
+		if (this.analyzed) {
+			throw new Exception("GxdRnaSeqHeatMapData object has already been analyzed; cannot analyzed twice");
+		}
+
+		// compute our heatmap dimensions
+		this.rows = mgiIDs.size();			// one row per marker
+		this.columns = sampleIDs.size();	// one column per consolidated sample
+		
+		// sort the lists of markers and samples
+		Collections.sort(this.markers, new MarkerCmp());
+		Collections.sort(this.samples, new SampleCmp());
+
 		this.addBoilerplate();
-		this.analyzeResults(results);
 		this.populateRowVectors();
 		this.populateColumnVectors();
-		this.populateMeasurements(results);
+		this.populateMeasurements();
+		this.analyzed = true;
 	}
 	
 	// Define the data that are common across all runs.
@@ -57,53 +140,6 @@ public class GxdRnaSeqHeatMapData {
 		// one fixed name of the data set Morpheus will deal with
 		this.seriesNames = new ArrayList<String>();
 		this.seriesNames.add("Mouse RNA-Seq Heat Map of GXD search results");
-	}
-	
-	// Make one pass to analyze the set of input results, compiling data on markers & samples so
-	// they can be ordered at the beginning.
-	private void analyzeResults(List<SolrGxdRnaSeqHeatMapResult> results) {
-		this.markers = new ArrayList<Marker>();
-		this.samples = new ArrayList<Sample>();
-
-		Set<String> mgiIDs = new HashSet<String>();		// set of MGI marker IDs collected so far
-		Set<String> sampleIDs = new HashSet<String>();	// set of bioreplicate set IDs collected so far
-		
-		// Walk through the list of results once, collecting lists of unique markers and samples.
-		for (SolrGxdRnaSeqHeatMapResult result : results) {
-			String mgiID = result.getMarkerMgiID();
-			String sampleID = result.getConsolidatedSampleKey();
-			
-			if (!mgiIDs.contains(mgiID)) {
-				Marker m = new Marker();
-				m.ensemblGMID = result.getMarkerEnsemblGeneModelID();
-				m.symbol = result.getMarkerSymbol();
-				m.mgiID = mgiID;
-				this.markers.add(m);
-				mgiIDs.add(mgiID);
-			}
-			
-			if (!sampleIDs.contains(sampleID)) {
-				Sample s = new Sample();
-				s.age = result.getAge();
-				s.alleles = result.getAlleles();
-				s.bioreplicateSetID = sampleID;
-				s.expID = result.getAssayMgiID();
-				s.sex = result.getSex();
-				s.stage = result.getTheilerStage();
-				s.strain = result.getStrain();
-				s.structure = result.getStructure();
-				this.samples.add(s);
-				sampleIDs.add(sampleID);
-			}
-		}
-		
-		// compute our heatmap dimensions
-		this.rows = mgiIDs.size();			// one row per marker
-		this.columns = sampleIDs.size();	// one column per consolidated sample
-		
-		// sort the lists of markers and samples
-		Collections.sort(this.markers, new MarkerCmp());
-		Collections.sort(this.samples, new SampleCmp());
 	}
 	
 	// Populate the row vectors, based on the list of markers.
@@ -170,7 +206,7 @@ public class GxdRnaSeqHeatMapData {
 	}
 	
 	// Go through the results and populate the heat map cells in seriesArrays.
-	private void populateMeasurements(List<SolrGxdRnaSeqHeatMapResult> results) {
+	private void populateMeasurements() {
 		// What we need to produce is effectively a two-dimensional array for each series.  However,
 		// we only have one series.  So, we produce a two-dimensional array as a List of Lists of
 		// integers, then we toss it as the only item in another list.
@@ -191,25 +227,28 @@ public class GxdRnaSeqHeatMapData {
 		Map<String,Integer> markerRows = this.buildLookup(this.getMarkerIDList(this.markers));
 		Map<String,Integer> sampleColumns = this.buildLookup(this.getSampleIDList(this.samples));
 
-		// Now walk through the results and update the values as we find them.
-		for (SolrGxdRnaSeqHeatMapResult result : results) {
-			String markerID = result.getMarkerMgiID();
-			String sampleID = result.getConsolidatedSampleKey();
-			Float avgQnTpm = notStudied;
-			try {
-				avgQnTpm = Float.parseFloat(result.getAvergageQNTPM());
-			} catch (Exception e) {
-				if (result.getAvergageQNTPM() != null) {
-					logger.info("Odd Avg QN TPM for (" + markerID + ", " + sampleID + "): " + result.getAvergageQNTPM());
+		// Loop over markers and samples, adding results as we find them.
+		for (int mIndex = 0; mIndex < this.rows; mIndex++) {
+			// need to translate from mIndex (with sorted markers) to tpmCache indices (before sorted markers)
+			int origMrkIndex = this.markers.get(mIndex).index;
+
+			for (int sIndex = 0; sIndex < this.columns; sIndex++) {
+				// need to translate from sIndex (with sorted samples) to tpmCache indices (before sorted samples)
+				int origSmpIndex = this.samples.get(sIndex).index;
+				
+				Float avgQnTpm = notStudied;
+				if (this.tpmCache.get(origMrkIndex).containsKey(origSmpIndex)) {
+					String qn = this.tpmCache.get(origMrkIndex).get(origSmpIndex);
+					try {
+						avgQnTpm = Float.parseFloat(qn);
+						rows.get(mIndex).set(sIndex, avgQnTpm);
+					} catch (Exception e) {
+						logger.info("Odd Avg QN TPM: " + qn);
+					}
 				}
 			}
-			
-			int markerIndex = markerRows.get(markerID);
-			int sampleIndex = sampleColumns.get(sampleID);
-			
-			rows.get(markerIndex).set(sampleIndex, avgQnTpm);
 		}
-		
+
 		// Finally, wrap the rows inside another list so it appears as the set of rows for this (first and only) series.
 		this.seriesArrays = new ArrayList<List<List<Float>>>();
 		this.seriesArrays.add(rows);
@@ -275,6 +314,7 @@ public class GxdRnaSeqHeatMapData {
 		public String symbol;
 		public String mgiID;
 		public String ensemblGMID;
+		private Integer index;
 	}
 	
 	// all data needed for the heat map for one sample (column)
@@ -287,6 +327,7 @@ public class GxdRnaSeqHeatMapData {
 		public String sex;
 		public String expID;
 		public String bioreplicateSetID;
+		private Integer index;
 		
 		public String getLabel() {
 			StringBuffer sb = new StringBuffer();

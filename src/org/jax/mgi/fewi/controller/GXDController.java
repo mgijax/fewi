@@ -1289,22 +1289,51 @@ public class GXDController {
 			HttpSession session,
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query
-			) {
+			) throws Exception {
 		logger.info("gxdRnaSeqHeatMapJson() started");
 		populateMarkerIDs(session, query);
+		int heatMapPageSize = 250000;
 
-		// get the results for structure/stage
-		Paginator page = new Paginator(1000000);
+		System.gc();
+		logger.info("Initial RAM: " + String.format("%,d", new Long(Runtime.getRuntime().freeMemory())));
+
+		// repackage them into the JSON object
+		GxdRnaSeqHeatMapData dataPacket = new GxdRnaSeqHeatMapData();
+
 		SearchParams params = new SearchParams();
-		params.setPaginator(page);
 		params.setFilter(parseGxdQueryForm(query));
 	
-		// get the individual heat map cells
-		SearchResults<SolrGxdRnaSeqHeatMapResult> results = gxdFinder.searchRnaSeqHeatMapResults(params);
-		logger.info("Got heat map cells: " + results.getTotalCount());
+		Paginator page = new Paginator(heatMapPageSize);
+		int start = 0;
+		boolean done = false;
 		
-		// repackage them into the JSON object
-		GxdRnaSeqHeatMapData dataPacket = new GxdRnaSeqHeatMapData(results.getResultObjects());
+		while (!done) {
+			page.setStartIndex(start);
+			params.setPaginator(page);
+
+			// get the individual heat map cells
+			SearchResults<SolrGxdRnaSeqHeatMapResult> searchResults = gxdFinder.searchRnaSeqHeatMapResults(params);
+			
+			List<SolrGxdRnaSeqHeatMapResult> results = searchResults.getResultObjects();
+			if ((results == null) || (results.size() == 0)) {
+				done = true;
+			} else {
+				logger.info("Got heat map cells (start " + start + "): " + results.size());
+				dataPacket.addResults(results);
+				logger.info(" - added to dataPacket");
+				start = start + heatMapPageSize;
+			}
+			logger.info(" - before GC RAM: " + String.format("%,d", new Long(Runtime.getRuntime().freeMemory())));
+			System.gc();
+			logger.info(" - after GC RAM: " + String.format("%,d", new Long(Runtime.getRuntime().freeMemory())));
+		}
+		
+		logger.info("Analyzing data");
+		dataPacket.analyzeData();
+		logger.info(" - done");
+		logger.info(" - before GC RAM: " + String.format("%,d", new Long(Runtime.getRuntime().freeMemory())));
+		System.gc();
+		logger.info(" - after GC RAM: " + String.format("%,d", new Long(Runtime.getRuntime().freeMemory())));
 		return dataPacket;
 	}
 
