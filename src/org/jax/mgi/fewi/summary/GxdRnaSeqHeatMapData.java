@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
 
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRnaSeqConsolidatedSample;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRnaSeqHeatMapResult;
 import org.jax.mgi.shr.fe.sort.SmartAlphaComparator;
 
@@ -84,38 +85,60 @@ public class GxdRnaSeqHeatMapData {
 				m = this.markers.get(this.mgiIDs.get(mgiID));
 			}
 			
-			Sample s = null;
 			if (!sampleIDs.containsKey(sampleID)) {
-				s = new Sample();
-				s.age = result.getAge();
-				s.alleles = result.getAlleles();
-				s.bioreplicateSetID = sampleID;
-				s.expID = result.getAssayMgiID();
-				s.sex = result.getSex();
-				s.stage = result.getTheilerStage();
-				s.strain = result.getStrain();
-				s.structure = result.getStructure();
-				s.index = this.sampleCount++;
-				this.samples.add(s);
-				this.sampleIDs.put(sampleID, s.index);
-			} else {
-				s = this.samples.get(this.sampleIDs.get(sampleID));
+				this.sampleIDs.put(sampleID, this.sampleCount++);
 			}
+			Integer sampleIndex = this.sampleIDs.get(sampleID);
 			
 			if (!this.tpmCache.containsKey(m.index)) {
 				this.tpmCache.put(m.index, new HashMap<Integer,String>());
 			}
-			this.tpmCache.get(m.index).put(s.index, result.getAvergageQNTPM());
+			this.tpmCache.get(m.index).put(sampleIndex, result.getAvergageQNTPM());
 		}
+	}
+	
+	// called by analyzeData() to extract data from the given 'consolidatedSamples' according to ordering
+	// contained in this.sampleIDs, populating this.samples.
+	private void populateSamples(Map<String, SolrGxdRnaSeqConsolidatedSample> consolidatedSamples) {
+		this.samples = new ArrayList<Sample>(this.sampleIDs.size());
+		for (int i = 0; i < this.sampleIDs.size(); i++) {
+			this.samples.add(null);
+		}
+
+		for (String csKey : this.sampleIDs.keySet()) {
+			SolrGxdRnaSeqConsolidatedSample cs = consolidatedSamples.get(csKey);
+			Sample s = new Sample();
+			s.age = cs.getAge();
+			s.alleles = cs.getAlleles();
+			s.bioreplicateSetID = csKey;
+			s.expID = cs.getAssayMgiID();
+			s.sex = cs.getSex();
+			s.stage = cs.getTheilerStage();
+			s.strain = cs.getStrain();
+			s.structure = cs.getStructure();
+			s.index = this.sampleIDs.get(csKey);
+			this.samples.set(s.index, s);
+		}
+	}
+
+	// return Set of consolidated sample keys found so far
+	public Set<String> getSampleIDs() {
+		return this.sampleIDs.keySet();
 	}
 	
 	// Must be called once finished adding batches of results; this analyzes the data and
 	// populates the data structures for the heat map.
-	public void analyzeData() throws Exception {
+	public void analyzeData(Map<String, SolrGxdRnaSeqConsolidatedSample> consolidatedSamples) throws Exception {
 		if (this.analyzed) {
 			throw new Exception("GxdRnaSeqHeatMapData object has already been analyzed; cannot analyzed twice");
 		}
+		
+		if ((consolidatedSamples == null) || (consolidatedSamples.size() == 0)) {
+			throw new Exception("Missing consolidated samples; cannot analyze data for heat map");
+		}
 
+		populateSamples(consolidatedSamples);
+		
 		// compute our heatmap dimensions
 		this.rows = mgiIDs.size();			// one row per marker
 		this.columns = sampleIDs.size();	// one column per consolidated sample

@@ -71,6 +71,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrGxdAssay;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdGeneMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdPhenoMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRecombinaseMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRnaSeqConsolidatedSample;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRnaSeqHeatMapResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
@@ -137,7 +138,7 @@ public class GXDController {
 	private static String DETECTED = "detected";	// custom case
 	private static String MARKERTYPE_DISPLAY = "markerTypeDisplay";	// custom case
 	private static String TPM_LEVEL_SORT = "tpmLevelSort";	// custom case
-
+	
 	// --------------------//
 	// instance variables
 	// --------------------//
@@ -1294,8 +1295,7 @@ public class GXDController {
 		populateMarkerIDs(session, query);
 		int heatMapPageSize = 250000;
 
-		System.gc();
-		logger.info("Initial RAM: " + String.format("%,d", new Long(Runtime.getRuntime().freeMemory())));
+		logger.info(" - initial RAM: " + String.format("%,d", new Long(Runtime.getRuntime().freeMemory())));
 
 		// repackage them into the JSON object
 		GxdRnaSeqHeatMapData dataPacket = new GxdRnaSeqHeatMapData();
@@ -1322,21 +1322,32 @@ public class GXDController {
 				dataPacket.addResults(results);
 				logger.info(" - added to dataPacket");
 				start = start + heatMapPageSize;
+
+				if (results.size() < heatMapPageSize) {
+					done = true;
+				}
 			}
-			logger.info(" - before GC RAM: " + String.format("%,d", new Long(Runtime.getRuntime().freeMemory())));
-			System.gc();
-			logger.info(" - after GC RAM: " + String.format("%,d", new Long(Runtime.getRuntime().freeMemory())));
 		}
 		
+		Map<String,SolrGxdRnaSeqConsolidatedSample> rnaSeqSamples = getRnaSeqSamples(dataPacket.getSampleIDs());
+
 		logger.info("Analyzing data");
-		dataPacket.analyzeData();
+		dataPacket.analyzeData(rnaSeqSamples);
+		logger.info(" - final RAM: " + String.format("%,d", new Long(Runtime.getRuntime().freeMemory())));
 		logger.info(" - done");
-		logger.info(" - before GC RAM: " + String.format("%,d", new Long(Runtime.getRuntime().freeMemory())));
-		System.gc();
-		logger.info(" - after GC RAM: " + String.format("%,d", new Long(Runtime.getRuntime().freeMemory())));
 		return dataPacket;
 	}
 
+	// retrieve the mapping of RNA-Seq consolidated samples for use in building heat maps
+	private Map<String,SolrGxdRnaSeqConsolidatedSample> getRnaSeqSamples(Set<String> sampleIDs) {
+		Map<String,SolrGxdRnaSeqConsolidatedSample> rnaSeqSamples = new HashMap<String,SolrGxdRnaSeqConsolidatedSample>();
+		SearchResults<SolrGxdRnaSeqConsolidatedSample> sr = gxdFinder.searchRnaSeqConsolidatedSamples(sampleIDs);
+		for (SolrGxdRnaSeqConsolidatedSample sample : sr.getResultObjects()) {
+			rnaSeqSamples.put(sample.getConsolidatedSampleKey(), sample);
+		}
+		return rnaSeqSamples;
+	}
+	
 	@RequestMapping("/stageMatrixPopup/json")
 	public @ResponseBody GxdStageMatrixPopup gxdStageMatrixPopupJson(
 			HttpSession session,

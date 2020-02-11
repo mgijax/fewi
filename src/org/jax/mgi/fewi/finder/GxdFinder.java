@@ -18,6 +18,7 @@ import org.jax.mgi.fewi.hunter.SolrGxdDetectedFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdDifferentialHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdMatrixResultHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdResultHunter;
+import org.jax.mgi.fewi.hunter.SolrGxdRnaSeqConsolidatedSampleHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdRnaSeqHeatMapResultHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdResultHasImageHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdSystemFacetHunter;
@@ -37,6 +38,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdPhenoMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRecombinaseMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRnaSeqConsolidatedSample;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRnaSeqHeatMapResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdStageMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrString;
@@ -100,6 +102,8 @@ public class GxdFinder {
 	@Autowired
 	private SolrGxdTmpLevelFacetHunter gxdTmpLevelFacetHunter;
 	
+	@Autowired
+	private SolrGxdRnaSeqConsolidatedSampleHunter gxdRnaSeqConsolidatedSampleHunter;
 	
 	/*
 	 * Only does the Solr query to return the total document (or group) count
@@ -217,6 +221,26 @@ public class GxdFinder {
 
 		SearchResults<SolrGxdRnaSeqHeatMapResult> srMR = new SearchResults<SolrGxdRnaSeqHeatMapResult>();
 		srMR.cloneFrom(results, SolrGxdRnaSeqHeatMapResult.class);
+		return srMR;
+	}
+
+	/* get consolidated samples for heat map (returns all of them)
+	 */
+	public SearchResults<SolrGxdRnaSeqConsolidatedSample> searchRnaSeqConsolidatedSamples(Set<String> sampleIDs) {
+		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
+		SearchParams params = new SearchParams();
+		params.setPaginator(new Paginator(10000));
+		
+		List<Filter> clauses = new ArrayList<Filter>(sampleIDs.size());
+		for (String sampleID : sampleIDs) {
+			clauses.add(new Filter(GxdResultFields.CONSOLIDATED_SAMPLE_KEY, sampleID));
+		}
+		params.setFilter(Filter.or(clauses));
+
+		gxdRnaSeqConsolidatedSampleHunter.hunt(params, results);
+
+		SearchResults<SolrGxdRnaSeqConsolidatedSample> srMR = new SearchResults<SolrGxdRnaSeqConsolidatedSample>();
+		srMR.cloneFrom(results, SolrGxdRnaSeqConsolidatedSample.class);
 		return srMR;
 	}
 
