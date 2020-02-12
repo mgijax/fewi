@@ -822,23 +822,6 @@ function refreshTabCounts()
 	//get the tab counts via ajax
 	var handleCountRequest = function(o)
 	{
-		// Hide the button for the RNA-Seq heat map until we find if there are RNA-Seq data in the results.
-		$('#heatMapLink').addClass('heatMapLinkHidden');
-		
-		$.get(fewiurl + 'gxd/facet/assayType?' + getQueryStringWithFilters(),
-			function(x) {
-				try {
-					if (x.resultFacets.indexOf('RNA-Seq') >= 0) {
-						$('#heatMapLink').removeClass('heatMapLinkHidden'); 
-					} else {
-						$('#heatMapLink').addClass('heatMapLinkHidden');
-					}
-				} catch (e) {
-					console.log('Caught error (' + e + ') : ' + x);
-				}
-			}
-		);
-
 		if(o.responseText == "-1") o.responseText = "0"; // set count to zero if errors
 		// resolve the request ID to its appropriate handler
 		if(o.tId==resultsRq.tId) {
@@ -871,6 +854,25 @@ function refreshTabCounts()
 					}, querystringWithFilters);
 				refreshGxdLitLink();
 				refreshCurrentTab();
+
+				// Hide the button for the RNA-Seq heat map until we find if there are RNA-Seq data in the results.
+				$('#heatMapLink').addClass('heatMapLinkHidden');
+		
+				// If there are any RNA-Seq results, we need to show the heat map button.  Determine this by
+				// seeing if RNA-Seq appears in the assay type filter values.
+				$.get(fewiurl + 'gxd/facet/assayType?' + getQueryStringWithFilters(),
+					function(x) {
+						try {
+							if (x.resultFacets.indexOf('RNA-Seq') >= 0) {
+								$('#heatMapLink').removeClass('heatMapLinkHidden'); 
+							} else {
+								$('#heatMapLink').addClass('heatMapLinkHidden');
+							}
+						} catch (e) {
+							console.log('Caught error (' + e + ') : ' + x);
+						}
+					}
+				);
 			}
 		}
 		else if(o.tId==assaysRq.tId) YAHOO.util.Dom.get("totalAssaysCount").innerHTML = commaDelimit(o.responseText);
@@ -1801,5 +1803,23 @@ var popupHeatMap = function() {
 	var page = fewiurl + 'gxd/rnaSeqHeatMap?';
 	var parameters = getQueryStringWithFilters();
 	
-	window.open(page + parameters, '_blank', 'width=1200,height=800,resizable=yes,scrollbars=yes,alwaysRaised=yes');
+	// We support the heat map display only if the number of RNA-Seq results is below a certain threshold.  If the
+	// number of all results is below it, then we can just go ahead.  If the number of all results is above it, then
+	// we need to check on the count of only RNA-Seq ones.
+	var maxResultsForHeatMap = 10000000;
+	
+	if (resultsCount > maxResultsForHeatMap) {
+		var rnaSeqOnly = parameters.replace(/assayType[^&]+&/g, '').replace(/&$/, '') + '&assayTypeFilter=RNA-Seq';
+		
+		$.get(fewiurl + 'gxd/results/totalCount?' + rnaSeqOnly, function(resultCount) {
+			if (resultCount <= maxResultsForHeatMap){
+				window.open(page + parameters, '_blank', 'width=1200,height=800,resizable=yes,scrollbars=yes,alwaysRaised=yes');
+			} else {
+//				alert('Too many RNA-Seq results for heat map.  Please use filters to bring under ' + maxResultsForHeatMap);
+				$('#heatMapLimit').dialog();
+			}
+		});
+	} else {
+		window.open(page + parameters, '_blank', 'width=1200,height=800,resizable=yes,scrollbars=yes,alwaysRaised=yes');
+	}
 };

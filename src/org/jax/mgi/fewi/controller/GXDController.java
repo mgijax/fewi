@@ -1295,7 +1295,7 @@ public class GXDController {
 		populateMarkerIDs(session, query);
 		int heatMapPageSize = 250000;
 
-		logger.info(" - initial RAM: " + String.format("%,d", new Long(Runtime.getRuntime().freeMemory())));
+		logger.debug(" - initial RAM: " + String.format("%,d", new Long(Runtime.getRuntime().freeMemory())));
 
 		// repackage them into the JSON object
 		GxdRnaSeqHeatMapData dataPacket = new GxdRnaSeqHeatMapData();
@@ -1318,9 +1318,8 @@ public class GXDController {
 			if ((results == null) || (results.size() == 0)) {
 				done = true;
 			} else {
-				logger.info("Got heat map cells (start " + start + "): " + results.size());
+				logger.debug("Got heat map cells (start " + start + "): " + results.size());
 				dataPacket.addResults(results);
-				logger.info(" - added to dataPacket");
 				start = start + heatMapPageSize;
 
 				if (results.size() < heatMapPageSize) {
@@ -1331,10 +1330,10 @@ public class GXDController {
 		
 		Map<String,SolrGxdRnaSeqConsolidatedSample> rnaSeqSamples = getRnaSeqSamples(dataPacket.getSampleIDs());
 
-		logger.info("Analyzing data");
+		logger.debug("Analyzing data");
 		dataPacket.analyzeData(rnaSeqSamples);
-		logger.info(" - final RAM: " + String.format("%,d", new Long(Runtime.getRuntime().freeMemory())));
-		logger.info(" - done");
+		logger.debug(" - final RAM: " + String.format("%,d", new Long(Runtime.getRuntime().freeMemory())));
+		logger.debug(" - done");
 		return dataPacket;
 	}
 

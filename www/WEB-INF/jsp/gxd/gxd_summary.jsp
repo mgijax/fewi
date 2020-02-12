@@ -1,4 +1,4 @@
-
+<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/gxd/gxd_summary.css" />
 
 <style>
@@ -175,6 +175,10 @@
 
 <div id="geneLegendPopupPanel" style="visibility: hidden;" class="facetFilter">
   <jsp:include page="gxd_legend_popup.jsp"></jsp:include>
+</div>
+
+<div id="heatMapLimit" style="display:none" title="Too many results">
+<p>Too many RNA-Seq results for the heat map.  Please refine your search to bring the RNA-Seq total under 10,000,000.</p>
 </div>
 
 <!-- Patterns for matrix sash icon -->

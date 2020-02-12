@@ -280,7 +280,7 @@ public class GxdRnaSeqHeatMapData {
 						avgQnTpm = Float.parseFloat(qn);
 						rows.get(mIndex).set(sIndex, avgQnTpm);
 					} catch (Exception e) {
-						logger.info("Odd Avg QN TPM: " + qn);
+						if (qn != null) logger.info("Odd Avg QN TPM: " + qn);
 					}
 				}
 			}
