@@ -21,6 +21,7 @@ import mgi.frontend.datamodel.RelatedTermBackward;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.VocabTerm;
+import mgi.frontend.datamodel.VocabTermEmapInfo;
 import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 
 import org.apache.commons.lang.StringUtils;
@@ -1167,18 +1168,71 @@ public class GXDController {
 			detectedText = "Assayed";
 		}
 		
-		// structure
+		// structure (preference:  structure ID filter > structure ID > structure key > structure text field)
 		String structure = query.getStructure();
-		sb = new StringBuffer();
-		sb.append(FormatHelper.bold(detectedText));
-		sb.append(" in ");
-		if ((structure != null) && !"".equals(structure)) {
-			sb.append(FormatHelper.bold(structure));
-			sb.append(FormatHelper.smallGrey(" includes substructures"));
-		} else {
-			sb.append(FormatHelper.bold("any structures"));
+		List<String> structureFilterID = query.getStructureIDFilter();
+		String structureKey = query.getStructureKey();
+		String structureID = query.getStructureID();
+		String structureOut = null;					// the structure string we want to report to the user
+		
+		if ((structureFilterID != null) && (structureFilterID.size() > 0)) {
+			// need to handle a list of terms for this one -- collect, sort, report 
+			List<VocabTerm> vocabTerms = vocabFinder.getTermsByID(structureFilterID);
+
+			if ((vocabTerms != null) && (vocabTerms.size() > 0)) {
+				List<String> terms = new ArrayList<String>();
+				for (VocabTerm term : vocabTerms) {
+					terms.add(getTermText(term));
+				}
+				Collections.sort(terms);	
+
+				boolean isFirst = true;
+				StringBuffer tb = new StringBuffer();
+				for (String t : terms) {
+					if (!isFirst) {
+						tb.append(" or ");
+					} else {
+						isFirst = false;
+					}
+					tb.append(FormatHelper.bold(t));
+				}
+				structureOut = tb.toString(); 
+			} else {
+				structureOut = "(unknown structure)";
+			}
+
+		} else if ((structureID != null) && (!"".equals(structureID))) {
+			List<VocabTerm> vocabTerms = vocabFinder.getTermByID(structureID);
+			if ((vocabTerms != null) && (vocabTerms.size() > 0)) {
+				structureOut = FormatHelper.bold(getTermText(vocabTerms.get(0)));
+			} else {
+				structureOut = "(unknown structure)";
+			}
+			
+		} else if ((structureKey != null) && (!"".equals(structureKey))) {
+			VocabTerm structureTerm = vocabFinder.getTermByKey(structureKey);
+			if ((structureTerm != null) && (!"".equals(structureTerm))) {
+				structureOut = FormatHelper.bold(getTermText(structureTerm));
+			} else {
+				structureOut = "(unknown structure)";
+			}
+			
+		} else if ((structure != null) && (!"".equals(structure))) {
+			structureOut = structure;
 		}
-		lines.add(sb.toString());
+		
+		if (structureOut != null) {
+			sb = new StringBuffer();
+			sb.append(FormatHelper.bold(detectedText));
+			sb.append(" in ");
+			if ((structureOut != null) && !"".equals(structureOut)) {
+				sb.append(FormatHelper.bold(structureOut));
+				sb.append(FormatHelper.smallGrey(" includes substructures"));
+			} else {
+				sb.append(FormatHelper.bold("any structures"));
+			}
+			lines.add(sb.toString());
+		}
 		
 		// anatomical system
 		if ((query.getSystemFilter() != null) && (query.getSystemFilter().size() > 0)) {
@@ -1251,6 +1305,8 @@ public class GXDController {
 		// RNA-Seq (TPM) level
 		if ((query.getTmpLevelFilter() != null) && (query.getTmpLevelFilter().size() > 0)) {
 			sb = new StringBuffer();
+			sb.append("TPM Level: ");
+
 			boolean isFirst = true;
 			for (String level : query.getTmpLevelFilter()) {
 				if (!isFirst) {
@@ -1266,6 +1322,28 @@ public class GXDController {
 		return StringUtils.join(lines, "<br/>");
 	}
 	
+	private String getTermText (VocabTerm t) {
+		if (t == null) return "";
+		VocabTermEmapInfo emap = t.getEmapInfo();
+		StringBuffer sb = new StringBuffer();
+		sb.append(t.getTerm());
+
+		if (emap != null) {
+			if (emap.getStage() != null) {
+				sb.append(" TS");
+				sb.append(emap.getStage());
+			} else if (emap.getStartStage() != null) {
+				sb.append(" TS");
+				sb.append(emap.getStartStage());
+				if (emap.getEndStage() != null) {
+					sb.append("-TS");
+					sb.append(emap.getEndStage());
+				}
+			}
+		} 
+		return sb.toString();
+	}
+
 	// helper for getRnaSeqHeatMapYSF -- adds needed info to lines for the given filter (if it has values)
 	private void addAnnotationFilter(List<String> lines, String filterName, List<String> terms) {
 		if ((terms != null) && (terms.size() > 0)) {
