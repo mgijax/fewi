@@ -108,15 +108,29 @@ public class GxdRnaSeqHeatMapData {
 		for (String csKey : this.sampleIDs.keySet()) {
 			SolrGxdRnaSeqConsolidatedSample cs = consolidatedSamples.get(csKey);
 			Sample s = new Sample();
-			s.age = cs.getAge();
-			s.alleles = cs.getAlleles();
-			s.bioreplicateSetID = csKey;
-			s.expID = cs.getAssayMgiID();
-			s.sex = cs.getSex();
-			s.stage = cs.getTheilerStage();
-			s.strain = cs.getStrain();
-			s.structure = cs.getStructure();
-			s.index = this.sampleIDs.get(csKey);
+			
+			if (cs != null) {
+				s.age = cs.getAge();
+				s.alleles = cs.getAlleles();
+				s.bioreplicateSetID = csKey;
+				s.expID = cs.getAssayMgiID();
+				s.sex = cs.getSex();
+				s.stage = cs.getTheilerStage();
+				s.strain = cs.getStrain();
+				s.structure = cs.getStructure();
+				s.index = this.sampleIDs.get(csKey);
+			} else {
+				// should not happen
+				s.age = "";
+				s.alleles = "";
+				s.bioreplicateSetID = csKey;
+				s.expID = "";
+				s.sex = "";
+				s.stage = 0;
+				s.strain = "";
+				s.structure = "Missing sample info";
+				s.index = this.sampleIDs.get(csKey);
+			}
 			this.samples.set(s.index, s);
 		}
 	}
