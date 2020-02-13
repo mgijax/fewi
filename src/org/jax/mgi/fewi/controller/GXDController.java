@@ -1091,14 +1091,87 @@ public class GXDController {
 		// temporary variable for composing each line
 		StringBuffer sb = null;
 		
-		// gene nomenclature
-		String nomenclature = query.getNomenclature();
-		if ((nomenclature != null) && !"".equals(nomenclature)) {
+		// other gene-related fields (various ID and symbol fields)
+		List<String> idsToDo = new ArrayList<String>();
+		List<String> symbolsToDo = new ArrayList<String>();
+		
+		if ((query.getMarkerIDs() != null) && (query.getMarkerIDs().size() > 0)) {
+			idsToDo.addAll(query.getMarkerIDs());
+		}
+		if ((query.getMarkerMgiId() != null) && (!"".equals(query.getMarkerMgiId()))) {
+			idsToDo.add(query.getMarkerMgiId());
+		}
+		
+		if (idsToDo.size() > 0) {
+			for (String markerID : idsToDo) {
+				List<Marker> markersByID = markerFinder.getMarkerByPrimaryId(markerID);
+				if ((markersByID != null) && (markersByID.size() > 0)) {
+					for (Marker m : markersByID) {
+						if (!symbolsToDo.contains(m.getSymbol())) {
+							symbolsToDo.add(m.getSymbol());
+						}
+					}
+				}
+			}
+		}
+		
+		if ((query.getMarkerSymbol() != null) && (!"".equals(query.getMarkerSymbol()))) {
+			if (!symbolsToDo.contains(query.getMarkerSymbol())) {
+				symbolsToDo.add(query.getMarkerSymbol());
+			}
+		}
+		if ((query.getMatrixMarkerSymbol() != null) && (!"".equals(query.getMatrixMarkerSymbol()))) {
+			if (!symbolsToDo.contains(query.getMatrixMarkerSymbol())) {
+				symbolsToDo.add(query.getMatrixMarkerSymbol());
+			}
+		}
+		List<String> markerSymbols = query.getMarkerSymbolFilter();
+		if ((markerSymbols != null) && (markerSymbols.size() > 0)) {
+			for (String symbol : markerSymbols) {
+				if (!symbolsToDo.contains(symbol)) {
+					symbolsToDo.add(symbol);
+				}
+			}
+		}
+		
+		if (symbolsToDo.size() > 0) {
+			Collections.sort(symbolsToDo);
 			sb = new StringBuffer();
-			sb.append("Gene nomenclature: ");
-			sb.append(FormatHelper.bold(nomenclature));
-			sb.append(FormatHelper.smallGrey(" current symbol, name, synonyms"));
+			sb.append("Gene(s): ");
+			boolean isFirst = true;
+			for (String symbol : symbolsToDo) {
+				if (!isFirst) {
+					sb.append(" or ");
+				} else {
+					isFirst = false;
+				}
+				sb.append(FormatHelper.bold(symbol));
+			}
 			lines.add(sb.toString());
+		}
+		
+		// gene nomenclature field (if other fields didn't preclude it)
+		if (symbolsToDo.size() == 0) {
+			String nomenclature = query.getNomenclature();
+			if ((nomenclature != null) && !"".equals(nomenclature)) {
+				sb = new StringBuffer();
+				sb.append("Gene nomenclature: ");
+				sb.append(FormatHelper.bold(nomenclature));
+				sb.append(FormatHelper.smallGrey(" current symbol, name, synonyms"));
+				lines.add(sb.toString());
+			}
+		}
+		
+		// allele
+		String alleleID = query.getAlleleId();
+		if ((alleleID != null) && (!"".equals(alleleID))) {
+			List<Allele> alleleList = alleleFinder.getAlleleByID(alleleID);
+			if ((alleleList != null) && (alleleList.size() > 0)) {
+				sb = new StringBuffer();
+				sb.append("Allele: ");
+				sb.append(FormatHelper.bold(FormatHelper.superscript(alleleList.get(0).getSymbol())));
+				lines.add(sb.toString());
+			}
 		}
 		
 		// gene type filter
@@ -1232,6 +1305,30 @@ public class GXDController {
 				sb.append(FormatHelper.bold("any structures"));
 			}
 			lines.add(sb.toString());
+		}
+		
+		// experiment (preference: filter > single ID)
+		String exptID = query.getExperimentID();
+		List<String> exptIDs = query.getExperimentFilter();
+		if ((exptIDs != null) && (exptIDs.size() > 0)) {
+			sb = new StringBuffer();
+			sb.append("Experiment: ");
+			boolean isFirst = true;
+			for (String experimentID : exptIDs) {
+				if (!isFirst) {
+					sb.append(" or ");
+				} else {
+					isFirst = false;
+				}
+				sb.append(FormatHelper.bold(experimentID));
+			}
+			structureOut = sb.toString();
+
+		} else if ((exptID != null) && (!"".equals(exptID))) {
+			sb = new StringBuffer();
+			sb.append("Experiment: ");
+			sb.append(FormatHelper.bold(exptID));
+			structureOut = sb.toString();
 		}
 		
 		// anatomical system
