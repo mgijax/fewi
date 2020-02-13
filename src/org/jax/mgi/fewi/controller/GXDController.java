@@ -1360,7 +1360,7 @@ public class GXDController {
 			// skip display in only default TS of zero
 			if ((query.getTheilerStage().size() > 1) || (query.getTheilerStage().get(0) != 0)) {
 				sb = new StringBuffer();
-				sb.append("at Theiler Stage(s): ");
+				sb.append("at developmental stage(s): ");
 				boolean isFirst = true;
 				for (Integer ts : query.getTheilerStage()) {
 					if (!isFirst) {
@@ -1368,7 +1368,7 @@ public class GXDController {
 					} else {
 						isFirst = false;
 					}
-					sb.append(FormatHelper.bold("TS" + ts.toString()));
+					sb.append(FormatHelper.bold("TS:" + ts.toString()));
 				}
 				lines.add(sb.toString());
 			}
