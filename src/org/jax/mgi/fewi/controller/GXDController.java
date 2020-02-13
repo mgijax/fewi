@@ -1475,7 +1475,11 @@ public class GXDController {
 		// repackage them into the JSON object
 		GxdRnaSeqHeatMapData dataPacket = new GxdRnaSeqHeatMapData();
 
+		List<String> assayType = new ArrayList<String>();
+		assayType.add("RNA-Seq");
+		
 		SearchParams params = new SearchParams();
+		query.setAssayType(assayType);
 		params.setFilter(parseGxdQueryForm(query));
 	
 		Paginator page = new Paginator(heatMapPageSize);
