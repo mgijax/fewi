@@ -1322,13 +1322,13 @@ public class GXDController {
 				}
 				sb.append(FormatHelper.bold(experimentID));
 			}
-			structureOut = sb.toString();
+			lines.add(sb.toString());
 
 		} else if ((exptID != null) && (!"".equals(exptID))) {
 			sb = new StringBuffer();
 			sb.append("Experiment: ");
 			sb.append(FormatHelper.bold(exptID));
-			structureOut = sb.toString();
+			lines.add(sb.toString());
 		}
 		
 		// anatomical system
