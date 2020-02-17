@@ -1815,7 +1815,6 @@ var popupHeatMap = function() {
 			if (resultCount <= maxResultsForHeatMap){
 				window.open(page + parameters, '_blank', 'width=1200,height=800,resizable=yes,scrollbars=yes,alwaysRaised=yes');
 			} else {
-//				alert('Too many RNA-Seq results for heat map.  Please use filters to bring under ' + maxResultsForHeatMap);
 				$('#heatMapLimit').dialog();
 			}
 		});
