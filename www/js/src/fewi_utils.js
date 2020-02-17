@@ -494,3 +494,12 @@ window.FewiUtil = new function()
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(?:\d{3})+(?!\d))/g, ",");
 }
+
+// return a string of pseudo-random letters and numbers that is 'size' characters long
+function mgiRandomString(size) {
+	var s = '';
+	while (s.length < size) {
+		s = s + Math.random().toString(36).substring(2);
+	}
+	return s.substring(0,size);
+}

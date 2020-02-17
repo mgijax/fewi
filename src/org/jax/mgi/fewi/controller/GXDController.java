@@ -92,6 +92,7 @@ import org.jax.mgi.fewi.util.FewiUtil;
 import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.QueryParser;
+import org.jax.mgi.fewi.util.SessionMonitor;
 import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
@@ -1460,11 +1461,23 @@ public class GXDController {
 		}
 	}
 	
+	// Get the String of status info for the given RNA-Seq heat map identified by sessionKey.
+	@RequestMapping("/rnaSeqHeatMap/status")
+	public @ResponseBody String gxdRnaSeqHeatMapStatus(
+			@RequestParam(value="sessionKey") String sessionKey) {
+
+		logger.info("Checking on session: " + sessionKey);
+		return SessionMonitor.getSharedMonitor().getStatus(sessionKey);
+	}
+	
+	// Get the packet of JSON data for an RNA-Seq heat map.  sessionKey is passed in from the user's browser
+	// to uniquely identify the session.
 	@RequestMapping("/rnaSeqHeatMap/json")
 	public @ResponseBody GxdRnaSeqHeatMapData gxdRnaSeqHeatMapJson(
 			HttpSession session,
 			HttpServletRequest request,
-			@ModelAttribute GxdQueryForm query
+			@ModelAttribute GxdQueryForm query,
+			@RequestParam(value="sessionKey") String sessionKey
 			) throws Exception {
 		logger.info("gxdRnaSeqHeatMapJson() started");
 		populateMarkerIDs(session, query);
@@ -1486,6 +1499,10 @@ public class GXDController {
 		int start = 0;
 		boolean done = false;
 		
+		SessionMonitor sm = SessionMonitor.getSharedMonitor();
+		sm.startSession(sessionKey);
+		logger.debug("Started session: " + sessionKey);
+
 		while (!done) {
 			page.setStartIndex(start);
 			params.setPaginator(page);
@@ -1497,20 +1514,23 @@ public class GXDController {
 			if ((results == null) || (results.size() == 0)) {
 				done = true;
 			} else {
-				logger.debug("Got heat map cells (start " + start + "): " + results.size());
+				logger.debug("Got heat map cells (start " + start + " of " + searchResults.getTotalCount() + "): " + results.size());
 				dataPacket.addResults(results);
 				start = start + heatMapPageSize;
+				sm.setStatus(sessionKey, "Server has found " + results.size() + " of " + searchResults.getTotalCount() + " results");
 
 				if (results.size() < heatMapPageSize) {
 					done = true;
 				}
 			}
 		}
-		
+		sm.setStatus(sessionKey, "Collating results...");
 		Map<String,SolrGxdRnaSeqConsolidatedSample> rnaSeqSamples = getRnaSeqSamples(dataPacket.getSampleIDs());
 
 		logger.debug("Analyzing data");
 		dataPacket.analyzeData(rnaSeqSamples);
+// Do not explicitly end the session, or the user can't get final updates.
+//		sm.endSession(sessionKey);
 		logger.debug(" - final RAM: " + String.format("%,d", new Long(Runtime.getRuntime().freeMemory())));
 		logger.debug(" - done");
 		return dataPacket;

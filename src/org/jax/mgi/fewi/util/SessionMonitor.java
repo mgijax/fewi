@@ -3,6 +3,8 @@ package org.jax.mgi.fewi.util;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /* Is: a container for tracking user sessions, both so the fewi can determine if a user is still
  *	waiting for results (or has quit) and so status updates can be delivered to the user.
@@ -10,6 +12,7 @@ import java.util.Set;
 public class SessionMonitor {
 	//--- static (class variables) ---
 	private static SessionMonitor sharedMonitor = new SessionMonitor();
+	private final Logger logger = LoggerFactory.getLogger(SessionMonitor.class);
 	
 	// maximum number of milliseconds since the last recorded event to still consider that session open
 	private static long maxAge = 10 * 60 * 1000;
@@ -28,8 +31,10 @@ public class SessionMonitor {
 	public boolean isActive(String sessionID) {
 		if (this.sessions.containsKey(sessionID)) {
 			this.sessions.get(sessionID).timestamp();
+			logger.debug("Found sessionID: " + sessionID);
 			return true;
 		}
+		logger.debug("Unknown sessionID: " + sessionID);
 		return false;
 	}
 	
@@ -53,8 +58,10 @@ public class SessionMonitor {
 	// get the current status message associated with the given session ID
 	public String getStatus(String sessionID) {
 		if (!this.sessions.containsKey(sessionID)) {
-			return "Inactive";
+			logger.debug("Missing ID: " + sessionID);
+			return "Waiting...";
 		} 
+		logger.debug("Returning status for ID: " + sessionID + ", " + this.sessions.get(sessionID).status);
 		this.sessions.get(sessionID).timestamp();
 		return this.sessions.get(sessionID).status;
 	}
@@ -62,6 +69,7 @@ public class SessionMonitor {
 	// set a new status message for the given session ID (if it's still active)
 	public void setStatus(String sessionID, String message) {
 		if (this.isActive(sessionID)) {
+			logger.debug("Set message: " + message);
 			this.sessions.get(sessionID).status = message;
 		}
 	}

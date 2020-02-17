@@ -67,6 +67,9 @@
   #loadingMessage {
   	text-align: center;
   }
+  #statusUpdates {
+  	text-align: center;
+  }
 </style>
 
 
@@ -104,6 +107,8 @@
 <div id="heatmapWrapper">
 	<div id="loadingMessage">
 		<img src='/fewi/mgi/assets/images/loading.gif' height='24' width='24'> Loading Morpheus libraries...
+	</div>
+	<div id="statusUpdates">
 	</div>
 </div>
 
@@ -150,6 +155,9 @@ var colorMap = [
 		}
 ];
 
+// unique identifier for this particular session, so we can get updates from the server
+var sessionKey = mgiRandomString(30);
+
 function buildHeatMap(json) {
 	  $('#heatmapWrapper').empty();
 
@@ -184,14 +192,35 @@ function showPopup() {
 	} );
 }
 
+var statusUrl = fewiurl + '/gxd/rnaSeqHeatMap/status?sessionKey=' + sessionKey;
+function retrieveUpdate(ms) {
+	$.get(statusUrl, function(data) {
+		if ($('#statusUpdates').length == 1) {
+			$('#statusUpdates').empty();
+			$('#statusUpdates').text(data);
+			scheduleUpdate(ms);
+		}
+	}).fail(function() {
+			$('#statusUpdates').empty();
+			$('#statusUpdates').text('-');
+		});
+}
+
+function scheduleUpdate(ms) {
+	if ($('#statusUpdates').length > 0) {
+		setTimeout(function() { retrieveUpdate(ms); }, ms);
+	}
+}
+
 $('#loadingMessage').empty();
 $('#loadingMessage').html("<img src='/fewi/mgi/assets/images/loading.gif' height='24' width='24'> Loading data from GXD...");
 
-var url = fewiurl + '/gxd/rnaSeqHeatMap/json?' + '${queryString}';
+var url = fewiurl + '/gxd/rnaSeqHeatMap/json?' + '${queryString}' + '&sessionKey=' + sessionKey;
 $.get(url, function(data) { buildHeatMap(data); })
 	.fail(function() {
 		$('#loadingMessage').empty();
 		$('#loadingMessage').text('Retrieval error. Please write User Support (<a href="${configBean.MGIHOME_URL}"/support/mgi_inbox.shtml" target="_blank">mgi-help@jax.org</a>) with your search parameters.');
 	});
+scheduleUpdate(1000);
 </script>
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
