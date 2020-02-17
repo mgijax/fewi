@@ -97,7 +97,7 @@ public class SessionMonitor {
 	//--- private inner class ---
 	private class SessionInfo {
 		long lastActive = System.currentTimeMillis();
-		String status = "Registered session...";
+		String status = "Waiting for data...";
 		
 		public void timestamp() {
 			this.lastActive = System.currentTimeMillis();

@@ -794,5 +794,24 @@ public class FormatHelper {
 	public static String smallGrey(String s) {
 		return "<span class='smallGrey'>" + s + "</span>";
 	}
+	
+	// return a String for a progress meter showing the percentage done given the two numbers given
+	public static String progressMeter(long numberDone, long totalNumber) {
+		if (totalNumber == 0) return "-";
+		
+		long pct = Math.round((100.0 * numberDone) / totalNumber);
+		StringBuffer sb = new StringBuffer();
+		sb.append("<div id='progressMeter' style='border: 1px solid black; width:200px; height:20px; margin-top: 5px;' title='" + String.format("%,d", numberDone) + " of " + String.format("%,d", totalNumber) + "'>");
+		sb.append("<div id='shadedPart' style='height: 100%; background-color: darkblue; float:left; color: white; width: " + pct + "%'>");
+		if (pct > 15) {
+			sb.append(pct + "%");
+			sb.append("</div><!-- shadedPart -->");
+		} else {
+			sb.append("</div><!-- shadedPart -->");
+			sb.append(pct + "%");
+		}
+		sb.append("</div><!-- progressMeter -->");
+		return sb.toString();
+	}
 } // end of class FormatHelper
 

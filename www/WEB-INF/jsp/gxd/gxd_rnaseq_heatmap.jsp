@@ -198,12 +198,14 @@ function retrieveUpdate(ms) {
 	$.get(statusUrl, function(data) {
 		if ($('#statusUpdates').length == 1) {
 			$('#statusUpdates').empty();
-			$('#statusUpdates').text(data);
+			$('#statusUpdates').html(data);
 			scheduleUpdate(ms);
+			var margin = ($(window).width() - $('#progressMeter').width()) / 2;
+			$('#progressMeter').css('margin-left', margin + 'px');
 		}
 	}).fail(function() {
 			$('#statusUpdates').empty();
-			$('#statusUpdates').text('-');
+			$('#statusUpdates').text('Failed to get status update');
 		});
 }
 

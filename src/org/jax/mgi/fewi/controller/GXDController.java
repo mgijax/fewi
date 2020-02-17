@@ -1466,7 +1466,7 @@ public class GXDController {
 	public @ResponseBody String gxdRnaSeqHeatMapStatus(
 			@RequestParam(value="sessionKey") String sessionKey) {
 
-		logger.info("Checking on session: " + sessionKey);
+		logger.debug("Checking on session: " + sessionKey);
 		return SessionMonitor.getSharedMonitor().getStatus(sessionKey);
 	}
 	
@@ -1517,7 +1517,7 @@ public class GXDController {
 				logger.debug("Got heat map cells (start " + start + " of " + searchResults.getTotalCount() + "): " + results.size());
 				dataPacket.addResults(results);
 				start = start + heatMapPageSize;
-				sm.setStatus(sessionKey, "Server has found " + results.size() + " of " + searchResults.getTotalCount() + " results");
+				sm.setStatus(sessionKey, FormatHelper.progressMeter(start, searchResults.getTotalCount()));
 
 				if (results.size() < heatMapPageSize) {
 					done = true;
