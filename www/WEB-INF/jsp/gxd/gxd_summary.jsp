@@ -178,7 +178,7 @@
 </div>
 
 <div id="heatMapLimit" style="display:none" title="Too many results">
-<p>Too many RNA-Seq results for export to heat map. Please refine your search to bring the RNA-Seq total under 10,000,000.</p>
+<p>Too many RNA-Seq results for export to heat map. Please refine your search to bring total RNA-Seq results under 10,000,000.</p>
 </div>
 
 <!-- Patterns for matrix sash icon -->
