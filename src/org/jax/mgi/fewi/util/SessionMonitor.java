@@ -27,14 +27,16 @@ public class SessionMonitor {
 
 	//--- public instance methods ---
 	
-	// returns true if the given session is still active, false if not
-	public boolean isActive(String sessionID) {
+	// returns true if user has checked for updates within 'ms' milliseconds, false if not
+	public boolean isListening(String sessionID, long ms) {
+		// Has the user issued a status request within 'ms' milliseconds?
 		if (this.sessions.containsKey(sessionID)) {
-			this.sessions.get(sessionID).timestamp();
-			logger.debug("Found sessionID: " + sessionID);
-			return true;
+			if ((System.currentTimeMillis() - this.sessions.get(sessionID).lastActive) <= ms) {
+				return true;
+			} else {
+				this.sessions.remove(sessionID);
+			}
 		}
-		logger.debug("Unknown sessionID: " + sessionID);
 		return false;
 	}
 	
@@ -66,9 +68,9 @@ public class SessionMonitor {
 		return this.sessions.get(sessionID).status;
 	}
 	
-	// set a new status message for the given session ID (if it's still active)
+	// set a new status message for the given session ID
 	public void setStatus(String sessionID, String message) {
-		if (this.isActive(sessionID)) {
+		if (this.sessions.containsKey(sessionID)) {
 			logger.debug("Set message: " + message);
 			this.sessions.get(sessionID).status = message;
 		}

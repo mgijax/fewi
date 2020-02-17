@@ -224,6 +224,8 @@ $.get(url, function(data) { buildHeatMap(data); })
 		$('#loadingMessage').empty();
 		$('#loadingMessage').text('Retrieval error. Please write User Support (<a href="${configBean.MGIHOME_URL}"/support/mgi_inbox.shtml" target="_blank">mgi-help@jax.org</a>) with your search parameters.');
 	});
-scheduleUpdate(1000);
+
+// Request status updates every 2 seconds.
+scheduleUpdate(2000);
 </script>
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

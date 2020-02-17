@@ -1469,7 +1469,7 @@ public class GXDController {
 		logger.debug("Checking on session: " + sessionKey);
 		return SessionMonitor.getSharedMonitor().getStatus(sessionKey);
 	}
-	
+
 	// Get the packet of JSON data for an RNA-Seq heat map.  sessionKey is passed in from the user's browser
 	// to uniquely identify the session.
 	@RequestMapping("/rnaSeqHeatMap/json")
@@ -1522,6 +1522,12 @@ public class GXDController {
 				if (results.size() < heatMapPageSize) {
 					done = true;
 				}
+			}
+			
+			// If we haven't had a status request within 10 seconds, assume the user disappeared.
+			if (!sm.isListening(sessionKey, 10000)) {
+				logger.info("User for heat map session disappeared; cancelling " + sessionKey);
+				return null;
 			}
 		}
 		sm.setStatus(sessionKey, "Collating results...");
