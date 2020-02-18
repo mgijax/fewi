@@ -335,6 +335,7 @@ var gs_samplePopup = function(experimentID) {
 		return;
 	}
     var sampleUrl = fewiUrl + 'gxd/htexp_index/samples/' + experimentID + '?' + querystring;
+    ga_logEvent('GXD RNA-Seq and Microarray Experiment Summary', 'Clicked to View Sample Data');
     window.open(sampleUrl,'sampleWindow-' + experimentID,'width=1000,height=400,resizable=yes,scrollbars=yes,alwaysRaised=yes');
 };
 
