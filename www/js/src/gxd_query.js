@@ -817,8 +817,8 @@ function closeSummaryControl()
 };
 
 // Instead of submitting the form, do an AJAX request
-var interceptSubmit = function(e, formName, formObj) {
-	ga_logEvent("GXD Query Form Submission", formName);
+var interceptSubmit = function(e) {
+	ga_logEvent("GXD Query Form Submission", currentQF);
 	YAHOO.util.Event.preventDefault(e);
 
 	if (!runValidation()){
@@ -834,7 +834,7 @@ var interceptSubmit = function(e, formName, formObj) {
 		}
 
 		// Set the global querystring to the form values
-		window.querystring = getQueryString(formObj);
+		window.querystring = getQueryString(this);
 
 		newQueryState = true;
 		if(typeof resultsTabs != 'undefined')
@@ -852,14 +852,19 @@ var interceptSubmit = function(e, formName, formObj) {
 			// convert spaces to escaped version before submission
 			YAHOO.util.Dom.get('ids').value = YAHOO.util.Dom.get('ids').value.trimRight();
 			//YAHOO.util.Dom.get('ids').value = YAHOO.util.Dom.get('ids').value.replace(/ /g, '%20');
+		} else if (currentQF == 'standard') {
+			// If this is a search that includes RNA-Seq data, log it.
+			if (window.querystring.indexOf('assayType=RNA-Seq') >= 0) {
+				ga_logEvent('GXD Query Form: Parameters', 'Included RNA-Seq data');
+			}
 		}
 		resetYSF();
 	}
 };
 
-YAHOO.util.Event.addListener("gxdQueryForm", "submit", function(e) { interceptSubmit(e, 'Standard', this); });
-YAHOO.util.Event.addListener("gxdBatchQueryForm1", "submit", function(e) { interceptSubmit(e, 'Batch', this); });
-YAHOO.util.Event.addListener("gxdDifferentialQueryForm3","submit", function(e) { interceptSubmit(e, 'Differential', this); });
+YAHOO.util.Event.addListener("gxdQueryForm", "submit", interceptSubmit);
+YAHOO.util.Event.addListener("gxdBatchQueryForm1", "submit", interceptSubmit);
+YAHOO.util.Event.addListener("gxdDifferentialQueryForm3","submit", interceptSubmit);
 
 /*
  * The following functions handle form validation/restriction
