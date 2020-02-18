@@ -817,7 +817,8 @@ function closeSummaryControl()
 };
 
 // Instead of submitting the form, do an AJAX request
-var interceptSubmit = function(e) {
+var interceptSubmit = function(e, formName, formObj) {
+	ga_logEvent("GXD Query Form Submission", formName);
 	YAHOO.util.Event.preventDefault(e);
 
 	if (!runValidation()){
@@ -833,7 +834,7 @@ var interceptSubmit = function(e) {
 		}
 
 		// Set the global querystring to the form values
-		window.querystring = getQueryString(this);
+		window.querystring = getQueryString(formObj);
 
 		newQueryState = true;
 		if(typeof resultsTabs != 'undefined')
@@ -856,9 +857,9 @@ var interceptSubmit = function(e) {
 	}
 };
 
-YAHOO.util.Event.addListener("gxdQueryForm", "submit", interceptSubmit);
-YAHOO.util.Event.addListener("gxdBatchQueryForm1", "submit", interceptSubmit);
-YAHOO.util.Event.addListener("gxdDifferentialQueryForm3","submit",interceptSubmit);
+YAHOO.util.Event.addListener("gxdQueryForm", "submit", function(e) { interceptSubmit(e, 'Standard', this); });
+YAHOO.util.Event.addListener("gxdBatchQueryForm1", "submit", function(e) { interceptSubmit(e, 'Batch', this); });
+YAHOO.util.Event.addListener("gxdDifferentialQueryForm3","submit", function(e) { interceptSubmit(e, 'Differential', this); });
 
 /*
  * The following functions handle form validation/restriction
