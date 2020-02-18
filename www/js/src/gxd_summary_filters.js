@@ -339,6 +339,7 @@ var filterByExperiment = function(exptID) {
 	}
 	if (!found) {
 		facets['experimentFilter'] = [ exptID ];
+		ga_logEvent("GXD Summary Filter", 'experimentFilter');
 	}
 	submitFacets(facets);
 }
@@ -372,6 +373,7 @@ var buildFacetDialog = function() {
 		for (i in selections) {
 			gsfLog("facets[" + i + "] = " + selections[i]);
 			facets[i] = selections[i];
+			ga_logEvent("GXD Summary Filter", i);
 		}
 		submitFacets(facets);
 		refreshTabCounts();
