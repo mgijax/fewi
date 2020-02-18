@@ -350,6 +350,21 @@ var gs_updateRequest = function() {
 	instantiatedPaginator = false;
 	updateResultsDiv(0, 50);
 }
+
+// callback function: should be wired into the filters.js module as a callback.  This will track which filters are
+// applied and log a GA event when a new one has been added.
+var previousFilters = {};
+var gs_logFilters = function() {
+	var newFilters = filters.urlToHash(filters.getUrlFragment().substring(1));
+	
+	for (var field in newFilters) {
+		if (!(field in previousFilters)) {
+			ga_logEvent("GXD RNA-Seq and Microarray Experiment Search: added filter", field);
+		}
+	}
+	previousFilters = newFilters; 
+}
+
 /*** to execute on being loaded ***/
 
 updateAgeStageTab();

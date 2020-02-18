@@ -147,6 +147,7 @@ function initializeFilterLibrary(delay) {
 		filters.addFilter('variableFilter', 'Variable', 'variableFilter', 'variableFilter', fewiurl + 'gxd/htexp_index/facet/variable');
 		filters.addFilter('studyTypeFilter', 'Study Type', 'studyTypeFilter', 'studyTypeFilter', fewiurl + 'gxd/htexp_index/facet/studyType');
 		filters.registerCallback("htCallback", gs_updateRequest);
+		filters.registerCallback("htCallback2", gs_logFilters);
 		filters.setRemovalDivStyle('block');
 	} else {
 		setTimeout(function() { initializeFilterLibrary(delay) }, delay);
