@@ -68,6 +68,11 @@ var flipColumn = function(key) {
 
 var flipOptionalColumns = function(dontMove) {
 	hideOptionalColumns = !hideOptionalColumns;
+	if (hideOptionalColumns) {
+		ga_logEvent("GXD Summary", "Hid Additional Sample Data");
+	} else {
+		ga_logEvent("GXD Summary", "Showed Additional Sample Data");
+	}
 	flipColumn('biologicalReplicates');
 	flipColumn('strain');
 	flipColumn('sex');
