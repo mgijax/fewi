@@ -146,7 +146,10 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		<td colspan="2" align="left">
 			<input class="buttonLabel" value="Search" type="submit" id="submit1">
 			&nbsp;&nbsp;
-			<input type="reset" id="reset1"> Default settings do not include RNA-Seq data; select assay type RNA-Seq to include.
+			<input type="reset" id="reset1">&nbsp;&nbsp;<span style='font-weight: bold;'>
+			Default settings do not include RNA-Seq data; select assay type RNA-Seq to include.
+			</span>			
+			
 		</td>
 	</tr>
 
