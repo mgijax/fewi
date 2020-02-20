@@ -1652,9 +1652,8 @@ var structureGeneGrid = function()
 	// It is not the underlying number of results, as would be typical.
 	var geneGridDataUrl = fewiurl + "gxd/genegrid/json?" + querystringWithFilters 
 		+ "&results=" + geneGridRowsPerPage + "&startIndex=" + geneGridRecordOffset + "&matrixMarkerTotal=" + geneGridRecordTotal;
-
-	console.log("------------------------------");
 	console.log(geneGridDataUrl);
+
 	showPaginators();			// hide or show as needed
 
 	var buildGrid = function()
@@ -1668,7 +1667,6 @@ var structureGeneGrid = function()
 			dataSource: {
 				url: geneGridDataUrl,
 				batchSize: 50000,
-				isGeneGrid: true,
 				offsetField: "startIndexMatrix",
 				limitField: "resultsMatrix",
 				MSG_LOADING: LOADING_IMG+' Searching for data (may take a couple minutes for large datasets)... ' +
@@ -1677,6 +1675,7 @@ var structureGeneGrid = function()
 				MSG_EMPTY: 'No assay results with expression data found.'
 			},
 			cellSize: 24,
+			isGeneGrid: true,
 			cellRenderer: GxdRender.StructureGeneCellRenderer,
 			columnSort: function(a,b){ return FewiUtil.SortSmartAlpha(a.cid,b.cid);},
 			verticalColumnLabels: true,
