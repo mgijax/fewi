@@ -37,6 +37,8 @@
 }
 .canHide {}
 .heatMapLinkHidden { display : none; }
+#heatMapLimit { font-size: 125%; }
+.ui-dialog-titlebar { background-color: #d0e0f0; color:red; }
 </style>
 
 
