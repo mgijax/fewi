@@ -14,7 +14,7 @@
 	padding-top: 2px;
 }
 .iconCell { text-align: center; }
-.iconText { text-align: left; }
+.iconText { text-align: left; font-family: unset; }
 .icon { height: 20px; }
 .legendSection {}
 .legendCredits {}
@@ -32,20 +32,20 @@
 	<div class='legendSection legendFont'>
 		<div id='legendCredits' style="clear:both; padding-top: 3px; padding-bottom: 10px;">
 			Data file provided by GXD<br/>
-			Heat map visualization provided by <a href="${externalUrls.MORPHEUS}" target="_blank" tabindex="-1" style="color:blue">Morpheus</a>
+			Heat map visualization and analysis tools provided by <a href="${externalUrls.MORPHEUS}" target="_blank" tabindex="-1" style="color:blue">Morpheus</a>
 		</div>
 		
 		<div id="legendBioreplicates">
 			Each column is a set of combined bioreplicates
 			<ul id="legendBullets">
 			<li> &#x2605; at end of column label indicates mutant</li>
-			<li> metadata fields displayed in rows behind label</li>
+			<li> metadata fields displayed in rows below label</li>
 			<li> field displayed when it contains &gt;1 value</li>
-			<li> to sort sets by values in field, click field label</li>
+			<li> to sort sets by values in field, click beside field label</li>
 			</ul>
 		</div>
 
-		<div id="legendHover">Hovering over field displays value.</div>
+		<div id="legendHover">Hovering over cell displays value.</div>
 			
 		<div id="legendColorKey">
 			Color key for TPM range
@@ -70,7 +70,7 @@
 					<td class="tpmCell">1001</td>
 					<td class="tpmCell">2001</td>
 					<td class="tpmCell">3000</td>
-					<td class="tpmCell">5000</td>
+					<td class="tpmCell">5000+</td>
 				</tr>
 			</table>
 		</div>
@@ -87,7 +87,7 @@
 			</table>
 		</div>
 			
-		<div id="legendButtons">
+		<div id="legendButtons" style="margin-top: 5px">
 			Heat map is customizable
 			<table>
 				<tr>

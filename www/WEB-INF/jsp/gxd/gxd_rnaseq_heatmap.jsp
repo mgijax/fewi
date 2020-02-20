@@ -91,7 +91,7 @@
 	</div>
 	<div id="ysfDiv">${ysf}
 	</div>
-	<div id="poweredByDiv">Visualization and analysis powered by 
+	<div id="poweredByDiv">Visualization and analysis tools provided by 
 	  <a href="${externalUrls.MORPHEUS}" target="_blank">
 		<B>Morpheus</B>
 		<svg id="morpheusIcon" width="24px" height="24px">
