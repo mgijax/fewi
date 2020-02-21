@@ -32,7 +32,7 @@
 	<div class='legendSection legendFont'>
 		<div id='legendCredits' style="clear:both; padding-top: 3px; padding-bottom: 10px;">
 			Data file provided by GXD<br/>
-			Heat map visualization and analysis tools provided by <a href="${externalUrls.MORPHEUS}" target="_blank" tabindex="-1" style="color:blue">Morpheus</a>
+			Heat map visualization and analysis tools rendered by <a href="${externalUrls.MORPHEUS}" target="_blank" tabindex="-1" style="color:blue">Morpheus</a>
 		</div>
 		
 		<div id="legendBioreplicates">
