@@ -1453,11 +1453,6 @@ var structureStageGrid = function()
 	hidePaginators();
 
 	var querystringWithFilters = getQueryStringWithFilters();
-	if(querystringWithFilters==window.prevStageGridQuery)
-	{
-		// don't refresh grid if query is the same.
-		return;
-	}
 	window.prevStageGridQuery=querystringWithFilters;
 
 	var buildGrid = function()
