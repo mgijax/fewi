@@ -13,6 +13,16 @@
 	border-left: none; border-right: none; border-bottom: none; font-size: 75%;
 	padding-top: 2px;
 }
+.tpmLegendBracketCell {
+	height: 5px; 
+	border-left: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; border-top: none;
+	padding-top: 2px;
+}
+.tpmLegendCell {
+	height: 25px; text-align: center; vertial-align: top;
+	border-left: none; border-right: none; border-bottom: none; font-size: 75%;
+	padding-top: 2px; padding-bottom: 8px;
+}
 .iconCell { text-align: center; }
 .iconText { text-align: left; font-family: unset; }
 .icon { height: 20px; }
@@ -71,6 +81,18 @@
 					<td class="tpmCell">2001</td>
 					<td class="tpmCell">3000</td>
 					<td class="tpmCell">5000+</td>
+				</tr>
+				<tr>
+					<td class="tpmLegendBracketCell"></td>
+					<td class="tpmLegendBracketCell" colspan="2"></td>
+					<td class="tpmLegendBracketCell" colspan="2"></td>
+					<td class="tpmLegendBracketCell" colspan="4"></td>
+				</tr>
+				<tr>
+					<td class="tpmLegendCell">Below Cutoff</td>
+					<td class="tpmLegendCell" colspan="2">Low</td>
+					<td class="tpmLegendCell" colspan="2">Medium</td>
+					<td class="tpmLegendCell" colspan="4">High</td>
 				</tr>
 			</table>
 		</div>
