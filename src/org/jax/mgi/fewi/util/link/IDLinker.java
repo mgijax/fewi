@@ -301,7 +301,11 @@ public class IDLinker {
 			sb.append("class=\"" + className + "\" ");
 		}
 		sb.append("href='");
-		sb.append(url.replace("@@@@", id));
+		if ((id != null) && (id.startsWith("PR:"))) {
+			sb.append(url.replace("@@@@", id.replace("PR:", "PR_")));
+		} else {
+			sb.append(url.replace("@@@@", id));
+		}
 		sb.append("'");
 		if (targetBlank) {
 			sb.append(" target='_blank'");
