@@ -42,7 +42,7 @@
 	<c:set var="notFirst" value="${true}"/></c:if>
 <c:if test="${not empty queryForm.interpro}">
 	<br><c:if test="${notFirst}">AND</c:if>
-	InterPro Protein Domain: contains <b>${queryForm.interpro}</b>
+	InterPro Protein Domain: contains <b>${e:forHtml(queryForm.interpro)}</b>
 	<c:set var="notFirst" value="${true}"/></c:if>
 <c:if test="${not empty queryForm.phenotype}">
 	<br><c:if test="${notFirst}">AND</c:if>

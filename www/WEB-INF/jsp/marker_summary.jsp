@@ -93,7 +93,7 @@
 </div>
 
 <script type="text/javascript">
-window.querystring="${queryString}";
+window.querystring="${e:forHtml(queryString)}";
 window.fewiurl="${configBean.FEWI_URL}";
 window.doHighlights=false;
 <c:if test="${not empty queryForm.nomen}">window.doHighlights=true;</c:if>

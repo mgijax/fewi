@@ -33,7 +33,7 @@ div.middle { vertical-align: middle }
 				<p/>
 				<span class="label">ID/Symbols List:</span>
 				<br/>
-				&nbsp;&nbsp;<form:textarea id="ids" path="ids" class="formWidth" value="${gxdBatchQueryForm.ids}" style="margin-bottom: 0px"></form:textarea>
+				&nbsp;&nbsp;<form:textarea id="ids" path="ids" class="formWidth" value="${e:forHtml(gxdBatchQueryForm.ids)}" style="margin-bottom: 0px"></form:textarea>
 				<br/>
 				&nbsp;&nbsp;<span class="example">* tab, space, and newline separated ids</span>
 				<br/>

@@ -111,12 +111,12 @@ body.yui-skin-sam div#outer {position:relative;}
 
 <script type="text/javascript">
     var fewiurl = "${configBean.FEWI_URL}";
-    var mgiMarkerId = "${marker.primaryID}";
-    var searchedStage = "${theilerStage}";
-    var searchedAssayType = "${assayType}";
-    var searchedStructure = "${structure}";
-    var searchedStructureId = "${structureId}";
-    var nomenclature = "${nomenclature}";
+    var mgiMarkerId = "${e:forHtml(marker.primaryID)}";
+    var searchedStage = "${e:forHtml(theilerStage)}";
+    var searchedAssayType = "${e:forHtml(assayType)}";
+    var searchedStructure = "${e:forHtml(structure)}";
+    var searchedStructureId = "${e:forHtml(structureId)}";
+    var nomenclature = "${e:forHtml(nomenclature)}";
     var querystring = "${e:forJavaScript(queryString)}";
     var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>

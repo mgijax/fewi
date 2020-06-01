@@ -6,6 +6,8 @@
 <%@ attribute name="refValues" required="false" type="java.util.List" description="User selected values for reference strains" %>
 <%@ tag import = "java.util.*" %>
 <%@ tag import = "org.jax.mgi.fewi.util.*" %>
+<%@ tag import = "org.owasp.encoder.Encode" %>
+
 
 <%-- tag to print out  checkbox options based on a map of key,value pairs, can also supply list of pre-selected keys to select --%>
 <%
@@ -38,14 +40,15 @@
 				</div>
 			<%
 		}
+		String cleanKey = Encode.forHtml((String) key);
 %>
 	<div class="checkbox">
 		<label class="refContainer refToggle">
-			<input name="${refName}" type="checkbox" value="<%=key %>" <%=refChecked %> />
+			<input name="${refName}" type="checkbox" value="<%=cleanKey %>" <%=refChecked %> />
  			<span class="refCheckmark"></span>
 		</label>
 		<label class="cmpContainer">
-			<input name="${name}" type="checkbox" value="<%=key %>" <%=checked %> /> <%=value %>
+			<input name="${name}" type="checkbox" value="<%=cleanKey %>" <%=checked %> /> <%=value %>
  			<span class="cmpCheckmark"></span>
 		</label>
 	</div>

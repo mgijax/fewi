@@ -76,6 +76,7 @@
 <c:if test="${empty operator}">
 	<c:set var="operator" value="assayed"/>
 </c:if>
+<c:set var="operator" value="${e:forHtml(operator)}"/>
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/recombinase/recombinase_summary_1.js"></script>
 <div id="summary" style="width:1150px;">
@@ -88,7 +89,7 @@
 		<div class="innertube" >
 				<span class="enhance">You searched for:</span><br/>
 				<c:if test="${not empty recombinaseQueryForm.driver}"><span class="label">Driver</span> equals
-					<span class="label">${fn:replace(recombinaseQueryForm.driver,";", ",") }</span><br/></c:if>
+					<span class="label">${fn:replace(e:forHtml(recombinaseQueryForm.driver),";", ",") }</span><br/></c:if>
 				<c:if test="${not empty recombinaseQueryForm.structure}">
 					<b>Activity ${operator}</b> in <b>${e:forHtml(recombinaseQueryForm.structure)}</b>
 					<c:if test="${not empty recombinaseQueryForm.nowhereElse}">
