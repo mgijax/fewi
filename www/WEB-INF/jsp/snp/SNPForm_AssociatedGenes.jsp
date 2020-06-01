@@ -6,7 +6,7 @@
 				<div style="width:300px;text-align:left;margin-top:3px;">
 					<nobr>
 						<span class="label"><a onclick="javascript:openUserhelpWindow('${userhelppage}#marker_name'); return false;" href="${userhelpurl}#marker_name">Gene Symbol/Name:</a></span>
-						<form:input id="nomen" path="nomen" class="formWidth" /> Search <fewi:select name="searchGeneBy" id="searchGeneByList" size="1" items="${searchByOptions}" value="${snpQueryForm.searchGeneBy}" />
+						<form:input id="nomen" path="nomen" class="formWidth" /> Search <fewi:select name="searchGeneBy" id="searchGeneByList" size="1" items="${searchByOptions}" value="${e:forHtml(snpQueryForm.searchGeneBy)}" />
 					</nobr>
 					<form:errors path="nomen" cssClass="qfError"/>
 				</div>
@@ -17,7 +17,7 @@
 			<br/>
 			<div class="left" style="margin-left: 70px;">
 				For the gene(s) specified above return all SNPs:<br/><br/>
-				<fewi:radio name="withinRange" divider="<br/>" idPrefix="rangeDropList" items="${withinRanges}" value="${snpQueryForm.withinRange}" />
+				<fewi:radio name="withinRange" divider="<br/>" idPrefix="rangeDropList" items="${withinRanges}" value="${e:forHtml(snpQueryForm.withinRange)}" />
 			</div>
 			<br/>
 			<div class="left" style="margin-left: 70px;">

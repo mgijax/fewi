@@ -14,7 +14,7 @@
 
 <script>
 	$(function() {
-		$( "#querytabs" ).tabs(<c:if test="${not empty snpQueryForm.selectedTab}">{active: ${snpQueryForm.selectedTab}}</c:if>);
+		$( "#querytabs" ).tabs(<c:if test="${not empty snpQueryForm.selectedTab}">{active: ${e:forHtml(snpQueryForm.selectedTab)}}</c:if>);
 	});
 </script>
 

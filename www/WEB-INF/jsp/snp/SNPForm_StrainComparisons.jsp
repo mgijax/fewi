@@ -28,7 +28,7 @@
 								<tr class="refToggle"><td></td>
 									<td>
 									Include SNPs With No Allele Call in Some <span class="refColor">Reference</span> strains?
-									<fewi:radio name="allowNullsForReferenceStrains" divider="&nbsp;&nbsp;" idPrefix="allowNullsForReferenceStrains" items="${yesNoOptions}" value="${snpQueryForm.allowNullsForReferenceStrains}" />
+									<fewi:radio name="allowNullsForReferenceStrains" divider="&nbsp;&nbsp;" idPrefix="allowNullsForReferenceStrains" items="${yesNoOptions}" value="${e:forHtml(snpQueryForm.allowNullsForReferenceStrains)}" />
 									</td>
 								</tr>
 								<tr><td class="refToggle"><span class="cmpColor">Comparison</span> strains</td>
@@ -42,7 +42,7 @@
 								<tr class="refToggle"><td></td>
 									<td>
 									Include SNPs With No Allele Call in Some <span class="cmpColor">Comparison</span> strains?
-									<fewi:radio name="allowNullsForComparisonStrains" divider="&nbsp;&nbsp;" idPrefix="allowNullsForComparisonStrains" items="${yesNoOptions}" value="${snpQueryForm.allowNullsForComparisonStrains}" />
+									<fewi:radio name="allowNullsForComparisonStrains" divider="&nbsp;&nbsp;" idPrefix="allowNullsForComparisonStrains" items="${yesNoOptions}" value="${e:forHtml(snpQueryForm.allowNullsForComparisonStrains)}" />
 									</td>
 								</tr>
 								</table>
