@@ -66,7 +66,7 @@ div.message { font-weight: bold; padding-top: 10px; padding-bottom: 10px }
 
 <script type="text/javascript">
 	var fewiurl = "${configBean.FEWI_URL}";
-	var querystring = "${queryString}";
+	var querystring = "${e:forJavaScript(queryString)}";
 	var defaultSort = "${defaultSort}";
 </script>
 

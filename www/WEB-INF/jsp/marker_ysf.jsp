@@ -10,7 +10,7 @@
 
 <c:if test="${not empty queryForm.nomen}">
 	<br><c:if test="${notFirst}">AND</c:if>
-	Marker Symbol/Name: including text <b><fewi:verbatim value="${queryForm.nomen}"/></b>
+	Marker Symbol/Name: including text <b><fewi:verbatim value="${e:forHtml(queryForm.nomen)}"/></b>
 		<span class="smallGrey">searching current symbols/names and synonyms</span>
 	<c:set var="notFirst" value="${true}"/></c:if>
 <c:if test="${not empty queryForm.mcv}">
