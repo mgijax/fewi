@@ -87,7 +87,7 @@ public class SnpQueryForm implements Cloneable {
 		return alleleAgreementFilter;
 	}
 	public String getAllowNullsForReferenceStrains() {
-		return allowNullsForReferenceStrains;
+		return FormatHelper.noScript(FormatHelper.noAlert(allowNullsForReferenceStrains));
 	}
 
 	public Integer getSliceMaxCount() {
@@ -119,7 +119,7 @@ public class SnpQueryForm implements Cloneable {
 	}
 
 	public String getAllowNullsForComparisonStrains() {
-		return allowNullsForComparisonStrains;
+		return FormatHelper.noScript(FormatHelper.noAlert(allowNullsForComparisonStrains));
 	}
 
 	public void setAllowNullsForComparisonStrains(String allowNullsForComparisonStrains) {
@@ -136,7 +136,7 @@ public class SnpQueryForm implements Cloneable {
 		this.functionClassFilter = functionClassFilter;
 	} 
 	public String getNomen() {
-		return nomen;
+		return FormatHelper.noScript(FormatHelper.noAlert(nomen));
 	}
 	public void setNomen(String nomen) {
 		this.nomen = nomen;
@@ -160,7 +160,7 @@ public class SnpQueryForm implements Cloneable {
 		this.coordinateUnit = coordinateUnit;
 	}
 	public String getCoordinate() {
-		return coordinate;
+		return FormatHelper.noAlert(FormatHelper.noScript(coordinate));
 	}
 	public void setCoordinate(String coordinate) {
 		this.coordinate = coordinate;
@@ -178,7 +178,7 @@ public class SnpQueryForm implements Cloneable {
 		this.geneSearch = geneSearch;
 	}
 	public String getSelectedTab() {
-		return selectedTab;
+		return FormatHelper.noScript(FormatHelper.noAlert(selectedTab));
 	}
 	public void setSelectedTab(String selectedTab) {
 		this.selectedTab = selectedTab;
@@ -190,7 +190,7 @@ public class SnpQueryForm implements Cloneable {
 		this.referenceStrains = referenceStrains;
 	}
 	public String getSelectedChromosome() {
-		return selectedChromosome;
+		return FormatHelper.noScript(FormatHelper.noAlert(selectedChromosome));
 	}
 	public void setSelectedChromosome(String selectedChromosome) {
 		this.selectedChromosome = selectedChromosome;
@@ -261,7 +261,7 @@ public class SnpQueryForm implements Cloneable {
 	}
 
 	public String getStartMarker() {
-		return startMarker;
+		return FormatHelper.noScript(FormatHelper.noAlert(startMarker));
 	}
 
 	public void setStartMarker(String startMarker) {
@@ -269,7 +269,7 @@ public class SnpQueryForm implements Cloneable {
 	}
 
 	public String getEndMarker() {
-		return endMarker;
+		return FormatHelper.noScript(FormatHelper.noAlert(endMarker));
 	}
 
 	public void setEndMarker(String endMarker) {
@@ -296,7 +296,7 @@ public class SnpQueryForm implements Cloneable {
 			} else if ("nomenclature".equals(searchGeneBy)) {
 				breadth = " searching current symbols/names, synonyms &amp; homologs";
 			}
-			out.add("Gene Symbol/Name: " + bold(FormatHelper.superscript(nomen)) + smallGray(breadth));
+			out.add("Gene Symbol/Name: " + bold(FormatHelper.superscript(FormatHelper.cleanHtml(nomen))) + smallGray(breadth));
 
 			// Include SNPs located...
 			if (withinRange != null) {
@@ -321,15 +321,15 @@ public class SnpQueryForm implements Cloneable {
 			if ("mbp".equalsIgnoreCase(coordinateUnit)) {
 				cu = "Mbp";
 			}
-			out.add("Genome Region: " + bold("Chr" + selectedChromosome + ":") + bold(orientCoordinates(coordinate)) + " " + cu);
+			out.add("Genome Region: " + bold("Chr" + FormatHelper.cleanHtml(selectedChromosome) + ":") + bold(FormatHelper.cleanHtml(orientCoordinates(coordinate))) + " " + cu);
 
 		} else if ( (selectedChromosome != null) && (!selectedChromosome.trim().equals("")) ) {
-			out.add("Genome Region: " + bold("Chr" + selectedChromosome));
+			out.add("Genome Region: " + bold("Chr" + FormatHelper.cleanHtml(selectedChromosome)));
 		}
 
 		// marker range
 		if ( (startMarker != null) && (endMarker != null) && (!startMarker.trim().equals("")) && (!endMarker.trim().equals("")) ) {
-			out.add("Marker Range: between " + bold(startMarker) + " and " + bold(endMarker));
+			out.add("Marker Range: between " + bold(FormatHelper.cleanHtml(startMarker)) + " and " + bold(FormatHelper.cleanHtml(endMarker)));
 		}
 		
 		// Reference Strain
@@ -337,14 +337,14 @@ public class SnpQueryForm implements Cloneable {
 		if ((referenceStrains != null) && (referenceStrains.size() > 0)) {
 			String label = "Reference Strain";
 			if (referenceStrains.size() == 1) {
-				out.add(label + ": " + bold(FormatHelper.superscript(referenceStrains.get(0))));
+				out.add(label + ": " + bold(FormatHelper.superscript(FormatHelper.cleanHtml(referenceStrains.get(0)))));
 			} else {
 				label = label + "s";
 				out.add(label + ": " + bold("" + referenceStrains.size()));
 			}
 			showNullMessages = true;
 			out.add("Include SNPs With No Allele Call in Some Reference Strains: "
-				+ bold(allowNullsForReferenceStrains));
+				+ bold(FormatHelper.cleanHtml(allowNullsForReferenceStrains)));
 		}
 
 		// Selected Strains
@@ -359,7 +359,7 @@ public class SnpQueryForm implements Cloneable {
 			}
 			if (showNullMessages) {
 				out.add("Include SNPs With No Allele Call in Some Comparison Strains: "
-					+ bold(allowNullsForComparisonStrains));
+					+ FormatHelper.cleanHtml(bold(allowNullsForComparisonStrains)));
 			}
 		}
 

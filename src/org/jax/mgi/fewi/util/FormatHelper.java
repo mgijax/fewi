@@ -10,6 +10,7 @@ import java.util.List;
 import java.lang.Math;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import org.owasp.encoder.Encode;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -812,6 +813,34 @@ public class FormatHelper {
 		}
 		sb.append("</div><!-- progressMeter -->");
 		return sb.toString();
+	}
+	
+	// Remove any HTML script tags from string 's', replacing them with an asterisk (to help prevent
+	// reflected XSS attacks).  This relies on whatever data we run through this not having script
+	// tags as a valid part of the expected string.
+	public static String noScript(String s) {
+		if (s == null) { return s; }
+		String t = s.replaceAll("(?i)" + Pattern.quote("<script>"), "*");
+		return t.replaceAll("(?i)" + Pattern.quote("</script>"), "*");
+	}
+	
+	// Remove any Javascript alert commands from string 's' (to help prevent reflected XSS attacks).
+	// This relies on valid data not having "alert" followed a pair of parentheses.
+	public static String noAlert(String s) {
+		if (s == null) { return s; }
+		return s.replaceAll("(?i)alert *\\([^)]*\\)", "");
+	}
+	
+	// Do any needed cleaning of string 's' to help prevent reflected XSS attacks, for HTML-displayed text.
+	public static String cleanHtml(String s) {
+		if (s == null) { return s; }
+		return Encode.forHtml(noScript(noAlert(s)));
+	}
+	
+	// Do any needed cleaning of string 's' to help prevent reflected XSS attacks, for JavaScript strings.
+	public static String cleanJavaScript(String s) {
+		if (s == null) { return s; }
+		return Encode.forJavaScript(noScript(noAlert(s)));
 	}
 } // end of class FormatHelper
 
