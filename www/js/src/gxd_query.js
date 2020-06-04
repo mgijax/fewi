@@ -501,7 +501,7 @@ var updateQuerySummary = function() {
 			el.appendChild(document.createTextNode(" in "));
 
 			b = new YAHOO.util.Element(document.createElement('b'));
-			b.appendChild(document.createTextNode(YAHOO.util.Dom.get('structure').value));
+			b.appendChild(document.createTextNode(noScript(noAlert(YAHOO.util.Dom.get('structure').value))));
 			el.appendChild(b);
 
 			var sp = new YAHOO.util.Element(document.createElement('span'));

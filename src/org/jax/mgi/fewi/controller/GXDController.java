@@ -267,7 +267,7 @@ public class GXDController {
 		logger.debug("routing to view object");
 		ModelAndView mav = new ModelAndView("gxdResultsSummaryReport");
 		mav.addObject("resultFinder", batchFinder);
-		mav.addObject("queryString", request.getQueryString());
+		mav.addObject("queryString", FormatHelper.cleanJavaScript(request.getQueryString()));
 		return mav;
 
 	}
@@ -350,9 +350,9 @@ public class GXDController {
 			} else {
 				idList = "";
 			}
-			mav.addObject("queryString", "batchSubmission=true&" + request.getQueryString() + idList);
+			mav.addObject("queryString", FormatHelper.cleanJavaScript("batchSubmission=true&" + request.getQueryString() + idList));
 		} else {
-			mav.addObject("queryString", request.getQueryString());
+			mav.addObject("queryString", FormatHelper.cleanJavaScript(request.getQueryString()));
 		}
 
 		return mav;
@@ -374,7 +374,7 @@ public class GXDController {
 		logger.debug("query form: " + query);
 
 		ModelAndView mav = new ModelAndView("gxd/gxd_generic_summary");
-		mav.addObject("queryString", request.getQueryString());
+		mav.addObject("queryString", FormatHelper.cleanJavaScript(request.getQueryString()));
 
 		// the marker ID is an optional field; if it exists, get the
 		// corresponding marker and add it to the mav.  This supports
@@ -455,7 +455,7 @@ public class GXDController {
 		logger.debug("routing to view object");
 		ModelAndView mav = new ModelAndView("gxdMarkersSummaryReport");
 		mav.addObject("markerFinder", batchFinder);
-		mav.addObject("queryString", request.getQueryString());
+		mav.addObject("queryString", FormatHelper.cleanJavaScript(request.getQueryString()));
 		return mav;
 
 	}
@@ -496,7 +496,7 @@ public class GXDController {
 		}
 		VocabTerm structure = structureList.get(0);
 		mav.addObject("structure", structure);
-		mav.addObject("queryString", request.getQueryString());
+		mav.addObject("queryString", FormatHelper.cleanJavaScript(request.getQueryString()));
 
 		logger.debug("summaryByStructureId routing to view ");
 		return mav;
@@ -543,7 +543,7 @@ public class GXDController {
 		}
 		SolrGxdAssay assay = assayList.get(0);
 		mav.addObject("experiment", assay);
-		mav.addObject("queryString", request.getQueryString());
+		mav.addObject("queryString", FormatHelper.cleanJavaScript(request.getQueryString()));
 
 		logger.debug("summaryByExperimentId routing to view ");
 		return mav;
@@ -586,7 +586,7 @@ public class GXDController {
 		}
 		Reference reference = referenceList.get(0);
 		mav.addObject("reference", reference);
-		mav.addObject("queryString", request.getQueryString());
+		mav.addObject("queryString", FormatHelper.cleanJavaScript(request.getQueryString()));
 
 		logger.debug("summeryByRefId routing to view ");
 		return mav;
@@ -631,7 +631,7 @@ public class GXDController {
 		}
 		Allele allele = alleleList.get(0);
 		mav.addObject("allele", allele);
-		mav.addObject("queryString", request.getQueryString());
+		mav.addObject("queryString", FormatHelper.cleanJavaScript(request.getQueryString()));
 
 		logger.debug("summeryByAllId routing to view ");
 		return mav;
@@ -678,7 +678,7 @@ public class GXDController {
 		logger.debug("->cdnaSummaryByMarkerID started");
 		
 		ModelAndView mav = new ModelAndView("gxd/cdna_summary_by_marker");
-		mav.addObject("queryString", request.getQueryString());
+		mav.addObject("queryString", FormatHelper.cleanJavaScript(request.getQueryString()));
 
 		// get the marker object (if possible) and add it to the mav
 		String error = addMarkerToMav(mav, mrkID);
@@ -755,7 +755,7 @@ public class GXDController {
 			return errorMav(error);
 		}
 
-		mav.addObject("queryString", request.getQueryString());
+		mav.addObject("queryString", FormatHelper.cleanJavaScript(request.getQueryString()));
 
 		// allow the wild-type filter to be applied as a GET parameter
 		
@@ -1035,7 +1035,7 @@ public class GXDController {
 		logger.info("gxdRnaSeqHeatMap() started");
 		
 		ModelAndView mav = new ModelAndView("gxd/gxd_rnaseq_heatmap");
-		mav.addObject("queryString", request.getQueryString());
+		mav.addObject("queryString", FormatHelper.cleanJavaScript(request.getQueryString()));
 		mav.addObject("ysf", getRnaSeqHeatMapYSF(query));
 		
 		return mav;
@@ -1292,7 +1292,7 @@ public class GXDController {
 			}
 			
 		} else if ((structure != null) && (!"".equals(structure))) {
-			structureOut = structure;
+			structureOut = FormatHelper.noScript(FormatHelper.noAlert(structure));
 		}
 		
 		if (structureOut != null) {
@@ -2548,7 +2548,7 @@ public class GXDController {
 		// setup view object
 		mav.addObject("mrkID", mrkID);
 		mav.addObject("genoclusterKey", genoclusterKey);
-		mav.addObject("queryString", request.getQueryString());
+		mav.addObject("queryString", FormatHelper.cleanJavaScript(request.getQueryString()));
 
 		logger.debug("gxdPhenoGrid routing to view ");
 		return mav;
@@ -2589,7 +2589,7 @@ public class GXDController {
 		// setup view object
 		mav.addObject("mrkID", mrkID);
 		mav.addObject("alleleID", alleleID);
-		mav.addObject("queryString", request.getQueryString());
+		mav.addObject("queryString", FormatHelper.cleanJavaScript(request.getQueryString()));
 
 		logger.debug("gxdGeneRecomGrid routing to view ");
 		return mav;

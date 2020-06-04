@@ -503,3 +503,15 @@ function mgiRandomString(size) {
 	}
 	return s.substring(0,size);
 }
+
+// remove any <script> or </script> tags from string 's'
+function noScript(s) {
+	if (s == null) { return s; }
+	return s.replace(/<script>/g, '').replace(/<\/script>/g, '');
+}
+
+// remove any alert(...) commands from string 's'
+function noAlert(s) {
+	if (s == null) { return s; }
+	return s.replace(/alert[(][^)]*[)]/g, '');
+}
