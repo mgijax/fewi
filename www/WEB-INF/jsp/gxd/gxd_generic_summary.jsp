@@ -14,7 +14,7 @@
 <c:if test="${not empty fromSlimgrid}">
   <c:set var="pageTitle" value="${marker.symbol} ${structure} gene expression"/>
 </c:if>
-<title>${pageTitle}</title>
+<title>${e:forHtml(pageTitle)}</title>
 
 <style>
 .left { float: left; }
@@ -111,12 +111,12 @@ body.yui-skin-sam div#outer {position:relative;}
 
 <script type="text/javascript">
     var fewiurl = "${configBean.FEWI_URL}";
-    var mgiMarkerId = "${e:forHtml(marker.primaryID)}";
-    var searchedStage = "${e:forHtml(theilerStage)}";
-    var searchedAssayType = "${e:forHtml(assayType)}";
-    var searchedStructure = "${e:forHtml(structure)}";
-    var searchedStructureId = "${e:forHtml(structureId)}";
-    var nomenclature = "${e:forHtml(nomenclature)}";
+    var mgiMarkerId = "${e:forJavaScript(marker.primaryID)}";
+    var searchedStage = "${e:forJavaScript(theilerStage)}";
+    var searchedAssayType = "${e:forJavaScript(assayType)}";
+    var searchedStructure = "${e:forJavaScript(structure)}";
+    var searchedStructureId = "${e:forJavaScript(structureId)}";
+    var nomenclature = "${e:forJavaScript(nomenclature)}";
     var querystring = "${e:forJavaScript(queryString)}";
     var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>

@@ -782,6 +782,9 @@ public class VocabularyController {
     @RequestMapping("/gxd/ma_ontology/treeChildren")
     public @ResponseBody String getMouseAnatomyTreeChildren(@RequestParam("id") String id,
     		@RequestParam("nodeID") String nodeID, @RequestParam("edgeType") String edgeType) {
+
+    	// remove any script tags or alert() calls embedded in edgeType
+    	edgeType = FormatHelper.noScript(FormatHelper.noAlert(edgeType));
     	return this.getSharedBrowserTreeChildren(id, nodeID, edgeType, MA_VOCAB);
     }
     

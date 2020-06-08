@@ -6,7 +6,7 @@
 <% StyleAlternator stripe  = (StyleAlternator)request.getAttribute("stripe"); %>
 <%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
-<title>${marker.symbol} Gene Expression Results - GXD</title>
+<title>${e:forHtml(marker.symbol)} Gene Expression Results - GXD</title>
 
 <meta name="description" content="View gene expression results for ${marker.symbol} with assay type, age, structure, image, mutant allele, reference" />
 <meta name="keywords" content="MGI, GXD, ${marker.symbol}, mice, mouse, murine, mus musculus, gene expression assay, immunohistochemistry, in situ reporter, blot, RNA in situ, RNase, RT-PCR, Northern blot, Western blot" />
@@ -104,15 +104,15 @@ body.yui-skin-sam div#outer {position:relative;}
 
 <script type="text/javascript">
     var fewiurl = "${configBean.FEWI_URL}";
-    var mgiMarkerId = "${marker.primaryID}";
-    var searchedStage = "${theilerStage}";
-    var searchedWildtypeFilter = "${wildtypeFilter}";
-    var searchedAssayType = "${assayType}";
-    var searchedStructure = "${structure}";
-    var searchedStructureId = "${strucureId}";
-    var querystring = "markerMgiId=${marker.primaryID}&theilerStage=${e:forJavaScript(theilerStage)}&assayType=${e:forJavaScript(assayType)}&tab=${e:forJavaScript(tab)}";
+    var mgiMarkerId = "${e:forJavaScript(marker.primaryID)}";
+    var searchedStage = "${e:forJavaScript(theilerStage)}";
+    var searchedWildtypeFilter = "${e:forJavaScript(wildtypeFilter)}";
+    var searchedAssayType = "${e:forJavaScript(assayType)}";
+    var searchedStructure = "${e:forJavaScript(structure)}";
+    var searchedStructureId = "${e:forJavaScript(strucureId)}";
+    var querystring = "markerMgiId=" + mgiMarkerId + "&theilerStage=${e:forJavaScript(theilerStage)}&assayType=${e:forJavaScript(assayType)}&tab=${e:forJavaScript(tab)}";
     if (searchedWildtypeFilter != '') {
-    	querystring = "markerMgiId=${marker.primaryID}&theilerStage=${e:forJavaScript(theilerStage)}&assayType=${e:forJavaScript(assayType)}&tab=${e:forJavaScript(tab)}&wildtypeFilter=${e:forJavaScript(wildtypeFilter)}";
+    	querystring = "markerMgiId=" + mgiMarkerId + "&theilerStage=${e:forJavaScript(theilerStage)}&assayType=${e:forJavaScript(assayType)}&tab=${e:forJavaScript(tab)}&wildtypeFilter=${e:forJavaScript(wildtypeFilter)}";
     }
     var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>
