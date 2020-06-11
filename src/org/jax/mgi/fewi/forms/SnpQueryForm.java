@@ -359,7 +359,7 @@ public class SnpQueryForm implements Cloneable {
 			}
 			if (showNullMessages) {
 				out.add("Include SNPs With No Allele Call in Some Comparison Strains: "
-					+ FormatHelper.cleanHtml(bold(allowNullsForComparisonStrains)));
+					+ bold(FormatHelper.cleanHtml(allowNullsForComparisonStrains)));
 			}
 		}
 
