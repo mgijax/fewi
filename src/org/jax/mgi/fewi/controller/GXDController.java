@@ -374,7 +374,7 @@ public class GXDController {
 		logger.debug("query form: " + query);
 
 		ModelAndView mav = new ModelAndView("gxd/gxd_generic_summary");
-		mav.addObject("queryString", FormatHelper.cleanJavaScript(request.getQueryString()));
+		mav.addObject("queryString", request.getQueryString());
 
 		// the marker ID is an optional field; if it exists, get the
 		// corresponding marker and add it to the mav.  This supports
