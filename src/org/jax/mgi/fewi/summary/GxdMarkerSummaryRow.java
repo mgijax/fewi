@@ -77,7 +77,7 @@ public class GxdMarkerSummaryRow {
 
 	  public String getCM() {        
 		  String cm = marker.getCm();
-		  if(!cm.equals(""))
+		  if((cm != null) && !cm.equals(""))
 		  {
 			  Float centimorgans = Float.parseFloat(cm);
 		      // don't display negative cM values
