@@ -863,8 +863,7 @@ public class GXDController {
 				logger.debug("--> Null Object");
 			}
 		}
-		JsonSummaryResponse<GxdMarkerSummaryRow> jsonResponse
-		= new JsonSummaryResponse<GxdMarkerSummaryRow>();
+		JsonSummaryResponse<GxdMarkerSummaryRow> jsonResponse = new JsonSummaryResponse<GxdMarkerSummaryRow>();
 		jsonResponse.setSummaryRows(summaryRows);
 		jsonResponse.setTotalCount(searchResults.getTotalCount());
 
