@@ -1469,6 +1469,33 @@ public class GXDController {
 		return SessionMonitor.getSharedMonitor().getStatus(sessionKey);
 	}
 
+	// Get the count of documents for an RNA-Seq heat map.
+	@RequestMapping("/rnaSeqHeatMap/totalCount")
+	public @ResponseBody String gxdRnaSeqHeatMapTotalCount(
+			HttpSession session,
+			HttpServletRequest request,
+			@ModelAttribute GxdQueryForm query
+			) throws Exception {
+
+		logger.info("gxdRnaSeqHeatMapTotalCount() started");
+		populateMarkerIDs(session, query);
+
+		List<String> assayType = new ArrayList<String>();
+		assayType.add("RNA-Seq");
+		
+		SearchParams params = new SearchParams();
+		query.setAssayType(assayType);
+		params.setFilter(parseGxdQueryForm(query));
+	
+		Paginator page = new Paginator(0);
+		page.setStartIndex(0);
+		
+		SearchResults<SolrGxdRnaSeqHeatMapResult> searchResults = gxdFinder.searchRnaSeqHeatMapResults(params);
+		logger.info("gxdRnaSeqHeatMapTotalCount() returning: " + searchResults.getTotalCount());
+
+		return Integer.toString(searchResults.getTotalCount());
+	}
+
 	// Get the packet of JSON data for an RNA-Seq heat map.  sessionKey is passed in from the user's browser
 	// to uniquely identify the session.
 	@RequestMapping("/rnaSeqHeatMap/json")
