@@ -86,6 +86,7 @@ import org.jax.mgi.fewi.summary.GxdAssaySummaryRow;
 import org.jax.mgi.fewi.summary.GxdCountsSummary;
 import org.jax.mgi.fewi.summary.GxdImageSummaryRow;
 import org.jax.mgi.fewi.summary.GxdMarkerSummaryRow;
+import org.jax.mgi.fewi.summary.GxdRnaSeqHeatMapCell;
 import org.jax.mgi.fewi.summary.GxdRnaSeqHeatMapData;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.FewiUtil;
@@ -1489,11 +1490,58 @@ public class GXDController {
 	
 		Paginator page = new Paginator(0);
 		page.setStartIndex(0);
+		params.setPaginator(page);
 		
 		SearchResults<SolrGxdRnaSeqHeatMapResult> searchResults = gxdFinder.searchRnaSeqHeatMapResults(params);
 		logger.info("gxdRnaSeqHeatMapTotalCount() returning: " + searchResults.getTotalCount());
 
 		return Integer.toString(searchResults.getTotalCount());
+	}
+
+	// Get the count of documents for an RNA-Seq heat map.  'start' gives the record index to start with, while
+	// 'end' gives us the one (after) which we should end; this is typical slicing behavior, gathering records
+	// from start up to but not including end.
+	@RequestMapping("/rnaSeqHeatMap/recordSlice")
+	public @ResponseBody List<GxdRnaSeqHeatMapCell> gxdRnaSeqHeatMapRecordSlice(
+			HttpSession session,
+			HttpServletRequest request,
+			@ModelAttribute GxdQueryForm query,
+			@RequestParam(value="start") String start,
+			@RequestParam(value="end") String end
+			) throws Exception {
+
+		logger.info("gxdRnaSeqHeatMapRecordSlice() started");
+		populateMarkerIDs(session, query);
+
+		List<String> assayType = new ArrayList<String>();
+		assayType.add("RNA-Seq");
+		
+		SearchParams params = new SearchParams();
+		query.setAssayType(assayType);
+		params.setFilter(parseGxdQueryForm(query));
+	
+		Integer startIndex = 0;
+		Integer endIndex = 0;
+		if (start.matches("[0-9]+")) startIndex = Integer.parseInt(start);
+		if (end.matches("[0-9]+")) endIndex = Integer.parseInt(end);
+
+		Paginator page = new Paginator(endIndex - startIndex);
+		page.setStartIndex(startIndex);
+		params.setPaginator(page);
+		
+		SearchResults<SolrGxdRnaSeqHeatMapResult> searchResults = gxdFinder.searchRnaSeqHeatMapResults(params);
+		logger.info(" - got " + searchResults.getResultObjects().size() + " records");
+
+		List<GxdRnaSeqHeatMapCell> cells = new ArrayList<GxdRnaSeqHeatMapCell>();
+		for (SolrGxdRnaSeqHeatMapResult result : searchResults.getResultObjects()) {
+			GxdRnaSeqHeatMapCell cell = new GxdRnaSeqHeatMapCell();
+			cell.setMarkerID(result.getMarkerMgiID());
+			cell.setCsmKey(result.getConsolidatedSampleKey());
+			cell.setAvgQnTpm(result.getAvergageQNTPM());
+			cells.add(cell);
+		}
+		logger.info(" - returning " + cells.size() + " cells");
+		return cells;
 	}
 
 	// Get the packet of JSON data for an RNA-Seq heat map.  sessionKey is passed in from the user's browser
