@@ -61,6 +61,7 @@ public class GxdQueryForm implements Cloneable {
 	private String alleleId = "";
 	private String probeKey = "";
 	private String antibodyKey = "";
+	private String sampleKey = "";
 	
 	// differential specific fields
 	private String difStructure = "";
@@ -804,6 +805,13 @@ public class GxdQueryForm implements Cloneable {
 	}
 	public void setIdType(String idType) {
 		this.idType = idType;
+	}
+
+	public String getSampleKey() {
+		return sampleKey;
+	}
+	public void setSampleKey(String sampleKey) {
+		this.sampleKey = sampleKey;
 	}
 
 	public boolean getBatchSubmission() {
