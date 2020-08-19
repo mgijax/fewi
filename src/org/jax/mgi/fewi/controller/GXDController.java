@@ -88,6 +88,7 @@ import org.jax.mgi.fewi.summary.GxdImageSummaryRow;
 import org.jax.mgi.fewi.summary.GxdMarkerSummaryRow;
 import org.jax.mgi.fewi.summary.GxdRnaSeqHeatMapCell;
 import org.jax.mgi.fewi.summary.GxdRnaSeqHeatMapData;
+import org.jax.mgi.fewi.summary.GxdRnaSeqHeatMapMarker;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.FewiUtil;
 import org.jax.mgi.fewi.util.FilterUtil;
@@ -98,6 +99,7 @@ import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.shr.fe.query.SolrLocationTranslator;
+import mgi.frontend.datamodel.sort.SmartAlphaComparator;
 import org.jax.mgi.shr.jsonmodel.Clone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -141,6 +143,9 @@ public class GXDController {
 	private static String DETECTED = "detected";	// custom case
 	private static String MARKERTYPE_DISPLAY = "markerTypeDisplay";	// custom case
 	private static String TPM_LEVEL_SORT = "tpmLevelSort";	// custom case
+	
+	// caches of objects for RNA-Seq Heat Map generation
+	private static Map<String, GxdRnaSeqHeatMapMarker> hmMarkers = new HashMap<String, GxdRnaSeqHeatMapMarker>();
 	
 	// --------------------//
 	// instance variables
@@ -1542,6 +1547,69 @@ public class GXDController {
 		}
 		logger.info(" - returning " + cells.size() + " cells");
 		return cells;
+	}
+
+	// Get additional data for a list of marker IDs.  Returns list of markers in proper order for display.
+	// Maintains cache of marker data in controller to help avoid Solr queries.
+	@RequestMapping("/rnaSeqHeatMap/markers")
+	public @ResponseBody List<GxdRnaSeqHeatMapMarker> gxdRnaSeqHeatMapMarkers(
+			HttpSession session,
+			HttpServletRequest request,
+			@ModelAttribute GxdQueryForm query,
+			@RequestParam(value="hmMarkerIDs") String markerIDs
+			) throws Exception {
+
+		logger.info("gxdRnaSeqHeatMapMarkers() started");
+		populateMarkerIDs(session, query);
+
+		List<String> assayType = new ArrayList<String>();
+		assayType.add("RNA-Seq");
+		
+		SearchParams params = new SearchParams();
+		query.setAssayType(assayType);
+		params.setFilter(parseGxdQueryForm(query));
+	
+		Paginator page = new Paginator(1);		// just first record for each marker requested
+		page.setStartIndex(0);
+		params.setPaginator(page);
+		
+		// retrieve markers
+		List<GxdRnaSeqHeatMapMarker> markers = new ArrayList<GxdRnaSeqHeatMapMarker>();
+		
+		if ((markerIDs != null) && (!markerIDs.trim().equals(""))) {
+			String[] markerIDList = markerIDs.trim().split("[ ]*,[ ]*");
+			for (String id : markerIDList) {
+				// if already cached, use that existing marker and query Solr if not yet cached
+				if (hmMarkers.containsKey(id)) {
+					markers.add(hmMarkers.get(id).clone());
+				} else {
+					query.setMarkerMgiId(id);
+					params.setFilter(parseGxdQueryForm(query));
+					SearchResults<SolrGxdRnaSeqHeatMapResult> searchResults = gxdFinder.searchRnaSeqHeatMapResults(params);
+					List<SolrGxdRnaSeqHeatMapResult> results = searchResults.getResultObjects();
+					if ((results != null) && (results.size() > 0)) {
+						SolrGxdRnaSeqHeatMapResult result = results.get(0);
+
+						GxdRnaSeqHeatMapMarker marker = new GxdRnaSeqHeatMapMarker();
+						marker.setMarkerID(result.getMarkerMgiID());
+						marker.setEnsemblGMID(result.getMarkerEnsemblGeneModelID());
+						marker.setSymbol(result.getMarkerSymbol());
+
+						markers.add(marker);			// add to list of markers for this request
+						hmMarkers.put(id, marker);		// add to cache of markers for future use
+					}
+				}
+			}
+
+			// sort markers and assign indexes to marker objects
+			Collections.sort(markers, new HeatMapMarkerComparator());
+			for (int i=0; i < markers.size(); i++) {
+				markers.get(i).setIndex(i);
+			}
+		}
+
+		logger.info(" - got " + markers.size() + " markers");
+		return markers;
 	}
 
 	// Get the packet of JSON data for an RNA-Seq heat map.  sessionKey is passed in from the user's browser
@@ -4644,4 +4712,16 @@ public class GXDController {
 	public @ResponseBody Map<String, List<String>> htFacetStudyType (HttpServletRequest request, @ModelAttribute GxdHtQueryForm query, @ModelAttribute Paginator page, HttpServletResponse response) {
 		return gxdhtController.getStudyTypeFacet(query, null, response);
 	}
+
+    private class HeatMapMarkerComparator extends SmartAlphaComparator<GxdRnaSeqHeatMapMarker> {
+    	public int compare(GxdRnaSeqHeatMapMarker t1, GxdRnaSeqHeatMapMarker t2) {
+    		// smart-alpha sort of Marker objects by symbol (fall back on ID sorting, if terms match)
+    		
+    		int i = super.compare(t1.getSymbol(), t2.getSymbol());
+    		if (i == 0) {
+    			i = super.compare(t1.getMarkerID(), t2.getMarkerID());
+    		}
+    		return i;
+    	}
+    }
 }
