@@ -90,14 +90,44 @@ function buildDataForMorpheus() {
 	
 }
 
-// Get data for the samples we found.
-function retrieveSamples(){
+// Get data for the samples we found.  Then continue onward and build the data structure for Morpheus.
+function retrieveSamples(sampleKeys, markerList) {
+	if (sampleKeys.length == 0) {
+		updateLoadingMessage('Found no samples.', false);
+	}
+	var url = fewiurl + '/gxd/rnaSeqHeatMap/samples';
+	var parameters = queryString + '&hmSampleKeys=' + String(sampleKeys);
 	
+	$.post(url, parameters, function(sampleList) {
+		try {
+			log('Got ' + sampleList.length + ' samples');
+			buildDataForMorpheus(sampleList, markerList);
+		} catch (e) {
+			updateLoadingMessage('Failed to retrieve samples for ' + sampleKeys.length + ' keys');
+		} })
+		.fail(function() {
+			updateLoadingMessage('Failed to retrieve samples (communication error).');
+		});
 }
 
-// Get data for the markers we found.
-function retrieveMarkers() {
+// Get data for the markers we found.  Then continue onward and get data for samples next.
+function retrieveMarkers(markerIDs, sampleKeys) {
+	if (markerIDs.length == 0) {
+		updateLoadingMessage('Found no genes.', false);
+	}
+	var url = fewiurl + '/gxd/rnaSeqHeatMap/markers';
+	var parameters = queryString + '&hmMarkerIDs=' + String(markerIDs);
 	
+	$.post(url, parameters, function(markerList) {
+		try {
+			log('Got ' + markerList.length + ' markers');
+			retrieveSamples(sampleKeys, markerList);
+		} catch (e) {
+			updateLoadingMessage('Failed to retrieve genes for ' + markerIDs.length + ' IDs');
+		} })
+		.fail(function() {
+			updateLoadingMessage('Failed to retrieve genes (communication error).');
+		});
 }
 
 // Go ahead and retrieve the different chunks of data, then process them.
@@ -145,11 +175,13 @@ function retrieveNextChunk() {
 		}
 		log('Got ' + markerIDs.length + ' marker IDs');
 		log('Got ' + sampleKeyList.length + ' sample keys');
+		
+		retrieveMarkers(markerIDs, sampleKeyList);
 	}
 }
 
 // Populate the global 'chunks' to request 'totalCount' data cells, then retrieve them.
-function identifyChunks(totalCount) {
+function identifyChunks() {
 	chunks = [];
 	cellTPM = {};
 	sampleKeys = {};
@@ -161,13 +193,14 @@ function identifyChunks(totalCount) {
 		log('Identified chunk from ' + start + ' to ' + end);
 		start = end;
 	}
+	log('Created ' + chunks.length + ' chunks');
 	retrieveNextChunk();
 }
 
 // Having identified the 'totalCount' of cells to retrieve, go ahead and gather them.
-function getCells(totalCount) {
+function getCells() {
 	cellTPM = {};		// reset mapping
-	identifyChunks(totalCount);
+	identifyChunks();
 }
 
 // Start processing data retrieval for the RNA-Seq heat map, initially getting the count of data cells.
@@ -176,12 +209,13 @@ function main() {
 
 	// get total count of records to be processed
 	
-	var totalCount = -1;
 	var url = fewiurl + '/gxd/rnaSeqHeatMap/totalCount?' + queryString;
 	$.get(url, function(data) {
 		try {
 			// Once we get the count, start fetching cells.
-			getCells(queryString, parseInt(data));
+			totalCount = parseInt(data);
+			log('Got totalCount of ' + data + ', parsed to be integer ' + totalCount);
+			getCells(queryString);
 		} catch (e) {
 			updateLoadingMessage('Non-integer count of records.');
 		} })
