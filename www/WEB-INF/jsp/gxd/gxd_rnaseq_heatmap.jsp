@@ -121,41 +121,7 @@
 <script type="text/javascript" src="${externalUrls.MORPHEUS}/js/morpheus-latest.min.js"></script>
 <script type="text/javascript" src="${externalUrls.MORPHEUS}/js/morpheus-external-latest.min.js"></script>
 <script type="text/javascript">
-// Note that colorMap should not contain definitions less than zero.  (Below zero numbers make
-// all the cells show up as white.)
-var colorMap = [
-	{ value: 0,
-		color: '#E0E0E0'
-		},
-	{ value: 0.0000998,
-		color: '#E0E0E0'
-		},
-	{ value: 0.0001000,
-		color: '#98CDF4'
-		},
-	{ value: 0.0011500,
-		color: '#45AFFD'
-		},
-	{ value: 0.0022000,
-		color: '#3292E4'
-		},
-	{ value: 0.1012000,
-		color: '#1E74CA'
-		},
-	{ value: 0.2002000,
-		color: '#105FAD'
-		},
-	{ value: 0.4001000,
-		color: '#024990'
-		},
-	{ value: 0.6000000,
-		color: '#000066'
-		},
-	{ value: 1,
-		color: '#000000'
-		}
-];
-
+/*
 // unique identifier for this particular session, so we can get updates from the server
 var sessionKey = mgiRandomString(30);
 
@@ -185,14 +151,6 @@ function buildHeatMap(json) {
   setTimeout(function() { showPopup() }, 500);
 }
 
-function showPopup() {
-	$('#tipsPopup').dialog( {
-		title : 'Heat Map Legend',
-		width : '400px',
-		position : { my: 'right center', at: 'right center', within: window }
-	} );
-}
-
 var statusUrl = fewiurl + '/gxd/rnaSeqHeatMap/status?sessionKey=' + sessionKey;
 function retrieveUpdate(ms) {
 	$.get(statusUrl, function(data) {
@@ -215,9 +173,6 @@ function scheduleUpdate(ms) {
 	}
 }
 
-$('#loadingMessage').empty();
-$('#loadingMessage').html("<img src='/fewi/mgi/assets/images/loading.gif' height='24' width='24'> Loading data from GXD...");
-
 var url = fewiurl + '/gxd/rnaSeqHeatMap/json?' + '${queryString}' + '&sessionKey=' + sessionKey;
 $.get(url, function(data) { buildHeatMap(data); })
 	.fail(function() {
@@ -227,5 +182,8 @@ $.get(url, function(data) { buildHeatMap(data); })
 
 // Request status updates every 2 seconds.
 scheduleUpdate(2000);
+*/
+var queryString = '${queryString}';
 </script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd/rnaseq_heatmap.js"></script>
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
