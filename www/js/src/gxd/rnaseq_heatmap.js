@@ -85,9 +85,192 @@ var chunks = [];
 // map of sample keys
 var sampleKeys = {};
 
-// Slice and dice the data to produce the data for Morpheus.
-function buildDataForMorpheus() {
+// data structure for Morpheus (complex)
+var hmData = {};
+
+// Reset the hmData structure (for Morpheus) and fill in the simple fields.
+function initializeHmData(sampleList, markerList) {
+	hmData = {};		// reset structure
+	hmData['rows'] = markerList.length;
+	hmData['columns'] = sampleList.length;
+	hmData['seriesDataTypes'] = [ 'Float32' ];
+	hmData['seriesNames'] = [ 'Mouse RNA-Seq Heat Map of GXD search results' ];
+}
+
+// Populate the sample IDs into hmData.
+function fillInSampleIDs(sampleList) {
+	hmData['sampleIDs'] = [];
+	var sample;
+	for (var s = 0; s < sampleList.length; s++) {
+		sample = sampleList[s];
+		hmData['sampleIDs'].push(sample['bioreplicateSetID']);
+	}
+	log('Collected ' + hmData['sampleIDs'].length + ' sample IDs');
+}
+
+// Populate sample data into hmData.
+function fillInSamples(sampleList) {
+	hmData['columnMetadataModel'] = {
+		'vectors' : [
+			{
+				'name' : 'label',
+				'array' : []
+			},
+			{
+				'name' : 'structure',
+				'array' : []
+			},
+			{
+				'name' : 'age',
+				'array' : []
+			},
+			{
+				'name' : 'stage',
+				'array' : []
+			},
+			{
+				'name' : 'alleles',
+				'array' : []
+			},
+			{
+				'name' : 'strain',
+				'array' : []
+			},
+			{
+				'name' : 'sex',
+				'array' : []
+			},
+			{
+				'name' : 'expID',
+				'array' : []
+			},
+			{
+				'name' : 'MGI_BioReplicateSet_ID',
+				'array' : []
+			}
+		]
+	};
+
+	var sample;
+	for (var s = 0; s < sampleList.length; s++) {
+		sample = sampleList[s];
+		hmData['columnMetadataModel']['vectors'][0]['array'].push(sample['label']);
+		hmData['columnMetadataModel']['vectors'][1]['array'].push(sample['structure']);
+		hmData['columnMetadataModel']['vectors'][2]['array'].push(sample['age']);
+		hmData['columnMetadataModel']['vectors'][3]['array'].push(String(sample['stage']));
+		hmData['columnMetadataModel']['vectors'][4]['array'].push(sample['alleles']);
+		hmData['columnMetadataModel']['vectors'][5]['array'].push(sample['strain']);
+		hmData['columnMetadataModel']['vectors'][6]['array'].push(sample['sex']);
+		hmData['columnMetadataModel']['vectors'][7]['array'].push(sample['expID']);
+		hmData['columnMetadataModel']['vectors'][8]['array'].push(sample['bioreplicateSetID']);
+	}
+
+	log('Collected ' + hmData['columnMetadataModel']['vectors'].length + ' sample vectors');
+}
+
+// Populate marker data into hmData.
+function fillInMarkers(markerList) {
+	hmData['rowMetadataModel'] = {
+		'vectors' : [
+			{
+				'name' : 'Gene Symbol',
+				'array' : []
+			},
+			{
+				'name' : 'MGI ID',
+				'array' : []
+			},
+			{
+				'name' : 'Ensembl ID',
+				'array' : []
+			}
+		]
+	};
+
+	var marker;
+	for (var m = 0; m < markerList.length; m++) {
+		marker = markerList[m];
+		hmData['rowMetadataModel']['vectors'][0]['array'].push(marker['symbol']);
+		hmData['rowMetadataModel']['vectors'][1]['array'].push(marker['markerID']);
+		hmData['rowMetadataModel']['vectors'][2]['array'].push(marker['ensemblGMID']);
+	}
+
+	markerList.reverse();		// put the list back in original order
+	log('Collected ' + hmData['rowMetadataModel']['vectors'].length + ' marker vectors');
+}
+
+// Actually build the structure of TPM values into hmData.
+function fillInCells(sampleList, markerList) {
+	var notStudied = null;		// flag for cells that have not been studied
+
+	// Data are in a list of rows, with each row being a list of column values.
+	// Initially all will be notStudied.
 	
+	hmData['seriesArrays'] = [];
+	for (var r = 0; r < hmData['rows']; r++) {
+		hmData['seriesArrays'].push([]);				// add new empty row
+		for (var c = 0; c < hmData['columns']; c++) {
+			hmData['seriesArrays'][r].push(notStudied);	// add another column to that row
+		}
+	}
+	
+	log('Created data array (' + hmData['rows'] + ' x ' + hmData['columns'] + ')');
+	
+	// Now populate the cells with real data from cellTPM.
+	
+	var marker;
+	var markerID;
+	var sample;
+	var sampleID;
+	var cells = 0;
+	for (var m = 0; m < markerList.length; m++) {
+		marker = markerList[m];
+		markerID = marker['markerID'];
+		for (var s = 0; s < sampleList.length; s++) {
+			sample = sampleList[s];
+			sampleID = parseInt(sample['bioreplicateSetID']);
+			if ((markerID in cellTPM) && (sampleID in cellTPM[markerID])) {
+				hmData['seriesArrays'][m][s] = parseFloat(cellTPM[markerID][sampleID]);
+				cells++;
+			}
+		}
+	}
+	log('Filled data array with ' + cells + ' cells');
+}
+
+// Slice and dice the data to produce the data for Morpheus.  Then hand off to Morpheus to render the heat map.
+function buildDataForMorpheus(sampleList, markerList) {
+	initializeHmData(sampleList, markerList);
+	fillInSampleIDs(sampleList);
+	fillInSamples(sampleList);
+	fillInMarkers(markerList);
+	fillInCells(sampleList, markerList);
+	log('Finished building data for Morpheus');
+
+	$('#heatmapWrapper').empty();
+	
+	new morpheus.HeatMap({
+	    el: $('#heatmapWrapper'),
+	    dataset: hmData,
+	    colorScheme: {
+	      type: 'fractions',
+	      scalingMode: 1,
+	      stepped: false,
+	      min: 0,
+	      max: 5000,
+	      missingColor: '#FFFFFF',
+	      map: colorMap
+  		  }
+	  }); 
+
+	// Hide the tab title at the top of the heat map, as it has odd characters that I can't get
+	// to disappear (and it's not overly useful anyway, for our purposes).
+	$('li.morpheus-sortable[role=presentation]').css('display', 'none');
+  
+	// Show the Tips popup after a brief delay, so we give the browser's scrollbars time to get
+	// into place.
+	setTimeout(function() { showPopup() }, 500);
+	log('Heatmap displayed');
 }
 
 // Get data for the samples we found.  Then continue onward and build the data structure for Morpheus.
@@ -103,7 +286,7 @@ function retrieveSamples(sampleKeys, markerList) {
 			log('Got ' + sampleList.length + ' samples');
 			buildDataForMorpheus(sampleList, markerList);
 		} catch (e) {
-			updateLoadingMessage('Failed to retrieve samples for ' + sampleKeys.length + ' keys');
+			updateLoadingMessage('Failed to retrieve samples for ' + sampleKeys.length + ' keys: ' + e);
 		} })
 		.fail(function() {
 			updateLoadingMessage('Failed to retrieve samples (communication error).');
