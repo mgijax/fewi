@@ -206,11 +206,11 @@ function fillInCells(sampleList, markerList) {
 	// Data are in a list of rows, with each row being a list of column values.
 	// Initially all will be notStudied.
 	
-	hmData['seriesArrays'] = [];
+	hmData['seriesArrays'] = [[]];					// only 1 series, but allow for multiples
 	for (var r = 0; r < hmData['rows']; r++) {
-		hmData['seriesArrays'].push([]);				// add new empty row
+		hmData['seriesArrays'][0].push([]);				// add new empty row
 		for (var c = 0; c < hmData['columns']; c++) {
-			hmData['seriesArrays'][r].push(notStudied);	// add another column to that row
+			hmData['seriesArrays'][0][r].push(notStudied);	// add another column to that row
 		}
 	}
 	
@@ -230,7 +230,7 @@ function fillInCells(sampleList, markerList) {
 			sample = sampleList[s];
 			sampleID = parseInt(sample['bioreplicateSetID']);
 			if ((markerID in cellTPM) && (sampleID in cellTPM[markerID])) {
-				hmData['seriesArrays'][m][s] = parseFloat(cellTPM[markerID][sampleID]);
+				hmData['seriesArrays'][0][m][s] = parseFloat(cellTPM[markerID][sampleID]);
 				cells++;
 			}
 		}
