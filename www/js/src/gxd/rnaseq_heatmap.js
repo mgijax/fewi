@@ -195,7 +195,6 @@ function fillInMarkers(markerList) {
 		hmData['rowMetadataModel']['vectors'][2]['array'].push(marker['ensemblGMID']);
 	}
 
-	markerList.reverse();		// put the list back in original order
 	log('Collected ' + hmData['rowMetadataModel']['vectors'].length + ' marker vectors');
 }
 

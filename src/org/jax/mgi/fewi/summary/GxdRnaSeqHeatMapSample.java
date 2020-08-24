@@ -84,6 +84,10 @@ public class GxdRnaSeqHeatMapSample implements Cloneable {
 		sb.append(expID);
 		sb.append("_");
 		sb.append(bioreplicateSetID);
+		if (!"wild-type".equals(this.alleles)) {
+			// add a black star to the end to flag those with mutant alleles
+			sb.append("\u2605");
+		}
 		return sb.toString();
 	}
 

@@ -120,6 +120,7 @@
 
 <script type="text/javascript" src="${externalUrls.MORPHEUS}/js/morpheus-latest.min.js"></script>
 <script type="text/javascript" src="${externalUrls.MORPHEUS}/js/morpheus-external-latest.min.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd/rnaseq_heatmap.js"></script>
 <script type="text/javascript">
 /*
 // unique identifier for this particular session, so we can get updates from the server
@@ -184,6 +185,6 @@ $.get(url, function(data) { buildHeatMap(data); })
 scheduleUpdate(2000);
 */
 var queryString = '${queryString}';
+main();
 </script>
-<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd/rnaseq_heatmap.js"></script>
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
