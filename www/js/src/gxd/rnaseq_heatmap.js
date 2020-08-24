@@ -3,16 +3,17 @@
  * Assumes: queryString is available from the JSP as a Javascript variable.
  */
 
-var logging = true;	// is logging to the console enabled? (true/false)
+var logging = true;		// is logging to the console enabled? (true/false)
+var lastTime = new Date().getTime();	// time in ms when last message was logged
 
 // log a message to the browser console, if logging is enabled
 function log(msg) {
     if (logging) {
 	    try {
-    		console.log(msg);
-    	} catch (c) {
-    	    setTimeout(function() { throw new Error(msg); }, 0);
-    	}
+	    	var elapsed = new Date().getTime() - lastTime;
+    		console.log(elapsed + 'ms : ' + msg);
+	    	lastTime = new Date().getTime();
+    	} catch (c) {}
    	}
 }
 
@@ -74,7 +75,7 @@ function updateLoadingMessage(s, supportLink = true) {
 var cellTPM = {};
 
 // number of cells to request in a single batch
-var chunkSize = 250000;
+var chunkSize = 100000;
 
 // number of data cells to retrieve
 var totalCount = 0;
@@ -87,6 +88,10 @@ var sampleKeys = {};
 
 // data structure for Morpheus (complex)
 var hmData = {};
+
+// used for scaling progress meter
+var cellPercentTotal = 75;							// what percent are all cell retrievals assumed to be?
+var otherPercentTotal = 100 - cellPercentTotal;		// what percent is everything else?
 
 // Reset the hmData structure (for Morpheus) and fill in the simple fields.
 function initializeHmData(sampleList, markerList) {
