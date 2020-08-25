@@ -59,6 +59,7 @@ import org.jax.mgi.fewi.matrix.PhenoMatrixPopup;
 import org.jax.mgi.fewi.matrix.RecombinaseMatrixPopup;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.MatrixPaginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -1567,17 +1568,12 @@ public class GXDController {
 		List<String> assayType = new ArrayList<String>();
 		assayType.add("RNA-Seq");
 		
-		SearchParams params = new SearchParams();
-		query.setAssayType(assayType);
-		params.setFilter(parseGxdQueryForm(query));
-	
-		Paginator page = new Paginator(1);		// just first record for each marker requested
-		page.setStartIndex(0);
-		params.setPaginator(page);
-		
 		// retrieve markers
 		List<GxdRnaSeqHeatMapMarker> markers = new ArrayList<GxdRnaSeqHeatMapMarker>();
 		int fromCache = 0;
+		
+		// list of marker IDs that we don't already have cached and need to look up
+		List<String> toFind = new ArrayList<String>();
 		
 		if ((markerIDs != null) && (!markerIDs.trim().equals(""))) {
 			String[] markerIDList = markerIDs.trim().split("[ ]*,[ ]*");
@@ -1587,21 +1583,26 @@ public class GXDController {
 					markers.add(hmMarkers.get(id).clone());
 					fromCache++;
 				} else {
-					query.setMarkerMgiId(id);
-					params.setFilter(parseGxdQueryForm(query));
-					SearchResults<SolrGxdRnaSeqHeatMapResult> searchResults = gxdFinder.searchRnaSeqHeatMapResults(params);
-					List<SolrGxdRnaSeqHeatMapResult> results = searchResults.getResultObjects();
-					if ((results != null) && (results.size() > 0)) {
-						SolrGxdRnaSeqHeatMapResult result = results.get(0);
+					toFind.add(id);
+				}
+			}
 
-						GxdRnaSeqHeatMapMarker marker = new GxdRnaSeqHeatMapMarker();
-						marker.setMarkerID(result.getMarkerMgiID());
-						marker.setEnsemblGMID(result.getMarkerEnsemblGeneModelID());
-						marker.setSymbol(result.getMarkerSymbol());
+			Paginator page = new Paginator(150000);		// as many markers as we can get (150k should be high enough)
+			SearchParams params = new SearchParams();
+			params.setFilter(new Filter(SearchConstants.CDNA_MARKER_ID, toFind, Operator.OP_IN));
+			params.setPaginator(page);
+		
+			SearchResults<Marker> searchResults = markerFinder.getMarkerByID(params);
+			List<Marker> results = searchResults.getResultObjects();
+			if ((results != null) && (results.size() > 0)) {
+				for (Marker m : results) {
+					GxdRnaSeqHeatMapMarker marker = new GxdRnaSeqHeatMapMarker();
+					marker.setMarkerID(m.getPrimaryID());
+					marker.setEnsemblGMID(m.getEnsemblGeneModelID().getAccID());
+					marker.setSymbol(m.getSymbol());
 
-						markers.add(marker);			// add to list of markers for this request
-						hmMarkers.put(id, marker);		// add to cache of markers for future use
-					}
+					markers.add(marker);							// add to list of markers for this request
+					hmMarkers.put(marker.getMarkerID(), marker);	// add to cache of markers for future use
 				}
 			}
 
