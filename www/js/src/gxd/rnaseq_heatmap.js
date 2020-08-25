@@ -75,7 +75,7 @@ function updateLoadingMessage(s, supportLink = true) {
 var cellTPM = {};
 
 // number of cells to request in a single batch
-var chunkSize = 100000;
+var chunkSize = 125000;
 
 // number of data cells to retrieve
 var totalCount = 0;
@@ -401,7 +401,7 @@ function main() {
 		try {
 			// Once we get the count, start fetching cells.
 			totalCount = parseInt(data);
-			log('Got totalCount of ' + data + ', parsed to be integer ' + totalCount);
+			log('Got totalCount of ' + data);
 			getCells(queryString);
 		} catch (e) {
 			updateLoadingMessage('Non-integer count of records.');
