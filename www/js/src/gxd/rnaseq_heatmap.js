@@ -90,7 +90,7 @@ var sampleKeys = {};
 var hmData = {};
 
 // used for scaling progress meter
-var cellPercentTotal = 75;							// what percent are all cell retrievals assumed to be?
+var cellPercentTotal = 90;							// what percent are all cell retrievals assumed to be?
 var otherPercentTotal = 100 - cellPercentTotal;		// what percent is everything else?
 
 // Reset the hmData structure (for Morpheus) and fill in the simple fields.
@@ -392,7 +392,7 @@ function getCells() {
 
 // Start processing data retrieval for the RNA-Seq heat map, initially getting the count of data cells.
 function main() {
-	updateLoadingMessage('<img src="/fewi/mgi/assets/images/loading.gif" height="24" width="24"> Loading data from GXD...');
+	updateLoadingMessage('<img src="/fewi/mgi/assets/images/loading.gif" height="24" width="24"> Loading data from GXD...', false);
 
 	// get total count of records to be processed
 	
