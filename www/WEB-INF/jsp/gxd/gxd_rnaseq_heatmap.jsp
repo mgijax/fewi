@@ -121,68 +121,6 @@
 <script type="text/javascript" src="${externalUrls.MORPHEUS}/js/morpheus-external-latest.min.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd/rnaseq_heatmap.js"></script>
 <script type="text/javascript">
-/*
-// unique identifier for this particular session, so we can get updates from the server
-var sessionKey = mgiRandomString(30);
-
-function buildHeatMap(json) {
-	  $('#heatmapWrapper').empty();
-
-	  new morpheus.HeatMap({
-	    el: $('#heatmapWrapper'),
-	    dataset: morpheus.Dataset.fromJSON(json),
-	    colorScheme: {
-	      type: 'fractions',
-	      scalingMode: 1,
-	      stepped: false,
-	      min: 0,
-	      max: 5000,
-	      missingColor: '#FFFFFF',
-	      map: colorMap
-  		  }
-	  }); 
-
-  // Hide the tab title at the top of the heat map, as it has odd characters that I can't get
-  // to disappear (and it's not overly useful anyway, for our purposes).
-  $('li.morpheus-sortable[role=presentation]').css('display', 'none');
-  
-  // Show the Tips popup after a brief delay, so we give the browser's scrollbars time to get
-  // into place.
-  setTimeout(function() { showPopup() }, 500);
-}
-
-var statusUrl = fewiurl + '/gxd/rnaSeqHeatMap/status?sessionKey=' + sessionKey;
-function retrieveUpdate(ms) {
-	$.get(statusUrl, function(data) {
-		if ($('#statusUpdates').length == 1) {
-			$('#statusUpdates').empty();
-			$('#statusUpdates').html(data);
-			scheduleUpdate(ms);
-			var margin = ($(window).width() - $('#progressMeter').width()) / 2;
-			$('#progressMeter').css('margin-left', margin + 'px');
-		}
-	}).fail(function() {
-			$('#statusUpdates').empty();
-			$('#statusUpdates').text('Failed to get status update');
-		});
-}
-
-function scheduleUpdate(ms) {
-	if ($('#statusUpdates').length > 0) {
-		setTimeout(function() { retrieveUpdate(ms); }, ms);
-	}
-}
-
-var url = fewiurl + '/gxd/rnaSeqHeatMap/json?' + '${queryString}' + '&sessionKey=' + sessionKey;
-$.get(url, function(data) { buildHeatMap(data); })
-	.fail(function() {
-		$('#loadingMessage').empty();
-		$('#loadingMessage').html('Retrieval error. Please write User Support (<a href="${configBean.MGIHOME_URL}"/support/mgi_inbox.shtml" target="_blank">mgi-help@jax.org</a>) with your search parameters.');
-	});
-
-// Request status updates every 2 seconds.
-scheduleUpdate(2000);
-*/
 var queryString = '${queryString}';
 main();
 </script>

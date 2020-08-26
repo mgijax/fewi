@@ -90,8 +90,8 @@ function updateLoadingMessage(s, supportLink = true) {
 // cellTPM[marker ID][sample key] = average quantile-normalized TPM value
 var cellTPM = {};
 
-// number of cells to request in a single batch (sized to have progress meter updates every 5-6 seconds)
-var chunkSize = 60000;
+// number of cells to request in a single batch (sized to have progress meter updates every 8-9 seconds)
+var chunkSize = 90000;
 
 // number of data cells already retrieved
 var countDone = 0;
