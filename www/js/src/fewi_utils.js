@@ -515,3 +515,22 @@ function noAlert(s) {
 	if (s == null) { return s; }
 	return s.replace(/alert[(][^)]*[)]/g, '');
 }
+
+// return a progress meter as two nested DIVs, including a rollover tip for actual numbers
+function progressMeter(numberDone, totalNumber) {
+	if (totalNumber == 0) return "-";
+	
+	var pct = Math.round((100.0 * numberDone) / totalNumber);
+	var sb = "";
+	sb = sb + "<div id='progressMeter' style='border: 1px solid black; width:200px; height:20px; margin-top: 5px;' title='" + Number(numberDone).toLocaleString() + " of " + Number(totalNumber).toLocaleString() + "'>";
+	sb = sb + "<div id='shadedPart' style='height: 100%; background-color: darkblue; float:left; color: white; width: " + pct + "%'>";
+	if (pct > 15) {
+		sb = sb + pct + "%";
+		sb = sb + "</div><!-- shadedPart -->";
+	} else {
+		sb = sb + "</div><!-- shadedPart -->";
+		sb = sb + pct + "%";
+	}
+	sb = sb + "</div><!-- progressMeter -->";
+	return sb;
+}

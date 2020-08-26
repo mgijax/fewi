@@ -62,10 +62,26 @@ function showPopup() {
 	} );
 }
 
+// If countDone is non-null, show a progress meter showing the progress from 'countDone' to global 'totalCount'.
+function updateStatus(countDone = null) {
+	if (countDone != null) {
+		try {
+			var s = progressMeter(countDone, totalCount);
+			$('#statusUpdates').empty();
+			$('#statusUpdates').html(s);
+			var margin = ($(window).width() - $('#progressMeter').width()) / 2;
+			$('#progressMeter').css('margin-left', margin + 'px');
+		} catch (e) {
+			console.log('Failed to bulid progressMeter: ' + e);
+		}
+	}
+}
+
 // update the #loadingMessage div to show the given message in 's', appending a user support link if specified.
+// If supportLink is true, give a message about contacting user support.
 function updateLoadingMessage(s, supportLink = true) {
 	if (supportLink) {
-		s = s + ' Please write User Support (<a href="${configBean.MGIHOME_URL}"/support/mgi_inbox.shtml" target="_blank">mgi-help@jax.org</a>) with your search parameters.';
+		s = s + '<br/> Please write User Support (<a href="${configBean.MGIHOME_URL}"/support/mgi_inbox.shtml" target="_blank">mgi-help@jax.org</a>) with your search parameters.';
 	}
 	$('#loadingMessage').empty();
 	$('#loadingMessage').html(s);
@@ -74,8 +90,11 @@ function updateLoadingMessage(s, supportLink = true) {
 // cellTPM[marker ID][sample key] = average quantile-normalized TPM value
 var cellTPM = {};
 
-// number of cells to request in a single batch
-var chunkSize = 125000;
+// number of cells to request in a single batch (sized to have progress meter updates every 5-6 seconds)
+var chunkSize = 60000;
+
+// number of data cells already retrieved
+var countDone = 0;
 
 // number of data cells to retrieve
 var totalCount = 0;
@@ -244,6 +263,7 @@ function fillInCells(sampleList, markerList) {
 
 // Slice and dice the data to produce the data for Morpheus.  Then hand off to Morpheus to render the heat map.
 function buildDataForMorpheus(sampleList, markerList) {
+	updateLoadingMessage('Collating cells, genes, and samples...', false);
 	initializeHmData(sampleList, markerList);
 	fillInSampleIDs(sampleList);
 	fillInSamples(sampleList);
@@ -284,6 +304,7 @@ function retrieveSamples(sampleKeys, markerList) {
 	}
 	var url = fewiurl + '/gxd/rnaSeqHeatMap/samples';
 	var parameters = queryString + '&hmSampleKeys=' + String(sampleKeys);
+	updateLoadingMessage('Getting data for ' + Number(sampleKeys.length).toLocaleString() + ' samples...', false);
 	
 	$.post(url, parameters, function(sampleList) {
 		try {
@@ -304,6 +325,7 @@ function retrieveMarkers(markerIDs, sampleKeys) {
 	}
 	var url = fewiurl + '/gxd/rnaSeqHeatMap/markers';
 	var parameters = queryString + '&hmMarkerIDs=' + String(markerIDs);
+	updateLoadingMessage('Getting data for ' + Number(markerIDs.length).toLocaleString() + ' genes...', false);
 	
 	$.post(url, parameters, function(markerList) {
 		try {
@@ -322,6 +344,9 @@ function retrieveNextChunk() {
 	if (chunks.length > 0) {
 		[ start, end ] = chunks.pop()
 		
+		if (countDone < totalCount) {
+			updateStatus(countDone);
+		}
 		var url = fewiurl + '/gxd/rnaSeqHeatMap/recordSlice?' + queryString + '&start=' + start + '&end=' + end;
 		$.get(url, function(cellList) {
 			try {
@@ -340,6 +365,7 @@ function retrieveNextChunk() {
 						sampleKeys[cell.csmKey] = 1;
 					}
 				}
+				countDone = countDone + cellList.length;
 				retrieveNextChunk();		// If more chunks to gather, do the next one.
 
 			} catch (e) {
@@ -362,6 +388,7 @@ function retrieveNextChunk() {
 		}
 		log('Got ' + markerIDs.length + ' marker IDs');
 		log('Got ' + sampleKeyList.length + ' sample keys');
+		$('#statusUpdates').empty();
 		
 		retrieveMarkers(markerIDs, sampleKeyList);
 	}
@@ -381,18 +408,23 @@ function identifyChunks() {
 		start = end;
 	}
 	log('Created ' + chunks.length + ' chunks');
+	updateLoadingMessage('Getting TPM values from GXD...', false);
 	retrieveNextChunk();
 }
 
 // Having identified the 'totalCount' of cells to retrieve, go ahead and gather them.
 function getCells() {
 	cellTPM = {};		// reset mapping
-	identifyChunks();
+	try {
+		identifyChunks();
+	} catch (e) {
+		console.log('Error: ' + e);
+	}
 }
 
 // Start processing data retrieval for the RNA-Seq heat map, initially getting the count of data cells.
 function main() {
-	updateLoadingMessage('<img src="/fewi/mgi/assets/images/loading.gif" height="24" width="24"> Loading data from GXD...', false);
+	updateLoadingMessage('<img src="/fewi/mgi/assets/images/loading.gif" height="24" width="24" /> Preparing...', false);
 
 	// get total count of records to be processed
 	

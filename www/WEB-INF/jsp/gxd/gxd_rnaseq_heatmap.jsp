@@ -68,7 +68,6 @@
   	text-align: center;
   }
   #statusUpdates {
-  	clear: both;
   	text-align: center;
   }
 </style>
