@@ -5,6 +5,7 @@
 
 var logging = true;		// is logging to the console enabled? (true/false)
 var lastTime = new Date().getTime();	// time in ms when last message was logged
+var spinner = "<img src='/fewi/mgi/assets/images/loading.gif' height='24' width='24'>";
 
 // log a message to the browser console, if logging is enabled
 function log(msg) {
@@ -263,7 +264,7 @@ function fillInCells(sampleList, markerList) {
 
 // Slice and dice the data to produce the data for Morpheus.  Then hand off to Morpheus to render the heat map.
 function buildDataForMorpheus(sampleList, markerList) {
-	updateLoadingMessage('Collating cells, genes, and samples...', false);
+	updateLoadingMessage(spinner + ' Collating cells, genes, and samples...', false);
 	initializeHmData(sampleList, markerList);
 	fillInSampleIDs(sampleList);
 	fillInSamples(sampleList);
@@ -304,7 +305,7 @@ function retrieveSamples(sampleKeys, markerList) {
 	}
 	var url = fewiurl + '/gxd/rnaSeqHeatMap/samples';
 	var parameters = queryString + '&hmSampleKeys=' + String(sampleKeys);
-	updateLoadingMessage('Getting data for ' + Number(sampleKeys.length).toLocaleString() + ' samples...', false);
+	updateLoadingMessage(spinner + ' Getting data for ' + Number(sampleKeys.length).toLocaleString() + ' samples...', false);
 	
 	$.post(url, parameters, function(sampleList) {
 		try {
@@ -325,7 +326,7 @@ function retrieveMarkers(markerIDs, sampleKeys) {
 	}
 	var url = fewiurl + '/gxd/rnaSeqHeatMap/markers';
 	var parameters = queryString + '&hmMarkerIDs=' + String(markerIDs);
-	updateLoadingMessage('Getting data for ' + Number(markerIDs.length).toLocaleString() + ' genes...', false);
+	updateLoadingMessage(spinner + ' Getting data for ' + Number(markerIDs.length).toLocaleString() + ' genes...', false);
 	
 	$.post(url, parameters, function(markerList) {
 		try {
@@ -351,18 +352,27 @@ function retrieveNextChunk() {
 		$.get(url, function(cellList) {
 			try {
 				log('Got ' + cellList.length + ' cells between ' + start + ' and ' + end);
-				var cell;
-				for (cell of cellList) {
+				var cell, cellString;
+				var markerID, csmKey, tpm;
 
+				// Transferring cell data as a comma-delimited string rather than a dictionary reduces data transit
+				// by roughly 50%.
+				
+				for (cellString of cellList) {
+					cell = cellString.split(',');		// marker ID, sample key, TPM
+					markerID = cell[0];
+					csmKey = cell[1];
+					tpm = cell[2];
+					
 					// For each (marker, sample) pair keep its TPM value.
-					if (!(cell.markerID in cellTPM)) {
-						cellTPM[cell.markerID] = {}
+					if (!(markerID in cellTPM)) {
+						cellTPM[markerID] = {}
 					}
-					cellTPM[cell.markerID][cell.csmKey] = cell.avgQnTpm;
+					cellTPM[markerID][csmKey] = tpm;
 					
 					// Remember which sample keys we've seen.
-					if (!(cell.csmKey in sampleKeys)) {
-						sampleKeys[cell.csmKey] = 1;
+					if (!(csmKey in sampleKeys)) {
+						sampleKeys[csmKey] = 1;
 					}
 				}
 				countDone = countDone + cellList.length;
@@ -408,7 +418,7 @@ function identifyChunks() {
 		start = end;
 	}
 	log('Created ' + chunks.length + ' chunks');
-	updateLoadingMessage('Getting TPM values from GXD...', false);
+	updateLoadingMessage(spinner + ' Getting TPM values from GXD...', false);
 	retrieveNextChunk();
 }
 
@@ -424,7 +434,7 @@ function getCells() {
 
 // Start processing data retrieval for the RNA-Seq heat map, initially getting the count of data cells.
 function main() {
-	updateLoadingMessage('<img src="/fewi/mgi/assets/images/loading.gif" height="24" width="24" /> Preparing...', false);
+	updateLoadingMessage(spinner + ' Preparing...', false);
 
 	// get total count of records to be processed
 	

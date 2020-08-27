@@ -87,7 +87,6 @@ import org.jax.mgi.fewi.summary.GxdAssaySummaryRow;
 import org.jax.mgi.fewi.summary.GxdCountsSummary;
 import org.jax.mgi.fewi.summary.GxdImageSummaryRow;
 import org.jax.mgi.fewi.summary.GxdMarkerSummaryRow;
-import org.jax.mgi.fewi.summary.GxdRnaSeqHeatMapCell;
 import org.jax.mgi.fewi.summary.GxdRnaSeqHeatMapMarker;
 import org.jax.mgi.fewi.summary.GxdRnaSeqHeatMapSample;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
@@ -1498,8 +1497,10 @@ public class GXDController {
 	// Get the count of documents for an RNA-Seq heat map.  'start' gives the record index to start with, while
 	// 'end' gives us the one (after) which we should end; this is typical slicing behavior, gathering records
 	// from start up to but not including end.
+	// Transferring cell data as a comma-delimited string rather than a dictionary reduces data transit
+	// by roughly 50%.
 	@RequestMapping("/rnaSeqHeatMap/recordSlice")
-	public @ResponseBody List<GxdRnaSeqHeatMapCell> gxdRnaSeqHeatMapRecordSlice(
+	public @ResponseBody List<String> gxdRnaSeqHeatMapRecordSlice(
 			HttpSession session,
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query,
@@ -1529,13 +1530,15 @@ public class GXDController {
 		SearchResults<SolrGxdRnaSeqHeatMapResult> searchResults = gxdFinder.searchRnaSeqHeatMapResults(params);
 		logger.info(" - got " + searchResults.getResultObjects().size() + " records");
 
-		List<GxdRnaSeqHeatMapCell> cells = new ArrayList<GxdRnaSeqHeatMapCell>();
+		List<String> cells = new ArrayList<String>();
 		for (SolrGxdRnaSeqHeatMapResult result : searchResults.getResultObjects()) {
-			GxdRnaSeqHeatMapCell cell = new GxdRnaSeqHeatMapCell();
-			cell.setMarkerID(result.getMarkerMgiID());
-			cell.setCsmKey(result.getConsolidatedSampleKey());
-			cell.setAvgQnTpm(result.getAvergageQNTPM());
-			cells.add(cell);
+			StringBuffer cell = new StringBuffer();
+			cell.append(result.getMarkerMgiID());
+			cell.append(",");
+			cell.append(result.getConsolidatedSampleKey());
+			cell.append(",");
+			cell.append(result.getAvergageQNTPM());
+			cells.add(cell.toString());
 		}
 		logger.info(" - returning " + cells.size() + " cells");
 		return cells;
