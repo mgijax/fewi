@@ -1576,22 +1576,29 @@ public class GXDController {
 				}
 			}
 
-			Paginator page = new Paginator(150000);		// as many markers as we can get (150k should be high enough)
+			/* Need to find markers in manageable batches so as not to overwhelm Solr's limit on
+			 * boolean clauses in a search.  (configured at 8k clauses)
+			 */
+			List<List<String>> idBatches = FewiUtil.getBatches(toFind, 8000);
+			Paginator page = new Paginator(10000);	
 			SearchParams params = new SearchParams();
-			params.setFilter(new Filter(SearchConstants.CDNA_MARKER_ID, toFind, Operator.OP_IN));
 			params.setPaginator(page);
-		
-			SearchResults<Marker> searchResults = markerFinder.getMarkerByID(params);
-			List<Marker> results = searchResults.getResultObjects();
-			if ((results != null) && (results.size() > 0)) {
-				for (Marker m : results) {
-					GxdRnaSeqHeatMapMarker marker = new GxdRnaSeqHeatMapMarker();
-					marker.setMarkerID(m.getPrimaryID());
-					marker.setEnsemblGMID(m.getEnsemblGeneModelID().getAccID());
-					marker.setSymbol(m.getSymbol());
+			
+			for (List<String> idBatch : idBatches) {
+				params.setFilter(new Filter(SearchConstants.CDNA_MARKER_ID, idBatch, Operator.OP_IN));
+				
+				SearchResults<Marker> searchResults = markerFinder.getMarkerByID(params);
+				List<Marker> results = searchResults.getResultObjects();
+				if ((results != null) && (results.size() > 0)) {
+					for (Marker m : results) {
+						GxdRnaSeqHeatMapMarker marker = new GxdRnaSeqHeatMapMarker();
+						marker.setMarkerID(m.getPrimaryID());
+						marker.setEnsemblGMID(m.getEnsemblGeneModelID().getAccID());
+						marker.setSymbol(m.getSymbol());
 
-					markers.add(marker);							// add to list of markers for this request
-					hmMarkers.put(marker.getMarkerID(), marker);	// add to cache of markers for future use
+						markers.add(marker);							// add to list of markers for this request
+						hmMarkers.put(marker.getMarkerID(), marker);	// add to cache of markers for future use
+					}
 				}
 			}
 
