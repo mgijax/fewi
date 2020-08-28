@@ -6,6 +6,7 @@
 var logging = true;		// is logging to the console enabled? (true/false)
 var lastTime = new Date().getTime();	// time in ms when last message was logged
 var spinner = "<img src='/fewi/mgi/assets/images/loading.gif' height='24' width='24'>";
+var startTime = new Date().getTime();	// time in ms when script loaded
 
 // log a message to the browser console, if logging is enabled
 function log(msg) {
@@ -91,8 +92,8 @@ function updateLoadingMessage(s, supportLink = true) {
 // cellTPM[marker ID][sample key] = average quantile-normalized TPM value
 var cellTPM = {};
 
-// number of cells to request in a single batch (sized to have progress meter updates every 8-9 seconds)
-var chunkSize = 90000;
+// number of cells to request in a single batch (sized to have progress meter updates every 11-12 seconds)
+var chunkSize = 150000;
 
 // number of data cells already retrieved
 var countDone = 0;
@@ -103,15 +104,20 @@ var totalCount = 0;
 // list of chunks of cells to retrieve, each a sublist as [ start index (inclusive), end index (exclusive) ]
 var chunks = [];
 
+// number of chunks where we've sent a request and are currently waiting for results
+var chunksInProgress = 0;
+
+// max number of chunks to request simultaneously
+var maxRequests = 3;
+
+// Have we failed yet?  If so, we should ignore pending data requests and not overwrite error messages.
+var failed = false;
+
 // map of sample keys
 var sampleKeys = {};
 
 // data structure for Morpheus (complex)
 var hmData = {};
-
-// used for scaling progress meter
-var cellPercentTotal = 90;							// what percent are all cell retrievals assumed to be?
-var otherPercentTotal = 100 - cellPercentTotal;		// what percent is everything else?
 
 // Reset the hmData structure (for Morpheus) and fill in the simple fields.
 function initializeHmData(sampleList, markerList) {
@@ -295,7 +301,8 @@ function buildDataForMorpheus(sampleList, markerList) {
 	// Show the Tips popup after a brief delay, so we give the browser's scrollbars time to get
 	// into place.
 	setTimeout(function() { showPopup() }, 500);
-	log('Heatmap displayed');
+	var elapsed = new Date().getTime() - startTime;
+	log('Heatmap displayed (' + elapsed + ' ms)');
 }
 
 // Get data for the samples we found.  Then continue onward and build the data structure for Morpheus.
@@ -340,67 +347,84 @@ function retrieveMarkers(markerIDs, sampleKeys) {
 		});
 }
 
-// Go ahead and retrieve the different chunks of data, then process them.
-function retrieveNextChunk() {
-	if (chunks.length > 0) {
-		[ start, end ] = chunks.pop()
-		
-		if (countDone < totalCount) {
-			updateStatus(countDone);
+// Process the given chunk of data (cells from the server)
+function processChunk(cellList, start, end) {
+	if (failed) {
+		return;		// Just bail out with no further updates, in case of another retrieval failing.
+	}
+	chunksInProgress = chunksInProgress - 1;
+
+	var cell, cellString;
+	var markerID, csmKey, tpm;
+
+	// Transferring cell data as a comma-delimited string rather than a dictionary reduces data transit
+	// by roughly 50%.
+				
+	for (cellString of cellList) {
+		cell = cellString.split(',');		// marker ID, sample key, TPM
+		markerID = cell[0];
+		csmKey = cell[1];
+		tpm = cell[2];
+					
+		// For each (marker, sample) pair keep its TPM value.
+		if (!(markerID in cellTPM)) {
+			cellTPM[markerID] = {}
 		}
+		cellTPM[markerID][csmKey] = tpm;
+					
+		// Remember which sample keys we've seen.
+		if (!(csmKey in sampleKeys)) {
+			sampleKeys[csmKey] = 1;
+		}
+	}
+
+	countDone = countDone + cellList.length;
+	if (countDone < totalCount) {
+		updateStatus(countDone);
+	}
+	retrieveChunk();		// If more chunks to gather, do the next one.
+}
+
+// Go ahead and retrieve the different chunks of data, then process them.
+function retrieveChunk() {
+	// More chunks to do?  Grab one and go.
+	if (chunks.length > 0) {
+		[ start, end ] = chunks.pop();
+		chunksInProgress = chunksInProgress + 1;
+		
 		var url = fewiurl + '/gxd/rnaSeqHeatMap/recordSlice?' + queryString + '&start=' + start + '&end=' + end;
 		$.get(url, function(cellList) {
 			try {
-				log('Got ' + cellList.length + ' cells between ' + start + ' and ' + end);
-				var cell, cellString;
-				var markerID, csmKey, tpm;
-
-				// Transferring cell data as a comma-delimited string rather than a dictionary reduces data transit
-				// by roughly 50%.
-				
-				for (cellString of cellList) {
-					cell = cellString.split(',');		// marker ID, sample key, TPM
-					markerID = cell[0];
-					csmKey = cell[1];
-					tpm = cell[2];
-					
-					// For each (marker, sample) pair keep its TPM value.
-					if (!(markerID in cellTPM)) {
-						cellTPM[markerID] = {}
-					}
-					cellTPM[markerID][csmKey] = tpm;
-					
-					// Remember which sample keys we've seen.
-					if (!(csmKey in sampleKeys)) {
-						sampleKeys[csmKey] = 1;
-					}
-				}
-				countDone = countDone + cellList.length;
-				retrieveNextChunk();		// If more chunks to gather, do the next one.
-
+				log('Got ' + cellList.length + ' cells from ' + start + ' to ' + end);
+				processChunk(cellList, start, end);
 			} catch (e) {
 				updateLoadingMessage('Failed to retrieve cells from ' + start + ' to ' + end + ": " + e);
-			} })
-			.fail(function() {
+				failed = true;
+			}
+		}).fail(function() {
 				updateLoadingMessage('Failed to retrieve cells (communication error).');
-			});
-	} else {
+				failed = true;
+		});
+	} else if (chunksInProgress == 0) {
 		// All chunks have been retrieved, so process them.  We should have data in cellTPM and sampleKeys.
 		// Identify the unique marker IDs, building them and the sample keys into lists.
 		var markerIDs = [];
 		for (markerID in cellTPM) {
 			markerIDs.push(markerID);
 		}
+		log('Got ' + markerIDs.length + ' marker IDs');
 		
 		var sampleKeyList = [];
 		for (sampleKey in sampleKeys) {
 			sampleKeyList.push(sampleKey);
 		}
-		log('Got ' + markerIDs.length + ' marker IDs');
 		log('Got ' + sampleKeyList.length + ' sample keys');
 		$('#statusUpdates').empty();
 		
 		retrieveMarkers(markerIDs, sampleKeyList);
+	} else {
+		log('Waiting for other chunks to finish');
+		// Other chunks are still being processed, so just drop this line of processing and wait for them.
 	}
 }
 
@@ -419,7 +443,11 @@ function identifyChunks() {
 	}
 	log('Created ' + chunks.length + ' chunks');
 	updateLoadingMessage(spinner + ' Getting TPM values from GXD...', false);
-	retrieveNextChunk();
+	
+	// start up multiple simultaneous requests of the server
+	for (var i = 0; i < maxRequests; i++) {
+		retrieveChunk();
+	}
 }
 
 // Having identified the 'totalCount' of cells to retrieve, go ahead and gather them.
