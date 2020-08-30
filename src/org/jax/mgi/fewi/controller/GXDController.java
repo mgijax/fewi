@@ -59,6 +59,7 @@ import org.jax.mgi.fewi.matrix.PhenoMatrixPopup;
 import org.jax.mgi.fewi.matrix.RecombinaseMatrixPopup;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.MatrixPaginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -86,17 +87,18 @@ import org.jax.mgi.fewi.summary.GxdAssaySummaryRow;
 import org.jax.mgi.fewi.summary.GxdCountsSummary;
 import org.jax.mgi.fewi.summary.GxdImageSummaryRow;
 import org.jax.mgi.fewi.summary.GxdMarkerSummaryRow;
-import org.jax.mgi.fewi.summary.GxdRnaSeqHeatMapData;
+import org.jax.mgi.fewi.summary.GxdRnaSeqHeatMapMarker;
+import org.jax.mgi.fewi.summary.GxdRnaSeqHeatMapSample;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.FewiUtil;
 import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.QueryParser;
-import org.jax.mgi.fewi.util.SessionMonitor;
 import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.shr.fe.query.SolrLocationTranslator;
+import mgi.frontend.datamodel.sort.SmartAlphaComparator;
 import org.jax.mgi.shr.jsonmodel.Clone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -140,6 +142,10 @@ public class GXDController {
 	private static String DETECTED = "detected";	// custom case
 	private static String MARKERTYPE_DISPLAY = "markerTypeDisplay";	// custom case
 	private static String TPM_LEVEL_SORT = "tpmLevelSort";	// custom case
+	
+	// caches of objects for RNA-Seq Heat Map generation
+	private static Map<String, GxdRnaSeqHeatMapMarker> hmMarkers = new HashMap<String, GxdRnaSeqHeatMapMarker>();
+	private static Map<String, GxdRnaSeqHeatMapSample> hmSamples = new HashMap<String, GxdRnaSeqHeatMapSample>();
 	
 	// --------------------//
 	// instance variables
@@ -863,8 +869,7 @@ public class GXDController {
 				logger.debug("--> Null Object");
 			}
 		}
-		JsonSummaryResponse<GxdMarkerSummaryRow> jsonResponse
-		= new JsonSummaryResponse<GxdMarkerSummaryRow>();
+		JsonSummaryResponse<GxdMarkerSummaryRow> jsonResponse = new JsonSummaryResponse<GxdMarkerSummaryRow>();
 		jsonResponse.setSummaryRows(summaryRows);
 		jsonResponse.setTotalCount(searchResults.getTotalCount());
 
@@ -1461,32 +1466,16 @@ public class GXDController {
 		}
 	}
 	
-	// Get the String of status info for the given RNA-Seq heat map identified by sessionKey.
-	@RequestMapping("/rnaSeqHeatMap/status")
-	public @ResponseBody String gxdRnaSeqHeatMapStatus(
-			@RequestParam(value="sessionKey") String sessionKey) {
-
-		logger.debug("Checking on session: " + sessionKey);
-		return SessionMonitor.getSharedMonitor().getStatus(sessionKey);
-	}
-
-	// Get the packet of JSON data for an RNA-Seq heat map.  sessionKey is passed in from the user's browser
-	// to uniquely identify the session.
-	@RequestMapping("/rnaSeqHeatMap/json")
-	public @ResponseBody GxdRnaSeqHeatMapData gxdRnaSeqHeatMapJson(
+	// Get the count of documents for an RNA-Seq heat map.
+	@RequestMapping("/rnaSeqHeatMap/totalCount")
+	public @ResponseBody String gxdRnaSeqHeatMapTotalCount(
 			HttpSession session,
 			HttpServletRequest request,
-			@ModelAttribute GxdQueryForm query,
-			@RequestParam(value="sessionKey") String sessionKey
+			@ModelAttribute GxdQueryForm query
 			) throws Exception {
-		logger.info("gxdRnaSeqHeatMapJson() started");
+
+		logger.info("gxdRnaSeqHeatMapTotalCount() started");
 		populateMarkerIDs(session, query);
-		int heatMapPageSize = 250000;
-
-		logger.debug(" - initial RAM: " + String.format("%,d", new Long(Runtime.getRuntime().freeMemory())));
-
-		// repackage them into the JSON object
-		GxdRnaSeqHeatMapData dataPacket = new GxdRnaSeqHeatMapData();
 
 		List<String> assayType = new ArrayList<String>();
 		assayType.add("RNA-Seq");
@@ -1495,63 +1484,202 @@ public class GXDController {
 		query.setAssayType(assayType);
 		params.setFilter(parseGxdQueryForm(query));
 	
-		Paginator page = new Paginator(heatMapPageSize);
-		int start = 0;
-		boolean done = false;
+		Paginator page = new Paginator(0);
+		page.setStartIndex(0);
+		params.setPaginator(page);
 		
-		SessionMonitor sm = SessionMonitor.getSharedMonitor();
-		sm.startSession(sessionKey);
-		logger.debug("Started session: " + sessionKey);
+		SearchResults<SolrGxdRnaSeqHeatMapResult> searchResults = gxdFinder.searchRnaSeqHeatMapResults(params);
+		logger.info("gxdRnaSeqHeatMapTotalCount() returning: " + searchResults.getTotalCount());
 
-		while (!done) {
-			page.setStartIndex(start);
-			params.setPaginator(page);
+		return Integer.toString(searchResults.getTotalCount());
+	}
 
-			// get the individual heat map cells
-			SearchResults<SolrGxdRnaSeqHeatMapResult> searchResults = gxdFinder.searchRnaSeqHeatMapResults(params);
-			
-			List<SolrGxdRnaSeqHeatMapResult> results = searchResults.getResultObjects();
-			if ((results == null) || (results.size() == 0)) {
-				done = true;
-			} else {
-				logger.debug("Got heat map cells (start " + start + " of " + searchResults.getTotalCount() + "): " + results.size());
-				dataPacket.addResults(results);
-				start = start + heatMapPageSize;
-				sm.setStatus(sessionKey, FormatHelper.progressMeter(start, searchResults.getTotalCount()));
+	// Get the count of documents for an RNA-Seq heat map.  'start' gives the record index to start with, while
+	// 'end' gives us the one (after) which we should end; this is typical slicing behavior, gathering records
+	// from start up to but not including end.
+	// Transferring cell data as a comma-delimited string rather than a dictionary reduces data transit
+	// by roughly 50%.
+	@RequestMapping("/rnaSeqHeatMap/recordSlice")
+	public @ResponseBody List<String> gxdRnaSeqHeatMapRecordSlice(
+			HttpSession session,
+			HttpServletRequest request,
+			@ModelAttribute GxdQueryForm query,
+			@RequestParam(value="start") String start,
+			@RequestParam(value="end") String end
+			) throws Exception {
 
-				if (results.size() < heatMapPageSize) {
-					done = true;
+		logger.info("gxdRnaSeqHeatMapRecordSlice() started");
+		populateMarkerIDs(session, query);
+
+		List<String> assayType = new ArrayList<String>();
+		assayType.add("RNA-Seq");
+		
+		SearchParams params = new SearchParams();
+		query.setAssayType(assayType);
+		params.setFilter(parseGxdQueryForm(query));
+	
+		Integer startIndex = 0;
+		Integer endIndex = 0;
+		if (start.matches("[0-9]+")) startIndex = Integer.parseInt(start);
+		if (end.matches("[0-9]+")) endIndex = Integer.parseInt(end);
+
+		Paginator page = new Paginator(endIndex - startIndex);
+		page.setStartIndex(startIndex);
+		params.setPaginator(page);
+		
+		SearchResults<SolrGxdRnaSeqHeatMapResult> searchResults = gxdFinder.searchRnaSeqHeatMapResults(params);
+		logger.info(" - got " + searchResults.getResultObjects().size() + " records");
+
+		List<String> cells = new ArrayList<String>();
+		for (SolrGxdRnaSeqHeatMapResult result : searchResults.getResultObjects()) {
+			StringBuffer cell = new StringBuffer();
+			cell.append(result.getMarkerMgiID());
+			cell.append(",");
+			cell.append(result.getConsolidatedSampleKey());
+			cell.append(",");
+			cell.append(result.getAvergageQNTPM());
+			cells.add(cell.toString());
+		}
+		logger.info(" - returning " + cells.size() + " cells");
+		return cells;
+	}
+
+	// Get additional data for a list of marker IDs.  Returns list of markers in proper order for display.
+	// Maintains cache of marker data in controller to help avoid Solr queries.
+	@RequestMapping("/rnaSeqHeatMap/markers")
+	public @ResponseBody List<GxdRnaSeqHeatMapMarker> gxdRnaSeqHeatMapMarkers(
+			HttpSession session,
+			HttpServletRequest request,
+			@ModelAttribute GxdQueryForm query,
+			@RequestParam(value="hmMarkerIDs") String markerIDs
+			) throws Exception {
+
+		logger.info("gxdRnaSeqHeatMapMarkers() started");
+		populateMarkerIDs(session, query);
+
+		List<String> assayType = new ArrayList<String>();
+		assayType.add("RNA-Seq");
+		
+		// retrieve markers
+		List<GxdRnaSeqHeatMapMarker> markers = new ArrayList<GxdRnaSeqHeatMapMarker>();
+		int fromCache = 0;
+		
+		// list of marker IDs that we don't already have cached and need to look up
+		List<String> toFind = new ArrayList<String>();
+		
+		if ((markerIDs != null) && (!markerIDs.trim().equals(""))) {
+			String[] markerIDList = markerIDs.trim().split("[ ]*,[ ]*");
+			for (String id : markerIDList) {
+				// if already cached, use that existing marker and query Solr if not yet cached
+				if (hmMarkers.containsKey(id)) {
+					markers.add(hmMarkers.get(id).clone());
+					fromCache++;
+				} else {
+					toFind.add(id);
 				}
 			}
+
+			/* Need to find markers in manageable batches so as not to overwhelm Solr's limit on
+			 * boolean clauses in a search.  (configured at 8k clauses)
+			 */
+			List<List<String>> idBatches = FewiUtil.getBatches(toFind, 8000);
+			Paginator page = new Paginator(10000);	
+			SearchParams params = new SearchParams();
+			params.setPaginator(page);
 			
-			// If we haven't had a status request within 10 seconds, assume the user disappeared.
-			if (!sm.isListening(sessionKey, 10000)) {
-				logger.info("User for heat map session disappeared; cancelling " + sessionKey);
-				return null;
+			for (List<String> idBatch : idBatches) {
+				params.setFilter(new Filter(SearchConstants.CDNA_MARKER_ID, idBatch, Operator.OP_IN));
+				
+				SearchResults<Marker> searchResults = markerFinder.getMarkerByID(params);
+				List<Marker> results = searchResults.getResultObjects();
+				if ((results != null) && (results.size() > 0)) {
+					for (Marker m : results) {
+						GxdRnaSeqHeatMapMarker marker = new GxdRnaSeqHeatMapMarker();
+						marker.setMarkerID(m.getPrimaryID());
+						marker.setEnsemblGMID(m.getEnsemblGeneModelID().getAccID());
+						marker.setSymbol(m.getSymbol());
+
+						markers.add(marker);							// add to list of markers for this request
+						hmMarkers.put(marker.getMarkerID(), marker);	// add to cache of markers for future use
+					}
+				}
+			}
+
+			// sort markers and assign indexes to marker objects
+			Collections.sort(markers, new HeatMapMarkerComparator());
+			for (int i=0; i < markers.size(); i++) {
+				markers.get(i).setIndex(i);
 			}
 		}
-		sm.setStatus(sessionKey, "Collating results...");
-		Map<String,SolrGxdRnaSeqConsolidatedSample> rnaSeqSamples = getRnaSeqSamples(dataPacket.getSampleIDs());
 
-		logger.debug("Analyzing data");
-		dataPacket.analyzeData(rnaSeqSamples);
-// Do not explicitly end the session, or the user can't get final updates.
-//		sm.endSession(sessionKey);
-		logger.debug(" - final RAM: " + String.format("%,d", new Long(Runtime.getRuntime().freeMemory())));
-		logger.debug(" - done");
-		return dataPacket;
+		logger.info(" - got " + markers.size() + " markers (" + fromCache + " from cache)");
+		return markers;
 	}
 
-	// retrieve the mapping of RNA-Seq consolidated samples for use in building heat maps
-	private Map<String,SolrGxdRnaSeqConsolidatedSample> getRnaSeqSamples(Set<String> sampleIDs) {
-		Map<String,SolrGxdRnaSeqConsolidatedSample> rnaSeqSamples = new HashMap<String,SolrGxdRnaSeqConsolidatedSample>();
-		SearchResults<SolrGxdRnaSeqConsolidatedSample> sr = gxdFinder.searchRnaSeqConsolidatedSamples(sampleIDs);
-		for (SolrGxdRnaSeqConsolidatedSample sample : sr.getResultObjects()) {
-			rnaSeqSamples.put(sample.getConsolidatedSampleKey(), sample);
+	// Get additional data for a list of sample keys.  Returns list of samples in proper order for display.
+	// Maintains cache of sample data in controller to help avoid Solr queries.
+	@RequestMapping("/rnaSeqHeatMap/samples")
+	public @ResponseBody List<GxdRnaSeqHeatMapSample> gxdRnaSeqHeatMapSamples(
+			HttpSession session,
+			HttpServletRequest request,
+			@ModelAttribute GxdQueryForm query,
+			@RequestParam(value="hmSampleKeys") String sampleKeys
+			) throws Exception {
+
+		logger.info("gxdRnaSeqHeatMapSamples() started");
+		
+		// retrieve samples
+		List<GxdRnaSeqHeatMapSample> samples = new ArrayList<GxdRnaSeqHeatMapSample>();
+		int fromCache = 0;
+		
+		if ((sampleKeys != null) && (!sampleKeys.trim().equals(""))) {
+			String[] sampleKeyList = sampleKeys.trim().split("[ ]*,[ ]*");
+
+			// sample keys to find (not already in cache)
+			Set<String> keys = new HashSet<String>();
+
+			for (String sampleKey : sampleKeyList) {
+				// if already cached, use that existing sample and query Solr if not yet cached
+				if (hmSamples.containsKey(sampleKey)) {
+					samples.add(hmSamples.get(sampleKey).clone());
+				} else {
+					keys.add(sampleKey);
+				}
+			}
+			fromCache = samples.size();
+
+			if (keys.size() > 0) {
+				SearchResults<SolrGxdRnaSeqConsolidatedSample> searchResults = gxdFinder.searchRnaSeqConsolidatedSamples(keys);
+				List<SolrGxdRnaSeqConsolidatedSample> results = searchResults.getResultObjects();
+				if (results != null) {
+					for (SolrGxdRnaSeqConsolidatedSample result : results) {
+						GxdRnaSeqHeatMapSample sample = new GxdRnaSeqHeatMapSample();
+						sample.setAge(result.getAge());
+						sample.setAlleles(result.getAlleles());
+						sample.setBioreplicateSetID(result.getConsolidatedSampleKey());
+						sample.setExpID(result.getAssayMgiID());
+						sample.setSex(result.getSex());
+						sample.setStage(result.getTheilerStage());
+						sample.setStrain(result.getStrain());
+						sample.setStructure(result.getStructure());
+
+						samples.add(sample);										// add to list of samples for this request
+						hmSamples.put(result.getConsolidatedSampleKey(), sample);	// add to cache of samples for future use
+					}
+				}
+			}
+
+			// sort samples and assign indexes to sample objects
+			Collections.sort(samples, new HeatMapSampleComparator());
+			for (int i=0; i < samples.size(); i++) {
+				samples.get(i).setIndex(i);
+			}
 		}
-		return rnaSeqSamples;
+
+		logger.info(" - got " + samples.size() + " samples (" + fromCache + " from cache)");
+		return samples;
 	}
-	
+
 	@RequestMapping("/stageMatrixPopup/json")
 	public @ResponseBody GxdStageMatrixPopup gxdStageMatrixPopupJson(
 			HttpSession session,
@@ -3343,6 +3471,15 @@ public class GXDController {
 		}
 
 		// ---------------------------
+		// heat map sample restriction (for looking up an individual sample's records)
+		// ---------------------------
+		
+		if ((query.getSampleKey() != null) && (!query.getSampleKey().trim().equals(""))) {
+			queryFilters.add(new Filter(GxdResultFields.CONSOLIDATED_SAMPLE_KEY, query.getSampleKey().trim(),
+				Filter.Operator.OP_EQUAL));
+		}
+		
+		// ---------------------------
 		// restrict results by filters (added to facetList)
 		// ---------------------------
 
@@ -4570,4 +4707,33 @@ public class GXDController {
 	public @ResponseBody Map<String, List<String>> htFacetStudyType (HttpServletRequest request, @ModelAttribute GxdHtQueryForm query, @ModelAttribute Paginator page, HttpServletResponse response) {
 		return gxdhtController.getStudyTypeFacet(query, null, response);
 	}
+
+	// comparator for markers in an RNA-Seq heat map
+    private class HeatMapMarkerComparator extends SmartAlphaComparator<GxdRnaSeqHeatMapMarker> {
+    	public int compare(GxdRnaSeqHeatMapMarker t1, GxdRnaSeqHeatMapMarker t2) {
+    		// smart-alpha sort of Marker objects by symbol (fall back on ID sorting, if terms match)
+    		
+    		int i = super.compare(t1.getSymbol(), t2.getSymbol());
+    		if (i == 0) {
+    			i = super.compare(t1.getMarkerID(), t2.getMarkerID());
+    		}
+    		return i;
+    	}
+    }
+
+	// comparator for samples in an RNA-Seq heat map
+    private class HeatMapSampleComparator extends SmartAlphaComparator<GxdRnaSeqHeatMapSample> {
+    	public int compare(GxdRnaSeqHeatMapSample t1, GxdRnaSeqHeatMapSample t2) {
+    		// smart-alpha sort of Sample objects by structure (falling back on experiment ID and sample key)
+    		
+    		int i = super.compare(t1.getStructure(), t2.getStructure());
+    		if (i == 0) {
+    			i = super.compare(t1.getExpID(), t2.getExpID());
+    			if (i == 0) {
+    				i = super.compare(t1.getBioreplicateSetID(), t2.getBioreplicateSetID());
+    			}
+    		}
+    		return i;
+    	}
+    }
 }

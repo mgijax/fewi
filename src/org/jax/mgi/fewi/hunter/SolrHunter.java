@@ -10,7 +10,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrRequest.METHOD;
-import org.apache.solr.client.solrj.impl.HttpSolrServer;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.impl.HttpSolrClient.Builder;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.Group;
 import org.apache.solr.client.solrj.response.GroupCommand;
@@ -62,7 +63,7 @@ public class SolrHunter<T> implements Hunter<T> {
 	/**
 	 * solr server settings from configuration
 	 */
-	protected HttpSolrServer curServer = null;
+	protected HttpSolrClient curServer = null;
 	@Value("${solr.soTimeout}")
 	protected Integer solrSoTimeout;
 	@Value("${solr.connectionTimeout}")
@@ -206,7 +207,7 @@ public class SolrHunter<T> implements Hunter<T> {
 		// Invoke the hook, editing the search params as needed.
 		searchParams = preProcessSearchParams(searchParams);
 
-		HttpSolrServer qServer;
+		HttpSolrClient qServer;
 		// Setup our interface into solr.
 		boolean doJoin=false;
 		if(joinField!=null && joinIndices.containsKey(joinField)) {
@@ -479,15 +480,15 @@ public class SolrHunter<T> implements Hunter<T> {
 	 * as needed.
 	 */
 
-	protected HttpSolrServer createSolrConnection()
+	protected HttpSolrClient createSolrConnection()
 	{
 		return createSolrConnection(solrUrl);
 	}
-	protected HttpSolrServer createSolrConnection(String url) 
+	protected HttpSolrClient createSolrConnection(String url) 
 	{
-		HttpSolrServer server=null;
+		HttpSolrClient server=null;
 		logger.debug("solrUrl->" + url);
-		try { server = new HttpSolrServer(url);}
+		try { server = new HttpSolrClient.Builder(url).allowCompression(true).build();}
 		catch (Exception e) {
 			System.out.println("Cannot reach the Solr server.");
 			e.printStackTrace();
@@ -495,11 +496,11 @@ public class SolrHunter<T> implements Hunter<T> {
 
 		server.setSoTimeout(solrSoTimeout);  // socket read timeout
 		server.setConnectionTimeout(connectionTimeout);
-		server.setDefaultMaxConnectionsPerHost(maxConnectionsPerHost);
-		server.setMaxTotalConnections(maxTotalConnections);
+//		server.setDefaultMaxConnectionsPerHost(maxConnectionsPerHost);
+//		server.setMaxTotalConnections(maxTotalConnections);
 		server.setFollowRedirects(false);  // defaults to false
-		server.setAllowCompression(true);
-		server.setMaxRetries(maxRetries);
+//		server.setAllowCompression(true);
+//		server.setMaxRetries(maxRetries);
 
 		return server;
 	}
