@@ -51,7 +51,8 @@
 			<li> &#x2605; at end of column label indicates mutant</li>
 			<li> metadata fields displayed in rows below label</li>
 			<li> field displayed when it contains &gt;1 value</li>
-			<li> to sort sets by values in field, click beside field label</li>
+			<li> to sort sets by values in field, click checkered box beside field label</li>
+			<li> to set multiple sort levels, hold shift key down when clicking boxes</li>
 			</ul>
 		</div>
 
