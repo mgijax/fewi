@@ -33,12 +33,31 @@
 </div>
 
 Bucket 1 : Markers and Alleles<p/>
+<div id="b1Results"></div>
 
 Bucket 2 : Vocabulary Terms<p/>
+<div id="b2Results"></div>
 
 Bucket 3 : Matches by ID<p/>
+<div id="b3Results"></div>
 
+<p/>
 Search MGI with Google<p/>
 
+<style>
+#b3Table { border-collapse: collapse }
+#b3Table th { font-weight: bold; padding: 3px; border: 1px solid black; }
+#b3Table td { padding: 3px; border: 1px solid black; }
+</style>
+
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/quicksearch/qs_main.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/quicksearch/qs_bucket3.js"></script>
+<script>
+var queryString="${e:forJavaScript(queryString)}";
+var query = "${query}";
+var fewiurl = "${configBean.FEWI_URL}";
+
+qsMain();
+</script>
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
 
