@@ -6,5 +6,6 @@
 // main logic for quick search
 var qsMain = function() {
 	b3Fetch();		// bucket 3 : ID bucket
+	b2Fetch();		// bucket 2 : vocab terms + strains bucket
 };
 

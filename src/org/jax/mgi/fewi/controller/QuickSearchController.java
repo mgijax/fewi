@@ -1,17 +1,27 @@
 package org.jax.mgi.fewi.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.fewi.config.ContextLoader;
+import org.jax.mgi.fewi.finder.QuickSearchFinder;
 import org.jax.mgi.fewi.forms.AccessionQueryForm;
 import org.jax.mgi.fewi.forms.QuickSearchQueryForm;
 import org.jax.mgi.fewi.searchUtil.Paginator;
+import org.jax.mgi.fewi.searchUtil.SearchConstants;
+import org.jax.mgi.fewi.searchUtil.SearchParams;
+import org.jax.mgi.fewi.searchUtil.Sort;
+import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.AccessionSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
+import org.jax.mgi.fewi.summary.QSVocabResult;
 import org.jax.mgi.fewi.util.UserMonitor;
+import org.jax.mgi.shr.jsonmodel.BrowserTerm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +57,9 @@ public class QuickSearchController {
     @Autowired
     private AccessionController accessionController;
 
+    @Autowired
+    private QuickSearchFinder qsFinder;
+    
     //--------------------------------------------------------------------//
     // public methods
     //--------------------------------------------------------------------//
@@ -88,6 +101,59 @@ public class QuickSearchController {
     //-------------------------//
     // QS Results - bucket 2 JSON (vocab terms and annotations)
     //-------------------------//
+	@RequestMapping("/vocabBucket")
+	public @ResponseBody JsonSummaryResponse<QSVocabResult> getVocabBucket(HttpServletRequest request,
+			@ModelAttribute QuickSearchQueryForm queryForm) {
+
+        logger.info("->getVocabBucket started");
+        
+        Paginator page = new Paginator(1000);				// max results per search
+        Sort byScore = new Sort(SortConstants.SCORE, true);	// sort by descending Solr score (best first)
+
+        String[] terms = queryForm.getQuery().replace(',', ' ').split(" ");
+        
+        // Search in order of priority:  ID matches, then term matches, then synonym matches
+        
+        List<Filter> idFilters = new ArrayList<Filter>();
+        List<Filter> termFilters = new ArrayList<Filter>();
+        List<Filter> synonymFilters = new ArrayList<Filter>();
+
+        for (String term : terms) {
+        	idFilters.add(new Filter(SearchConstants.QS_ACC_ID, term, Operator.OP_EQUAL));
+        	termFilters.add(new Filter(SearchConstants.QS_TERM, term, Operator.OP_CONTAINS));
+        	synonymFilters.add(new Filter(SearchConstants.QS_SYNONYM, term, Operator.OP_CONTAINS));
+        }
+
+        SearchParams idSearch = new SearchParams();
+        idSearch.setPaginator(page);
+        idSearch.setFilter(Filter.or(idFilters));
+
+        SearchParams termSearch = new SearchParams();
+        termSearch.setPaginator(page);
+        termSearch.setFilter(Filter.or(termFilters));
+        
+        SearchParams synonymSearch = new SearchParams();
+        synonymSearch.setPaginator(page);
+        synonymSearch.setFilter(Filter.or(synonymFilters));
+        
+        List<QSVocabResult> idMatches = qsFinder.getResults(idSearch).getResultObjects();
+        logger.info("Got " + idMatches.size() + " ID matches");
+        List<QSVocabResult> termMatches = qsFinder.getResults(termSearch).getResultObjects();
+        logger.info("Got " + termMatches.size() + " term matches");
+        List<QSVocabResult> synonymMatches = qsFinder.getResults(synonymSearch).getResultObjects();
+        logger.info("Got " + synonymMatches.size() + " synonym matches");
+        
+        List<QSVocabResult> out = idMatches;
+        out.addAll(termMatches);
+        out.addAll(synonymMatches);
+        
+        JsonSummaryResponse<QSVocabResult> response = new JsonSummaryResponse<QSVocabResult>();
+        response.setSummaryRows(out);
+        response.setTotalCount(out.size());
+        logger.info("Returning " + out.size() + " matches");
+
+        return response;
+    }
 
     //-------------------------//
     // QS Results - bucket 3 JSON (accession ID matches)

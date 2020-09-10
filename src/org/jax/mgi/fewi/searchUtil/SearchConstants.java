@@ -304,4 +304,17 @@ public class SearchConstants {
 	// general
 	public static final String COLUMN_ID = "columnID";
 	public static final String HAS_IMAGE = "hasImage";
+	
+	// quick search
+	public static final String QS_PRIMARY_ID = "primaryID";
+	public static final String QS_ACC_ID = "accID";
+	public static final String QS_TERM = "term";
+	public static final String QS_TERM_TYPE = "termType";
+	public static final String QS_SYNONYM = "synonym";
+	public static final String QS_VOCAB_NAME = "vocabName";
+	public static final String QS_DETAIL_URI = "detailUri";
+	public static final String QS_ANNOTATION_COUNT = "annotationCount";
+	public static final String QS_ANNOTATION_TEXT = "annotationText";
+	public static final String QS_ANNOTATION_URI = "annotationUri";
+	public static final String QS_SEQUENCE_NUM = "sequenceNum";
 }
