@@ -36,7 +36,7 @@ var b3Show = function(data) {
 			tbl = tbl + '<TD>' + item.displayType + ': ' + item.accId + '</TD></TR>';
 		}
 		$('#b3Results').html(tbl);
-		console.log("Populated b3Results");
+		console.log("Populated " + data.summaryRows.length + " b3Results");
 	} else {
 		console.log("No b3Results");
 	}

@@ -41,7 +41,7 @@ var b2Show = function(data) {
 			tbl = tbl + '<TD>TBD</TD></TR>';
 		}
 		$('#b2Results').html(tbl);
-		console.log("Populated b2Results");
+		console.log("Populated " + data.summaryRows.length + " b2Results");
 	} else {
 		console.log("No b2Results");
 	}
