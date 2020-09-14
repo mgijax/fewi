@@ -32,9 +32,17 @@ var b2Show = function(data) {
 		for (var i = 0; i < Math.min(100, data.summaryRows.length); i++) {
 			var item = data.summaryRows[i];
 			tbl = tbl + '<TR><TD>TBD</TD>';
-			tbl = tbl + '<TD>' + item.vocabName + ': ' + item.term + '</TD>';
+			if (item.detailUrl === null) {
+				tbl = tbl + '<TD>' + item.vocabName + ': ' + item.term + '</TD>';
+			} else {
+				tbl = tbl + '<TD>' + item.vocabName + ': <a href="' + item.detailUri + '">' + item.term + '</a></TD>';
+			}
 			if (item.annotationCount > 0) {
-				tbl = tbl + '<TD>' + item.annotationText + '</TD>';
+				if (item.annotationUri === null) {
+					tbl = tbl + '<TD>' + item.annotationText + '</TD>';
+				} else {
+					tbl = tbl + '<TD><a href="' + item.annotationUri + '">'+ item.annotationText + '</a></TD>';
+				}
 			} else {
 				tbl = tbl + '<TD>&nbsp;</TD>';
 			}
