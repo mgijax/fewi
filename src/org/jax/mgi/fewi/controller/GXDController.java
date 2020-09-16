@@ -1596,7 +1596,9 @@ public class GXDController {
 					for (Marker m : results) {
 						GxdRnaSeqHeatMapMarker marker = new GxdRnaSeqHeatMapMarker();
 						marker.setMarkerID(m.getPrimaryID());
-						marker.setEnsemblGMID(m.getEnsemblGeneModelID().getAccID());
+						if (m.getEnsemblGeneModelID() != null) {
+							marker.setEnsemblGMID(m.getEnsemblGeneModelID().getAccID()); 
+						}
 						marker.setSymbol(m.getSymbol());
 
 						markers.add(marker);							// add to list of markers for this request
