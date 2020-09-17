@@ -84,8 +84,8 @@ public class SolrQSFeatureResultBaseHunter extends SolrHunter<QSFeatureResult> {
 				result.setIsMarker((Integer) doc.getFieldValue(IndexConstants.QS_IS_MARKER));
 				result.setFeatureType((String) doc.getFieldValue(IndexConstants.QS_FEATURE_TYPE));
 				result.setChromosome((String) doc.getFieldValue(IndexConstants.QS_CHROMOSOME));
-				result.setStartCoord((String) doc.getFieldValue(IndexConstants.QS_START_COORD));
-				result.setEndCoord((String) doc.getFieldValue(IndexConstants.QS_END_COORD));
+				result.setStartCoord(((Long) doc.getFieldValue(IndexConstants.QS_START_COORD)).toString());
+				result.setEndCoord(((Long) doc.getFieldValue(IndexConstants.QS_END_COORD)).toString());
 				result.setStrand((String) doc.getFieldValue(IndexConstants.QS_STRAND));
 				
 				try {
