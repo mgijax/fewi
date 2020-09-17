@@ -20,6 +20,7 @@ import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.AccessionSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.QSVocabResult;
+import org.jax.mgi.fewi.summary.QSFeatureResult;
 import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.shr.jsonmodel.BrowserTerm;
 import org.slf4j.Logger;
@@ -97,6 +98,65 @@ public class QuickSearchController {
     //-------------------------//
     // QS Results - bucket 1 JSON (markers and alleles)
     //-------------------------//
+	@RequestMapping("/featureBucket")
+	public @ResponseBody JsonSummaryResponse<QSFeatureResult> getFeatureBucket(HttpServletRequest request,
+			@ModelAttribute QuickSearchQueryForm queryForm) {
+
+        logger.info("->getFeatureBucket started");
+        
+        Paginator page = new Paginator(1000);				// max results per search
+        Sort byScore = new Sort(SortConstants.SCORE, true);	// sort by descending Solr score (best first)
+
+        String[] terms = queryForm.getQuery().replace(',', ' ').split(" ");
+        
+        // Search in order of priority:  ID matches, then symbol/name/synonym matches, then other matches
+        
+        List<Filter> idFilters = new ArrayList<Filter>();
+        List<Filter> nomenFilters = new ArrayList<Filter>();
+        List<Filter> otherFilters = new ArrayList<Filter>();
+
+        for (String term : terms) {
+        	idFilters.add(new Filter(SearchConstants.QS_ACC_ID, term, Operator.OP_EQUAL));
+        	
+        	List<Filter> nomenSet = new ArrayList<Filter>();
+        	nomenSet.add(new Filter(SearchConstants.QS_SYMBOL, term, Operator.OP_CONTAINS));
+        	nomenSet.add(new Filter(SearchConstants.QS_NAME, term, Operator.OP_CONTAINS));
+        	nomenSet.add(new Filter(SearchConstants.QS_SYNONYM, term, Operator.OP_CONTAINS));
+        	nomenFilters.add(Filter.or(nomenSet));
+        	
+        	otherFilters.add(new Filter(SearchConstants.QS_SEARCH_TEXT, term, Operator.OP_CONTAINS));
+        }
+
+        SearchParams idSearch = new SearchParams();
+        idSearch.setPaginator(page);
+        idSearch.setFilter(Filter.or(idFilters));
+
+        SearchParams nomenSearch = new SearchParams();
+        nomenSearch.setPaginator(page);
+        nomenSearch.setFilter(Filter.or(nomenFilters));
+        
+        SearchParams otherSearch = new SearchParams();
+        otherSearch.setPaginator(page);
+        otherSearch.setFilter(Filter.or(otherFilters));
+        
+        List<QSFeatureResult> idMatches = qsFinder.getFeatureResults(idSearch).getResultObjects();
+        logger.info("Got " + idMatches.size() + " ID matches");
+        List<QSFeatureResult> nomenMatches = qsFinder.getFeatureResults(nomenSearch).getResultObjects();
+        logger.info("Got " + nomenMatches.size() + " nomen matches");
+        List<QSFeatureResult> otherMatches = qsFinder.getFeatureResults(otherSearch).getResultObjects();
+        logger.info("Got " + otherMatches.size() + " other matches");
+        
+        List<QSFeatureResult> out = idMatches;
+        out.addAll(nomenMatches);
+        out.addAll(otherMatches);
+        
+        JsonSummaryResponse<QSFeatureResult> response = new JsonSummaryResponse<QSFeatureResult>();
+        response.setSummaryRows(out);
+        response.setTotalCount(out.size());
+        logger.info("Returning " + out.size() + " matches");
+
+        return response;
+    }
 
     //-------------------------//
     // QS Results - bucket 2 JSON (vocab terms and annotations)
@@ -136,11 +196,11 @@ public class QuickSearchController {
         synonymSearch.setPaginator(page);
         synonymSearch.setFilter(Filter.or(synonymFilters));
         
-        List<QSVocabResult> idMatches = qsFinder.getResults(idSearch).getResultObjects();
+        List<QSVocabResult> idMatches = qsFinder.getVocabResults(idSearch).getResultObjects();
         logger.info("Got " + idMatches.size() + " ID matches");
-        List<QSVocabResult> termMatches = qsFinder.getResults(termSearch).getResultObjects();
+        List<QSVocabResult> termMatches = qsFinder.getVocabResults(termSearch).getResultObjects();
         logger.info("Got " + termMatches.size() + " term matches");
-        List<QSVocabResult> synonymMatches = qsFinder.getResults(synonymSearch).getResultObjects();
+        List<QSVocabResult> synonymMatches = qsFinder.getVocabResults(synonymSearch).getResultObjects();
         logger.info("Got " + synonymMatches.size() + " synonym matches");
         
         List<QSVocabResult> out = idMatches;

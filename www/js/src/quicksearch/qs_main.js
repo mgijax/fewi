@@ -5,7 +5,8 @@
 
 // main logic for quick search
 var qsMain = function() {
-	b3Fetch();		// bucket 3 : ID bucket
+	b1Fetch();		// bucket 1 : markers + alleles bucket
 	b2Fetch();		// bucket 2 : vocab terms + strains bucket
+	b3Fetch();		// bucket 3 : ID bucket
 };
 

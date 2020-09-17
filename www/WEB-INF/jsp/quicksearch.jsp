@@ -45,6 +45,10 @@ Bucket 3 : Matches by ID<p/>
 Search MGI with Google<p/>
 
 <style>
+#b1Table { border-collapse: collapse }
+#b1Table th { font-weight: bold; padding: 3px; border: 1px solid black; }
+#b1Table td { padding: 3px; border: 1px solid black; }
+
 #b2Table { border-collapse: collapse }
 #b2Table th { font-weight: bold; padding: 3px; border: 1px solid black; }
 #b2Table td { padding: 3px; border: 1px solid black; }
@@ -55,6 +59,7 @@ Search MGI with Google<p/>
 </style>
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/quicksearch/qs_main.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/quicksearch/qs_bucket1.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/quicksearch/qs_bucket2.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/quicksearch/qs_bucket3.js"></script>
 <script>
