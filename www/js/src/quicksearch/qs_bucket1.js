@@ -34,12 +34,15 @@ var b1Show = function(data) {
 			tbl = tbl + '<TR><TD>TBD</TD>';
 			tbl = tbl + '<TD>' + item.featureType + '</TD>';
 
+			var symbol = qsSuperscript(item.symbol);
+			var name = qsSuperscript(item.name);
+			
 			if (item.detailUrl === null) {
-				tbl = tbl + '<TD>' + item.symbol + '</TD>';
+				tbl = tbl + '<TD>' + symbol + '</TD>';
 			} else {
-				tbl = tbl + '<TD><a href="' + item.detailUri + '">' + item.symbol + '</a></TD>';
+				tbl = tbl + '<TD><a href="' + item.detailUri + '">' + symbol + '</a></TD>';
 			}
-			tbl = tbl + '<TD>' + item.name + '</TD>';
+			tbl = tbl + '<TD>' + name + '</TD>';
 			tbl = tbl + '<TD>' + item.chromosome + '</TD>';
 
 			if ((item.startCoord === null) || (item.endCoord === null)) {
