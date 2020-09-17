@@ -40,9 +40,19 @@ var b1Show = function(data) {
 				tbl = tbl + '<TD><a href="' + item.detailUri + '">' + item.symbol + '</a></TD>';
 			}
 			tbl = tbl + '<TD>' + item.name + '</TD>';
-			tbl = tbl + '<TD>TBD</TD>';
-			tbl = tbl + '<TD>TBD</TD>';
-			tbl = tbl + '<TD>TBD</TD>';
+			tbl = tbl + '<TD>' + item.chromosome + '</TD>';
+
+			if ((item.startCoord === null) || (item.endCoord === null)) {
+				tbl = tbl + '<TD>TBD</TD>';
+			} else {
+				tbl = tbl + '<TD>' + item.startCoord + '- ' + item.endCoord + '</TD>';
+			}
+
+			if (item.strand === null) {
+				tbl = tbl + '<TD>TBD</TD>';
+			} else {
+				tbl = tbl + '<TD>' + item.strand + '</TD>';
+			}
 			tbl = tbl + '<TD>TBD</TD></TR>';
 		}
 		$('#b1Results').html(tbl);
