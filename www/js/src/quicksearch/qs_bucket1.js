@@ -31,7 +31,7 @@ var b1Show = function(data) {
 
 		for (var i = 0; i < Math.min(100, data.summaryRows.length); i++) {
 			var item = data.summaryRows[i];
-			tbl = tbl + '<TR><TD>TBD</TD>';
+			tbl = tbl + '<TR><TD>' + item.stars + '</TD>';
 			tbl = tbl + '<TD>' + item.featureType + '</TD>';
 
 			var symbol = qsSuperscript(item.symbol);
@@ -46,17 +46,21 @@ var b1Show = function(data) {
 			tbl = tbl + '<TD>' + item.chromosome + '</TD>';
 
 			if ((item.startCoord === null) || (item.endCoord === null)) {
-				tbl = tbl + '<TD>TBD</TD>';
+				tbl = tbl + '<TD>&nbsp;</TD>';
 			} else {
 				tbl = tbl + '<TD>' + item.startCoord + '- ' + item.endCoord + '</TD>';
 			}
 
 			if (item.strand === null) {
-				tbl = tbl + '<TD>TBD</TD>';
+				tbl = tbl + '<TD>&nbsp;</TD>';
 			} else {
 				tbl = tbl + '<TD>' + item.strand + '</TD>';
 			}
-			tbl = tbl + '<TD>TBD</TD></TR>';
+			if (item.bestMatchType === null) {
+				tbl = tbl + '<TD>&nbsp;</TD>';
+			} else {
+				tbl = tbl + '<TD>' + item.bestMatchType + ': ' + item.bestMatchText + '</TD></TR>';
+			}
 		}
 		$('#b1Results').html(tbl);
 		console.log("Populated " + data.summaryRows.length + " b1Results");

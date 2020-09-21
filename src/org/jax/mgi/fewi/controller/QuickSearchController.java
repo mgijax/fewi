@@ -1,7 +1,11 @@
 package org.jax.mgi.fewi.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -104,7 +108,7 @@ public class QuickSearchController {
 
         logger.info("->getFeatureBucket started");
         
-        Paginator page = new Paginator(1000);				// max results per search
+        Paginator page = new Paginator(1500);				// max results per search
         Sort byScore = new Sort(SortConstants.SCORE, true);	// sort by descending Solr score (best first)
 
         String[] terms = queryForm.getQuery().replace(',', ' ').split(" ");
@@ -146,9 +150,7 @@ public class QuickSearchController {
         List<QSFeatureResult> otherMatches = qsFinder.getFeatureResults(otherSearch).getResultObjects();
         logger.info("Got " + otherMatches.size() + " other matches");
         
-        List<QSFeatureResult> out = idMatches;
-        out.addAll(nomenMatches);
-        out.addAll(otherMatches);
+        List<QSFeatureResult> out = unifyFeatureMatches(terms, idMatches, nomenMatches, otherMatches);
         
         JsonSummaryResponse<QSFeatureResult> response = new JsonSummaryResponse<QSFeatureResult>();
         response.setSummaryRows(out);
@@ -158,6 +160,67 @@ public class QuickSearchController {
         return response;
     }
 
+	// consolidate the lists of matching features, add star values, and setting best match values, then return
+	private List<QSFeatureResult> unifyFeatureMatches (String[] searchTerms, List<QSFeatureResult> idMatches,
+		List<QSFeatureResult> nomenMatches, List<QSFeatureResult> otherMatches) {
+		
+		Grouper<QSFeatureResult> grouper = new Grouper<QSFeatureResult>();
+		
+		// ID matches must be exact matches (aside from case sensitivity)
+		
+		for (QSFeatureResult match : idMatches) {
+			boolean found = false;
+			for (String id : match.getAccID()) {
+				for (String term : searchTerms) {
+					if (term.equalsIgnoreCase(id)) {
+						match.setBestMatchText("ID");
+						match.setBestMatchText(id);
+						match.setStars("****");
+						grouper.addFourStar(match.getPrimaryID(), match);
+						found = true;
+						break;
+					}
+				}
+				if (found) { break; }
+			}
+			if (!found) {
+				// should not happen, but let's make sure not to lose the result just in case
+				match.setStars("*");
+				grouper.addOneStar(match.getPrimaryID(), match);
+			}
+		}
+
+		// Nomen matches can be to symbol, name, or synonym.  Exact are 4-star, begins are 3-star, contains are 2-star.
+		
+		BestMatchFinder bmf = new BestMatchFinder(searchTerms);
+		for (QSFeatureResult match : nomenMatches) {
+			Map<String,String> options = new HashMap<String,String>();
+			options.put(match.getSymbol(), "symbol");
+			options.put(match.getName(), "name");
+			if (match.getSynonym() != null) {
+				for (String synonym : match.getSynonym()) {
+					options.put(synonym, "synonym");
+				}
+			}
+
+			BestMatch bestMatch = bmf.getBestMatch(options);
+			match.setStars(bestMatch.stars);
+			match.setBestMatchText(bestMatch.matchText);
+			match.setBestMatchType(bestMatch.matchType);
+
+			grouper.add(bestMatch.stars, match.getPrimaryID(), match);
+		}
+
+		// other matches 
+		
+		for (QSFeatureResult match : otherMatches) {
+			// TODO - better logic
+			grouper.add("*", match.getPrimaryID(), match);
+		}
+		
+		return grouper.toList();
+	}
+	
     //-------------------------//
     // QS Results - bucket 2 JSON (vocab terms and annotations)
     //-------------------------//
@@ -167,7 +230,7 @@ public class QuickSearchController {
 
         logger.info("->getVocabBucket started");
         
-        Paginator page = new Paginator(1000);				// max results per search
+        Paginator page = new Paginator(1500);				// max results per search
         Sort byScore = new Sort(SortConstants.SCORE, true);	// sort by descending Solr score (best first)
 
         String[] terms = queryForm.getQuery().replace(',', ' ').split(" ");
@@ -203,6 +266,8 @@ public class QuickSearchController {
         List<QSVocabResult> synonymMatches = qsFinder.getVocabResults(synonymSearch).getResultObjects();
         logger.info("Got " + synonymMatches.size() + " synonym matches");
         
+        // TODO - add new general unification method like the feature one
+
         List<QSVocabResult> out = idMatches;
         out.addAll(termMatches);
         out.addAll(synonymMatches);
@@ -249,4 +314,130 @@ public class QuickSearchController {
         }
         return out;
     }
+	
+	// private inner class for scoring / sorting QS results
+	private class Grouper<T> {
+		List<T> fourStar;
+		List<T> threeStar;
+		List<T> twoStar;
+		List<T> oneStar;
+		Set<String> ids;
+		
+		public Grouper() {
+			this.fourStar = new ArrayList<T>();
+			this.threeStar = new ArrayList<T>();
+			this.twoStar = new ArrayList<T>();
+			this.oneStar = new ArrayList<T>();
+			this.ids = new HashSet<String>();
+		}
+		
+		public void addFourStar(String id, T item) {
+			if (!this.ids.contains(id)) {
+				this.fourStar.add(item);
+			}
+		}
+		
+		public void addThreeStar(String id, T item) {
+			if (!this.ids.contains(id)) {
+				this.threeStar.add(item);
+			}
+		}
+		
+		public void addTwoStar(String id, T item) {
+			if (!this.ids.contains(id)) {
+				this.twoStar.add(item);
+			}
+		}
+		
+		public void addOneStar(String id, T item) {
+			if (!this.ids.contains(id)) {
+				this.oneStar.add(item);
+			}
+		}
+		
+		public void add(String stars, String id, T item) {
+			int starCount = stars.length();
+
+			if (starCount == 4) { this.addFourStar(id, item); }
+			else if (starCount == 3) { this.addThreeStar(id, item); }
+			else if (starCount == 2) { this.addTwoStar(id, item); }
+			else { this.addOneStar(id, item); }
+		}
+		
+		public List<T> toList() {
+			List<T> all = new ArrayList<T>();
+			all.addAll(fourStar);
+			all.addAll(threeStar);
+			all.addAll(twoStar);
+			all.addAll(oneStar);
+			return all;
+		}
+	}
+	
+	private class BestMatchFinder {
+		private List<String> lowerTerms;
+		
+		public BestMatchFinder(String[] searchTerms) {
+			this.lowerTerms = new ArrayList<String>();
+			for (String term : searchTerms) {
+				this.lowerTerms.add(term.toLowerCase());
+			}
+		}
+		
+		// Find the best match (for the search terms included at instantiation) among the various options,
+		// which map from a term to each one's term type.
+		public BestMatch getBestMatch(Map<String,String> options) {
+			// 1. iterate over terms in one pass
+			// 2. test against each of the search terms
+			// 3. bypass match types that are lower than what we've already found
+			
+			BestMatch match = new BestMatch();
+			match.starCount = 0;
+			match.stars = "";
+
+			for (String key : options.keySet()) {
+				String keyLower = key.toLowerCase();
+
+				for (String term : lowerTerms) {
+
+					// bail out once we find a 4-star match
+					if (keyLower.equals(term)) {
+						match.starCount = 4;
+						match.stars = "****";
+						match.matchText = key;
+						match.matchType = options.get(key);
+						return match;
+					}
+						
+					// don't bother checking if we already have a 3-star match
+					if (match.starCount < 3) {
+						if (keyLower.startsWith(term)) {
+							match.starCount = 3;
+							match.stars = "***";
+							match.matchText = key;
+							match.matchType = options.get(key);
+						}
+					}
+						
+					// don't bother checking if we already have at least a 2-star match
+					if (match.starCount < 2) {
+						if (keyLower.contains(term)) {
+							match.starCount = 2;
+							match.stars = "**";
+							match.matchText = key;
+							match.matchType = options.get(key);
+						}
+					}
+				}
+			}
+			return match;
+		}
+	}
+	
+	private class BestMatch {
+		public int starCount;
+		public String stars;
+		public String matchType;
+		public String matchText;
+	}
 }

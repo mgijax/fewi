@@ -21,7 +21,28 @@ public class QSFeatureResult {
 	private String endCoord;
 	private String strand;
 	private Float score;
+	private String stars;
+	private String bestMatchType;
+	private String bestMatchText;
 
+	public String getStars() {
+		return stars;
+	}
+	public void setStars(String stars) {
+		this.stars = stars;
+	}
+	public String getBestMatchType() {
+		return bestMatchType;
+	}
+	public void setBestMatchType(String bestMatchType) {
+		this.bestMatchType = bestMatchType;
+	}
+	public String getBestMatchText() {
+		return bestMatchText;
+	}
+	public void setBestMatchText(String bestMatchText) {
+		this.bestMatchText = bestMatchText;
+	}
 	public String getPrimaryID() {
 		return primaryID;
 	}
