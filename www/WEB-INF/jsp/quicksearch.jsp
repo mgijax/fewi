@@ -35,9 +35,11 @@
 Bucket 1 : Markers and Alleles<p/>
 <div id="b1Results"></div>
 
+<p/>
 Bucket 2 : Vocabulary Terms<p/>
 <div id="b2Results"></div>
 
+<p/>
 Bucket 3 : Matches by ID<p/>
 <div id="b3Results"></div>
 

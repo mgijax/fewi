@@ -238,7 +238,11 @@ public class QuickSearchController {
         Paginator page = new Paginator(1500);				// max results per search
         Sort byScore = new Sort(SortConstants.SCORE, true);	// sort by descending Solr score (best first)
 
-        String[] terms = queryForm.getQuery().replace(',', ' ').split(" ");
+        List<String> terms = new ArrayList<String>();
+        for (String term : queryForm.getQuery().replace(',', ' ').split(" ")) {
+        	terms.add(term);
+        }
+        terms.add(queryForm.getQuery());		// add full term for exact matches
         
         // Search in order of priority:  ID matches, then term matches, then synonym matches
         
@@ -273,9 +277,7 @@ public class QuickSearchController {
         
         // TODO - add new general unification method like the feature one
 
-        List<QSVocabResult> out = idMatches;
-        out.addAll(termMatches);
-        out.addAll(synonymMatches);
+        List<QSVocabResult> out = unifyVocabMatches(terms, idMatches, termMatches, synonymMatches);
         
         JsonSummaryResponse<QSVocabResult> response = new JsonSummaryResponse<QSVocabResult>();
         response.setSummaryRows(out);
@@ -284,6 +286,63 @@ public class QuickSearchController {
 
         return response;
     }
+
+	// consolidate the lists of matching vocab termss, add star values, and setting best match values, then return
+	private List<QSVocabResult> unifyVocabMatches (List<String> searchTerms, List<QSVocabResult> idMatches,
+		List<QSVocabResult> termMatches, List<QSVocabResult> synonymMatches) {
+		
+		Grouper<QSVocabResult> grouper = new Grouper<QSVocabResult>();
+		
+		// ID matches must be exact matches (aside from case sensitivity)
+		
+		for (QSVocabResult match : idMatches) {
+			boolean found = false;
+			for (String id : match.getAccID()) {
+				for (String term : searchTerms) {
+					if (term.equalsIgnoreCase(id)) {
+						match.setBestMatchType("ID");
+						match.setBestMatchText(id);
+						match.setStars("****");
+						grouper.add("****", match.getPrimaryID(), match);
+						found = true;
+						break;
+					}
+				}
+				if (found) { break; }
+			}
+			if (!found) {
+				// should not happen, but let's make sure not to lose the result just in case
+				match.setStars("*");
+				grouper.add("*", match.getPrimaryID(), match);
+			}
+		}
+
+		// Term matches can be to symbol, name, or synonym.  Exact are 4-star, begins are 3-star, contains are 2-star.
+		
+		List<QSVocabResult> consolidatedMatches = new ArrayList<QSVocabResult>();
+		consolidatedMatches.addAll(termMatches);
+		consolidatedMatches.addAll(synonymMatches);
+
+		BestMatchFinder bmf = new BestMatchFinder(searchTerms);
+		for (QSVocabResult match : consolidatedMatches) {
+			Map<String,String> options = new HashMap<String,String>();
+			options.put(match.getTerm(), "term");
+			if (match.getSynonym() != null) {
+				for (String synonym : match.getSynonym()) {
+					options.put(synonym, "synonym");
+				}
+			}
+
+			BestMatch bestMatch = bmf.getBestMatch(options);
+			match.setStars(bestMatch.stars);
+			match.setBestMatchText(bestMatch.matchText);
+			match.setBestMatchType(bestMatch.matchType);
+
+			grouper.add(bestMatch.stars, match.getPrimaryID(), match);
+		}
+
+		return grouper.toList();
+	}
 
     //-------------------------//
     // QS Results - bucket 3 JSON (accession ID matches)

@@ -58,7 +58,7 @@ var b1Show = function(data) {
 				tbl = tbl + '<TD>' + item.strand + '</TD>';
 			}
 			if (item.bestMatchType === null) {
-				tbl = tbl + '<TD>&nbsp;</TD>';
+				tbl = tbl + '<TD>&nbsp;</TD></TR>';
 			} else {
 				tbl = tbl + '<TD>' + item.bestMatchType + ': ' + bestMatchText + '</TD></TR>';
 			}

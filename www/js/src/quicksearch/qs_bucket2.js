@@ -31,7 +31,12 @@ var b2Show = function(data) {
 
 		for (var i = 0; i < Math.min(100, data.summaryRows.length); i++) {
 			var item = data.summaryRows[i];
-			tbl = tbl + '<TR><TD>TBD</TD>';
+			tbl = tbl + '<TR>';
+			if (item.stars === null) {
+				tbl = tbl + '<TD>TBD</TD>';
+			} else {
+				tbl = tbl + '<TD>' + item.stars + '</TD>';
+			}
 			if (item.detailUrl === null) {
 				tbl = tbl + '<TD>' + item.vocabName + ': ' + item.term + '</TD>';
 			} else {
@@ -46,7 +51,12 @@ var b2Show = function(data) {
 			} else {
 				tbl = tbl + '<TD>&nbsp;</TD>';
 			}
-			tbl = tbl + '<TD>TBD</TD></TR>';
+
+			if (item.bestMatchType === null) {
+				tbl = tbl + '<TD>&nbsp;</TD></TR>';
+			} else {
+				tbl = tbl + '<TD>' + item.bestMatchType + ': ' + item.bestMatchText + '</TD></TR>';
+			}
 		}
 		$('#b2Results').html(tbl);
 		console.log("Populated " + data.summaryRows.length + " b2Results");
