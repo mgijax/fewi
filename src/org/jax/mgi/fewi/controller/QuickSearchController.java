@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -111,7 +112,11 @@ public class QuickSearchController {
         Paginator page = new Paginator(1500);				// max results per search
         Sort byScore = new Sort(SortConstants.SCORE, true);	// sort by descending Solr score (best first)
 
-        String[] terms = queryForm.getQuery().replace(',', ' ').split(" ");
+        List<String> terms = new ArrayList<String>();
+        for (String term : queryForm.getQuery().replace(',', ' ').split(" ")) {
+        	terms.add(term);
+        }
+        terms.add(queryForm.getQuery());
         
         // Search in order of priority:  ID matches, then symbol/name/synonym matches, then other matches
         
@@ -161,7 +166,7 @@ public class QuickSearchController {
     }
 
 	// consolidate the lists of matching features, add star values, and setting best match values, then return
-	private List<QSFeatureResult> unifyFeatureMatches (String[] searchTerms, List<QSFeatureResult> idMatches,
+	private List<QSFeatureResult> unifyFeatureMatches (List<String> searchTerms, List<QSFeatureResult> idMatches,
 		List<QSFeatureResult> nomenMatches, List<QSFeatureResult> otherMatches) {
 		
 		Grouper<QSFeatureResult> grouper = new Grouper<QSFeatureResult>();
@@ -173,7 +178,7 @@ public class QuickSearchController {
 			for (String id : match.getAccID()) {
 				for (String term : searchTerms) {
 					if (term.equalsIgnoreCase(id)) {
-						match.setBestMatchText("ID");
+						match.setBestMatchType("ID");
 						match.setBestMatchText(id);
 						match.setStars("****");
 						grouper.add("****", match.getPrimaryID(), match);
@@ -373,7 +378,7 @@ public class QuickSearchController {
 	private class BestMatchFinder {
 		private List<String> lowerTerms;
 		
-		public BestMatchFinder(String[] searchTerms) {
+		public BestMatchFinder(List<String> searchTerms) {
 			this.lowerTerms = new ArrayList<String>();
 			for (String term : searchTerms) {
 				this.lowerTerms.add(term.toLowerCase().replace("*", ""));
