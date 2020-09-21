@@ -176,7 +176,7 @@ public class QuickSearchController {
 						match.setBestMatchText("ID");
 						match.setBestMatchText(id);
 						match.setStars("****");
-						grouper.addFourStar(match.getPrimaryID(), match);
+						grouper.add("****", match.getPrimaryID(), match);
 						found = true;
 						break;
 					}
@@ -186,7 +186,7 @@ public class QuickSearchController {
 			if (!found) {
 				// should not happen, but let's make sure not to lose the result just in case
 				match.setStars("*");
-				grouper.addOneStar(match.getPrimaryID(), match);
+				grouper.add("*", match.getPrimaryID(), match);
 			}
 		}
 
@@ -332,36 +332,32 @@ public class QuickSearchController {
 		}
 		
 		public void addFourStar(String id, T item) {
-			if (!this.ids.contains(id)) {
-				this.fourStar.add(item);
-			}
+			this.fourStar.add(item);
 		}
 		
 		public void addThreeStar(String id, T item) {
-			if (!this.ids.contains(id)) {
-				this.threeStar.add(item);
-			}
+			this.threeStar.add(item);
 		}
 		
 		public void addTwoStar(String id, T item) {
-			if (!this.ids.contains(id)) {
-				this.twoStar.add(item);
-			}
+			this.twoStar.add(item);
 		}
 		
 		public void addOneStar(String id, T item) {
-			if (!this.ids.contains(id)) {
-				this.oneStar.add(item);
-			}
+			this.oneStar.add(item);
 		}
 		
 		public void add(String stars, String id, T item) {
 			int starCount = stars.length();
 
+			if (this.ids.contains(id)) { return; }
+			
 			if (starCount == 4) { this.addFourStar(id, item); }
 			else if (starCount == 3) { this.addThreeStar(id, item); }
 			else if (starCount == 2) { this.addTwoStar(id, item); }
 			else { this.addOneStar(id, item); }
+
+			this.ids.add(id);
 		}
 		
 		public List<T> toList() {
@@ -380,7 +376,7 @@ public class QuickSearchController {
 		public BestMatchFinder(String[] searchTerms) {
 			this.lowerTerms = new ArrayList<String>();
 			for (String term : searchTerms) {
-				this.lowerTerms.add(term.toLowerCase());
+				this.lowerTerms.add(term.toLowerCase().replace("*", ""));
 			}
 		}
 		
@@ -399,7 +395,6 @@ public class QuickSearchController {
 				String keyLower = key.toLowerCase();
 
 				for (String term : lowerTerms) {
-
 					// bail out once we find a 4-star match
 					if (keyLower.equals(term)) {
 						match.starCount = 4;

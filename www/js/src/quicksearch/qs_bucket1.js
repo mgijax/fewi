@@ -36,6 +36,7 @@ var b1Show = function(data) {
 
 			var symbol = qsSuperscript(item.symbol);
 			var name = qsSuperscript(item.name);
+			var bestMatchText = qsSuperscript(item.bestMatchText);
 			
 			if (item.detailUrl === null) {
 				tbl = tbl + '<TD>' + symbol + '</TD>';
@@ -59,7 +60,7 @@ var b1Show = function(data) {
 			if (item.bestMatchType === null) {
 				tbl = tbl + '<TD>&nbsp;</TD>';
 			} else {
-				tbl = tbl + '<TD>' + item.bestMatchType + ': ' + item.bestMatchText + '</TD></TR>';
+				tbl = tbl + '<TD>' + item.bestMatchType + ': ' + bestMatchText + '</TD></TR>';
 			}
 		}
 		$('#b1Results').html(tbl);
