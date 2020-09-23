@@ -13,6 +13,7 @@ public class QSFeatureResult {
 	private String name;
 	private Integer isMarker;
 	private List<String> synonym;
+	private List<String> orthologNomenOrg;
 	private String featureType;
 	private String detailUri;
 	private Long sequenceNum;
@@ -25,6 +26,12 @@ public class QSFeatureResult {
 	private String bestMatchType;
 	private String bestMatchText;
 
+	public List<String> getOrthologNomenOrg() {
+		return orthologNomenOrg;
+	}
+	public void setOrthologNomenOrg(List<String> orthologNomenOrg) {
+		this.orthologNomenOrg = orthologNomenOrg;
+	}
 	public String getStars() {
 		return stars;
 	}

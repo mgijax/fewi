@@ -47,6 +47,7 @@ public class SolrQSFeatureResultBaseHunter extends SolrHunter<QSFeatureResult> {
 		propertyMap.put(SearchConstants.QS_END_COORD, new SolrPropertyMapper(IndexConstants.QS_END_COORD));
 		propertyMap.put(SearchConstants.QS_STRAND, new SolrPropertyMapper(IndexConstants.QS_STRAND));
 		propertyMap.put(SearchConstants.QS_SEARCH_TEXT, new SolrPropertyMapper(IndexConstants.QS_SEARCH_TEXT));
+		propertyMap.put(SearchConstants.QS_ORTHOLOG_NOMEN_ORG, new SolrPropertyMapper(IndexConstants.QS_ORTHOLOG_NOMEN_ORG));
 		/*
 		 * The name of the field we want to iterate through the documents for
 		 * and place into the output.  In this case we want the standard list of
@@ -95,6 +96,7 @@ public class SolrQSFeatureResultBaseHunter extends SolrHunter<QSFeatureResult> {
 				try {
 					result.setSynonym((List<String>) doc.getFieldValue(IndexConstants.QS_SYNONYM));
 					result.setAccID((List<String>) doc.getFieldValue(IndexConstants.QS_ACC_ID));
+					result.setOrthologNomenOrg((List<String>) doc.getFieldValue(IndexConstants.QS_ORTHOLOG_NOMEN_ORG));
 				} catch (Throwable t) {}
 				
 				Float score = (Float) doc.getFieldValue(IndexConstants.SCORE);

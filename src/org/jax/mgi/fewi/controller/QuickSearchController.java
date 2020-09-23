@@ -216,11 +216,27 @@ public class QuickSearchController {
 			grouper.add(bestMatch.stars, match.getPrimaryID(), match);
 		}
 
-		// other matches 
+		// other matches -- need to handle anything in searchText bucket (annotations, ortholog nomen, etc)
+		
+		// move down ortholog nomen to here
 		
 		for (QSFeatureResult match : otherMatches) {
-			// TODO - better logic
-			grouper.add("*", match.getPrimaryID(), match);
+			Map<String,String> options = new HashMap<String,String>();
+			if (match.getOrthologNomenOrg() != null) {
+				for (String orthologNomenOrg : match.getOrthologNomenOrg()) {
+					String[] pieces = orthologNomenOrg.split(":");
+					if ((pieces != null) && (pieces.length > 1)) {
+						options.put(pieces[1], pieces[0]);
+					}
+				}
+			}
+
+			BestMatch bestMatch = bmf.getBestMatch(options);
+			match.setStars(bestMatch.stars);
+			match.setBestMatchText(bestMatch.matchText);
+			match.setBestMatchType(bestMatch.matchType);
+
+			grouper.add(bestMatch.stars, match.getPrimaryID(), match);
 		}
 		
 		return grouper.toList();
