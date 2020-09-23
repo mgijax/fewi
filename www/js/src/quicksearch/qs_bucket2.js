@@ -37,7 +37,7 @@ var b2Show = function(data) {
 			} else {
 				tbl = tbl + '<TD>' + item.stars + '</TD>';
 			}
-			if (item.detailUrl === null) {
+			if (item.detailUri === null) {
 				tbl = tbl + '<TD>' + item.vocabName + ': ' + item.term + '</TD>';
 			} else {
 				tbl = tbl + '<TD>' + item.vocabName + ': <a href="' + item.detailUri + '">' + item.term + '</a></TD>';
