@@ -12,12 +12,13 @@ var qsMain = function() {
 
 // find a string beginning with the given string 'c' that doesn't appear in string 's'
 var findTag = function(c, s) {
-  	if (s.indexOf(c) < 0) { return c; }
+  	if ((s === null) || (s.indexOf(c) < 0)) { return c; }
   	return findTag(c + c[0], s);
 };
   
 // convert MGI superscript notation <...> to HTML superscript tags
 var qsSuperscript = function(s) {
+	if (s === null) { return s; }
     var openTag = findTag('{', s);
   	return s.split('<').join(openTag).split('>').join('</sup>').split(openTag).join('<sup>');
 };
