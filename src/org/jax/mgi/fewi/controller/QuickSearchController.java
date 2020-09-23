@@ -195,50 +195,78 @@ public class QuickSearchController {
 			}
 		}
 
-		// Nomen matches can be to symbol, name, or synonym.  Exact are 4-star, begins are 3-star, contains are 2-star.
+		// At this point, we could have the same features matched in both nomenMatches and in otherMatches.  If we just
+		// process them separately, it would be possible for the best nomenMatch for the feature to be a 2-star while
+		// the best otherMatch could be a 4-star.  In that case, whichever is found first would be retained and the
+		// other discarded.  So we need to reconcile the two lists into a single one with only one match per feature.
+		
+		// Make two sets of primary IDs.  Those in nomenSet need to have symbol, name, synonym checked.  Those in
+		// otherSet need annotations and ortholog data checked.  Those in both need both checked.  This optimization 
+		// reduces the number of strings we need to analyze for each data point.
+		
+		Set<String> byNomen = new HashSet<String>();	// IDs of features yet to process for nomen
+		Set<String> byOther = new HashSet<String>();	// IDs of features yet to process for other matches
+		
+		for (QSFeatureResult match : nomenMatches) {
+			byNomen.add(match.getPrimaryID());
+		}
+		for (QSFeatureResult match : otherMatches) {
+			byOther.add(match.getPrimaryID());
+		}
+		
+		List<List<QSFeatureResult>> bothLists = new ArrayList<List<QSFeatureResult>>();
+		bothLists.add(nomenMatches);
+		bothLists.add(otherMatches);
+
+		// Exact are 4-star, begins are 3-star, contains are 2-star.
 		
 		BestMatchFinder bmf = new BestMatchFinder(searchTerms);
-		for (QSFeatureResult match : nomenMatches) {
-			Map<String,String> options = new HashMap<String,String>();
-			options.put(match.getSymbol(), "symbol");
-			options.put(match.getName(), "name");
-			if (match.getSynonym() != null) {
-				for (String synonym : match.getSynonym()) {
-					options.put(synonym, "synonym");
-				}
-			}
+		for (List<QSFeatureResult> resultList : bothLists) {
+			for (QSFeatureResult match : resultList) {
+				String primaryID = match.getPrimaryID();
+				boolean nomenToDo = byNomen.contains(primaryID);
+				boolean otherToDo = byOther.contains(primaryID);
+				
+				// maps from value string to a string describing what type of data it is
+				Map<String,String> options = new HashMap<String,String>();
 
-			BestMatch bestMatch = bmf.getBestMatch(options);
-			match.setStars(bestMatch.stars);
-			match.setBestMatchText(bestMatch.matchText);
-			match.setBestMatchType(bestMatch.matchType);
-
-			grouper.add(bestMatch.stars, match.getPrimaryID(), match);
-		}
-
-		// other matches -- need to handle anything in searchText bucket (annotations, ortholog nomen, etc)
-		
-		// move down ortholog nomen to here
-		
-		for (QSFeatureResult match : otherMatches) {
-			Map<String,String> options = new HashMap<String,String>();
-			if (match.getOrthologNomenOrg() != null) {
-				for (String orthologNomenOrg : match.getOrthologNomenOrg()) {
-					String[] pieces = orthologNomenOrg.split(":");
-					if ((pieces != null) && (pieces.length > 1)) {
-						options.put(pieces[1], pieces[0]);
+				if (nomenToDo) {
+					// Nomen matches can be to symbol, name, or synonym.
+					options.put(match.getSymbol(), "symbol");
+					options.put(match.getName(), "name");
+					if (match.getSynonym() != null) {
+						for (String synonym : match.getSynonym()) {
+							options.put(synonym, "synonym");
+						}
 					}
+					byNomen.remove(primaryID);
+				}
+				if (otherToDo) {
+					// Other matches need to handle anything in searchText bucket (annotations, ortholog nomen, etc.)
+					if (match.getOrthologNomenOrg() != null) {
+						for (String orthologNomenOrg : match.getOrthologNomenOrg()) {
+							String[] pieces = orthologNomenOrg.split(":");
+							if ((pieces != null) && (pieces.length > 1)) {
+								options.put(pieces[1], pieces[0]);
+							}
+						}
+					}
+					byOther.remove(primaryID);
+				}
+
+				// If we encounter the same matching feature a second time (say, once in nomen and once in other)
+				// then options will be empty and we can skip scoring and adding it again.
+				if (options.size() > 0) {
+					BestMatch bestMatch = bmf.getBestMatch(options);
+					match.setStars(bestMatch.stars);
+					match.setBestMatchText(bestMatch.matchText);
+					match.setBestMatchType(bestMatch.matchType);
+
+					grouper.add(bestMatch.stars, primaryID, match);
 				}
 			}
-
-			BestMatch bestMatch = bmf.getBestMatch(options);
-			match.setStars(bestMatch.stars);
-			match.setBestMatchText(bestMatch.matchText);
-			match.setBestMatchType(bestMatch.matchType);
-
-			grouper.add(bestMatch.stars, match.getPrimaryID(), match);
 		}
-		
+
 		return grouper.toList();
 	}
 	
