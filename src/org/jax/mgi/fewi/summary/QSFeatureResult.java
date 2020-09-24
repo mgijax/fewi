@@ -12,6 +12,7 @@ public class QSFeatureResult {
 	private String symbol;
 	private String name;
 	private Integer isMarker;
+	private List<String> proteinDomains;
 	private List<String> synonym;
 	private List<String> orthologNomenOrg;
 	private String featureType;
@@ -26,6 +27,12 @@ public class QSFeatureResult {
 	private String bestMatchType;
 	private String bestMatchText;
 
+	public List<String> getProteinDomains() {
+		return proteinDomains;
+	}
+	public void setProteinDomains(List<String> proteinDomains) {
+		this.proteinDomains = proteinDomains;
+	}
 	public List<String> getOrthologNomenOrg() {
 		return orthologNomenOrg;
 	}

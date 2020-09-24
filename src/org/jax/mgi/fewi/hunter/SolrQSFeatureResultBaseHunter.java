@@ -45,6 +45,7 @@ public class SolrQSFeatureResultBaseHunter extends SolrHunter<QSFeatureResult> {
 		propertyMap.put(SearchConstants.QS_CHROMOSOME, new SolrPropertyMapper(IndexConstants.QS_CHROMOSOME));
 		propertyMap.put(SearchConstants.QS_START_COORD, new SolrPropertyMapper(IndexConstants.QS_START_COORD));
 		propertyMap.put(SearchConstants.QS_END_COORD, new SolrPropertyMapper(IndexConstants.QS_END_COORD));
+		propertyMap.put(SearchConstants.QS_PROTEIN_DOMAINS, new SolrPropertyMapper(IndexConstants.QS_PROTEIN_DOMAINS));
 		propertyMap.put(SearchConstants.QS_STRAND, new SolrPropertyMapper(IndexConstants.QS_STRAND));
 		propertyMap.put(SearchConstants.QS_SEARCH_TEXT, new SolrPropertyMapper(IndexConstants.QS_SEARCH_TEXT));
 		propertyMap.put(SearchConstants.QS_ORTHOLOG_NOMEN_ORG, new SolrPropertyMapper(IndexConstants.QS_ORTHOLOG_NOMEN_ORG));
@@ -95,6 +96,7 @@ public class SolrQSFeatureResultBaseHunter extends SolrHunter<QSFeatureResult> {
 				
 				try {
 					result.setSynonym((List<String>) doc.getFieldValue(IndexConstants.QS_SYNONYM));
+					result.setProteinDomains((List<String>) doc.getFieldValue(IndexConstants.QS_PROTEIN_DOMAINS));
 					result.setAccID((List<String>) doc.getFieldValue(IndexConstants.QS_ACC_ID));
 					result.setOrthologNomenOrg((List<String>) doc.getFieldValue(IndexConstants.QS_ORTHOLOG_NOMEN_ORG));
 				} catch (Throwable t) {}

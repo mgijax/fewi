@@ -325,6 +325,7 @@ public class SearchConstants {
 	public static final String QS_CHROMOSOME = "chromosome";
 	public static final String QS_START_COORD = "startCoord";
 	public static final String QS_END_COORD = "endCoord";
+	public static final String QS_PROTEIN_DOMAINS = "proteinDomains";
 	public static final String QS_STRAND = "strand";
 	public static final String QS_ORTHOLOG_NOMEN_ORG = "orthologNomenOrg";
 }

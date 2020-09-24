@@ -251,6 +251,12 @@ public class QuickSearchController {
 							}
 						}
 					}
+					
+					if (match.getProteinDomains() != null) {
+						for (String domain : match.getProteinDomains()) {
+							options.put(domain, "Protein Domain");
+						}
+					}
 					byOther.remove(primaryID);
 				}
 
