@@ -349,8 +349,6 @@ public class QuickSearchController {
         int totalCount = qsFinder.getVocabResults(anySearch).getTotalCount();
         logger.info("Identified " + totalCount + " matches in all");
 
-        // TODO - add new general unification method like the feature one
-
         List<QSVocabResult> out = unifyVocabMatches(terms, idMatches, termMatches, synonymMatches);
         
         JsonSummaryResponse<QSVocabResult> response = new JsonSummaryResponse<QSVocabResult>();
