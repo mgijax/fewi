@@ -155,11 +155,23 @@ public class QuickSearchController {
         List<QSFeatureResult> otherMatches = qsFinder.getFeatureResults(otherSearch).getResultObjects();
         logger.info("Got " + otherMatches.size() + " other matches");
         
+        List<Filter> anyFilters = new ArrayList<Filter>();
+        anyFilters.addAll(idFilters);
+        anyFilters.addAll(nomenFilters);
+        anyFilters.addAll(otherFilters);
+        
+        SearchParams anySearch = new SearchParams();
+        anySearch.setPaginator(new Paginator(0));
+        anySearch.setFilter(Filter.or(anyFilters));
+
+        int totalCount = qsFinder.getFeatureResults(anySearch).getTotalCount();
+        logger.info("Identified " + totalCount + " matches in all");
+
         List<QSFeatureResult> out = unifyFeatureMatches(terms, idMatches, nomenMatches, otherMatches);
         
         JsonSummaryResponse<QSFeatureResult> response = new JsonSummaryResponse<QSFeatureResult>();
         response.setSummaryRows(out);
-        response.setTotalCount(out.size());
+        response.setTotalCount(totalCount);
         logger.info("Returning " + out.size() + " matches");
 
         return response;
