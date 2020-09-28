@@ -311,6 +311,7 @@ public class QuickSearchController {
         List<Filter> idFilters = new ArrayList<Filter>();
         List<Filter> termFilters = new ArrayList<Filter>();
         List<Filter> synonymFilters = new ArrayList<Filter>();
+        List<Filter> anyFilters = new ArrayList<Filter>();
 
         for (String term : terms) {
         	idFilters.add(new Filter(SearchConstants.QS_ACC_ID, term, Operator.OP_EQUAL));
@@ -337,13 +338,24 @@ public class QuickSearchController {
         List<QSVocabResult> synonymMatches = qsFinder.getVocabResults(synonymSearch).getResultObjects();
         logger.info("Got " + synonymMatches.size() + " synonym matches");
         
+        anyFilters.addAll(idFilters);
+        anyFilters.addAll(termFilters);
+        anyFilters.addAll(synonymFilters);
+        
+        SearchParams anySearch = new SearchParams();
+        anySearch.setPaginator(new Paginator(0));
+        anySearch.setFilter(Filter.or(anyFilters));
+
+        int totalCount = qsFinder.getVocabResults(anySearch).getTotalCount();
+        logger.info("Identified " + totalCount + " matches in all");
+
         // TODO - add new general unification method like the feature one
 
         List<QSVocabResult> out = unifyVocabMatches(terms, idMatches, termMatches, synonymMatches);
         
         JsonSummaryResponse<QSVocabResult> response = new JsonSummaryResponse<QSVocabResult>();
         response.setSummaryRows(out);
-        response.setTotalCount(out.size());
+        response.setTotalCount(totalCount);
         logger.info("Returning " + out.size() + " matches");
 
         return response;
