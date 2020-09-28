@@ -29,7 +29,8 @@ var b2Show = function(data) {
 		var tbl = '<TABLE ID="b2Table">';
 		tbl = tbl + '<TR><TH>Score</TH><TH>Term</TH><TH>Associated Data</TH><TH>Best Mactch</TH></TR>';
 
-		for (var i = 0; i < Math.min(100, data.summaryRows.length); i++) {
+		var toShow = Math.min(100, data.summaryRows.length);
+		for (var i = 0; i < toShow; i++) {
 			var item = data.summaryRows[i];
 			tbl = tbl + '<TR>';
 			if (item.stars === null) {
@@ -58,7 +59,8 @@ var b2Show = function(data) {
 				tbl = tbl + '<TD>' + item.bestMatchType + ': ' + item.bestMatchText + '</TD></TR>';
 			}
 		}
-		$('#b2Results').html(tbl);
+		var header = qsResultHeader(1, toShow, data.totalCount, " vocabulary term");
+		$('#b2Results').html(header + "<br>" + tbl);
 		console.log("Populated " + data.summaryRows.length + " b2Results");
 	} else {
 		console.log("No b2Results");

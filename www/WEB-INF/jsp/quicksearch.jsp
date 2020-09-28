@@ -18,14 +18,7 @@
     
 %>
 
-<style type="text/css">
-</style>
-
-<script>
-</script>
-
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
-
 
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="QUICK_SEARCH_help.shtml">	
@@ -60,6 +53,7 @@ Search MGI with Google<p/>
 #b3Table td { padding: 3px; border: 1px solid black; }
 </style>
 
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/fewi_utils.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/quicksearch/qs_main.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/quicksearch/qs_bucket1.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/quicksearch/qs_bucket2.js"></script>

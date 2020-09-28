@@ -23,3 +23,11 @@ var qsSuperscript = function(s) {
   	return s.split('<').join(openTag).split('>').join('</sup>').split(openTag).join('<sup>');
 };
   
+// return a string listing counts for search results
+var qsResultHeader = function(start, end, total, dataType) {
+	var plural = "";
+	if ((end - start) > 1) {
+		plural = "s";
+	}
+	return "Showing " + commaDelimit(start) + "-" + commaDelimit(end) + " of " + commaDelimit(total) + " " + dataType + plural;
+};

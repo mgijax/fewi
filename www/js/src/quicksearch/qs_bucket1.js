@@ -29,7 +29,8 @@ var b1Show = function(data) {
 		var tbl = '<TABLE ID="b1Table">';
 		tbl = tbl + '<TR><TH>Score</TH><TH>Type</TH><TH>Symbol</TH><TH>Name</TH><TH>Chr</TH><TH>Location</TH><TH>Str</TH><TH>Best Match</TH></TR>';
 
-		for (var i = 0; i < Math.min(100, data.summaryRows.length); i++) {
+		var toShow = Math.min(100, data.summaryRows.length);
+		for (var i = 0; i < toShow; i++) {
 			var item = data.summaryRows[i];
 			tbl = tbl + '<TR><TD>' + item.stars + '</TD>';
 			tbl = tbl + '<TD>' + item.featureType + '</TD>';
@@ -63,7 +64,8 @@ var b1Show = function(data) {
 				tbl = tbl + '<TD>' + item.bestMatchType + ': ' + bestMatchText + '</TD></TR>';
 			}
 		}
-		$('#b1Results').html(tbl);
+		var header = qsResultHeader(1, toShow, data.totalCount, " genome feature");
+		$('#b1Results').html(header + "<br>" + tbl);
 		console.log("Populated " + data.summaryRows.length + " b1Results");
 	} else {
 		console.log("No b1Results");
