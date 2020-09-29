@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrRequest.METHOD;
+import org.apache.solr.client.solrj.impl.HttpClientUtil;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.impl.HttpSolrClient.Builder;
 import org.apache.solr.client.solrj.response.FacetField.Count;
@@ -20,6 +21,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.params.GroupParams;
+import org.apache.solr.common.params.ModifiableSolrParams;
 import org.jax.mgi.fewi.propertyMapper.SolrJoinMapper;
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.Filter;
@@ -486,21 +488,22 @@ public class SolrHunter<T> implements Hunter<T> {
 	}
 	protected HttpSolrClient createSolrConnection(String url) 
 	{
+		ModifiableSolrParams solrParams = new ModifiableSolrParams();
+		solrParams.set(HttpClientUtil.PROP_ALLOW_COMPRESSION, true);
+		solrParams.set(HttpClientUtil.PROP_SO_TIMEOUT, solrSoTimeout);
+		solrParams.set(HttpClientUtil.PROP_CONNECTION_TIMEOUT, connectionTimeout);
+		solrParams.set(HttpClientUtil.PROP_MAX_CONNECTIONS, maxTotalConnections);
+		solrParams.set(HttpClientUtil.PROP_MAX_CONNECTIONS_PER_HOST, maxConnectionsPerHost);
+		solrParams.set(HttpClientUtil.PROP_FOLLOW_REDIRECTS, false);
+		solrParams.set(HttpClientUtil.PROP_USE_RETRY, maxRetries);
+		
 		HttpSolrClient server=null;
 		logger.debug("solrUrl->" + url);
-		try { server = new HttpSolrClient.Builder(url).allowCompression(true).build();}
+		try { server = new HttpSolrClient.Builder(url).withInvariantParams(solrParams).build();}
 		catch (Exception e) {
 			System.out.println("Cannot reach the Solr server.");
 			e.printStackTrace();
 		}
-
-		server.setSoTimeout(solrSoTimeout);  // socket read timeout
-		server.setConnectionTimeout(connectionTimeout);
-//		server.setDefaultMaxConnectionsPerHost(maxConnectionsPerHost);
-//		server.setMaxTotalConnections(maxTotalConnections);
-		server.setFollowRedirects(false);  // defaults to false
-//		server.setAllowCompression(true);
-//		server.setMaxRetries(maxRetries);
 
 		return server;
 	}
