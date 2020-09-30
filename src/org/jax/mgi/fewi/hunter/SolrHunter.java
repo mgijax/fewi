@@ -138,6 +138,8 @@ public class SolrHunter<T> implements Hunter<T> {
 	// Indexes that can be joined on
 	protected Map<String,SolrJoinMapper> joinIndices = new HashMap<String,SolrJoinMapper>();
 
+	// shared connections when joining to other indices; string key maps to connection
+	protected Map<String,HttpSolrClient> joinedServers = new HashMap<String,HttpSolrClient>();
 
 	/*----- CONSTRUCTOR -----*/
 
@@ -213,7 +215,11 @@ public class SolrHunter<T> implements Hunter<T> {
 		// Setup our interface into solr.
 		boolean doJoin=false;
 		if(joinField!=null && joinIndices.containsKey(joinField)) {
-			qServer = createSolrConnection(joinIndices.get(joinField).getToIndexUrl());
+			// If we do not already have a joined connection for that field, then we must create one.
+			if (!joinedServers.containsKey(joinField)) {
+				joinedServers.put(joinField, createSolrConnection(joinIndices.get(joinField).getToIndexUrl()));
+			}
+			qServer = joinedServers.get(joinField);
 			doJoin=true;
 		} else {
 			if (curServer==null) curServer = createSolrConnection();
