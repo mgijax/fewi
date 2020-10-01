@@ -27,6 +27,7 @@ import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.QSVocabResult;
 import org.jax.mgi.fewi.summary.QSFeatureResult;
 import org.jax.mgi.fewi.summary.QSFeatureResultWrapper;
+import org.jax.mgi.fewi.summary.QSVocabResultWrapper;
 import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.shr.jsonmodel.BrowserTerm;
 import org.slf4j.Logger;
@@ -178,7 +179,7 @@ public class QuickSearchController {
         JsonSummaryResponse<QSFeatureResultWrapper> response = new JsonSummaryResponse<QSFeatureResultWrapper>();
         response.setSummaryRows(wrapped);
         response.setTotalCount(totalCount);
-        logger.info("Returning " + wrapped.size() + " matches");
+        logger.info("Returning " + wrapped.size() + " feature matches");
 
         return response;
     }
@@ -321,7 +322,7 @@ public class QuickSearchController {
     // QS Results - bucket 2 JSON (vocab terms and annotations)
     //-------------------------//
 	@RequestMapping("/vocabBucket")
-	public @ResponseBody JsonSummaryResponse<QSVocabResult> getVocabBucket(HttpServletRequest request,
+	public @ResponseBody JsonSummaryResponse<QSVocabResultWrapper> getVocabBucket(HttpServletRequest request,
 			@ModelAttribute QuickSearchQueryForm queryForm) {
 
         logger.info("->getVocabBucket started");
@@ -380,10 +381,15 @@ public class QuickSearchController {
 
         List<QSVocabResult> out = unifyVocabMatches(terms, idMatches, termMatches, synonymMatches);
         
-        JsonSummaryResponse<QSVocabResult> response = new JsonSummaryResponse<QSVocabResult>();
-        response.setSummaryRows(out);
+        List<QSVocabResultWrapper> wrapped = new ArrayList<QSVocabResultWrapper>();
+        for (QSVocabResult r : out) {
+        	wrapped.add(new QSVocabResultWrapper(r));
+        }
+        
+        JsonSummaryResponse<QSVocabResultWrapper> response = new JsonSummaryResponse<QSVocabResultWrapper>();
+        response.setSummaryRows(wrapped);
         response.setTotalCount(totalCount);
-        logger.info("Returning " + out.size() + " matches");
+        logger.info("Returning " + wrapped.size() + " vocab matches");
 
         return response;
     }
