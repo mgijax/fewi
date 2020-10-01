@@ -15,6 +15,26 @@ public class QSFeatureResult {
 	private List<String> proteinDomains;
 	private List<String> synonym;
 	private List<String> orthologNomenOrg;
+
+	private List<String> functionAnnotationsID;
+	private List<String> functionAnnotationsTerm;
+	private List<String> functionAnnotationsSynonym;
+	private List<String> functionAnnotationsDefinition;
+
+	private List<String> processAnnotationsID;
+	private List<String> processAnnotationsTerm;
+	private List<String> processAnnotationsSynonym;
+	private List<String> processAnnotationsDefinition;
+
+	private List<String> componentAnnotationsID;
+	private List<String> componentAnnotationsTerm;
+	private List<String> componentAnnotationsSynonym;
+	private List<String> componentAnnotationsDefinition;
+
+	private List<String> phenotypeAnnotations;
+	private List<String> humanPhenotypeAnnotations;
+	private List<String> gxdAnnotationsWithTS;
+	private List<String> diseaseAnnotations;
 	private String featureType;
 	private String detailUri;
 	private Long sequenceNum;
@@ -27,6 +47,102 @@ public class QSFeatureResult {
 	private String bestMatchType;
 	private String bestMatchText;
 
+	public List<String> getFunctionAnnotationsID() {
+		return functionAnnotationsID;
+	}
+	public void setFunctionAnnotationsID(List<String> functionAnnotationsID) {
+		this.functionAnnotationsID = functionAnnotationsID;
+	}
+	public List<String> getFunctionAnnotationsTerm() {
+		return functionAnnotationsTerm;
+	}
+	public void setFunctionAnnotationsTerm(List<String> functionAnnotationsTerm) {
+		this.functionAnnotationsTerm = functionAnnotationsTerm;
+	}
+	public List<String> getFunctionAnnotationsSynonym() {
+		return functionAnnotationsSynonym;
+	}
+	public void setFunctionAnnotationsSynonym(List<String> functionAnnotationsSynonym) {
+		this.functionAnnotationsSynonym = functionAnnotationsSynonym;
+	}
+	public List<String> getFunctionAnnotationsDefinition() {
+		return functionAnnotationsDefinition;
+	}
+	public void setFunctionAnnotationsDefinition(List<String> functionAnnotationsDefinition) {
+		this.functionAnnotationsDefinition = functionAnnotationsDefinition;
+	}
+	public List<String> getProcessAnnotationsID() {
+		return processAnnotationsID;
+	}
+	public void setProcessAnnotationsID(List<String> processAnnotationsID) {
+		this.processAnnotationsID = processAnnotationsID;
+	}
+	public List<String> getProcessAnnotationsTerm() {
+		return processAnnotationsTerm;
+	}
+	public void setProcessAnnotationsTerm(List<String> processAnnotationsTerm) {
+		this.processAnnotationsTerm = processAnnotationsTerm;
+	}
+	public List<String> getProcessAnnotationsSynonym() {
+		return processAnnotationsSynonym;
+	}
+	public void setProcessAnnotationsSynonym(List<String> processAnnotationsSynonym) {
+		this.processAnnotationsSynonym = processAnnotationsSynonym;
+	}
+	public List<String> getProcessAnnotationsDefinition() {
+		return processAnnotationsDefinition;
+	}
+	public void setProcessAnnotationsDefinition(List<String> processAnnotationsDefinition) {
+		this.processAnnotationsDefinition = processAnnotationsDefinition;
+	}
+	public List<String> getComponentAnnotationsID() {
+		return componentAnnotationsID;
+	}
+	public void setComponentAnnotationsID(List<String> componentAnnotationsID) {
+		this.componentAnnotationsID = componentAnnotationsID;
+	}
+	public List<String> getComponentAnnotationsTerm() {
+		return componentAnnotationsTerm;
+	}
+	public void setComponentAnnotationsTerm(List<String> componentAnnotationsTerm) {
+		this.componentAnnotationsTerm = componentAnnotationsTerm;
+	}
+	public List<String> getComponentAnnotationsSynonym() {
+		return componentAnnotationsSynonym;
+	}
+	public void setComponentAnnotationsSynonym(List<String> componentAnnotationsSynonym) {
+		this.componentAnnotationsSynonym = componentAnnotationsSynonym;
+	}
+	public List<String> getComponentAnnotationsDefinition() {
+		return componentAnnotationsDefinition;
+	}
+	public void setComponentAnnotationsDefinition(List<String> componentAnnotationsDefinition) {
+		this.componentAnnotationsDefinition = componentAnnotationsDefinition;
+	}
+	public List<String> getPhenotypeAnnotations() {
+		return phenotypeAnnotations;
+	}
+	public void setPhenotypeAnnotations(List<String> phenotypeAnnotations) {
+		this.phenotypeAnnotations = phenotypeAnnotations;
+	}
+	public List<String> getHumanPhenotypeAnnotations() {
+		return humanPhenotypeAnnotations;
+	}
+	public void setHumanPhenotypeAnnotations(List<String> humanPhenotypeAnnotations) {
+		this.humanPhenotypeAnnotations = humanPhenotypeAnnotations;
+	}
+	public List<String> getGxdAnnotationsWithTS() {
+		return gxdAnnotationsWithTS;
+	}
+	public void setGxdAnnotationsWithTS(List<String> gxdAnnotationsWithTS) {
+		this.gxdAnnotationsWithTS = gxdAnnotationsWithTS;
+	}
+	public List<String> getDiseaseAnnotations() {
+		return diseaseAnnotations;
+	}
+	public void setDiseaseAnnotations(List<String> diseaseAnnotations) {
+		this.diseaseAnnotations = diseaseAnnotations;
+	}
 	public List<String> getProteinDomains() {
 		return proteinDomains;
 	}

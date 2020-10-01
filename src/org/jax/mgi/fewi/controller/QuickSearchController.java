@@ -26,6 +26,7 @@ import org.jax.mgi.fewi.summary.AccessionSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.QSVocabResult;
 import org.jax.mgi.fewi.summary.QSFeatureResult;
+import org.jax.mgi.fewi.summary.QSFeatureResultWrapper;
 import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.shr.jsonmodel.BrowserTerm;
 import org.slf4j.Logger;
@@ -104,12 +105,12 @@ public class QuickSearchController {
     // QS Results - bucket 1 JSON (markers and alleles)
     //-------------------------//
 	@RequestMapping("/featureBucket")
-	public @ResponseBody JsonSummaryResponse<QSFeatureResult> getFeatureBucket(HttpServletRequest request,
+	public @ResponseBody JsonSummaryResponse<QSFeatureResultWrapper> getFeatureBucket(HttpServletRequest request,
 			@ModelAttribute QuickSearchQueryForm queryForm) {
 
         logger.info("->getFeatureBucket started");
         
-        Paginator page = new Paginator(1500);				// max results per search
+        Paginator page = new Paginator(300);				// max results per search
         Sort byScore = new Sort(SortConstants.SCORE, true);	// sort by descending Solr score (best first)
 
         List<String> terms = new ArrayList<String>();
@@ -169,10 +170,15 @@ public class QuickSearchController {
 
         List<QSFeatureResult> out = unifyFeatureMatches(terms, idMatches, nomenMatches, otherMatches);
         
-        JsonSummaryResponse<QSFeatureResult> response = new JsonSummaryResponse<QSFeatureResult>();
-        response.setSummaryRows(out);
+        List<QSFeatureResultWrapper> wrapped = new ArrayList<QSFeatureResultWrapper>();
+        for (QSFeatureResult r : out) {
+        	wrapped.add(new QSFeatureResultWrapper(r));
+        }
+        
+        JsonSummaryResponse<QSFeatureResultWrapper> response = new JsonSummaryResponse<QSFeatureResultWrapper>();
+        response.setSummaryRows(wrapped);
         response.setTotalCount(totalCount);
-        logger.info("Returning " + out.size() + " matches");
+        logger.info("Returning " + wrapped.size() + " matches");
 
         return response;
     }
@@ -269,6 +275,29 @@ public class QuickSearchController {
 							options.put(domain, "Protein Domain");
 						}
 					}
+					
+					Map<String,List<String>> annotations = new HashMap<String,List<String>>();
+					annotations.put("Function", match.getFunctionAnnotationsID());
+					annotations.put("Function", match.getFunctionAnnotationsTerm());
+					annotations.put("Function (synonym)", match.getFunctionAnnotationsSynonym());
+					annotations.put("Function (definition)", match.getFunctionAnnotationsDefinition());
+					annotations.put("Process", match.getProcessAnnotationsID());
+					annotations.put("Process", match.getProcessAnnotationsTerm());
+					annotations.put("Process (synonym)", match.getProcessAnnotationsSynonym());
+					annotations.put("Process (definition)", match.getProcessAnnotationsDefinition());
+					annotations.put("Component", match.getComponentAnnotationsID());
+					annotations.put("Component", match.getComponentAnnotationsTerm());
+					annotations.put("Component (synonym)", match.getComponentAnnotationsSynonym());
+					annotations.put("Component (definition)", match.getComponentAnnotationsDefinition());
+					
+					for (String termType : annotations.keySet().toArray(new String[0])) {
+						if (annotations.get(termType) != null) {
+							for (String term : annotations.get(termType)) {
+								options.put(term, termType);
+							}
+						}
+					}
+					
 					byOther.remove(primaryID);
 				}
 

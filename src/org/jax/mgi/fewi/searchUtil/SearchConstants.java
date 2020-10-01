@@ -326,6 +326,26 @@ public class SearchConstants {
 	public static final String QS_START_COORD = "startCoord";
 	public static final String QS_END_COORD = "endCoord";
 	public static final String QS_PROTEIN_DOMAINS = "proteinDomains";
+	public static final String QS_PHENOTYPE_ANNOTATIONS = "phenotypeAnnotations";
+	public static final String QS_HPO_ANNOTATIONS = "humanPhenotypeAnnotations";
+	public static final String QS_GXD_ANNOTATIONS_WITH_TS = "gxdAnnotationsWithTS";
+	public static final String QS_GXD_ANNOTATIONS = "gxdAnnotations";
+	public static final String QS_DISEASE_ANNOTATIONS = "diseaseAnnotations";
 	public static final String QS_STRAND = "strand";
 	public static final String QS_ORTHOLOG_NOMEN_ORG = "orthologNomenOrg";
+
+	public static final String QS_FUNCTION_ANNOTATIONS_ID = "functionAnnotationsID";
+	public static final String QS_FUNCTION_ANNOTATIONS_TERM = "functionAnnotationsTerm";
+	public static final String QS_FUNCTION_ANNOTATIONS_SYNONYM = "functionAnnotationsSynonym";
+	public static final String QS_FUNCTION_ANNOTATIONS_DEFINITION = "functionAnnotationsDefinition";
+
+	public static final String QS_PROCESS_ANNOTATIONS_ID = "processAnnotationsID";
+	public static final String QS_PROCESS_ANNOTATIONS_TERM = "processAnnotationsTerm";
+	public static final String QS_PROCESS_ANNOTATIONS_SYNONYM = "processAnnotationsSynonym";
+	public static final String QS_PROCESS_ANNOTATIONS_DEFINITION = "processAnnotationsDefinition";
+
+	public static final String QS_COMPONENT_ANNOTATIONS_ID = "componentAnnotationsID";
+	public static final String QS_COMPONENT_ANNOTATIONS_TERM = "componentAnnotationsTerm";
+	public static final String QS_COMPONENT_ANNOTATIONS_SYNONYM = "componentAnnotationsSynonym";
+	public static final String QS_COMPONENT_ANNOTATIONS_DEFINITION = "componentAnnotationsDefinition";
 }

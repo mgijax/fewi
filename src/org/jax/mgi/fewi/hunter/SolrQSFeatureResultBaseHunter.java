@@ -49,6 +49,21 @@ public class SolrQSFeatureResultBaseHunter extends SolrHunter<QSFeatureResult> {
 		propertyMap.put(SearchConstants.QS_STRAND, new SolrPropertyMapper(IndexConstants.QS_STRAND));
 		propertyMap.put(SearchConstants.QS_SEARCH_TEXT, new SolrPropertyMapper(IndexConstants.QS_SEARCH_TEXT));
 		propertyMap.put(SearchConstants.QS_ORTHOLOG_NOMEN_ORG, new SolrPropertyMapper(IndexConstants.QS_ORTHOLOG_NOMEN_ORG));
+
+		propertyMap.put(SearchConstants.QS_FUNCTION_ANNOTATIONS_ID, new SolrPropertyMapper(IndexConstants.QS_FUNCTION_ANNOTATIONS_ID));
+		propertyMap.put(SearchConstants.QS_FUNCTION_ANNOTATIONS_TERM, new SolrPropertyMapper(IndexConstants.QS_FUNCTION_ANNOTATIONS_TERM));
+		propertyMap.put(SearchConstants.QS_FUNCTION_ANNOTATIONS_SYNONYM, new SolrPropertyMapper(IndexConstants.QS_FUNCTION_ANNOTATIONS_SYNONYM));
+		propertyMap.put(SearchConstants.QS_FUNCTION_ANNOTATIONS_DEFINITION, new SolrPropertyMapper(IndexConstants.QS_FUNCTION_ANNOTATIONS_DEFINITION));
+
+		propertyMap.put(SearchConstants.QS_PROCESS_ANNOTATIONS_ID, new SolrPropertyMapper(IndexConstants.QS_PROCESS_ANNOTATIONS_ID));
+		propertyMap.put(SearchConstants.QS_PROCESS_ANNOTATIONS_TERM, new SolrPropertyMapper(IndexConstants.QS_PROCESS_ANNOTATIONS_TERM));
+		propertyMap.put(SearchConstants.QS_PROCESS_ANNOTATIONS_SYNONYM, new SolrPropertyMapper(IndexConstants.QS_PROCESS_ANNOTATIONS_SYNONYM));
+		propertyMap.put(SearchConstants.QS_PROCESS_ANNOTATIONS_DEFINITION, new SolrPropertyMapper(IndexConstants.QS_PROCESS_ANNOTATIONS_DEFINITION));
+
+		propertyMap.put(SearchConstants.QS_COMPONENT_ANNOTATIONS_ID, new SolrPropertyMapper(IndexConstants.QS_COMPONENT_ANNOTATIONS_ID));
+		propertyMap.put(SearchConstants.QS_COMPONENT_ANNOTATIONS_TERM, new SolrPropertyMapper(IndexConstants.QS_COMPONENT_ANNOTATIONS_TERM));
+		propertyMap.put(SearchConstants.QS_COMPONENT_ANNOTATIONS_SYNONYM, new SolrPropertyMapper(IndexConstants.QS_COMPONENT_ANNOTATIONS_SYNONYM));
+		propertyMap.put(SearchConstants.QS_COMPONENT_ANNOTATIONS_DEFINITION, new SolrPropertyMapper(IndexConstants.QS_COMPONENT_ANNOTATIONS_DEFINITION));
 		/*
 		 * The name of the field we want to iterate through the documents for
 		 * and place into the output.  In this case we want the standard list of
@@ -100,6 +115,21 @@ public class SolrQSFeatureResultBaseHunter extends SolrHunter<QSFeatureResult> {
 					result.setAccID((List<String>) doc.getFieldValue(IndexConstants.QS_ACC_ID));
 					result.setOrthologNomenOrg((List<String>) doc.getFieldValue(IndexConstants.QS_ORTHOLOG_NOMEN_ORG));
 				} catch (Throwable t) {}
+				
+				result.setFunctionAnnotationsID((List<String>) doc.getFieldValue(IndexConstants.QS_FUNCTION_ANNOTATIONS_ID));
+				result.setFunctionAnnotationsTerm((List<String>) doc.getFieldValue(IndexConstants.QS_FUNCTION_ANNOTATIONS_TERM));
+				result.setFunctionAnnotationsSynonym((List<String>) doc.getFieldValue(IndexConstants.QS_FUNCTION_ANNOTATIONS_SYNONYM));
+				result.setFunctionAnnotationsDefinition((List<String>) doc.getFieldValue(IndexConstants.QS_FUNCTION_ANNOTATIONS_DEFINITION));
+				
+				result.setProcessAnnotationsID((List<String>) doc.getFieldValue(IndexConstants.QS_PROCESS_ANNOTATIONS_ID));
+				result.setProcessAnnotationsTerm((List<String>) doc.getFieldValue(IndexConstants.QS_PROCESS_ANNOTATIONS_TERM));
+				result.setProcessAnnotationsSynonym((List<String>) doc.getFieldValue(IndexConstants.QS_PROCESS_ANNOTATIONS_SYNONYM));
+				result.setProcessAnnotationsDefinition((List<String>) doc.getFieldValue(IndexConstants.QS_PROCESS_ANNOTATIONS_DEFINITION));
+				
+				result.setComponentAnnotationsID((List<String>) doc.getFieldValue(IndexConstants.QS_COMPONENT_ANNOTATIONS_ID));
+				result.setComponentAnnotationsTerm((List<String>) doc.getFieldValue(IndexConstants.QS_COMPONENT_ANNOTATIONS_TERM));
+				result.setComponentAnnotationsSynonym((List<String>) doc.getFieldValue(IndexConstants.QS_COMPONENT_ANNOTATIONS_SYNONYM));
+				result.setComponentAnnotationsDefinition((List<String>) doc.getFieldValue(IndexConstants.QS_COMPONENT_ANNOTATIONS_DEFINITION));
 				
 				Float score = (Float) doc.getFieldValue(IndexConstants.SCORE);
 				if (score == null) {
