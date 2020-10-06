@@ -2,6 +2,7 @@ package org.jax.mgi.fewi.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -28,11 +29,13 @@ import org.jax.mgi.fewi.summary.QSVocabResult;
 import org.jax.mgi.fewi.summary.QSFeatureResult;
 import org.jax.mgi.fewi.summary.QSFeatureResultWrapper;
 import org.jax.mgi.fewi.summary.QSVocabResultWrapper;
+import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.shr.jsonmodel.BrowserTerm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,6 +70,10 @@ public class QuickSearchController {
 
     @Autowired
     private QuickSearchFinder qsFinder;
+    
+	@Value("${solr.factetNumberDefault}")
+	private Integer facetLimit; 			// max values to display for a single facet
+
     
     //--------------------------------------------------------------------//
     // public methods
@@ -316,6 +323,71 @@ public class QuickSearchController {
 		}
 
 		return grouper.toList();
+	}
+	
+	/* get the set of study type filter options for the current result set
+	 */
+	@RequestMapping("/featureBucket/process")
+	public @ResponseBody Map<String, List<String>> getProcessFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFeatureFacets(qf, SearchConstants.QS_GO_PROCESS_FACETS);
+	}
+
+	/* Execute the search for facets for the feature bucket using the given filterName, returning results suitable to
+	 * be converted to JSON and returned directly.
+	 */
+	private Map<String,List<String>> getFeatureFacets(QuickSearchQueryForm queryForm, String filterName) {
+		// break up the query into a set of terms
+		
+        List<String> terms = new ArrayList<String>();
+        for (String term : queryForm.getQuery().replace(',', ' ').split(" ")) {
+        	terms.add(term);
+        }
+        terms.add(queryForm.getQuery());
+        
+        // match either ID, nomenclature, or other (annotations and ortholog nomen)
+        
+        List<Filter> facetFilters = new ArrayList<Filter>();
+
+        for (String term : terms) {
+        	facetFilters.add(new Filter(SearchConstants.QS_ACC_ID, term, Operator.OP_EQUAL));
+        	facetFilters.add(new Filter(SearchConstants.QS_SYMBOL, term, Operator.OP_CONTAINS));
+        	facetFilters.add(new Filter(SearchConstants.QS_NAME, term, Operator.OP_CONTAINS));
+        	facetFilters.add(new Filter(SearchConstants.QS_SYNONYM, term, Operator.OP_CONTAINS));
+        	facetFilters.add(new Filter(SearchConstants.QS_SEARCH_TEXT, term, Operator.OP_CONTAINS));
+        }
+
+        SearchParams facetSearch = new SearchParams();
+        facetSearch.setPaginator(new Paginator(0));
+        facetSearch.setFilter(Filter.or(facetFilters));
+
+        List<String> resultList = null;		// list of strings, each a value for a facet
+        String error = null;				// error message, if needed
+        
+        if (SearchConstants.QS_GO_PROCESS_FACETS.equals(filterName)) {
+        	resultList = qsFinder.getGoProcessFacets(facetSearch);
+        } else {
+        	error = "Invalid facet name: " + filterName;
+        }
+        
+        if (resultList != null) {
+        	if (resultList.size() == 0) {
+        		error = "No values for filtering";
+        	} else if (resultList.size() > facetLimit) {
+        		error = "Too many values; please use another filter to reduce the data set first.";
+        	}
+        }
+
+        Map<String, List<String>> out = new HashMap<String, List<String>>();
+        if (error == null) {
+			Collections.sort(resultList);
+			out.put("resultFacets", resultList);
+        } else {
+        	List<String> messages = new ArrayList<String>(1);
+        	messages.add(error);
+			out.put("error", messages);
+        }
+        return out;
 	}
 	
     //-------------------------//

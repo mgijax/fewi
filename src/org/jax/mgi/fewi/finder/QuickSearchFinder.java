@@ -5,8 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jax.mgi.fewi.hunter.SolrQSVocabResultHunter;
+import org.jax.mgi.fewi.hunter.SolrQSFeatureResultFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrQSFeatureResultHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
+import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.slf4j.Logger;
@@ -32,6 +34,9 @@ public class QuickSearchFinder {
 	@Autowired
 	private SolrQSFeatureResultHunter qsFeatureHunter;
 
+	@Autowired
+	private SolrQSFeatureResultFacetHunter goProcessFacetHunter;
+	
 	//--- public methods ---//
 
 	/* return all QSVocabResult (from Solr) objects matching the given search parameters
@@ -62,5 +67,14 @@ public class QuickSearchFinder {
 		logger.debug("->hunter found " + searchResults.getResultObjects().size() + " QS feature results");
 
 		return searchResults;
+	}
+	
+	/* get the GO Process facets for the matching feature results
+	 */
+	public List<String> getGoProcessFacets(SearchParams searchParams) {
+		SearchResults<QSFeatureResult> results = new SearchResults<QSFeatureResult>();
+		goProcessFacetHunter.setFacetString(SearchConstants.QS_GO_PROCESS_FACETS);
+		goProcessFacetHunter.hunt(searchParams, results);
+		return results.getResultFacets();
 	}
 }

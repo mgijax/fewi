@@ -348,4 +348,11 @@ public class SearchConstants {
 	public static final String QS_COMPONENT_ANNOTATIONS_TERM = "componentAnnotationsTerm";
 	public static final String QS_COMPONENT_ANNOTATIONS_SYNONYM = "componentAnnotationsSynonym";
 	public static final String QS_COMPONENT_ANNOTATIONS_DEFINITION = "componentAnnotationsDefinition";
+
+	public static final String QS_GO_PROCESS_FACETS = "goProcessFacets";
+	public static final String QS_GO_FUNCTION_FACETS = "goFunctionFacets";
+	public static final String QS_GO_COMPONENT_FACETS = "goComponentFacets";
+	public static final String QS_DISEASE_FACETS = "diseaseFacets";
+	public static final String QS_PHENOTYPE_FACETS = "phenotypeFacets";
+	public static final String QS_MARKER_TYPE_FACETS = "markerTypeFacets";
 }
