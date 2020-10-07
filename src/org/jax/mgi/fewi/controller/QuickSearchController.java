@@ -59,6 +59,11 @@ public class QuickSearchController {
     // static variables
     //--------------------//
 
+	private static String BY_ID = "match_by_id";		// match by ID
+	private static String BY_NOMEN = "match_by_nomen";	// match by (symbol, name, synonym) or (term, synonym)
+	private static String BY_OTHER = "match_by_other";	// match by other (ortholog nomen or annotations)
+	private static String BY_ANY = "match_by_any";		// match by any field
+	
     //--------------------//
     // instance variables
     //--------------------//
@@ -117,45 +122,13 @@ public class QuickSearchController {
 			@ModelAttribute QuickSearchQueryForm queryForm) {
 
         logger.info("->getFeatureBucket started");
-        
-        Paginator page = new Paginator(300);				// max results per search
-        Sort byScore = new Sort(SortConstants.SCORE, true);	// sort by descending Solr score (best first)
-
-        List<String> terms = new ArrayList<String>();
-        for (String term : queryForm.getQuery().replace(',', ' ').split(" ")) {
-        	terms.add(term);
-        }
-        terms.add(queryForm.getQuery());
+        Integer resultCount = 300;
         
         // Search in order of priority:  ID matches, then symbol/name/synonym matches, then other matches
         
-        List<Filter> idFilters = new ArrayList<Filter>();
-        List<Filter> nomenFilters = new ArrayList<Filter>();
-        List<Filter> otherFilters = new ArrayList<Filter>();
-
-        for (String term : terms) {
-        	idFilters.add(new Filter(SearchConstants.QS_ACC_ID, term, Operator.OP_EQUAL));
-        	
-        	List<Filter> nomenSet = new ArrayList<Filter>();
-        	nomenSet.add(new Filter(SearchConstants.QS_SYMBOL, term, Operator.OP_CONTAINS));
-        	nomenSet.add(new Filter(SearchConstants.QS_NAME, term, Operator.OP_CONTAINS));
-        	nomenSet.add(new Filter(SearchConstants.QS_SYNONYM, term, Operator.OP_CONTAINS));
-        	nomenFilters.add(Filter.or(nomenSet));
-        	
-        	otherFilters.add(new Filter(SearchConstants.QS_SEARCH_TEXT, term, Operator.OP_CONTAINS));
-        }
-
-        SearchParams idSearch = new SearchParams();
-        idSearch.setPaginator(page);
-        idSearch.setFilter(Filter.or(idFilters));
-
-        SearchParams nomenSearch = new SearchParams();
-        nomenSearch.setPaginator(page);
-        nomenSearch.setFilter(Filter.or(nomenFilters));
-        
-        SearchParams otherSearch = new SearchParams();
-        otherSearch.setPaginator(page);
-        otherSearch.setFilter(Filter.or(otherFilters));
+        SearchParams idSearch = getFeatureSearchParams(queryForm, BY_ID, resultCount);
+        SearchParams nomenSearch = getFeatureSearchParams(queryForm, BY_NOMEN, resultCount);
+        SearchParams otherSearch = getFeatureSearchParams(queryForm, BY_OTHER, resultCount);
         
         List<QSFeatureResult> idMatches = qsFinder.getFeatureResults(idSearch).getResultObjects();
         logger.info("Got " + idMatches.size() + " ID matches");
@@ -164,19 +137,12 @@ public class QuickSearchController {
         List<QSFeatureResult> otherMatches = qsFinder.getFeatureResults(otherSearch).getResultObjects();
         logger.info("Got " + otherMatches.size() + " other matches");
         
-        List<Filter> anyFilters = new ArrayList<Filter>();
-        anyFilters.addAll(idFilters);
-        anyFilters.addAll(nomenFilters);
-        anyFilters.addAll(otherFilters);
-        
-        SearchParams anySearch = new SearchParams();
-        anySearch.setPaginator(new Paginator(0));
-        anySearch.setFilter(Filter.or(anyFilters));
+        SearchParams anySearch = getFeatureSearchParams(queryForm, BY_ANY, 0);
 
         int totalCount = qsFinder.getFeatureResults(anySearch).getTotalCount();
         logger.info("Identified " + totalCount + " matches in all");
 
-        List<QSFeatureResult> out = unifyFeatureMatches(terms, idMatches, nomenMatches, otherMatches);
+        List<QSFeatureResult> out = unifyFeatureMatches(queryForm.getTerms(), idMatches, nomenMatches, otherMatches);
         
         List<QSFeatureResultWrapper> wrapped = new ArrayList<QSFeatureResultWrapper>();
         for (QSFeatureResult r : out) {
@@ -191,6 +157,84 @@ public class QuickSearchController {
         return response;
     }
 
+	// Process the given parameters and return an appropriate SearchParams object (ready to use in a search).
+	
+	private SearchParams getFeatureSearchParams (QuickSearchQueryForm qf, String queryMode, Integer resultCount) {
+        Filter featureFilter;
+        
+        if (BY_ID.equals(queryMode)) {
+        	featureFilter = createFeatureIDFilter(qf);
+        } else if (BY_NOMEN.equals(queryMode)) {
+        	featureFilter = createFeatureNomenFilter(qf);
+        } else if (BY_OTHER.equals(queryMode)) { // BY_OTHER
+        	featureFilter = createFeatureOtherFilter(qf);
+        } else {	// BY_ANY
+        	Filter idFilter = createFeatureIDFilter(qf);
+        	Filter nomenFilter = createFeatureNomenFilter(qf);
+        	Filter otherFilter = createFeatureOtherFilter(qf);
+        	featureFilter = this.orFilters(idFilter, nomenFilter, otherFilter);
+        }
+
+        Paginator page = new Paginator(resultCount);			// max results per search
+        Sort byScore = new Sort(SortConstants.SCORE, true);		// sort by descending Solr score (best first)
+        List<Sort> sorts = new ArrayList<Sort>(1);
+        sorts.add(byScore);
+
+        SearchParams featureSearch = new SearchParams();
+        featureSearch.setPaginator(page);
+        featureSearch.setFilter(featureFilter);
+        return featureSearch;
+	}
+	
+	// Return a single filter that looks for features by ID, with multiple terms joined by an OR.
+	private Filter createFeatureIDFilter(QuickSearchQueryForm qf) {
+        List<Filter> idFilters = new ArrayList<Filter>();
+
+        for (String term : qf.getTerms()) {
+        	idFilters.add(new Filter(SearchConstants.QS_ACC_ID, term, Operator.OP_EQUAL));
+        }
+        return Filter.or(idFilters);
+	}
+	
+	// Return a single filter that looks for features by symbol, name, or synonym, with multiple
+	// terms joined by an OR.
+	private Filter createFeatureNomenFilter(QuickSearchQueryForm qf) {
+        List<Filter> nomenFilters = new ArrayList<Filter>();
+
+        for (String term : qf.getTerms()) {
+        	List<Filter> nomenSet = new ArrayList<Filter>();
+        	nomenSet.add(new Filter(SearchConstants.QS_SYMBOL, term, Operator.OP_CONTAINS));
+        	nomenSet.add(new Filter(SearchConstants.QS_NAME, term, Operator.OP_CONTAINS));
+        	nomenSet.add(new Filter(SearchConstants.QS_SYNONYM, term, Operator.OP_CONTAINS));
+        	nomenFilters.add(Filter.or(nomenSet));
+        }
+        return Filter.or(nomenFilters);
+	}
+	
+	// Return a single filter that looks for features by other data (ortholog nomen or annotations), with multiple
+	// terms joined by an OR.
+	private Filter createFeatureOtherFilter(QuickSearchQueryForm qf) {
+        List<Filter> otherFilters = new ArrayList<Filter>();
+
+        for (String term : qf.getTerms()) {
+        	otherFilters.add(new Filter(SearchConstants.QS_SEARCH_TEXT, term, Operator.OP_CONTAINS));
+        }
+        return Filter.or(otherFilters);
+	}
+	
+	// Join 3 filters by an OR.
+	private Filter orFilters(Filter f1, Filter f2, Filter f3) {
+		List<Filter> filters = new ArrayList<Filter>();
+		if (f1 != null) filters.add(f1);
+		if (f2 != null) filters.add(f2);
+		if (f3 != null) filters.add(f3);
+		if (filters.size() == 0) {
+			// should not happen
+			return null;
+		}
+		return Filter.or(filters);
+	}
+	
 	// consolidate the lists of matching features, add star values, and setting best match values, then return
 	private List<QSFeatureResult> unifyFeatureMatches (List<String> searchTerms, List<QSFeatureResult> idMatches,
 		List<QSFeatureResult> nomenMatches, List<QSFeatureResult> otherMatches) {
@@ -401,6 +445,8 @@ public class QuickSearchController {
         
         Paginator page = new Paginator(1500);				// max results per search
         Sort byScore = new Sort(SortConstants.SCORE, true);	// sort by descending Solr score (best first)
+        List<Sort> sorts = new ArrayList<Sort>(1);
+        sorts.add(byScore);
 
         List<String> terms = new ArrayList<String>();
         for (String term : queryForm.getQuery().replace(',', ' ').split(" ")) {
@@ -424,14 +470,17 @@ public class QuickSearchController {
         SearchParams idSearch = new SearchParams();
         idSearch.setPaginator(page);
         idSearch.setFilter(Filter.or(idFilters));
+        idSearch.setSorts(sorts);
 
         SearchParams termSearch = new SearchParams();
         termSearch.setPaginator(page);
         termSearch.setFilter(Filter.or(termFilters));
+        termSearch.setSorts(sorts);
         
         SearchParams synonymSearch = new SearchParams();
         synonymSearch.setPaginator(page);
         synonymSearch.setFilter(Filter.or(synonymFilters));
+        synonymSearch.setSorts(sorts);
         
         List<QSVocabResult> idMatches = qsFinder.getVocabResults(idSearch).getResultObjects();
         logger.info("Got " + idMatches.size() + " ID matches");

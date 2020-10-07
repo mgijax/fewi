@@ -31,3 +31,24 @@ var qsResultHeader = function(start, end, total, dataType) {
 	}
 	return "Showing " + commaDelimit(start) + "-" + commaDelimit(end) + " of " + commaDelimit(total) + " " + dataType + plural;
 };
+
+// update the request & data in the feature bucket (after a filtering event)
+var qsUpdateFeatureRequest = function() {
+	filters.populateFilterSummary();
+	instantiatedPaginator = false;
+	b1Fetch();
+}
+
+// callback function: should be wired into the filters.js module as a callback.  This will track which filters are
+// applied and log a GA event when a new one has been added.
+var previousFilters = {};
+var qsLogFilters = function() {
+	var newFilters = filters.urlToHash(filters.getUrlFragment().substring(1));
+	
+	for (var field in newFilters) {
+		if (!(field in previousFilters)) {
+			ga_logEvent("QuickSearch: added filter", field);
+		}
+	}
+	previousFilters = newFilters; 
+}

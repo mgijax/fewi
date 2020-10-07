@@ -25,6 +25,13 @@
 	<span class="titleBarMainTitle">Quick Search Results for ${query}</span>
 </div>
 
+<div id="filterButtons">
+   <a id="processFilter" class="filterButton">Process <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
+</div>
+<div id="filterSummary">
+  <span id="filterList"></span>
+</div>
+
 Bucket 1 : Markers and Alleles<p/>
 <div id="b1Results"></div>
 
@@ -51,8 +58,29 @@ Search MGI with Google<p/>
 #b3Table { border-collapse: collapse }
 #b3Table th { font-weight: bold; padding: 3px; border: 1px solid black; }
 #b3Table td { padding: 3px; border: 1px solid black; }
+
+.facetFilter .yui-panel .bd { width: 285px; }
 </style>
 
+<!-- for filter popup (re-used by all filter buttons) -->
+<div class="facetFilter">
+	<div id="facetDialog">
+		<div class="hd">Filter</div>
+		<div class="bd">
+			<form:form method="GET"
+				action="${configBean.FEWI_URL}quicksearch/summary">
+				<img src="/fewi/mgi/assets/images/loading.gif">
+			</form:form>
+		</div>
+	</div>
+</div>
+	
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/filters.js"></script>
+<script>
+		function getQuerystring() {
+	  		return queryString + filters.getUrlFragment();
+		}
+</script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/fewi_utils.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/quicksearch/qs_main.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/quicksearch/qs_bucket1.js"></script>
@@ -64,6 +92,22 @@ var query = "${query}";
 var fewiurl = "${configBean.FEWI_URL}";
 
 qsMain();
+
+function initializeFilterLibrary(delay) {
+	if (window.filtersLoaded) {
+		console.log('initializing filters');
+		filters.setFewiUrl(fewiurl);
+		filters.setQueryStringFunction(getQuerystring);
+		filters.setSummaryNames('filterSummary', 'filterList');
+		filters.addFilter('goProcessFilter', 'Process', 'processFilter', 'processFilter', fewiurl + 'quicksearch/featureBucket/process');
+		filters.registerCallback("featureCallback", qsUpdateFeatureRequest);
+		filters.registerCallback("gaLogCallback", qsLogFilters);
+		filters.setRemovalDivStyle('block');
+	} else {
+		setTimeout(function() { initializeFilterLibrary(delay) }, delay);
+	}
+}
+initializeFilterLibrary(250);	// check for filters.js library being loaded every 250ms
 </script>
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
 

@@ -9,7 +9,7 @@ var b1Failed = false;		// did retrieval for this bucket fail?
 
 // Fetch the data items for bucket 1 (matches by marker or allele)
 var b1Fetch = function() {
-		var url = fewiurl + '/quicksearch/featureBucket?' + queryString;
+		var url = fewiurl + '/quicksearch/featureBucket?' + getQuerystring();
 		$.get(url, function(data) {
 			try {
 				b1Show(data);
