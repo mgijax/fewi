@@ -28,8 +28,10 @@
 <div id="filterButtons">
    <a id="processFilter" class="filterButton">Process <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
 </div>
-<div id="filterSummary">
-  <span id="filterList"></span>
+<div id="breadbox">
+  <div id="filterSummary">
+    <span id="filterList"></span>
+  </div>
 </div>
 
 Bucket 1 : Markers and Alleles<p/>
