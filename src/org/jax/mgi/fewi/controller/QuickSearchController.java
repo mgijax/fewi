@@ -158,7 +158,6 @@ public class QuickSearchController {
     }
 
 	// Process the given parameters and return an appropriate SearchParams object (ready to use in a search).
-	
 	private SearchParams getFeatureSearchParams (QuickSearchQueryForm qf, String queryMode, Integer resultCount) {
         Filter featureFilter;
         
@@ -174,6 +173,14 @@ public class QuickSearchController {
         	Filter otherFilter = createFeatureOtherFilter(qf);
         	featureFilter = this.orFilters(idFilter, nomenFilter, otherFilter);
         }
+        
+        Filter facetFilters = getFilterForFeatureFacets(qf);
+        if (facetFilters != null) {
+        	List<Filter> filtered = new ArrayList<Filter>();
+        	filtered.add(featureFilter);
+        	filtered.add(facetFilters);
+        	featureFilter = Filter.and(filtered);
+        }
 
         Paginator page = new Paginator(resultCount);			// max results per search
         Sort byScore = new Sort(SortConstants.SCORE, true);		// sort by descending Solr score (best first)
@@ -184,6 +191,25 @@ public class QuickSearchController {
         featureSearch.setPaginator(page);
         featureSearch.setFilter(featureFilter);
         return featureSearch;
+	}
+	
+	// distill the various facet parameters down to a single Filter
+	private Filter getFilterForFeatureFacets (QuickSearchQueryForm qf) {
+		List<Filter> filters = new ArrayList<Filter>();
+		
+		List<String> processFacets = qf.getProcessFilter();
+		if ((processFacets != null) && (processFacets.size() > 0)) {
+			List<Filter> processFilters = new ArrayList<Filter>();
+			for (String process : processFacets) {
+				processFilters.add(new Filter(SearchConstants.QS_GO_PROCESS_FACETS, process, Filter.Operator.OP_EQUAL));
+			}
+			filters.add(Filter.or(processFilters));
+		}
+		
+		if (filters.size() > 0) {
+			return Filter.and(filters);
+		}
+		return null;
 	}
 	
 	// Return a single filter that looks for features by ID, with multiple terms joined by an OR.
