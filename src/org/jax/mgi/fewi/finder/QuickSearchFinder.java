@@ -7,6 +7,7 @@ import java.util.List;
 import org.jax.mgi.fewi.hunter.SolrQSVocabResultHunter;
 import org.jax.mgi.fewi.hunter.SolrQSFeatureResultFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrQSFeatureResultHunter;
+import org.jax.mgi.fewi.hunter.SolrQSVocabResultFacetHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
@@ -35,7 +36,10 @@ public class QuickSearchFinder {
 	private SolrQSFeatureResultHunter qsFeatureHunter;
 
 	@Autowired
-	private SolrQSFeatureResultFacetHunter goProcessFacetHunter;
+	private SolrQSFeatureResultFacetHunter featureFacetHunter;
+	
+	@Autowired
+	private SolrQSVocabResultFacetHunter vocabFacetHunter;
 	
 	//--- public methods ---//
 
@@ -69,12 +73,22 @@ public class QuickSearchFinder {
 		return searchResults;
 	}
 	
-	/* get the GO Process facets for the matching feature results
+	/* get the specified facets for the matching feature results
 	 */
-	public List<String> getGoProcessFacets(SearchParams searchParams) {
+	public List<String> getFeatureFacets(SearchParams searchParams, String facetField) {
 		SearchResults<QSFeatureResult> results = new SearchResults<QSFeatureResult>();
-		goProcessFacetHunter.setFacetString(SearchConstants.QS_GO_PROCESS_FACETS);
-		goProcessFacetHunter.hunt(searchParams, results);
+		featureFacetHunter.setFacetString(facetField);
+		featureFacetHunter.hunt(searchParams, results);
 		return results.getResultFacets();
 	}
+
+	/* get the specified facets for the matching vocab results
+	 */
+	public List<String> getVocabFacets(SearchParams searchParams, String facetField) {
+		SearchResults<QSVocabResult> results = new SearchResults<QSVocabResult>();
+		vocabFacetHunter.setFacetString(facetField);
+		vocabFacetHunter.hunt(searchParams, results);
+		return results.getResultFacets();
+	}
+
 }
