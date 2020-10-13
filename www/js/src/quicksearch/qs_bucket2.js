@@ -9,7 +9,7 @@ var b2Failed = false;		// did retrieval for this bucket fail?
 
 // Fetch the data items for bucket 2 (matches by strain or vocab term)
 var b2Fetch = function() {
-		var url = fewiurl + '/quicksearch/vocabBucket?' + queryString;
+		var url = fewiurl + '/quicksearch/vocabBucket?' + getQuerystring();
 		$.get(url, function(data) {
 			try {
 				b2Show(data);
@@ -25,11 +25,13 @@ var b2Fetch = function() {
 
 // Having received 'data' from the server, show it on the page.
 var b2Show = function(data) {
+	var toShow = 100;
+	var tbl = '';
 	if (data.summaryRows.length > 0) {
-		var tbl = '<TABLE ID="b2Table">';
+		tbl = '<TABLE ID="b2Table">';
 		tbl = tbl + '<TR><TH>Score</TH><TH>Term</TH><TH>Associated Data</TH><TH>Best Mactch</TH></TR>';
 
-		var toShow = Math.min(100, data.summaryRows.length);
+		toShow = Math.min(100, data.summaryRows.length);
 		for (var i = 0; i < toShow; i++) {
 			var item = data.summaryRows[i];
 			tbl = tbl + '<TR>';
@@ -59,10 +61,10 @@ var b2Show = function(data) {
 				tbl = tbl + '<TD>' + item.bestMatchType + ': ' + item.bestMatchText + '</TD></TR>';
 			}
 		}
-		var header = qsResultHeader(1, toShow, data.totalCount, " vocabulary term");
-		$('#b2Results').html(header + "<br>" + tbl);
-		console.log("Populated " + data.summaryRows.length + " b2Results");
 	} else {
 		console.log("No b2Results");
 	}
+	var header = qsResultHeader(1, toShow, data.totalCount, " vocabulary term");
+	$('#b2Results').html(header + "<br>" + tbl);
+	console.log("Populated " + data.summaryRows.length + " b2Results");
 };

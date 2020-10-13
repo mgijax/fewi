@@ -63,6 +63,8 @@ public class QuickSearchController {
 	private static String BY_NOMEN = "match_by_nomen";	// match by (symbol, name, synonym) or (term, synonym)
 	private static String BY_OTHER = "match_by_other";	// match by other (ortholog nomen or annotations)
 	private static String BY_ANY = "match_by_any";		// match by any field
+	private static String BY_TERM = "match_by_term";		// match vocab by term
+	private static String BY_SYNONYM = "match_by_synonym";	// match vocab by synonym
 	
     //--------------------//
     // instance variables
@@ -162,19 +164,19 @@ public class QuickSearchController {
         Filter featureFilter;
         
         if (BY_ID.equals(queryMode)) {
-        	featureFilter = createFeatureIDFilter(qf);
+        	featureFilter = createIDFilter(qf);
         } else if (BY_NOMEN.equals(queryMode)) {
         	featureFilter = createFeatureNomenFilter(qf);
         } else if (BY_OTHER.equals(queryMode)) { // BY_OTHER
         	featureFilter = createFeatureOtherFilter(qf);
         } else {	// BY_ANY
-        	Filter idFilter = createFeatureIDFilter(qf);
+        	Filter idFilter = createIDFilter(qf);
         	Filter nomenFilter = createFeatureNomenFilter(qf);
         	Filter otherFilter = createFeatureOtherFilter(qf);
         	featureFilter = this.orFilters(idFilter, nomenFilter, otherFilter);
         }
         
-        Filter facetFilters = getFilterForFeatureFacets(qf);
+        Filter facetFilters = getFilterFacets(qf);
         if (facetFilters != null) {
         	List<Filter> filtered = new ArrayList<Filter>();
         	filtered.add(featureFilter);
@@ -193,8 +195,9 @@ public class QuickSearchController {
         return featureSearch;
 	}
 	
-	// distill the various facet parameters down to a single Filter
-	private Filter getFilterForFeatureFacets (QuickSearchQueryForm qf) {
+	// distill the various facet parameters down to a single Filter (should work across both feature and
+	// vocab term buckets)
+	private Filter getFilterFacets (QuickSearchQueryForm qf) {
 		List<Filter> filters = new ArrayList<Filter>();
 		
 		List<String> processFacets = qf.getProcessFilter();
@@ -213,7 +216,7 @@ public class QuickSearchController {
 	}
 	
 	// Return a single filter that looks for features by ID, with multiple terms joined by an OR.
-	private Filter createFeatureIDFilter(QuickSearchQueryForm qf) {
+	private Filter createIDFilter(QuickSearchQueryForm qf) {
         List<Filter> idFilters = new ArrayList<Filter>();
 
         for (String term : qf.getTerms()) {
@@ -468,45 +471,12 @@ public class QuickSearchController {
 			@ModelAttribute QuickSearchQueryForm queryForm) {
 
         logger.info("->getVocabBucket started");
-        
-        Paginator page = new Paginator(1500);				// max results per search
-        Sort byScore = new Sort(SortConstants.SCORE, true);	// sort by descending Solr score (best first)
-        List<Sort> sorts = new ArrayList<Sort>(1);
-        sorts.add(byScore);
-
-        List<String> terms = new ArrayList<String>();
-        for (String term : queryForm.getQuery().replace(',', ' ').split(" ")) {
-        	terms.add(term);
-        }
-        terms.add(queryForm.getQuery());		// add full term for exact matches
+        Integer resultCount = 300;
         
         // Search in order of priority:  ID matches, then term matches, then synonym matches
-        
-        List<Filter> idFilters = new ArrayList<Filter>();
-        List<Filter> termFilters = new ArrayList<Filter>();
-        List<Filter> synonymFilters = new ArrayList<Filter>();
-        List<Filter> anyFilters = new ArrayList<Filter>();
-
-        for (String term : terms) {
-        	idFilters.add(new Filter(SearchConstants.QS_ACC_ID, term, Operator.OP_EQUAL));
-        	termFilters.add(new Filter(SearchConstants.QS_TERM, term, Operator.OP_CONTAINS));
-        	synonymFilters.add(new Filter(SearchConstants.QS_SYNONYM, term, Operator.OP_CONTAINS));
-        }
-
-        SearchParams idSearch = new SearchParams();
-        idSearch.setPaginator(page);
-        idSearch.setFilter(Filter.or(idFilters));
-        idSearch.setSorts(sorts);
-
-        SearchParams termSearch = new SearchParams();
-        termSearch.setPaginator(page);
-        termSearch.setFilter(Filter.or(termFilters));
-        termSearch.setSorts(sorts);
-        
-        SearchParams synonymSearch = new SearchParams();
-        synonymSearch.setPaginator(page);
-        synonymSearch.setFilter(Filter.or(synonymFilters));
-        synonymSearch.setSorts(sorts);
+        SearchParams idSearch = getVocabSearchParams(queryForm, BY_ID, resultCount);
+        SearchParams termSearch = getVocabSearchParams(queryForm, BY_TERM, resultCount);
+        SearchParams synonymSearch = getVocabSearchParams(queryForm, BY_SYNONYM, resultCount);
         
         List<QSVocabResult> idMatches = qsFinder.getVocabResults(idSearch).getResultObjects();
         logger.info("Got " + idMatches.size() + " ID matches");
@@ -515,18 +485,12 @@ public class QuickSearchController {
         List<QSVocabResult> synonymMatches = qsFinder.getVocabResults(synonymSearch).getResultObjects();
         logger.info("Got " + synonymMatches.size() + " synonym matches");
         
-        anyFilters.addAll(idFilters);
-        anyFilters.addAll(termFilters);
-        anyFilters.addAll(synonymFilters);
-        
-        SearchParams anySearch = new SearchParams();
-        anySearch.setPaginator(new Paginator(0));
-        anySearch.setFilter(Filter.or(anyFilters));
+        SearchParams anySearch = getVocabSearchParams(queryForm, BY_ANY, 0);
 
         int totalCount = qsFinder.getVocabResults(anySearch).getTotalCount();
         logger.info("Identified " + totalCount + " matches in all");
 
-        List<QSVocabResult> out = unifyVocabMatches(terms, idMatches, termMatches, synonymMatches);
+        List<QSVocabResult> out = unifyVocabMatches(queryForm.getTerms(), idMatches, termMatches, synonymMatches);
         
         List<QSVocabResultWrapper> wrapped = new ArrayList<QSVocabResultWrapper>();
         for (QSVocabResult r : out) {
@@ -541,6 +505,66 @@ public class QuickSearchController {
         return response;
     }
 
+	// Process the given parameters and return an appropriate SearchParams object (ready to use in a search).
+	private SearchParams getVocabSearchParams (QuickSearchQueryForm qf, String queryMode, Integer resultCount) {
+        Filter vocabFilter;
+        
+        if (BY_ID.equals(queryMode)) {
+        	vocabFilter = createIDFilter(qf);
+        } else if (BY_TERM.equals(queryMode)) {
+        	vocabFilter = createVocabTermFilter(qf);
+        } else if (BY_SYNONYM.equals(queryMode)) {
+        	vocabFilter = createVocabSynonymFilter(qf);
+        } else {	// BY_ANY
+        	Filter idFilter = createIDFilter(qf);
+        	Filter termFilter = createVocabTermFilter(qf);
+        	Filter synonymFilter = createVocabSynonymFilter(qf);
+        	vocabFilter = this.orFilters(idFilter, termFilter, synonymFilter);
+        }
+        
+        Filter facetFilters = getFilterFacets(qf);
+        if (facetFilters != null) {
+        	List<Filter> filtered = new ArrayList<Filter>();
+        	filtered.add(vocabFilter);
+        	filtered.add(facetFilters);
+        	vocabFilter = Filter.and(filtered);
+        }
+
+        Paginator page = new Paginator(resultCount);			// max results per search
+        Sort byScore = new Sort(SortConstants.SCORE, true);		// sort by descending Solr score (best first)
+        List<Sort> sorts = new ArrayList<Sort>(1);
+        sorts.add(byScore);
+
+        SearchParams vocabSearch = new SearchParams();
+        vocabSearch.setPaginator(page);
+        vocabSearch.setFilter(vocabFilter);
+        return vocabSearch;
+	}
+	
+	// Return a single filter that looks for vocab terms by term, with multiple terms joined by an OR.
+	private Filter createVocabTermFilter(QuickSearchQueryForm qf) {
+        List<Filter> termFilters = new ArrayList<Filter>();
+
+        for (String term : qf.getTerms()) {
+        	List<Filter> termSet = new ArrayList<Filter>();
+        	termSet.add(new Filter(SearchConstants.QS_TERM, term, Operator.OP_CONTAINS));
+        	termFilters.add(Filter.or(termSet));
+        }
+        return Filter.or(termFilters);
+	}
+	
+	// Return a single filter that looks for vocab terms by synonym, with multiple terms joined by an OR.
+	private Filter createVocabSynonymFilter(QuickSearchQueryForm qf) {
+        List<Filter> synonymFilters = new ArrayList<Filter>();
+
+        for (String term : qf.getTerms()) {
+        	List<Filter> synonymSet = new ArrayList<Filter>();
+        	synonymSet.add(new Filter(SearchConstants.QS_SYNONYM, term, Operator.OP_CONTAINS));
+        	synonymFilters.add(Filter.or(synonymSet));
+        }
+        return Filter.or(synonymFilters);
+	}
+	
 	// consolidate the lists of matching vocab termss, add star values, and setting best match values, then return
 	private List<QSVocabResult> unifyVocabMatches (List<String> searchTerms, List<QSVocabResult> idMatches,
 		List<QSVocabResult> termMatches, List<QSVocabResult> synonymMatches) {

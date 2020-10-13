@@ -25,11 +25,13 @@ var b1Fetch = function() {
 
 // Having received 'data' from the server, show it on the page.
 var b1Show = function(data) {
+	var tbl = '';
+	var toShow = 100;
 	if (data.summaryRows.length > 0) {
-		var tbl = '<TABLE ID="b1Table">';
+		tbl = '<TABLE ID="b1Table">';
 		tbl = tbl + '<TR><TH>Score</TH><TH>Type</TH><TH>Symbol</TH><TH>Name</TH><TH>Chr</TH><TH>Location</TH><TH>Str</TH><TH>Best Match</TH></TR>';
 
-		var toShow = Math.min(100, data.summaryRows.length);
+		toShow = Math.min(100, data.summaryRows.length);
 		for (var i = 0; i < toShow; i++) {
 			var item = data.summaryRows[i];
 			tbl = tbl + '<TR><TD>' + item.stars + '</TD>';
@@ -64,10 +66,10 @@ var b1Show = function(data) {
 				tbl = tbl + '<TD>' + item.bestMatchType + ': ' + bestMatchText + '</TD></TR>';
 			}
 		}
-		var header = qsResultHeader(1, toShow, data.totalCount, " genome feature");
-		$('#b1Results').html(header + "<br>" + tbl);
-		console.log("Populated " + data.summaryRows.length + " b1Results");
 	} else {
 		console.log("No b1Results");
 	}
+	var header = qsResultHeader(1, toShow, data.totalCount, " genome feature");
+	$('#b1Results').html(header + "<br>" + tbl);
+	console.log("Populated " + data.summaryRows.length + " b1Results");
 };

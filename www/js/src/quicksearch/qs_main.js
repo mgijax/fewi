@@ -25,6 +25,9 @@ var qsSuperscript = function(s) {
   
 // return a string listing counts for search results
 var qsResultHeader = function(start, end, total, dataType) {
+	if (total == 0) {
+		return "No matching " + dataType + "s";
+	}
 	var plural = "";
 	if ((end - start) > 1) {
 		plural = "s";
@@ -33,10 +36,11 @@ var qsResultHeader = function(start, end, total, dataType) {
 };
 
 // update the request & data in the feature bucket (after a filtering event)
-var qsUpdateFeatureRequest = function() {
+var qsProcessFilters = function() {
 	filters.populateFilterSummary();
 	instantiatedPaginator = false;
 	b1Fetch();
+	b2Fetch();
 }
 
 // callback function: should be wired into the filters.js module as a callback.  This will track which filters are

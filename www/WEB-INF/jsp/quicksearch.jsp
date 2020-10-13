@@ -102,7 +102,7 @@ function initializeFilterLibrary(delay) {
 		filters.setQueryStringFunction(getQuerystring);
 		filters.setSummaryNames('filterSummary', 'filterList');
 		filters.addFilter('goProcessFilter', 'Process', 'processFilter', 'processFilter', fewiurl + 'quicksearch/featureBucket/process');
-		filters.registerCallback("featureCallback", qsUpdateFeatureRequest);
+		filters.registerCallback("filterCallback", qsProcessFilters);
 		filters.registerCallback("gaLogCallback", qsLogFilters);
 		filters.setRemovalDivStyle('block');
 	} else {
