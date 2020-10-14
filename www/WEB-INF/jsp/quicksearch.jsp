@@ -26,7 +26,9 @@
 </div>
 
 <div id="filterButtons">
-   <a id="processFilter" class="filterButton">Process <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
+   <a id="functionFilter" class="filterButton">Molecular Function <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
+   <a id="processFilter" class="filterButton">Biological Process <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
+   <a id="componentFilter" class="filterButton">Cellular Component <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
 </div>
 <div id="breadbox">
   <div id="filterSummary">
@@ -102,6 +104,8 @@ function initializeFilterLibrary(delay) {
 		filters.setQueryStringFunction(getQuerystring);
 		filters.setSummaryNames('filterSummary', 'filterList');
 		filters.addFilter('goProcessFilter', 'Process', 'processFilter', 'processFilter', fewiurl + 'quicksearch/featureBucket/process');
+		filters.addFilter('goFunctionFilter', 'Function', 'functionFilter', 'functionFilter', fewiurl + 'quicksearch/featureBucket/function');
+		filters.addFilter('goComponentFilter', 'Component', 'componentFilter', 'componentFilter', fewiurl + 'quicksearch/featureBucket/component');
 		filters.registerCallback("filterCallback", qsProcessFilters);
 		filters.registerCallback("gaLogCallback", qsLogFilters);
 		filters.setRemovalDivStyle('block');

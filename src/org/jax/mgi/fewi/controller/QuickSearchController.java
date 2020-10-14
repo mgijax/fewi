@@ -66,6 +66,14 @@ public class QuickSearchController {
 	private static String BY_TERM = "match_by_term";		// match vocab by term
 	private static String BY_SYNONYM = "match_by_synonym";	// match vocab by synonym
 	
+	private static Set<String> validFacetFields;
+	static {
+		validFacetFields = new HashSet<String>();
+		validFacetFields.add(SearchConstants.QS_GO_COMPONENT_FACETS);
+		validFacetFields.add(SearchConstants.QS_GO_PROCESS_FACETS);
+		validFacetFields.add(SearchConstants.QS_GO_FUNCTION_FACETS);
+	}
+
     //--------------------//
     // instance variables
     //--------------------//
@@ -200,19 +208,30 @@ public class QuickSearchController {
 	private Filter getFilterFacets (QuickSearchQueryForm qf) {
 		List<Filter> filters = new ArrayList<Filter>();
 		
-		List<String> processFacets = qf.getProcessFilter();
-		if ((processFacets != null) && (processFacets.size() > 0)) {
-			List<Filter> processFilters = new ArrayList<Filter>();
-			for (String process : processFacets) {
-				processFilters.add(new Filter(SearchConstants.QS_GO_PROCESS_FACETS, process, Filter.Operator.OP_EQUAL));
-			}
-			filters.add(Filter.or(processFilters));
-		}
+		Filter processFilter = getFilterForOneField(SearchConstants.QS_GO_PROCESS_FACETS, qf.getProcessFilter());
+		if (processFilter != null) { filters.add(processFilter); }
+		
+		Filter functionFilter = getFilterForOneField(SearchConstants.QS_GO_FUNCTION_FACETS, qf.getFunctionFilter());
+		if (functionFilter != null) { filters.add(functionFilter); }
+		
+		Filter componentFilter = getFilterForOneField(SearchConstants.QS_GO_COMPONENT_FACETS, qf.getComponentFilter());
+		if (componentFilter != null) { filters.add(componentFilter); }
 		
 		if (filters.size() > 0) {
 			return Filter.and(filters);
 		}
 		return null;
+	}
+	
+	// Compose a single Filter for the given field name, OR-ing choices from the selected list.
+	private Filter getFilterForOneField (String facetField, List<String> selected) {
+		if ((selected == null) || (selected.size() == 0) || (facetField == null)) { return null; }
+
+		List<Filter> filters = new ArrayList<Filter>();
+		for (String choice : selected) {
+			filters.add(new Filter(facetField, choice, Filter.Operator.OP_EQUAL));
+		}
+		return Filter.or(filters);
 	}
 	
 	// Return a single filter that looks for features by ID, with multiple terms joined by an OR.
@@ -404,12 +423,32 @@ public class QuickSearchController {
 	@RequestMapping("/featureBucket/process")
 	public @ResponseBody Map<String, List<String>> getProcessFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
 		AjaxUtils.prepareAjaxHeaders(response);
-		List<String> featureFacets = getFeatureFacets(qf, SearchConstants.QS_GO_PROCESS_FACETS);
-		logger.info("Got " + featureFacets.size() + " feature facets");
-		List<String> vocabFacets = getVocabFacets(qf, SearchConstants.QS_GO_PROCESS_FACETS);
-		logger.info("Got " + vocabFacets.size() + " vocab facets");
+		return getFacets(qf, SearchConstants.QS_GO_PROCESS_FACETS);
+	}
+
+	/* Get the set of GO Function filter options for the current result set, including facets from both the
+	 * feature bucket and the vocab bucket.
+	 */
+	@RequestMapping("/featureBucket/function")
+	public @ResponseBody Map<String, List<String>> getFunctionFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_GO_FUNCTION_FACETS);
+	}
+
+	/* Get the set of GO Component filter options for the current result set, including facets from both the
+	 * feature bucket and the vocab bucket.
+	 */
+	@RequestMapping("/featureBucket/component")
+	public @ResponseBody Map<String, List<String>> getComponentFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_GO_COMPONENT_FACETS);
+	}
+
+	// Retrieve the facets for the specified field, in a form suitable for conversion to JSON.
+	private Map<String, List<String>> getFacets (QuickSearchQueryForm qf, String facetField) throws Exception {
+		List<String> featureFacets = getFeatureFacets(qf, facetField);
+		List<String> vocabFacets = getVocabFacets(qf, facetField);
 		List<String> resultList = unifyFacets(featureFacets, vocabFacets);
-		logger.info("Got " + resultList.size() + " combined facets");
 		String error = null;
 		
         if (resultList.size() == 0) {
@@ -428,7 +467,7 @@ public class QuickSearchController {
         }
 		return out;
 	}
-
+	
 	/* Unify group1 and group2 facets into a single, ordered list for return.  Modifies group1 by adding entries
 	 * from group2 and then sorting.
 	 */
@@ -466,7 +505,7 @@ public class QuickSearchController {
         List<String> resultList = null;		// list of strings, each a value for a facet
         String error = null;				// error message, if needed
         
-        if (SearchConstants.QS_GO_PROCESS_FACETS.equals(filterName)) {
+        if (validFacetFields.contains(filterName)) {
         	resultList = qsFinder.getFeatureFacets(anySearch, filterName);
         } else {
         	throw new Exception("getFeatureFacets: Invalid facet name: " + filterName);
@@ -485,7 +524,7 @@ public class QuickSearchController {
         List<String> resultList = null;		// list of strings, each a value for a facet
         String error = null;				// error message, if needed
         
-        if (SearchConstants.QS_GO_PROCESS_FACETS.equals(filterName)) {
+        if (validFacetFields.contains(filterName)) {
         	resultList = qsFinder.getVocabFacets(anySearch, filterName);
         } else {
         	throw new Exception("getVocabFacets: Invalid facet name: " + filterName);

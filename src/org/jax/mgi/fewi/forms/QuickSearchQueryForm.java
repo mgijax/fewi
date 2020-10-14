@@ -14,6 +14,8 @@ public class QuickSearchQueryForm {
     //--------------------//
     private String query;
     private List<String> processFilter;
+    private List<String> componentFilter;
+    private List<String> functionFilter;
     private List<String> terms;
 
     //--------------------//
@@ -39,7 +41,19 @@ public class QuickSearchQueryForm {
     	return terms;
     }
     
-    public List<String> getProcessFilter() {
+    public List<String> getComponentFilter() {
+		return componentFilter;
+	}
+	public void setComponentFilter(List<String> componentFilter) {
+		this.componentFilter = componentFilter;
+	}
+	public List<String> getFunctionFilter() {
+		return functionFilter;
+	}
+	public void setFunctionFilter(List<String> functionFilter) {
+		this.functionFilter = functionFilter;
+	}
+	public List<String> getProcessFilter() {
 		return processFilter;
 	}
 	public void setProcessFilter(List<String> processFilter) {
