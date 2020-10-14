@@ -34,6 +34,19 @@
   </div>
 </div>
 
+<!-- for filter popup (re-used by all filter buttons) -->
+<div class="facetFilter">
+	<div id="facetDialog">
+		<div class="hd">Filter</div>
+		<div class="bd">
+			<form:form method="GET"
+				action="${configBean.FEWI_URL}quicksearch/summary">
+				<img src="/fewi/mgi/assets/images/loading.gif">
+			</form:form>
+		</div>
+	</div>
+</div>
+	
 Bucket 1 : Markers and Alleles<p/>
 <div id="b1Results"></div>
 
@@ -64,19 +77,6 @@ Search MGI with Google<p/>
 .facetFilter .yui-panel .bd { width: 285px; }
 </style>
 
-<!-- for filter popup (re-used by all filter buttons) -->
-<div class="facetFilter">
-	<div id="facetDialog">
-		<div class="hd">Filter</div>
-		<div class="bd">
-			<form:form method="GET"
-				action="${configBean.FEWI_URL}quicksearch/summary">
-				<img src="/fewi/mgi/assets/images/loading.gif">
-			</form:form>
-		</div>
-	</div>
-</div>
-	
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/filters.js"></script>
 <script>
 		function getQuerystring() {
