@@ -68,13 +68,22 @@
 <div id="b3Header" class="qsHeader">Other Results by ID
   <span id="b3Counts" class="resultCount"></span>
   <span class="helpCursor" onmouseover="return overlib('<div class=detailRowType>This section includes links to sequences, orthology relationships, SNPs and other results whose accession ID matched an item in your search text.</div><div class=\'detailRowType\'>See <a href=\'${configBean.USERHELP_URL}QUICK_SEARCH_help.shtml\'>Using the Quick Search Tool</a> for more information and examples.</div>', STICKY, CAPTION, 'Other Results By ID', HAUTO, BELOW, WIDTH, 375, DELAY, 600, CLOSECLICK, CLOSETEXT, 'Close X')" onmouseout="nd();">
-       <img src="http://www.informatics.jax.org/searchtool/blue_info_icon.gif" border="0">
+    <img src="${configBean.WEBSHARE_URL}images/blue_info_icon.gif" border="0">
   </span>
 </div>
 <div id="b3Results"></div>
 
-<p/>
-Search MGI with Google<p/>
+<div id="b4Header" class="qsHeader">Search MGI with Google
+  <span id="b4Counts" class="resultCount"></span>
+  <span class="helpCursor" onmouseover="return overlib('<div class=detailRowType>Use Google to search for your text on MGI\'s web pages including:<ul><li>FAQs</li><li>Help pages</li><li>Reference abstracts</li><li>Phenotypic details for alleles</li><li>Image captions</li><li>...and other pages</li></ul></div><div class=\'detailRowType\'>See <a href=\'${configBean.USERHELP_URL}QUICK_SEARCH_help.shtml\'>Using the Quick Search Tool</a> for more information and examples.</div>', STICKY, CAPTION, 'Search MGI with Google', HAUTO, BELOW, WIDTH, 375, DELAY, 600, CLOSECLICK, CLOSETEXT, 'Close X')" onmouseout="nd();">
+    <img src="${configBean.WEBSHARE_URL}images/blue_info_icon.gif" border="0">
+  </span>
+</div>
+<form method="get" action="http://www.google.com/search">
+  <input type="text" name="q" size="25" maxlength="255" value="${query}">
+  <input type="submit" value="Search" class="buttonLabelKLF">
+  <input type="hidden" name="sitesearch" value="informatics.jax.org">
+</form>
 
 <style>
 .helpCursor { cursor: help; }

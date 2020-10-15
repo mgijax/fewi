@@ -49,7 +49,7 @@ var b2Show = function(data) {
 				if (item.annotationUri === null) {
 					tbl = tbl + '<TD>' + item.annotationText + '</TD>';
 				} else {
-					tbl = tbl + '<TD><a href="' + item.annotationUri + '">'+ item.annotationText + '</a></TD>';
+					tbl = tbl + '<TD class="nowrap"><a href="' + item.annotationUri + '">'+ item.annotationText + '</a></TD>';
 				}
 			} else {
 				tbl = tbl + '<TD>&nbsp;</TD>';
