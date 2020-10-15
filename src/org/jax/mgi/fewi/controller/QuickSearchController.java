@@ -65,6 +65,7 @@ public class QuickSearchController {
 	private static String BY_ANY = "match_by_any";		// match by any field
 	private static String BY_TERM = "match_by_term";		// match vocab by term
 	private static String BY_SYNONYM = "match_by_synonym";	// match vocab by synonym
+	private static String BY_DEFINITION = "match_by_def";	// match vocab by definition
 	
 	private static Set<String> validFacetFields;
 	static {
@@ -181,7 +182,7 @@ public class QuickSearchController {
         	Filter idFilter = createIDFilter(qf);
         	Filter nomenFilter = createFeatureNomenFilter(qf);
         	Filter otherFilter = createFeatureOtherFilter(qf);
-        	featureFilter = this.orFilters(idFilter, nomenFilter, otherFilter);
+        	featureFilter = this.orFilters(idFilter, nomenFilter, otherFilter, null);
         }
         
         Filter facetFilters = getFilterFacets(qf);
@@ -271,11 +272,12 @@ public class QuickSearchController {
 	}
 	
 	// Join 3 filters by an OR.
-	private Filter orFilters(Filter f1, Filter f2, Filter f3) {
+	private Filter orFilters(Filter f1, Filter f2, Filter f3, Filter f4) {
 		List<Filter> filters = new ArrayList<Filter>();
 		if (f1 != null) filters.add(f1);
 		if (f2 != null) filters.add(f2);
 		if (f3 != null) filters.add(f3);
+		if (f4 != null) filters.add(f4);
 		if (filters.size() == 0) {
 			// should not happen
 			return null;
@@ -503,7 +505,6 @@ public class QuickSearchController {
         SearchParams anySearch = getFeatureSearchParams(queryForm, BY_ANY, facetLimit);
 
         List<String> resultList = null;		// list of strings, each a value for a facet
-        String error = null;				// error message, if needed
         
         if (validFacetFields.contains(filterName)) {
         	resultList = qsFinder.getFeatureFacets(anySearch, filterName);
@@ -522,7 +523,6 @@ public class QuickSearchController {
         SearchParams anySearch = getVocabSearchParams(queryForm, BY_ANY, facetLimit);
 
         List<String> resultList = null;		// list of strings, each a value for a facet
-        String error = null;				// error message, if needed
         
         if (validFacetFields.contains(filterName)) {
         	resultList = qsFinder.getVocabFacets(anySearch, filterName);
@@ -546,6 +546,7 @@ public class QuickSearchController {
         SearchParams idSearch = getVocabSearchParams(queryForm, BY_ID, resultCount);
         SearchParams termSearch = getVocabSearchParams(queryForm, BY_TERM, resultCount);
         SearchParams synonymSearch = getVocabSearchParams(queryForm, BY_SYNONYM, resultCount);
+        SearchParams definitionSearch = getVocabSearchParams(queryForm, BY_DEFINITION, resultCount);
         
         List<QSVocabResult> idMatches = qsFinder.getVocabResults(idSearch).getResultObjects();
         logger.info("Got " + idMatches.size() + " ID matches");
@@ -553,13 +554,15 @@ public class QuickSearchController {
         logger.info("Got " + termMatches.size() + " term matches");
         List<QSVocabResult> synonymMatches = qsFinder.getVocabResults(synonymSearch).getResultObjects();
         logger.info("Got " + synonymMatches.size() + " synonym matches");
+        List<QSVocabResult> definitionMatches = qsFinder.getVocabResults(definitionSearch).getResultObjects();
+        logger.info("Got " + definitionMatches.size() + " definition matches");
         
         SearchParams anySearch = getVocabSearchParams(queryForm, BY_ANY, 0);
 
         int totalCount = qsFinder.getVocabResults(anySearch).getTotalCount();
         logger.info("Identified " + totalCount + " matches in all");
 
-        List<QSVocabResult> out = unifyVocabMatches(queryForm.getTerms(), idMatches, termMatches, synonymMatches);
+        List<QSVocabResult> out = unifyVocabMatches(queryForm.getTerms(), idMatches, termMatches, synonymMatches, definitionMatches);
         
         List<QSVocabResultWrapper> wrapped = new ArrayList<QSVocabResultWrapper>();
         for (QSVocabResult r : out) {
@@ -581,14 +584,17 @@ public class QuickSearchController {
         if (BY_ID.equals(queryMode)) {
         	vocabFilter = createIDFilter(qf);
         } else if (BY_TERM.equals(queryMode)) {
-        	vocabFilter = createVocabTermFilter(qf);
+        	vocabFilter = createContainsFilter(qf, SearchConstants.QS_TERM);
         } else if (BY_SYNONYM.equals(queryMode)) {
-        	vocabFilter = createVocabSynonymFilter(qf);
+        	vocabFilter = createContainsFilter(qf, SearchConstants.QS_SYNONYM);
+        } else if (BY_DEFINITION.equals(queryMode)) {
+        	vocabFilter = createContainsFilter(qf, SearchConstants.QS_DEFINITION);
         } else {	// BY_ANY
         	Filter idFilter = createIDFilter(qf);
-        	Filter termFilter = createVocabTermFilter(qf);
-        	Filter synonymFilter = createVocabSynonymFilter(qf);
-        	vocabFilter = this.orFilters(idFilter, termFilter, synonymFilter);
+        	Filter termFilter = createContainsFilter(qf, SearchConstants.QS_TERM);
+        	Filter synonymFilter = createContainsFilter(qf, SearchConstants.QS_SYNONYM);
+        	Filter definitionFilter = createContainsFilter(qf, SearchConstants.QS_DEFINITION);
+        	vocabFilter = this.orFilters(idFilter, termFilter, synonymFilter, definitionFilter);
         }
         
         Filter facetFilters = getFilterFacets(qf);
@@ -610,33 +616,21 @@ public class QuickSearchController {
         return vocabSearch;
 	}
 	
-	// Return a single filter that looks for vocab terms by term, with multiple terms joined by an OR.
-	private Filter createVocabTermFilter(QuickSearchQueryForm qf) {
+	// Return a single filter that looks for vocab terms by the given field, with multiple terms joined by an OR.
+	private Filter createContainsFilter(QuickSearchQueryForm qf, String fieldname) {
         List<Filter> termFilters = new ArrayList<Filter>();
 
         for (String term : qf.getTerms()) {
         	List<Filter> termSet = new ArrayList<Filter>();
-        	termSet.add(new Filter(SearchConstants.QS_TERM, term, Operator.OP_CONTAINS));
+        	termSet.add(new Filter(fieldname, term, Operator.OP_CONTAINS));
         	termFilters.add(Filter.or(termSet));
         }
         return Filter.or(termFilters);
 	}
 	
-	// Return a single filter that looks for vocab terms by synonym, with multiple terms joined by an OR.
-	private Filter createVocabSynonymFilter(QuickSearchQueryForm qf) {
-        List<Filter> synonymFilters = new ArrayList<Filter>();
-
-        for (String term : qf.getTerms()) {
-        	List<Filter> synonymSet = new ArrayList<Filter>();
-        	synonymSet.add(new Filter(SearchConstants.QS_SYNONYM, term, Operator.OP_CONTAINS));
-        	synonymFilters.add(Filter.or(synonymSet));
-        }
-        return Filter.or(synonymFilters);
-	}
-	
 	// consolidate the lists of matching vocab termss, add star values, and setting best match values, then return
 	private List<QSVocabResult> unifyVocabMatches (List<String> searchTerms, List<QSVocabResult> idMatches,
-		List<QSVocabResult> termMatches, List<QSVocabResult> synonymMatches) {
+		List<QSVocabResult> termMatches, List<QSVocabResult> synonymMatches, List<QSVocabResult> definitionMatches) {
 		
 		Grouper<QSVocabResult> grouper = new Grouper<QSVocabResult>();
 		
@@ -669,6 +663,7 @@ public class QuickSearchController {
 		List<QSVocabResult> consolidatedMatches = new ArrayList<QSVocabResult>();
 		consolidatedMatches.addAll(termMatches);
 		consolidatedMatches.addAll(synonymMatches);
+		consolidatedMatches.addAll(definitionMatches);
 
 		BestMatchFinder bmf = new BestMatchFinder(searchTerms);
 		for (QSVocabResult match : consolidatedMatches) {
@@ -678,6 +673,9 @@ public class QuickSearchController {
 				for (String synonym : match.getSynonym()) {
 					options.put(synonym, "synonym");
 				}
+			}
+			if (match.getDefinition() != null) {
+				options.put(match.getDefinition(), "definition");
 			}
 
 			BestMatch bestMatch = bmf.getBestMatch(options);

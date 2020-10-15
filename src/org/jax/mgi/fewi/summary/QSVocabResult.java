@@ -11,6 +11,7 @@ public class QSVocabResult {
 	private List<String> accID;
 	private String term;
 	private String termType;
+	private String definition;
 	private List<String> synonym;
 	private String vocabName;
 	private String detailUri;
@@ -23,6 +24,12 @@ public class QSVocabResult {
 	private String bestMatchType;
 	private String bestMatchText;
 
+	public String getDefinition() {
+		return definition;
+	}
+	public void setDefinition(String definition) {
+		this.definition = definition;
+	}
 	public String getStars() {
 		return stars;
 	}

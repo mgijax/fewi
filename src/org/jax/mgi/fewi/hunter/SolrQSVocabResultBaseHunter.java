@@ -44,6 +44,7 @@ public class SolrQSVocabResultBaseHunter extends SolrHunter<QSVocabResult> {
 		propertyMap.put(SearchConstants.QS_ANNOTATION_TEXT, new SolrPropertyMapper(IndexConstants.QS_ANNOTATION_TEXT));
 		propertyMap.put(SearchConstants.QS_ANNOTATION_URI, new SolrPropertyMapper(IndexConstants.QS_ANNOTATION_URI));
 		propertyMap.put(SearchConstants.QS_SEQUENCE_NUM, new SolrPropertyMapper(IndexConstants.QS_SEQUENCE_NUM));
+		propertyMap.put(SearchConstants.QS_DEFINITION, new SolrPropertyMapper(IndexConstants.QS_DEFINITION));
 		/*
 		 * The name of the field we want to iterate through the documents for
 		 * and place into the output.  In this case we want the standard list of
@@ -81,6 +82,7 @@ public class SolrQSVocabResultBaseHunter extends SolrHunter<QSVocabResult> {
 				result.setDetailUri((String) doc.getFieldValue(IndexConstants.QS_DETAIL_URI));
 				result.setAnnotationText((String) doc.getFieldValue(IndexConstants.QS_ANNOTATION_TEXT));
 				result.setAnnotationUri((String) doc.getFieldValue(IndexConstants.QS_ANNOTATION_URI));
+				result.setDefinition((String) doc.getFieldValue(IndexConstants.QS_DEFINITION));
 				
 				try {
 					result.setSynonym((List<String>) doc.getFieldValue(IndexConstants.QS_SYNONYM));
