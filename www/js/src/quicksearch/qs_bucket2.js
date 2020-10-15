@@ -29,7 +29,7 @@ var b2Show = function(data) {
 	var tbl = '';
 	if (data.summaryRows.length > 0) {
 		tbl = '<TABLE ID="b2Table">';
-		tbl = tbl + '<TR><TH>Score</TH><TH>Term</TH><TH>Associated Data</TH><TH>Best Mactch</TH></TR>';
+		tbl = tbl + '<TR><TH>Score</TH><TH>Term</TH><TH>Associated Data</TH><TH>Best Match</TH></TR>';
 
 		toShow = Math.min(100, data.summaryRows.length);
 		for (var i = 0; i < toShow; i++) {
@@ -64,7 +64,8 @@ var b2Show = function(data) {
 	} else {
 		console.log("No b2Results");
 	}
-	var header = qsResultHeader(1, toShow, data.totalCount, " vocabulary term");
-	$('#b2Results').html(header + "<br>" + tbl);
+	var header = qsResultHeader(1, toShow, data.totalCount);
+	$('#b2Counts').html(header);
+	$('#b2Results').html(tbl);
 	console.log("Populated " + data.summaryRows.length + " b2Results");
 };

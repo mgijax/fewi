@@ -69,7 +69,8 @@ var b1Show = function(data) {
 	} else {
 		console.log("No b1Results");
 	}
-	var header = qsResultHeader(1, toShow, data.totalCount, " genome feature");
-	$('#b1Results').html(header + "<br>" + tbl);
+	var header = qsResultHeader(1, toShow, data.totalCount);
+	$('#b1Counts').html(header);
+	$('#b1Results').html(tbl);
 	console.log("Populated " + data.summaryRows.length + " b1Results");
 };

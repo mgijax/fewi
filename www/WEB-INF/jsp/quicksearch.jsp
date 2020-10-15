@@ -49,21 +49,41 @@
 	</div>
 </div>
 	
-Bucket 1 : Markers and Alleles<p/>
+<div id="b1Header" class="qsHeader">Genome Features
+  <span id="b1Counts" class="resultCount"></span>
+  <span class="helpCursor" onmouseover="return overlib('<div class=detailRowType>This list includes genes, QTL, cytogenetic markers, and other genome features whose name, symbol, synonym, or accession ID matched some or all of your search text.<br/><br/>This list also includes genome features associated with vocabulary terms matching your search text. <br/><br/></div><div class=\'detailRowType\'>See <a href=\'${configBean.USERHELP_URL}QUICK_SEARCH_help.shtml\'>Using the Quick Search Tool</a> for more information and examples.</div>', STICKY, CAPTION, 'Genome Features', HAUTO, BELOW, WIDTH, 375, DELAY, 600, CLOSECLICK, CLOSETEXT, 'Close X')" onmouseout="nd();">
+       <img src="${configBean.WEBSHARE_URL}images/blue_info_icon.gif" border="0">
+  </span>
+</div>
 <div id="b1Results"></div>
 
-<p/>
-Bucket 2 : Vocabulary Terms<p/>
+<div id="b2Header" class="qsHeader">Vocabulary Terms
+  <span id="b2Counts" class="resultCount"></span>
+  <span class="helpCursor" onmouseover="return overlib('<div class=detailRowType>Use the vocabulary terms listed here <ul><li>to learn MGI\'s official terms</li><li>to focus on detailed research topics</li><li>to explore related research areas</li><li>to investigate alternative areas</li></ul></div><div class=\'detailRowType\'>See <a href=\'${configBean.USERHELP_URL}QUICK_SEARCH_help.shtml\'>Using the Quick Search Tool</a> for more information and examples.</div>', STICKY, CAPTION, 'Vocabulary Terms', HAUTO, BELOW, WIDTH, 375, DELAY, 600, CLOSECLICK, CLOSETEXT, 'Close X')" onmouseout="nd();">
+    <img src="${configBean.WEBSHARE_URL}images/blue_info_icon.gif" border="0">
+  </span>
+</div>
 <div id="b2Results"></div>
 
-<p/>
-Bucket 3 : Matches by ID<p/>
+<div id="b3Header" class="qsHeader">Other Results by ID
+  <span id="b3Counts" class="resultCount"></span>
+  <span class="helpCursor" onmouseover="return overlib('<div class=detailRowType>This section includes links to sequences, orthology relationships, SNPs and other results whose accession ID matched an item in your search text.</div><div class=\'detailRowType\'>See <a href=\'${configBean.USERHELP_URL}QUICK_SEARCH_help.shtml\'>Using the Quick Search Tool</a> for more information and examples.</div>', STICKY, CAPTION, 'Other Results By ID', HAUTO, BELOW, WIDTH, 375, DELAY, 600, CLOSECLICK, CLOSETEXT, 'Close X')" onmouseout="nd();">
+       <img src="http://www.informatics.jax.org/searchtool/blue_info_icon.gif" border="0">
+  </span>
+</div>
 <div id="b3Results"></div>
 
 <p/>
 Search MGI with Google<p/>
 
 <style>
+.helpCursor { cursor: help; }
+.qsHeader { width: 100%; background-color: #F0F8FF; color: #002255; margin-top: 0.75em; 
+	font-size: 18px; font-weight: bold; line-height: 1.25; vertical-align: top;
+	padding-left: 5px; padding-right: 5px; padding-top: 2px; padding-bottom: 2px; 
+	}
+.resultCount { font-size: 10px; font-weight: normal; color: #676767; }
+
 #b1Results { max-height: 300px; overflow-y: auto; }
 #b2Results { max-height: 300px; overflow-y: auto; }
 

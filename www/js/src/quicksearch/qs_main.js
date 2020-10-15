@@ -24,15 +24,11 @@ var qsSuperscript = function(s) {
 };
   
 // return a string listing counts for search results
-var qsResultHeader = function(start, end, total, dataType) {
+var qsResultHeader = function(start, end, total) {
 	if (total == 0) {
-		return "No matching " + dataType + "s";
+		return "no results";
 	}
-	var plural = "";
-	if ((end - start) > 1) {
-		plural = "s";
-	}
-	return "Showing " + commaDelimit(start) + "-" + commaDelimit(end) + " of " + commaDelimit(total) + " " + dataType + plural;
+	return "sorted by best match, showing " + commaDelimit(start) + "-" + commaDelimit(end) + " of " + commaDelimit(total);
 };
 
 // update the request & data in the feature bucket (after a filtering event)
