@@ -88,20 +88,24 @@ Search MGI with Google<p/>
 #b2Results { max-height: 300px; overflow-y: auto; }
 
 #b1Table { border-collapse: collapse; width: 100% }
-#b1Table th { font-weight: bold; padding: 3px; border: 1px solid black; }
-#b1Table td { padding: 3px; border: 1px solid black; }
-#b1Table tr:nth-child(even) { background-color: #f2f2f2; }
+#b1Table th { font-weight: bold; padding: 3px; }
+#b1Table td { padding: 3px; }
+#b1Table tr:nth-child(odd) { background-color: #f2f2f2; }
+#b1Table tr:first-child { background-color: #dfefff; }
 
 #b2Table { border-collapse: collapse; width: 100% }
-#b2Table th { font-weight: bold; padding: 3px; border: 1px solid black; }
-#b2Table td { padding: 3px; border: 1px solid black; }
-#b2Table tr:nth-child(even) { background-color: #f2f2f2; }
+#b2Table th { font-weight: bold; padding: 3px; }
+#b2Table td { padding: 3px; }
+#b2Table tr:nth-child(odd) { background-color: #f2f2f2; }
+#b2Table tr:first-child { background-color: #dfefff; }
 
 #b3Table { border-collapse: collapse }
-#b3Table th { font-weight: bold; padding: 3px; border: 1px solid black; }
-#b3Table td { padding: 3px; border: 1px solid black; }
-#b3Table tr:nth-child(even) { background-color: #f2f2f2; }
+#b3Table th { font-weight: bold; padding: 3px; }
+#b3Table td { padding: 3px; }
+#b3Table tr:nth-child(odd) { background-color: #f2f2f2; }
+#b3Table tr:first-child { background-color: #dfefff; }
 
+.noWrap { white-space: nowrap; }
 .facetFilter .yui-panel .bd { width: 285px; }
 </style>
 

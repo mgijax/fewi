@@ -52,7 +52,7 @@ var b1Show = function(data) {
 			if ((item.startCoord === null) || (item.endCoord === null)) {
 				tbl = tbl + '<TD>&nbsp;</TD>';
 			} else {
-				tbl = tbl + '<TD>' + item.startCoord + '- ' + item.endCoord + '</TD>';
+				tbl = tbl + '<TD class="nowrap">' + item.startCoord + '- ' + item.endCoord + '</TD>';
 			}
 
 			if (item.strand === null) {
