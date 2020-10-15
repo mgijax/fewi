@@ -92,10 +92,13 @@
 .qsHeader { width: 100%; background-color: #F0F8FF; color: #002255; margin-top: 0.75em; 
 	font-size: 18px; font-weight: bold; line-height: 1.25; vertical-align: top;
 	padding-left: 5px; padding-right: 5px; padding-top: 2px; padding-bottom: 2px; 
+	clear: both;
 	}
 .resultCount { font-size: 10px; font-weight: normal; color: #676767; }
 .hidden { display: none; }
 .shown { display: inline; }
+
+#filterSummary { margin-top: 5px; margin-bottom: 5px; }
 
 #b1Results { max-height: 300px; overflow-y: auto; }
 #b2Results { max-height: 300px; overflow-y: auto; }
