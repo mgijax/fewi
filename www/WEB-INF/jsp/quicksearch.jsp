@@ -21,9 +21,16 @@
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <!-- header bar -->
+<form action="${configBean.FEWI_URL}quicksearch/summary" METHOD="get">
 <div id="titleBarWrapper" userdoc="QUICK_SEARCH_help.shtml">	
-	<span class="titleBarMainTitle">Quick Search Results for ${query}</span>
+	<span class="titleBarMainTitle">Quick Search Results</span> for: <input id='queryField' name='query' size='30' type='text' value='${query}'>
+	&nbsp; <input class="qsButton" type="submit" name="submit" value="Search Again">
+	&nbsp; <input class="qsButton" type="submit" name="reset" value="Reset" onClick="clearField(); return false;">
+	&nbsp; <span class="qsButton" style="margin-left:35px;" onclick="window.open('${configBean.MGIHOME_URL}feedback/feedback_form.cgi?subject=Quick Search')">
+    Your Input Welcome
+  </span>
 </div>
+</form>
 
 <div id="filterButtons">
    <b>Filter results by: </b>
@@ -98,6 +105,21 @@
 .hidden { display: none; }
 .shown { display: inline; }
 
+.qsButton {
+    font-size: 12px;
+    font-family: Verdana,Arial,Helvetica;
+    color: #002255;
+    font-weight: bolder;
+    background-color: #eeeeee;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #7d95b9;
+    padding: 2px;
+    display: inline;
+    text-decoration: none;
+    cursor: hand;
+}
+
 #filterSummary { margin-top: 5px; margin-bottom: 5px; }
 
 #b1Results { max-height: 300px; overflow-y: auto; }
@@ -137,6 +159,10 @@
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/quicksearch/qs_bucket2.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/quicksearch/qs_bucket3.js"></script>
 <script>
+function clearField() {
+	$('#queryField')[0].value = '';
+}
+
 var queryString="${e:forJavaScript(queryString)}";
 var query = "${query}";
 var fewiurl = "${configBean.FEWI_URL}";
