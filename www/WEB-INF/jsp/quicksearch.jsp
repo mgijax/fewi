@@ -64,11 +64,14 @@ Bucket 3 : Matches by ID<p/>
 Search MGI with Google<p/>
 
 <style>
-#b1Table { border-collapse: collapse }
+#b1Results { max-height: 300px; overflow-y: auto; }
+#b2Results { max-height: 300px; overflow-y: auto; }
+
+#b1Table { border-collapse: collapse; width: 100% }
 #b1Table th { font-weight: bold; padding: 3px; border: 1px solid black; }
 #b1Table td { padding: 3px; border: 1px solid black; }
 
-#b2Table { border-collapse: collapse }
+#b2Table { border-collapse: collapse; width: 100% }
 #b2Table th { font-weight: bold; padding: 3px; border: 1px solid black; }
 #b2Table td { padding: 3px; border: 1px solid black; }
 
