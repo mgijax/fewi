@@ -37,6 +37,13 @@ var qsProcessFilters = function() {
 	instantiatedPaginator = false;
 	b1Fetch();
 	b2Fetch();
+
+	// If no active filters, hide the remove filter buttons.
+	if (queryString == getQuerystring()) {
+		$('#breadbox').addClass('hidden');
+	} else {
+		$('#breadbox').removeClass('hidden');
+	}
 }
 
 // callback function: should be wired into the filters.js module as a callback.  This will track which filters are

@@ -26,12 +26,14 @@
 </div>
 
 <div id="filterButtons">
+   <b>Filter results by: </b>
    <a id="functionFilter" class="filterButton">Molecular Function <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
    <a id="processFilter" class="filterButton">Biological Process <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
    <a id="componentFilter" class="filterButton">Cellular Component <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
 </div>
-<div id="breadbox">
+<div id="breadbox" class="hidden">
   <div id="filterSummary">
+  	<b>Filtered by: </b>
     <span id="filterList"></span>
   </div>
 </div>
@@ -92,6 +94,8 @@
 	padding-left: 5px; padding-right: 5px; padding-top: 2px; padding-bottom: 2px; 
 	}
 .resultCount { font-size: 10px; font-weight: normal; color: #676767; }
+.hidden { display: none; }
+.shown { display: inline; }
 
 #b1Results { max-height: 300px; overflow-y: auto; }
 #b2Results { max-height: 300px; overflow-y: auto; }
