@@ -90,14 +90,17 @@ Search MGI with Google<p/>
 #b1Table { border-collapse: collapse; width: 100% }
 #b1Table th { font-weight: bold; padding: 3px; border: 1px solid black; }
 #b1Table td { padding: 3px; border: 1px solid black; }
+#b1Table tr:nth-child(even) { background-color: #f2f2f2; }
 
 #b2Table { border-collapse: collapse; width: 100% }
 #b2Table th { font-weight: bold; padding: 3px; border: 1px solid black; }
 #b2Table td { padding: 3px; border: 1px solid black; }
+#b2Table tr:nth-child(even) { background-color: #f2f2f2; }
 
 #b3Table { border-collapse: collapse }
 #b3Table th { font-weight: bold; padding: 3px; border: 1px solid black; }
 #b3Table td { padding: 3px; border: 1px solid black; }
+#b3Table tr:nth-child(even) { background-color: #f2f2f2; }
 
 .facetFilter .yui-panel .bd { width: 285px; }
 </style>

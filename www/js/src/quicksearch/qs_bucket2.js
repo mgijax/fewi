@@ -38,7 +38,7 @@ var b2Show = function(data) {
 			if (item.stars === null) {
 				tbl = tbl + '<TD>TBD</TD>';
 			} else {
-				tbl = tbl + '<TD>' + item.stars + '</TD>';
+				tbl = tbl + '<TD>' + item.stars.replace(/[*]/g, "&#9733;") + '</TD>';
 			}
 			if (item.detailUri === null) {
 				tbl = tbl + '<TD>' + item.vocabName + ': ' + item.term + '</TD>';

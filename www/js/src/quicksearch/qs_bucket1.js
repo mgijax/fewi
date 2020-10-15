@@ -34,7 +34,7 @@ var b1Show = function(data) {
 		toShow = Math.min(100, data.summaryRows.length);
 		for (var i = 0; i < toShow; i++) {
 			var item = data.summaryRows[i];
-			tbl = tbl + '<TR><TD>' + item.stars + '</TD>';
+			tbl = tbl + '<TR><TD>' + item.stars.replace(/[*]/g, "&#9733;") + '</TD>';
 			tbl = tbl + '<TD>' + item.featureType + '</TD>';
 
 			var symbol = qsSuperscript(item.symbol);
