@@ -25,8 +25,9 @@ var b3Fetch = function() {
 
 // Having received 'data' from the server, show it on the page.
 var b3Show = function(data) {
+	var tbl = '';
 	if (data.summaryRows.length > 0) {
-		var tbl = '<TABLE ID="b3Table">';
+		tbl = tbl + '<TABLE ID="b3Table">';
 		tbl = tbl + '<TR><TH>Type</TH><TH>Name/Description</TH><TH>Why did this match?</TH></TR>';
 
 		for (var i = 0; i < data.summaryRows.length; i++) {
@@ -40,4 +41,8 @@ var b3Show = function(data) {
 	} else {
 		console.log("No b3Results");
 	}
+
+	var header = qsResultHeader(1, data.totalCount, data.totalCount);
+	$('#b3Counts').html(header);
+	$('#b3Results').html(tbl);
 };
