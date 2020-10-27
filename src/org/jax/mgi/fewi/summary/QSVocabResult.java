@@ -123,7 +123,6 @@ public class QSVocabResult {
 
 	@Override
 	public String toString() {
-		return "QSVocabResult [primaryID=" + primaryID + ", term=" + term + ", vocabName=" + vocabName + ", score="
-				+ score + "]";
+		return term;
 	}
 }

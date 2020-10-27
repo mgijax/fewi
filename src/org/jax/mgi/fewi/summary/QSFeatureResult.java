@@ -260,6 +260,6 @@ public class QSFeatureResult {
 
 	@Override
 	public String toString() {
-		return "QSFeatureResult [primaryID=" + primaryID + ", symbol=" + symbol + ", featureType=" + featureType + "]";
+		return symbol;
 	}
 }

@@ -3,6 +3,7 @@ package org.jax.mgi.fewi.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -31,6 +32,7 @@ import org.jax.mgi.fewi.summary.QSFeatureResultWrapper;
 import org.jax.mgi.fewi.summary.QSVocabResultWrapper;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.UserMonitor;
+import org.jax.mgi.shr.fe.sort.SmartAlphaComparator;
 import org.jax.mgi.shr.jsonmodel.BrowserTerm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -301,7 +303,7 @@ public class QuickSearchController {
 						match.setBestMatchType("ID");
 						match.setBestMatchText(id);
 						match.setStars("****");
-						grouper.add("****", match.getPrimaryID(), match);
+						grouper.add("****", match.getPrimaryID(), match, 500);
 						found = true;
 						break;
 					}
@@ -311,7 +313,7 @@ public class QuickSearchController {
 			if (!found) {
 				// should not happen, but let's make sure not to lose the result just in case
 				match.setStars("*");
-				grouper.add("*", match.getPrimaryID(), match);
+				grouper.add("*", match.getPrimaryID(), match, 0);
 			}
 		}
 
@@ -411,7 +413,7 @@ public class QuickSearchController {
 					match.setBestMatchText(bestMatch.matchText);
 					match.setBestMatchType(bestMatch.matchType);
 
-					grouper.add(bestMatch.stars, primaryID, match);
+					grouper.add(bestMatch.stars, primaryID, match, bestMatch.boost);
 				}
 			}
 		}
@@ -644,7 +646,7 @@ public class QuickSearchController {
 						match.setBestMatchType("ID");
 						match.setBestMatchText(id);
 						match.setStars("****");
-						grouper.add("****", match.getPrimaryID(), match);
+						grouper.add("****", match.getPrimaryID(), match, 500);
 						found = true;
 						break;
 					}
@@ -654,7 +656,7 @@ public class QuickSearchController {
 			if (!found) {
 				// should not happen, but let's make sure not to lose the result just in case
 				match.setStars("*");
-				grouper.add("*", match.getPrimaryID(), match);
+				grouper.add("*", match.getPrimaryID(), match, 0);
 			}
 		}
 
@@ -683,7 +685,7 @@ public class QuickSearchController {
 			match.setBestMatchText(bestMatch.matchText);
 			match.setBestMatchType(bestMatch.matchType);
 
-			grouper.add(bestMatch.stars, match.getPrimaryID(), match);
+			grouper.add(bestMatch.stars, match.getPrimaryID(), match, bestMatch.boost);
 		}
 
 		return grouper.toList();
@@ -726,55 +728,71 @@ public class QuickSearchController {
 	
 	// private inner class for scoring / sorting QS results
 	private class Grouper<T> {
-		List<T> fourStar;
-		List<T> threeStar;
-		List<T> twoStar;
-		List<T> oneStar;
+		private class SortItem<T> {
+			public T item;
+			public int boost;
+			
+			public SortItem(T item, int boost) {
+				this.item = item;
+				this.boost = boost;
+			}
+			
+			public Comparator<SortItem<T>> getComparator() {
+				return new SIComparator();
+			}
+			
+			private class SIComparator implements Comparator<SortItem<T>> {
+				public int compare (SortItem<T> a, SortItem<T> b) {
+					if (a.boost < b.boost) { return 1; }
+					if (a.boost > b.boost) { return -1; }
+					return a.toString().compareTo(b.toString());
+				}
+			}
+		}
+		List<SortItem<T>> fourStar;
+		List<SortItem<T>> threeStar;
+		List<SortItem<T>> twoStar;
+		List<SortItem<T>> oneStar;
 		Set<String> ids;
 		
 		public Grouper() {
-			this.fourStar = new ArrayList<T>();
-			this.threeStar = new ArrayList<T>();
-			this.twoStar = new ArrayList<T>();
-			this.oneStar = new ArrayList<T>();
+			this.fourStar = new ArrayList<SortItem<T>>();
+			this.threeStar = new ArrayList<SortItem<T>>();
+			this.twoStar = new ArrayList<SortItem<T>>();
+			this.oneStar = new ArrayList<SortItem<T>>();
 			this.ids = new HashSet<String>();
 		}
 		
-		public void addFourStar(String id, T item) {
-			this.fourStar.add(item);
-		}
-		
-		public void addThreeStar(String id, T item) {
-			this.threeStar.add(item);
-		}
-		
-		public void addTwoStar(String id, T item) {
-			this.twoStar.add(item);
-		}
-		
-		public void addOneStar(String id, T item) {
-			this.oneStar.add(item);
-		}
-		
-		public void add(String stars, String id, T item) {
+		public void add(String stars, String id, T item, int boost) {
 			int starCount = stars.length();
 
 			if (this.ids.contains(id)) { return; }
 			
-			if (starCount == 4) { this.addFourStar(id, item); }
-			else if (starCount == 3) { this.addThreeStar(id, item); }
-			else if (starCount == 2) { this.addTwoStar(id, item); }
-			else { this.addOneStar(id, item); }
+			if (starCount == 4) { this.fourStar.add(new SortItem<T>(item, boost)); }
+			else if (starCount == 3) { this.threeStar.add(new SortItem<T>(item, boost)); }
+			else if (starCount == 2) { this.twoStar.add(new SortItem<T>(item, boost)); }
+			else { this.oneStar.add(new SortItem<T>(item, boost)); }
 
 			this.ids.add(id);
 		}
 		
+		private List<T> sortAndExtract(List<SortItem<T>> myList) {
+			List<T> extracted = new ArrayList<T>(myList.size());
+			if ((myList != null) && (myList.size() > 0)) {
+				Collections.sort(myList, myList.get(0).getComparator());
+				for (SortItem<T> element : myList) {
+					extracted.add(element.item);
+				}
+			}
+			return extracted;
+		}
+		
 		public List<T> toList() {
 			List<T> all = new ArrayList<T>();
-			all.addAll(fourStar);
-			all.addAll(threeStar);
-			all.addAll(twoStar);
-			all.addAll(oneStar);
+			all.addAll(sortAndExtract(fourStar));
+			all.addAll(sortAndExtract(threeStar));
+			all.addAll(sortAndExtract(twoStar));
+			all.addAll(sortAndExtract(oneStar));
 			return all;
 		}
 	}
@@ -789,52 +807,95 @@ public class QuickSearchController {
 			}
 		}
 		
-		// Find the best match (for the search terms included at instantiation) among the various options,
-		// which map from a term to each one's term type.
-		public BestMatch getBestMatch(Map<String,String> options) {
-			// 1. iterate over terms in one pass
-			// 2. test against each of the search terms
-			// 3. bypass match types that are lower than what we've already found
-			
-			BestMatch match = new BestMatch();
-			match.starCount = 0;
-			match.stars = "";
+		// initial filtering; return a new map of options with all those that cannot match winnowed out
+		private Map<String,String> winnow(Map<String,String> options) {
+			Map<String,String> potential = new HashMap<String,String>();
 
-			for (String key : options.keySet()) {
-				String keyLower = key.toLowerCase();
+			for (String term : options.keySet()) {
+				String termLower = term.toLowerCase();
 
-				for (String term : lowerTerms) {
-					// bail out once we find a 4-star match
-					if (keyLower.equals(term)) {
-						match.starCount = 4;
-						match.stars = "****";
-						match.matchText = key;
-						match.matchType = options.get(key);
-						return match;
-					}
-						
-					// don't bother checking if we already have a 3-star match
-					if (match.starCount < 3) {
-						if (keyLower.startsWith(term)) {
-							match.starCount = 3;
-							match.stars = "***";
-							match.matchText = key;
-							match.matchType = options.get(key);
-						}
-					}
-						
-					// don't bother checking if we already have at least a 2-star match
-					if (match.starCount < 2) {
-						if (keyLower.contains(term)) {
-							match.starCount = 2;
-							match.stars = "**";
-							match.matchText = key;
-							match.matchType = options.get(key);
-						}
+				for (String searchWord : lowerTerms) {
+					// Once we find a single search word that matches this term, keep the term and 
+					// don't look for more.  If we don't find any, then it cannot become a "best match",
+					// so leave it out.
+					if (termLower.contains(searchWord)) {
+						potential.put(term, options.get(term));
+						break;
 					}
 				}
 			}
-			return match;
+			return potential;
+		}
+		
+		// Find the best match (for the search terms included at instantiation) among the various options,
+		// which map from a term to each one's term type.
+		public BestMatch getBestMatch(Map<String,String> options) {
+			// Winnow things down so that the only options we consider are possibilities.
+			Map<String,String> filteredOptions = this.winnow(options);
+
+			// best match found so far
+			BestMatch bestMatch = new BestMatch();
+			bestMatch.starCount = 0;
+			bestMatch.stars = "";
+			bestMatch.boost = 0;
+			bestMatch.matchText = "N/A";
+			bestMatch.matchType = "Best Match";
+
+			// iterate through each option for possible "best match" strings
+			for (String key : filteredOptions.keySet()) {
+				String keyLower = key.toLowerCase();
+
+				// data compiled about this possible "best match" string (on this loop iteration)
+				BestMatch thisMatch = new BestMatch();
+				thisMatch.starCount = 0;
+				thisMatch.stars = "";
+				thisMatch.boost = 0;
+				thisMatch.matchText = key;
+				thisMatch.matchType = options.get(key);
+
+				/* New scoring considerations:
+				 * 1. 4-star matches are to full string.
+				 * 2. 3-star matches are with search word as a prefix.
+				 * 3. 2-star matches are with search word contained within the string.
+				 * 4. Multi-word matches must be boosted up in their star-tier, so we need to consider
+				 * 	  all search words.  To accomplish this, here's the heuristic we're using:
+				 * 		a. Keep a "boost" for each potential best match.
+				 * 		b. A 4-star matching search word adds 500 to boost.
+				 * 		c. A 3-star matching search word adds 50 to boost.
+				 * 		d. A 2-star matching search word adds 5 to boost.
+				 * 		e. Keep the highest star value among b-d to represent the whole potential best match.
+				 * 		f. Return the best match that has the highest boost.
+				 * 5. Of note, 85-90% of user searches are using a single word.
+				 */
+				for (String term : lowerTerms) {
+					if (keyLower.equals(term)) {
+						thisMatch.starCount = 4;
+						thisMatch.stars = "****";
+						thisMatch.boost += 500;
+					}
+						
+					else if (keyLower.startsWith(term)) {
+						if (thisMatch.starCount < 3) {
+							thisMatch.starCount = 3;
+							thisMatch.stars = "***";
+						}
+						thisMatch.boost += 50;
+					}
+						
+					else if (keyLower.contains(term)) {
+						if (thisMatch.starCount < 2) {
+							thisMatch.starCount = 2;
+							thisMatch.stars = "**";
+						}
+						thisMatch.boost += 5;
+					}
+				}
+				
+				if (thisMatch.boost > bestMatch.boost) {
+					bestMatch = thisMatch;
+				}
+			}
+			return bestMatch;
 		}
 	}
 	
@@ -843,5 +904,6 @@ public class QuickSearchController {
 		public String stars;
 		public String matchType;
 		public String matchText;
+		public int boost;
 	}
 }
