@@ -807,13 +807,17 @@ public class QuickSearchController {
 	}
 	
 	private class BestMatchFinder {
-		private List<String> lowerTerms;
+		private String searchString;		// concatenation of lowerTerms, used for full-string matching
+		private List<String> lowerTerms;	// words from user's search string
+		private int searchTermCount = 0;	// number of words in user's search string
 		
 		public BestMatchFinder(List<String> searchTerms) {
 			this.lowerTerms = new ArrayList<String>();
 			for (String term : searchTerms) {
 				this.lowerTerms.add(term.toLowerCase().replace("*", ""));
 			}
+			this.searchTermCount = this.lowerTerms.size();
+			this.searchString = String.join(" ", this.lowerTerms).toLowerCase();
 		}
 		
 		// initial filtering; return a new map of options with all those that cannot match winnowed out
@@ -864,43 +868,57 @@ public class QuickSearchController {
 
 				/* New scoring considerations:
 				 * 1. 4-star matches are to full string.
-				 * 2. 3-star matches are with search word as a prefix.
-				 * 3. 2-star matches are with search word contained within the string.
+				 * 2. 3-star matches contain all words from the search string.
+				 * 3. 2-star matches contain at least one of the words from the search string.
 				 * 4. Multi-word matches must be boosted up in their star-tier, so we need to consider
 				 * 	  all search words.  To accomplish this, here's the heuristic we're using:
 				 * 		a. Keep a "boost" for each potential best match.
-				 * 		b. A 4-star matching search word adds 500 to boost.
-				 * 		c. A 3-star matching search word adds 8 to boost.  (small enough that two 2-star matches are higher)
-				 * 		d. A 2-star matching search word adds 5 to boost.
+				 * 		b. A 4-star matching search word adds 500 to boost.  (keep at the top)
+				 * 		c. Search words appearing in the string in the user's order are worth more (7)
+				 * 			than search words that appear but are not in the user's order (5).  So two
+				 * 			words in order are preferred over two out of order, but three out of order
+				 * 			are better than two in order.
+				 * 		d. Check to see if the count of matching terms matches the count of search terms (3-star)
+				 * 			or not (only 2-star).
 				 * 		e. Keep the highest star value among b-d to represent the whole potential best match.
 				 * 		f. Return the best match that has the highest boost.
-				 * 5. Of note, 85-90% of user searches are using a single word.
+				 * 5. Of note, 85-90% of user searches are using a single word, meaning this logic is not
+				 * 	  needed most of the time.
 				 */
-				for (String term : lowerTerms) {
-					if (keyLower.equals(term)) {
-						thisMatch.starCount = 4;
-						thisMatch.stars = "****";
-						thisMatch.boost += 500;
-					}
-						
-					else if (keyLower.startsWith(term)) {
-						if (thisMatch.starCount < 3) {
-							thisMatch.starCount = 3;
-							thisMatch.stars = "***";
+				if (keyLower.equals(this.searchString)) {
+					// exact match to search string -- 4-star match, big boost
+					thisMatch.starCount = 4;
+					thisMatch.stars = "****";
+					thisMatch.boost += 500;
+				} else {
+					int lastMatchPosition = -1;			// where was the last matching search term?
+					int matchingWordCount = 0;			// number of words from the search string that appear in keyLower
+				
+					for (String term : lowerTerms) {
+						int thisTermPosition = keyLower.indexOf(term);
+						if (thisTermPosition >= 0) {
+							if (thisTermPosition >= lastMatchPosition) {
+								thisMatch.boost += 7;
+							} else {
+								thisMatch.boost += 5;
+							}
+							lastMatchPosition = thisTermPosition;
+							matchingWordCount += 1;
 						}
-						thisMatch.boost += 8;
 					}
-						
-					else if (keyLower.contains(term)) {
-						if (thisMatch.starCount < 2) {
-							thisMatch.starCount = 2;
-							thisMatch.stars = "**";
-						}
-						thisMatch.boost += 5;
+					
+					if (matchingWordCount == this.searchTermCount) {
+						thisMatch.starCount = 3;
+						thisMatch.stars = "***";
+					} else {
+						thisMatch.starCount = 2;
+						thisMatch.stars = "**";
 					}
 				}
 				
-				if (thisMatch.boost > bestMatch.boost) {
+				if (thisMatch.starCount > bestMatch.starCount) {
+					bestMatch = thisMatch;
+				} else if ((thisMatch.starCount == bestMatch.starCount) && (thisMatch.boost > bestMatch.boost)) {
 					bestMatch = thisMatch;
 				}
 			}
