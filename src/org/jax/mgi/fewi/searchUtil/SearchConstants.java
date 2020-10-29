@@ -312,7 +312,8 @@ public class SearchConstants {
 	public static final String QS_TERM_TYPE = "termType";
 	public static final String QS_SYNONYM = "synonym";
 	public static final String QS_DEFINITION= "definition";
-	public static final String QS_VOCAB_NAME = "vocabName";
+	public static final String QS_VOCAB_NAME = "vocabName";				// for display in QS
+	public static final String QS_RAW_VOCAB_NAME = "rawVocabName";		// for certain filtering
 	public static final String QS_DETAIL_URI = "detailUri";
 	public static final String QS_ANNOTATION_COUNT = "annotationCount";
 	public static final String QS_ANNOTATION_TEXT = "annotationText";

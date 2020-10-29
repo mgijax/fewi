@@ -586,16 +586,16 @@ public class QuickSearchController {
         if (BY_ID.equals(queryMode)) {
         	vocabFilter = createIDFilter(qf);
         } else if (BY_TERM.equals(queryMode)) {
-        	vocabFilter = createContainsFilter(qf, SearchConstants.QS_TERM);
+        	vocabFilter = notEmaps(createContainsFilter(qf, SearchConstants.QS_TERM));
         } else if (BY_SYNONYM.equals(queryMode)) {
-        	vocabFilter = createContainsFilter(qf, SearchConstants.QS_SYNONYM);
+        	vocabFilter = notEmaps(createContainsFilter(qf, SearchConstants.QS_SYNONYM));
         } else if (BY_DEFINITION.equals(queryMode)) {
-        	vocabFilter = createContainsFilter(qf, SearchConstants.QS_DEFINITION);
+        	vocabFilter = notEmaps(createContainsFilter(qf, SearchConstants.QS_DEFINITION));
         } else {	// BY_ANY
         	Filter idFilter = createIDFilter(qf);
-        	Filter termFilter = createContainsFilter(qf, SearchConstants.QS_TERM);
-        	Filter synonymFilter = createContainsFilter(qf, SearchConstants.QS_SYNONYM);
-        	Filter definitionFilter = createContainsFilter(qf, SearchConstants.QS_DEFINITION);
+        	Filter termFilter = notEmaps(createContainsFilter(qf, SearchConstants.QS_TERM));
+        	Filter synonymFilter = notEmaps(createContainsFilter(qf, SearchConstants.QS_SYNONYM));
+        	Filter definitionFilter = notEmaps(createContainsFilter(qf, SearchConstants.QS_DEFINITION));
         	vocabFilter = this.orFilters(idFilter, termFilter, synonymFilter, definitionFilter);
         }
         
@@ -616,6 +616,15 @@ public class QuickSearchController {
         vocabSearch.setPaginator(page);
         vocabSearch.setFilter(vocabFilter);
         return vocabSearch;
+	}
+	
+	// special case -- add a qualifier to the given filter (returning the resulting Filter) such that we
+	// do not return documents that have a primary ID beginning with "EMAPS".
+	private Filter notEmaps(Filter f) {
+		List<Filter> combo = new ArrayList<Filter>(2);
+		combo.add(f);
+		combo.add(new Filter(SearchConstants.QS_RAW_VOCAB_NAME, "EMAPS", Operator.OP_NOT_EQUAL));
+		return Filter.and(combo);
 	}
 	
 	// Return a single filter that looks for vocab terms by the given field, with multiple terms joined by an OR.
@@ -861,7 +870,7 @@ public class QuickSearchController {
 				 * 	  all search words.  To accomplish this, here's the heuristic we're using:
 				 * 		a. Keep a "boost" for each potential best match.
 				 * 		b. A 4-star matching search word adds 500 to boost.
-				 * 		c. A 3-star matching search word adds 50 to boost.
+				 * 		c. A 3-star matching search word adds 8 to boost.  (small enough that two 2-star matches are higher)
 				 * 		d. A 2-star matching search word adds 5 to boost.
 				 * 		e. Keep the highest star value among b-d to represent the whole potential best match.
 				 * 		f. Return the best match that has the highest boost.
@@ -879,7 +888,7 @@ public class QuickSearchController {
 							thisMatch.starCount = 3;
 							thisMatch.stars = "***";
 						}
-						thisMatch.boost += 50;
+						thisMatch.boost += 8;
 					}
 						
 					else if (keyLower.contains(term)) {
