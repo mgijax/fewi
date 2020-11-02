@@ -257,6 +257,9 @@ public class QuickSearchController {
         	nomenSet.add(new Filter(SearchConstants.QS_SYMBOL, term, Operator.OP_CONTAINS));
         	nomenSet.add(new Filter(SearchConstants.QS_NAME, term, Operator.OP_CONTAINS));
         	nomenSet.add(new Filter(SearchConstants.QS_SYNONYM, term, Operator.OP_CONTAINS));
+        	nomenSet.add(new Filter(SearchConstants.QS_MARKER_SYMBOL, term, Operator.OP_CONTAINS));
+        	nomenSet.add(new Filter(SearchConstants.QS_MARKER_NAME, term, Operator.OP_CONTAINS));
+        	nomenSet.add(new Filter(SearchConstants.QS_MARKER_SYNONYM, term, Operator.OP_CONTAINS));
         	nomenFilters.add(Filter.or(nomenSet));
         }
         return Filter.or(nomenFilters);
@@ -359,6 +362,16 @@ public class QuickSearchController {
 					if (match.getSynonym() != null) {
 						for (String synonym : match.getSynonym()) {
 							options.put(synonym, "synonym");
+						}
+					}
+					// If this is an allele, we also need to consider it's correpsonding marker's nomenclature.
+					if (match.getIsMarker() == 0) {
+						options.put(match.getMarkerSymbol(), "marker symbol");
+						options.put(match.getMarkerName(), "marker name");
+						if (match.getMarkerSynonym() != null) {
+							for (String synonym : match.getMarkerSynonym()) {
+								options.put(synonym, "marker synonym");
+							}
 						}
 					}
 					byNomen.remove(primaryID);

@@ -16,6 +16,10 @@ public class QSFeatureResult {
 	private List<String> synonym;
 	private List<String> orthologNomenOrg;
 
+	private String markerSymbol;
+	private String markerName;
+	private List<String> markerSynonym;
+
 	private List<String> functionAnnotationsID;
 	private List<String> functionAnnotationsTerm;
 	private List<String> functionAnnotationsSynonym;
@@ -257,7 +261,24 @@ public class QSFeatureResult {
 	public void setScore(Float score) {
 		this.score = score;
 	}
-
+	public String getMarkerSymbol() {
+		return markerSymbol;
+	}
+	public void setMarkerSymbol(String markerSymbol) {
+		this.markerSymbol = markerSymbol;
+	}
+	public String getMarkerName() {
+		return markerName;
+	}
+	public void setMarkerName(String markerName) {
+		this.markerName = markerName;
+	}
+	public List<String> getMarkerSynonym() {
+		return markerSynonym;
+	}
+	public void setMarkerSynonym(List<String> markerSynonym) {
+		this.markerSynonym = markerSynonym;
+	}
 	@Override
 	public String toString() {
 		return symbol;

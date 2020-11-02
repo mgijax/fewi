@@ -64,6 +64,10 @@ public class SolrQSFeatureResultBaseHunter extends SolrHunter<QSFeatureResult> {
 		propertyMap.put(SearchConstants.QS_COMPONENT_ANNOTATIONS_TERM, new SolrPropertyMapper(IndexConstants.QS_COMPONENT_ANNOTATIONS_TERM));
 		propertyMap.put(SearchConstants.QS_COMPONENT_ANNOTATIONS_SYNONYM, new SolrPropertyMapper(IndexConstants.QS_COMPONENT_ANNOTATIONS_SYNONYM));
 		propertyMap.put(SearchConstants.QS_COMPONENT_ANNOTATIONS_DEFINITION, new SolrPropertyMapper(IndexConstants.QS_COMPONENT_ANNOTATIONS_DEFINITION));
+
+		propertyMap.put(SearchConstants.QS_MARKER_SYMBOL, new SolrPropertyMapper(IndexConstants.QS_MARKER_SYMBOL));
+		propertyMap.put(SearchConstants.QS_MARKER_NAME, new SolrPropertyMapper(IndexConstants.QS_MARKER_NAME));
+		propertyMap.put(SearchConstants.QS_MARKER_SYNONYM, new SolrPropertyMapper(IndexConstants.QS_MARKER_SYNONYM));
 		/*
 		 * The name of the field we want to iterate through the documents for
 		 * and place into the output.  In this case we want the standard list of
@@ -109,6 +113,11 @@ public class SolrQSFeatureResultBaseHunter extends SolrHunter<QSFeatureResult> {
 				}
 				result.setStrand((String) doc.getFieldValue(IndexConstants.QS_STRAND));
 				
+				if (result.getIsMarker() == 0) {
+					result.setMarkerSymbol((String) doc.getFieldValue(IndexConstants.QS_MARKER_SYMBOL));
+					result.setMarkerName((String) doc.getFieldValue(IndexConstants.QS_MARKER_NAME));
+					result.setMarkerSynonym((List<String>) doc.getFieldValue(IndexConstants.QS_MARKER_SYNONYM)); 
+				}
 				try {
 					result.setSynonym((List<String>) doc.getFieldValue(IndexConstants.QS_SYNONYM));
 					result.setProteinDomains((List<String>) doc.getFieldValue(IndexConstants.QS_PROTEIN_DOMAINS));

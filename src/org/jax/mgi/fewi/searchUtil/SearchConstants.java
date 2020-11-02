@@ -357,4 +357,9 @@ public class SearchConstants {
 	public static final String QS_DISEASE_FACETS = "diseaseFacets";
 	public static final String QS_PHENOTYPE_FACETS = "phenotypeFacets";
 	public static final String QS_MARKER_TYPE_FACETS = "markerTypeFacets";
+
+	// used for finding alleles by marker nomenclature
+	public static final String QS_MARKER_SYMBOL = "markerSymbol";
+	public static final String QS_MARKER_NAME = "markerName";
+	public static final String QS_MARKER_SYNONYM = "markerSynonym";
 }
