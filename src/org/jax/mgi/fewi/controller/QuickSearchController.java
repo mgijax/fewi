@@ -358,19 +358,19 @@ public class QuickSearchController {
 				if (nomenToDo) {
 					// Nomen matches can be to symbol, name, or synonym.
 					options.put(match.getSymbol(), "symbol");
-					options.put(match.getName(), "name");
+					options.putIfAbsent(match.getName(), "name");
 					if (match.getSynonym() != null) {
 						for (String synonym : match.getSynonym()) {
-							options.put(synonym, "synonym");
+							options.putIfAbsent(synonym, "synonym");
 						}
 					}
-					// If this is an allele, we also need to consider it's correpsonding marker's nomenclature.
+					// If this is an allele, we also need to consider it's corresponding marker's nomenclature.
 					if (match.getIsMarker() == 0) {
-						options.put(match.getMarkerSymbol(), "marker symbol");
-						options.put(match.getMarkerName(), "marker name");
+						options.putIfAbsent(match.getMarkerSymbol(), "marker symbol");
+						options.putIfAbsent(match.getMarkerName(), "marker name");
 						if (match.getMarkerSynonym() != null) {
 							for (String synonym : match.getMarkerSynonym()) {
-								options.put(synonym, "marker synonym");
+								options.putIfAbsent(synonym, "marker synonym");
 							}
 						}
 					}
@@ -382,14 +382,14 @@ public class QuickSearchController {
 						for (String orthologNomenOrg : match.getOrthologNomenOrg()) {
 							String[] pieces = orthologNomenOrg.split(":");
 							if ((pieces != null) && (pieces.length > 1)) {
-								options.put(pieces[1], pieces[0]);
+								options.putIfAbsent(pieces[1], pieces[0]);
 							}
 						}
 					}
 					
 					if (match.getProteinDomains() != null) {
 						for (String domain : match.getProteinDomains()) {
-							options.put(domain, "Protein Domain");
+							options.putIfAbsent(domain, "Protein Domain");
 						}
 					}
 					
@@ -410,7 +410,7 @@ public class QuickSearchController {
 					for (String termType : annotations.keySet().toArray(new String[0])) {
 						if (annotations.get(termType) != null) {
 							for (String term : annotations.get(termType)) {
-								options.put(term, termType);
+								options.putIfAbsent(term, termType);
 							}
 						}
 					}
@@ -830,7 +830,8 @@ public class QuickSearchController {
 				this.lowerTerms.add(term.toLowerCase().replace("*", ""));
 			}
 			this.searchTermCount = this.lowerTerms.size();
-			this.searchString = String.join(" ", this.lowerTerms).toLowerCase();
+			// Full search string should come in as the last of the search terms, per the QuickSearchQueryForm's API.
+			this.searchString = this.lowerTerms.get(searchTermCount - 1);
 		}
 		
 		// initial filtering; return a new map of options with all those that cannot match winnowed out
@@ -869,7 +870,8 @@ public class QuickSearchController {
 
 			// iterate through each option for possible "best match" strings
 			for (String key : filteredOptions.keySet()) {
-				String keyLower = key.toLowerCase();
+				String keyLower = key.toLowerCase().trim();
+				logger.info("Comparing '" + keyLower + "' and '" + this.searchString + "'");
 
 				// data compiled about this possible "best match" string (on this loop iteration)
 				BestMatch thisMatch = new BestMatch();

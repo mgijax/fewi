@@ -29,7 +29,8 @@ public class QuickSearchQueryForm {
     }
 
     // Return a list of search "terms", computed from this.query.  (cannot be set; this is read-only)
-    // Note: once computed, the value of 'terms' is cached in this.terms.
+    // Note: once computed, the value of 'terms' is cached in this.terms.  Puts the full string as the
+    // last term.
     public List<String> getTerms() {
     	if ((terms == null) && (query != null)) {
     		terms = new ArrayList<String>();
