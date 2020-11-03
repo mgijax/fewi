@@ -35,7 +35,7 @@ var b1Show = function(data) {
 		for (var i = 0; i < toShow; i++) {
 			var item = data.summaryRows[i];
 			tbl = tbl + '<TR><TD>' + item.stars.replace(/[*]/g, "&#9733;") + '</TD>';
-			tbl = tbl + '<TD>' + item.featureType + '</TD>';
+			tbl = tbl + '<TD class="small">' + item.featureType + '</TD>';
 
 			var symbol = qsSuperscript(item.symbol);
 			var name = qsSuperscript(item.name);
@@ -46,24 +46,24 @@ var b1Show = function(data) {
 			} else {
 				tbl = tbl + '<TD><a href="' + item.detailUri + '">' + symbol + '</a></TD>';
 			}
-			tbl = tbl + '<TD>' + name + '</TD>';
-			tbl = tbl + '<TD>' + item.chromosome + '</TD>';
+			tbl = tbl + '<TD class="nameCol">' + name + '</TD>';
+			tbl = tbl + '<TD class="small">' + item.chromosome + '</TD>';
 
 			if ((item.startCoord === null) || (item.endCoord === null)) {
 				tbl = tbl + '<TD>&nbsp;</TD>';
 			} else {
-				tbl = tbl + '<TD class="nowrap">' + item.startCoord + '-' + item.endCoord + '</TD>';
+				tbl = tbl + '<TD class="nowrap small">' + item.startCoord + '-' + item.endCoord + '</TD>';
 			}
 
 			if (item.strand === null) {
 				tbl = tbl + '<TD>&nbsp;</TD>';
 			} else {
-				tbl = tbl + '<TD>' + item.strand + '</TD>';
+				tbl = tbl + '<TD class="small">' + item.strand + '</TD>';
 			}
 			if (item.bestMatchType === null) {
 				tbl = tbl + '<TD>&nbsp;</TD></TR>';
 			} else {
-				tbl = tbl + '<TD>' + item.bestMatchType + ': ' + bestMatchText + '</TD></TR>';
+				tbl = tbl + '<TD><span class="termType">' + item.bestMatchType + '</span><span class="small">: ' + bestMatchText + '</span></TD></TR>';
 			}
 		}
 	} else {

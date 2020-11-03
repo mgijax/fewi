@@ -145,6 +145,13 @@
 
 .noWrap { white-space: nowrap; }
 .facetFilter .yui-panel .bd { width: 285px; }
+
+.termType { font-variant: small-caps; font-size: 10px; font-family: Verdana, Arial, Helvetica; }
+.nameCol { width: 25%; }
+.termCol { width: 40%; }
+.dataCol { width: 10%; }
+.bestMatchCol { } 
+.small { font-size: 10px; }
 </style>
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/filters.js"></script>

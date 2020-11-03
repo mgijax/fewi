@@ -29,7 +29,7 @@ var b2Show = function(data) {
 	var tbl = '';
 	if (data.summaryRows.length > 0) {
 		tbl = '<TABLE ID="b2Table">';
-		tbl = tbl + '<TR><TH>Score</TH><TH>Term</TH><TH>Associated Data</TH><TH>Best Match</TH></TR>';
+		tbl = tbl + '<TR><TH>Score</TH><TH class="termCol">Term</TH><TH class="dataCol">Associated Data</TH><TH class="bestMatchCol">Best Match</TH></TR>';
 
 		toShow = Math.min(100, data.summaryRows.length);
 		for (var i = 0; i < toShow; i++) {
@@ -41,15 +41,15 @@ var b2Show = function(data) {
 				tbl = tbl + '<TD>' + item.stars.replace(/[*]/g, "&#9733;") + '</TD>';
 			}
 			if (item.detailUri === null) {
-				tbl = tbl + '<TD>' + item.vocabName + ': ' + item.term + '</TD>';
+				tbl = tbl + '<TD><span class="termType">' + item.vocabName + '</span>: ' + item.term + '</TD>';
 			} else {
-				tbl = tbl + '<TD>' + item.vocabName + ': <a href="' + item.detailUri + '">' + item.term + '</a></TD>';
+				tbl = tbl + '<TD><span class="termType">' + item.vocabName + '</span>: <a href="' + item.detailUri + '">' + item.term + '</a></TD>';
 			}
 			if (item.annotationCount > 0) {
 				if (item.annotationUri === null) {
-					tbl = tbl + '<TD>' + item.annotationText + '</TD>';
+					tbl = tbl + '<TD><span class="small">' + item.annotationText + '</span></TD>';
 				} else {
-					tbl = tbl + '<TD class="nowrap"><a href="' + item.annotationUri + '">'+ item.annotationText + '</a></TD>';
+					tbl = tbl + '<TD class="nowrap"><a class="small" href="' + item.annotationUri + '">'+ item.annotationText + '</a></TD>';
 				}
 			} else {
 				tbl = tbl + '<TD>&nbsp;</TD>';
@@ -58,7 +58,7 @@ var b2Show = function(data) {
 			if (item.bestMatchType === null) {
 				tbl = tbl + '<TD>&nbsp;</TD></TR>';
 			} else {
-				tbl = tbl + '<TD>' + item.bestMatchType + ': ' + item.bestMatchText + '</TD></TR>';
+				tbl = tbl + '<TD><span class="termType">' + item.bestMatchType + '</span><span class="small">: ' + item.bestMatchText + '</span></TD></TR>';
 			}
 		}
 	} else {

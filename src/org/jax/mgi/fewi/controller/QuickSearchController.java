@@ -390,20 +390,20 @@ public class QuickSearchController {
 
 				if (nomenToDo) {
 					// Nomen matches can be to symbol, name, or synonym.
-					options.put(match.getSymbol(), "symbol");
-					options.put(match.getName(), "name");
+					options.put(match.getSymbol(), "Symbol");
+					options.put(match.getName(), "Name");
 					if (match.getSynonym() != null) {
 						for (String synonym : match.getSynonym()) {
-							options.put(synonym, "synonym");
+							options.put(synonym, "Synonym");
 						}
 					}
 					// If this is an allele, we also need to consider it's corresponding marker's nomenclature.
 					if (match.getIsMarker() == 0) {
-						options.put(match.getMarkerSymbol(), "marker symbol");
-						options.put(match.getMarkerName(), "marker name");
+						options.put(match.getMarkerSymbol(), "Marker Symbol");
+						options.put(match.getMarkerName(), "Marker Name");
 						if (match.getMarkerSynonym() != null) {
 							for (String synonym : match.getMarkerSynonym()) {
-								options.put(synonym, "marker synonym");
+								options.put(synonym, "Marker Synonym");
 							}
 						}
 					}
@@ -728,14 +728,14 @@ public class QuickSearchController {
 		BestMatchFinder bmf = new BestMatchFinder(searchTerms);
 		for (QSVocabResult match : consolidatedMatches) {
 			BestMatchOptions options = new BestMatchOptions();
-			options.put(match.getTerm(), "term");
+			options.put(match.getTerm(), "Term");
 			if (match.getSynonym() != null) {
 				for (String synonym : match.getSynonym()) {
-					options.put(synonym, "synonym");
+					options.put(synonym, "Synonym");
 				}
 			}
 			if (match.getDefinition() != null) {
-				options.put(match.getDefinition(), "definition");
+				options.put(match.getDefinition(), "Definition");
 			}
 
 			BestMatch bestMatch = bmf.getBestMatch(options);
