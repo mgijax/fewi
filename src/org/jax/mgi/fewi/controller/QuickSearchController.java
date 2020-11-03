@@ -61,6 +61,8 @@ public class QuickSearchController {
     // static variables
     //--------------------//
 
+	private static String MARKER = "marker";			// flag for only matching markers
+	private static String ALLELE = "allele";			// flag for only matching alleles
 	private static String BY_ID = "match_by_id";		// match by ID
 	private static String BY_NOMEN = "match_by_nomen";	// match by (symbol, name, synonym) or (term, synonym)
 	private static String BY_OTHER = "match_by_other";	// match by other (ortholog nomen or annotations)
@@ -135,25 +137,36 @@ public class QuickSearchController {
 			@ModelAttribute QuickSearchQueryForm queryForm) {
 
         logger.info("->getFeatureBucket started");
-        Integer resultCount = 300;
+        Integer resultCount = 200;
         
-        // Search in order of priority:  ID matches, then symbol/name/synonym matches, then other matches
+        // Search in order of priority:  ID matches, then symbol/name/synonym matches, then other matches.
+        // Note that we now search for markers and alleles separately so we can prioritize markers and be assured that
+        // we will retrieve the best matching ones, not having them overwhelmed by the greater number of alleles.
         
         SearchParams idSearch = getFeatureSearchParams(queryForm, BY_ID, resultCount);
-        SearchParams nomenSearch = getFeatureSearchParams(queryForm, BY_NOMEN, resultCount);
-        SearchParams otherSearch = getFeatureSearchParams(queryForm, BY_OTHER, resultCount);
-        
+        SearchParams markerNomenSearch = restrictTo(getFeatureSearchParams(queryForm, BY_NOMEN, resultCount), MARKER);
+        SearchParams markerOtherSearch = restrictTo(getFeatureSearchParams(queryForm, BY_OTHER, resultCount), MARKER);
+        SearchParams alleleNomenSearch = restrictTo(getFeatureSearchParams(queryForm, BY_NOMEN, resultCount), ALLELE);
+        SearchParams alleleOtherSearch = restrictTo(getFeatureSearchParams(queryForm, BY_OTHER, resultCount), ALLELE);
+
         List<QSFeatureResult> idMatches = qsFinder.getFeatureResults(idSearch).getResultObjects();
-        logger.info("Got " + idMatches.size() + " ID matches");
-        List<QSFeatureResult> nomenMatches = qsFinder.getFeatureResults(nomenSearch).getResultObjects();
-        logger.info("Got " + nomenMatches.size() + " nomen matches");
-        List<QSFeatureResult> otherMatches = qsFinder.getFeatureResults(otherSearch).getResultObjects();
-        logger.info("Got " + otherMatches.size() + " other matches");
+        List<QSFeatureResult> markerNomenMatches = qsFinder.getFeatureResults(markerNomenSearch).getResultObjects();
+        List<QSFeatureResult> markerOtherMatches = qsFinder.getFeatureResults(markerOtherSearch).getResultObjects();
+        List<QSFeatureResult> alleleNomenMatches = qsFinder.getFeatureResults(alleleNomenSearch).getResultObjects();
+        List<QSFeatureResult> alleleOtherMatches = qsFinder.getFeatureResults(alleleOtherSearch).getResultObjects();
+
+        List<QSFeatureResult> nomenMatches = new ArrayList<QSFeatureResult>();
+        nomenMatches.addAll(qsFinder.getFeatureResults(markerNomenSearch).getResultObjects());
+        nomenMatches.addAll(qsFinder.getFeatureResults(alleleNomenSearch).getResultObjects());
+
+        List<QSFeatureResult> otherMatches = new ArrayList<QSFeatureResult>();
+        otherMatches.addAll(qsFinder.getFeatureResults(markerOtherSearch).getResultObjects());
+        otherMatches.addAll(qsFinder.getFeatureResults(alleleOtherSearch).getResultObjects());
         
         SearchParams anySearch = getFeatureSearchParams(queryForm, BY_ANY, 0);
 
         int totalCount = qsFinder.getFeatureResults(anySearch).getTotalCount();
-        logger.info("Identified " + totalCount + " matches in all");
+        logger.debug("Identified " + totalCount + " matches in all");
 
         List<QSFeatureResult> out = unifyFeatureMatches(queryForm.getTerms(), idMatches, nomenMatches, otherMatches);
         
@@ -170,6 +183,26 @@ public class QuickSearchController {
         return response;
     }
 
+	// Restrict the given search params to only look at the certain object type (MARKER or ALLELE).
+	// Note: This alters the 'params' object so it will have the revised filter.
+	private SearchParams restrictTo (SearchParams params, String objectType) {
+		String markerFlag = null;
+		
+		if (ALLELE.equals(objectType)) {
+			markerFlag = "0";
+		} else if (MARKER.equals(objectType)) {
+			markerFlag = "1";
+		} else {
+			return params;
+		}
+		
+		List<Filter> filters = new ArrayList<Filter>(2);
+		filters.add(params.getFilter());
+		filters.add(new Filter(SearchConstants.QS_IS_MARKER, markerFlag, Filter.Operator.OP_EQUAL));
+		params.setFilter(Filter.and(filters));
+		return params;
+	}
+	
 	// Process the given parameters and return an appropriate SearchParams object (ready to use in a search).
 	private SearchParams getFeatureSearchParams (QuickSearchQueryForm qf, String queryMode, Integer resultCount) {
         Filter featureFilter;
@@ -353,24 +386,24 @@ public class QuickSearchController {
 				boolean otherToDo = byOther.contains(primaryID);
 				
 				// maps from value string to a string describing what type of data it is
-				Map<String,String> options = new HashMap<String,String>();
+				BestMatchOptions options = new BestMatchOptions();
 
 				if (nomenToDo) {
 					// Nomen matches can be to symbol, name, or synonym.
 					options.put(match.getSymbol(), "symbol");
-					options.putIfAbsent(match.getName(), "name");
+					options.put(match.getName(), "name");
 					if (match.getSynonym() != null) {
 						for (String synonym : match.getSynonym()) {
-							options.putIfAbsent(synonym, "synonym");
+							options.put(synonym, "synonym");
 						}
 					}
 					// If this is an allele, we also need to consider it's corresponding marker's nomenclature.
 					if (match.getIsMarker() == 0) {
-						options.putIfAbsent(match.getMarkerSymbol(), "marker symbol");
-						options.putIfAbsent(match.getMarkerName(), "marker name");
+						options.put(match.getMarkerSymbol(), "marker symbol");
+						options.put(match.getMarkerName(), "marker name");
 						if (match.getMarkerSynonym() != null) {
 							for (String synonym : match.getMarkerSynonym()) {
-								options.putIfAbsent(synonym, "marker synonym");
+								options.put(synonym, "marker synonym");
 							}
 						}
 					}
@@ -382,14 +415,14 @@ public class QuickSearchController {
 						for (String orthologNomenOrg : match.getOrthologNomenOrg()) {
 							String[] pieces = orthologNomenOrg.split(":");
 							if ((pieces != null) && (pieces.length > 1)) {
-								options.putIfAbsent(pieces[1], pieces[0]);
+								options.put(pieces[1], pieces[0]);
 							}
 						}
 					}
 					
 					if (match.getProteinDomains() != null) {
 						for (String domain : match.getProteinDomains()) {
-							options.putIfAbsent(domain, "Protein Domain");
+							options.put(domain, "Protein Domain");
 						}
 					}
 					
@@ -410,7 +443,7 @@ public class QuickSearchController {
 					for (String termType : annotations.keySet().toArray(new String[0])) {
 						if (annotations.get(termType) != null) {
 							for (String term : annotations.get(termType)) {
-								options.putIfAbsent(term, termType);
+								options.put(term, termType);
 							}
 						}
 					}
@@ -426,6 +459,9 @@ public class QuickSearchController {
 					match.setBestMatchText(bestMatch.matchText);
 					match.setBestMatchType(bestMatch.matchType);
 
+					if (match.getIsMarker() == 1) {
+						bestMatch.boost += 600;
+					}
 					grouper.add(bestMatch.stars, primaryID, match, bestMatch.boost);
 				}
 			}
@@ -691,7 +727,7 @@ public class QuickSearchController {
 
 		BestMatchFinder bmf = new BestMatchFinder(searchTerms);
 		for (QSVocabResult match : consolidatedMatches) {
-			Map<String,String> options = new HashMap<String,String>();
+			BestMatchOptions options = new BestMatchOptions();
 			options.put(match.getTerm(), "term");
 			if (match.getSynonym() != null) {
 				for (String synonym : match.getSynonym()) {
@@ -835,7 +871,7 @@ public class QuickSearchController {
 		}
 		
 		// initial filtering; return a new map of options with all those that cannot match winnowed out
-		private Map<String,String> winnow(Map<String,String> options) {
+		private Map<String,String> winnow(BestMatchOptions options) {
 			Map<String,String> potential = new HashMap<String,String>();
 
 			for (String term : options.keySet()) {
@@ -856,7 +892,7 @@ public class QuickSearchController {
 		
 		// Find the best match (for the search terms included at instantiation) among the various options,
 		// which map from a term to each one's term type.
-		public BestMatch getBestMatch(Map<String,String> options) {
+		public BestMatch getBestMatch(BestMatchOptions options) {
 			// Winnow things down so that the only options we consider are possibilities.
 			Map<String,String> filteredOptions = this.winnow(options);
 
@@ -871,7 +907,6 @@ public class QuickSearchController {
 			// iterate through each option for possible "best match" strings
 			for (String key : filteredOptions.keySet()) {
 				String keyLower = key.toLowerCase().trim();
-				logger.info("Comparing '" + keyLower + "' and '" + this.searchString + "'");
 
 				// data compiled about this possible "best match" string (on this loop iteration)
 				BestMatch thisMatch = new BestMatch();
@@ -947,5 +982,39 @@ public class QuickSearchController {
 		public String matchType;
 		public String matchText;
 		public int boost;
+	}
+	
+	// special extension of a HashMap that:
+	// 1. keeps mixed case keys, but...
+	// 2. does not add a new key/value pair if we already have that key (case insensitive)
+	// So, if we already have "Kit" as a key, then we do not allow "KIT" or "kit" or "kiT" to be added, etc.
+	private class BestMatchOptions {
+		HashMap<String,String> options = new HashMap<String,String>();
+		HashSet<String> lowerKeys = new HashSet<String>();
+		
+		public String put(String key, String value) {
+			String lowerKey = key.toLowerCase();
+			if (!lowerKeys.contains(lowerKey)) {
+				lowerKeys.add(lowerKey);
+				options.put(key, value);
+				return value;
+			}
+			return null;
+		}
+		
+		public int size() {
+			return this.options.size();
+		}
+		
+		public Set<String> keySet() {
+			return options.keySet();
+		}
+		
+		public String get(String key) {
+			if (options.containsKey(key)) {
+				return options.get(key);
+			}
+			return null;
+		}
 	}
 }
