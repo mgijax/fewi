@@ -10,6 +10,8 @@ public class AccessionQueryForm {
     // instance variables
     //--------------------//
     private String id;
+    
+    private String flag;		// flag for special handling (optional)
 
     //--------------------//
     // accessors
@@ -21,7 +23,14 @@ public class AccessionQueryForm {
         this.id = id;
     }
 
-    @Override
+    public String getFlag() {
+		return flag;
+	}
+	public void setFlag(String flag) {
+		this.flag = flag;
+	}
+
+	@Override
 	public String toString() {
 		return "AccessionQueryForm [id=" + id + "]";
 	}

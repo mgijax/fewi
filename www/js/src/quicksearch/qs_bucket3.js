@@ -18,7 +18,7 @@ var b3Fetch = function() {
 				failed = true;
 			}
 		}).fail(function() {
-				console.log("Failed to retrieve data for the ID bucket: " + e);
+				console.log("Failed to retrieve data for the ID bucket: " + e); 
 				failed = true;
 		});
 };
@@ -32,6 +32,11 @@ var b3Show = function(data) {
 
 		for (var i = 0; i < data.summaryRows.length; i++) {
 			var item = data.summaryRows[i];
+			
+			if (item.mgiLink.indexOf('MGI MA: Detail') >= 0) {
+				item.mgiLink = item.mgiLink.replaceAll(/MGI MA: Detail/g, 'MA Browser Detail');
+				item.displayType = 'ID';
+			}
 			tbl = tbl + '<TR><TD>' + item.mgiLink + '</TD>';
 			tbl = tbl + '<TD>' + item.description + '</TD>';
 			tbl = tbl + '<TD>' + item.displayType + ': ' + item.accId + '</TD></TR>';

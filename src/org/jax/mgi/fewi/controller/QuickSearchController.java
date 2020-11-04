@@ -765,6 +765,7 @@ public class QuickSearchController {
 
        	AccessionQueryForm accQF = new AccessionQueryForm();
         Paginator page = new Paginator(1000);
+       	accQF.setFlag("QS");
 
         for (String term : terms) {
         	accQF.setId(term);
