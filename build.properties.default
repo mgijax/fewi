@@ -1,8 +1,8 @@
 project.name=fewi
 
 <!--jboss directories -->
-jboss.dir=/usr/local/mgi/jboss/
-deploy.dir=/usr/local/mgi/jboss/fewi/deployments
+jboss.dir=/usr/local/mgi/wildfly/
+deploy.dir=/usr/local/mgi/wildfly/fewi/deployments
 
 <!--fewi product directories -->
 lib.dir=www/WEB-INF/lib

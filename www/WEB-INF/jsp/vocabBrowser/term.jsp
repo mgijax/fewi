@@ -40,9 +40,9 @@
 			  </td>
 			</tr>
 	    </c:if>
-		<c:if test="${not empty term.comment}">
+		<c:if test="${not empty term.cleanComment}">
           <tr><th class="rightBorderThinGray padded label top">Comment: </th>
-	          <td class="padded top">${term.comment}</td>
+	          <td class="padded top">${term.cleanComment}</td>
 	    </c:if>
 		<c:if test="${not empty term.dagName}">
 	        <tr><th class="rightBorderThinGray padded label top">Category: </th>
