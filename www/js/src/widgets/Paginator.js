@@ -17,7 +17,8 @@ var pgClearPaginator = function(cssClass) {
 // contents of any HTML elements (presumably DIVs) that have that class with an 
 // updated paginator.  Do not include the '.' in the CSS class name.  Callback should take
 // three parameters: cssClass name, page number, page size.
-var pgUpdatePaginator = function(cacheName, cssClass, totalCount, pageLimit, callback) {
+var pgUpdatePaginator = function(cacheName, cssClass, totalCount, pageLimit, callback, hasLastButton) {
+	if (hasLastButton === null) { hasLastButton = false; }
 	if (cssClass in alreadyDone) { return; }
 	alreadyDone[cssClass] = true;
 	
@@ -61,6 +62,7 @@ var pgUpdatePaginator = function(cacheName, cssClass, totalCount, pageLimit, cal
                     if (this.active) return '<a href="#">&lt;&lt;first</a> ';
 	                return '<span class="disabled">&lt;&lt;first</span> ';
                 case 'last': // ]
+                	if (hasLastButton != true) return '';
                     if (this.active) return '<a href="#">last&gt;&gt;</a>';
 	                return '<span class="disabled">last&gt;&gt;</span> ';
             }
