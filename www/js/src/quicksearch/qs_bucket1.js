@@ -6,34 +6,20 @@
 // Globals
 
 var b1Failed = false;		// did retrieval for this bucket fail?
-
-// Fetch the data items for bucket 1 (matches by marker or allele)
-var b1Fetch = function() {
-		var url = fewiurl + '/quicksearch/featureBucket?' + getQuerystring();
-		$.get(url, function(data) {
-			try {
-				b1Show(data);
-			} catch (e) {
-				console.log("Failed to display data for the feature bucket: " + e);
-				failed = true;
-			}
-		}).fail(function() {
-				console.log("Failed to retrieve data for the feature bucket: " + e);
-				failed = true;
-		});
-};
+var b1PageSize = 100;
+var b1CacheName = 'featureCache';
 
 // Having received 'data' from the server, show it on the page.
-var b1Show = function(data) {
+function b1Show(data) {
 	var tbl = '';
-	var toShow = 100;
-	if (data.summaryRows.length > 0) {
+	var toShow = b1PageSize;
+	if (data.rows.length > 0) {
 		tbl = '<TABLE ID="b1Table">';
 		tbl = tbl + '<TR><TH>Score</TH><TH>Type</TH><TH>Symbol</TH><TH>Name</TH><TH>Chr</TH><TH>Location</TH><TH>Str</TH><TH>Best Match</TH></TR>';
 
-		toShow = Math.min(100, data.summaryRows.length);
+		toShow = Math.min(100, data.rows.length);
 		for (var i = 0; i < toShow; i++) {
-			var item = data.summaryRows[i];
+			var item = data.rows[i];
 			tbl = tbl + '<TR><TD>' + item.stars.replace(/[*]/g, "&#9733;") + '</TD>';
 			tbl = tbl + '<TD class="small">' + item.featureType + '</TD>';
 
@@ -69,8 +55,16 @@ var b1Show = function(data) {
 	} else {
 		console.log("No b1Results");
 	}
-	var header = qsResultHeader(1, toShow, data.totalCount);
+	var header = qsResultHeader(data.start, data.end, data.totalCount);
 	$('#b1Counts').html(header);
 	$('#b1Results').html(tbl);
-	console.log("Populated " + data.summaryRows.length + " b1Results");
+	pgUpdatePaginator(b1CacheName, 'featurePaginator', data.totalCount, b1PageSize, dcGetPage);
+	console.log("Populated " + data.rows.length + " b1Results");
+};
+
+// Fetch the data items for bucket 1 (matches by marker or allele)
+var b1Fetch = function() {
+		var url = fewiurl + '/quicksearch/featureBucket?' + getQuerystring();
+		dcStartCache(b1CacheName, url, b1Show, b1PageSize);
+		dcGetPage(b1CacheName, 1);
 };

@@ -27,6 +27,8 @@ var qsSuperscript = function(s) {
 var qsResultHeader = function(start, end, total) {
 	if (total == 0) {
 		return "no results";
+	} else if (start == end) {
+		return "sorted by best match, showing " + commaDelimit(start) + " of " + commaDelimit(total);
 	}
 	return "sorted by best match, showing " + commaDelimit(start) + "-" + commaDelimit(end) + " of " + commaDelimit(total);
 };

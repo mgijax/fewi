@@ -63,6 +63,7 @@
   <span class="helpCursor" onmouseover="return overlib('<div class=detailRowType>This list includes genes, QTL, cytogenetic markers, and other genome features whose name, symbol, synonym, or accession ID matched some or all of your search text.<br/><br/>This list also includes genome features associated with vocabulary terms matching your search text. <br/><br/></div><div class=\'detailRowType\'>See <a href=\'${configBean.USERHELP_URL}QUICK_SEARCH_help.shtml\'>Using the Quick Search Tool</a> for more information and examples.</div>', STICKY, CAPTION, 'Genome Features', HAUTO, BELOW, WIDTH, 375, DELAY, 600, CLOSECLICK, CLOSETEXT, 'Close X')" onmouseout="nd();">
        <img src="${configBean.WEBSHARE_URL}images/blue_info_icon.gif" border="0">
   </span>
+  <div id="featurePaginator" class="featurePaginator"></div>
 </div>
 <div id="b1Results"></div>
 
@@ -152,6 +153,15 @@
 .dataCol { width: 10%; }
 .bestMatchCol { } 
 .small { font-size: 10px; }
+
+#featurePaginator {
+	float: right;
+    font-size: 12px;
+    margin-top: 10px;
+    font-weight: normal;
+    margin-right: 10px;
+    text-decoration: none;
+}
 </style>
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/filters.js"></script>
@@ -160,7 +170,11 @@
 	  		return queryString + filters.getUrlFragment();
 		}
 </script>
+<link rel="stylesheet" type="text/css" href="${configBean.WEBSHARE_URL}css/jquery-ui-1.10.2.custom.min.css" />
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/fewi_utils.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/widgets/DataCache.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/widgets/Paginator.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/external/jquery.paging.min.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/quicksearch/qs_main.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/quicksearch/qs_bucket1.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/quicksearch/qs_bucket2.js"></script>

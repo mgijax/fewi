@@ -134,10 +134,14 @@ public class QuickSearchController {
     //-------------------------//
 	@RequestMapping("/featureBucket")
 	public @ResponseBody JsonSummaryResponse<QSFeatureResultWrapper> getFeatureBucket(HttpServletRequest request,
-			@ModelAttribute QuickSearchQueryForm queryForm) {
+			@ModelAttribute QuickSearchQueryForm queryForm, @ModelAttribute Paginator page) {
 
         logger.info("->getFeatureBucket started");
-        Integer resultCount = 200;
+        
+        // Because we are doing so much sorting and prioritizing in Java code, we need to actually fetch all
+        // results from 0 up to (startIndex + resultCount), then just return from startIndex onward.
+        Integer startIndex = page.getStartIndex();
+        Integer resultCount = page.getResults() + startIndex;
         
         // Search in order of priority:  ID matches, then symbol/name/synonym matches, then other matches.
         // Note that we now search for markers and alleles separately so we can prioritize markers and be assured that
@@ -171,8 +175,10 @@ public class QuickSearchController {
         List<QSFeatureResult> out = unifyFeatureMatches(queryForm.getTerms(), idMatches, nomenMatches, otherMatches);
         
         List<QSFeatureResultWrapper> wrapped = new ArrayList<QSFeatureResultWrapper>();
-        for (QSFeatureResult r : out) {
-        	wrapped.add(new QSFeatureResultWrapper(r));
+        if (wrapped.size() >= startIndex) {
+        	for (QSFeatureResult r : out.subList(startIndex, Math.min(out.size(), startIndex + resultCount))) {
+        		wrapped.add(new QSFeatureResultWrapper(r));
+        	}
         }
         
         JsonSummaryResponse<QSFeatureResultWrapper> response = new JsonSummaryResponse<QSFeatureResultWrapper>();
