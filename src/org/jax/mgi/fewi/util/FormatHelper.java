@@ -842,5 +842,16 @@ public class FormatHelper {
 		if (s == null) { return s; }
 		return Encode.forJavaScript(noScript(noAlert(s)));
 	}
+	
+	// Remove any {xref...} or {comment...} strings from 's'.  For use in vocab browser comment display
+	// for MP terms.
+	public static String cleanComment(String s) {
+		if (s != null) {
+			String t = s.replaceAll("\\{xref[^}]*\\}", "");
+			t = t.replaceAll("\\{comment[^}]*\\}", "");
+            return t;
+		}
+		return s;
+	}
 } // end of class FormatHelper
 
