@@ -61,3 +61,8 @@ var qsLogFilters = function() {
 	}
 	previousFilters = newFilters; 
 }
+
+// show the "waiting" spinner in the given 'divName' (including the pound sign)
+var qsShowSpinner = function(divName) {
+	$(divName).html("<img src='/fewi/mgi/assets/images/loading.gif' height='21' width='21'> Waiting for results...");
+}

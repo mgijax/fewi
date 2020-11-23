@@ -31,17 +31,21 @@ var pdcCallback = {};
 // maps from a cache name to its total count of matches
 var pdcTotalCount = {}
 
+// maps from a cache name to the div where a spinner should be displayed
+var pdcSpinnerDiv = {}
+
 /*** public functions ***/
 
 /* Instantiate a new cache. (Or clear and redefine an existing one, if that 'cacheName' is
  * already in use.)  Use the given 'url' to request the next several pages of data.
  */
-var dcStartCache = function(cacheName, url, callback, pageSize) {
+var dcStartCache = function(cacheName, url, callback, pageSize, spinnerDiv) {
 	pdcLog("Initializing cache " + cacheName);
 	pdcClearCache(cacheName);
 	dcSetCallback(cacheName, callback);
 	dcSetUrl(cacheName, url);
 	dcSetPageSize(cacheName, pageSize);
+	pdcSpinnerDiv[cacheName] = spinnerDiv;
 }
 
 /* Return the requested page of data from the cache, and request more from the server if needed to
@@ -58,6 +62,12 @@ var dcGetPage = function(cacheName, pageNumber) {
 	}
 	if (pdcTotalCount[cacheName] >= 0) {
 		targetIndex = Math.min(targetIndex, pdcTotalCount[cacheName]);
+	}
+
+	if (cacheName in pdcSpinnerDiv) {
+		if (pdcSpinnerDiv[cacheName] != null) {
+			qsShowSpinner(pdcSpinnerDiv[cacheName]);
+		}
 	}
 
 	// Do we already have enough data in-hand?

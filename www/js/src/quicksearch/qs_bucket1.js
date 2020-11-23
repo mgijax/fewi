@@ -64,7 +64,8 @@ function b1Show(data) {
 
 // Fetch the data items for bucket 1 (matches by marker or allele)
 var b1Fetch = function() {
+		qsShowSpinner('#b1Results');
 		var url = fewiurl + '/quicksearch/featureBucket?' + getQuerystring();
-		dcStartCache(b1CacheName, url, b1Show, b1PageSize);
+		dcStartCache(b1CacheName, url, b1Show, b1PageSize, '#b1Results');
 		dcGetPage(b1CacheName, 1);
 };
