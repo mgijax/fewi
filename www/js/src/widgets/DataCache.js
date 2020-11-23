@@ -136,7 +136,7 @@ var pdcLog = function(entry) {
 var pdcFetchData = function(cacheName, start, end, passBackStart, passBackEnd) {
 	pdcLog("Fetching data from " + start + " to " + end + " for cache " + cacheName);
 	var results = end - start;		// number of results to fetch
-	var url = pdcUrl[cacheName] + "&start=" + start + "&results=" + results;
+	var url = pdcUrl[cacheName] + "&startIndex=" + start + "&results=" + results;
 
 	$.get(url, function(data) {
 		try {
