@@ -136,7 +136,7 @@ public class QuickSearchController {
 	public @ResponseBody JsonSummaryResponse<QSFeatureResultWrapper> getFeatureBucket(HttpServletRequest request,
 			@ModelAttribute QuickSearchQueryForm queryForm, @ModelAttribute Paginator page) {
 
-        logger.info("->getFeatureBucket started");
+        logger.info("->getFeatureBucket started (seeking results " + page.getStartIndex() + " to " + (page.getStartIndex() + page.getResults()) + ")");
         
         // Because we are doing so much sorting and prioritizing in Java code, we need to actually fetch all
         // results from 0 up to (startIndex + resultCount), then just return from startIndex onward.
@@ -175,10 +175,13 @@ public class QuickSearchController {
         List<QSFeatureResult> out = unifyFeatureMatches(queryForm.getTerms(), idMatches, nomenMatches, otherMatches);
         
         List<QSFeatureResultWrapper> wrapped = new ArrayList<QSFeatureResultWrapper>();
-        if (wrapped.size() >= startIndex) {
+        if (out.size() >= startIndex) {
+        	logger.debug(" - extracting results " + startIndex + " to " + Math.min(out.size(), startIndex + resultCount));
         	for (QSFeatureResult r : out.subList(startIndex, Math.min(out.size(), startIndex + resultCount))) {
         		wrapped.add(new QSFeatureResultWrapper(r));
         	}
+        } else { 
+        	logger.debug(" - not extracting,just returning empty list");
         }
         
         JsonSummaryResponse<QSFeatureResultWrapper> response = new JsonSummaryResponse<QSFeatureResultWrapper>();
