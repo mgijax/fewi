@@ -170,8 +170,8 @@ public class QuickSearchController {
         
         List<QSFeatureResultWrapper> wrapped = new ArrayList<QSFeatureResultWrapper>();
         if (out.size() >= startIndex) {
-        	logger.debug(" - extracting results " + startIndex + " to " + Math.min(out.size(), startIndex + resultCount));
-        	for (QSFeatureResult r : out.subList(startIndex, Math.min(out.size(), startIndex + resultCount))) {
+        	logger.debug(" - extracting results " + startIndex + " to " + Math.min(out.size(), endIndex));
+        	for (QSFeatureResult r : out.subList(startIndex, Math.min(out.size(), endIndex))) {
         		wrapped.add(new QSFeatureResultWrapper(r));
         	}
         } else { 
@@ -180,7 +180,7 @@ public class QuickSearchController {
         
         JsonSummaryResponse<QSFeatureResultWrapper> response = new JsonSummaryResponse<QSFeatureResultWrapper>();
         response.setSummaryRows(wrapped);
-        response.setTotalCount(resultCount);
+        response.setTotalCount(out.size());
         logger.info("Returning " + wrapped.size() + " feature matches");
 
         return response;
