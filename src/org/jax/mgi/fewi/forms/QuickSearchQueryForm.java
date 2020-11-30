@@ -28,14 +28,14 @@ public class QuickSearchQueryForm {
         this.query = query;
     }
 
-    // Return a list of search "terms", computed from this.query.  (cannot be set; this is read-only)
+    // Return a list of search "terms", all in lowercase and computed from this.query.  (cannot be set; this is read-only)
     // Note: once computed, the value of 'terms' is cached in this.terms.  Puts the full string as the
     // last term.
     public List<String> getTerms() {
     	if ((terms == null) && (query != null)) {
     		terms = new ArrayList<String>();
     		for (String term : query.replace(',', ' ').split(" ")) {
-    			terms.add(term);
+    			terms.add(term.toLowerCase());
     		}
     		terms.add(query);
     	}

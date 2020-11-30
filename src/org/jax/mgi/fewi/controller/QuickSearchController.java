@@ -22,6 +22,7 @@ import org.jax.mgi.fewi.forms.QuickSearchQueryForm;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
+import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.AccessionSummaryRow;
@@ -64,10 +65,9 @@ public class QuickSearchController {
 	private static String MARKER = "marker";			// flag for only matching markers
 	private static String ALLELE = "allele";			// flag for only matching alleles
 	private static String BY_ID = "match_by_id";		// match by ID
-	private static String BY_NOMEN = "match_by_nomen";	// match by (symbol, name, synonym) or (term, synonym)
+	private static String BY_TERM = "match_by_term";	// match by non-ID
 	private static String BY_OTHER = "match_by_other";	// match by other (ortholog nomen or annotations)
 	private static String BY_ANY = "match_by_any";		// match by any field
-	private static String BY_TERM = "match_by_term";		// match vocab by term
 	private static String BY_SYNONYM = "match_by_synonym";	// match vocab by synonym
 	private static String BY_DEFINITION = "match_by_def";	// match vocab by definition
 	
@@ -138,41 +138,35 @@ public class QuickSearchController {
 
         logger.info("->getFeatureBucket started (seeking results " + page.getStartIndex() + " to " + (page.getStartIndex() + page.getResults()) + ")");
         
-        // Because we are doing so much sorting and prioritizing in Java code, we need to actually fetch all
-        // results from 0 up to (startIndex + resultCount), then just return from startIndex onward.
-        Integer startIndex = page.getStartIndex();
-        Integer resultCount = page.getResults() + startIndex;
+        int startIndex = page.getStartIndex();
+        int endIndex = startIndex + page.getResults();
         
-        // Search in order of priority:  ID matches, then symbol/name/synonym matches, then other matches.
-        // Note that we now search for markers and alleles separately so we can prioritize markers and be assured that
-        // we will retrieve the best matching ones, not having them overwhelmed by the greater number of alleles.
+        // The index has been rebuilt to instead have each document be a point of data that can be matched, so
+        // we now need to retrieve all matching documents and then process them.  Guessing too high a number of
+        // expected results can be detrimental to efficiency, so we can do an initial query to get the count
+        // and then a second query to return them.
         
-        SearchParams idSearch = getFeatureSearchParams(queryForm, BY_ID, resultCount);
-        SearchParams markerNomenSearch = restrictTo(getFeatureSearchParams(queryForm, BY_NOMEN, resultCount), MARKER);
-        SearchParams markerOtherSearch = restrictTo(getFeatureSearchParams(queryForm, BY_OTHER, resultCount), MARKER);
-        SearchParams alleleNomenSearch = restrictTo(getFeatureSearchParams(queryForm, BY_NOMEN, resultCount), ALLELE);
-        SearchParams alleleOtherSearch = restrictTo(getFeatureSearchParams(queryForm, BY_OTHER, resultCount), ALLELE);
+        SearchParams idSearch = getFeatureSearchParams(queryForm, BY_ID, 0);
+        SearchParams nomenSearch = getFeatureSearchParams(queryForm, BY_TERM, 0);
 
-        List<QSFeatureResult> idMatches = qsFinder.getFeatureResults(idSearch).getResultObjects();
-        List<QSFeatureResult> markerNomenMatches = qsFinder.getFeatureResults(markerNomenSearch).getResultObjects();
-        List<QSFeatureResult> markerOtherMatches = qsFinder.getFeatureResults(markerOtherSearch).getResultObjects();
-        List<QSFeatureResult> alleleNomenMatches = qsFinder.getFeatureResults(alleleNomenSearch).getResultObjects();
-        List<QSFeatureResult> alleleOtherMatches = qsFinder.getFeatureResults(alleleOtherSearch).getResultObjects();
-
-        List<QSFeatureResult> nomenMatches = new ArrayList<QSFeatureResult>();
-        nomenMatches.addAll(qsFinder.getFeatureResults(markerNomenSearch).getResultObjects());
-        nomenMatches.addAll(qsFinder.getFeatureResults(alleleNomenSearch).getResultObjects());
-
-        List<QSFeatureResult> otherMatches = new ArrayList<QSFeatureResult>();
-        otherMatches.addAll(qsFinder.getFeatureResults(markerOtherSearch).getResultObjects());
-        otherMatches.addAll(qsFinder.getFeatureResults(alleleOtherSearch).getResultObjects());
+        SearchParams orSearch = new SearchParams();
+        orSearch.setPaginator(new Paginator(0));
+        List<Filter> idOrNomen = new ArrayList<Filter>();
+        idOrNomen.add(idSearch.getFilter());
+        idOrNomen.add(nomenSearch.getFilter());
+        orSearch.setFilter(Filter.or(idOrNomen));
         
-        SearchParams anySearch = getFeatureSearchParams(queryForm, BY_ANY, 0);
-
-        int totalCount = qsFinder.getFeatureResults(anySearch).getTotalCount();
-        logger.debug("Identified " + totalCount + " matches in all");
-
-        List<QSFeatureResult> out = unifyFeatureMatches(queryForm.getTerms(), idMatches, nomenMatches, otherMatches);
+        SearchResults<QSFeatureResult> idOrNomenResults = qsFinder.getFeatureResults(orSearch);
+        Integer resultCount = idOrNomenResults.getTotalCount();
+        logger.info("Identified " + resultCount + " matches");
+        
+        // Now do the query to retrieve all results.
+        orSearch.setPaginator(new Paginator(resultCount));
+        List<QSFeatureResult> allMatches = qsFinder.getFeatureResults(orSearch).getResultObjects();
+        logger.info("Loaded " + allMatches.size() + " matches");
+        
+        List<QSFeatureResult> out = unifyFeatureMatches(queryForm.getTerms(), allMatches);
+        logger.info("Consolidated down to " + out.size() + " features");
         
         List<QSFeatureResultWrapper> wrapped = new ArrayList<QSFeatureResultWrapper>();
         if (out.size() >= startIndex) {
@@ -186,7 +180,7 @@ public class QuickSearchController {
         
         JsonSummaryResponse<QSFeatureResultWrapper> response = new JsonSummaryResponse<QSFeatureResultWrapper>();
         response.setSummaryRows(wrapped);
-        response.setTotalCount(totalCount);
+        response.setTotalCount(resultCount);
         logger.info("Returning " + wrapped.size() + " feature matches");
 
         return response;
@@ -217,14 +211,14 @@ public class QuickSearchController {
         Filter featureFilter;
         
         if (BY_ID.equals(queryMode)) {
-        	featureFilter = createIDFilter(qf);
-        } else if (BY_NOMEN.equals(queryMode)) {
-        	featureFilter = createFeatureNomenFilter(qf);
+        	featureFilter = createIDFilter(qf, false);
+        } else if (BY_TERM.equals(queryMode)) {
+        	featureFilter = createFeatureTermFilter(qf);
         } else if (BY_OTHER.equals(queryMode)) { // BY_OTHER
         	featureFilter = createFeatureOtherFilter(qf);
         } else {	// BY_ANY
-        	Filter idFilter = createIDFilter(qf);
-        	Filter nomenFilter = createFeatureNomenFilter(qf);
+        	Filter idFilter = createIDFilter(qf, false);
+        	Filter nomenFilter = createFeatureTermFilter(qf);
         	Filter otherFilter = createFeatureOtherFilter(qf);
         	featureFilter = this.orFilters(idFilter, nomenFilter, otherFilter, null);
         }
@@ -280,31 +274,28 @@ public class QuickSearchController {
 	}
 	
 	// Return a single filter that looks for features by ID, with multiple terms joined by an OR.
-	private Filter createIDFilter(QuickSearchQueryForm qf) {
+	private Filter createIDFilter(QuickSearchQueryForm qf, boolean isVocabBucket) {
         List<Filter> idFilters = new ArrayList<Filter>();
 
         for (String term : qf.getTerms()) {
-        	idFilters.add(new Filter(SearchConstants.QS_ACC_ID, term, Operator.OP_EQUAL));
+        	if (isVocabBucket) {
+        		idFilters.add(new Filter(SearchConstants.QS_ACC_ID, term, Operator.OP_EQUAL));
+        	} else {
+        		idFilters.add(new Filter(SearchConstants.QS_SEARCH_ID, term, Operator.OP_EQUAL));
+        	}
         }
         return Filter.or(idFilters);
 	}
 	
-	// Return a single filter that looks for features by symbol, name, or synonym, with multiple
+	// Return a single filter that looks for features by any non-ID type of field, with multiple
 	// terms joined by an OR.
-	private Filter createFeatureNomenFilter(QuickSearchQueryForm qf) {
-        List<Filter> nomenFilters = new ArrayList<Filter>();
+	private Filter createFeatureTermFilter(QuickSearchQueryForm qf) {
+        List<Filter> termFilters = new ArrayList<Filter>();
 
         for (String term : qf.getTerms()) {
-        	List<Filter> nomenSet = new ArrayList<Filter>();
-        	nomenSet.add(new Filter(SearchConstants.QS_SYMBOL, term, Operator.OP_CONTAINS));
-        	nomenSet.add(new Filter(SearchConstants.QS_NAME, term, Operator.OP_CONTAINS));
-        	nomenSet.add(new Filter(SearchConstants.QS_SYNONYM, term, Operator.OP_CONTAINS));
-        	nomenSet.add(new Filter(SearchConstants.QS_MARKER_SYMBOL, term, Operator.OP_CONTAINS));
-        	nomenSet.add(new Filter(SearchConstants.QS_MARKER_NAME, term, Operator.OP_CONTAINS));
-        	nomenSet.add(new Filter(SearchConstants.QS_MARKER_SYNONYM, term, Operator.OP_CONTAINS));
-        	nomenFilters.add(Filter.or(nomenSet));
+        	termFilters.add(new Filter(SearchConstants.QS_SEARCH_TERM, term, Operator.OP_CONTAINS));
         }
-        return Filter.or(nomenFilters);
+        return Filter.or(termFilters);
 	}
 	
 	// Return a single filter that looks for features by other data (ortholog nomen or annotations), with multiple
@@ -313,7 +304,7 @@ public class QuickSearchController {
         List<Filter> otherFilters = new ArrayList<Filter>();
 
         for (String term : qf.getTerms()) {
-        	otherFilters.add(new Filter(SearchConstants.QS_SEARCH_TEXT, term, Operator.OP_CONTAINS));
+        	otherFilters.add(new Filter(SearchConstants.QS_SEARCH_TERM, term, Operator.OP_CONTAINS));
         }
         return Filter.or(otherFilters);
 	}
@@ -333,147 +324,85 @@ public class QuickSearchController {
 	}
 	
 	// consolidate the lists of matching features, add star values, and setting best match values, then return
-	private List<QSFeatureResult> unifyFeatureMatches (List<String> searchTerms, List<QSFeatureResult> idMatches,
-		List<QSFeatureResult> nomenMatches, List<QSFeatureResult> otherMatches) {
+	private List<QSFeatureResult> unifyFeatureMatches (List<String> searchTerms, List<QSFeatureResult> allMatches) {
 		
 		Grouper<QSFeatureResult> grouper = new Grouper<QSFeatureResult>();
 		
-		// ID matches must be exact matches (aside from case sensitivity)
+		// original serach term will be the last item in the list of search terms
+		String originalSearchTerm = searchTerms.get(searchTerms.size() - 1).toLowerCase();
 		
-		for (QSFeatureResult match : idMatches) {
-			boolean found = false;
-			for (String id : match.getAccID()) {
-				for (String term : searchTerms) {
-					if (term.equalsIgnoreCase(id)) {
-						match.setBestMatchType("ID");
-						match.setBestMatchText(id);
-						match.setStars("****");
-						grouper.add("****", match.getPrimaryID(), match, 500);
-						found = true;
-						break;
-					}
-				}
-				if (found) { break; }
-			}
-			if (!found) {
-				// should not happen, but let's make sure not to lose the result just in case
-				match.setStars("*");
-				grouper.add("*", match.getPrimaryID(), match, 0);
-			}
-		}
-
-		// At this point, we could have the same features matched in both nomenMatches and in otherMatches.  If we just
-		// process them separately, it would be possible for the best nomenMatch for the feature to be a 2-star while
-		// the best otherMatch could be a 4-star.  In that case, whichever is found first would be retained and the
-		// other discarded.  So we need to reconcile the two lists into a single one with only one match per feature.
+		// last search term is the full string, so this is the count of individual words
+		int wordCount = searchTerms.size() - 1;
 		
-		// Make two sets of primary IDs.  Those in nomenSet need to have symbol, name, synonym checked.  Those in
-		// otherSet need annotations and ortholog data checked.  Those in both need both checked.  This optimization 
-		// reduces the number of strings we need to analyze for each data point.
+		// There may be multiple entries in allMatches for the same feature (marker or allele), so we need to
+		// prioritize them and only choose the best.  To do this, we iterate through documents and:
+		// 1. determine star tier (exact / all words / any word)
+		// 2. if best tier so far for this primary ID, keep this one
+		// 3. if same as best tier so far but this has a better weight (based on data type), keep this one
 		
-		Set<String> byNomen = new HashSet<String>();	// IDs of features yet to process for nomen
-		Set<String> byOther = new HashSet<String>();	// IDs of features yet to process for other matches
-		
-		for (QSFeatureResult match : nomenMatches) {
-			byNomen.add(match.getPrimaryID());
-		}
-		for (QSFeatureResult match : otherMatches) {
-			byOther.add(match.getPrimaryID());
-		}
-		
-		List<List<QSFeatureResult>> bothLists = new ArrayList<List<QSFeatureResult>>();
-		bothLists.add(nomenMatches);
-		bothLists.add(otherMatches);
-
-		// Exact are 4-star, begins are 3-star, contains are 2-star.
-		
-		BestMatchFinder bmf = new BestMatchFinder(searchTerms);
-		for (List<QSFeatureResult> resultList : bothLists) {
-			for (QSFeatureResult match : resultList) {
-				String primaryID = match.getPrimaryID();
-				boolean nomenToDo = byNomen.contains(primaryID);
-				boolean otherToDo = byOther.contains(primaryID);
+		Map<String,QSFeatureResult> bestMatches = new HashMap<String,QSFeatureResult>();
+		for (QSFeatureResult match : allMatches) {
+			String primaryID = match.getPrimaryID();
+			
+			if (match.getSearchID() != null) {
+				// IDs can only be exact matches
+				match.setStars("****");
 				
-				// maps from value string to a string describing what type of data it is
-				BestMatchOptions options = new BestMatchOptions();
+			} else if (match.getSearchTerm() != null) {
+				String lowerTerm = match.getSearchTerm().toLowerCase();
 
-				if (nomenToDo) {
-					// Nomen matches can be to symbol, name, or synonym.
-					options.put(match.getSymbol(), "Symbol");
-					options.put(match.getName(), "Name");
-					if (match.getSynonym() != null) {
-						for (String synonym : match.getSynonym()) {
-							options.put(synonym, "Synonym");
-						}
-					}
-					// If this is an allele, we also need to consider it's corresponding marker's nomenclature.
-					if (match.getIsMarker() == 0) {
-						options.put(match.getMarkerSymbol(), "Marker Symbol");
-						options.put(match.getMarkerName(), "Marker Name");
-						if (match.getMarkerSynonym() != null) {
-							for (String synonym : match.getMarkerSynonym()) {
-								options.put(synonym, "Marker Synonym");
-							}
-						}
-					}
-					byNomen.remove(primaryID);
-				}
-				if (otherToDo) {
-					// Other matches need to handle anything in searchText bucket (annotations, ortholog nomen, etc.)
-					if (match.getOrthologNomenOrg() != null) {
-						for (String orthologNomenOrg : match.getOrthologNomenOrg()) {
-							String[] pieces = orthologNomenOrg.split(":");
-							if ((pieces != null) && (pieces.length > 1)) {
-								options.put(pieces[1], pieces[0]);
-							}
+				// search terms can be exact (4-star), contain all terms (3-star), or contain some terms (2-star)
+				if (lowerTerm.equals(originalSearchTerm)) {
+					match.setStars("****");
+				} else {
+					int matchCount = 0;
+					for (String word : searchTerms) {
+						if (lowerTerm.indexOf(word) >= 0) {
+							matchCount++;
 						}
 					}
 					
-					if (match.getProteinDomains() != null) {
-						for (String domain : match.getProteinDomains()) {
-							options.put(domain, "Protein Domain");
-						}
+					if (matchCount == wordCount) {
+						match.setStars("***");
+					} else {
+						match.setStars("**");
 					}
-					
-					Map<String,List<String>> annotations = new HashMap<String,List<String>>();
-					annotations.put("Function", match.getFunctionAnnotationsID());
-					annotations.put("Function", match.getFunctionAnnotationsTerm());
-					annotations.put("Function (synonym)", match.getFunctionAnnotationsSynonym());
-					annotations.put("Function (definition)", match.getFunctionAnnotationsDefinition());
-					annotations.put("Process", match.getProcessAnnotationsID());
-					annotations.put("Process", match.getProcessAnnotationsTerm());
-					annotations.put("Process (synonym)", match.getProcessAnnotationsSynonym());
-					annotations.put("Process (definition)", match.getProcessAnnotationsDefinition());
-					annotations.put("Component", match.getComponentAnnotationsID());
-					annotations.put("Component", match.getComponentAnnotationsTerm());
-					annotations.put("Component (synonym)", match.getComponentAnnotationsSynonym());
-					annotations.put("Component (definition)", match.getComponentAnnotationsDefinition());
-					
-					for (String termType : annotations.keySet().toArray(new String[0])) {
-						if (annotations.get(termType) != null) {
-							for (String term : annotations.get(termType)) {
-								options.put(term, termType);
-							}
-						}
-					}
-					
-					byOther.remove(primaryID);
-				}
-
-				// If we encounter the same matching feature a second time (say, once in nomen and once in other)
-				// then options will be empty and we can skip scoring and adding it again.
-				if (options.size() > 0) {
-					BestMatch bestMatch = bmf.getBestMatch(options);
-					match.setStars(bestMatch.stars);
-					match.setBestMatchText(bestMatch.matchText);
-					match.setBestMatchType(bestMatch.matchType);
-
-					if (match.getIsMarker() == 1) {
-						bestMatch.boost += 600;
-					}
-					grouper.add(bestMatch.stars, primaryID, match, bestMatch.boost);
 				}
 			}
+			
+			// We'll double check that we identified at least one star, just in case something slipped through.  If
+			// one has no stars, we just skip it.
+			if (match.getStarCount() > 0) {
+				boolean keepThisOne = false;		// Is this our best match so far for this feature?
+				
+				// If we've already seen this feature, then we only want to keep this as the best match if:
+				// 1. it has a higher star count than the previous best match, or
+				// 2. it has the same star count as the previous best match and a larger weight.
+				if (bestMatches.containsKey(primaryID)) {
+					QSFeatureResult bestMatch = bestMatches.get(primaryID);
+					
+					if (match.getStarCount() > bestMatch.getStarCount()) {
+						keepThisOne = true;
+					} else if (match.getStarCount() == bestMatch.getStarCount()) {
+						if (match.getSearchTermWeight() > bestMatch.getSearchTermWeight()) {
+							keepThisOne = true; 
+						}
+					}
+				} else {
+					// We haven't seen this feature before, so keep this as the initial "best match".
+					keepThisOne = true;
+				}
+				
+				if (keepThisOne) {
+					bestMatches.put(primaryID, match);
+				}
+			}
+		}
+		
+		// Now use the Grouper to divide up the best matches we found into their star buckets.
+		for (String primaryID : bestMatches.keySet()) {
+			QSFeatureResult bestMatch = bestMatches.get(primaryID);
+			grouper.add(bestMatch.getStars(), primaryID, bestMatch, bestMatch.getSequenceNum());
 		}
 
 		return grouper.toList();
@@ -642,7 +571,7 @@ public class QuickSearchController {
         Filter vocabFilter;
         
         if (BY_ID.equals(queryMode)) {
-        	vocabFilter = createIDFilter(qf);
+        	vocabFilter = createIDFilter(qf, true);
         } else if (BY_TERM.equals(queryMode)) {
         	vocabFilter = notEmaps(createContainsFilter(qf, SearchConstants.QS_TERM));
         } else if (BY_SYNONYM.equals(queryMode)) {
@@ -650,7 +579,7 @@ public class QuickSearchController {
         } else if (BY_DEFINITION.equals(queryMode)) {
         	vocabFilter = notEmaps(createContainsFilter(qf, SearchConstants.QS_DEFINITION));
         } else {	// BY_ANY
-        	Filter idFilter = createIDFilter(qf);
+        	Filter idFilter = createIDFilter(qf, true);
         	Filter termFilter = notEmaps(createContainsFilter(qf, SearchConstants.QS_TERM));
         	Filter synonymFilter = notEmaps(createContainsFilter(qf, SearchConstants.QS_SYNONYM));
         	Filter definitionFilter = notEmaps(createContainsFilter(qf, SearchConstants.QS_DEFINITION));
@@ -798,9 +727,9 @@ public class QuickSearchController {
 	private class Grouper<T> {
 		private class SortItem<T> {
 			public T item;
-			public int boost;
+			public long boost;
 			
-			public SortItem(T item, int boost) {
+			public SortItem(T item, long boost) {
 				this.item = item;
 				this.boost = boost;
 			}
@@ -811,8 +740,8 @@ public class QuickSearchController {
 			
 			private class SIComparator implements Comparator<SortItem<T>> {
 				public int compare (SortItem<T> a, SortItem<T> b) {
-					if (a.boost < b.boost) { return 1; }
-					if (a.boost > b.boost) { return -1; }
+					if (a.boost < b.boost) { return -1; }
+					if (a.boost > b.boost) { return 1; }
 					return a.toString().compareTo(b.toString());
 				}
 			}
@@ -831,7 +760,7 @@ public class QuickSearchController {
 			this.ids = new HashSet<String>();
 		}
 		
-		public void add(String stars, String id, T item, int boost) {
+		public void add(String stars, String id, T item, long boost) {
 			int starCount = stars.length();
 
 			if (this.ids.contains(id)) { return; }
@@ -991,7 +920,7 @@ public class QuickSearchController {
 		public String stars;
 		public String matchType;
 		public String matchText;
-		public int boost;
+		public long boost;
 	}
 	
 	// special extension of a HashMap that:

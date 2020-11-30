@@ -13,11 +13,11 @@ public class QSFeatureResultWrapper {
 	public String getFeatureType() { return result.getFeatureType(); }
 	public String getSymbol() { return result.getSymbol(); }
 	public String getName() { return result.getName(); }
-	public String getBestMatchText() { return result.getBestMatchText(); }
+	public String getBestMatchText() { return result.getSearchTermDisplay(); }
 	public String getDetailUri() { return result.getDetailUri(); }
 	public String getChromosome() { return result.getChromosome(); }
 	public String getStartCoord() { return result.getStartCoord(); }
 	public String getEndCoord() { return result.getEndCoord(); }
 	public String getStrand() { return result.getStrand(); }
-	public String getBestMatchType() { return result.getBestMatchType(); }
+	public String getBestMatchType() { return result.getSearchTermType(); }
 }

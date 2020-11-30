@@ -33,47 +33,38 @@ public class SolrQSFeatureResultBaseHunter extends SolrHunter<QSFeatureResult> {
 		 * incoming filter list to the corresponding field names in the Solr
 		 * implementation.
 		 */
-		propertyMap.put(SearchConstants.QS_PRIMARY_ID, new SolrPropertyMapper(IndexConstants.QS_PRIMARY_ID));
-		propertyMap.put(SearchConstants.QS_IS_MARKER, new SolrPropertyMapper(IndexConstants.QS_IS_MARKER));
+		propertyMap.put(SearchConstants.UNIQUE_KEY, new SolrPropertyMapper(IndexConstants.UNIQUE_KEY));
+		propertyMap.put(SearchConstants.QS_SEARCH_ID, new SolrPropertyMapper(IndexConstants.QS_SEARCH_ID));
+		propertyMap.put(SearchConstants.QS_SEARCH_TERM, new SolrPropertyMapper(IndexConstants.QS_SEARCH_TERM));
+		propertyMap.put(SearchConstants.QS_SEARCH_TERM_DISPLAY, new SolrPropertyMapper(IndexConstants.QS_SEARCH_TERM_DISPLAY));
+		propertyMap.put(SearchConstants.QS_SEARCH_TERM_TYPE, new SolrPropertyMapper(IndexConstants.QS_SEARCH_TERM_TYPE));
+		propertyMap.put(SearchConstants.QS_SEARCH_TERM_WEIGHT, new SolrPropertyMapper(IndexConstants.QS_SEARCH_TERM_WEIGHT));
+
 		propertyMap.put(SearchConstants.QS_FEATURE_TYPE, new SolrPropertyMapper(IndexConstants.QS_FEATURE_TYPE));
-		propertyMap.put(SearchConstants.QS_ACC_ID, new SolrPropertyMapper(IndexConstants.QS_ACC_ID));
+		propertyMap.put(SearchConstants.QS_IS_MARKER, new SolrPropertyMapper(IndexConstants.QS_IS_MARKER));
 		propertyMap.put(SearchConstants.QS_SYMBOL, new SolrPropertyMapper(IndexConstants.QS_SYMBOL));
+		propertyMap.put(SearchConstants.QS_PRIMARY_ID, new SolrPropertyMapper(IndexConstants.QS_PRIMARY_ID));
 		propertyMap.put(SearchConstants.QS_NAME, new SolrPropertyMapper(IndexConstants.QS_NAME));
-		propertyMap.put(SearchConstants.QS_SYNONYM, new SolrPropertyMapper(IndexConstants.QS_SYNONYM));
 		propertyMap.put(SearchConstants.QS_DETAIL_URI, new SolrPropertyMapper(IndexConstants.QS_DETAIL_URI));
-		propertyMap.put(SearchConstants.QS_SEQUENCE_NUM, new SolrPropertyMapper(IndexConstants.QS_SEQUENCE_NUM));
 		propertyMap.put(SearchConstants.QS_CHROMOSOME, new SolrPropertyMapper(IndexConstants.QS_CHROMOSOME));
 		propertyMap.put(SearchConstants.QS_START_COORD, new SolrPropertyMapper(IndexConstants.QS_START_COORD));
 		propertyMap.put(SearchConstants.QS_END_COORD, new SolrPropertyMapper(IndexConstants.QS_END_COORD));
-		propertyMap.put(SearchConstants.QS_PROTEIN_DOMAINS, new SolrPropertyMapper(IndexConstants.QS_PROTEIN_DOMAINS));
 		propertyMap.put(SearchConstants.QS_STRAND, new SolrPropertyMapper(IndexConstants.QS_STRAND));
-		propertyMap.put(SearchConstants.QS_SEARCH_TEXT, new SolrPropertyMapper(IndexConstants.QS_SEARCH_TEXT));
-		propertyMap.put(SearchConstants.QS_ORTHOLOG_NOMEN_ORG, new SolrPropertyMapper(IndexConstants.QS_ORTHOLOG_NOMEN_ORG));
+		propertyMap.put(SearchConstants.QS_SEQUENCE_NUM, new SolrPropertyMapper(IndexConstants.QS_SEQUENCE_NUM));
 
-		propertyMap.put(SearchConstants.QS_FUNCTION_ANNOTATIONS_ID, new SolrPropertyMapper(IndexConstants.QS_FUNCTION_ANNOTATIONS_ID));
-		propertyMap.put(SearchConstants.QS_FUNCTION_ANNOTATIONS_TERM, new SolrPropertyMapper(IndexConstants.QS_FUNCTION_ANNOTATIONS_TERM));
-		propertyMap.put(SearchConstants.QS_FUNCTION_ANNOTATIONS_SYNONYM, new SolrPropertyMapper(IndexConstants.QS_FUNCTION_ANNOTATIONS_SYNONYM));
-		propertyMap.put(SearchConstants.QS_FUNCTION_ANNOTATIONS_DEFINITION, new SolrPropertyMapper(IndexConstants.QS_FUNCTION_ANNOTATIONS_DEFINITION));
+		propertyMap.put(SearchConstants.QS_GO_PROCESS_FACETS, new SolrPropertyMapper(IndexConstants.QS_GO_PROCESS_FACETS));
+		propertyMap.put(SearchConstants.QS_GO_FUNCTION_FACETS, new SolrPropertyMapper(IndexConstants.QS_GO_FUNCTION_FACETS));
+		propertyMap.put(SearchConstants.QS_GO_COMPONENT_FACETS, new SolrPropertyMapper(IndexConstants.QS_GO_COMPONENT_FACETS));
+		propertyMap.put(SearchConstants.QS_DISEASE_FACETS, new SolrPropertyMapper(IndexConstants.QS_DISEASE_FACETS));
+		propertyMap.put(SearchConstants.QS_PHENOTYPE_FACETS, new SolrPropertyMapper(IndexConstants.QS_PHENOTYPE_FACETS));
+		propertyMap.put(SearchConstants.QS_MARKER_TYPE_FACETS, new SolrPropertyMapper(IndexConstants.QS_MARKER_TYPE_FACETS));
 
-		propertyMap.put(SearchConstants.QS_PROCESS_ANNOTATIONS_ID, new SolrPropertyMapper(IndexConstants.QS_PROCESS_ANNOTATIONS_ID));
-		propertyMap.put(SearchConstants.QS_PROCESS_ANNOTATIONS_TERM, new SolrPropertyMapper(IndexConstants.QS_PROCESS_ANNOTATIONS_TERM));
-		propertyMap.put(SearchConstants.QS_PROCESS_ANNOTATIONS_SYNONYM, new SolrPropertyMapper(IndexConstants.QS_PROCESS_ANNOTATIONS_SYNONYM));
-		propertyMap.put(SearchConstants.QS_PROCESS_ANNOTATIONS_DEFINITION, new SolrPropertyMapper(IndexConstants.QS_PROCESS_ANNOTATIONS_DEFINITION));
-
-		propertyMap.put(SearchConstants.QS_COMPONENT_ANNOTATIONS_ID, new SolrPropertyMapper(IndexConstants.QS_COMPONENT_ANNOTATIONS_ID));
-		propertyMap.put(SearchConstants.QS_COMPONENT_ANNOTATIONS_TERM, new SolrPropertyMapper(IndexConstants.QS_COMPONENT_ANNOTATIONS_TERM));
-		propertyMap.put(SearchConstants.QS_COMPONENT_ANNOTATIONS_SYNONYM, new SolrPropertyMapper(IndexConstants.QS_COMPONENT_ANNOTATIONS_SYNONYM));
-		propertyMap.put(SearchConstants.QS_COMPONENT_ANNOTATIONS_DEFINITION, new SolrPropertyMapper(IndexConstants.QS_COMPONENT_ANNOTATIONS_DEFINITION));
-
-		propertyMap.put(SearchConstants.QS_MARKER_SYMBOL, new SolrPropertyMapper(IndexConstants.QS_MARKER_SYMBOL));
-		propertyMap.put(SearchConstants.QS_MARKER_NAME, new SolrPropertyMapper(IndexConstants.QS_MARKER_NAME));
-		propertyMap.put(SearchConstants.QS_MARKER_SYNONYM, new SolrPropertyMapper(IndexConstants.QS_MARKER_SYNONYM));
 		/*
-		 * The name of the field we want to iterate through the documents for
+		 *  The name of the field we want to iterate through the documents for
 		 * and place into the output.  In this case we want the standard list of
 		 * object keys returned.
 		 */
-		keyString = IndexConstants.QS_PRIMARY_ID;
+		keyString = IndexConstants.UNIQUE_KEY;
 	}
 
 	@Value("${solr.qsFeatureBucket.url}")
@@ -91,19 +82,23 @@ public class SolrQSFeatureResultBaseHunter extends SolrHunter<QSFeatureResult> {
 
 		List<String> resultKeys = new ArrayList<String>();
 
-		Float zero = new Float(0.0);
-		
 		for (SolrDocument doc : sdl) {
 			String key = (String) doc.getFieldValue(IndexConstants.QS_PRIMARY_ID);
 
 			try {
 				QSFeatureResult result = new QSFeatureResult();
-				result.setPrimaryID(key);
+				result.setUniqueKey((String) doc.getFieldValue(IndexConstants.UNIQUE_KEY));
+				result.setSearchID((String) doc.getFieldValue(IndexConstants.QS_SEARCH_ID));
+				result.setSearchTerm((String) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM));
+				result.setSearchTermDisplay((String) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_DISPLAY));
+				result.setSearchTermType((String) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_TYPE));
+
+				result.setFeatureType((String) doc.getFieldValue(IndexConstants.QS_FEATURE_TYPE));
+				result.setIsMarker((Integer) doc.getFieldValue(IndexConstants.QS_IS_MARKER));
 				result.setSymbol((String) doc.getFieldValue(IndexConstants.QS_SYMBOL));
+				result.setPrimaryID(key);
 				result.setName((String) doc.getFieldValue(IndexConstants.QS_NAME));
 				result.setDetailUri((String) doc.getFieldValue(IndexConstants.QS_DETAIL_URI));
-				result.setIsMarker((Integer) doc.getFieldValue(IndexConstants.QS_IS_MARKER));
-				result.setFeatureType((String) doc.getFieldValue(IndexConstants.QS_FEATURE_TYPE));
 				result.setChromosome((String) doc.getFieldValue(IndexConstants.QS_CHROMOSOME));
 				if (doc.getFieldValue(IndexConstants.QS_START_COORD) != null) {
 					result.setStartCoord(((Long) doc.getFieldValue(IndexConstants.QS_START_COORD)).toString());
@@ -113,38 +108,18 @@ public class SolrQSFeatureResultBaseHunter extends SolrHunter<QSFeatureResult> {
 				}
 				result.setStrand((String) doc.getFieldValue(IndexConstants.QS_STRAND));
 				
-				if (result.getIsMarker() == 0) {
-					result.setMarkerSymbol((String) doc.getFieldValue(IndexConstants.QS_MARKER_SYMBOL));
-					result.setMarkerName((String) doc.getFieldValue(IndexConstants.QS_MARKER_NAME));
-					result.setMarkerSynonym((List<String>) doc.getFieldValue(IndexConstants.QS_MARKER_SYNONYM)); 
-				}
-				try {
-					result.setSynonym((List<String>) doc.getFieldValue(IndexConstants.QS_SYNONYM));
-					result.setProteinDomains((List<String>) doc.getFieldValue(IndexConstants.QS_PROTEIN_DOMAINS));
-					result.setAccID((List<String>) doc.getFieldValue(IndexConstants.QS_ACC_ID));
-					result.setOrthologNomenOrg((List<String>) doc.getFieldValue(IndexConstants.QS_ORTHOLOG_NOMEN_ORG));
-				} catch (Throwable t) {}
-				
-				result.setFunctionAnnotationsID((List<String>) doc.getFieldValue(IndexConstants.QS_FUNCTION_ANNOTATIONS_ID));
-				result.setFunctionAnnotationsTerm((List<String>) doc.getFieldValue(IndexConstants.QS_FUNCTION_ANNOTATIONS_TERM));
-				result.setFunctionAnnotationsSynonym((List<String>) doc.getFieldValue(IndexConstants.QS_FUNCTION_ANNOTATIONS_SYNONYM));
-				result.setFunctionAnnotationsDefinition((List<String>) doc.getFieldValue(IndexConstants.QS_FUNCTION_ANNOTATIONS_DEFINITION));
-				
-				result.setProcessAnnotationsID((List<String>) doc.getFieldValue(IndexConstants.QS_PROCESS_ANNOTATIONS_ID));
-				result.setProcessAnnotationsTerm((List<String>) doc.getFieldValue(IndexConstants.QS_PROCESS_ANNOTATIONS_TERM));
-				result.setProcessAnnotationsSynonym((List<String>) doc.getFieldValue(IndexConstants.QS_PROCESS_ANNOTATIONS_SYNONYM));
-				result.setProcessAnnotationsDefinition((List<String>) doc.getFieldValue(IndexConstants.QS_PROCESS_ANNOTATIONS_DEFINITION));
-				
-				result.setComponentAnnotationsID((List<String>) doc.getFieldValue(IndexConstants.QS_COMPONENT_ANNOTATIONS_ID));
-				result.setComponentAnnotationsTerm((List<String>) doc.getFieldValue(IndexConstants.QS_COMPONENT_ANNOTATIONS_TERM));
-				result.setComponentAnnotationsSynonym((List<String>) doc.getFieldValue(IndexConstants.QS_COMPONENT_ANNOTATIONS_SYNONYM));
-				result.setComponentAnnotationsDefinition((List<String>) doc.getFieldValue(IndexConstants.QS_COMPONENT_ANNOTATIONS_DEFINITION));
-				
-				Float score = (Float) doc.getFieldValue(IndexConstants.SCORE);
-				if (score == null) {
-					result.setScore(zero);
+				result.setGoProcessFacets((List<String>) doc.getFieldValue(IndexConstants.QS_GO_PROCESS_FACETS));
+				result.setGoFunctionFacets((List<String>) doc.getFieldValue(IndexConstants.QS_GO_FUNCTION_FACETS));
+				result.setGoComponentFacets((List<String>) doc.getFieldValue(IndexConstants.QS_GO_COMPONENT_FACETS));
+				result.setDiseaseFacets((List<String>) doc.getFieldValue(IndexConstants.QS_DISEASE_FACETS));
+				result.setPhenotypeFacets((List<String>) doc.getFieldValue(IndexConstants.QS_PHENOTYPE_FACETS));
+				result.setMarkerTypeFacets((List<String>) doc.getFieldValue(IndexConstants.QS_MARKER_TYPE_FACETS));
+
+				Integer weight = (Integer) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_WEIGHT);
+				if (weight == null) {
+					result.setSearchTermWeight(0);
 				} else {
-					result.setScore(score);
+					result.setSearchTermWeight(weight);
 				}
 
 				Long seqNum = (Long) doc.getFieldValue(IndexConstants.QS_SEQUENCE_NUM);

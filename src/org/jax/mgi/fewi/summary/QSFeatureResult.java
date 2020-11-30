@@ -7,187 +7,121 @@ import java.util.List;
  */
 public class QSFeatureResult {
 
-	private String primaryID;
-	private List<String> accID;
-	private String symbol;
-	private String name;
-	private Integer isMarker;
-	private List<String> proteinDomains;
-	private List<String> synonym;
-	private List<String> orthologNomenOrg;
+	private String uniqueKey;
+	private String searchID;
+	private String searchTerm;
+	private String searchTermDisplay;
+	private String searchTermType;
+	private Integer searchTermWeight;
+	private String stars;
+	private int starCount = 0;
 
-	private String markerSymbol;
-	private String markerName;
-	private List<String> markerSynonym;
-
-	private List<String> functionAnnotationsID;
-	private List<String> functionAnnotationsTerm;
-	private List<String> functionAnnotationsSynonym;
-	private List<String> functionAnnotationsDefinition;
-
-	private List<String> processAnnotationsID;
-	private List<String> processAnnotationsTerm;
-	private List<String> processAnnotationsSynonym;
-	private List<String> processAnnotationsDefinition;
-
-	private List<String> componentAnnotationsID;
-	private List<String> componentAnnotationsTerm;
-	private List<String> componentAnnotationsSynonym;
-	private List<String> componentAnnotationsDefinition;
-
-	private List<String> phenotypeAnnotations;
-	private List<String> humanPhenotypeAnnotations;
-	private List<String> gxdAnnotationsWithTS;
-	private List<String> diseaseAnnotations;
 	private String featureType;
+	private Integer isMarker;
+	private String symbol;
+	private String primaryID;
+	private String name;
 	private String detailUri;
-	private Long sequenceNum;
 	private String chromosome;
 	private String startCoord;
 	private String endCoord;
 	private String strand;
-	private Float score;
-	private String stars;
-	private String bestMatchType;
-	private String bestMatchText;
+	private Long sequenceNum;
 
-	public List<String> getFunctionAnnotationsID() {
-		return functionAnnotationsID;
+	private List<String> goProcessFacets;
+	private List<String> goFunctionFacets;
+	private List<String> goComponentFacets;
+	private List<String> diseaseFacets;
+	private List<String> phenotypeFacets;
+	private List<String> markerTypeFacets;
+
+	public String getUniqueKey() {
+		return uniqueKey;
 	}
-	public void setFunctionAnnotationsID(List<String> functionAnnotationsID) {
-		this.functionAnnotationsID = functionAnnotationsID;
+	public void setUniqueKey(String uniqueKey) {
+		this.uniqueKey = uniqueKey;
 	}
-	public List<String> getFunctionAnnotationsTerm() {
-		return functionAnnotationsTerm;
+	public String getSearchID() {
+		return searchID;
 	}
-	public void setFunctionAnnotationsTerm(List<String> functionAnnotationsTerm) {
-		this.functionAnnotationsTerm = functionAnnotationsTerm;
+	public void setSearchID(String searchID) {
+		this.searchID = searchID;
 	}
-	public List<String> getFunctionAnnotationsSynonym() {
-		return functionAnnotationsSynonym;
+	public String getSearchTerm() {
+		return searchTerm;
 	}
-	public void setFunctionAnnotationsSynonym(List<String> functionAnnotationsSynonym) {
-		this.functionAnnotationsSynonym = functionAnnotationsSynonym;
+	public void setSearchTerm(String searchTerm) {
+		this.searchTerm = searchTerm;
 	}
-	public List<String> getFunctionAnnotationsDefinition() {
-		return functionAnnotationsDefinition;
+	public String getSearchTermDisplay() {
+		return searchTermDisplay;
 	}
-	public void setFunctionAnnotationsDefinition(List<String> functionAnnotationsDefinition) {
-		this.functionAnnotationsDefinition = functionAnnotationsDefinition;
+	public void setSearchTermDisplay(String searchTermDisplay) {
+		this.searchTermDisplay = searchTermDisplay;
 	}
-	public List<String> getProcessAnnotationsID() {
-		return processAnnotationsID;
+	public String getSearchTermType() {
+		return searchTermType;
 	}
-	public void setProcessAnnotationsID(List<String> processAnnotationsID) {
-		this.processAnnotationsID = processAnnotationsID;
+	public void setSearchTermType(String searchTermType) {
+		this.searchTermType = searchTermType;
 	}
-	public List<String> getProcessAnnotationsTerm() {
-		return processAnnotationsTerm;
+	public Integer getSearchTermWeight() {
+		return searchTermWeight;
 	}
-	public void setProcessAnnotationsTerm(List<String> processAnnotationsTerm) {
-		this.processAnnotationsTerm = processAnnotationsTerm;
+	public void setSearchTermWeight(Integer searchTermWeight) {
+		this.searchTermWeight = searchTermWeight;
 	}
-	public List<String> getProcessAnnotationsSynonym() {
-		return processAnnotationsSynonym;
+	public List<String> getGoProcessFacets() {
+		return goProcessFacets;
 	}
-	public void setProcessAnnotationsSynonym(List<String> processAnnotationsSynonym) {
-		this.processAnnotationsSynonym = processAnnotationsSynonym;
+	public void setGoProcessFacets(List<String> goProcessFacets) {
+		this.goProcessFacets = goProcessFacets;
 	}
-	public List<String> getProcessAnnotationsDefinition() {
-		return processAnnotationsDefinition;
+	public List<String> getGoFunctionFacets() {
+		return goFunctionFacets;
 	}
-	public void setProcessAnnotationsDefinition(List<String> processAnnotationsDefinition) {
-		this.processAnnotationsDefinition = processAnnotationsDefinition;
+	public void setGoFunctionFacets(List<String> goFunctionFacets) {
+		this.goFunctionFacets = goFunctionFacets;
 	}
-	public List<String> getComponentAnnotationsID() {
-		return componentAnnotationsID;
+	public List<String> getGoComponentFacets() {
+		return goComponentFacets;
 	}
-	public void setComponentAnnotationsID(List<String> componentAnnotationsID) {
-		this.componentAnnotationsID = componentAnnotationsID;
+	public void setGoComponentFacets(List<String> goComponentFacets) {
+		this.goComponentFacets = goComponentFacets;
 	}
-	public List<String> getComponentAnnotationsTerm() {
-		return componentAnnotationsTerm;
+	public List<String> getDiseaseFacets() {
+		return diseaseFacets;
 	}
-	public void setComponentAnnotationsTerm(List<String> componentAnnotationsTerm) {
-		this.componentAnnotationsTerm = componentAnnotationsTerm;
+	public void setDiseaseFacets(List<String> diseaseFacets) {
+		this.diseaseFacets = diseaseFacets;
 	}
-	public List<String> getComponentAnnotationsSynonym() {
-		return componentAnnotationsSynonym;
+	public List<String> getPhenotypeFacets() {
+		return phenotypeFacets;
 	}
-	public void setComponentAnnotationsSynonym(List<String> componentAnnotationsSynonym) {
-		this.componentAnnotationsSynonym = componentAnnotationsSynonym;
+	public void setPhenotypeFacets(List<String> phenotypeFacets) {
+		this.phenotypeFacets = phenotypeFacets;
 	}
-	public List<String> getComponentAnnotationsDefinition() {
-		return componentAnnotationsDefinition;
+	public List<String> getMarkerTypeFacets() {
+		return markerTypeFacets;
 	}
-	public void setComponentAnnotationsDefinition(List<String> componentAnnotationsDefinition) {
-		this.componentAnnotationsDefinition = componentAnnotationsDefinition;
-	}
-	public List<String> getPhenotypeAnnotations() {
-		return phenotypeAnnotations;
-	}
-	public void setPhenotypeAnnotations(List<String> phenotypeAnnotations) {
-		this.phenotypeAnnotations = phenotypeAnnotations;
-	}
-	public List<String> getHumanPhenotypeAnnotations() {
-		return humanPhenotypeAnnotations;
-	}
-	public void setHumanPhenotypeAnnotations(List<String> humanPhenotypeAnnotations) {
-		this.humanPhenotypeAnnotations = humanPhenotypeAnnotations;
-	}
-	public List<String> getGxdAnnotationsWithTS() {
-		return gxdAnnotationsWithTS;
-	}
-	public void setGxdAnnotationsWithTS(List<String> gxdAnnotationsWithTS) {
-		this.gxdAnnotationsWithTS = gxdAnnotationsWithTS;
-	}
-	public List<String> getDiseaseAnnotations() {
-		return diseaseAnnotations;
-	}
-	public void setDiseaseAnnotations(List<String> diseaseAnnotations) {
-		this.diseaseAnnotations = diseaseAnnotations;
-	}
-	public List<String> getProteinDomains() {
-		return proteinDomains;
-	}
-	public void setProteinDomains(List<String> proteinDomains) {
-		this.proteinDomains = proteinDomains;
-	}
-	public List<String> getOrthologNomenOrg() {
-		return orthologNomenOrg;
-	}
-	public void setOrthologNomenOrg(List<String> orthologNomenOrg) {
-		this.orthologNomenOrg = orthologNomenOrg;
+	public void setMarkerTypeFacets(List<String> markerTypeFacets) {
+		this.markerTypeFacets = markerTypeFacets;
 	}
 	public String getStars() {
 		return stars;
 	}
+	public int getStarCount() {
+		return this.starCount;
+	}
 	public void setStars(String stars) {
 		this.stars = stars;
-	}
-	public String getBestMatchType() {
-		return bestMatchType;
-	}
-	public void setBestMatchType(String bestMatchType) {
-		this.bestMatchType = bestMatchType;
-	}
-	public String getBestMatchText() {
-		return bestMatchText;
-	}
-	public void setBestMatchText(String bestMatchText) {
-		this.bestMatchText = bestMatchText;
+		this.starCount = stars.length();
 	}
 	public String getPrimaryID() {
 		return primaryID;
 	}
 	public void setPrimaryID(String primaryID) {
 		this.primaryID = primaryID;
-	}
-	public List<String> getAccID() {
-		return accID;
-	}
-	public void setAccID(List<String> accID) {
-		this.accID = accID;
 	}
 	public String getSymbol() {
 		return symbol;
@@ -206,12 +140,6 @@ public class QSFeatureResult {
 	}
 	public void setIsMarker(Integer isMarker) {
 		this.isMarker = isMarker;
-	}
-	public List<String> getSynonym() {
-		return synonym;
-	}
-	public void setSynonym(List<String> synonym) {
-		this.synonym = synonym;
 	}
 	public String getFeatureType() {
 		return featureType;
@@ -254,30 +182,6 @@ public class QSFeatureResult {
 	}
 	public void setStrand(String strand) {
 		this.strand = strand;
-	}
-	public Float getScore() {
-		return score;
-	}
-	public void setScore(Float score) {
-		this.score = score;
-	}
-	public String getMarkerSymbol() {
-		return markerSymbol;
-	}
-	public void setMarkerSymbol(String markerSymbol) {
-		this.markerSymbol = markerSymbol;
-	}
-	public String getMarkerName() {
-		return markerName;
-	}
-	public void setMarkerName(String markerName) {
-		this.markerName = markerName;
-	}
-	public List<String> getMarkerSynonym() {
-		return markerSynonym;
-	}
-	public void setMarkerSynonym(List<String> markerSynonym) {
-		this.markerSynonym = markerSynonym;
 	}
 	@Override
 	public String toString() {

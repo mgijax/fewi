@@ -7,6 +7,7 @@ package org.jax.mgi.fewi.searchUtil;
 * receptive to index change
 */
 public class SearchConstants {
+    public static final String UNIQUE_KEY		    = "uniqueKey";
 
     // reference constants
     public static final String REF_ID			    = "reference_id";
@@ -306,50 +307,31 @@ public class SearchConstants {
 	public static final String HAS_IMAGE = "hasImage";
 	
 	// quick search
+	public static final String QS_SEARCH_ID = "searchID";
+	public static final String QS_SEARCH_TERM = "searchTerm";
+	public static final String QS_SEARCH_TERM_DISPLAY = "searchTermDisplay";
+	public static final String QS_SEARCH_TERM_TYPE = "searchTermType";
+	public static final String QS_SEARCH_TERM_WEIGHT = "searchTermWeight";
+
 	public static final String QS_PRIMARY_ID = "primaryID";
-	public static final String QS_ACC_ID = "accID";
-	public static final String QS_TERM = "term";
-	public static final String QS_TERM_TYPE = "termType";
-	public static final String QS_SYNONYM = "synonym";
-	public static final String QS_DEFINITION= "definition";
-	public static final String QS_VOCAB_NAME = "vocabName";				// for display in QS
-	public static final String QS_RAW_VOCAB_NAME = "rawVocabName";		// for certain filtering
 	public static final String QS_DETAIL_URI = "detailUri";
-	public static final String QS_ANNOTATION_COUNT = "annotationCount";
-	public static final String QS_ANNOTATION_TEXT = "annotationText";
-	public static final String QS_ANNOTATION_URI = "annotationUri";
 	public static final String QS_SEQUENCE_NUM = "sequenceNum";
 	public static final String QS_SYMBOL = "symbol";
 	public static final String QS_NAME = "name";
-	public static final String QS_SEARCH_TEXT = "searchText";
 	public static final String QS_IS_MARKER = "isMarker";
 	public static final String QS_FEATURE_TYPE = "featureType";
 	public static final String QS_CHROMOSOME = "chromosome";
 	public static final String QS_START_COORD = "startCoord";
 	public static final String QS_END_COORD = "endCoord";
-	public static final String QS_PROTEIN_DOMAINS = "proteinDomains";
-	public static final String QS_PHENOTYPE_ANNOTATIONS = "phenotypeAnnotations";
-	public static final String QS_HPO_ANNOTATIONS = "humanPhenotypeAnnotations";
-	public static final String QS_GXD_ANNOTATIONS_WITH_TS = "gxdAnnotationsWithTS";
-	public static final String QS_GXD_ANNOTATIONS = "gxdAnnotations";
-	public static final String QS_DISEASE_ANNOTATIONS = "diseaseAnnotations";
 	public static final String QS_STRAND = "strand";
-	public static final String QS_ORTHOLOG_NOMEN_ORG = "orthologNomenOrg";
 
-	public static final String QS_FUNCTION_ANNOTATIONS_ID = "functionAnnotationsID";
-	public static final String QS_FUNCTION_ANNOTATIONS_TERM = "functionAnnotationsTerm";
-	public static final String QS_FUNCTION_ANNOTATIONS_SYNONYM = "functionAnnotationsSynonym";
-	public static final String QS_FUNCTION_ANNOTATIONS_DEFINITION = "functionAnnotationsDefinition";
-
-	public static final String QS_PROCESS_ANNOTATIONS_ID = "processAnnotationsID";
-	public static final String QS_PROCESS_ANNOTATIONS_TERM = "processAnnotationsTerm";
-	public static final String QS_PROCESS_ANNOTATIONS_SYNONYM = "processAnnotationsSynonym";
-	public static final String QS_PROCESS_ANNOTATIONS_DEFINITION = "processAnnotationsDefinition";
-
-	public static final String QS_COMPONENT_ANNOTATIONS_ID = "componentAnnotationsID";
-	public static final String QS_COMPONENT_ANNOTATIONS_TERM = "componentAnnotationsTerm";
-	public static final String QS_COMPONENT_ANNOTATIONS_SYNONYM = "componentAnnotationsSynonym";
-	public static final String QS_COMPONENT_ANNOTATIONS_DEFINITION = "componentAnnotationsDefinition";
+	public static final String QS_TERM = "term";
+	public static final String QS_TERM_TYPE = "termType";
+	public static final String QS_VOCAB_NAME = "vocabName";				// for display in QS
+	public static final String QS_RAW_VOCAB_NAME = "rawVocabName";		// for certain filtering
+	public static final String QS_ANNOTATION_COUNT = "annotationCount";
+	public static final String QS_ANNOTATION_TEXT = "annotationText";
+	public static final String QS_ANNOTATION_URI = "annotationUri";
 
 	public static final String QS_GO_PROCESS_FACETS = "goProcessFacets";
 	public static final String QS_GO_FUNCTION_FACETS = "goFunctionFacets";
@@ -358,8 +340,8 @@ public class SearchConstants {
 	public static final String QS_PHENOTYPE_FACETS = "phenotypeFacets";
 	public static final String QS_MARKER_TYPE_FACETS = "markerTypeFacets";
 
-	// used for finding alleles by marker nomenclature
-	public static final String QS_MARKER_SYMBOL = "markerSymbol";
-	public static final String QS_MARKER_NAME = "markerName";
-	public static final String QS_MARKER_SYNONYM = "markerSynonym";
+	public static final String QS_DEFINITION = "definition";
+	public static final String QS_SYNONYM = "synonym";
+	public static final String QS_ACC_ID = "accID";
+
 }
