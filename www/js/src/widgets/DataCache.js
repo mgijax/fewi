@@ -13,7 +13,7 @@
 var pdcLogging = true;
 
 // number of pages we desire to have in cache ahead of where we are currently
-var pdcLookAhead = 2;
+var pdcLookAhead = 4;
 
 // maps from cache name to a list of its cached data elements
 var pdcCache = {};
