@@ -232,7 +232,7 @@ public class QuickSearchController {
         List<Filter> termFilters = new ArrayList<Filter>();
 
         for (String term : qf.getTerms()) {
-        	termFilters.add(new Filter(SearchConstants.QS_SEARCH_TERM, term, Operator.OP_CONTAINS));
+        	termFilters.add(new Filter(SearchConstants.QS_SEARCH_TERM, term, Operator.OP_CONTAINS_WITH_COLON));
         }
         if (bucket == VOCAB_TERM) {
         	// When looking for vocab terms by term, synonym, or definition, we do not want EMAPS terms

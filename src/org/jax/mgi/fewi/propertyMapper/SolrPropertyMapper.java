@@ -174,6 +174,9 @@ public class SolrPropertyMapper {
 		else if (operand == Filter.Operator.OP_CONTAINS) {
 			val =  field + ":" + "(" + value + ")";
 		}
+		else if (operand == Filter.Operator.OP_CONTAINS_WITH_COLON) {
+			val =  field + ":(\"" + value + "\")";
+		}
 		else if (operand == Filter.Operator.OP_STRING_CONTAINS) {
 			val =  field + ":" + "*" + ClientUtils.escapeQueryChars(value) + "*";
 		}
