@@ -33,24 +33,35 @@ public class SolrQSVocabResultBaseHunter extends SolrHunter<QSVocabResult> {
 		 * incoming filter list to the corresponding field names in the Solr
 		 * implementation.
 		 */
+		propertyMap.put(SearchConstants.UNIQUE_KEY, new SolrPropertyMapper(IndexConstants.UNIQUE_KEY));
+		propertyMap.put(SearchConstants.QS_SEARCH_ID, new SolrPropertyMapper(IndexConstants.QS_SEARCH_ID));
+		propertyMap.put(SearchConstants.QS_SEARCH_TERM, new SolrPropertyMapper(IndexConstants.QS_SEARCH_TERM));
+		propertyMap.put(SearchConstants.QS_SEARCH_TERM_DISPLAY, new SolrPropertyMapper(IndexConstants.QS_SEARCH_TERM_DISPLAY));
+		propertyMap.put(SearchConstants.QS_SEARCH_TERM_TYPE, new SolrPropertyMapper(IndexConstants.QS_SEARCH_TERM_TYPE));
+		propertyMap.put(SearchConstants.QS_SEARCH_TERM_WEIGHT, new SolrPropertyMapper(IndexConstants.QS_SEARCH_TERM_WEIGHT));
+
 		propertyMap.put(SearchConstants.QS_PRIMARY_ID, new SolrPropertyMapper(IndexConstants.QS_PRIMARY_ID));
-		propertyMap.put(SearchConstants.QS_ACC_ID, new SolrPropertyMapper(IndexConstants.QS_ACC_ID));
 		propertyMap.put(SearchConstants.QS_TERM, new SolrPropertyMapper(IndexConstants.QS_TERM));
 		propertyMap.put(SearchConstants.QS_TERM_TYPE, new SolrPropertyMapper(IndexConstants.QS_TERM_TYPE));
-		propertyMap.put(SearchConstants.QS_SYNONYM, new SolrPropertyMapper(IndexConstants.QS_SYNONYM));
 		propertyMap.put(SearchConstants.QS_VOCAB_NAME, new SolrPropertyMapper(IndexConstants.QS_VOCAB_NAME));
 		propertyMap.put(SearchConstants.QS_DETAIL_URI, new SolrPropertyMapper(IndexConstants.QS_DETAIL_URI));
 		propertyMap.put(SearchConstants.QS_ANNOTATION_COUNT, new SolrPropertyMapper(IndexConstants.QS_ANNOTATION_COUNT));
 		propertyMap.put(SearchConstants.QS_ANNOTATION_TEXT, new SolrPropertyMapper(IndexConstants.QS_ANNOTATION_TEXT));
 		propertyMap.put(SearchConstants.QS_ANNOTATION_URI, new SolrPropertyMapper(IndexConstants.QS_ANNOTATION_URI));
 		propertyMap.put(SearchConstants.QS_SEQUENCE_NUM, new SolrPropertyMapper(IndexConstants.QS_SEQUENCE_NUM));
-		propertyMap.put(SearchConstants.QS_DEFINITION, new SolrPropertyMapper(IndexConstants.QS_DEFINITION));
+
+		propertyMap.put(SearchConstants.QS_GO_PROCESS_FACETS, new SolrPropertyMapper(IndexConstants.QS_GO_PROCESS_FACETS));
+		propertyMap.put(SearchConstants.QS_GO_FUNCTION_FACETS, new SolrPropertyMapper(IndexConstants.QS_GO_FUNCTION_FACETS));
+		propertyMap.put(SearchConstants.QS_GO_COMPONENT_FACETS, new SolrPropertyMapper(IndexConstants.QS_GO_COMPONENT_FACETS));
+		propertyMap.put(SearchConstants.QS_DISEASE_FACETS, new SolrPropertyMapper(IndexConstants.QS_DISEASE_FACETS));
+		propertyMap.put(SearchConstants.QS_PHENOTYPE_FACETS, new SolrPropertyMapper(IndexConstants.QS_PHENOTYPE_FACETS));
+		propertyMap.put(SearchConstants.QS_MARKER_TYPE_FACETS, new SolrPropertyMapper(IndexConstants.QS_MARKER_TYPE_FACETS));
 		/*
 		 * The name of the field we want to iterate through the documents for
 		 * and place into the output.  In this case we want the standard list of
 		 * object keys returned.
 		 */
-		keyString = IndexConstants.QS_PRIMARY_ID;
+		keyString = IndexConstants.UNIQUE_KEY;
 	}
 
 	@Value("${solr.qsVocabBucket.url}")
@@ -68,34 +79,25 @@ public class SolrQSVocabResultBaseHunter extends SolrHunter<QSVocabResult> {
 
 		List<String> resultKeys = new ArrayList<String>();
 
-		Float zero = new Float(0.0);
-		
 		for (SolrDocument doc : sdl) {
-			String key = (String) doc.getFieldValue(IndexConstants.QS_PRIMARY_ID);
-
+			String key = (String) doc.getFieldValue(IndexConstants.UNIQUE_KEY);
 			try {
 				QSVocabResult result = new QSVocabResult();
-				result.setPrimaryID(key);
+				result.setPrimaryID((String) doc.getFieldValue(IndexConstants.QS_PRIMARY_ID));
+				result.setUniqueKey(key);
+				result.setSearchID((String) doc.getFieldValue(IndexConstants.QS_SEARCH_ID));
+				result.setSearchTerm((String) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM));
+				result.setSearchTermDisplay((String) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_DISPLAY));
+				result.setSearchTermType((String) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_TYPE));
+
 				result.setTerm((String) doc.getFieldValue(IndexConstants.QS_TERM));
 				result.setTermType((String) doc.getFieldValue(IndexConstants.QS_TERM_TYPE));
 				result.setVocabName((String) doc.getFieldValue(IndexConstants.QS_VOCAB_NAME));
+				result.setRawVocabName((String) doc.getFieldValue(IndexConstants.QS_RAW_VOCAB_NAME));
 				result.setDetailUri((String) doc.getFieldValue(IndexConstants.QS_DETAIL_URI));
 				result.setAnnotationText((String) doc.getFieldValue(IndexConstants.QS_ANNOTATION_TEXT));
 				result.setAnnotationUri((String) doc.getFieldValue(IndexConstants.QS_ANNOTATION_URI));
-				result.setDefinition((String) doc.getFieldValue(IndexConstants.QS_DEFINITION));
 				
-				try {
-					result.setSynonym((List<String>) doc.getFieldValue(IndexConstants.QS_SYNONYM));
-					result.setAccID((List<String>) doc.getFieldValue(IndexConstants.QS_ACC_ID));
-				} catch (Throwable t) {}
-				
-				Float score = (Float) doc.getFieldValue(IndexConstants.SCORE);
-				if (score == null) {
-					result.setScore(zero);
-				} else {
-					result.setScore(score);
-				}
-
 				Long annotCount = (Long) doc.getFieldValue(IndexConstants.QS_ANNOTATION_COUNT);
 				if (annotCount == null) {
 					result.setAnnotationCount(0L);
@@ -103,9 +105,9 @@ public class SolrQSVocabResultBaseHunter extends SolrHunter<QSVocabResult> {
 					result.setAnnotationCount(annotCount);
 				}
 				
-				Integer seqNum = (Integer) doc.getFieldValue(IndexConstants.QS_SEQUENCE_NUM);
+				Long seqNum = (Long) doc.getFieldValue(IndexConstants.QS_SEQUENCE_NUM);
 				if (seqNum == null) {
-					result.setSequenceNum(0);
+					result.setSequenceNum(0L);
 				} else {
 					result.setSequenceNum(seqNum);
 				}

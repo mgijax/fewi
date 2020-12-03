@@ -83,7 +83,7 @@ public class SolrQSFeatureResultBaseHunter extends SolrHunter<QSFeatureResult> {
 		List<String> resultKeys = new ArrayList<String>();
 
 		for (SolrDocument doc : sdl) {
-			String key = (String) doc.getFieldValue(IndexConstants.QS_PRIMARY_ID);
+			String key = (String) doc.getFieldValue(IndexConstants.UNIQUE_KEY);
 
 			try {
 				QSFeatureResult result = new QSFeatureResult();
@@ -96,7 +96,7 @@ public class SolrQSFeatureResultBaseHunter extends SolrHunter<QSFeatureResult> {
 				result.setFeatureType((String) doc.getFieldValue(IndexConstants.QS_FEATURE_TYPE));
 				result.setIsMarker((Integer) doc.getFieldValue(IndexConstants.QS_IS_MARKER));
 				result.setSymbol((String) doc.getFieldValue(IndexConstants.QS_SYMBOL));
-				result.setPrimaryID(key);
+				result.setPrimaryID((String) doc.getFieldValue(IndexConstants.QS_PRIMARY_ID));
 				result.setName((String) doc.getFieldValue(IndexConstants.QS_NAME));
 				result.setDetailUri((String) doc.getFieldValue(IndexConstants.QS_DETAIL_URI));
 				result.setChromosome((String) doc.getFieldValue(IndexConstants.QS_CHROMOSOME));

@@ -339,9 +339,4 @@ public class SearchConstants {
 	public static final String QS_DISEASE_FACETS = "diseaseFacets";
 	public static final String QS_PHENOTYPE_FACETS = "phenotypeFacets";
 	public static final String QS_MARKER_TYPE_FACETS = "markerTypeFacets";
-
-	public static final String QS_DEFINITION = "definition";
-	public static final String QS_SYNONYM = "synonym";
-	public static final String QS_ACC_ID = "accID";
-
 }

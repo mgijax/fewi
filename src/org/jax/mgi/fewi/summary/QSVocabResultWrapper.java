@@ -16,6 +16,6 @@ public class QSVocabResultWrapper {
 	public Long getAnnotationCount() { return result.getAnnotationCount(); }
 	public String getAnnotationUri() { return result.getAnnotationUri(); }
 	public String getAnnotationText() { return result.getAnnotationText(); }
-	public String getBestMatchText() { return result.getBestMatchText(); }
-	public String getBestMatchType() { return result.getBestMatchType(); }
+	public String getBestMatchText() { return result.getSearchTermDisplay(); }
+	public String getBestMatchType() { return result.getSearchTermType(); }
 }

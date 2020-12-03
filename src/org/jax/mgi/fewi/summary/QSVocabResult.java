@@ -5,60 +5,83 @@ import java.util.List;
 /**
  * Is: one result for the quick search's vocab/strain bucket
  */
-public class QSVocabResult {
+public class QSVocabResult extends QSResult {
+
+	private String uniqueKey;
+	private String searchID;
+	private String searchTerm;
+	private String searchTermDisplay;
+	private String searchTermType;
+	private Integer searchTermWeight;
 
 	private String primaryID;
-	private List<String> accID;
 	private String term;
 	private String termType;
-	private String definition;
-	private List<String> synonym;
 	private String vocabName;
+	private String rawVocabName;
 	private String detailUri;
 	private Long annotationCount;
 	private String annotationText;
 	private String annotationUri;
-	private Integer sequenceNum;
-	private Float score;
-	private String stars;
-	private String bestMatchType;
-	private String bestMatchText;
+	private Long sequenceNum;
 
-	public String getDefinition() {
-		return definition;
+	private String stars;
+	private int starCount = 0;
+
+	public String getUniqueKey() {
+		return uniqueKey;
 	}
-	public void setDefinition(String definition) {
-		this.definition = definition;
+	public void setUniqueKey(String uniqueKey) {
+		this.uniqueKey = uniqueKey;
+	}
+	public String getSearchID() {
+		return searchID;
+	}
+	public void setSearchID(String searchID) {
+		this.searchID = searchID;
+	}
+	public String getSearchTerm() {
+		return searchTerm;
+	}
+	public void setSearchTerm(String searchTerm) {
+		this.searchTerm = searchTerm;
+	}
+	public String getSearchTermDisplay() {
+		return searchTermDisplay;
+	}
+	public void setSearchTermDisplay(String searchTermDisplay) {
+		this.searchTermDisplay = searchTermDisplay;
+	}
+	public String getSearchTermType() {
+		return searchTermType;
+	}
+	public void setSearchTermType(String searchTermType) {
+		this.searchTermType = searchTermType;
+	}
+	public Integer getSearchTermWeight() {
+		return searchTermWeight;
+	}
+	public void setSearchTermWeight(Integer searchTermWeight) {
+		this.searchTermWeight = searchTermWeight;
+	}
+	public int getStarCount() {
+		return starCount;
+	}
+	public void setStarCount(int starCount) {
+		this.starCount = starCount;
 	}
 	public String getStars() {
 		return stars;
 	}
 	public void setStars(String stars) {
 		this.stars = stars;
-	}
-	public String getBestMatchType() {
-		return bestMatchType;
-	}
-	public void setBestMatchType(String bestMatchType) {
-		this.bestMatchType = bestMatchType;
-	}
-	public String getBestMatchText() {
-		return bestMatchText;
-	}
-	public void setBestMatchText(String bestMatchText) {
-		this.bestMatchText = bestMatchText;
+		this.starCount = stars.length();
 	}
 	public String getPrimaryID() {
 		return primaryID;
 	}
 	public void setPrimaryID(String primaryID) {
 		this.primaryID = primaryID;
-	}
-	public List<String> getAccID() {
-		return accID;
-	}
-	public void setAccID(List<String> accID) {
-		this.accID = accID;
 	}
 	public String getTerm() {
 		return term;
@@ -71,12 +94,6 @@ public class QSVocabResult {
 	}
 	public void setTermType(String termType) {
 		this.termType = termType;
-	}
-	public List<String> getSynonym() {
-		return synonym;
-	}
-	public void setSynonym(List<String> synonym) {
-		this.synonym = synonym;
 	}
 	public String getVocabName() {
 		return vocabName;
@@ -108,21 +125,21 @@ public class QSVocabResult {
 	public void setAnnotationUri(String annotationUri) {
 		this.annotationUri = annotationUri;
 	}
-	public Integer getSequenceNum() {
+	public Long getSequenceNum() {
 		return sequenceNum;
 	}
-	public void setSequenceNum(Integer sequenceNum) {
+	public void setSequenceNum(Long sequenceNum) {
 		this.sequenceNum = sequenceNum;
 	}
-	public Float getScore() {
-		return score;
+	public String getRawVocabName() {
+		return rawVocabName;
 	}
-	public void setScore(Float score) {
-		this.score = score;
+	public void setRawVocabName(String rawVocabName) {
+		this.rawVocabName = rawVocabName;
 	}
 
 	@Override
 	public String toString() {
-		return term;
+		return primaryID + ", " + term;
 	}
 }

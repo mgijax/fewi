@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Is: one result for the quick search's feature (marker + allele) bucket
  */
-public class QSFeatureResult {
+public class QSFeatureResult extends QSResult {
 
 	private String uniqueKey;
 	private String searchID;
