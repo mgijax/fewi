@@ -6,34 +6,20 @@
 // Globals
 
 var b2Failed = false;		// did retrieval for this bucket fail?
-
-// Fetch the data items for bucket 2 (matches by strain or vocab term)
-var b2Fetch = function() {
-		var url = fewiurl + '/quicksearch/vocabBucket?' + getQuerystring();
-		$.get(url, function(data) {
-			try {
-				b2Show(data);
-			} catch (e) {
-				console.log("Failed to display data for the vocab/strain bucket: " + e);
-				failed = true;
-			}
-		}).fail(function() {
-				console.log("Failed to retrieve data for the vocab/strain bucket: " + e);
-				failed = true;
-		});
-};
+var b2PageSize = 100;
+var b2CacheName = 'vocabCache';
 
 // Having received 'data' from the server, show it on the page.
-var b2Show = function(data) {
-	var toShow = 100;
+function b2Show(data) {
+	var toShow = b2PageSize;
 	var tbl = '';
-	if (data.summaryRows.length > 0) {
+	if (data.rows.length > 0) {
 		tbl = '<TABLE ID="b2Table">';
 		tbl = tbl + '<TR><TH>Score</TH><TH class="termCol">Term</TH><TH class="dataCol">Associated Data</TH><TH class="bestMatchCol">Best Match</TH></TR>';
 
-		toShow = Math.min(100, data.summaryRows.length);
+		toShow = Math.min(100, data.rows.length);
 		for (var i = 0; i < toShow; i++) {
-			var item = data.summaryRows[i];
+			var item = data.rows[i];
 			tbl = tbl + '<TR>';
 			if (item.stars === null) {
 				tbl = tbl + '<TD>TBD</TD>';
@@ -64,8 +50,17 @@ var b2Show = function(data) {
 	} else {
 		console.log("No b2Results");
 	}
-	var header = qsResultHeader(1, toShow, data.totalCount);
+	var header = qsResultHeader(data.start, data.end, data.totalCount);
 	$('#b2Counts').html(header);
 	$('#b2Results').html(tbl);
-	console.log("Populated " + data.summaryRows.length + " b2Results");
+	pgUpdatePaginator(b2CacheName, 'vocabPaginator', data.totalCount, b2PageSize, dcGetPage)
+	console.log("Populated " + data.rows.length + " b2Results");
+};
+
+// Fetch the data items for bucket 2 (matches by vocab term)
+var b2Fetch = function() {
+		qsShowSpinner('#b2Results');
+		var url = fewiurl + '/quicksearch/vocabBucket?' + getQuerystring();
+		dcStartCache(b2CacheName, url, b2Show, b2PageSize, '#b2Results');
+		dcGetPage(b2CacheName, 1);
 };
