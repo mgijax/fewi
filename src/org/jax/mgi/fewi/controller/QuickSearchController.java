@@ -33,6 +33,7 @@ import org.jax.mgi.fewi.summary.QSFeatureResultWrapper;
 import org.jax.mgi.fewi.summary.QSResult;
 import org.jax.mgi.fewi.summary.QSVocabResultWrapper;
 import org.jax.mgi.fewi.util.AjaxUtils;
+import org.jax.mgi.fewi.util.LimitedSizeCache;
 import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.shr.fe.sort.SmartAlphaComparator;
 import org.jax.mgi.shr.jsonmodel.BrowserTerm;
@@ -78,6 +79,9 @@ public class QuickSearchController {
 		validFacetFields.add(SearchConstants.QS_GO_FUNCTION_FACETS);
 	}
 
+	private static LimitedSizeCache<List<QSFeatureResult>> featureResultCache = new LimitedSizeCache<List<QSFeatureResult>>();
+	private static LimitedSizeCache<List<QSVocabResult>> vocabResultCache = new LimitedSizeCache<List<QSVocabResult>>();
+	
     //--------------------//
     // instance variables
     //--------------------//
@@ -140,32 +144,43 @@ public class QuickSearchController {
         int startIndex = page.getStartIndex();
         int endIndex = startIndex + page.getResults();
         
-        // The index has been rebuilt to instead have each document be a point of data that can be matched, so
-        // we now need to retrieve all matching documents and then process them.  Guessing too high a number of
-        // expected results can be detrimental to efficiency, so we can do an initial query to get the count
-        // and then a second query to return them.
+        String cacheKey = withoutPagination(request.getQueryString());
+        List<QSFeatureResult> out = featureResultCache.get(cacheKey);
         
-        SearchParams idSearch = getSearchParams(queryForm, BY_ID, 0, FEATURE);
-        SearchParams nomenSearch = getSearchParams(queryForm, BY_TERM, 0, FEATURE);
+        if (out != null) {
+        	logger.info(" - got " + out.size() + " feature results from cache");
+        	
+        } else {
+        	// The index has been rebuilt to instead have each document be a point of data that can be matched, so
+        	// we now need to retrieve all matching documents and then process them.  Guessing too high a number of
+        	// expected results can be detrimental to efficiency, so we can do an initial query to get the count
+        	// and then a second query to return them.
+        
+        	SearchParams idSearch = getSearchParams(queryForm, BY_ID, 0, FEATURE);
+        	SearchParams nomenSearch = getSearchParams(queryForm, BY_TERM, 0, FEATURE);
 
-        SearchParams orSearch = new SearchParams();
-        orSearch.setPaginator(new Paginator(0));
-        List<Filter> idOrNomen = new ArrayList<Filter>();
-        idOrNomen.add(idSearch.getFilter());
-        idOrNomen.add(nomenSearch.getFilter());
-        orSearch.setFilter(Filter.or(idOrNomen));
+        	SearchParams orSearch = new SearchParams();
+        	orSearch.setPaginator(new Paginator(0));
+        	List<Filter> idOrNomen = new ArrayList<Filter>();
+        	idOrNomen.add(idSearch.getFilter());
+        	idOrNomen.add(nomenSearch.getFilter());
+        	orSearch.setFilter(Filter.or(idOrNomen));
         
-        SearchResults<QSFeatureResult> idOrNomenResults = qsFinder.getFeatureResults(orSearch);
-        Integer resultCount = idOrNomenResults.getTotalCount();
-        logger.info("Identified " + resultCount + " feature matches");
+        	SearchResults<QSFeatureResult> idOrNomenResults = qsFinder.getFeatureResults(orSearch);
+        	Integer resultCount = idOrNomenResults.getTotalCount();
+        	logger.info("Identified " + resultCount + " feature matches");
         
-        // Now do the query to retrieve all results.
-        orSearch.setPaginator(new Paginator(resultCount));
-        List<QSFeatureResult> allMatches = qsFinder.getFeatureResults(orSearch).getResultObjects();
-        logger.info("Loaded " + allMatches.size() + " feature matches");
+        	// Now do the query to retrieve all results.
+        	orSearch.setPaginator(new Paginator(resultCount));
+        	List<QSFeatureResult> allMatches = qsFinder.getFeatureResults(orSearch).getResultObjects();
+        	logger.info("Loaded " + allMatches.size() + " feature matches");
         
-        List<QSFeatureResult> out = unifyFeatureMatches(queryForm.getTerms(), allMatches);
-        logger.info("Consolidated down to " + out.size() + " features");
+        	out = unifyFeatureMatches(queryForm.getTerms(), allMatches);
+        	logger.info("Consolidated down to " + out.size() + " features");
+        	
+        	featureResultCache.put(cacheKey, out);
+        	logger.info(" - added " + out.size() + " feature results to cache");
+       	}
         
         List<QSFeatureResultWrapper> wrapped = new ArrayList<QSFeatureResultWrapper>();
         if (out.size() >= startIndex) {
@@ -487,36 +502,41 @@ public class QuickSearchController {
         int startIndex = page.getStartIndex();
         int endIndex = startIndex + page.getResults();
         
-        // The index has been rebuilt to instead have each document be a point of data that can be matched, so
-        // we now need to retrieve all matching documents and then process them.  Guessing too high a number of
-        // expected results can be detrimental to efficiency, so we can do an initial query to get the count
-        // and then a second query to return them.
+        String cacheKey = withoutPagination(request.getQueryString());
+        List<QSVocabResult> out = vocabResultCache.get(cacheKey);
         
-        SearchParams idSearch = getSearchParams(queryForm, BY_ID, 0, VOCAB_TERM);
-        SearchParams nomenSearch = getSearchParams(queryForm, BY_TERM, 0, VOCAB_TERM);
+        if (out != null) {
+        	logger.info(" - got " + out.size() + " vocab results from cache");
+        } else {
+        	// The index has been rebuilt to instead have each document be a point of data that can be matched, so
+        	// we now need to retrieve all matching documents and then process them.  Guessing too high a number of
+        	// expected results can be detrimental to efficiency, so we can do an initial query to get the count
+        	// and then a second query to return them.
+        
+        	SearchParams idSearch = getSearchParams(queryForm, BY_ID, 0, VOCAB_TERM);
+        	SearchParams nomenSearch = getSearchParams(queryForm, BY_TERM, 0, VOCAB_TERM);
 
-        SearchParams orSearch = new SearchParams();
-        orSearch.setPaginator(new Paginator(0));
-        List<Filter> idOrNomen = new ArrayList<Filter>();
-        idOrNomen.add(idSearch.getFilter());
-        idOrNomen.add(nomenSearch.getFilter());
-        orSearch.setFilter(Filter.or(idOrNomen));
+        	SearchParams orSearch = new SearchParams();
+        	orSearch.setPaginator(new Paginator(0));
+        	List<Filter> idOrNomen = new ArrayList<Filter>();
+        	idOrNomen.add(idSearch.getFilter());
+        	idOrNomen.add(nomenSearch.getFilter());
+        	orSearch.setFilter(Filter.or(idOrNomen));
         
-        SearchResults<QSVocabResult> idOrNomenResults = qsFinder.getVocabResults(orSearch);
-        Integer resultCount = idOrNomenResults.getTotalCount();
-        logger.info("Identified " + resultCount + " term matches");
+        	SearchResults<QSVocabResult> idOrNomenResults = qsFinder.getVocabResults(orSearch);
+        	Integer resultCount = idOrNomenResults.getTotalCount();
+        	logger.info("Identified " + resultCount + " term matches");
 
-        // Now do the query to retrieve all results.
-        orSearch.setPaginator(new Paginator(resultCount));
-        List<QSVocabResult> allMatches = qsFinder.getVocabResults(orSearch).getResultObjects();
-        logger.info("Loaded " + allMatches.size() + " term matches");
+        	// Now do the query to retrieve all results.
+        	orSearch.setPaginator(new Paginator(resultCount));
+        	List<QSVocabResult> allMatches = qsFinder.getVocabResults(orSearch).getResultObjects();
+        	logger.info("Loaded " + allMatches.size() + " term matches");
         
-        List<QSVocabResult> out = (List<QSVocabResult>) unifyVocabMatches(queryForm.getTerms(), allMatches);
-        logger.info("Consolidated down to " + out.size() + " terms");
-        
-        int i = 0;
-        for (QSVocabResult r : out) {
-        	logger.info("Term " + i++ + ": " + r.toString());
+        	out = (List<QSVocabResult>) unifyVocabMatches(queryForm.getTerms(), allMatches);
+        	logger.info("Consolidated down to " + out.size() + " terms");
+        	
+        	vocabResultCache.put(cacheKey, out);
+        	logger.info(" - added " + out.size() + " vocab results to cache");
         }
         
         List<QSVocabResultWrapper> wrapped = new ArrayList<QSVocabResultWrapper>();
@@ -579,6 +599,14 @@ public class QuickSearchController {
 		combo.add(new Filter(SearchConstants.QS_RAW_VOCAB_NAME, "EMAPS", Operator.OP_NOT_EQUAL));
 		return Filter.and(combo);
 	}
+	
+	// Take the given query string and eliminate any pagination parameters, leaving those parameters that
+	// uniquely identify the search itself (the query text plus any filters).  This can be used to identify
+	// the set of search results for caching.
+	private String withoutPagination(String queryString) {
+		return queryString.replaceAll("&startIndex=[0-9]+", "").replaceAll("&results=[0-9]+", "");
+	}
+	
 	
     //-------------------------//
     // QS Results - bucket 3 JSON (accession ID matches)
