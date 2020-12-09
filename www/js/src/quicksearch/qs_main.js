@@ -8,6 +8,7 @@ var qsMain = function() {
 	b1Fetch();		// bucket 1 : markers + alleles bucket
 	b2Fetch();		// bucket 2 : vocab terms + strains bucket
 	b3Fetch();		// bucket 3 : ID bucket
+	b4Fetch();		// bucket 4 : strains bucket
 };
 
 // find a string beginning with the given string 'c' that doesn't appear in string 's'
@@ -39,6 +40,7 @@ var qsProcessFilters = function() {
 	instantiatedPaginator = false;
 	b1Fetch();
 	b2Fetch();
+	b4Fetch();
 
 	// If no active filters, hide the remove filter buttons.
 	if (queryString == getQuerystring()) {

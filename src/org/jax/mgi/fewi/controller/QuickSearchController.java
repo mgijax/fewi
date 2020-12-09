@@ -31,6 +31,8 @@ import org.jax.mgi.fewi.summary.QSVocabResult;
 import org.jax.mgi.fewi.summary.QSFeatureResult;
 import org.jax.mgi.fewi.summary.QSFeatureResultWrapper;
 import org.jax.mgi.fewi.summary.QSResult;
+import org.jax.mgi.fewi.summary.QSStrainResult;
+import org.jax.mgi.fewi.summary.QSStrainResultWrapper;
 import org.jax.mgi.fewi.summary.QSVocabResultWrapper;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.LimitedSizeCache;
@@ -66,6 +68,7 @@ public class QuickSearchController {
 
 	private static int FEATURE = 1;			// constants for types of objects we work with
 	private static int VOCAB_TERM = 2;
+	private static int STRAIN = 3;
 
 	private static String BY_ID = "match_by_id";		// match by ID
 	private static String BY_TERM = "match_by_term";	// match by non-ID
@@ -81,6 +84,7 @@ public class QuickSearchController {
 
 	private static LimitedSizeCache<List<QSFeatureResult>> featureResultCache = new LimitedSizeCache<List<QSFeatureResult>>();
 	private static LimitedSizeCache<List<QSVocabResult>> vocabResultCache = new LimitedSizeCache<List<QSVocabResult>>();
+	private static LimitedSizeCache<List<QSStrainResult>> strainResultCache = new LimitedSizeCache<List<QSStrainResult>>();
 	
     //--------------------//
     // instance variables
@@ -200,8 +204,7 @@ public class QuickSearchController {
         return response;
     }
 
-	// distill the various facet parameters down to a single Filter (should work across both feature and
-	// vocab term buckets)
+	// distill the various facet parameters down to a single Filter (should work across both all QS buckets)
 	private Filter getFilterFacets (QuickSearchQueryForm qf) {
 		List<Filter> filters = new ArrayList<Filter>();
 		
@@ -241,7 +244,7 @@ public class QuickSearchController {
         return Filter.or(idFilters);
 	}
 	
-	// Return a single filter that looks for documentss by any non-ID type of field, with multiple
+	// Return a single filter that looks for documents by any non-ID type of field, with multiple
 	// terms joined by an OR.
 	private Filter createTermFilter(QuickSearchQueryForm qf, int bucket) {
         List<Filter> termFilters = new ArrayList<Filter>();
@@ -282,6 +285,21 @@ public class QuickSearchController {
 		List<QSVocabResult> out = new ArrayList<QSVocabResult>(unified.size());
 		for (QSResult u : unified) {
 			out.add((QSVocabResult) u);
+		}
+		return out;
+	}
+	
+	// consolidate the lists of matching strains, add star values, and setting best match values, then return
+	private List<QSStrainResult> unifyStrainMatches (List<String> searchTerms, List<QSStrainResult> allMatches) {
+		List<QSResult> a = new ArrayList<QSResult>(allMatches.size());
+		for (QSStrainResult r : allMatches) {
+			a.add((QSResult) r);
+		}
+		List<QSResult> unified = unifyMatches(searchTerms, a);
+		
+		List<QSStrainResult> out = new ArrayList<QSStrainResult>(unified.size());
+		for (QSResult u : unified) {
+			out.add((QSStrainResult) u);
 		}
 		return out;
 	}
@@ -377,8 +395,7 @@ public class QuickSearchController {
 		return grouper.toList();
 	}
 	
-	/* Get the set of GO Process filter options for the current result set, including facets from both the
-	 * feature bucket and the vocab bucket.
+	/* Get the set of GO Process filter options for the current result set, including facets from all QS buckets
 	 */
 	@RequestMapping("/featureBucket/process")
 	public @ResponseBody Map<String, List<String>> getProcessFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
@@ -386,8 +403,7 @@ public class QuickSearchController {
 		return getFacets(qf, SearchConstants.QS_GO_PROCESS_FACETS);
 	}
 
-	/* Get the set of GO Function filter options for the current result set, including facets from both the
-	 * feature bucket and the vocab bucket.
+	/* Get the set of GO Function filter options for the current result set, including facets from all QS buckets
 	 */
 	@RequestMapping("/featureBucket/function")
 	public @ResponseBody Map<String, List<String>> getFunctionFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
@@ -395,8 +411,7 @@ public class QuickSearchController {
 		return getFacets(qf, SearchConstants.QS_GO_FUNCTION_FACETS);
 	}
 
-	/* Get the set of GO Component filter options for the current result set, including facets from both the
-	 * feature bucket and the vocab bucket.
+	/* Get the set of GO Component filter options for the current result set, including facets from all QS buckets
 	 */
 	@RequestMapping("/featureBucket/component")
 	public @ResponseBody Map<String, List<String>> getComponentFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
@@ -408,7 +423,8 @@ public class QuickSearchController {
 	private Map<String, List<String>> getFacets (QuickSearchQueryForm qf, String facetField) throws Exception {
 		List<String> featureFacets = getFeatureFacets(qf, facetField);
 		List<String> vocabFacets = getVocabFacets(qf, facetField);
-		List<String> resultList = unifyFacets(featureFacets, vocabFacets);
+		List<String> strainFacets = getStrainFacets(qf, facetField);
+		List<String> resultList = unifyFacets(featureFacets, vocabFacets, strainFacets);
 		String error = null;
 		
         if (resultList.size() == 0) {
@@ -428,10 +444,10 @@ public class QuickSearchController {
 		return out;
 	}
 	
-	/* Unify group1 and group2 facets into a single, ordered list for return.  Modifies group1 by adding entries
-	 * from group2 and then sorting.
+	/* Unify 3 groups of facets into a single, ordered list for return.  Modifies group1 by adding entries
+	 * from group2 and group3 and then sorting.
 	 */
-	private List<String> unifyFacets(List<String> group1, List<String> group2) {
+	private List<String> unifyFacets(List<String> group1, List<String> group2, List<String> group3) {
 		Set<String> seenIt = new HashSet<String>();
 
 		if (group1 != null) {
@@ -442,11 +458,17 @@ public class QuickSearchController {
 			group1 = new ArrayList<String>();
 		}
 		
-		if (group2 != null) {
-			for (String item : group2) {
-				if (!seenIt.contains(item)) {
-					group1.add(item);
-					seenIt.add(item);
+		List<List<String>> toUnify = new ArrayList<List<String>>();
+		toUnify.add(group2);
+		toUnify.add(group3);
+		
+		for (List<String> group : toUnify) {
+			if (group != null) {
+				for (String item : group) {
+					if (!seenIt.contains(item)) {
+						group1.add(item);
+						seenIt.add(item);
+					}
 				}
 			}
 		}
@@ -486,6 +508,24 @@ public class QuickSearchController {
         	resultList = qsFinder.getVocabFacets(anySearch, filterName);
         } else {
         	throw new Exception("getVocabFacets: Invalid facet name: " + filterName);
+        }
+        return resultList;
+	}
+	
+	/* Execute the search for facets for the strain bucket using the given filterName, returning them as an
+	 * unordered list of strings.
+	 */
+	private List<String> getStrainFacets(QuickSearchQueryForm queryForm, String filterName) throws Exception {
+        // match either ID, term, or synonyms
+        
+        SearchParams anySearch = getSearchParams(queryForm, BY_ANY, facetLimit, STRAIN);
+
+        List<String> resultList = null;		// list of strings, each a value for a facet
+        
+        if (validFacetFields.contains(filterName)) {
+        	resultList = qsFinder.getStrainFacets(anySearch, filterName);
+        } else {
+        	throw new Exception("getStrainFacets: Invalid facet name: " + filterName);
         }
         return resultList;
 	}
@@ -550,6 +590,73 @@ public class QuickSearchController {
         }
         
         JsonSummaryResponse<QSVocabResultWrapper> response = new JsonSummaryResponse<QSVocabResultWrapper>();
+        response.setSummaryRows(wrapped);
+        response.setTotalCount(out.size());
+        logger.info("Returning " + wrapped.size() + " term matches");
+
+        return response;
+    }
+
+    //-------------------------//
+    // QS Results - bucket 3 JSON (strains)
+    //-------------------------//
+	@RequestMapping("/strainBucket")
+	public @ResponseBody JsonSummaryResponse<QSStrainResultWrapper> getStrainBucket(HttpServletRequest request,
+			@ModelAttribute QuickSearchQueryForm queryForm, @ModelAttribute Paginator page) {
+
+        logger.info("->getStrainBucket started (seeking results " + page.getStartIndex() + " to " + (page.getStartIndex() + page.getResults()) + ")");
+
+        int startIndex = page.getStartIndex();
+        int endIndex = startIndex + page.getResults();
+        
+        String cacheKey = withoutPagination(request.getQueryString());
+        List<QSStrainResult> out = strainResultCache.get(cacheKey);
+        
+        if (out != null) {
+        	logger.info(" - got " + out.size() + " strain results from cache");
+        } else {
+        	// The index has been rebuilt to instead have each document be a point of data that can be matched, so
+        	// we now need to retrieve all matching documents and then process them.  Guessing too high a number of
+        	// expected results can be detrimental to efficiency, so we can do an initial query to get the count
+        	// and then a second query to return them.
+        
+        	SearchParams idSearch = getSearchParams(queryForm, BY_ID, 0, STRAIN);
+        	SearchParams nomenSearch = getSearchParams(queryForm, BY_TERM, 0, STRAIN);
+
+        	SearchParams orSearch = new SearchParams();
+        	orSearch.setPaginator(new Paginator(0));
+        	List<Filter> idOrNomen = new ArrayList<Filter>();
+        	idOrNomen.add(idSearch.getFilter());
+        	idOrNomen.add(nomenSearch.getFilter());
+        	orSearch.setFilter(Filter.or(idOrNomen));
+        
+        	SearchResults<QSStrainResult> idOrNomenResults = qsFinder.getStrainResults(orSearch);
+        	Integer resultCount = idOrNomenResults.getTotalCount();
+        	logger.info("Identified " + resultCount + " term matches");
+
+        	// Now do the query to retrieve all results.
+        	orSearch.setPaginator(new Paginator(resultCount));
+        	List<QSStrainResult> allMatches = qsFinder.getStrainResults(orSearch).getResultObjects();
+        	logger.info("Loaded " + allMatches.size() + " term matches");
+        
+        	out = (List<QSStrainResult>) unifyStrainMatches(queryForm.getTerms(), allMatches);
+        	logger.info("Consolidated down to " + out.size() + " terms");
+        	
+        	strainResultCache.put(cacheKey, out);
+        	logger.info(" - added " + out.size() + " strain results to cache");
+        }
+        
+        List<QSStrainResultWrapper> wrapped = new ArrayList<QSStrainResultWrapper>();
+        if (out.size() >= startIndex) {
+        	logger.debug(" - extracting results " + startIndex + " to " + Math.min(out.size(), endIndex));
+        	for (QSStrainResult r : out.subList(startIndex, Math.min(out.size(), endIndex))) {
+        		wrapped.add(new QSStrainResultWrapper(r));
+        	}
+        } else { 
+        	logger.debug(" - not extracting,just returning empty term list");
+        }
+        
+        JsonSummaryResponse<QSStrainResultWrapper> response = new JsonSummaryResponse<QSStrainResultWrapper>();
         response.setSummaryRows(wrapped);
         response.setTotalCount(out.size());
         logger.info("Returning " + wrapped.size() + " term matches");

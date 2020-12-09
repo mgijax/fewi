@@ -76,6 +76,16 @@
 </div>
 <div id="b2Results"></div>
 
+<!-- Note: b4 appears out of order (before b3) for historical reasons. -->
+<div id="b4Header" class="qsHeader">Strains
+  <span id="b4Counts" class="resultCount"></span>
+  <span class="helpCursor" onmouseover="return overlib('<div class=detailRowType>TBD</div><div class=\'detailRowType\'>See <a href=\'${configBean.USERHELP_URL}QUICK_SEARCH_help.shtml\'>Using the Quick Search Tool</a> for more information and examples.</div>', STICKY, CAPTION, 'Strains', HAUTO, BELOW, WIDTH, 375, DELAY, 600, CLOSECLICK, CLOSETEXT, 'Close X')" onmouseout="nd();">
+    <img src="${configBean.WEBSHARE_URL}images/blue_info_icon.gif" border="0">
+  </span>
+  <div id="strainPaginator" class="strainPaginator"></div>
+</div>
+<div id="b4Results"></div>
+
 <div id="b3Header" class="qsHeader">Other Results by ID
   <span id="b3Counts" class="resultCount"></span>
   <span class="helpCursor" onmouseover="return overlib('<div class=detailRowType>This section includes links to sequences, orthology relationships, SNPs and other results whose accession ID matched an item in your search text.</div><div class=\'detailRowType\'>See <a href=\'${configBean.USERHELP_URL}QUICK_SEARCH_help.shtml\'>Using the Quick Search Tool</a> for more information and examples.</div>', STICKY, CAPTION, 'Other Results By ID', HAUTO, BELOW, WIDTH, 375, DELAY, 600, CLOSECLICK, CLOSETEXT, 'Close X')" onmouseout="nd();">
@@ -84,8 +94,8 @@
 </div>
 <div id="b3Results"></div>
 
-<div id="b4Header" class="qsHeader">Search MGI with Google
-  <span id="b4Counts" class="resultCount"></span>
+<div id="b5Header" class="qsHeader">Search MGI with Google
+  <span id="b5Counts" class="resultCount"></span>
   <span class="helpCursor" onmouseover="return overlib('<div class=detailRowType>Use Google to search for your text on MGI\'s web pages including:<ul><li>FAQs</li><li>Help pages</li><li>Reference abstracts</li><li>Phenotypic details for alleles</li><li>Image captions</li><li>...and other pages</li></ul></div><div class=\'detailRowType\'>See <a href=\'${configBean.USERHELP_URL}QUICK_SEARCH_help.shtml\'>Using the Quick Search Tool</a> for more information and examples.</div>', STICKY, CAPTION, 'Search MGI with Google', HAUTO, BELOW, WIDTH, 375, DELAY, 600, CLOSECLICK, CLOSETEXT, 'Close X')" onmouseout="nd();">
     <img src="${configBean.WEBSHARE_URL}images/blue_info_icon.gif" border="0">
   </span>
@@ -126,6 +136,7 @@
 
 #b1Results { max-height: 300px; overflow-y: auto; }
 #b2Results { max-height: 300px; overflow-y: auto; }
+#b4Results { max-height: 300px; overflow-y: auto; }
 
 #b1Table { border-collapse: collapse; width: 100% }
 #b1Table th { font-weight: bold; padding: 3px; }
@@ -144,6 +155,12 @@
 #b3Table td { padding: 3px; }
 #b3Table tr:nth-child(odd) { background-color: #f2f2f2; }
 #b3Table tr:first-child { background-color: #dfefff; }
+
+#b4Table { border-collapse: collapse; width: 100% }
+#b4Table th { font-weight: bold; padding: 3px; }
+#b4Table td { padding: 3px; }
+#b4Table tr:nth-child(odd) { background-color: #f2f2f2; }
+#b4Table tr:first-child { background-color: #dfefff; }
 
 .noWrap { white-space: nowrap; }
 .facetFilter .yui-panel .bd { width: 285px; }
@@ -171,6 +188,14 @@
     margin-right: 10px;
     text-decoration: none;
 }
+#strainPaginator {
+	float: right;
+    font-size: 12px;
+    margin-top: 10px;
+    font-weight: normal;
+    margin-right: 10px;
+    text-decoration: none;
+}
 </style>
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/filters.js"></script>
@@ -188,6 +213,7 @@
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/quicksearch/qs_bucket1.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/quicksearch/qs_bucket2.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/quicksearch/qs_bucket3.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/quicksearch/qs_bucket4.js"></script>
 <script>
 function clearField() {
 	$('#queryField')[0].value = '';

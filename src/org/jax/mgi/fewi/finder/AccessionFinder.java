@@ -111,13 +111,15 @@ public class AccessionFinder {
 
         boolean includeMarkers = true;
         boolean includeAlleles = true;
+        boolean includeStrains = true;
         boolean includeNonAmaTerms = true;
         
-        // When called by the Quick Search (for bucket 3), we need to exclude markers, alleles, and
+        // When called by the Quick Search (for bucket 3), we need to exclude markers, alleles, strains, and
         // non-AMA terms from consideration.  (Those are already handled in other buckets.)
         if ("QS".equals(flag)) {
         	includeMarkers = false;
         	includeAlleles = false;
+        	includeStrains = false;
         	includeNonAmaTerms = false;
         }
         
@@ -146,7 +148,7 @@ public class AccessionFinder {
         if (includeMarkers) { getMouseMarkers(accID, searchResults); }
         if (includeAlleles) { getAlleles(accID, searchResults); }
         getReferences(accID, searchResults);
-        getStrains(accID, searchResults);
+        if (includeStrains) { getStrains(accID, searchResults); }
        	getGenotypes(accID, searchResults);
         getProbes(accID, searchResults);
         getImages(accID, searchResults);
