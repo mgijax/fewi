@@ -670,7 +670,7 @@ public class QuickSearchController {
         
         if (BY_ID.equals(queryMode)) {
         	myFilter = createIDFilter(qf);
-        } else if (BY_TERM.contentEquals(queryMode)) {
+        } else if (BY_TERM.equals(queryMode)) {
         	myFilter = createTermFilter(qf, bucket);
         } else { 	// BY_ANY
         	List<Filter> orFilters = new ArrayList<Filter>(2);
