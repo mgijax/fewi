@@ -34,8 +34,8 @@ public class SolrQSVocabResultBaseHunter extends SolrHunter<QSVocabResult> {
 		 * implementation.
 		 */
 		propertyMap.put(SearchConstants.UNIQUE_KEY, new SolrPropertyMapper(IndexConstants.UNIQUE_KEY));
-		propertyMap.put(SearchConstants.QS_SEARCH_ID, new SolrPropertyMapper(IndexConstants.QS_SEARCH_ID));
-		propertyMap.put(SearchConstants.QS_SEARCH_TERM, new SolrPropertyMapper(IndexConstants.QS_SEARCH_TERM));
+		propertyMap.put(SearchConstants.QS_SEARCH_TERM_EXACT, new SolrPropertyMapper(IndexConstants.QS_SEARCH_TERM_EXACT));
+		propertyMap.put(SearchConstants.QS_SEARCH_TERM_STEMMED, new SolrPropertyMapper(IndexConstants.QS_SEARCH_TERM_STEMMED));
 		propertyMap.put(SearchConstants.QS_SEARCH_TERM_DISPLAY, new SolrPropertyMapper(IndexConstants.QS_SEARCH_TERM_DISPLAY));
 		propertyMap.put(SearchConstants.QS_SEARCH_TERM_TYPE, new SolrPropertyMapper(IndexConstants.QS_SEARCH_TERM_TYPE));
 		propertyMap.put(SearchConstants.QS_SEARCH_TERM_WEIGHT, new SolrPropertyMapper(IndexConstants.QS_SEARCH_TERM_WEIGHT));
@@ -85,8 +85,8 @@ public class SolrQSVocabResultBaseHunter extends SolrHunter<QSVocabResult> {
 				QSVocabResult result = new QSVocabResult();
 				result.setPrimaryID((String) doc.getFieldValue(IndexConstants.QS_PRIMARY_ID));
 				result.setUniqueKey(key);
-				result.setSearchID((String) doc.getFieldValue(IndexConstants.QS_SEARCH_ID));
-				result.setSearchTerm((String) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM));
+				result.setSearchTermExact((String) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_EXACT));
+				result.setSearchTermStemmed((String) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_STEMMED));
 				result.setSearchTermDisplay((String) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_DISPLAY));
 				result.setSearchTermType((String) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_TYPE));
 

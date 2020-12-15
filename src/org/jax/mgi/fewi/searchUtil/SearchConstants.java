@@ -307,8 +307,8 @@ public class SearchConstants {
 	public static final String HAS_IMAGE = "hasImage";
 	
 	// quick search
-	public static final String QS_SEARCH_ID = "searchID";
-	public static final String QS_SEARCH_TERM = "searchTerm";
+	public static final String QS_SEARCH_TERM_EXACT = "searchTermExact";
+	public static final String QS_SEARCH_TERM_STEMMED = "searchTermStemmed";
 	public static final String QS_SEARCH_TERM_DISPLAY = "searchTermDisplay";
 	public static final String QS_SEARCH_TERM_TYPE = "searchTermType";
 	public static final String QS_SEARCH_TERM_WEIGHT = "searchTermWeight";

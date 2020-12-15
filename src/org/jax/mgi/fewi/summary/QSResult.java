@@ -1,8 +1,8 @@
 package org.jax.mgi.fewi.summary;
 
 public abstract class QSResult {
-	public abstract String getSearchID();			// methods to get info about the searchable data
-	public abstract String getSearchTerm();
+	public abstract String getSearchTermExact();			// methods to get info about the searchable data
+	public abstract String getSearchTermStemmed();
 	public abstract Integer getSearchTermWeight();
 
 	public abstract void setStars(String stars);		// methods to set/get star rating info

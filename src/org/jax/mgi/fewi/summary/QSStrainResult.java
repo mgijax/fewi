@@ -8,8 +8,8 @@ import java.util.List;
 public class QSStrainResult extends QSResult {
 
 	private String uniqueKey;
-	private String searchID;
-	private String searchTerm;
+	private String searchTermExact;
+	private String searchTermStemmed;
 	private String searchTermDisplay;
 	private String searchTermType;
 	private Integer searchTermWeight;
@@ -55,17 +55,17 @@ public class QSStrainResult extends QSResult {
 	public void setUniqueKey(String uniqueKey) {
 		this.uniqueKey = uniqueKey;
 	}
-	public String getSearchID() {
-		return searchID;
+	public String getSearchTermExact() {
+		return searchTermExact;
 	}
-	public void setSearchID(String searchID) {
-		this.searchID = searchID;
+	public void setSearchTermExact(String searchTermExact) {
+		this.searchTermExact = searchTermExact;
 	}
-	public String getSearchTerm() {
-		return searchTerm;
+	public String getSearchTermStemmed() {
+		return searchTermStemmed;
 	}
-	public void setSearchTerm(String searchTerm) {
-		this.searchTerm = searchTerm;
+	public void setSearchTermStemmed(String searchTermStemmed) {
+		this.searchTermStemmed = searchTermStemmed;
 	}
 	public String getSearchTermDisplay() {
 		return searchTermDisplay;

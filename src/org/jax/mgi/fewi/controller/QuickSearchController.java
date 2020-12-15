@@ -38,6 +38,8 @@ import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.LimitedSizeCache;
 import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.shr.fe.sort.SmartAlphaComparator;
+import org.jax.mgi.shr.fe.util.EasyStemmer;
+import org.jax.mgi.shr.fe.util.StopwordRemover;
 import org.jax.mgi.shr.jsonmodel.BrowserTerm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,9 +72,9 @@ public class QuickSearchController {
 	private static int VOCAB_TERM = 2;
 	private static int STRAIN = 3;
 
-	private static String BY_ID = "match_by_id";		// match by ID
-	private static String BY_TERM = "match_by_term";	// match by non-ID
-	private static String BY_ANY = "match_by_any";		// match by any field
+	private static String BY_EXACT_MATCH = "exact_match";	
+	private static String BY_STEMMED_MATCH = "stemmed match";
+	private static String BY_ANY = "any match";	
 	
 	private static Set<String> validFacetFields;
 	static {
@@ -160,8 +162,8 @@ public class QuickSearchController {
         	// expected results can be detrimental to efficiency, so we can do an initial query to get the count
         	// and then a second query to return them.
         
-        	SearchParams idSearch = getSearchParams(queryForm, BY_ID, 0, FEATURE);
-        	SearchParams nomenSearch = getSearchParams(queryForm, BY_TERM, 0, FEATURE);
+        	SearchParams idSearch = getSearchParams(queryForm, BY_EXACT_MATCH, 0, FEATURE);
+        	SearchParams nomenSearch = getSearchParams(queryForm, BY_STEMMED_MATCH, 0, FEATURE);
 
         	SearchParams orSearch = new SearchParams();
         	orSearch.setPaginator(new Paginator(0));
@@ -235,23 +237,34 @@ public class QuickSearchController {
 	}
 	
 	// Return a single filter that looks for features by ID, with multiple terms joined by an OR.
-	private Filter createIDFilter(QuickSearchQueryForm qf) {
+	private Filter createExactTermFilter(QuickSearchQueryForm qf) {
         List<Filter> idFilters = new ArrayList<Filter>();
 
         for (String term : qf.getTerms()) {
-        	idFilters.add(new Filter(SearchConstants.QS_SEARCH_ID, term, Operator.OP_EQUAL));
+        	idFilters.add(new Filter(SearchConstants.QS_SEARCH_TERM_EXACT, term, Operator.OP_EQUAL));
         }
         return Filter.or(idFilters);
 	}
 	
 	// Return a single filter that looks for documents by any non-ID type of field, with multiple
 	// terms joined by an OR.
-	private Filter createTermFilter(QuickSearchQueryForm qf, int bucket) {
+	private Filter createStemmedTermFilter(QuickSearchQueryForm qf, int bucket) {
         List<Filter> termFilters = new ArrayList<Filter>();
+        EasyStemmer stemmer = new EasyStemmer();
+        StopwordRemover stopwordRemover = new StopwordRemover();
 
         for (String term : qf.getTerms()) {
-        	termFilters.add(new Filter(SearchConstants.QS_SEARCH_TERM, term, Operator.OP_CONTAINS_WITH_COLON));
+        	term = stemmer.stemAll(stopwordRemover.remove(term));
+        	if ((term != null) && (term.length() > 0)) {
+        		termFilters.add(new Filter(SearchConstants.QS_SEARCH_TERM_STEMMED, term, Operator.OP_CONTAINS_WITH_COLON));
+        	}
         }
+        
+        // All search terms were removed by stemming, so don't return anything for this.
+        if (termFilters.size() == 0) {
+        	termFilters.add(new Filter(SearchConstants.QS_SEARCH_TERM_STEMMED, "abcdefghijklmn", Operator.OP_EQUAL));
+        }
+        
         if (bucket == VOCAB_TERM) {
         	// When looking for vocab terms by term, synonym, or definition, we do not want EMAPS terms
         	return notEmaps(Filter.or(termFilters));
@@ -326,12 +339,11 @@ public class QuickSearchController {
 		for (QSResult match : allMatches) {
 			String primaryID = match.getPrimaryID();
 			
-			if (match.getSearchID() != null) {
-				// IDs can only be exact matches
+			if (match.getSearchTermExact() != null) {
 				match.setStars("****");
 				
-			} else if (match.getSearchTerm() != null) {
-				String lowerTerm = match.getSearchTerm().toLowerCase();
+			} else if (match.getSearchTermStemmed() != null) {
+				String lowerTerm = match.getSearchTermStemmed().toLowerCase();
 
 				// search terms can be exact (4-star), contain all terms (3-star), or contain some terms (2-star)
 				if (lowerTerm.equals(originalSearchTerm)) {
@@ -553,8 +565,8 @@ public class QuickSearchController {
         	// expected results can be detrimental to efficiency, so we can do an initial query to get the count
         	// and then a second query to return them.
         
-        	SearchParams idSearch = getSearchParams(queryForm, BY_ID, 0, VOCAB_TERM);
-        	SearchParams nomenSearch = getSearchParams(queryForm, BY_TERM, 0, VOCAB_TERM);
+        	SearchParams idSearch = getSearchParams(queryForm, BY_EXACT_MATCH, 0, VOCAB_TERM);
+        	SearchParams nomenSearch = getSearchParams(queryForm, BY_STEMMED_MATCH, 0, VOCAB_TERM);
 
         	SearchParams orSearch = new SearchParams();
         	orSearch.setPaginator(new Paginator(0));
@@ -620,8 +632,8 @@ public class QuickSearchController {
         	// expected results can be detrimental to efficiency, so we can do an initial query to get the count
         	// and then a second query to return them.
         
-        	SearchParams idSearch = getSearchParams(queryForm, BY_ID, 0, STRAIN);
-        	SearchParams nomenSearch = getSearchParams(queryForm, BY_TERM, 0, STRAIN);
+        	SearchParams idSearch = getSearchParams(queryForm, BY_EXACT_MATCH, 0, STRAIN);
+        	SearchParams nomenSearch = getSearchParams(queryForm, BY_STEMMED_MATCH, 0, STRAIN);
 
         	SearchParams orSearch = new SearchParams();
         	orSearch.setPaginator(new Paginator(0));
@@ -668,14 +680,14 @@ public class QuickSearchController {
 	private SearchParams getSearchParams (QuickSearchQueryForm qf, String queryMode, Integer resultCount, int bucket) {
         Filter myFilter;
         
-        if (BY_ID.equals(queryMode)) {
-        	myFilter = createIDFilter(qf);
-        } else if (BY_TERM.equals(queryMode)) {
-        	myFilter = createTermFilter(qf, bucket);
+        if (BY_EXACT_MATCH.equals(queryMode)) {
+        	myFilter = createExactTermFilter(qf);
+        } else if (BY_STEMMED_MATCH.equals(queryMode)) {
+        	myFilter = createStemmedTermFilter(qf, bucket);
         } else { 	// BY_ANY
         	List<Filter> orFilters = new ArrayList<Filter>(2);
-        	orFilters.add(createIDFilter(qf));
-        	orFilters.add(createTermFilter(qf, bucket));
+        	orFilters.add(createExactTermFilter(qf));
+        	orFilters.add(createStemmedTermFilter(qf, bucket));
         	myFilter = Filter.or(orFilters);
         }
         
