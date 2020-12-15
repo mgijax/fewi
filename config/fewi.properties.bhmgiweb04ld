@@ -1,0 +1,27 @@
+#-------------------------------------------------------------------------------
+#- fewi-specific properties.
+#-
+#- Applied by <context:property-placeholder/> application context XML file
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+#----- BASE URLS
+#-------------------------------------------------------------------------------
+
+#----- solr server urls -----#
+
+#fe
+solr.server1.url=http://bhmgiweb01lt.jax.org:9995/solr
+
+#snp
+solr.server2.url=http://bhmgisnpdb01lt.jax.org:18983/solr
+
+#gxd
+solr.server3.url=http://bhmgiweb01lt.jax.org:9992/solr
+
+#-------------------------------------------------------------------------------
+#----- INSTALL VALUES
+#-------------------------------------------------------------------------------
+
+# directory in which to find the standard mgi template
+template.dir=/usr/local/mgi/live/mgiconfig/web/
