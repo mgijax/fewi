@@ -308,6 +308,7 @@ public class SearchConstants {
 	
 	// quick search
 	public static final String QS_SEARCH_TERM_EXACT = "searchTermExact";
+	public static final String QS_SEARCH_TERM_INEXACT = "searchTermInexact";
 	public static final String QS_SEARCH_TERM_STEMMED = "searchTermStemmed";
 	public static final String QS_SEARCH_TERM_DISPLAY = "searchTermDisplay";
 	public static final String QS_SEARCH_TERM_TYPE = "searchTermType";

@@ -9,6 +9,7 @@ public class QSVocabResult extends QSResult {
 
 	private String uniqueKey;
 	private String searchTermExact;
+	private String searchTermInexact;
 	private String searchTermStemmed;
 	private String searchTermDisplay;
 	private String searchTermType;
@@ -28,6 +29,12 @@ public class QSVocabResult extends QSResult {
 	private String stars;
 	private int starCount = 0;
 
+	public String getSearchTermInexact() {
+		return searchTermInexact;
+	}
+	public void setSearchTermInexact(String searchTermInexact) {
+		this.searchTermInexact = searchTermInexact;
+	}
 	public String getUniqueKey() {
 		return uniqueKey;
 	}

@@ -72,8 +72,9 @@ public class QuickSearchController {
 	private static int VOCAB_TERM = 2;
 	private static int STRAIN = 3;
 
-	private static String BY_EXACT_MATCH = "exact_match";	
-	private static String BY_STEMMED_MATCH = "stemmed match";
+	private static String BY_EXACT_MATCH = "exact_match";		// requires exact matching
+	private static String BY_INEXACT_MATCH = "inexact_match";	// allows partial matches after stopword removal
+	private static String BY_STEMMED_MATCH = "stemmed match";	// matches after stemming and stopword removal
 	private static String BY_ANY = "any match";	
 	
 	private static Set<String> validFacetFields;
@@ -162,18 +163,18 @@ public class QuickSearchController {
         	// expected results can be detrimental to efficiency, so we can do an initial query to get the count
         	// and then a second query to return them.
         
-        	SearchParams idSearch = getSearchParams(queryForm, BY_EXACT_MATCH, 0, FEATURE);
-        	SearchParams nomenSearch = getSearchParams(queryForm, BY_STEMMED_MATCH, 0, FEATURE);
+        	SearchParams exactSearch = getSearchParams(queryForm, BY_EXACT_MATCH, 0, FEATURE);
+        	SearchParams inexactSearch = getSearchParams(queryForm, BY_STEMMED_MATCH, 0, FEATURE);
 
         	SearchParams orSearch = new SearchParams();
         	orSearch.setPaginator(new Paginator(0));
-        	List<Filter> idOrNomen = new ArrayList<Filter>();
-        	idOrNomen.add(idSearch.getFilter());
-        	idOrNomen.add(nomenSearch.getFilter());
-        	orSearch.setFilter(Filter.or(idOrNomen));
+        	List<Filter> either = new ArrayList<Filter>();
+        	either.add(exactSearch.getFilter());
+        	either.add(inexactSearch.getFilter());
+        	orSearch.setFilter(Filter.or(either));
         
-        	SearchResults<QSFeatureResult> idOrNomenResults = qsFinder.getFeatureResults(orSearch);
-        	Integer resultCount = idOrNomenResults.getTotalCount();
+        	SearchResults<QSFeatureResult> eitherResults = qsFinder.getFeatureResults(orSearch);
+        	Integer resultCount = eitherResults.getTotalCount();
         	logger.info("Identified " + resultCount + " feature matches");
         
         	// Now do the query to retrieve all results.
@@ -236,14 +237,39 @@ public class QuickSearchController {
 		return Filter.or(filters);
 	}
 	
-	// Return a single filter that looks for features by ID, with multiple terms joined by an OR.
+	// Return a single filter that looks for features using the exact field, with multiple terms joined by an OR.
 	private Filter createExactTermFilter(QuickSearchQueryForm qf) {
-        List<Filter> idFilters = new ArrayList<Filter>();
+        List<Filter> exactFilters = new ArrayList<Filter>();
 
         for (String term : qf.getTerms()) {
-        	idFilters.add(new Filter(SearchConstants.QS_SEARCH_TERM_EXACT, term, Operator.OP_EQUAL));
+        	exactFilters.add(new Filter(SearchConstants.QS_SEARCH_TERM_EXACT, term, Operator.OP_EQUAL));
         }
-        return Filter.or(idFilters);
+        return Filter.or(exactFilters);
+	}
+	
+	// Return a single filter that looks for features using the inexact field, with multiple terms joined by an OR.
+	// Removes stopwords.
+	private Filter createInexactTermFilter(QuickSearchQueryForm qf, int bucket) {
+        List<Filter> filters = new ArrayList<Filter>();
+        StopwordRemover stopwordRemover = new StopwordRemover();
+
+        for (String term : qf.getTerms()) {
+        	term = stopwordRemover.remove(term);
+        	if ((term != null) && (term.length() > 0)) {
+        		filters.add(new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT, term, Operator.OP_CONTAINS));
+        	}
+        }
+
+        // All search terms were removed by stemming, so don't return anything for this.
+        if (filters.size() == 0) {
+        	filters.add(new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT, "abcdefghijklmn", Operator.OP_EQUAL));
+        }
+        
+        if (bucket == VOCAB_TERM) {
+        	// When looking for vocab terms by the inexact field, we do not want EMAPS terms
+        	return notEmaps(Filter.or(filters));
+        }
+        return Filter.or(filters);
 	}
 	
 	// Return a single filter that looks for documents by any non-ID type of field, with multiple
@@ -338,15 +364,23 @@ public class QuickSearchController {
 		Map<String,QSResult> bestMatches = new HashMap<String,QSResult>();
 		for (QSResult match : allMatches) {
 			String primaryID = match.getPrimaryID();
+			String lowerDisplayTerm = match.getSearchTermDisplay().toLowerCase();
+			String lowerTerm = null;
 			
+			// If the exact field is non-null, then we know we have an exact match to the search term,
+			// aside from case sensitivity.
 			if (match.getSearchTermExact() != null) {
 				match.setStars("****");
 				
 			} else if (match.getSearchTermStemmed() != null) {
-				String lowerTerm = match.getSearchTermStemmed().toLowerCase();
-
+				lowerTerm = match.getSearchTermStemmed().toLowerCase();
+			} else if (match.getSearchTermInexact() != null) {
+				lowerTerm = match.getSearchTermInexact().toLowerCase();
+			}
+				
+			if (lowerTerm != null) {
 				// search terms can be exact (4-star), contain all terms (3-star), or contain some terms (2-star)
-				if (lowerTerm.equals(originalSearchTerm)) {
+				if (lowerTerm.equals(originalSearchTerm) || lowerDisplayTerm.equals(originalSearchTerm)) {
 					match.setStars("****");
 				} else {
 					int matchCount = 0;
@@ -632,18 +666,20 @@ public class QuickSearchController {
         	// expected results can be detrimental to efficiency, so we can do an initial query to get the count
         	// and then a second query to return them.
         
-        	SearchParams idSearch = getSearchParams(queryForm, BY_EXACT_MATCH, 0, STRAIN);
-        	SearchParams nomenSearch = getSearchParams(queryForm, BY_STEMMED_MATCH, 0, STRAIN);
+        	SearchParams exactSearch = getSearchParams(queryForm, BY_EXACT_MATCH, 0, STRAIN);
+        	SearchParams inexactSearch = getSearchParams(queryForm, BY_INEXACT_MATCH, 0, STRAIN);
+        	SearchParams stemmedSearch = getSearchParams(queryForm, BY_STEMMED_MATCH, 0, STRAIN);
 
         	SearchParams orSearch = new SearchParams();
         	orSearch.setPaginator(new Paginator(0));
-        	List<Filter> idOrNomen = new ArrayList<Filter>();
-        	idOrNomen.add(idSearch.getFilter());
-        	idOrNomen.add(nomenSearch.getFilter());
-        	orSearch.setFilter(Filter.or(idOrNomen));
+        	List<Filter> any = new ArrayList<Filter>();
+        	any.add(exactSearch.getFilter());
+        	any.add(inexactSearch.getFilter());
+        	any.add(stemmedSearch.getFilter());
+        	orSearch.setFilter(Filter.or(any));
         
-        	SearchResults<QSStrainResult> idOrNomenResults = qsFinder.getStrainResults(orSearch);
-        	Integer resultCount = idOrNomenResults.getTotalCount();
+        	SearchResults<QSStrainResult> anyResults = qsFinder.getStrainResults(orSearch);
+        	Integer resultCount = anyResults.getTotalCount();
         	logger.info("Identified " + resultCount + " term matches");
 
         	// Now do the query to retrieve all results.
@@ -682,11 +718,14 @@ public class QuickSearchController {
         
         if (BY_EXACT_MATCH.equals(queryMode)) {
         	myFilter = createExactTermFilter(qf);
+        } else if (BY_INEXACT_MATCH.equals(queryMode)) {
+        	myFilter = createInexactTermFilter(qf, bucket);
         } else if (BY_STEMMED_MATCH.equals(queryMode)) {
         	myFilter = createStemmedTermFilter(qf, bucket);
         } else { 	// BY_ANY
         	List<Filter> orFilters = new ArrayList<Filter>(2);
         	orFilters.add(createExactTermFilter(qf));
+        	orFilters.add(createInexactTermFilter(qf, bucket));
         	orFilters.add(createStemmedTermFilter(qf, bucket));
         	myFilter = Filter.or(orFilters);
         }

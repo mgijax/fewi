@@ -9,6 +9,7 @@ public class QSFeatureResult extends QSResult {
 
 	private String uniqueKey;
 	private String searchTermExact;
+	private String searchTermInexact;
 	private String searchTermStemmed;
 	private String searchTermDisplay;
 	private String searchTermType;
@@ -35,6 +36,12 @@ public class QSFeatureResult extends QSResult {
 	private List<String> phenotypeFacets;
 	private List<String> markerTypeFacets;
 
+	public String getSearchTermInexact() {
+		return searchTermInexact;
+	}
+	public void setSearchTermInexact(String searchTermInexact) {
+		this.searchTermInexact = searchTermInexact;
+	}
 	public String getUniqueKey() {
 		return uniqueKey;
 	}
