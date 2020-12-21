@@ -256,7 +256,7 @@ public class QuickSearchController {
         for (String term : qf.getTerms()) {
         	term = stopwordRemover.remove(term);
         	if ((term != null) && (term.length() > 0)) {
-        		filters.add(new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT, term, Operator.OP_CONTAINS));
+        		filters.add(new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT, term, Operator.OP_STRING_CONTAINS));
         	}
         }
 
