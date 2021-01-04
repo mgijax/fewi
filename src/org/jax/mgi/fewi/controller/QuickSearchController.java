@@ -343,6 +343,21 @@ public class QuickSearchController {
 		return out;
 	}
 	
+	// run the stemmer on each string in the list, and remove any stopwords
+	private List<String> stemAndRemoveStopwords(List<String> searchTerms) {
+        EasyStemmer stemmer = new EasyStemmer();
+        StopwordRemover stopwordRemover = new StopwordRemover();
+		List<String> out = new ArrayList<String>(searchTerms.size());
+
+		for (String term : searchTerms) {
+			String trim = stemmer.stemAll(stopwordRemover.remove(term));
+			if ((trim != null) && (trim.length() > 0)) {
+				out.add(trim);
+			}
+		}
+		return out;
+	}
+	
 	// consolidate the lists of matching (abstract) QSResult objects, add star values, and setting best match values,
 	// then return
 	private List<QSResult> unifyMatches (List<String> searchTerms, List<QSResult> allMatches) {
@@ -351,6 +366,10 @@ public class QuickSearchController {
 		
 		// original search term will be the last item in the list of search terms
 		String originalSearchTerm = searchTerms.get(searchTerms.size() - 1).toLowerCase();
+		
+		// search terms with stemming and stopword removal
+		List<String> stemmedSearchTerms = stemAndRemoveStopwords(searchTerms);
+		String stemmedSearchPhrase = stemmedSearchTerms.get(stemmedSearchTerms.size() - 1).toLowerCase();
 		
 		// last search term is the full string, so this is the count of individual words
 		int wordCount = searchTerms.size() - 1;
@@ -366,6 +385,7 @@ public class QuickSearchController {
 			String primaryID = match.getPrimaryID();
 			String lowerDisplayTerm = match.getSearchTermDisplay().toLowerCase();
 			String lowerTerm = null;
+			List<String> termsToCheck = searchTerms;		// assume we compare with non-stemmed set of terms
 			
 			// If the exact field is non-null, then we know we have an exact match to the search term,
 			// aside from case sensitivity.
@@ -374,6 +394,7 @@ public class QuickSearchController {
 				
 			} else if (match.getSearchTermStemmed() != null) {
 				lowerTerm = match.getSearchTermStemmed().toLowerCase();
+				termsToCheck = stemmedSearchTerms;
 			} else if (match.getSearchTermInexact() != null) {
 				lowerTerm = match.getSearchTermInexact().toLowerCase();
 			}
@@ -384,13 +405,13 @@ public class QuickSearchController {
 					match.setStars("****");
 				} else {
 					int matchCount = 0;
-					for (String word : searchTerms) {
+					for (String word : termsToCheck) {
 						if (lowerTerm.indexOf(word) >= 0) {
 							matchCount++;
 						}
 					}
 					
-					if (matchCount == wordCount) {
+					if (matchCount >= wordCount) {
 						match.setStars("***");
 					} else {
 						match.setStars("**");
