@@ -425,16 +425,17 @@ public class QuickSearchController {
 			// If the exact field is non-null, then we know we have an exact match to the search term,
 			// aside from case sensitivity.
 			if (match.getSearchTermExact() != null) {
-				match.setStars("****");
+				lowerTerm = match.getSearchTermExact().toLowerCase();
 				
 			} else if (match.getSearchTermStemmed() != null) {
 				lowerTerm = match.getSearchTermStemmed().toLowerCase();
 				termsToCheck = stemmedTerms;
+
 			} else if (match.getSearchTermInexact() != null) {
 				lowerTerm = match.getSearchTermInexact().toLowerCase();
 			}
 				
-			if ((match.getStarCount() < 4) && (lowerTerm != null)) {
+			if (lowerTerm != null) {
 				// search terms can be exact (4-star), contain all terms (3-star), or contain some terms (2-star)
 				if (lowerTerm.equals(originalSearchTerm) || lowerDisplayTerm.equals(originalSearchTerm)) {
 					match.setStars("****");
