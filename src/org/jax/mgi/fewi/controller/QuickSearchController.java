@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -358,18 +360,51 @@ public class QuickSearchController {
 		return out;
 	}
 	
+	// determine if s can be converted to an integer (true) or not (false)
+	private boolean isInteger(String s) {
+		try {
+			Integer.parseInt(s);
+			return true;
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
+	}
+
 	// consolidate the lists of matching (abstract) QSResult objects, add star values, and setting best match values,
 	// then return
 	private List<QSResult> unifyMatches (List<String> searchTerms, List<QSResult> allMatches) {
-		
-		Grouper<QSResult> grouper = new Grouper<QSResult>();
-		
 		// original search term will be the last item in the list of search terms
 		String originalSearchTerm = searchTerms.get(searchTerms.size() - 1).toLowerCase();
 		
 		// search terms with stemming and stopword removal
 		List<String> stemmedSearchTerms = stemAndRemoveStopwords(searchTerms);
-		String stemmedSearchPhrase = stemmedSearchTerms.get(stemmedSearchTerms.size() - 1).toLowerCase();
+		
+		// Note: For search terms that are numbers, we only want those numbers to match whole words.
+		// (For example, "4" should not match "14" or "41" or "141".)  To do this, we'll need to do regex
+		// comparisons based on word boundaries (\b).  So, need to have two lists for comparison -- one using
+		// String indexOf and the other with regex matches.
+		
+		List<String> nonStemmedTerms = new ArrayList<String>();			// non-numeric, non-stemmed terms to match
+		List<String> stemmedTerms = new ArrayList<String>();			// non-numeric, stemmed terms to match
+		List<Pattern> numericPatterns = new ArrayList<Pattern>();		// numeric terms to match
+		
+		// Take the original list of search terms and split the list into a non-numeric part and a numeric part,
+		// the latter of which will be examined using word boundaries.
+		for (String term : searchTerms) {
+			if (isInteger(term)) {
+				numericPatterns.add(Pattern.compile("\\b" + term + "\\b"));
+			} else {
+				nonStemmedTerms.add(term);
+			}
+		}
+		
+		// Go through the list of stemmed search terms and just keep the non-numerics, as we already have the
+		// numeric list of Patterns (which wouldn't change due to stemming).
+		for (String term : stemmedSearchTerms) {
+			if (!isInteger(term)) {
+				stemmedTerms.add(term);
+			}
+		}
 		
 		// last search term is the full string, so this is the count of individual words
 		int wordCount = searchTerms.size() - 1;
@@ -385,7 +420,7 @@ public class QuickSearchController {
 			String primaryID = match.getPrimaryID();
 			String lowerDisplayTerm = match.getSearchTermDisplay().toLowerCase();
 			String lowerTerm = null;
-			List<String> termsToCheck = searchTerms;		// assume we compare with non-stemmed set of terms
+			List<String> termsToCheck = nonStemmedTerms;		// assume we compare with non-stemmed set of terms
 			
 			// If the exact field is non-null, then we know we have an exact match to the search term,
 			// aside from case sensitivity.
@@ -394,23 +429,33 @@ public class QuickSearchController {
 				
 			} else if (match.getSearchTermStemmed() != null) {
 				lowerTerm = match.getSearchTermStemmed().toLowerCase();
-				termsToCheck = stemmedSearchTerms;
+				termsToCheck = stemmedTerms;
 			} else if (match.getSearchTermInexact() != null) {
 				lowerTerm = match.getSearchTermInexact().toLowerCase();
 			}
 				
-			if (lowerTerm != null) {
+			if ((match.getStarCount() < 4) && (lowerTerm != null)) {
 				// search terms can be exact (4-star), contain all terms (3-star), or contain some terms (2-star)
 				if (lowerTerm.equals(originalSearchTerm) || lowerDisplayTerm.equals(originalSearchTerm)) {
 					match.setStars("****");
 				} else {
 					int matchCount = 0;
+
+					// check non-numeric search terms
 					for (String word : termsToCheck) {
 						if (lowerTerm.indexOf(word) >= 0) {
 							matchCount++;
 						}
 					}
-					
+
+					// then check numeric search terms
+					for (Pattern number : numericPatterns) {
+						Matcher matcher = number.matcher(lowerTerm);
+						if (matcher.find()) {
+							matchCount++;
+						}
+					}
+
 					if (matchCount >= wordCount) {
 						match.setStars("***");
 					} else {
@@ -453,7 +498,10 @@ public class QuickSearchController {
 		}
 		
 		logger.info("bestMatches.size() = " + bestMatches.size());
+
 		// Now use the Grouper to divide up the best matches we found into their star buckets.
+		Grouper<QSResult> grouper = new Grouper<QSResult>();
+
 		for (String primaryID : bestMatches.keySet()) {
 			QSResult bestMatch = bestMatches.get(primaryID);
 			grouper.add(bestMatch.getStars(), primaryID, bestMatch, bestMatch.getSequenceNum());
