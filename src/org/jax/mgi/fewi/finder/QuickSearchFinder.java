@@ -5,6 +5,7 @@ import java.util.List;
 import org.jax.mgi.fewi.hunter.SolrQSVocabResultHunter;
 import org.jax.mgi.fewi.hunter.SolrQSFeatureResultFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrQSFeatureResultHunter;
+import org.jax.mgi.fewi.hunter.SolrQSFeatureResultTinyHunter;
 import org.jax.mgi.fewi.hunter.SolrQSStrainResultFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrQSStrainResultHunter;
 import org.jax.mgi.fewi.hunter.SolrQSVocabResultFacetHunter;
@@ -35,8 +36,11 @@ public class QuickSearchFinder {
 	private SolrQSVocabResultHunter qsVocabHunter;
 
 	@Autowired
-	private SolrQSFeatureResultHunter qsFeatureHunter;
+	private SolrQSFeatureResultTinyHunter qsFeatureTinyHunter;
 
+//	@Autowired
+//	private SolrQSFeatureResultHunter qsFeatureHunter;
+//
 	@Autowired
 	private SolrQSFeatureResultFacetHunter featureFacetHunter;
 	
@@ -87,7 +91,7 @@ public class QuickSearchFinder {
 		SearchResults<QSFeatureResult> searchResults = new SearchResults<QSFeatureResult>();
 
 		// ask the hunter to identify which objects to return
-		qsFeatureHunter.hunt(searchParams, searchResults);
+		qsFeatureTinyHunter.hunt(searchParams, searchResults);
 		logger.debug("->hunter found " + searchResults.getResultObjects().size() + " QS feature results");
 
 		return searchResults;

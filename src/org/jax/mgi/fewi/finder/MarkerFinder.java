@@ -73,6 +73,11 @@ public class MarkerFinder {
 		return mrkGatherer.get(Marker.class,Arrays.asList(id),"primaryID");
 	}
 
+    public List<Marker> getMarkerByPrimaryIDs(List<String> markerIDs)
+    {
+        return mrkGatherer.get(Marker.class, markerIDs, "primaryID" );
+    }
+
 	/*--------------------------------------------*/
 	/* Retrieval of a marker, for a given db key
     /*--------------------------------------------*/

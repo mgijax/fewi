@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.fewi.config.ContextLoader;
+import org.jax.mgi.fewi.finder.AlleleFinder;
+import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.QuickSearchFinder;
 import org.jax.mgi.fewi.forms.AccessionQueryForm;
 import org.jax.mgi.fewi.forms.QuickSearchQueryForm;
@@ -29,6 +31,7 @@ import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.AccessionSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
+import org.jax.mgi.fewi.summary.QSFeaturePart;
 import org.jax.mgi.fewi.summary.QSVocabResult;
 import org.jax.mgi.fewi.summary.QSFeatureResult;
 import org.jax.mgi.fewi.summary.QSFeatureResultWrapper;
@@ -39,6 +42,7 @@ import org.jax.mgi.fewi.summary.QSVocabResultWrapper;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.LimitedSizeCache;
 import org.jax.mgi.fewi.util.UserMonitor;
+import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.sort.SmartAlphaComparator;
 import org.jax.mgi.shr.fe.util.EasyStemmer;
 import org.jax.mgi.shr.fe.util.StopwordRemover;
@@ -53,6 +57,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import mgi.frontend.datamodel.Allele;
+import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.MarkerLocation;
 
 /*-------*/
 /* class */
@@ -87,9 +95,34 @@ public class QuickSearchController {
 		validFacetFields.add(SearchConstants.QS_GO_FUNCTION_FACETS);
 	}
 
+	// Stemmed "words" that should not be matched alone in annotation-related fields (only in combination with
+	// other "words").  (If matched alone, they return too many unhelpful matching documents.)
+	private static Set<String> restrictedWords;
+	static {
+		restrictedWords = new HashSet<String>();
+		restrictedWords.add("abnorm");
+		restrictedWords.add("morpholog");
+		restrictedWords.add("cell");
+		restrictedWords.add("anomali");
+		restrictedWords.add("gene");
+		restrictedWords.add("system");
+		restrictedWords.add("ani");
+		restrictedWords.add("trap");
+		restrictedWords.add("that");
+	}
+	
+	// Fields types for which we should exclude the restrictedWords as noted above (basically, annotations).
+	private static List<String> restrictedTypes;
+	static {
+		restrictedTypes = new ArrayList<String>();
+		restrictedTypes.add("Phenotype");
+		restrictedTypes.add("Phenotype Definition");
+	}
+	
 	private static LimitedSizeCache<List<QSFeatureResult>> featureResultCache = new LimitedSizeCache<List<QSFeatureResult>>();
 	private static LimitedSizeCache<List<QSVocabResult>> vocabResultCache = new LimitedSizeCache<List<QSVocabResult>>();
 	private static LimitedSizeCache<List<QSStrainResult>> strainResultCache = new LimitedSizeCache<List<QSStrainResult>>();
+	private static Map<String,QSFeaturePart> featureDataCache = new HashMap<String,QSFeaturePart>();
 	
     //--------------------//
     // instance variables
@@ -102,6 +135,12 @@ public class QuickSearchController {
 
     @Autowired
     private QuickSearchFinder qsFinder;
+    
+    @Autowired
+    private MarkerFinder markerFinder;
+    
+    @Autowired
+    private AlleleFinder alleleFinder;
     
 	@Value("${solr.factetNumberDefault}")
 	private Integer facetLimit; 			// max values to display for a single facet
@@ -194,9 +233,7 @@ public class QuickSearchController {
         List<QSFeatureResultWrapper> wrapped = new ArrayList<QSFeatureResultWrapper>();
         if (out.size() >= startIndex) {
         	logger.debug(" - extracting features " + startIndex + " to " + Math.min(out.size(), endIndex));
-        	for (QSFeatureResult r : out.subList(startIndex, Math.min(out.size(), endIndex))) {
-        		wrapped.add(new QSFeatureResultWrapper(r));
-        	}
+        	wrapped = wrapFeatureResults(out.subList(startIndex, Math.min(out.size(), endIndex)));
         } else { 
         	logger.debug(" - not extracting,just returning empty list");
         }
@@ -209,6 +246,91 @@ public class QuickSearchController {
         return response;
     }
 
+	/* Take a list of QSFeatureResult objects (that are missing crucial information for display), look up the remaining
+	 * data from a memory cache (retrieving additional data as needed), and wrap them up in objects for display.
+	 */
+	private List<QSFeatureResultWrapper> wrapFeatureResults(List<QSFeatureResult> results) {
+		fillGapsInFeatureCache(results);
+        List<QSFeatureResultWrapper> wrapped = new ArrayList<QSFeatureResultWrapper>();
+
+       	for (QSFeatureResult r : results) {
+       		if (featureDataCache.containsKey(r.getPrimaryID())) {
+       			QSFeaturePart part = featureDataCache.get(r.getPrimaryID());
+       			r.setSymbol(part.getSymbol());
+       			r.setName(part.getName());
+       			r.setChromosome(part.getChromosome());
+       			r.setStartCoord(part.getStartCoord());
+       			r.setEndCoord(part.getEndCoord());
+       			r.setStrand(part.getStrand());
+       		}
+       		wrapped.add(new QSFeatureResultWrapper(r));
+       	}
+		return wrapped;
+	}
+	
+	/* Look at the given list of results, identify any IDs for which we don't have QSFeaturePart objects, look them
+	 * up and fill in the cache.
+	 */
+	private void fillGapsInFeatureCache(List<QSFeatureResult> results) {
+		List<String> markersToFind = new ArrayList<String>();
+		List<String> allelesToFind = new ArrayList<String>();
+		int knownIDs = 0;
+		
+		for (QSFeatureResult result : results) {
+			String primaryID = result.getPrimaryID();
+			if (featureDataCache.containsKey(primaryID)) {
+				knownIDs++;
+			} else if (result.getIsMarker() == 0) {
+				allelesToFind.add(primaryID);
+			} else {
+				markersToFind.add(primaryID);
+			}
+		}
+		logger.info("Identified " + knownIDs + " features from cache");
+
+		List<Marker> markers = markerFinder.getMarkerByPrimaryIDs(markersToFind);
+		logger.info("Loaded " + knownIDs + " markers from database");
+
+		List<Allele> alleles = alleleFinder.getAlleleByID(allelesToFind);
+		logger.info("Loaded " + knownIDs + " markers from database");
+		
+		for (Marker m : markers) {
+			QSFeaturePart part = new QSFeaturePart();
+			part.setSymbol(m.getSymbol());
+			part.setName(m.getName());
+			part.setChromosome(m.getChromosome());	// likely overridden below
+
+			MarkerLocation loc = m.getPreferredLocation();
+			if (loc != null) {
+				if (loc.getChromosome() != null) { part.setChromosome(loc.getChromosome()); }
+				if (loc.getStartCoordinate() != null) { part.setStartCoord(loc.getStartCoordinate().toString()); }
+				if (loc.getEndCoordinate() != null) { part.setStartCoord(loc.getEndCoordinate().toString()); }
+				if (loc.getStrand() != null) { part.setStrand(loc.getStrand()); }
+			}
+			featureDataCache.put(m.getPrimaryID(), part);
+		}
+		logger.info("Cached " + markers.size() + " markers from database, total size: " + featureDataCache.size());
+		
+		for (Allele a : alleles) {
+			QSFeaturePart part = new QSFeaturePart();
+			part.setSymbol(a.getSymbol());
+			part.setName(a.getName());
+			part.setChromosome(a.getChromosome());	// likely overridden below
+
+			if (a.getMarker() != null) {
+				MarkerLocation loc = a.getMarker().getPreferredLocation();
+				if (loc != null) {
+					if (loc.getChromosome() != null) { part.setChromosome(loc.getChromosome()); }
+					if (loc.getStartCoordinate() != null) { part.setStartCoord(loc.getStartCoordinate().toString()); }
+					if (loc.getEndCoordinate() != null) { part.setStartCoord(loc.getEndCoordinate().toString()); }
+					if (loc.getStrand() != null) { part.setStrand(loc.getStrand()); }
+				}
+			}
+			featureDataCache.put(a.getPrimaryID(), part);
+		}
+		logger.info("Cached " + alleles.size() + " markers from database, total size: " + featureDataCache.size());
+	}
+	
 	// distill the various facet parameters down to a single Filter (should work across both all QS buckets)
 	private Filter getFilterFacets (QuickSearchQueryForm qf) {
 		List<Filter> filters = new ArrayList<Filter>();
@@ -281,10 +403,47 @@ public class QuickSearchController {
         EasyStemmer stemmer = new EasyStemmer();
         StopwordRemover stopwordRemover = new StopwordRemover();
 
+        // If we are searching in the restrictedTypes of data, we need to consider what to do with restrictedWords.
+        // These are words (really word stems) that are so overwhelmingly common that we don't want to match them
+        // solo to a field.  Rules:
+        // 1. A restrictedWord can be matched solo to data types that are not in the restrictedTypes.
+        // 2. Two or more consecutive restrictedWords can be matched to data types in the restrictedTypes.
+        // 3. One or more restrictedWords can be matched to data types in the restrictedTypes -- as long as there
+        //    is also a non-restrictedWord present in the same field.  (In reality, we can ignore these instances
+        //    of restrictedWords because the document would match due to the presence of a non-restrictedWord.)
+        // 4. Non-restrictedWords can be matched to any type of data.
+
+        // Note: The full [potentially] multi-token query string is in the last position of qf.getTerms().
+        String fullString = qf.getTerms().get(qf.getTerms().size() - 1);
+        List<String> otherTokens = qf.getTerms().subList(0, qf.getTerms().size() - 2);
+        
+        String lastRestrictedWord = null; 
+        
         for (String term : qf.getTerms()) {
         	term = stemmer.stemAll(stopwordRemover.remove(term));
         	if ((term != null) && (term.length() > 0)) {
-        		termFilters.add(new Filter(SearchConstants.QS_SEARCH_TERM_STEMMED, term, Operator.OP_CONTAINS_WITH_COLON));
+
+        		// case 3 and case 4 (see comments above)
+        		if (!restrictedWords.contains(term)) {
+        			termFilters.add(new Filter(SearchConstants.QS_SEARCH_TERM_STEMMED, term, Operator.OP_CONTAINS_WITH_COLON)); 
+        			lastRestrictedWord = null;
+        		}
+
+        		// case 1 (see above)
+        		else if (lastRestrictedWord == null) {
+        			lastRestrictedWord = term;				// Remember this in case the next is restricted too.
+        			List<Filter> f = new ArrayList<Filter>();
+        			f.add(new Filter(SearchConstants.QS_SEARCH_TERM_STEMMED, term, Operator.OP_CONTAINS_WITH_COLON)); 
+        			f.add(Filter.notIn(SearchConstants.QS_SEARCH_TERM_TYPE, restrictedTypes));
+        			termFilters.add(Filter.and(f));
+        		}
+
+        		// case 2 (see above)
+        		else {
+        			lastRestrictedWord = lastRestrictedWord + " " + term;
+        			termFilters.add(new Filter(SearchConstants.QS_SEARCH_TERM_STEMMED, lastRestrictedWord, Operator.OP_CONTAINS_WITH_COLON)); 
+        			lastRestrictedWord = term;				// Remember this in case the next is restricted too.
+        		}
         	}
         }
         
