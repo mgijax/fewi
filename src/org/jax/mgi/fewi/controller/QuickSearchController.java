@@ -1,5 +1,7 @@
 package org.jax.mgi.fewi.controller;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -294,6 +296,7 @@ public class QuickSearchController {
 		List<Allele> alleles = alleleFinder.getAlleleByID(allelesToFind);
 		logger.info("Loaded " + knownIDs + " markers from database");
 		
+		NumberFormat nf = new DecimalFormat("#");	// no decimal places
 		for (Marker m : markers) {
 			QSFeaturePart part = new QSFeaturePart();
 			part.setSymbol(m.getSymbol());
@@ -303,8 +306,8 @@ public class QuickSearchController {
 			MarkerLocation loc = m.getPreferredLocation();
 			if (loc != null) {
 				if (loc.getChromosome() != null) { part.setChromosome(loc.getChromosome()); }
-				if (loc.getStartCoordinate() != null) { part.setStartCoord(loc.getStartCoordinate().toString()); }
-				if (loc.getEndCoordinate() != null) { part.setStartCoord(loc.getEndCoordinate().toString()); }
+				if (loc.getStartCoordinate() != null) { part.setStartCoord(nf.format(loc.getStartCoordinate())); }
+				if (loc.getEndCoordinate() != null) { part.setEndCoord(nf.format(loc.getEndCoordinate())); }
 				if (loc.getStrand() != null) { part.setStrand(loc.getStrand()); }
 			}
 			featureDataCache.put(m.getPrimaryID(), part);
