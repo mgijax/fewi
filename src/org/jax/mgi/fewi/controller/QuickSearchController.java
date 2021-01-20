@@ -324,8 +324,8 @@ public class QuickSearchController {
 				MarkerLocation loc = a.getMarker().getPreferredLocation();
 				if (loc != null) {
 					if (loc.getChromosome() != null) { part.setChromosome(loc.getChromosome()); }
-					if (loc.getStartCoordinate() != null) { part.setStartCoord(loc.getStartCoordinate().toString()); }
-					if (loc.getEndCoordinate() != null) { part.setStartCoord(loc.getEndCoordinate().toString()); }
+					if (loc.getStartCoordinate() != null) { part.setStartCoord(nf.format(loc.getStartCoordinate())); }
+					if (loc.getEndCoordinate() != null) { part.setEndCoord(nf.format(loc.getEndCoordinate())); }
 					if (loc.getStrand() != null) { part.setStrand(loc.getStrand()); }
 				}
 			}
