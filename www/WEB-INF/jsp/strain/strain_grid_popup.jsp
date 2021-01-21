@@ -9,8 +9,8 @@
 
 <%@ page trimDirectiveWhitespaces="true" %>
 
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-<link rel="stylesheet" href="//jqueryui.com/jquery-wp-content/themes/jqueryui.com/style.css">
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<link rel="stylesheet" href="https://jqueryui.com/jquery-wp-content/themes/jqueryui.com/style.css">
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/bower_components/bootstrap/dist/css/bootstrap.css" />
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/bower_components/bootstrap/spacelab/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/bower_components/ng-dialog/css/ngDialog.min.css" />
@@ -18,8 +18,8 @@
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/bower_components/ng-cells/dist/0.4.0/ng-cells.css" />
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/css/strain/strain_popup.css" />
 
-<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
 <script src="${configBean.FEWI_URL}/assets/js/strain/strain_grid_popup.js"></script>
 
