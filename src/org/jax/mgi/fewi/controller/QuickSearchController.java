@@ -119,6 +119,8 @@ public class QuickSearchController {
 		restrictedTypes = new ArrayList<String>();
 		restrictedTypes.add("Phenotype");
 		restrictedTypes.add("Phenotype Definition");
+		restrictedTypes.add("Subterm Phenotype");
+		restrictedTypes.add("Subterm Phenotype Definition");
 	}
 	
 	private static LimitedSizeCache<List<QSFeatureResult>> featureResultCache = new LimitedSizeCache<List<QSFeatureResult>>();
