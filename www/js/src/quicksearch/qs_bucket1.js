@@ -33,7 +33,12 @@ function b1Show(data) {
 				tbl = tbl + '<TD><a href="' + item.detailUri + '">' + symbol + '</a></TD>';
 			}
 			tbl = tbl + '<TD class="nameCol">' + name + '</TD>';
-			tbl = tbl + '<TD class="small">' + item.chromosome + '</TD>';
+
+			if (item.chromosome === null) {
+				tbl = tbl + '<TD class="small">&nbsp;</TD>';
+			} else {
+				tbl = tbl + '<TD class="small">' + item.chromosome + '</TD>';
+			}
 
 			if ((item.startCoord === null) || (item.endCoord === null)) {
 				tbl = tbl + '<TD>&nbsp;</TD>';

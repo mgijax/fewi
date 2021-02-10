@@ -61,8 +61,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import mgi.frontend.datamodel.Allele;
+import mgi.frontend.datamodel.AlleleSequenceAssociation;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerLocation;
+import mgi.frontend.datamodel.Sequence;
+import mgi.frontend.datamodel.SequenceLocation;
 
 /*-------*/
 /* class */
@@ -209,13 +212,15 @@ public class QuickSearchController {
         	// and then a second query to return them.
         
         	SearchParams exactSearch = getSearchParams(queryForm, BY_EXACT_MATCH, 0, FEATURE);
-        	SearchParams inexactSearch = getSearchParams(queryForm, BY_STEMMED_MATCH, 0, FEATURE);
+        	SearchParams inexactSearch = getSearchParams(queryForm, BY_INEXACT_MATCH, 0, FEATURE);
+        	SearchParams stemmedSearch = getSearchParams(queryForm, BY_STEMMED_MATCH, 0, FEATURE);
 
         	SearchParams orSearch = new SearchParams();
         	orSearch.setPaginator(new Paginator(0));
         	List<Filter> either = new ArrayList<Filter>();
         	either.add(exactSearch.getFilter());
         	either.add(inexactSearch.getFilter());
+        	either.add(stemmedSearch.getFilter());
         	orSearch.setFilter(Filter.or(either));
         
         	SearchResults<QSFeatureResult> eitherResults = qsFinder.getFeatureResults(orSearch);
@@ -322,6 +327,7 @@ public class QuickSearchController {
 			part.setName(a.getName());
 			part.setChromosome(a.getChromosome());	// likely overridden below
 
+			// Can we pick up coordinates from the allele's associated marker?
 			if (a.getMarker() != null) {
 				MarkerLocation loc = a.getMarker().getPreferredLocation();
 				if (loc != null) {
@@ -330,7 +336,23 @@ public class QuickSearchController {
 					if (loc.getEndCoordinate() != null) { part.setEndCoord(nf.format(loc.getEndCoordinate())); }
 					if (loc.getStrand() != null) { part.setStrand(loc.getStrand()); }
 				}
-			}
+			} else if (a.getSequenceAssociations() != null) {
+				// Does the allele have an associated sequence with a single good hit?
+				for (AlleleSequenceAssociation asa : a.getSequenceAssociations()) {
+					Sequence seq = asa.getSequence();
+					Integer hitCount = seq.getGoodHitCount();
+					List<SequenceLocation> locations = seq.getLocations();
+					if ((hitCount != null) && (hitCount == 1) && (locations != null) && (locations.size() > 0)) {
+						// All sequences currently have only one location, so just assume that's still the case.
+						SequenceLocation loc = locations.get(0);
+						if (loc.getChromosome() != null) { part.setChromosome(loc.getChromosome()); }
+						if (loc.getStartCoordinate() != null) { part.setStartCoord(nf.format(loc.getStartCoordinate())); }
+						if (loc.getEndCoordinate() != null) { part.setEndCoord(nf.format(loc.getEndCoordinate())); }
+						if (loc.getStrand() != null) { part.setStrand(loc.getStrand()); }
+					}
+				}
+			} // end -- looking for location data for alleles
+
 			featureDataCache.put(a.getPrimaryID(), part);
 		}
 		logger.info("Cached " + alleles.size() + " markers from database, total size: " + featureDataCache.size());
