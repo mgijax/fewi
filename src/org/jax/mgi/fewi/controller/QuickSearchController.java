@@ -329,6 +329,7 @@ public class QuickSearchController {
 
 			// Can we pick up coordinates from the allele's associated marker?
 			if (a.getMarker() != null) {
+				part.setName(a.getMarker().getName() + "; " + a.getName());
 				MarkerLocation loc = a.getMarker().getPreferredLocation();
 				if (loc != null) {
 					if (loc.getChromosome() != null) { part.setChromosome(loc.getChromosome()); }

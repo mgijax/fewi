@@ -3,7 +3,7 @@ package org.jax.mgi.fewi.summary;
 import java.util.List;
 
 /**
- * Is: contains cache-able data for a single marker/allele that we don't want to retrieve redundanly
+ * Is: contains cache-able data for a single marker/allele that we don't want to retrieve redundantly
  * from Solr for every single matching document.
  */
 public class QSFeaturePart {
