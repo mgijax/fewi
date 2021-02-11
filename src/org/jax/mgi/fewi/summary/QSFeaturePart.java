@@ -10,8 +10,7 @@ public class QSFeaturePart {
 	private String symbol;
 	private String name;
 	private String chromosome;
-	private String startCoord;
-	private String endCoord;
+	private String location;
 	private String strand;
 
 	public String getSymbol() {
@@ -32,23 +31,17 @@ public class QSFeaturePart {
 	public void setChromosome(String chromosome) {
 		this.chromosome = chromosome;
 	}
-	public String getStartCoord() {
-		return startCoord;
-	}
-	public void setStartCoord(String startCoord) {
-		this.startCoord = startCoord;
-	}
-	public String getEndCoord() {
-		return endCoord;
-	}
-	public void setEndCoord(String endCoord) {
-		this.endCoord = endCoord;
-	}
 	public String getStrand() {
 		return strand;
 	}
 	public void setStrand(String strand) {
 		this.strand = strand;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
 	}
 	@Override
 	public String toString() {

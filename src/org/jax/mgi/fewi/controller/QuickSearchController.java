@@ -268,13 +268,32 @@ public class QuickSearchController {
        			r.setSymbol(part.getSymbol());
        			r.setName(part.getName());
        			r.setChromosome(part.getChromosome());
-       			r.setStartCoord(part.getStartCoord());
-       			r.setEndCoord(part.getEndCoord());
+       			r.setLocation(part.getLocation());
        			r.setStrand(part.getStrand());
        		}
        		wrapped.add(new QSFeatureResultWrapper(r));
        	}
 		return wrapped;
+	}
+	
+	private String getMarkerLocation(MarkerLocation loc, NumberFormat nf, NumberFormat cmf) {
+		if (loc == null) { return "syntenic"; }
+		
+		// genome coordinates and strand
+		if ((loc.getStartCoordinate() != null) && (loc.getEndCoordinate() != null)) {
+			return nf.format(loc.getStartCoordinate()) + "-" + nf.format(loc.getEndCoordinate());
+
+		} else if (loc.getCytogeneticOffset() != null) {
+			// cytogenetic band
+			return "cytoband " + loc.getCytogeneticOffset();
+
+		} else if (loc.getCmOffset() != null) {
+			if (loc.getCmOffset() >= 0) {
+				// cM location
+				return cmf.format(loc.getCmOffset()) + " cM";
+			}
+		}
+		return "syntenic";
 	}
 	
 	/* Look at the given list of results, identify any IDs for which we don't have QSFeaturePart objects, look them
@@ -303,7 +322,8 @@ public class QuickSearchController {
 		List<Allele> alleles = alleleFinder.getAlleleByID(allelesToFind);
 		logger.info("Loaded " + knownIDs + " markers from database");
 		
-		NumberFormat nf = new DecimalFormat("#");	// no decimal places
+		NumberFormat nf = new DecimalFormat("#");		// no decimal places (coordinates)
+		NumberFormat cmf = new DecimalFormat("#.##");	// two decimal places (cM location)
 		for (Marker m : markers) {
 			QSFeaturePart part = new QSFeaturePart();
 			part.setSymbol(m.getSymbol());
@@ -311,11 +331,11 @@ public class QuickSearchController {
 			part.setChromosome(m.getChromosome());	// likely overridden below
 
 			MarkerLocation loc = m.getPreferredLocation();
+
 			if (loc != null) {
 				if (loc.getChromosome() != null) { part.setChromosome(loc.getChromosome()); }
-				if (loc.getStartCoordinate() != null) { part.setStartCoord(nf.format(loc.getStartCoordinate())); }
-				if (loc.getEndCoordinate() != null) { part.setEndCoord(nf.format(loc.getEndCoordinate())); }
 				if (loc.getStrand() != null) { part.setStrand(loc.getStrand()); }
+				part.setLocation(getMarkerLocation(loc, nf, cmf));
 			}
 			featureDataCache.put(m.getPrimaryID(), part);
 		}
@@ -330,12 +350,12 @@ public class QuickSearchController {
 			// Can we pick up coordinates from the allele's associated marker?
 			if (a.getMarker() != null) {
 				part.setName(a.getMarker().getName() + "; " + a.getName());
+			// TODO
 				MarkerLocation loc = a.getMarker().getPreferredLocation();
 				if (loc != null) {
 					if (loc.getChromosome() != null) { part.setChromosome(loc.getChromosome()); }
-					if (loc.getStartCoordinate() != null) { part.setStartCoord(nf.format(loc.getStartCoordinate())); }
-					if (loc.getEndCoordinate() != null) { part.setEndCoord(nf.format(loc.getEndCoordinate())); }
 					if (loc.getStrand() != null) { part.setStrand(loc.getStrand()); }
+					part.setLocation(getMarkerLocation(loc, nf, cmf));
 				}
 			} else if (a.getSequenceAssociations() != null) {
 				// Does the allele have an associated sequence with a single good hit?
@@ -347,16 +367,17 @@ public class QuickSearchController {
 						// All sequences currently have only one location, so just assume that's still the case.
 						SequenceLocation loc = locations.get(0);
 						if (loc.getChromosome() != null) { part.setChromosome(loc.getChromosome()); }
-						if (loc.getStartCoordinate() != null) { part.setStartCoord(nf.format(loc.getStartCoordinate())); }
-						if (loc.getEndCoordinate() != null) { part.setEndCoord(nf.format(loc.getEndCoordinate())); }
 						if (loc.getStrand() != null) { part.setStrand(loc.getStrand()); }
+						if ((loc.getStartCoordinate() != null) && (loc.getEndCoordinate() != null)) { 
+							part.setLocation(nf.format(loc.getStartCoordinate()) + "-" + nf.format(loc.getEndCoordinate()));
+						}
 					}
 				}
 			} // end -- looking for location data for alleles
 
 			featureDataCache.put(a.getPrimaryID(), part);
 		}
-		logger.info("Cached " + alleles.size() + " markers from database, total size: " + featureDataCache.size());
+		logger.info("Cached " + alleles.size() + " alleles from database, total size: " + featureDataCache.size());
 	}
 	
 	// distill the various facet parameters down to a single Filter (should work across both all QS buckets)

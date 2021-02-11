@@ -16,8 +16,7 @@ public class QSFeatureResultWrapper {
 	public String getBestMatchText() { return result.getSearchTermDisplay(); }
 	public String getDetailUri() { return result.getDetailUri(); }
 	public String getChromosome() { return result.getChromosome(); }
-	public String getStartCoord() { return result.getStartCoord(); }
-	public String getEndCoord() { return result.getEndCoord(); }
+	public String getLocation() { return result.getLocation(); }
 	public String getStrand() { return result.getStrand(); }
 	public String getBestMatchType() { return result.getSearchTermType(); }
 }

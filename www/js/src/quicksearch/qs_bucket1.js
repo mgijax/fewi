@@ -40,10 +40,10 @@ function b1Show(data) {
 				tbl = tbl + '<TD class="small">' + item.chromosome + '</TD>';
 			}
 
-			if ((item.startCoord === null) || (item.endCoord === null)) {
+			if (item.location === null) {
 				tbl = tbl + '<TD>&nbsp;</TD>';
 			} else {
-				tbl = tbl + '<TD class="nowrap small">' + item.startCoord + '-' + item.endCoord + '</TD>';
+				tbl = tbl + '<TD class="nowrap small">' + item.location + '</TD>';
 			}
 
 			if (item.strand === null) {

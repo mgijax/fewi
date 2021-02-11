@@ -102,12 +102,15 @@ public class SolrQSFeatureResultBaseHunter extends SolrHunter<QSFeatureResult> {
 				result.setName((String) doc.getFieldValue(IndexConstants.QS_NAME));
 				result.setDetailUri((String) doc.getFieldValue(IndexConstants.QS_DETAIL_URI));
 				result.setChromosome((String) doc.getFieldValue(IndexConstants.QS_CHROMOSOME));
-				if (doc.getFieldValue(IndexConstants.QS_START_COORD) != null) {
-					result.setStartCoord(((Long) doc.getFieldValue(IndexConstants.QS_START_COORD)).toString());
-					if (doc.getFieldValue(IndexConstants.QS_END_COORD) != null) {
-						result.setEndCoord(((Long) doc.getFieldValue(IndexConstants.QS_END_COORD)).toString());
-					}
-				}
+
+/* We don't pull these fields from the Solr documents anymore, as they're cached for efficiency.
+*				if (doc.getFieldValue(IndexConstants.QS_START_COORD) != null) {
+*					result.setStartCoord(((Long) doc.getFieldValue(IndexConstants.QS_START_COORD)).toString());
+*					if (doc.getFieldValue(IndexConstants.QS_END_COORD) != null) {
+*						result.setEndCoord(((Long) doc.getFieldValue(IndexConstants.QS_END_COORD)).toString());
+*					}
+*				}
+*/
 				result.setStrand((String) doc.getFieldValue(IndexConstants.QS_STRAND));
 				
 				result.setGoProcessFacets((List<String>) doc.getFieldValue(IndexConstants.QS_GO_PROCESS_FACETS));

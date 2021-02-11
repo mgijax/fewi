@@ -24,8 +24,7 @@ public class QSFeatureResult extends QSResult {
 	private String name;
 	private String detailUri;
 	private String chromosome;
-	private String startCoord;
-	private String endCoord;
+	private String location;
 	private String strand;
 	private Long sequenceNum;
 
@@ -172,17 +171,11 @@ public class QSFeatureResult extends QSResult {
 	public void setChromosome(String chromosome) {
 		this.chromosome = chromosome;
 	}
-	public String getStartCoord() {
-		return startCoord;
+	public String getLocation() {
+		return location;
 	}
-	public void setStartCoord(String startCoord) {
-		this.startCoord = startCoord;
-	}
-	public String getEndCoord() {
-		return endCoord;
-	}
-	public void setEndCoord(String endCoord) {
-		this.endCoord = endCoord;
+	public void setLocation(String location) {
+		this.location = location;
 	}
 	public String getStrand() {
 		return strand;
