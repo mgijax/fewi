@@ -114,16 +114,29 @@ public class QuickSearchController {
 		restrictedWords.add("ani");
 		restrictedWords.add("trap");
 		restrictedWords.add("that");
+		restrictedWords.add("activ");
 	}
 	
+	// Types of vocabularies that have restricted fields.
+	private static List<String> restrictedVocabs;
+	static {
+		restrictedVocabs = new ArrayList<String>();
+		restrictedVocabs.add("Phenotype");
+		restrictedVocabs.add("Function");
+		restrictedVocabs.add("Process");
+		restrictedVocabs.add("Component");
+	}
+
 	// Fields types for which we should exclude the restrictedWords as noted above (basically, annotations).
 	private static List<String> restrictedTypes;
 	static {
 		restrictedTypes = new ArrayList<String>();
-		restrictedTypes.add("Phenotype");
-		restrictedTypes.add("Phenotype Definition");
-		restrictedTypes.add("Subterm Phenotype");
-		restrictedTypes.add("Subterm Phenotype Definition");
+		for (String vocab : restrictedVocabs) {
+			restrictedTypes.add(vocab);
+			restrictedTypes.add(vocab + " Definition");
+			restrictedTypes.add("Subterm " + vocab);
+			restrictedTypes.add("Subterm " + vocab + " Definition");
+		}
 	}
 	
 	private static LimitedSizeCache<List<QSFeatureResult>> featureResultCache = new LimitedSizeCache<List<QSFeatureResult>>();
