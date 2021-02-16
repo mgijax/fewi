@@ -34,7 +34,7 @@ public class QuickSearchQueryForm {
     public List<String> getTerms() {
     	if ((terms == null) && (query != null)) {
     		terms = new ArrayList<String>();
-    		for (String term : query.replace(',', ' ').replace('-', ' ').split(" ")) {
+    		for (String term : query.replace(',', ' ').split(" ")) {
     			terms.add(term.toLowerCase());
     		}
     		terms.add(query);
