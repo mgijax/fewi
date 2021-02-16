@@ -110,4 +110,19 @@ public class FewiUtil {
 
 		return Arrays.asList(tokenArray);
 	}
+	
+	/* Convenience wrapper over monitoring functions (for looking for slow-running queries and such).  This one
+	 * starts monitoring an event of the given type, identified by the given identifier.  Returns a unique key
+	 * to identify it for the endMonitoring method.
+	 */
+	public static String startMonitoring(String eventType, String identifier) {
+		return SlowEventMonitor.getSharedMonitor().startEvent(eventType, identifier);
+	}
+
+	/* Convenience wrapper over monitoring functions (for looking for slow-running queries and such).  This one
+	 * ends monitoring of the event with the given key (which was assigned by the startMonitoring method).
+	 */
+	public static void endMonitoring(String key) {
+		SlowEventMonitor.getSharedMonitor().endEvent(key);
+	}
 }

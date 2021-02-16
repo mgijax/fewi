@@ -63,6 +63,11 @@ public class QuickSearchQueryForm {
 
 	@Override
 	public String toString() {
-		return "QuickSearchQueryForm [query=" + query + "]";
+		StringBuffer sb = new StringBuffer("QS");
+		if (query != null) { sb.append(" query="); sb.append(query); }
+		if (processFilter != null) { sb.append(", processFilter="); sb.append(processFilter); }
+		if (componentFilter != null) { sb.append(", componentFilter="); sb.append(componentFilter); }
+		if (functionFilter != null) { sb.append(", functionFilter="); sb.append(functionFilter); }
+		return sb.toString();
 	}
 }

@@ -42,6 +42,7 @@ import org.jax.mgi.fewi.summary.QSStrainResult;
 import org.jax.mgi.fewi.summary.QSStrainResultWrapper;
 import org.jax.mgi.fewi.summary.QSVocabResultWrapper;
 import org.jax.mgi.fewi.util.AjaxUtils;
+import org.jax.mgi.fewi.util.FewiUtil;
 import org.jax.mgi.fewi.util.LimitedSizeCache;
 import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.shr.fe.IndexConstants;
@@ -77,7 +78,6 @@ import mgi.frontend.datamodel.SequenceLocation;
 @Controller
 @RequestMapping(value="/quicksearch")
 public class QuickSearchController {
-
 
     //--------------------//
     // static variables
@@ -241,9 +241,11 @@ public class QuickSearchController {
         	logger.info("Identified " + resultCount + " feature matches");
         
         	// Now do the query to retrieve all results.
+        	String key = FewiUtil.startMonitoring("QS Feature Search", queryForm.toString());
         	orSearch.setPaginator(new Paginator(resultCount));
         	List<QSFeatureResult> allMatches = qsFinder.getFeatureResults(orSearch).getResultObjects();
         	logger.info("Loaded " + allMatches.size() + " feature matches");
+        	FewiUtil.endMonitoring(key);
         
         	out = unifyFeatureMatches(queryForm.getTerms(), allMatches);
         	logger.info("Consolidated down to " + out.size() + " features");
@@ -905,9 +907,11 @@ public class QuickSearchController {
         	logger.info("Identified " + resultCount + " term matches");
 
         	// Now do the query to retrieve all results.
+        	String key = FewiUtil.startMonitoring("QS Vocab Term Search", queryForm.toString());
         	orSearch.setPaginator(new Paginator(resultCount));
         	List<QSVocabResult> allMatches = qsFinder.getVocabResults(orSearch).getResultObjects();
         	logger.info("Loaded " + allMatches.size() + " term matches");
+        	FewiUtil.endMonitoring(key);
         
         	out = (List<QSVocabResult>) unifyVocabMatches(queryForm.getTerms(), allMatches);
         	logger.info("Consolidated down to " + out.size() + " terms");
@@ -974,9 +978,11 @@ public class QuickSearchController {
         	logger.info("Identified " + resultCount + " term matches");
 
         	// Now do the query to retrieve all results.
+        	String key = FewiUtil.startMonitoring("QS Strain Search", queryForm.toString());
         	orSearch.setPaginator(new Paginator(resultCount));
         	List<QSStrainResult> allMatches = qsFinder.getStrainResults(orSearch).getResultObjects();
         	logger.info("Loaded " + allMatches.size() + " term matches");
+        	FewiUtil.endMonitoring(key);
         
         	out = (List<QSStrainResult>) unifyStrainMatches(queryForm.getTerms(), allMatches);
         	logger.info("Consolidated down to " + out.size() + " terms");
