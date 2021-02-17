@@ -11,6 +11,8 @@ import java.util.Random;
 
 import org.jax.mgi.fewi.summary.SlowEvent;
 
+// TODO: methods for count of current open events, list of n most recent timed-out events, display in JSP
+
 /* Is: a watchdog for identify slow-running pieces of code, especially useful for tracking slow queries.
  * Has: a set of open events and a list of the longest running events seen so far, with each event
  * 	having a type
@@ -220,11 +222,19 @@ public class SlowEventMonitor {
 		// remove any expired events from the map of open events
 		private void cullExpiredEvents(long now) {
 			long expiredTime = now - maxWaitTime;
+			List<String> toRemove = new ArrayList<String>();
 				
+			// First need to collect the keys to remove, then remove them in a second step to avoid a
+			// concurrent modification exception.
+			
 			for (String key : openEvents.keySet()) {
 				if (openEvents.get(key).startTime <= expiredTime) {
-					openEvents.remove(key);
+					toRemove.add(key);
 				}
+			}
+
+			for (String key : toRemove) {
+				openEvents.remove(key);
 			}
 			lastCleanupTime = now;
 		}
