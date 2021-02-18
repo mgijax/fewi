@@ -56,6 +56,33 @@
     </tr>
   </c:forEach>
 </table>
+
+<c:if test="${monitor.hasFailures(eventType)}">
+  <div class="eventType">${eventType} Failures</div>
+  <table class="eventTable">
+
+    <!-- ROW1 -->
+    <tr >
+      <th>#</th>
+      <th>Started</th>
+      <th>Elapsed (ms)</th>
+      <th>Query</th>
+      <th>Failure Reason</th>
+    </tr>
+
+    <c:forEach var="event" items="${monitor.getFailedEvents(eventType)}" varStatus="fStatus">
+      <tr>
+        <td>${fStatus.index}</td>
+        <td>${event.startDate}</td>
+        <td style="text-align:right;">${event.elapsedTime}</td>
+        <td>${event.identifier}</td>
+        <td>${event.failure}</td>
+        </td>
+      </tr>
+    </c:forEach>
+  </table>
+</c:if>
+
 </c:forEach>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

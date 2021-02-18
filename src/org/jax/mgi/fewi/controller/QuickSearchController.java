@@ -243,7 +243,15 @@ public class QuickSearchController {
         	// Now do the query to retrieve all results.
         	String key = FewiUtil.startMonitoring("QS Feature Search", queryForm.toString());
         	orSearch.setPaginator(new Paginator(resultCount));
-        	List<QSFeatureResult> allMatches = qsFinder.getFeatureResults(orSearch).getResultObjects();
+        	List<QSFeatureResult> allMatches = null;
+        	
+        	try {
+        		allMatches = qsFinder.getFeatureResults(orSearch).getResultObjects();
+        	} catch (Exception e) {
+        		// record the failure and return empty results
+        		FewiUtil.failMonitoring(key, e.toString());
+        		allMatches = new ArrayList<QSFeatureResult>();
+        	}
         	logger.info("Loaded " + allMatches.size() + " feature matches");
         	FewiUtil.endMonitoring(key);
         

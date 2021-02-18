@@ -8,12 +8,14 @@ public class SlowEvent {
 	Long elapsedTime = null;
 	String eventType = null;
 	String identifier = null;
+	String failure = null;		// reason for failure (if any), likely remains null
 	
-	public SlowEvent(Long time, Long elapsedTime, String eventType, String identifier) {
+	public SlowEvent(Long time, Long elapsedTime, String eventType, String identifier, String failure) {
 		this.startDate = new Date(time);
 		this.eventType = eventType;
 		this.identifier = identifier;
 		this.elapsedTime = elapsedTime;
+		this.failure = failure;
 	}
 
 	public String getStartDate() {
@@ -30,5 +32,9 @@ public class SlowEvent {
 	
 	public String getElapsedTime() {
 		return elapsedTime.toString();
+	}
+	
+	public String getFailure() {
+		return failure;
 	}
 }

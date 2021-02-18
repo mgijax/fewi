@@ -125,4 +125,11 @@ public class FewiUtil {
 	public static void endMonitoring(String key) {
 		SlowEventMonitor.getSharedMonitor().endEvent(key);
 	}
+
+	/* Convenience wrapper over monitoring functions (for looking for slow-running queries and such).  This one
+	 * notes that the event with the given key has failed for the given reason.
+	 */
+	public static void failMonitoring(String key, String failure) {
+		SlowEventMonitor.getSharedMonitor().failEvent(key, failure);
+	}
 }

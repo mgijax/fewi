@@ -35,6 +35,9 @@ public class SlowEventMonitor {
 	// maps from an eventType to its slowest events seen so far (finished events only)
 	private Map<String, MonitoredEventSet> slowestEvents = new HashMap<String, MonitoredEventSet>();
 	
+	// maps from an eventType to a limited-size list of events that have failed
+	private Map<String, List<SlowEvent>> failedEvents = new HashMap<String, List<SlowEvent>>();
+	
 	// characters to choose from when making a key, random number generator to use in choosing from them, and
 	// the minimum number of characters to make up a key
 	private char[] keyCharacters = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ:;,.!?[]{}()".toCharArray();
@@ -70,9 +73,14 @@ public class SlowEventMonitor {
 		return eventTypes;
 	}
 	
-	// returns true of the given eventType has any events logged so far, false if not
+	// returns true if the given eventType has any events logged so far, false if not
 	public boolean contains(String eventType) {
 		return this.slowestEvents.containsKey(eventType);
+	}
+	
+	// returns true if the given eventType has any failures logged so far, false if not
+	public boolean hasFailures(String eventType) {
+		return this.failedEvents.containsKey(eventType);
 	}
 	
 	// Create an event for the given parameters and begin tracking it.
@@ -80,6 +88,12 @@ public class SlowEventMonitor {
 		MonitoredEvent event = new MonitoredEvent(eventType, identifier);
 		String key = this.getNextKey();
 		openEvents.put(key, event);
+			
+		// If it's time for another cleanup step, go through the open events and remove any that have aged out.
+		if (lastCleanupTime < (event.startTime - timeToCleanup)) {
+			this.cullExpiredEvents(event.startTime);
+		}
+
 		return key;
 	}
 
@@ -105,6 +119,38 @@ public class SlowEventMonitor {
 		return null;
 	}
 	
+	// Note that the event identified by the given key has failed, with the given reason
+	public void failEvent(String key, String reason) {
+		if (!openEvents.containsKey(key)) {
+			return;
+		}
+		
+		long now = (new Date()).getTime();
+		MonitoredEvent event = openEvents.get(key);
+		openEvents.remove(key);
+
+		SlowEvent failedEvent = new SlowEvent(event.startTime, now - event.startTime, event.eventType, event.identifier, reason);
+		
+		// First failure for this event type?  If so, need an array.
+		if (!this.failedEvents.containsKey(event.eventType)) {
+			this.failedEvents.put(event.eventType, new ArrayList<SlowEvent>());
+		}
+		this.failedEvents.get(event.eventType).add(failedEvent);
+		
+		// If we're past the number to track, remove the oldest ones. (should be only 1 at a time)
+		while (this.failedEvents.get(event.eventType).size() > eventsToTrack) {
+			this.failedEvents.get(event.eventType).remove(0);
+		}
+	}
+	
+	// Get the list of the most recent 20 failed events for the given event type.
+	public List<SlowEvent> getFailedEvents(String eventType) {
+		if (this.failedEvents.containsKey(eventType)) {
+			return this.failedEvents.get(eventType);
+		}
+		return null;
+	}
+	
 	/*--------------------------------*/
 	/*--- private instance methods ---*/
 	/*--------------------------------*/
@@ -124,6 +170,28 @@ public class SlowEventMonitor {
 		return key;
 	}
 		
+	// remove any expired events from the map of open events
+	private void cullExpiredEvents(long now) {
+		long expiredTime = now - maxWaitTime;
+		List<String> toRemove = new ArrayList<String>();
+				
+		// First need to collect the keys to remove, then remove them in a second step to avoid a
+		// concurrent modification exception.
+			
+		for (String key : openEvents.keySet()) {
+			if (openEvents.get(key).startTime <= expiredTime) {
+				toRemove.add(key);
+			}
+		}
+
+		synchronized (this) {
+			for (String key : toRemove) {
+				failEvent(key, "Timed out, stopped monitoring");
+			}
+		}
+		lastCleanupTime = now;
+	}
+
 	/*-----------------------------*/
 	/*--- private inner classes ---*/
 	/*-----------------------------*/
@@ -212,33 +280,8 @@ public class SlowEventMonitor {
 					this.cullSlowEvents();
 				}
 			}
-			
-			// If it's time for another cleanup step, go through the open events and remove any that have aged out.
-			if (lastCleanupTime < (event.startTime - timeToCleanup)) {
-				this.cullExpiredEvents(event.startTime);
-			}
 		}
 		
-		// remove any expired events from the map of open events
-		private void cullExpiredEvents(long now) {
-			long expiredTime = now - maxWaitTime;
-			List<String> toRemove = new ArrayList<String>();
-				
-			// First need to collect the keys to remove, then remove them in a second step to avoid a
-			// concurrent modification exception.
-			
-			for (String key : openEvents.keySet()) {
-				if (openEvents.get(key).startTime <= expiredTime) {
-					toRemove.add(key);
-				}
-			}
-
-			for (String key : toRemove) {
-				openEvents.remove(key);
-			}
-			lastCleanupTime = now;
-		}
-
 		// return an ordered list (slowest to fastest) of events seen so far
 		public List<MonitoredEvent> getEvents() {
 			this.cullSlowEvents();
@@ -260,7 +303,7 @@ public class SlowEventMonitor {
 			
 			if (this.events != null) {
 				for (MonitoredEvent event : this.events) {
-					slowEvents.add(new SlowEvent(event.startTime, event.elapsedTime, event.eventType, event.identifier));
+					slowEvents.add(new SlowEvent(event.startTime, event.elapsedTime, event.eventType, event.identifier, null));
 				}
 			}
 			return slowEvents;
