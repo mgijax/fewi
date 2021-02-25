@@ -17,11 +17,13 @@ public class LimitedSizeCache<T> {
 	public int cacheSize = 30;			// default number of entries to cache; can be changed
 	public List<String> keys;			// list of keys, ordered from oldest to newest
 	public Map<String,T> cache;			// Map from each key to its corresponding element
+	public Map<String,Integer> keyIndex;	// Map from each key to its position in keys (for speedy deletions)
 	
 	// constructor - keep default cache size
 	public LimitedSizeCache() {
 		this.keys = new ArrayList<String>(cacheSize);
 		this.cache = new HashMap<String,T>();
+		this.keyIndex = new HashMap<String,Integer>();
 	}
 	
 	// constructor - pick a different cache size
@@ -29,12 +31,19 @@ public class LimitedSizeCache<T> {
 		this.cacheSize = cacheSize;
 		this.keys = new ArrayList<String>(cacheSize);
 		this.cache = new HashMap<String,T>();
+		this.keyIndex = new HashMap<String,Integer>();
 	}
 	
+	// current number of items in the cache
+	public int size() {
+		return this.cache.size();
+	}
+
 	// empty the cache
 	public void clear() {
 		this.keys.clear();
 		this.cache.clear();
+		this.keyIndex.clear();
 	}
 	
 	// return true if the given key is in the cache, false if not
@@ -48,9 +57,11 @@ public class LimitedSizeCache<T> {
 		// Need a synchronized block to avoid the possibility of conflicts due to multiple threads.
 		// (say, one thread removes a key between the containsKey its removal on the next line)
 		synchronized (this) {
-			if (this.cache.containsKey(key)) {
-				this.keys.remove(key);			// remove from current list position
-				this.keys.add(key);				// move to the end of the list (most recently used)
+			if (this.keyIndex.containsKey(key)) {
+				// remove from current list position and move to the end of the list (most recently used)
+				this.keys.remove(keyIndex.get(key).intValue());		
+				this.keys.add(key);	
+				this.keyIndex.put(key, this.keys.size() - 1);
 				return this.cache.get(key);
 			} else {
 				return null;
@@ -63,18 +74,20 @@ public class LimitedSizeCache<T> {
 	public void put(String key, T element) {
 		// If we're already tracking this key, we need to "forget" it from out list.
 		synchronized(this) {
-			if (this.cache.containsKey(key)) {
-				this.keys.remove(key);
+			if (this.keyIndex.containsKey(key)) {
+				this.keys.remove(keyIndex.get(key).intValue());		
 			}
+			this.keys.add(key);	
+			this.keyIndex.put(key, this.keys.size() - 1);
 		}
 		this.cache.put(key, element);
-		this.keys.add(key);
 
 		synchronized(this) {
 			// If we've crossed our maximum cache size, remove the oldest key/element pair.
 			if (this.keys.size() > this.cacheSize) {
 				String toDelete = this.keys.get(0);
 				this.keys.remove(0);
+				this.keyIndex.remove(toDelete);
 				this.cache.remove(toDelete);
 			}
 		}

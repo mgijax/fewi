@@ -33,6 +33,8 @@ import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.AccessionSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
+import org.jax.mgi.fewi.summary.QSAlleleResult;
+import org.jax.mgi.fewi.summary.QSAlleleResultWrapper;
 import org.jax.mgi.fewi.summary.QSFeaturePart;
 import org.jax.mgi.fewi.summary.QSVocabResult;
 import org.jax.mgi.fewi.summary.QSFeatureResult;
@@ -86,6 +88,7 @@ public class QuickSearchController {
 	private static int FEATURE = 1;			// constants for types of objects we work with
 	private static int VOCAB_TERM = 2;
 	private static int STRAIN = 3;
+	private static int ALLELE = 4;
 
 	private static String BY_EXACT_MATCH = "exact_match";		// requires exact matching
 	private static String BY_INEXACT_MATCH = "inexact_match";	// allows partial matches after stopword removal
@@ -142,7 +145,7 @@ public class QuickSearchController {
 	private static LimitedSizeCache<List<QSFeatureResult>> featureResultCache = new LimitedSizeCache<List<QSFeatureResult>>();
 	private static LimitedSizeCache<List<QSVocabResult>> vocabResultCache = new LimitedSizeCache<List<QSVocabResult>>();
 	private static LimitedSizeCache<List<QSStrainResult>> strainResultCache = new LimitedSizeCache<List<QSStrainResult>>();
-	private static Map<String,QSFeaturePart> featureDataCache = new HashMap<String,QSFeaturePart>();
+	private static LimitedSizeCache<List<QSAlleleResult>> alleleResultCache = new LimitedSizeCache<List<QSAlleleResult>>();
 	
     //--------------------//
     // instance variables
@@ -155,12 +158,6 @@ public class QuickSearchController {
 
     @Autowired
     private QuickSearchFinder qsFinder;
-    
-    @Autowired
-    private MarkerFinder markerFinder;
-    
-    @Autowired
-    private AlleleFinder alleleFinder;
     
 	@Value("${solr.factetNumberDefault}")
 	private Integer facetLimit; 			// max values to display for a single facet
@@ -282,125 +279,26 @@ public class QuickSearchController {
 	 * data from a memory cache (retrieving additional data as needed), and wrap them up in objects for display.
 	 */
 	private List<QSFeatureResultWrapper> wrapFeatureResults(List<QSFeatureResult> results) {
-		fillGapsInFeatureCache(results);
+		logger.info("Wrapping " + results.size() + " feature results");
+		Map<String,QSFeaturePart> cachedData = qsFinder.getMarkerParts(results);
         List<QSFeatureResultWrapper> wrapped = new ArrayList<QSFeatureResultWrapper>();
 
        	for (QSFeatureResult r : results) {
-       		if (featureDataCache.containsKey(r.getPrimaryID())) {
-       			QSFeaturePart part = featureDataCache.get(r.getPrimaryID());
-       			r.setSymbol(part.getSymbol());
-       			r.setName(part.getName());
-       			r.setChromosome(part.getChromosome());
-       			r.setLocation(part.getLocation());
-       			r.setStrand(part.getStrand());
+       		if (cachedData.containsKey(r.getPrimaryID())) {
+       			QSFeaturePart part = cachedData.get(r.getPrimaryID());
+       			if (part != null) {
+       				r.setSymbol(part.getSymbol());
+       				r.setName(part.getName());
+       				r.setChromosome(part.getChromosome());
+       				r.setLocation(part.getLocation());
+       				r.setStrand(part.getStrand());
+       			} else {
+       				logger.info("Cannot find " + r.getPrimaryID());
+       			}
        		}
        		wrapped.add(new QSFeatureResultWrapper(r));
        	}
 		return wrapped;
-	}
-	
-	private String getMarkerLocation(MarkerLocation loc, NumberFormat nf, NumberFormat cmf) {
-		if (loc == null) { return "syntenic"; }
-		
-		// genome coordinates and strand
-		if ((loc.getStartCoordinate() != null) && (loc.getEndCoordinate() != null)) {
-			return nf.format(loc.getStartCoordinate()) + "-" + nf.format(loc.getEndCoordinate());
-
-		} else if (loc.getCytogeneticOffset() != null) {
-			// cytogenetic band
-			return "cytoband " + loc.getCytogeneticOffset();
-
-		} else if (loc.getCmOffset() != null) {
-			if (loc.getCmOffset() >= 0) {
-				// cM location
-				return cmf.format(loc.getCmOffset()) + " cM";
-			}
-		}
-		return "syntenic";
-	}
-	
-	/* Look at the given list of results, identify any IDs for which we don't have QSFeaturePart objects, look them
-	 * up and fill in the cache.
-	 */
-	private void fillGapsInFeatureCache(List<QSFeatureResult> results) {
-		List<String> markersToFind = new ArrayList<String>();
-		List<String> allelesToFind = new ArrayList<String>();
-		int knownIDs = 0;
-		
-		for (QSFeatureResult result : results) {
-			String primaryID = result.getPrimaryID();
-			if (featureDataCache.containsKey(primaryID)) {
-				knownIDs++;
-			} else if (result.getIsMarker() == 0) {
-				allelesToFind.add(primaryID);
-			} else {
-				markersToFind.add(primaryID);
-			}
-		}
-		logger.info("Identified " + knownIDs + " features from cache");
-
-		List<Marker> markers = markerFinder.getMarkerByPrimaryIDs(markersToFind);
-		logger.info("Loaded " + knownIDs + " markers from database");
-
-		List<Allele> alleles = alleleFinder.getAlleleByID(allelesToFind);
-		logger.info("Loaded " + knownIDs + " markers from database");
-		
-		NumberFormat nf = new DecimalFormat("#");		// no decimal places (coordinates)
-		NumberFormat cmf = new DecimalFormat("#.##");	// two decimal places (cM location)
-		for (Marker m : markers) {
-			QSFeaturePart part = new QSFeaturePart();
-			part.setSymbol(m.getSymbol());
-			part.setName(m.getName());
-			part.setChromosome(m.getChromosome());	// likely overridden below
-
-			MarkerLocation loc = m.getPreferredLocation();
-
-			if (loc != null) {
-				if (loc.getChromosome() != null) { part.setChromosome(loc.getChromosome()); }
-				if (loc.getStrand() != null) { part.setStrand(loc.getStrand()); }
-				part.setLocation(getMarkerLocation(loc, nf, cmf));
-			}
-			featureDataCache.put(m.getPrimaryID(), part);
-		}
-		logger.info("Cached " + markers.size() + " markers from database, total size: " + featureDataCache.size());
-		
-		for (Allele a : alleles) {
-			QSFeaturePart part = new QSFeaturePart();
-			part.setSymbol(a.getSymbol());
-			part.setName(a.getName());
-			part.setChromosome(a.getChromosome());	// likely overridden below
-
-			// Can we pick up coordinates from the allele's associated marker?
-			if (a.getMarker() != null) {
-				part.setName(a.getMarker().getName() + "; " + a.getName());
-			// TODO
-				MarkerLocation loc = a.getMarker().getPreferredLocation();
-				if (loc != null) {
-					if (loc.getChromosome() != null) { part.setChromosome(loc.getChromosome()); }
-					if (loc.getStrand() != null) { part.setStrand(loc.getStrand()); }
-					part.setLocation(getMarkerLocation(loc, nf, cmf));
-				}
-			} else if (a.getSequenceAssociations() != null) {
-				// Does the allele have an associated sequence with a single good hit?
-				for (AlleleSequenceAssociation asa : a.getSequenceAssociations()) {
-					Sequence seq = asa.getSequence();
-					Integer hitCount = seq.getGoodHitCount();
-					List<SequenceLocation> locations = seq.getLocations();
-					if ((hitCount != null) && (hitCount == 1) && (locations != null) && (locations.size() > 0)) {
-						// All sequences currently have only one location, so just assume that's still the case.
-						SequenceLocation loc = locations.get(0);
-						if (loc.getChromosome() != null) { part.setChromosome(loc.getChromosome()); }
-						if (loc.getStrand() != null) { part.setStrand(loc.getStrand()); }
-						if ((loc.getStartCoordinate() != null) && (loc.getEndCoordinate() != null)) { 
-							part.setLocation(nf.format(loc.getStartCoordinate()) + "-" + nf.format(loc.getEndCoordinate()));
-						}
-					}
-				}
-			} // end -- looking for location data for alleles
-
-			featureDataCache.put(a.getPrimaryID(), part);
-		}
-		logger.info("Cached " + alleles.size() + " alleles from database, total size: " + featureDataCache.size());
 	}
 	
 	// distill the various facet parameters down to a single Filter (should work across both all QS buckets)
@@ -486,8 +384,6 @@ public class QuickSearchController {
         // 4. Non-restrictedWords can be matched to any type of data.
 
         // Note: The full [potentially] multi-token query string is in the last position of qf.getTerms().
-        String fullString = qf.getTerms().get(qf.getTerms().size() - 1);
-        List<String> otherTokens = qf.getTerms().subList(0, qf.getTerms().size() - 2);
         
         String lastRestrictedWord = null; 
         
@@ -557,6 +453,21 @@ public class QuickSearchController {
 		List<QSVocabResult> out = new ArrayList<QSVocabResult>(unified.size());
 		for (QSResult u : unified) {
 			out.add((QSVocabResult) u);
+		}
+		return out;
+	}
+	
+	// consolidate the lists of matching alleles, add star values, and setting best match values, then return
+	private List<QSAlleleResult> unifyAlleleMatches (List<String> searchTerms, List<QSAlleleResult> allMatches) {
+		List<QSResult> a = new ArrayList<QSResult>(allMatches.size());
+		for (QSAlleleResult r : allMatches) {
+			a.add((QSResult) r);
+		}
+		List<QSResult> unified = unifyMatches(searchTerms, a);
+		
+		List<QSAlleleResult> out = new ArrayList<QSAlleleResult>(unified.size());
+		for (QSResult u : unified) {
+			out.add((QSAlleleResult) u);
 		}
 		return out;
 	}
@@ -771,7 +682,8 @@ public class QuickSearchController {
 		List<String> featureFacets = getFeatureFacets(qf, facetField);
 		List<String> vocabFacets = getVocabFacets(qf, facetField);
 		List<String> strainFacets = getStrainFacets(qf, facetField);
-		List<String> resultList = unifyFacets(featureFacets, vocabFacets, strainFacets);
+		List<String> alleleFacets = getAlleleFacets(qf, facetField);
+		List<String> resultList = unifyFacets(featureFacets, vocabFacets, strainFacets, alleleFacets);
 		String error = null;
 		
         if (resultList.size() == 0) {
@@ -792,9 +704,9 @@ public class QuickSearchController {
 	}
 	
 	/* Unify 3 groups of facets into a single, ordered list for return.  Modifies group1 by adding entries
-	 * from group2 and group3 and then sorting.
+	 * from the other groups and then sorting.
 	 */
-	private List<String> unifyFacets(List<String> group1, List<String> group2, List<String> group3) {
+	private List<String> unifyFacets(List<String> group1, List<String> group2, List<String> group3, List<String> group4) {
 		Set<String> seenIt = new HashSet<String>();
 
 		if (group1 != null) {
@@ -808,6 +720,7 @@ public class QuickSearchController {
 		List<List<String>> toUnify = new ArrayList<List<String>>();
 		toUnify.add(group2);
 		toUnify.add(group3);
+		toUnify.add(group4);
 		
 		for (List<String> group : toUnify) {
 			if (group != null) {
@@ -855,6 +768,24 @@ public class QuickSearchController {
         	resultList = qsFinder.getVocabFacets(anySearch, filterName);
         } else {
         	throw new Exception("getVocabFacets: Invalid facet name: " + filterName);
+        }
+        return resultList;
+	}
+	
+	/* Execute the search for facets for the allele bucket using the given filterName, returning them as an
+	 * unordered list of strings.
+	 */
+	private List<String> getAlleleFacets(QuickSearchQueryForm queryForm, String filterName) throws Exception {
+        // match either ID, term, or synonyms
+        
+        SearchParams anySearch = getSearchParams(queryForm, BY_ANY, facetLimit, ALLELE);
+
+        List<String> resultList = null;		// list of strings, each a value for a facet
+        
+        if (validFacetFields.contains(filterName)) {
+        	resultList = qsFinder.getAlleleFacets(anySearch, filterName);
+        } else {
+        	throw new Exception("getAlleleFacets: Invalid facet name: " + filterName);
         }
         return resultList;
 	}
@@ -983,17 +914,17 @@ public class QuickSearchController {
         
         	SearchResults<QSStrainResult> anyResults = qsFinder.getStrainResults(orSearch);
         	Integer resultCount = anyResults.getTotalCount();
-        	logger.info("Identified " + resultCount + " term matches");
+        	logger.info("Identified " + resultCount + " strain matches");
 
         	// Now do the query to retrieve all results.
         	String key = FewiUtil.startMonitoring("QS Strain Search", queryForm.toString());
         	orSearch.setPaginator(new Paginator(resultCount));
         	List<QSStrainResult> allMatches = qsFinder.getStrainResults(orSearch).getResultObjects();
-        	logger.info("Loaded " + allMatches.size() + " term matches");
+        	logger.info("Loaded " + allMatches.size() + " strain matches");
         	FewiUtil.endMonitoring(key);
         
         	out = (List<QSStrainResult>) unifyStrainMatches(queryForm.getTerms(), allMatches);
-        	logger.info("Consolidated down to " + out.size() + " terms");
+        	logger.info("Consolidated down to " + out.size() + " strains");
         	
         	strainResultCache.put(cacheKey, out);
         	logger.info(" - added " + out.size() + " strain results to cache");
@@ -1010,6 +941,77 @@ public class QuickSearchController {
         }
         
         JsonSummaryResponse<QSStrainResultWrapper> response = new JsonSummaryResponse<QSStrainResultWrapper>();
+        response.setSummaryRows(wrapped);
+        response.setTotalCount(out.size());
+        logger.info("Returning " + wrapped.size() + " term matches");
+
+        return response;
+    }
+
+    //-------------------------//
+    // QS Results - bucket 4 JSON (alleles)
+    //-------------------------//
+	@RequestMapping("/alleleBucket")
+	public @ResponseBody JsonSummaryResponse<QSAlleleResultWrapper> getAlleleBucket(HttpServletRequest request,
+			@ModelAttribute QuickSearchQueryForm queryForm, @ModelAttribute Paginator page) {
+
+        logger.info("->getAlleleBucket started (seeking results " + page.getStartIndex() + " to " + (page.getStartIndex() + page.getResults()) + ")");
+
+        int startIndex = page.getStartIndex();
+        int endIndex = startIndex + page.getResults();
+        
+        String cacheKey = withoutPagination(request.getQueryString());
+        List<QSAlleleResult> out = alleleResultCache.get(cacheKey);
+        
+        if (out != null) {
+        	logger.info(" - got " + out.size() + " allele results from cache");
+        } else {
+        	// The index has been rebuilt to instead have each document be a point of data that can be matched, so
+        	// we now need to retrieve all matching documents and then process them.  Guessing too high a number of
+        	// expected results can be detrimental to efficiency, so we can do an initial query to get the count
+        	// and then a second query to return them.
+        
+        	SearchParams exactSearch = getSearchParams(queryForm, BY_EXACT_MATCH, 0, ALLELE);
+        	SearchParams inexactSearch = getSearchParams(queryForm, BY_INEXACT_MATCH, 0, ALLELE);
+        	SearchParams stemmedSearch = getSearchParams(queryForm, BY_STEMMED_MATCH, 0, ALLELE);
+
+        	SearchParams orSearch = new SearchParams();
+        	orSearch.setPaginator(new Paginator(0));
+        	List<Filter> any = new ArrayList<Filter>();
+        	any.add(exactSearch.getFilter());
+        	any.add(inexactSearch.getFilter());
+        	any.add(stemmedSearch.getFilter());
+        	orSearch.setFilter(Filter.or(any));
+        
+        	SearchResults<QSAlleleResult> anyResults = qsFinder.getAlleleResults(orSearch);
+        	Integer resultCount = anyResults.getTotalCount();
+        	logger.info("Identified " + resultCount + " allele matches");
+
+        	// Now do the query to retrieve all results.
+        	String key = FewiUtil.startMonitoring("QS Allele Search", queryForm.toString());
+        	orSearch.setPaginator(new Paginator(resultCount));
+        	List<QSAlleleResult> allMatches = qsFinder.getAlleleResults(orSearch).getResultObjects();
+        	logger.info("Loaded " + allMatches.size() + " allele matches");
+        	FewiUtil.endMonitoring(key);
+        
+        	out = (List<QSAlleleResult>) unifyAlleleMatches(queryForm.getTerms(), allMatches);
+        	logger.info("Consolidated down to " + out.size() + " alleles");
+        	
+        	alleleResultCache.put(cacheKey, out);
+        	logger.info(" - added " + out.size() + " allele results to cache");
+        }
+        
+        List<QSAlleleResultWrapper> wrapped = new ArrayList<QSAlleleResultWrapper>();
+        if (out.size() >= startIndex) {
+        	logger.debug(" - extracting results " + startIndex + " to " + Math.min(out.size(), endIndex));
+        	for (QSAlleleResult r : out.subList(startIndex, Math.min(out.size(), endIndex))) {
+        		wrapped.add(new QSAlleleResultWrapper(r));
+        	}
+        } else { 
+        	logger.debug(" - not extracting,just returning empty term list");
+        }
+        
+        JsonSummaryResponse<QSAlleleResultWrapper> response = new JsonSummaryResponse<QSAlleleResultWrapper>();
         response.setSummaryRows(wrapped);
         response.setTotalCount(out.size());
         logger.info("Returning " + wrapped.size() + " term matches");
@@ -1069,7 +1071,6 @@ public class QuickSearchController {
 	private String withoutPagination(String queryString) {
 		return queryString.replaceAll("&startIndex=[0-9]+", "").replaceAll("&results=[0-9]+", "");
 	}
-	
 	
     //-------------------------//
     // QS Results - bucket 3 JSON (accession ID matches)

@@ -1,18 +1,23 @@
 package org.jax.mgi.fewi.summary;
 
-import java.util.List;
-
 /**
  * Is: contains cache-able data for a single marker/allele that we don't want to retrieve redundantly
  * from Solr for every single matching document.
  */
 public class QSFeaturePart {
+	private String primaryID;
 	private String symbol;
 	private String name;
 	private String chromosome;
 	private String location;
 	private String strand;
 
+	public String getPrimaryID() {
+		return primaryID;
+	}
+	public void setPrimaryID(String primaryID) {
+		this.primaryID = primaryID;
+	}
 	public String getSymbol() {
 		return symbol;
 	}
