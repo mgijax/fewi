@@ -5,10 +5,11 @@
 
 // main logic for quick search
 var qsMain = function() {
-	b1Fetch();		// bucket 1 : markers + alleles bucket
+	b1Fetch();		// bucket 1 : markers bucket
 	b2Fetch();		// bucket 2 : vocab terms + strains bucket
 	b3Fetch();		// bucket 3 : ID bucket
 	b4Fetch();		// bucket 4 : strains bucket
+	b5Fetch();		// bucket 5 : alleles bucket
 };
 
 // find a string beginning with the given string 'c' that doesn't appear in string 's'
@@ -41,6 +42,7 @@ var qsProcessFilters = function() {
 	b1Fetch();
 	b2Fetch();
 	b4Fetch();
+	b5Fetch();
 
 	// If no active filters, hide the remove filter buttons.
 	if (queryString == getQuerystring()) {

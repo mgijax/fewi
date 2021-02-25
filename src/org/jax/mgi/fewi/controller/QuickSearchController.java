@@ -173,7 +173,7 @@ public class QuickSearchController {
     //--------------------//
     @RequestMapping(method=RequestMethod.GET)
     public ModelAndView getQSMainPage() {
-        logger.info("->getQSMainPage started");
+        logger.debug("->getQSMainPage started");
 
         ModelAndView mav = new ModelAndView("redirect:" + ContextLoader.getConfigBean().getProperty("FEWI_URL"));
         return mav;
@@ -189,7 +189,7 @@ public class QuickSearchController {
 		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
 			return UserMonitor.getSharedInstance().getLimitedMessage();
 		}
-        logger.info("->getQSSummary started");
+        logger.debug("->getQSSummary started");
 
         ModelAndView mav = new ModelAndView("quicksearch");
         mav.addObject("query", queryForm.getQuery());
@@ -204,7 +204,7 @@ public class QuickSearchController {
 	public @ResponseBody JsonSummaryResponse<QSFeatureResultWrapper> getFeatureBucket(HttpServletRequest request,
 			@ModelAttribute QuickSearchQueryForm queryForm, @ModelAttribute Paginator page) {
 
-        logger.info("->getFeatureBucket started (seeking results " + page.getStartIndex() + " to " + (page.getStartIndex() + page.getResults()) + ")");
+        logger.debug("->getFeatureBucket started (seeking results " + page.getStartIndex() + " to " + (page.getStartIndex() + page.getResults()) + ")");
         
         int startIndex = page.getStartIndex();
         int endIndex = startIndex + page.getResults();
@@ -213,7 +213,7 @@ public class QuickSearchController {
         List<QSFeatureResult> out = featureResultCache.get(cacheKey);
         
         if (out != null) {
-        	logger.info(" - got " + out.size() + " feature results from cache");
+        	logger.debug(" - got " + out.size() + " feature results from cache");
         	
         } else {
         	// The index has been rebuilt to instead have each document be a point of data that can be matched, so
@@ -235,7 +235,7 @@ public class QuickSearchController {
         
         	SearchResults<QSFeatureResult> eitherResults = qsFinder.getFeatureResults(orSearch);
         	Integer resultCount = eitherResults.getTotalCount();
-        	logger.info("Identified " + resultCount + " feature matches");
+        	logger.debug("Identified " + resultCount + " feature matches");
         
         	// Now do the query to retrieve all results.
         	String key = FewiUtil.startMonitoring("QS Feature Search", queryForm.toString());
@@ -249,14 +249,14 @@ public class QuickSearchController {
         		FewiUtil.failMonitoring(key, e.toString());
         		allMatches = new ArrayList<QSFeatureResult>();
         	}
-        	logger.info("Loaded " + allMatches.size() + " feature matches");
+        	logger.debug("Loaded " + allMatches.size() + " feature matches");
         	FewiUtil.endMonitoring(key);
         
         	out = unifyFeatureMatches(queryForm.getTerms(), allMatches);
-        	logger.info("Consolidated down to " + out.size() + " features");
+        	logger.debug("Consolidated down to " + out.size() + " features");
         	
         	featureResultCache.put(cacheKey, out);
-        	logger.info(" - added " + out.size() + " feature results to cache");
+        	logger.debug(" - added " + out.size() + " feature results to cache");
        	}
         
         List<QSFeatureResultWrapper> wrapped = new ArrayList<QSFeatureResultWrapper>();
@@ -270,7 +270,7 @@ public class QuickSearchController {
         JsonSummaryResponse<QSFeatureResultWrapper> response = new JsonSummaryResponse<QSFeatureResultWrapper>();
         response.setSummaryRows(wrapped);
         response.setTotalCount(out.size());
-        logger.info("Returning " + wrapped.size() + " feature matches");
+        logger.debug("Returning " + wrapped.size() + " feature matches");
 
         return response;
     }
@@ -279,7 +279,7 @@ public class QuickSearchController {
 	 * data from a memory cache (retrieving additional data as needed), and wrap them up in objects for display.
 	 */
 	private List<QSFeatureResultWrapper> wrapFeatureResults(List<QSFeatureResult> results) {
-		logger.info("Wrapping " + results.size() + " feature results");
+		logger.debug("Wrapping " + results.size() + " feature results");
 		Map<String,QSFeaturePart> cachedData = qsFinder.getMarkerParts(results);
         List<QSFeatureResultWrapper> wrapped = new ArrayList<QSFeatureResultWrapper>();
 
@@ -293,10 +293,36 @@ public class QuickSearchController {
        				r.setLocation(part.getLocation());
        				r.setStrand(part.getStrand());
        			} else {
-       				logger.info("Cannot find " + r.getPrimaryID());
+       				logger.debug("Cannot find " + r.getPrimaryID());
        			}
        		}
        		wrapped.add(new QSFeatureResultWrapper(r));
+       	}
+		return wrapped;
+	}
+	
+	/* Take a list of QSAlleleResult objects (that are missing crucial information for display), look up the remaining
+	 * data from a memory cache (retrieving additional data as needed), and wrap them up in objects for display.
+	 */
+	private List<QSAlleleResultWrapper> wrapAlleleResults(List<QSAlleleResult> results) {
+		logger.debug("Wrapping " + results.size() + " allele results");
+		Map<String,QSFeaturePart> cachedData = qsFinder.getAlleleParts(results);
+        List<QSAlleleResultWrapper> wrapped = new ArrayList<QSAlleleResultWrapper>();
+
+       	for (QSAlleleResult r : results) {
+       		if (cachedData.containsKey(r.getPrimaryID())) {
+       			QSFeaturePart part = cachedData.get(r.getPrimaryID());
+       			if (part != null) {
+       				r.setSymbol(part.getSymbol());
+       				r.setName(part.getName());
+       				r.setChromosome(part.getChromosome());
+       				r.setLocation(part.getLocation());
+       				r.setStrand(part.getStrand());
+       			} else {
+       				logger.debug("Cannot find " + r.getPrimaryID());
+       			}
+       		}
+       		wrapped.add(new QSAlleleResultWrapper(r));
        	}
 		return wrapped;
 	}
@@ -640,7 +666,7 @@ public class QuickSearchController {
 			}
 		}
 		
-		logger.info("bestMatches.size() = " + bestMatches.size());
+		logger.debug("bestMatches.size() = " + bestMatches.size());
 
 		// Now use the Grouper to divide up the best matches we found into their star buckets.
 		Grouper<QSResult> grouper = new Grouper<QSResult>();
@@ -815,7 +841,7 @@ public class QuickSearchController {
 	public @ResponseBody JsonSummaryResponse<QSVocabResultWrapper> getVocabBucket(HttpServletRequest request,
 			@ModelAttribute QuickSearchQueryForm queryForm, @ModelAttribute Paginator page) {
 
-        logger.info("->getVocabBucket started (seeking results " + page.getStartIndex() + " to " + (page.getStartIndex() + page.getResults()) + ")");
+        logger.debug("->getVocabBucket started (seeking results " + page.getStartIndex() + " to " + (page.getStartIndex() + page.getResults()) + ")");
 
         int startIndex = page.getStartIndex();
         int endIndex = startIndex + page.getResults();
@@ -824,7 +850,7 @@ public class QuickSearchController {
         List<QSVocabResult> out = vocabResultCache.get(cacheKey);
         
         if (out != null) {
-        	logger.info(" - got " + out.size() + " vocab results from cache");
+        	logger.debug(" - got " + out.size() + " vocab results from cache");
         } else {
         	// The index has been rebuilt to instead have each document be a point of data that can be matched, so
         	// we now need to retrieve all matching documents and then process them.  Guessing too high a number of
@@ -843,20 +869,20 @@ public class QuickSearchController {
         
         	SearchResults<QSVocabResult> idOrNomenResults = qsFinder.getVocabResults(orSearch);
         	Integer resultCount = idOrNomenResults.getTotalCount();
-        	logger.info("Identified " + resultCount + " term matches");
+        	logger.debug("Identified " + resultCount + " term matches");
 
         	// Now do the query to retrieve all results.
         	String key = FewiUtil.startMonitoring("QS Vocab Term Search", queryForm.toString());
         	orSearch.setPaginator(new Paginator(resultCount));
         	List<QSVocabResult> allMatches = qsFinder.getVocabResults(orSearch).getResultObjects();
-        	logger.info("Loaded " + allMatches.size() + " term matches");
+        	logger.debug("Loaded " + allMatches.size() + " term matches");
         	FewiUtil.endMonitoring(key);
         
         	out = (List<QSVocabResult>) unifyVocabMatches(queryForm.getTerms(), allMatches);
-        	logger.info("Consolidated down to " + out.size() + " terms");
+        	logger.debug("Consolidated down to " + out.size() + " terms");
         	
         	vocabResultCache.put(cacheKey, out);
-        	logger.info(" - added " + out.size() + " vocab results to cache");
+        	logger.debug(" - added " + out.size() + " vocab results to cache");
         }
         
         List<QSVocabResultWrapper> wrapped = new ArrayList<QSVocabResultWrapper>();
@@ -872,7 +898,7 @@ public class QuickSearchController {
         JsonSummaryResponse<QSVocabResultWrapper> response = new JsonSummaryResponse<QSVocabResultWrapper>();
         response.setSummaryRows(wrapped);
         response.setTotalCount(out.size());
-        logger.info("Returning " + wrapped.size() + " term matches");
+        logger.debug("Returning " + wrapped.size() + " term matches");
 
         return response;
     }
@@ -884,7 +910,7 @@ public class QuickSearchController {
 	public @ResponseBody JsonSummaryResponse<QSStrainResultWrapper> getStrainBucket(HttpServletRequest request,
 			@ModelAttribute QuickSearchQueryForm queryForm, @ModelAttribute Paginator page) {
 
-        logger.info("->getStrainBucket started (seeking results " + page.getStartIndex() + " to " + (page.getStartIndex() + page.getResults()) + ")");
+        logger.debug("->getStrainBucket started (seeking results " + page.getStartIndex() + " to " + (page.getStartIndex() + page.getResults()) + ")");
 
         int startIndex = page.getStartIndex();
         int endIndex = startIndex + page.getResults();
@@ -893,7 +919,7 @@ public class QuickSearchController {
         List<QSStrainResult> out = strainResultCache.get(cacheKey);
         
         if (out != null) {
-        	logger.info(" - got " + out.size() + " strain results from cache");
+        	logger.debug(" - got " + out.size() + " strain results from cache");
         } else {
         	// The index has been rebuilt to instead have each document be a point of data that can be matched, so
         	// we now need to retrieve all matching documents and then process them.  Guessing too high a number of
@@ -914,20 +940,20 @@ public class QuickSearchController {
         
         	SearchResults<QSStrainResult> anyResults = qsFinder.getStrainResults(orSearch);
         	Integer resultCount = anyResults.getTotalCount();
-        	logger.info("Identified " + resultCount + " strain matches");
+        	logger.debug("Identified " + resultCount + " strain matches");
 
         	// Now do the query to retrieve all results.
         	String key = FewiUtil.startMonitoring("QS Strain Search", queryForm.toString());
         	orSearch.setPaginator(new Paginator(resultCount));
         	List<QSStrainResult> allMatches = qsFinder.getStrainResults(orSearch).getResultObjects();
-        	logger.info("Loaded " + allMatches.size() + " strain matches");
+        	logger.debug("Loaded " + allMatches.size() + " strain matches");
         	FewiUtil.endMonitoring(key);
         
         	out = (List<QSStrainResult>) unifyStrainMatches(queryForm.getTerms(), allMatches);
-        	logger.info("Consolidated down to " + out.size() + " strains");
+        	logger.debug("Consolidated down to " + out.size() + " strains");
         	
         	strainResultCache.put(cacheKey, out);
-        	logger.info(" - added " + out.size() + " strain results to cache");
+        	logger.debug(" - added " + out.size() + " strain results to cache");
         }
         
         List<QSStrainResultWrapper> wrapped = new ArrayList<QSStrainResultWrapper>();
@@ -943,7 +969,7 @@ public class QuickSearchController {
         JsonSummaryResponse<QSStrainResultWrapper> response = new JsonSummaryResponse<QSStrainResultWrapper>();
         response.setSummaryRows(wrapped);
         response.setTotalCount(out.size());
-        logger.info("Returning " + wrapped.size() + " term matches");
+        logger.debug("Returning " + wrapped.size() + " term matches");
 
         return response;
     }
@@ -955,7 +981,7 @@ public class QuickSearchController {
 	public @ResponseBody JsonSummaryResponse<QSAlleleResultWrapper> getAlleleBucket(HttpServletRequest request,
 			@ModelAttribute QuickSearchQueryForm queryForm, @ModelAttribute Paginator page) {
 
-        logger.info("->getAlleleBucket started (seeking results " + page.getStartIndex() + " to " + (page.getStartIndex() + page.getResults()) + ")");
+        logger.debug("->getAlleleBucket started (seeking results " + page.getStartIndex() + " to " + (page.getStartIndex() + page.getResults()) + ")");
 
         int startIndex = page.getStartIndex();
         int endIndex = startIndex + page.getResults();
@@ -964,7 +990,7 @@ public class QuickSearchController {
         List<QSAlleleResult> out = alleleResultCache.get(cacheKey);
         
         if (out != null) {
-        	logger.info(" - got " + out.size() + " allele results from cache");
+        	logger.debug(" - got " + out.size() + " allele results from cache");
         } else {
         	// The index has been rebuilt to instead have each document be a point of data that can be matched, so
         	// we now need to retrieve all matching documents and then process them.  Guessing too high a number of
@@ -985,28 +1011,26 @@ public class QuickSearchController {
         
         	SearchResults<QSAlleleResult> anyResults = qsFinder.getAlleleResults(orSearch);
         	Integer resultCount = anyResults.getTotalCount();
-        	logger.info("Identified " + resultCount + " allele matches");
+        	logger.debug("Identified " + resultCount + " allele matches");
 
         	// Now do the query to retrieve all results.
         	String key = FewiUtil.startMonitoring("QS Allele Search", queryForm.toString());
         	orSearch.setPaginator(new Paginator(resultCount));
         	List<QSAlleleResult> allMatches = qsFinder.getAlleleResults(orSearch).getResultObjects();
-        	logger.info("Loaded " + allMatches.size() + " allele matches");
+        	logger.debug("Loaded " + allMatches.size() + " allele matches");
         	FewiUtil.endMonitoring(key);
         
         	out = (List<QSAlleleResult>) unifyAlleleMatches(queryForm.getTerms(), allMatches);
-        	logger.info("Consolidated down to " + out.size() + " alleles");
+        	logger.debug("Consolidated down to " + out.size() + " alleles");
         	
         	alleleResultCache.put(cacheKey, out);
-        	logger.info(" - added " + out.size() + " allele results to cache");
+        	logger.debug(" - added " + out.size() + " allele results to cache");
         }
         
         List<QSAlleleResultWrapper> wrapped = new ArrayList<QSAlleleResultWrapper>();
         if (out.size() >= startIndex) {
         	logger.debug(" - extracting results " + startIndex + " to " + Math.min(out.size(), endIndex));
-        	for (QSAlleleResult r : out.subList(startIndex, Math.min(out.size(), endIndex))) {
-        		wrapped.add(new QSAlleleResultWrapper(r));
-        	}
+        	wrapped = wrapAlleleResults(out.subList(startIndex, Math.min(out.size(), endIndex)));
         } else { 
         	logger.debug(" - not extracting,just returning empty term list");
         }
@@ -1014,7 +1038,7 @@ public class QuickSearchController {
         JsonSummaryResponse<QSAlleleResultWrapper> response = new JsonSummaryResponse<QSAlleleResultWrapper>();
         response.setSummaryRows(wrapped);
         response.setTotalCount(out.size());
-        logger.info("Returning " + wrapped.size() + " term matches");
+        logger.debug("Returning " + wrapped.size() + " term matches");
 
         return response;
     }
@@ -1079,7 +1103,7 @@ public class QuickSearchController {
 	public @ResponseBody JsonSummaryResponse<AccessionSummaryRow> getIDBucket(HttpServletRequest request,
 			@ModelAttribute QuickSearchQueryForm queryForm) {
 
-        logger.info("->getIDBucket started");
+        logger.debug("->getIDBucket started");
         
         JsonSummaryResponse<AccessionSummaryRow> out = new JsonSummaryResponse<AccessionSummaryRow>();
         
