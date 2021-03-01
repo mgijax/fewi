@@ -18,7 +18,6 @@ public class QSFeatureResult extends QSResult {
 	private int starCount = 0;
 
 	private String featureType;
-	private Integer isMarker;
 	private String symbol;
 	private String primaryID;
 	private String name;
@@ -140,12 +139,6 @@ public class QSFeatureResult extends QSResult {
 	}
 	public void setName(String name) {
 		this.name = name;
-	}
-	public Integer getIsMarker() {
-		return isMarker;
-	}
-	public void setIsMarker(Integer isMarker) {
-		this.isMarker = isMarker;
 	}
 	public String getFeatureType() {
 		return featureType;

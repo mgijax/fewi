@@ -9,7 +9,6 @@ import org.jax.mgi.fewi.hunter.SolrQSVocabResultHunter;
 import org.jax.mgi.fewi.hunter.SolrQSAlleleResultFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrQSAlleleResultHunter;
 import org.jax.mgi.fewi.hunter.SolrQSFeatureResultFacetHunter;
-import org.jax.mgi.fewi.hunter.SolrQSFeatureResultHunter;
 import org.jax.mgi.fewi.hunter.SolrQSFeatureResultTinyHunter;
 import org.jax.mgi.fewi.hunter.SolrQSLookupHunter;
 import org.jax.mgi.fewi.hunter.SolrQSStrainResultFacetHunter;
@@ -60,9 +59,6 @@ public class QuickSearchFinder {
 	@Autowired
 	private SolrQSFeatureResultTinyHunter qsFeatureTinyHunter;
 
-//	@Autowired
-//	private SolrQSFeatureResultHunter qsFeatureHunter;
-//
 	@Autowired
 	private SolrQSFeatureResultFacetHunter featureFacetHunter;
 	

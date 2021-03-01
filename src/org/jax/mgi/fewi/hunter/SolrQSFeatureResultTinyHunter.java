@@ -41,20 +41,9 @@ public class SolrQSFeatureResultTinyHunter extends SolrHunter<QSFeatureResult> {
 		propertyMap.put(SearchConstants.QS_SEARCH_TERM_WEIGHT, new SolrPropertyMapper(IndexConstants.QS_SEARCH_TERM_WEIGHT));
 
 		propertyMap.put(SearchConstants.QS_FEATURE_TYPE, new SolrPropertyMapper(IndexConstants.QS_FEATURE_TYPE));
-		propertyMap.put(SearchConstants.QS_IS_MARKER, new SolrPropertyMapper(IndexConstants.QS_IS_MARKER));
 		propertyMap.put(SearchConstants.QS_PRIMARY_ID, new SolrPropertyMapper(IndexConstants.QS_PRIMARY_ID));
-		propertyMap.put(SearchConstants.QS_DETAIL_URI, new SolrPropertyMapper(IndexConstants.QS_DETAIL_URI));
 		propertyMap.put(SearchConstants.QS_SEQUENCE_NUM, new SolrPropertyMapper(IndexConstants.QS_SEQUENCE_NUM));
 
-		/* Removed to reduce redundant data transfers.  Will look them up as needed later on.
-		propertyMap.put(SearchConstants.QS_SYMBOL, new SolrPropertyMapper(IndexConstants.QS_SYMBOL));
-		propertyMap.put(SearchConstants.QS_NAME, new SolrPropertyMapper(IndexConstants.QS_NAME));
-		propertyMap.put(SearchConstants.QS_CHROMOSOME, new SolrPropertyMapper(IndexConstants.QS_CHROMOSOME));
-		propertyMap.put(SearchConstants.QS_START_COORD, new SolrPropertyMapper(IndexConstants.QS_START_COORD));
-		propertyMap.put(SearchConstants.QS_END_COORD, new SolrPropertyMapper(IndexConstants.QS_END_COORD));
-		propertyMap.put(SearchConstants.QS_STRAND, new SolrPropertyMapper(IndexConstants.QS_STRAND));
-		*/
-		
 		/*
 		 *  The name of the field we want to iterate through the documents for
 		 * and place into the output.  In this case we want the standard list of
@@ -88,11 +77,9 @@ public class SolrQSFeatureResultTinyHunter extends SolrHunter<QSFeatureResult> {
 				result.setSearchTermStemmed((String) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_STEMMED));
 				result.setSearchTermDisplay((String) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_DISPLAY));
 				result.setSearchTermType((String) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_TYPE));
-
+				result.setDetailUri("/marker/" + (String) doc.getFieldValue(IndexConstants.QS_PRIMARY_ID));
 				result.setFeatureType((String) doc.getFieldValue(IndexConstants.QS_FEATURE_TYPE));
-				result.setIsMarker((Integer) doc.getFieldValue(IndexConstants.QS_IS_MARKER));
 				result.setPrimaryID((String) doc.getFieldValue(IndexConstants.QS_PRIMARY_ID));
-				result.setDetailUri((String) doc.getFieldValue(IndexConstants.QS_DETAIL_URI));
 
 				Integer weight = (Integer) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_WEIGHT);
 				if (weight == null) {
@@ -108,19 +95,6 @@ public class SolrQSFeatureResultTinyHunter extends SolrHunter<QSFeatureResult> {
 					result.setSequenceNum(seqNum);
 				}
 
-				/* removed from data transfer to aid speed.  will look up later.
-				result.setSymbol((String) doc.getFieldValue(IndexConstants.QS_SYMBOL));
-				result.setName((String) doc.getFieldValue(IndexConstants.QS_NAME));
-				result.setChromosome((String) doc.getFieldValue(IndexConstants.QS_CHROMOSOME));
-				if (doc.getFieldValue(IndexConstants.QS_START_COORD) != null) {
-					result.setStartCoord(((Long) doc.getFieldValue(IndexConstants.QS_START_COORD)).toString());
-					if (doc.getFieldValue(IndexConstants.QS_END_COORD) != null) {
-						result.setEndCoord(((Long) doc.getFieldValue(IndexConstants.QS_END_COORD)).toString());
-					}
-				}
-				result.setStrand((String) doc.getFieldValue(IndexConstants.QS_STRAND));
-				*/
-				
 				sr.addResultObjects(result);
 			} catch (Exception e) {
 				e.printStackTrace();
