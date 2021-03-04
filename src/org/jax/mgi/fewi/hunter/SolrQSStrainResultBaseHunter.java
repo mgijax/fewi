@@ -90,6 +90,13 @@ public class SolrQSStrainResultBaseHunter extends SolrHunter<QSStrainResult> {
 				result.setSearchTermDisplay((String) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_DISPLAY));
 				result.setSearchTermType((String) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_TYPE));
 
+				Integer weight = (Integer) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_WEIGHT);
+				if (weight == null) {
+					result.setSearchTermWeight(0);
+				} else {
+					result.setSearchTermWeight(weight);
+				}
+
 				result.setName((String) doc.getFieldValue(IndexConstants.QS_NAME));
 				result.setAttributes((List<String>) doc.getFieldValue(IndexConstants.QS_ATTRIBUTES));
 				result.setDetailUri((String) doc.getFieldValue(IndexConstants.QS_DETAIL_URI));

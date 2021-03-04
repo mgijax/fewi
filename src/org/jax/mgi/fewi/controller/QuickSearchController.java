@@ -673,7 +673,7 @@ public class QuickSearchController {
 
 		for (String primaryID : bestMatches.keySet()) {
 			QSResult bestMatch = bestMatches.get(primaryID);
-			grouper.add(bestMatch.getStars(), primaryID, bestMatch, bestMatch.getSequenceNum());
+			grouper.add(bestMatch.getStars(), primaryID, bestMatch, bestMatch.getSearchTermWeight(), bestMatch.getSequenceNum());
 		}
 
 		return grouper.toList();
@@ -1132,14 +1132,17 @@ public class QuickSearchController {
         return out;
     }
 	
-	// private inner class for scoring / sorting QS results
+	// private inner class for scoring / sorting QS results.  We use a 3-level sort:  star rating,
+	// weight of matched item (from indexer), and sequence num (smart-alpha, from indexer)
 	private class Grouper<T> {
 		private class SortItem<T> {
 			public T item;
+			public Integer weight = 0;
 			public long sequenceNum;
 			
-			public SortItem(T item, long sequenceNum) {
+			public SortItem(T item, Integer weight, long sequenceNum) {
 				this.item = item;
+				this.weight = weight;
 				this.sequenceNum = sequenceNum;
 			}
 			
@@ -1149,6 +1152,8 @@ public class QuickSearchController {
 			
 			private class SIComparator implements Comparator<SortItem<T>> {
 				public int compare (SortItem<T> a, SortItem<T> b) {
+					if (a.weight < b.weight) { return 1; }
+					if (a.weight > b.weight) { return -1; }
 					if (a.sequenceNum < b.sequenceNum) { return -1; }
 					if (a.sequenceNum > b.sequenceNum) { return 1; }
 					return a.toString().compareTo(b.toString());
@@ -1169,15 +1174,15 @@ public class QuickSearchController {
 			this.ids = new HashSet<String>();
 		}
 		
-		public void add(String stars, String id, T item, long sequenceNum) {
+		public void add(String stars, String id, T item, Integer weight, long sequenceNum) {
 			int starCount = stars.length();
 
 			if (this.ids.contains(id)) { return; }
 			
-			if (starCount == 4) { this.fourStar.add(new SortItem<T>(item, sequenceNum)); }
-			else if (starCount == 3) { this.threeStar.add(new SortItem<T>(item, sequenceNum)); }
-			else if (starCount == 2) { this.twoStar.add(new SortItem<T>(item, sequenceNum)); }
-			else { this.oneStar.add(new SortItem<T>(item, sequenceNum)); }
+			if (starCount == 4) { this.fourStar.add(new SortItem<T>(item, weight, sequenceNum)); }
+			else if (starCount == 3) { this.threeStar.add(new SortItem<T>(item, weight, sequenceNum)); }
+			else if (starCount == 2) { this.twoStar.add(new SortItem<T>(item, weight, sequenceNum)); }
+			else { this.oneStar.add(new SortItem<T>(item, weight, sequenceNum)); }
 
 			this.ids.add(id);
 		}

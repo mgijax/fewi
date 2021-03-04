@@ -92,6 +92,14 @@ public class SolrQSVocabResultBaseHunter extends SolrHunter<QSVocabResult> {
 				result.setSearchTermDisplay((String) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_DISPLAY));
 				result.setSearchTermType((String) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_TYPE));
 
+				Integer weight = (Integer) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_WEIGHT);
+				if (weight == null) {
+					result.setSearchTermWeight(0);
+				} else {
+					result.setSearchTermWeight(weight);
+				}
+
+
 				result.setTerm((String) doc.getFieldValue(IndexConstants.QS_TERM));
 				result.setTermType((String) doc.getFieldValue(IndexConstants.QS_TERM_TYPE));
 				result.setVocabName((String) doc.getFieldValue(IndexConstants.QS_VOCAB_NAME));
