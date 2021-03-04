@@ -176,6 +176,7 @@
 #b5Table { border-collapse: collapse; width: 100% }
 #b5Table th { font-weight: bold; padding: 3px; }
 #b5Table td { padding: 3px; }
+#b5Table td sup { padding: 3px; line-height: 1.9em; }
 #b5Table tr:nth-child(odd) { background-color: #f2f2f2; }
 #b5Table tr:first-child { background-color: #dfefff; }
 
