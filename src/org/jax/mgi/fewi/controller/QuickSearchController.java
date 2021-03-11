@@ -85,6 +85,8 @@ public class QuickSearchController {
     // static variables
     //--------------------//
 
+	private static int SOLR_BATCH_SIZE = 150000;	// number of docs to retrieve from Solr per batch
+	
 	private static int FEATURE = 1;			// constants for types of objects we work with
 	private static int VOCAB_TERM = 2;
 	private static int STRAIN = 3;
@@ -236,28 +238,52 @@ public class QuickSearchController {
         	either.add(stemmedSearch.getFilter());
         	orSearch.setFilter(Filter.or(either));
         
+        	// Begin monitoring when we get our count.
+        	String key = FewiUtil.startMonitoring("QS Feature Search", queryForm.toString());
+        	
         	SearchResults<QSFeatureResult> eitherResults = qsFinder.getFeatureResults(orSearch);
         	Integer resultCount = eitherResults.getTotalCount();
-        	logger.debug("Identified " + resultCount + " feature matches");
+        	logger.info("> Identified " + resultCount + " feature matches");
         
-        	// Now do the query to retrieve all results.
-        	String key = FewiUtil.startMonitoring("QS Feature Search", queryForm.toString());
-        	orSearch.setPaginator(new Paginator(resultCount));
-        	List<QSFeatureResult> allMatches = null;
+        	// Now that we know how many results we're looking for, we can retrieve them in batches.
         	
-        	try {
-        		allMatches = qsFinder.getFeatureResults(orSearch).getResultObjects();
-        	} catch (Exception e) {
-        		// record the failure and return empty results
-        		FewiUtil.failMonitoring(key, e.toString());
-        		allMatches = new ArrayList<QSFeatureResult>();
+        	int start = 0;
+        	out = new ArrayList<QSFeatureResult>();
+
+        	Paginator batch = new Paginator(SOLR_BATCH_SIZE);
+        	if (resultCount < SOLR_BATCH_SIZE) {
+        		batch.setResults(resultCount);
         	}
-        	logger.debug("Loaded " + allMatches.size() + " feature matches");
-        	FewiUtil.endMonitoring(key);
-        
-        	out = unifyFeatureMatches(queryForm.getTerms(), allMatches);
-        	logger.debug("Consolidated down to " + out.size() + " features");
+
+        	while (start < resultCount) {
+        		logger.info("> Seeking from " + start + " to " + (start + batch.getResults()));
+
+        		batch.setStartIndex(start);
+        		orSearch.setPaginator(batch);
+        		
+        		// Now do the query to retrieve all results.
+        		List<QSFeatureResult> allMatches = null;
         	
+        		try {
+        			allMatches = qsFinder.getFeatureResults(orSearch).getResultObjects();
+        		} catch (Exception e) {
+        			// record the failure and return empty results
+        			FewiUtil.failMonitoring(key, e.toString());
+        			allMatches = new ArrayList<QSFeatureResult>();
+        			logger.debug("Caught exception: " + e.toString());
+        		}
+
+        		logger.debug("Found " + allMatches.size() + " feature matches");
+        
+        		out = unifyFeatureMatches(queryForm.getTerms(), allMatches, out);
+        		logger.debug("Currently tracking " + out.size() + " features");
+        		
+        		start = start + SOLR_BATCH_SIZE;
+        	}
+
+        	// stop monitoring when we reach the end
+       		FewiUtil.endMonitoring(key);
+
         	featureResultCache.put(cacheKey, out);
         	logger.debug(" - added " + out.size() + " feature results to cache");
        	}
@@ -457,12 +483,17 @@ public class QuickSearchController {
 	}
 	
 	// consolidate the lists of matching features, add star values, and setting best match values, then return
-	private List<QSFeatureResult> unifyFeatureMatches (List<String> searchTerms, List<QSFeatureResult> allMatches) {
+	private List<QSFeatureResult> unifyFeatureMatches (List<String> searchTerms, List<QSFeatureResult> allMatches, List<QSFeatureResult> bestSoFar) {
+		Map<String,QSResult> bestMatches = new HashMap<String,QSResult>();
+		for (QSFeatureResult b : bestSoFar) {
+			bestMatches.put(b.getPrimaryID(), (QSResult) b);
+		}
+		
 		List<QSResult> a = new ArrayList<QSResult>(allMatches.size());
 		for (QSFeatureResult r : allMatches) {
 			a.add((QSResult) r);
 		}
-		List<QSResult> unified = unifyMatches(searchTerms, a);
+		List<QSResult> unified = unifyMatches(searchTerms, a, bestMatches);
 		
 		List<QSFeatureResult> out = new ArrayList<QSFeatureResult>(unified.size());
 		for (QSResult u : unified) {
@@ -477,7 +508,7 @@ public class QuickSearchController {
 		for (QSVocabResult r : allMatches) {
 			a.add((QSResult) r);
 		}
-		List<QSResult> unified = unifyMatches(searchTerms, a);
+		List<QSResult> unified = unifyMatches(searchTerms, a, null);
 		
 		List<QSVocabResult> out = new ArrayList<QSVocabResult>(unified.size());
 		for (QSResult u : unified) {
@@ -492,7 +523,7 @@ public class QuickSearchController {
 		for (QSAlleleResult r : allMatches) {
 			a.add((QSResult) r);
 		}
-		List<QSResult> unified = unifyMatches(searchTerms, a);
+		List<QSResult> unified = unifyMatches(searchTerms, a, null);
 		
 		List<QSAlleleResult> out = new ArrayList<QSAlleleResult>(unified.size());
 		for (QSResult u : unified) {
@@ -507,7 +538,7 @@ public class QuickSearchController {
 		for (QSStrainResult r : allMatches) {
 			a.add((QSResult) r);
 		}
-		List<QSResult> unified = unifyMatches(searchTerms, a);
+		List<QSResult> unified = unifyMatches(searchTerms, a, null);
 		
 		List<QSStrainResult> out = new ArrayList<QSStrainResult>(unified.size());
 		for (QSResult u : unified) {
@@ -542,8 +573,9 @@ public class QuickSearchController {
 	}
 
 	// consolidate the lists of matching (abstract) QSResult objects, add star values, and setting best match values,
-	// then return
-	private List<QSResult> unifyMatches (List<String> searchTerms, List<QSResult> allMatches) {
+	// then return.  bestMatches can be passed in for processing batches via multiple invocations; if null, it will be
+	// instantiated herein.
+	private List<QSResult> unifyMatches (List<String> searchTerms, List<QSResult> allMatches, Map<String,QSResult> bestMatches) {
 		// original search term will be the last item in the list of search terms
 		String originalSearchTerm = searchTerms.get(searchTerms.size() - 1).toLowerCase();
 		
@@ -586,7 +618,9 @@ public class QuickSearchController {
 		// 2. if best tier so far for this primary ID, keep this one
 		// 3. if same as best tier so far but this has a better weight (based on data type), keep this one
 		
-		Map<String,QSResult> bestMatches = new HashMap<String,QSResult>();
+		if (bestMatches == null) {
+			bestMatches = new HashMap<String,QSResult>();
+		}
 		for (QSResult match : allMatches) {
 			String primaryID = match.getPrimaryID();
 			String lowerDisplayTerm = match.getSearchTermDisplay().toLowerCase();
