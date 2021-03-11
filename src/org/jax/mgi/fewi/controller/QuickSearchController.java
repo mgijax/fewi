@@ -157,6 +157,9 @@ public class QuickSearchController {
     private AccessionController accessionController;
 
     @Autowired
+    private GXDController gxdController;
+
+    @Autowired
     private QuickSearchFinder qsFinder;
     
 	@Value("${solr.factetNumberDefault}")
@@ -889,6 +892,24 @@ public class QuickSearchController {
         if (out.size() >= startIndex) {
         	logger.debug(" - extracting results " + startIndex + " to " + Math.min(out.size(), endIndex));
         	for (QSVocabResult r : out.subList(startIndex, Math.min(out.size(), endIndex))) {
+
+        		// For EMAPA and EMAPS terms, we need to retrieve and remember annotation counts.
+        		if ("<<gxdCount>>".equals(r.getAnnotationText())) {
+        			Integer resultCount = gxdController.getResultCountForID(r.getPrimaryID());
+        			logger.debug("count for " + r.getPrimaryID() + ": " + resultCount);
+        			if (resultCount > 0) {
+        				String s = "";
+        				if (resultCount > 1) {
+        					s = "s";
+        				}
+        				r.setAnnotationCount(new Long(resultCount));
+        				r.setAnnotationText(resultCount + " gene expression result" + s);
+        			} else {
+        				r.setAnnotationCount(0L);
+        				r.setAnnotationText(null);
+        			}
+        		}
+
         		wrapped.add(new QSVocabResultWrapper(r));
         	}
         } else { 

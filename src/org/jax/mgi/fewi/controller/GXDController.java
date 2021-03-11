@@ -2770,6 +2770,19 @@ public class GXDController {
 
 		return gxdFinder.getAssayResultCount(params);
 	}
+	
+	// lookup of result count based solely on EMAPA/EMAPS ID
+	public Integer getResultCountForID(String termID) {
+		logger.debug("in getResultCountForID(" + termID + ")");
+		SearchParams params = new SearchParams();
+		GxdQueryForm form = new GxdQueryForm();
+		form.setStructureID(termID);
+		params.setFilter(parseGxdQueryForm(form));
+		params.setPageSize(0);
+
+		return gxdFinder.getAssayResultCount(params);
+	}
+	
 	@RequestMapping("/images/totalCount")
 	public @ResponseBody Integer getGxdImageCount(
 			HttpSession session,
