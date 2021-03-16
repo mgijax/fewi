@@ -518,12 +518,17 @@ public class QuickSearchController {
 	}
 	
 	// consolidate the lists of matching alleles, add star values, and setting best match values, then return
-	private List<QSAlleleResult> unifyAlleleMatches (List<String> searchTerms, List<QSAlleleResult> allMatches) {
+	private List<QSAlleleResult> unifyAlleleMatches (List<String> searchTerms, List<QSAlleleResult> allMatches, List<QSAlleleResult> bestSoFar) {
+		Map<String,QSResult> bestMatches = new HashMap<String,QSResult>();
+		for (QSAlleleResult b : bestSoFar) {
+			bestMatches.put(b.getPrimaryID(), (QSResult) b);
+		}
+		
 		List<QSResult> a = new ArrayList<QSResult>(allMatches.size());
 		for (QSAlleleResult r : allMatches) {
 			a.add((QSResult) r);
 		}
-		List<QSResult> unified = unifyMatches(searchTerms, a, null);
+		List<QSResult> unified = unifyMatches(searchTerms, a, bestMatches);
 		
 		List<QSAlleleResult> out = new ArrayList<QSAlleleResult>(unified.size());
 		for (QSResult u : unified) {
@@ -1066,17 +1071,46 @@ public class QuickSearchController {
         
         	SearchResults<QSAlleleResult> anyResults = qsFinder.getAlleleResults(orSearch);
         	Integer resultCount = anyResults.getTotalCount();
-        	logger.debug("Identified " + resultCount + " allele matches");
+        	logger.debug("> Identified " + resultCount + " allele matches");
 
-        	// Now do the query to retrieve all results.
+        	// Now that we know how many results we're looking for, we can retrieve them in batches.
         	String key = FewiUtil.startMonitoring("QS Allele Search", queryForm.toString());
-        	orSearch.setPaginator(new Paginator(resultCount));
-        	List<QSAlleleResult> allMatches = qsFinder.getAlleleResults(orSearch).getResultObjects();
-        	logger.debug("Loaded " + allMatches.size() + " allele matches");
-        	FewiUtil.endMonitoring(key);
-        
-        	out = (List<QSAlleleResult>) unifyAlleleMatches(queryForm.getTerms(), allMatches);
-        	logger.debug("Consolidated down to " + out.size() + " alleles");
+        	int start = 0;
+        	out = new ArrayList<QSAlleleResult>();
+
+        	Paginator batch = new Paginator(SOLR_BATCH_SIZE);
+        	if (resultCount < SOLR_BATCH_SIZE) {
+        		batch.setResults(resultCount);
+        	}
+        	
+        	while (start < resultCount) {
+        		logger.info("> Seeking from " + start + " to " + (start + batch.getResults()));
+
+        		batch.setStartIndex(start);
+        		orSearch.setPaginator(batch);
+
+        		// Now do the query to retrieve all results.
+        		List<QSAlleleResult> allMatches = null;
+
+        		try {
+        			allMatches = qsFinder.getAlleleResults(orSearch).getResultObjects();
+        		} catch (Exception e) {
+        			// record the failure and return empty results
+        			FewiUtil.failMonitoring(key, e.toString());
+        			allMatches = new ArrayList<QSAlleleResult>();
+        			logger.debug("Caught exception: " + e.toString());
+        		}
+
+        		logger.debug("Found " + allMatches.size() + " allele matches");
+
+        		out = unifyAlleleMatches(queryForm.getTerms(), allMatches, out);
+        		logger.debug("Currently tracking " + out.size() + " alleles");
+
+        		start = start + SOLR_BATCH_SIZE;
+        	}
+
+        	// stop monitoring when we reach the end
+       		FewiUtil.endMonitoring(key);
         	
         	alleleResultCache.put(cacheKey, out);
         	logger.debug(" - added " + out.size() + " allele results to cache");
