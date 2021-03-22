@@ -144,10 +144,10 @@
 
 #filterSummary { margin-top: 5px; margin-bottom: 5px; }
 
-#b1Results { max-height: 300px; overflow-y: auto; }
-#b2Results { max-height: 300px; overflow-y: auto; }
-#b4Results { max-height: 300px; overflow-y: auto; }
-#b5Results { max-height: 300px; overflow-y: auto; }
+#b1Results { max-height: 300px; overflow-y: auto; width: 100%; }
+#b2Results { max-height: 300px; overflow-y: auto; width: 100%; }
+#b4Results { max-height: 300px; overflow-y: auto; width: 100%; }
+#b5Results { max-height: 300px; overflow-y: auto; width: 100%; }
 
 #b1Table { border-collapse: collapse; width: 100% }
 #b1Table th { font-weight: bold; padding: 3px; }
