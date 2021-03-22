@@ -166,4 +166,8 @@ public class QSStrainResult extends QSResult {
 	public String toString() {
 		return name;
 	}
+	@Override
+	public void addBoost(int boost) {
+		this.searchTermWeight += boost; 
+	}
 }

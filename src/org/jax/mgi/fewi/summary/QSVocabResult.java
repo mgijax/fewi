@@ -149,4 +149,8 @@ public class QSVocabResult extends QSResult {
 	public String toString() {
 		return primaryID + ", " + term;
 	}
+	@Override
+	public void addBoost(int boost) {
+		this.searchTermWeight += boost; 
+	}
 }

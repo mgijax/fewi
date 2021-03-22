@@ -622,6 +622,9 @@ public class QuickSearchController {
 		// 1. determine star tier (exact / all words / any word)
 		// 2. if best tier so far for this primary ID, keep this one
 		// 3. if same as best tier so far but this has a better weight (based on data type), keep this one
+		// 3a. Apply a minor boost to weight for cases where one of the words in the search string matches the
+		//		start of the indexed string.  (This moves those matches up when choosing the Best Match and when
+		//		displaying results in the QS.
 		
 		if (bestMatches == null) {
 			bestMatches = new HashMap<String,QSResult>();
@@ -644,7 +647,10 @@ public class QuickSearchController {
 			} else if (match.getSearchTermInexact() != null) {
 				lowerTerm = match.getSearchTermInexact().toLowerCase();
 			}
-				
+			
+			// boost to be applied to the weight (based on whether a match is to the start of the string)
+			int prefixBoost = 0;	
+			
 			if (lowerTerm != null) {
 				// search terms can be exact (4-star), contain all terms (3-star), or contain some terms (2-star)
 				if (lowerTerm.equals(originalSearchTerm) || lowerDisplayTerm.equals(originalSearchTerm)) {
@@ -656,6 +662,10 @@ public class QuickSearchController {
 					for (String word : termsToCheck) {
 						if (lowerTerm.indexOf(word) >= 0) {
 							matchCount++;
+							
+							if (lowerTerm.indexOf(word) == 0) {
+								prefixBoost = 2;
+							}
 						}
 					}
 
@@ -664,6 +674,10 @@ public class QuickSearchController {
 						Matcher matcher = number.matcher(lowerTerm);
 						if (matcher.find()) {
 							matchCount++;
+							
+							if (matcher.start() == 0) {
+								prefixBoost = 2;
+							}
 						}
 					}
 
@@ -680,9 +694,11 @@ public class QuickSearchController {
 			if (match.getStarCount() > 0) {
 				boolean keepThisOne = false;		// Is this our best match so far for this feature?
 				
+				match.addBoost(prefixBoost);
+
 				// If we've already seen this feature, then we only want to keep this as the best match if:
 				// 1. it has a higher star count than the previous best match, or
-				// 2. it has the same star count as the previous best match and a larger weight.
+				// 2. it has the same star count as the previous best match and a larger weight (plus prefixBoost).
 				if (bestMatches.containsKey(primaryID)) {
 					QSResult bestMatch = bestMatches.get(primaryID);
 					

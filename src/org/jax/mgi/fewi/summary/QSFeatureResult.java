@@ -180,4 +180,8 @@ public class QSFeatureResult extends QSResult {
 	public String toString() {
 		return symbol;
 	}
+	@Override
+	public void addBoost(int boost) {
+		this.searchTermWeight += boost; 
+	}
 }

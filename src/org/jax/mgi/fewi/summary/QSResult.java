@@ -13,4 +13,6 @@ public abstract class QSResult {
 
 	public abstract String getPrimaryID();			// unique identifier of the match
 	public abstract Long getSequenceNum();
+
+	public abstract void addBoost(int boost);		// add a boost to the weight (to allow preferences in choosing Best Match)
 }
