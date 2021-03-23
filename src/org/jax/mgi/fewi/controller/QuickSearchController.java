@@ -626,8 +626,9 @@ public class QuickSearchController {
 		//		start of the indexed string.  (This moves those matches up when choosing the Best Match and when
 		//		displaying results in the QS.
 		// 3b. Apply a minor boost to weight for cases where the whole search string is not an exact match to
-		//		the indexed string but where the indexed string contains the search string.  (This also moves
-		//		those matches up when choosing the Best Match and when displaying results in the QS.)
+		//		the indexed string but where the indexed string contains the words from the search string in the
+		//		proper order.  (This also moves those matches up when choosing the Best Match and when displaying
+		//		results in the QS.)
 		
 		if (bestMatches == null) {
 			bestMatches = new HashMap<String,QSResult>();
@@ -654,8 +655,8 @@ public class QuickSearchController {
 			// boost to be applied to the weight (based on whether a match is to the start of the string)
 			int prefixBoost = 0;	
 			
-			// boost to be applied to the weight (based on whether the indexed string contains the whole search string)
-			int containsBoost = 0;	
+			// boost to be applied to the weight (based on whether the indexed string contains all terms in the right order)
+			int inOrderBoost = 0;	
 			
 			if (lowerTerm != null) {
 				// search terms can be exact (4-star), contain all terms (3-star), or contain some terms (2-star)
@@ -670,7 +671,7 @@ public class QuickSearchController {
 							matchCount++;
 							
 							if (lowerTerm.indexOf(word) == 0) {
-								prefixBoost = 8;
+								prefixBoost = 5;
 							}
 						}
 					}
@@ -682,18 +683,32 @@ public class QuickSearchController {
 							matchCount++;
 							
 							if (matcher.start() == 0) {
-								prefixBoost = 8;
+								prefixBoost = 5;
 							}
 						}
 					}
 
 					if (matchCount >= wordCount) {
 						match.setStars("***");
-						if (lowerTerm.indexOf(originalSearchTerm) >= 0) {
-							containsBoost = 5;
-						}
 					} else {
 						match.setStars("**");
+					}
+					
+					// Only need to worry about the inOrderBoost if the user entered more than one word in the
+					// search phrase.
+					if (searchTerms.size() > 1) {
+						int lastTermIndex = -10;		// index of the last term matched
+						inOrderBoost = 8;				// assume terms matched in order, larger boost than prefix
+					
+						for (String term : searchTerms) {
+							int termIndex = lowerTerm.indexOf(term);
+							if (termIndex < lastTermIndex) {
+								// Found a word that was in the wrong order, so take away the boost.
+								inOrderBoost = 0;
+								break;
+							}
+							lastTermIndex = termIndex;
+						}
 					}
 				}
 			}
@@ -704,7 +719,7 @@ public class QuickSearchController {
 				boolean keepThisOne = false;		// Is this our best match so far for this feature?
 				
 				match.addBoost(prefixBoost);
-				match.addBoost(containsBoost);
+				match.addBoost(inOrderBoost);
 
 				// If we've already seen this feature, then we only want to keep this as the best match if:
 				// 1. it has a higher star count than the previous best match, or
