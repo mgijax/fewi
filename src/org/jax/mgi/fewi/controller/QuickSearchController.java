@@ -639,6 +639,9 @@ public class QuickSearchController {
 			String lowerTerm = null;
 			List<String> termsToCheck = nonStemmedTerms;		// assume we compare with non-stemmed set of terms
 			
+			// For alleles, the marker symbol field is limited to 3-stars.
+			boolean limitedType = "Marker Symbol".equals(match.getSearchTermType());
+			
 			// If the exact field is non-null, then we know we have an exact match to the search term,
 			// aside from case sensitivity.
 			if (match.getSearchTermExact() != null) {
@@ -660,7 +663,7 @@ public class QuickSearchController {
 			
 			if (lowerTerm != null) {
 				// search terms can be exact (4-star), contain all terms (3-star), or contain some terms (2-star)
-				if (lowerTerm.equals(originalSearchTerm) || lowerDisplayTerm.equals(originalSearchTerm)) {
+				if (!limitedType && (lowerTerm.equals(originalSearchTerm) || lowerDisplayTerm.equals(originalSearchTerm))) {
 					match.setStars("****");
 				} else {
 					int matchCount = 0;
@@ -723,7 +726,7 @@ public class QuickSearchController {
 
 				// If we've already seen this feature, then we only want to keep this as the best match if:
 				// 1. it has a higher star count than the previous best match, or
-				// 2. it has the same star count as the previous best match and a larger weight (plus prefixBoost).
+				// 2. it has the same star count as the previous best match and a larger weight (plus boosts).
 				if (bestMatches.containsKey(primaryID)) {
 					QSResult bestMatch = bestMatches.get(primaryID);
 					
