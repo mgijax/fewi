@@ -701,8 +701,8 @@ public class QuickSearchController {
 					
 					// Only need to worry about the inOrderBoost if the user entered more than one word in the
 					// search phrase.
-					toCheckOrder = toCheckOrder.subList(0, toCheckOrder.size() - 1);
 					if (toCheckOrder.size() > 1) {
+						toCheckOrder = toCheckOrder.subList(0, toCheckOrder.size() - 1);
 						int lastTermIndex = -10;		// index of the last term matched
 						inOrderBoost = 8;				// assume terms matched in order, larger boost than prefix
 					
