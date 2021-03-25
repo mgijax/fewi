@@ -595,6 +595,7 @@ public class QuickSearchController {
 		List<String> nonStemmedTerms = new ArrayList<String>();			// non-numeric, non-stemmed terms to match
 		List<String> stemmedTerms = new ArrayList<String>();			// non-numeric, stemmed terms to match
 		List<Pattern> numericPatterns = new ArrayList<Pattern>();		// numeric terms to match
+		List<String> toCheckOrder = searchTerms;						// terms to check for ordering
 		
 		// Take the original list of search terms and split the list into a non-numeric part and a numeric part,
 		// the latter of which will be examined using word boundaries.
@@ -650,6 +651,7 @@ public class QuickSearchController {
 			} else if (match.getSearchTermStemmed() != null) {
 				lowerTerm = match.getSearchTermStemmed().toLowerCase();
 				termsToCheck = stemmedTerms;
+				toCheckOrder = stemmedSearchTerms;
 
 			} else if (match.getSearchTermInexact() != null) {
 				lowerTerm = match.getSearchTermInexact().toLowerCase();
@@ -699,11 +701,12 @@ public class QuickSearchController {
 					
 					// Only need to worry about the inOrderBoost if the user entered more than one word in the
 					// search phrase.
-					if (searchTerms.size() > 1) {
+					toCheckOrder = toCheckOrder.subList(0, toCheckOrder.size() - 1);
+					if (toCheckOrder.size() > 1) {
 						int lastTermIndex = -10;		// index of the last term matched
 						inOrderBoost = 8;				// assume terms matched in order, larger boost than prefix
 					
-						for (String term : searchTerms) {
+						for (String term : toCheckOrder) {
 							int termIndex = lowerTerm.indexOf(term);
 							if (termIndex < lastTermIndex) {
 								// Found a word that was in the wrong order, so take away the boost.
@@ -747,6 +750,7 @@ public class QuickSearchController {
 				}
 				
 				if (keepThisOne) {
+					match.setSearchTermDisplay(match.getSearchTermDisplay() + " " + match.getSearchTermWeight());
 					bestMatches.put(primaryID, match);
 				}
 			}

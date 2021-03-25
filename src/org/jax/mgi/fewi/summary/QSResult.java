@@ -16,4 +16,6 @@ public abstract class QSResult {
 	public abstract Long getSequenceNum();
 
 	public abstract void addBoost(int boost);		// add a boost to the weight (to allow preferences in choosing Best Match)
+
+	public abstract void setSearchTermDisplay(String s);	// allow this to help debugging
 }
