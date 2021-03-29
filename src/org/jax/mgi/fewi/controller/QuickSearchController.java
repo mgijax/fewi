@@ -750,7 +750,8 @@ public class QuickSearchController {
 				}
 				
 				if (keepThisOne) {
-					match.setSearchTermDisplay(match.getSearchTermDisplay() + " " + match.getSearchTermWeight());
+// useful for debugging; just comment out for now...
+//					match.setSearchTermDisplay(match.getSearchTermDisplay() + " " + match.getSearchTermWeight());
 					bestMatches.put(primaryID, match);
 				}
 			}
