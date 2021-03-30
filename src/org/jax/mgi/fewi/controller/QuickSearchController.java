@@ -660,6 +660,15 @@ public class QuickSearchController {
 				lowerTerm = match.getSearchTermInexact().toLowerCase();
 			}
 			
+			// Also, when matching parts of transgene or gene trap symbols, limit to 3-stars.
+			if (!limitedType) {
+				if ("Symbol".contentEquals(match.getSearchTermType())) {
+					if (!lowerTerm.equals(lowerDisplayTerm)) {
+						limitedType = true;
+					}
+				}
+			}
+			
 			// boost to be applied to the weight (based on whether a match is to the start of the string)
 			int prefixBoost = 0;	
 			
