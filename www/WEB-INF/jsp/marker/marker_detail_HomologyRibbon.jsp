@@ -154,7 +154,7 @@
 							<c:forEach var="homologyClass" items="${homologyClasses}">
 								<c:if test="${not empty homologyClass.primaryID}">
 									<li>
-										<div class="label">HomoloGene</div>
+										<div class="label">Alliance of Genome Resources</div>
 										<div class="value">
 											<a href="${configBean.FEWI_URL}homology/${homologyClass.primaryID}">Vertebrate Homology Class ${homologyClass.primaryID}</a><br/>
 											<c:forEach var="organismOrthology" items="${homologyClass.orthologs}" varStatus="status">${organismOrthology.markerCount} ${organismOrthology.organism}<c:if test="${!status.last}">;</c:if></c:forEach><br/>

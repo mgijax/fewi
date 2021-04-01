@@ -14,11 +14,11 @@
 
 	    <c:if test="${not empty clusterSource}">
 	      <c:set var="homologyUrl" value="${configBean.FEWI_URL}homology/cluster/key/"/>
-	      <c:if test="${fn:contains(clusterSource, 'HomoloGene')}">
-		<c:set var="clusterSource" value="HomoloGene"/>
+	      <c:if test="${fn:contains(clusterSource, 'Alliance Direct')}">
+		<c:set var="clusterSource" value="Alliance Direct"/>
 	      </c:if>
-	      <c:if test="${fn:contains(clusterSource, 'HGNC')}">
-		<c:set var="clusterSource" value="HGNC"/>
+	      <c:if test="${fn:contains(clusterSource, 'Alliance Clustered')}">
+			<c:set var="clusterSource" value="Alliance Clustered"/>
 	      </c:if>
 	    </c:if>
 
@@ -50,12 +50,12 @@
 		  <c:set var="hSymbol" value="<b>${hSymbol}</b>"/>
 		</c:if>
 
-		<c:if test="${clusterSource == 'HomoloGene'}">
-		  <c:set var="clusterKey" value="${hMarker.marker.homoloGeneOrganismOrtholog.homologyCluster.clusterKey}"/>
+		<c:if test="${clusterSource == 'Alliance Direct'}">
+		  <c:set var="clusterKey" value="${hMarker.marker.allianceDirectOrganismOrtholog.homologyCluster.clusterKey}"/>
 		</c:if>
 
-		<c:if test="${clusterSource == 'HGNC'}">
-		  <c:set var="clusterKey" value="${hMarker.marker.hgncOrganismOrtholog.homologyCluster.clusterKey}"/>
+		<c:if test="${clusterSource == 'Alliance Clustered'}">
+		  <c:set var="clusterKey" value="${hMarker.marker.allianceClusteredOrganismOrtholog.homologyCluster.clusterKey}"/>
 		</c:if>
 
 		<c:if test="${not empty homologyUrl}">
