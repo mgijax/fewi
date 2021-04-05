@@ -157,7 +157,6 @@ function deselectAllSeqs() {
 	    
 	    <td class="${style}" nowrap="nowrap">
 		<c:forEach var="link" items="${m.homologyLinks}" varStatus="linkStatus">
-		<c:if test="${link.displayText != 'VISTA-Point'}">
 			<c:if test="${not empty link.associatedID}">
 				${link.associatedID}
 				<c:set var="fixedUrl" value="${configBean.FEWI_URL}accession/"/>
@@ -167,16 +166,7 @@ function deselectAllSeqs() {
 			<c:if test="${empty link.associatedID}">
 		  		<a href="${link.url}">${link.displayText}</a><br/>
 			</c:if>
-		</c:if>
-
 		</c:forEach>
-
-		<c:set var="clusterKey" value="${m.allianceDirectClusterKey}"/> 
-		<c:set var="clusterText" value="Alliance of Genome Resources homology"/>
-
-		<c:if test="${not empty clusterText and not empty clusterKey}">
-		  <a href='${configBean.FEWI_URL}homology/cluster/key/${clusterKey}'>${clusterText}</a><br/>
-		</c:if>
 	    </td>
 	    
 	    <td class="${style}">
