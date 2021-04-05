@@ -15,10 +15,10 @@
 	    <c:if test="${not empty clusterSource}">
 	      <c:set var="homologyUrl" value="${configBean.FEWI_URL}homology/cluster/key/"/>
 	      <c:if test="${fn:contains(clusterSource, 'Alliance Direct')}">
-		<c:set var="clusterSource" value="Alliance Direct"/>
+			<c:set var="clusterSource" value="Alliance of Genome Resources"/>
 	      </c:if>
 	      <c:if test="${fn:contains(clusterSource, 'Alliance Clustered')}">
-			<c:set var="clusterSource" value="Alliance Clustered"/>
+			<c:set var="clusterSource" value="Alliance of Genome Resources"/>
 	      </c:if>
 	    </c:if>
 
