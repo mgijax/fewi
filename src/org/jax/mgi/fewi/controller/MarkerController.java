@@ -751,17 +751,6 @@ public class MarkerController {
 			if (homologyCluster != null) {
 				homologyClusteres.add(homologyCluster);
 
-//				 				Uncomment the next few lines if they want to turn on Mouse
-//								OrganismOrtholog mouseOOtoOO = homologyCluster.getOrganismOrtholog("mouse");
-//
-//								if (mouseOOtoOO != null) {
-//									for(Marker hh: mouseOOtoOO.getMarkers()) {
-//										if(!hcopLinks.containsKey("mouse")) {
-//											hcopLinks.put("mouse", new TreeMap<String, Marker>());
-//										}
-//										hcopLinks.get("mouse").put(hh.getSymbol(), hh);
-//									}
-//								}
 				OrganismOrtholog humanOO = homologyCluster.getOrganismOrtholog("human");
 				
 				if (humanOO != null) {

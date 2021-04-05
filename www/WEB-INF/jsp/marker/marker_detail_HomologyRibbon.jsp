@@ -36,14 +36,16 @@
 						<ul>
 							<li>
 								<c:forEach var="homologyClass" items="${homologyClasses}">
-									<c:if test="${not empty homologyClass.primaryID}">
+									<c:if test="${not empty homologyClass.clusterKey}">
 										<div class="label">
 											Vertebrate&nbsp;Orthologs
 										</div>
 										<div class="value">
 											<c:set var="organismOrthologyCount" value="0"/>
 											<c:forEach var="organismOrthology" items="${homologyClass.orthologs}" varStatus="status">
-												<c:set var="organismOrthologyCount" value="${organismOrthology.markerCount + organismOrthologyCount}" />
+												<c:if test="${organismOrthology.organism != 'mouse'}">
+													<c:set var="organismOrthologyCount" value="${organismOrthology.markerCount + organismOrthologyCount}" />
+												</c:if>
 											</c:forEach>
 											${organismOrthologyCount}
 										</div>
