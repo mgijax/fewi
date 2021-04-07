@@ -8,7 +8,7 @@ function main() {
         	label:"<b>Genetic Location</b>",
         	sortable:false},
         {key:"coordinates",
-            label:"<b>Genome Coordinates<br>(strand)<br><i>GRCm38</i></b>",
+            label:"<b>Genome Coordinates<br>(strand)<br><i>GRCm39</i></b>",
             sortable:true},
         {key:"featureType",
             label:"<b>Feature Type</b>",

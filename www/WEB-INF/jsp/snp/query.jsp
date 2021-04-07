@@ -19,6 +19,19 @@
 </div>
 <!-- end header bar -->
 
+<c:if test="${configBean.snpsOutOfSync == 'true'}">
+<style>
+#outOfSync { background-color:#FFFFCC; border: 1px solid black; font-size: 0.9em; padding: 5px; }
+#outOfSyncLabel { font-size: 1em; font-weight: bold; }
+</style>
+<div id="outOfSync">
+  <span id="outOfSyncLabel">Genome Coordinate Discrepancy</span><BR/>
+  The genome coordinates for mouse RefSNPs are derived from a different NCBI build of the mouse genome
+  than are the genome coordinates for MGI genes (see <a href="${configBean.USERHELP_URL}SNP_discrepancy_help.shtml" target="_blank">details</a>).
+</div>
+</c:if>
+
+
 <div id="outer">
 	<span id="toggleImg" class="qfCollapse"></span>
 	<c:if test="${not empty querystring}">

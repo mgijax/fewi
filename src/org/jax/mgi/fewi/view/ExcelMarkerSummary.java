@@ -46,7 +46,7 @@ public class ExcelMarkerSummary  extends AbstractBigExcelView
 			"Start",
 			"End",
 			"cM",
-			"strand GRCm38",
+			"strand GRCm39",
 			"MGI ID",
 			"Feature Type",
 			"Symbol",

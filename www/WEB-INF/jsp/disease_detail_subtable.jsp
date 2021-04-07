@@ -9,17 +9,11 @@
 	    <c:set var="clusterKey" value=""/>
 
 	    <c:if test="${not empty cluster}">
-	      <c:set var="clusterSource" value="${cluster.secondarySource}"/>
+	      <c:set var="clusterSource" value="Alliance of Genome Resources"/>
 	    </c:if>
 
 	    <c:if test="${not empty clusterSource}">
 	      <c:set var="homologyUrl" value="${configBean.FEWI_URL}homology/cluster/key/"/>
-	      <c:if test="${fn:contains(clusterSource, 'HomoloGene')}">
-		<c:set var="clusterSource" value="HomoloGene"/>
-	      </c:if>
-	      <c:if test="${fn:contains(clusterSource, 'HGNC')}">
-		<c:set var="clusterSource" value="HGNC"/>
-	      </c:if>
 	    </c:if>
 
 	    <c:set var="rowCount" value="${rowCount + 1}"/>
@@ -50,13 +44,7 @@
 		  <c:set var="hSymbol" value="<b>${hSymbol}</b>"/>
 		</c:if>
 
-		<c:if test="${clusterSource == 'HomoloGene'}">
-		  <c:set var="clusterKey" value="${hMarker.marker.homoloGeneOrganismOrtholog.homologyCluster.clusterKey}"/>
-		</c:if>
-
-		<c:if test="${clusterSource == 'HGNC'}">
-		  <c:set var="clusterKey" value="${hMarker.marker.hgncOrganismOrtholog.homologyCluster.clusterKey}"/>
-		</c:if>
+	    <c:set var="clusterKey" value="${hMarker.marker.allianceClusteredOrganismOrtholog.homologyCluster.clusterKey}"/>
 
 		<c:if test="${not empty homologyUrl}">
 		  <c:set var="hSymbol" value="<a href='${homologyUrl}${clusterKey}'>${hSymbol}</a>"/>
@@ -101,7 +89,7 @@
 	      </c:if>
 	    </td>
 	    <td class="${borders} ${stripe} leftAlign"><c:if test="${not empty diseaseRow.homologyCluster}">
-	    ${diseaseRow.homologyCluster.secondarySource}
+	    ${clusterSource}
 	    </c:if>
 	    </td>
 	    </tr>

@@ -48,7 +48,7 @@ tr.gray td {background-color:#EEEEEE;}
 <div id="maintitle">
     <h1>SNP Summary Tests</h1>
     <ul>
-        <li>User story 69, Text fixes to Update Build, Create Build, GRCm38, etc.</li>
+        <li>User story 69, Text fixes to Update Build, Create Build, GRCm39, etc.</li>
         <li>User story 73, Ameliorate data size issue</li>
         <li>User story 89, Change links to MPD</li>
     </ul>
@@ -57,7 +57,7 @@ tr.gray td {background-color:#EEEEEE;}
 <div id="acceptance">
     <h2>Acceptance Criteria</h2>
 	<ul>
-		<li>US69 - dbSNP build is 137 not 128, NCBI build is 38 not 37</li>
+		<li>US69 - dbSNP build is 137 not 128, NCBI build is 39 not 37</li>
 		<li>US73 - for HTML-formatted (format=Web) returns, the SNP query CGI displays up to a fixed maximum (e.g. 1000) SNPs.</li>
 		<li>US73 - if the number of items returned by the query is greater than the limit (or maybe always??), display a link that re-executes the same query, but returns tab-delimited (or tab delimited to ftp site) data with no limits.</li>
 		<li>US73 - this behavior is in effect regardless of the origin of the request (i.e. works for the query form and for links from the marker detail).</li>
@@ -85,11 +85,11 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>When the summary page displays verify the SNP ID column header says dbSNP Build 137</li>
     		</ol>
     		</li>
-    		<li>Verify NCBI build is 38 on the snp summary page(covered by selenium test SNPBuildNumbers.java)
+    		<li>Verify NCBI build is 39 on the snp summary page(covered by selenium test SNPBuildNumbers.java)
  			<p concordion:manual="true">klf 3/4/2013</p>
     		<ol>
                 <li>From the SNP query form search strain of C57BL/6J and Chromosome 11</li>
-                <li>When the summary page displays verify the Map Position column header says GRCm38</li>
+                <li>When the summary page displays verify the Map Position column header says GRCm39</li>
     		</ol>
     		</li>
     		<li>dbSNP build is 137 on the snp summary page(covered by selenium test SNPBuildNumbers.java)
@@ -99,11 +99,11 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>When the summary page displays verify the SNP ID column header says dbSNP Build 137</li>
     		</ol>
     		</li>
-    		<li>Verify NCBI build is 38 on the snp summary page(covered by selenium test SNPBuildNumbers.java)
+    		<li>Verify NCBI build is 39 on the snp summary page(covered by selenium test SNPBuildNumbers.java)
  			<p concordion:manual="true">klf 3/4/2013</p>
     		<ol>
                 <li>Display the Marker detail page for <b>Ap1b1</b> and click on the SNPs link in the Polymorphisms ribbon</li>
-                <li>When the summary page displays verify the Map Position column header says GRCm38</li>
+                <li>When the summary page displays verify the Map Position column header says GRCm39</li>
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> A SNP query summary that returns over 1,000 results displays only 1,000 SNPs but displays the full count in the intro text

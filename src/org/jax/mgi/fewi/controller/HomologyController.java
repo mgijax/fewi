@@ -74,18 +74,15 @@ public class HomologyController {
 
 		// So, we now have found our marker.  Get its HomoloGene ID.
 		Marker mouse = markerList.get(0);
-		MarkerID mouseID = mouse.getHomoloGeneID();
+		String directClusterKey = mouse.getAllianceDirectClusterKey();
 
-		if (mouseID == null) {
-			return errorMav("Non-Mouse Marker Has No HomoloGene ID");
+		if (directClusterKey == null) {
+			return errorMav("Marker has no associated Alliance Direct homology cluster.");
 		}
 
-		String hgID = mouseID.getAccID();
+		// now we can go ahead and pass off to the normal code for links by cluster key
 
-		// now we can go ahead and pass off to the normal code for links by
-		// HomoloGene ID
-
-		return prepareHomologyClassByID(hgID);
+		return prepareHomologyClusterByKey(directClusterKey);
 	}
 
 	@RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
@@ -111,18 +108,15 @@ public class HomologyController {
 
 		// So, we now have found our marker.  Get its HomoloGene ID.
 		Marker mouse = markerList.get(0);
-		MarkerID mouseID = mouse.getHomoloGeneID();
+		String directClusterKey = mouse.getAllianceDirectClusterKey();
 
-		if (mouseID == null) {
-			return errorMav("Non-Mouse Marker Has No HomoloGene ID");
+		if (directClusterKey == null) {
+			return errorMav("Marker has no associated Alliance Direct homology cluster.");
 		}
 
-		String hgID = mouseID.getAccID();
+		// now we can go ahead and pass off to the normal code for links by cluster key
 
-		// now we can go ahead and pass off to the normal code for links by
-		// HomoloGene ID
-
-		return prepareHomologyClassByID(hgID);
+		return prepareHomologyClusterByKey(directClusterKey);
 	}
 
 	//--------------------//
@@ -136,7 +130,8 @@ public class HomologyController {
 
 		logger.debug("->homologyDetailByID started");
 
-		return prepareHomologyClassByID(homologyID);
+		// homologyID is really a cluster key
+		return prepareHomologyClusterByKey(homologyID);
 	}
 
 	//------------------------------------------------------------
@@ -164,20 +159,16 @@ public class HomologyController {
 
 	// code shared to send back a HomoloGene class detail page, regardless of
 	// whether the initial link was by HG ID or by non-mouse marker key
-	private ModelAndView prepareHomologyClassByID (String homologyID) {
+	private ModelAndView prepareHomologyClusterByKey (String clusterKey) {
 
-		List<HomologyCluster> homologyList =
-				homologyFinder.getHomologyClusterByID(homologyID);
+		HomologyCluster homologyCluster = homologyFinder.getClusterByKey(clusterKey);
 
 		// there can be only one...
-		if (homologyList.size() < 1) { // none found
+		if (homologyCluster == null) {						// none found
 			return errorMav("No Homology Cluster Found");
-		} else if (homologyList.size() > 1) { // dupe found
-			return errorMav("Duplicate ID");
 		}
-		// success - we have a single object
 
-		return prepareHomologyClass(homologyList.get(0));
+		return prepareHomologyClass(homologyCluster);
 	}
 
 	// code shared to send back a HomoloGene class detail page, regardless of
@@ -215,13 +206,9 @@ public class HomologyController {
 		mav.addObject("seoDescription", "View " + firstSymbol + " mouse/human homology from " + homology.getSource() + " with: genes, location, sequences, " + "associated human diseases");
 		mav.addObject("seoKeywords", keywords.toString());
 
-		if ("HGNC".equals(homology.getSource())) {
-			mav.addObject("browserTitle", firstSymbol + " Mouse/Human Homology HGNC");
-			mav.addObject("pageTitle", "HGNC Mouse/Human Homology");
-		} else {
-			mav.addObject("browserTitle", firstSymbol + " Vertebrate Homology HomoloGene:" + homology.getPrimaryID());
-			mav.addObject("pageTitle", "HomoloGene Vertebrate Homology");
-		}
+		mav.addObject("browserTitle", firstSymbol + " Vertebrate HGNC");
+		mav.addObject("pageTitle", "Vertebrate Homology");
+
 		return mav;
 	}
 

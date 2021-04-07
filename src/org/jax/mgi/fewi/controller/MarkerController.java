@@ -724,7 +724,7 @@ public class MarkerController {
 		//    restrictions by marker type.
 		// 2. If a marker has multiple IDs, use the first one returned to make
 		//    the link.
-		// 3. External links go to build 38 (GRCm38) data.
+		// 3. External links go to build 39 (GRCm39) data.
 		// 4. For Ensembl, use coordinates -- or
 		//    both if both are available.
 		// 5. NCBI's map viewer needs to use two different URLs for cases
@@ -751,17 +751,6 @@ public class MarkerController {
 			if (homologyCluster != null) {
 				homologyClusteres.add(homologyCluster);
 
-//				 				Uncomment the next few lines if they want to turn on Mouse
-//								OrganismOrtholog mouseOOtoOO = homologyCluster.getOrganismOrtholog("mouse");
-//
-//								if (mouseOOtoOO != null) {
-//									for(Marker hh: mouseOOtoOO.getMarkers()) {
-//										if(!hcopLinks.containsKey("mouse")) {
-//											hcopLinks.put("mouse", new TreeMap<String, Marker>());
-//										}
-//										hcopLinks.get("mouse").put(hh.getSymbol(), hh);
-//									}
-//								}
 				OrganismOrtholog humanOO = homologyCluster.getOrganismOrtholog("human");
 				
 				if (humanOO != null) {

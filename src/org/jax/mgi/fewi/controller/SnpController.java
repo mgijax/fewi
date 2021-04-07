@@ -1578,17 +1578,18 @@ public class SnpController {
 		 * 1. if we have a distance-direction and a distance-from, then
 		 * 	we need to note updated to "<distance> bp <direction>"
 		 * 2. if we have a distance-direction and a Locus-Region, then
-		 * 	we needto update to include the direction
+		 * 	we need to update to include the direction
 		 * 3. strip out any trailing " of"
 		 */
+		boolean outOfSync = ("true".equalsIgnoreCase(ContextLoader.getConfigBean().getProperty("snpsOutOfSync")));
 		for (ConsensusMarkerSNP m : markers) {
 			String direction = m.getDistanceDirection();
 			int from = m.getDistanceFrom();
 			String fc = m.getFunctionClass();
 
-			if ("Locus-Region".equals(fc) && (direction != null)) {
+			if (!outOfSync && "Locus-Region".equals(fc) && (direction != null)) {
 				m.setFunctionClass(fc + " (" + direction + ")");
-			} else if ("within distance of".equals(fc) && (direction != null) && (from > 0)) {
+			} else if (!outOfSync && "within distance of".equals(fc) && (direction != null) && (from > 0)) {
 				m.setFunctionClass(from + " bp " + direction);
 			} else if (fc.endsWith(" of")) {
 				m.setFunctionClass(fc.replace(" of", ""));
@@ -1598,9 +1599,10 @@ public class SnpController {
 
 	// trim out coordinates-based marker associations that are beyond 2k
 	private List<ConsensusMarkerSNP> filterByDistance (List<ConsensusMarkerSNP> markers) {
+		boolean outOfSync = ("true".equalsIgnoreCase(ContextLoader.getConfigBean().getProperty("snpsOutOfSync")));
 		List<ConsensusMarkerSNP> filtered = new ArrayList<ConsensusMarkerSNP>();
 		for (ConsensusMarkerSNP m : markers) {
-			if (!"within distance of".equals(m.getFunctionClass()) || (m.getDistanceFrom() <= 2000) ) {
+			if (!"within distance of".equals(m.getFunctionClass()) || (!outOfSync && (m.getDistanceFrom() <= 2000)) ) {
 				filtered.add(m);
 			}
 		}

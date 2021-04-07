@@ -48,7 +48,7 @@ tr.gray td {background-color:#EEEEEE;}
 <div id="maintitle">
     <h1>SNP Detail Page Tests</h1>
     <ul>
-        <li>User story 69, Text fixes to Update Build, Create Build, GRCm38, etc.</li>
+        <li>User story 69, Text fixes to Update Build, Create Build, GRCm39, etc.</li>
         <li>User story 74, Update mouse gbrowse links on SNP detail page</li>
         <li>User story 89, change links to MPD</li>
     </ul>
@@ -57,7 +57,7 @@ tr.gray td {background-color:#EEEEEE;}
 <div id="acceptance">
     <h2>Acceptance Criteria</h2>
 	<ul>
-		<li>US69 - dbSNP build is 137 not 128, NCBI build is 38 not 37</li>
+		<li>US69 - dbSNP build is 137 not 128, NCBI build is 39 not 37</li>
 		<li>US74 - the links correctly point to the new GBrowse</li>
 		<li>US74 - NO requirement that Gbrowse itself is correct</li>
 		<li>US89 - Verify the MPD links use the correct URL pattern provided by MPD</li>
@@ -84,12 +84,12 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>When the detail page displays verify in the ID/Version ribbon it says dbSNP Build 137</li>
     		</ol>
     		</li>
-    		<li><span class="regressHi">Regress</span> Verify NCBI build is 38 on the snp detail page
+    		<li><span class="regressHi">Regress</span> Verify NCBI build is 39 on the snp detail page
  			<p concordion:manual="true">klf 3/4/2013</p>
     		<ol>
                 <li>Display the SNP detail page for rs29438715(from marker Ap1b1)</li>
-                <li>When the detail page displays verify on the Genome Location and Flanking Sequence ribbon it says GRCm38</li>
-                <li>When the detail page displays verify on the Gene/Marker associations and Function classes ribbon it says GRCm38</li>
+                <li>When the detail page displays verify on the Genome Location and Flanking Sequence ribbon it says GRCm39</li>
+                <li>When the detail page displays verify on the Gene/Marker associations and Function classes ribbon it says GRCm39</li>
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> Verify GBrowse link renders correct page when SNP is mapped to 1 coordinate location.

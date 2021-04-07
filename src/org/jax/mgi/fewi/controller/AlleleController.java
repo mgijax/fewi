@@ -1343,7 +1343,7 @@ public class AlleleController {
 		//   	b. already tried to get from other sequences secondarily
 		//   2. from marker
 		//   3. from class variable
-		//   4. fall back on "GRCm38" if none for 1-3
+		//   4. fall back on "GRCm39" if none for 1-3
 
 		if(asmVersion==null) {
 			if (marker!=null) {
@@ -1356,7 +1356,7 @@ public class AlleleController {
 
 		// if still null, try the class variable
 		if(asmVersion==null) {
-			asmVersion = assemblyVersion!=null ? assemblyVersion : "GRCm38";
+			asmVersion = assemblyVersion!=null ? assemblyVersion : "GRCm39";
 		} else {
 			// cache the asmVersion in class variable
 			assemblyVersion=asmVersion;

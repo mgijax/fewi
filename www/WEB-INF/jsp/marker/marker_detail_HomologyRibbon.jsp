@@ -36,14 +36,16 @@
 						<ul>
 							<li>
 								<c:forEach var="homologyClass" items="${homologyClasses}">
-									<c:if test="${not empty homologyClass.primaryID}">
+									<c:if test="${not empty homologyClass.clusterKey}">
 										<div class="label">
 											Vertebrate&nbsp;Orthologs
 										</div>
 										<div class="value">
 											<c:set var="organismOrthologyCount" value="0"/>
 											<c:forEach var="organismOrthology" items="${homologyClass.orthologs}" varStatus="status">
-												<c:set var="organismOrthologyCount" value="${organismOrthology.markerCount + organismOrthologyCount}" />
+												<c:if test="${organismOrthology.organism != 'mouse'}">
+													<c:set var="organismOrthologyCount" value="${organismOrthology.markerCount + organismOrthologyCount}" />
+												</c:if>
 											</c:forEach>
 											${organismOrthologyCount}
 										</div>
@@ -75,10 +77,7 @@
 										<fmt:formatNumber value="${humanCoords.endCoordinate}" pattern="#0" var="humanEndCoord"/>
 						
 										${humanHomolog.symbol}, ${humanHomolog.name}<br />
-										Orthology source: 
-										<c:forEach var="homologyCluster" items="${marker.getHomologyClusterSources(humanHomolog)}" varStatus="hstat">
-											${homologyCluster.source}<c:if test="${!hstat.last}">, </c:if>
-										</c:forEach>	
+										Orthology source:  Alliance of Genome Resources
 									</div>
 								</li>
 
@@ -152,11 +151,11 @@
 						<ul>
 
 							<c:forEach var="homologyClass" items="${homologyClasses}">
-								<c:if test="${not empty homologyClass.primaryID}">
+								<c:if test="${not empty homologyClass.clusterKey}">
 									<li>
-										<div class="label">HomoloGene</div>
+										<div class="label">Alliance of Genome Resources</div>
 										<div class="value">
-											<a href="${configBean.FEWI_URL}homology/${homologyClass.primaryID}">Vertebrate Homology Class ${homologyClass.primaryID}</a><br/>
+											<a href="${configBean.FEWI_URL}homology/cluster/key/${homologyClass.clusterKey}">${marker.symbol} stringent orthology</a><br/>
 											<c:forEach var="organismOrthology" items="${homologyClass.orthologs}" varStatus="status">${organismOrthology.markerCount} ${organismOrthology.organism}<c:if test="${!status.last}">;</c:if></c:forEach><br/>
 										</div>
 									</li>
@@ -169,7 +168,7 @@
 									<div class="value">
 										<c:forEach var="organism" items="${hcopLinks}">
 											<c:if test="${fn:length(organism.value) > 0}">
-												${organism.key} homology predictions:
+												vertebrate homology predictions:
 												<c:forEach var="hmarker" items="${organism.value}" varStatus="hcstat">
 													<c:if test="${organism.key == 'human'}">
 														<a href="${fn:replace(urls.HCOP, '@@@@', hmarker.value.symbol)}" target="_blank">${hmarker.value.symbol}</a><c:if test="${!hcstat.last}">, </c:if>

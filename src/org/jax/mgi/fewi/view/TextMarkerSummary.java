@@ -39,7 +39,7 @@ public class TextMarkerSummary extends AbstractTextView
 			"Start",
 			"End",
 			"cM",
-			"strand GRCm38",
+			"strand GRCm39",
 			"MGI ID",
 			"Feature Type",
 			"Symbol",
