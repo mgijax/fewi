@@ -117,6 +117,8 @@ public class ConsensusSNPSummaryRow {
 			}
 		}
 		
+		boolean outOfSync = ("true".equalsIgnoreCase(ContextLoader.getConfigBean().getProperty("snpsOutOfSync")));
+
 		String hr = "";
 		for(Integer sc: map.keySet()) {
 			ret += hr;
@@ -134,7 +136,7 @@ public class ConsensusSNPSummaryRow {
 							m.setFunctionClass(m.getDistanceFrom() + " bp " + m.getDistanceDirection());
 							//16 bp downstream of
 						}
-						if(m.getFunctionClass().equals("Locus-Region")) {
+						if(!outOfSync && m.getFunctionClass().equals("Locus-Region")) {
 							ret += "<a href=\"" + fewiUrl + "marker/" + m.getAccid() + "\" target=\"_blank\">" + m.getSymbol() + "</a> <nobr>" + m.getFunctionClass() + " " + m.getDistanceDirection() + "</nobr><br>";
 						} else {
 							ret += "<a href=\"" + fewiUrl + "marker/" + m.getAccid() + "\" target=\"_blank\">" + m.getSymbol() + "</a> <nobr>" + m.getFunctionClass() + "</nobr><br>";

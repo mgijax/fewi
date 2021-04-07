@@ -26,18 +26,20 @@
 		<span class="label">Export:</span>
 		<a id="snpsToTextFile" class="filterButton" href="${configBean.FEWI_URL}snp/report.txt?${querystring}"><img width="10" height="10" src="${configBean.WEBSHARE_URL}images/text.png"> SNPs to Text File </a> 
 	</div>
-	<c:if test="${not empty jbrowseLink or not empty markerSummaryLink}">
-		For this genome region: 
-	</c:if>
-	<c:if test="${not empty jbrowseLink}">
-		<div id="jbrowseDiv" class="padded inlineblock">
-			View <a href="${jbrowseLink}" target="_blank">JBrowse Genome Browser</a>
-		</div>
-	</c:if>
-	<c:if test="${not empty markerSummaryLink}">
-		<div id="markerSummaryLinkDiv" class="padded inlineblock">
-			View <a href="${markerSummaryLink}" target="_blank">MGI Genome Feature Summary</a>
-		</div>
+	<c:if test="${configBean.snpsOutOfSync != 'true'}">
+		<c:if test="${not empty jbrowseLink or not empty markerSummaryLink}">
+			For this genome region: 
+		</c:if>
+		<c:if test="${not empty jbrowseLink}">
+			<div id="jbrowseDiv" class="padded inlineblock">
+				View <a href="${jbrowseLink}" target="_blank">JBrowse Genome Browser</a>
+			</div>
+		</c:if>
+		<c:if test="${not empty markerSummaryLink}">
+			<div id="markerSummaryLinkDiv" class="padded inlineblock">
+				View <a href="${markerSummaryLink}" target="_blank">MGI Genome Feature Summary</a>
+			</div>
+		</c:if>
 	</c:if>
 </div>
 <table id="snpSummaryTable">
