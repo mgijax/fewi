@@ -201,7 +201,7 @@
       <a class='userhelpLink'
       href="http://www.informatics.jax.org/userhelp/ALLELE_help.shtml#coordinates"
       onclick='javascript:openUserhelpWindow("ALLELE_help.shtml#coordinates"); return false;'
-      >Genome Coordinates</a>: <span class="example">(from GRCm38)</span>
+      >Genome Coordinates</a>: <span class="example">(from GRCm39)</span>
       <br/>
       <span style='margin-left:25px;'>
         between <input type="text" size="23" name="coordinate" value="<c:out value="${alleleQueryForm.coordinate}"/>"></input>
