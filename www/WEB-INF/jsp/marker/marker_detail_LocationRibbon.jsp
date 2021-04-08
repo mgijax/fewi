@@ -41,8 +41,8 @@
 								<c:set var="coords" value="${fn:replace(coord2, '<end>', endCoord)}"/>
 
 								<c:if test="${not empty marker.preferredCoordinates}">
-									Chr${chromosome}:${startCoord}-${endCoord}
-									<div style="padding-bottom: 3px">${marker.preferredCoordinates.mapUnits}<c:if test="${not empty marker.preferredCoordinates.strand}">, ${marker.preferredCoordinates.strand} strand</c:if></div>
+									<div style="padding-bottom: 3px">
+									Chr${chromosome}:${startCoord}-${endCoord} ${marker.preferredCoordinates.mapUnits}<c:if test="${not empty marker.preferredCoordinates.strand}">, ${marker.preferredCoordinates.strand} strand</c:if></div>
 									From ${marker.preferredCoordinates.provider} annotation of ${marker.preferredCoordinates.buildIdentifier}<br />
 								</c:if>
 							</c:if>
