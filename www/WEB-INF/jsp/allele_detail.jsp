@@ -468,26 +468,9 @@ function formatFastaArgs() {
 		    </tr>
 		    <form name='sequenceForm' method='GET'>
 		  <c:if test="${not empty representativeSeq}">
+		    <% seq = (Sequence) request.getAttribute("representativeSeq"); %>
 		    <tr>
-		      <td class='seqTag'>${representativeSeq.primaryID}<br/>
-			<% seq = (Sequence) request.getAttribute("representativeSeq");
-			   if (seq != null) {
-			     primaryID = seq.getPrimaryID();
-			     logicalDB = seq.getLogicalDB();
-
-			     // hack so we can handle TIGM one way for MCL and a
-			     // different way for sequence tags
-			     if ("TIGM".equals(logicalDB)) {
-				 logicalDB = "TIGM_SequenceTag";
-			     }
-			   } else {
-			     // should not happen
-			     primaryID = "none";
-			     logicalDB = "GenBank";
-			   }
-			%>
-			(<%= idLinker.getLink (logicalDB, primaryID, logicalDB).replace("TIGM_SequenceTag", "TIGM") %>)
-		      </td>
+		      <td class='seqTag'>${representativeSeq.primaryID}</td>
 		      <c:if test='${not empty representativeSeq.preferredGenBankID}'>
 		        <td class='seqTag'>${representativeSeq.preferredGenBankID.accID}
 			<br/>
@@ -501,20 +484,9 @@ function formatFastaArgs() {
 		  </c:if>
 		  <c:if test="${not empty otherSequences}">
 		    <c:forEach var="seq" items="${otherSequences}">
+			<% seq = (Sequence) pageContext.getAttribute("seq"); %>
 		    <tr>
-		      <td class='seqTag'>${seq.primaryID}<br/>
-			<% seq = (Sequence) pageContext.getAttribute("seq");
-			   if (seq != null) {
-			     primaryID = seq.getPrimaryID();
-			     logicalDB = seq.getLogicalDB();
-			   } else {
-			     // should not happen
-			     primaryID = "n/a";
-			     logicalDB = "GenBank";
-			   }
-			%>
-			(<%= idLinker.getLink (logicalDB, primaryID, logicalDB) %>)
-		      </td>
+		      <td class='seqTag'>${seq.primaryID}</td>
 		      <c:if test='${not empty seq.preferredGenBankID}'>
 		        <td class='seqTag'>${seq.preferredGenBankID.accID}
 			<br/>
@@ -545,7 +517,7 @@ function formatFastaArgs() {
 		</tr>
 		</c:if>
 
-		<c:if test="${(not empty gbrowseLink) and (not empty gbrowseThumbnail)}">
+		<c:if test="${not empty gbrowseLink}">
 		<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">Genome Context:</font>&nbsp;</td>
 		<td width="1%" class='padded' style='vertical-align:top'>
 		  <div style='float:right; cursor:pointer; position:relative; z-index:1' id='rightArrowGenome' onClick='toggleGenomeContext()'><img src='${configBean.WEBSHARE_URL}images/rightArrow.gif'></div>
@@ -554,10 +526,7 @@ function formatFastaArgs() {
 		<td class="padded" style='vertical-align:top'>
 		  Genome Browser view of this mutation<br/>
 		  <table id='genomeContextTable' style='display:none'>
-		    <tr><td class='padded' style='border: 2px solid #aaaaaa; text-align:center; background-color: #ffffff'>
-		      <span style='font-size: 90%'><span style='color:blue'>Blue</span> line marks
-		      approximate position of gene trap insertion</span><br/>
-	      	      <a href='${gbrowseLink}' class='anchor' target='_new'><img src='${gbrowseThumbnail}' style='width:290px'></a><p>
+		    <tr><td class='padded' style='text-align:center; background-color: #ffffff'>
 		      ${gbrowseExtraLine}
 		      <a href='${gbrowseLink}' class='MP' target='_new'><span style='font-size: 90%'>${gbrowseLabel}</span></a>
 		    </td></tr>

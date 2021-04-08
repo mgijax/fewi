@@ -886,8 +886,7 @@ public class AlleleController {
 		mav.addObject("title", title);
 		mav.addObject("subtitle", subtitle);
 
-		// start colleting values needed for GBrowse thumbnail and link, with
-		// priorities as follows:
+		// start collecting values needed for GBrowse link, with priorities as follows:
 		//    1. coordinates from an associated marker
 		//    2. coordinates from representative sequence + a 5kb buffer
 		long pointCoord = -1;
@@ -1319,20 +1318,9 @@ public class AlleleController {
 			// link to gbrowse
 			String gbrowseUrl = externalUrls.getProperty("GBrowse_Allele").replace("<chromosome>", chromosome).replace("<start>", Long.toString(startCoord)).replace("<end>", Long.toString(endCoord));
 
-			// thumbnail image for gbrowse
-			String gbrowseThumbnailUrl = "foo";
-
-			if (pointCoord < 0) {
-				gbrowseThumbnailUrl = externalUrls.getProperty("GBrowse_Allele_Thumbnail").replace("<chromosome>", chromosome).replace("<start>", Long.toString(startCoord)).replace("<end>", Long.toString(endCoord));
-			} else {
-				gbrowseThumbnailUrl = externalUrls.getProperty("GBrowse_Allele_Thumbnail_With_Highlight").replace("<chromosome>", chromosome).replace("<start>", Long.toString(startCoord)).replace("<end>", Long.toString(endCoord)).replace("<point>", Long.toString(pointCoord));
-			}
-
-			// we only actually want the gbrowse thumbnail and link if we have
-			// a point coordinate.
+			// we only actually want the gbrowse link if we have a point coordinate.
 			if (pointCoord >= 0) {
 				mav.addObject("gbrowseLink", gbrowseUrl);
-				mav.addObject("gbrowseThumbnail", gbrowseThumbnailUrl);
 			}
 		}
 
