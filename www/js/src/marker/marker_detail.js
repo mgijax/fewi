@@ -330,8 +330,7 @@ var strainRibbonGoButtonClick = function() {
 			}
 		}
 		
-		form.action = url;
-		form.submit();
+		window.open(url, '_blank');
 		
 	} else if (option == 'snps') {
 		window.open(getSangerUrl(), '_blank');
