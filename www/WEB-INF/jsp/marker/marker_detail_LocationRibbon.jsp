@@ -42,7 +42,7 @@
 
 								<c:if test="${not empty marker.preferredCoordinates}">
 									Chr${chromosome}:${startCoord}-${endCoord}
-									${marker.preferredCoordinates.mapUnits}<c:if test="${not empty marker.preferredCoordinates.strand}">, ${marker.preferredCoordinates.strand} strand</c:if><br/>
+									<div style="padding-bottom: 3px">${marker.preferredCoordinates.mapUnits}<c:if test="${not empty marker.preferredCoordinates.strand}">, ${marker.preferredCoordinates.strand} strand</c:if></div>
 									From ${marker.preferredCoordinates.provider} annotation of ${marker.preferredCoordinates.buildIdentifier}<br />
 								</c:if>
 							</c:if>
