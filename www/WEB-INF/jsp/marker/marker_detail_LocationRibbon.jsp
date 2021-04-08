@@ -9,7 +9,7 @@
 
 			<c:set var="showGeneticMap" value="${(not empty marker.preferredCentimorgans) or (not empty marker.preferredCytoband) or (marker.countOfMappingExperiments > 0) or (not empty qtlIDs) or (not empty marker.aliases)}" />
 			
-			<c:set var="geneticMapExtra" value="${not empty qtlIDs or marker.countOfMappingExperiments > 0 or not empty marker.aliases or hasMiniMap}" />
+			<c:set var="geneticMapExtra" value="${not empty qtlIDs or marker.countOfMappingExperiments > 0 or not empty marker.aliases}" />
 			<c:set var="showLocationNote" value="${not empty marker.locationNote}" />
 
 			<c:set var="arrowstate" value="hdExpand" />
@@ -42,7 +42,8 @@
 
 								<c:if test="${not empty marker.preferredCoordinates}">
 									Chr${chromosome}:${startCoord}-${endCoord}
-									${marker.preferredCoordinates.mapUnits}<c:if test="${not empty marker.preferredCoordinates.strand}">, ${marker.preferredCoordinates.strand} strand</c:if>
+									${marker.preferredCoordinates.mapUnits}<c:if test="${not empty marker.preferredCoordinates.strand}">, ${marker.preferredCoordinates.strand} strand</c:if><br/>
+									From ${marker.preferredCoordinates.provider} annotation of ${marker.preferredCoordinates.buildIdentifier}<br />
 								</c:if>
 							</c:if>
 
@@ -55,11 +56,6 @@
 					<c:if test="${showJBrowser}">
 						<li class="extra closed">
 							<div class="value">
-
-								<c:if test="${not empty marker.preferredCoordinates}">
-									From ${marker.preferredCoordinates.provider} annotation of ${marker.preferredCoordinates.buildIdentifier}<br />
-								</c:if>
-								<p />
 
 								<c:if test="${not empty jbrowseUrl}">
 									<table>
@@ -127,25 +123,6 @@
 							</div>
 						</li>
 					
-						<c:if test="${hasMinimap}">
-							<li class="extra closed">
-								<div class="value">
-								    <div class="minimapWrap">
-								        <canvas id="minimap"></canvas>
-								    </div>
-								    <script>
-								    	window.loadMinimap = function(){
-								    		Minimap.draw({
-								    			id: "minimap",
-								    			data: ${minimapInitJson},
-								    			rotate90: true
-								    		});
-								    	}
-								    </script>
-								</div>
-							</li>
-						</c:if>
-
 						<c:if test="${not empty qtlIDs}">
 							<li class="extra closed">
 								<div class="label">QTL Archive</div>

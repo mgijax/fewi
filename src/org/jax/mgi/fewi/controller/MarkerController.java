@@ -28,7 +28,6 @@ import mgi.frontend.datamodel.MarkerIDOtherMarker;
 import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.MarkerProbeset;
 import mgi.frontend.datamodel.MarkerSynonym;
-import mgi.frontend.datamodel.MinimapMarker;
 import mgi.frontend.datamodel.OrganismOrtholog;
 import mgi.frontend.datamodel.QueryFormOption;
 import mgi.frontend.datamodel.Reference;
@@ -97,9 +96,6 @@ public class MarkerController {
 	private static String PCR = "PCR";
 	private static String RFLP = "RFLP";
 	
-	// maps from marker key to the URL for the minimap image
-	private static HashMap<Integer,String> minimaps =  new HashMap<Integer,String>();
-
 	private final Logger logger = LoggerFactory.getLogger(MarkerController.class);
 
 	@Autowired
@@ -592,20 +588,6 @@ public class MarkerController {
 	 * marker locations ribbon
 	 */
 	private void setupLocationRibbon(ModelAndView mav, Marker marker) {
-
-		// Generate the JSON string for initializing minimap javascript widget
-		List<MinimapMarker> minimapMarkers = marker.getMinimapMarkers();
-		ObjectMapper mapper = new ObjectMapper();
-		
-		if (minimapMarkers != null && minimapMarkers.size() > 0) {
-			try {
-				mav.addObject("hasMinimap", true);
-				mav.addObject("minimapInitJson", mapper.writeValueAsString(minimapMarkers));
-			} catch (IOException e) {
-				logger.error("Failed to parse minimapMarkers into JSON",e);
-			}
-		}
-		
 		ArrayList<String> qtlIDs = new ArrayList<String>();
 
 		for (MarkerID anId: marker.getIds()) {
@@ -1240,9 +1222,6 @@ public class MarkerController {
 			}
 			mav.addObject("seoKeywords", seoKeywordString);
 		}
-
-		// finally, add the minimap URL to the mav
-
 	}
 
 
@@ -1458,28 +1437,6 @@ public class MarkerController {
 		return mav;
 	}
 	
-	@RequestMapping("/minimap/json/{markerId}")
-	public @ResponseBody String minimapJson(HttpServletRequest request, 
-			@PathVariable("markerId") String markerId) throws JsonGenerationException, JsonMappingException, IOException {
-		logger.debug("->minimapJson started");
-
-		SearchResults<Marker> markerResults = markerFinder.getMarkerByID(markerId);
-
-		if (markerResults.getTotalCount() != 1) {
-			logger.warn("no single marker match for " + markerId);
-			return "[]";
-		}
-		
-		Marker marker = markerResults.getResultObjects().get(0);
-		
-		List<MinimapMarker> minimapMarkers = marker.getMinimapMarkers();
-		
-		ObjectMapper mapper = new ObjectMapper();
-		
-		return mapper.writeValueAsString(minimapMarkers);
-	}
-	
-
 	@RequestMapping("/json")
 	public @ResponseBody JsonSummaryResponse<MarkerSummaryRow> seqSummaryJson(HttpServletRequest request, @ModelAttribute MarkerQueryForm query, @ModelAttribute Paginator page) throws org.antlr.runtime.RecognitionException {
 		logger.debug("->JsonSummaryResponse started");
@@ -1819,20 +1776,6 @@ public class MarkerController {
 	// returns a filter that should always fail to retrieve results
 	private Filter nullFilter() {
 		return new Filter("markerKey","-99999",Filter.Operator.OP_EQUAL);
-	}
-
-	/** force the cache of minimap URLs to be cleared, allowing it to be
-	 * repopulated from scratch
-	 */
-	protected static void clearMinimapCache() {
-		minimaps = new HashMap<Integer,String>();
-		return;
-	}
-
-	/** report how many minimap URLs are currently cacahed
-	 */
-	protected static int getMinimapCacheCount() {
-		return minimaps.size();
 	}
 
 	private Filter makeListFilter(List<String> values, String searchConstant) {

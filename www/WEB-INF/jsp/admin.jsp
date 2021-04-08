@@ -77,7 +77,7 @@
       Caches
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
-	    ${minimaps} cached minimap URLs : <A HREF="admin/clear">clear cache</A><BR>
+	    N/A
     </td>
   </tr>
 
