@@ -34,6 +34,7 @@
 							${snp.buildUpdated}
 						</div>
 					</li>
+<c:if test="${configBean.snpsOutOfSync != 'true'}">
 					<li>
 						<div class="label">Additional Resources</div>
 						<div class="value">
@@ -50,7 +51,7 @@
 							</c:if>
 						</div>
 					</li>
-
+</c:if>
 				</ul>
 			</section>
 		</div>
