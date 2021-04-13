@@ -79,7 +79,7 @@
 				<c:set var="referenceStrain" value="${sequence.sources[0].strain}"/>
 			</c:if>
 			<!--  standard, coordinate-based linking for sequences in general (gene traps) -->
-			<c:set var="mgvLink" value="${configBean.MGV_URL}#ref=${referenceStrain}&genomes=${externalUrls.MGV_DOCCFounder_Strains}&chr=${chromosome}&start=${startCoordWithFlank}&end=${endCoordWithFlank}&highlight=${sequence.primaryID}"/>
+			<c:set var="mgvLink" value="${configBean.MGV_URL}#ref=${referenceStrain}&genomes=${externalUrls.MGV_DOCCFounder_Strains}&chr=${chromosome}&start=${startCoordWithFlank}&end=${endCoordWithFlank}"/>
 			<c:if test="${sequence.logicalDB=='Mouse Genome Project' || sequence.logicalDB=='MGI Strain Gene'}">
 				<c:if test="${(not empty markers) and (fn:length(markers) == 1)}">
 					<!--  special landmark-style link if this is a gene model sequence with a single marker -->
