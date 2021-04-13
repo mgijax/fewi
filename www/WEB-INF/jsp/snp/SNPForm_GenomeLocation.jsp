@@ -42,14 +42,3 @@
 			</div>
 		</td>
 	</tr>
-<c:if test="${configBean.snpsOutOfSync == 'true'}">
-<script>
-$('#chromosomeDropList').attr('disabled', true);				// disable all three location fields
-$('[name=coordinate]').attr('disabled', true);	
-$('#coordinateUnitDropList').attr('disabled', true);	
-$('[name=startMarker]').attr('disabled', true);	
-$('[name=endMarker]').attr('disabled', true);	
-$('[name=locationSearch]').attr('disabled', true);	
-$('#outOfSyncLocationMessage').css({'display' : 'inline'});		// show the message
-</script>
-</c:if>

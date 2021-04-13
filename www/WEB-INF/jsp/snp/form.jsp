@@ -58,6 +58,19 @@
 	</div>
 </div>
 
+<c:if test="${configBean.snpsOutOfSync == 'true'}">
+<script>
+// disable location fields and submit buttons if in out-of-sync mode 
+$('#chromosomeDropList').attr('disabled', true);				// disable all three location fields
+$('[name=coordinate]').attr('disabled', true);	
+$('#coordinateUnitDropList').attr('disabled', true);	
+$('[name=startMarker]').attr('disabled', true);	
+$('[name=endMarker]').attr('disabled', true);	
+$('#form2 [type=submit]').attr('disabled', true);
+$('#outOfSyncLocationMessage').css({'display' : 'inline'});		// show the message
+</script>
+</c:if>
+
 <c:if test="${not empty doccFounders}">
 <script>
 	var doccFounders = [
