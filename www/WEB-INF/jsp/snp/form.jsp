@@ -24,7 +24,11 @@
 <div id="querytabs">
 	<ul>
 		<li><span class="label"><a href="#tabs-1">Search by Gene</a></span></li>
-		<li><span class="label"><a href="#tabs-2">Search by Region</a></span></li>
+		<li><span class="label" id="regionTab"><a href="#tabs-2">Search by Region
+<c:if test="${configBean.snpsOutOfSync == 'true'}">
+<span style="font-size: 0.9em; color: red; font-weight: normal;">--disabled--</span>
+</c:if>
+		</a></span></li>
 	</ul>
 	<div>
 		<div id="tabs-1">
