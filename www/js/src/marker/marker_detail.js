@@ -314,11 +314,11 @@ var strainRibbonGoButtonClick = function() {
 
 			if (urlPieces[j].startsWith('genomes=')) {
 				url = url + 'genomes=';							// add parameter name back in
-				var strains = urlPieces[j].split('=')[1].split('+');
+				var strains = urlPieces[j].split('=')[1].split(',');
 				var firstStrain = true;
 				for (s = 0; s < strains.length; s++) {
 					if (getMungedStrainName(strains[s]) in checked) {
-						if (!firstStrain) { url = url + '+'; }
+						if (!firstStrain) { url = url + ','; }
 						url = url + strains[s];
 						firstStrain = false;
 					}
