@@ -268,7 +268,7 @@ var getMungedStrainName = function(s) {
 	if (pieces.length == 3) {
 		name = pieces[1];
 	}
-	return name.replace(/\//g, '');
+	return name.replace(/\//g, '').replace('SPRETEiJ', 'SPRETUSEiJ');
 }
 
 // handle when the strain ribbon's Go button is clicked
