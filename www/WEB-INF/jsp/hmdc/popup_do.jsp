@@ -1,6 +1,6 @@
 <%
 	/* to be included by popup.jsp for table of disease (DO) annotations, with diseases mapped to
-	 * mouse genotypes and/or human genes
+	 * mouse genotypes and/or human genes (click disease cell from main HMDC grid to get to this popup)
 	 */
 %>
 <c:if test="${not empty diseaseGroup}">
