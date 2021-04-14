@@ -241,7 +241,7 @@ public class HomologyController {
 						}
 					}
 
-					mgvParams = mgvParams + "&highlight=" + mouseMarker.getPrimaryID() + "lock=on&paralogs=off";
+					mgvParams = mgvParams + "&highlight=" + mouseMarker.getPrimaryID() + "&lock=on&paralogs=off";
 					mav.addObject("mgvParams", mgvParams);
 
 				} catch (NumberFormatException e) {
