@@ -70,26 +70,26 @@ function deselectAllSeqs() {
 <br/>
 
 <c:set var="popupTitle" value="Alliance Homology Information"/>
-<c:set var="popupText" value='<p>MGI loads vertebrate homology data from the
-		<A TARGET="_blank" HREF="https://www.alliancegenome.org/"><u>Alliance of Genome Resources</u></A>, 
-		which programmatically detects homologs among the genome features of completely sequenced genomes for member model organisms.
-		<span style="color:red">(actual text to come from Mary)</span></p>
-		
-		<p>MGI includes homology for the following selected vertebrate species from the Alliance of Genome Resources:<br>
+<c:set var="popupText" value="<p>MGI loads orthology data based on the 'stringent' set from 
+		<A TARGET='_blank' HREF='https://www.alliancegenome.org/'><u>the Alliance of Genome Resources</u></A>. 
+		The Alliance sets are based on a scoring system developed by the Alliance in collaboration with 
+		<a href='https://www.flyrnai.org/diopt' target='_blank'>DIOPT</a>.
+		</p>
+		<p>MGI includes orthology for the following vertebrate species from the Alliance:<br>
 		&nbsp;- human<br>
 		&nbsp;- mouse<br>
 		&nbsp;- rat<br>
-		&nbsp;- zebrafish<p>
+		&nbsp;- zebrafish</p>
 
-		<p>These are a subset of the total species represented in the Alliance of Genome Resources.<br>
-		Additional species may be present in an Alliance homology class than appear in MGI.</font></p>'/>
+		<p>These are a subset of the total species represented in the Alliance; there may be stringent set
+		orthologs in other Alliance species.</p>"/>
 
 <div id="summary">
 	<div id="breadbox">
 		<div id="contentcolumn">
-			<div class="innertube">
-				<c:if test="${not empty homology.primaryID}">
-				 <span class="small"><a href='https://www.ncbi.nlm.nih.gov/sites/entrez?cmd=Retrieve&db=homologene&dopt=MultipleAlignment&list_uids=${homology.primaryID}'>HomoloGene:${homology.primaryID} Multiple Sequence Alignment</a></span>
+			<div class="innertube" style="text-align: center;">
+				<c:if test="${not empty mgvParams}">
+				 <span class="small"><a href='${configBean.MGV_URL}${mgvParams}' target="_blank">Multiple Genome Viewer</a></span>
 				 </c:if>
 			</div>
 		</div>

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import mgi.frontend.datamodel.HomologyCluster;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerID;
+import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.OrganismOrtholog;
 
 import org.jax.mgi.fewi.config.ContextLoader;
@@ -184,6 +185,11 @@ public class HomologyController {
 		// SEO keywords
 		StringBuffer keywords = new StringBuffer("MGI");
 
+		// for keeping track of data for generating MGV link
+		Marker mouseMarker = null;
+		boolean hasRat = false;
+		boolean hasHuman = false;
+		
 		// kstone - Somehow pre-looping through the markers and sequences makes the MAV do half as many queries on average.
 		// I have no idea why, but it cuts a second or two off the load time.
 		homology.getOrthologs().size();
@@ -199,8 +205,52 @@ public class HomologyController {
 				keywords.append(", ");
 				keywords.append(m.getSymbol());
 			}
+
+			if ("mouse".equals(oo.getOrganism())) {
+				mouseMarker = oo.getMarkers().get(0);
+			} else if ("rat".equals(oo.getOrganism())) {
+				hasRat = true;
+			} else if ("human".equals(oo.getOrganism())) {
+				hasHuman = true;
+			}
 		}
 
+		// If we have a mouse marker (which we should) and it has coordinates, then we can use it to form a link to MGV.
+		// If there are human and/or rat homologs, note them as comparison species.
+		if (mouseMarker != null) {
+			MarkerLocation mouseCoords = mouseMarker.getPreferredCoordinates();
+			if (mouseCoords != null) {
+				try {
+					String chromosome = mouseCoords.getChromosome();
+					String startCoord = String.format("%.0f", mouseCoords.getStartCoordinate());
+					String endCoord = String.format("%.0f", mouseCoords.getEndCoordinate());
+
+					String mgvParams = "#ref=C57BL/6J&chr=" + chromosome + "&start=" + startCoord + "&end=" + endCoord;
+
+					if (hasRat || hasHuman) {
+						mgvParams = mgvParams + "&genomes=";
+
+						if (hasHuman) {
+							mgvParams = mgvParams + "H. sapiens";
+							if (hasRat) {
+								mgvParams = mgvParams + ",";
+							}
+						}
+						if (hasRat) {
+							mgvParams = mgvParams + "R. norvegicus";
+						}
+					}
+
+					mgvParams = mgvParams + "&highlight=" + mouseMarker.getPrimaryID() + "lock=on&paralogs=off";
+					mav.addObject("mgvParams", mgvParams);
+
+				} catch (NumberFormatException e) {
+					// any errors? just fail and skip the link
+					logger.error("Caught: " + e.toString());
+				}
+			}
+		}
+		
 		mav.addObject("homology", homology);
 		mav.addObject("source", homology.getSource());
 		mav.addObject("seoDescription", "View " + firstSymbol + " mouse/human homology from " + homology.getSource() + " with: genes, location, sequences, " + "associated human diseases");
