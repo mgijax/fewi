@@ -12,6 +12,7 @@ import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.OrganismOrtholog;
 
 import org.jax.mgi.fewi.config.ContextLoader;
+import org.jax.mgi.fewi.forms.HomologyQueryForm;
 import org.jax.mgi.fewi.finder.HomologyFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.searchUtil.Filter;
@@ -27,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -259,6 +261,79 @@ public class HomologyController {
 		mav.addObject("browserTitle", firstSymbol + " Vertebrate HGNC");
 		mav.addObject("pageTitle", "Vertebrate Homology");
 
+		return mav;
+	}
+
+	//-----------------------------------------------
+	// Forward to the right Alliance gene detail page for the given set of (cluster key, organism, marker symbol)
+	//-----------------------------------------------
+	@RequestMapping(value="/alliance/gene", method=RequestMethod.GET)
+	public ModelAndView goToAlliance(HttpServletRequest request, @ModelAttribute HomologyQueryForm query) {
+		String clusterKey = query.getClusterKey();
+		String symbol = query.getSymbol();
+		String organism = query.getOrganism();
+		
+		// check parameters
+		
+		if (clusterKey == null) {
+			return errorMav("Missing clusterKey");
+		} else if (organism == null) {
+			return errorMav("Missing organism");
+		} else if (symbol == null) {
+			return errorMav("Missing symbol"); 
+		}
+
+		if (!FewiUtil.isPositiveInteger(clusterKey)) {
+			return errorMav("Cannot find homology cluster");
+		}
+		
+		// retrieve homology cluster
+		
+		HomologyCluster homology = null;
+		try {
+			homology = homologyFinder.getClusterByKey(clusterKey); 
+			if (homology == null) { throw new Exception ("is null"); }
+		} catch (Throwable t) {
+			return errorMav("Cannot find homology cluster");
+		}
+		
+		// Get the desired ortholog organism, then walk through 
+		// its markers to find the right one by symbol.
+		
+		OrganismOrtholog oo = homology.getOrganismOrtholog(organism);
+		if (oo == null) {
+			return errorMav("Homology cluster does not contain specified organism");
+		}
+		
+		Marker marker = null;
+		for (Marker m : oo.getMarkers()) {
+			if (m.getSymbol().equals(symbol)) {
+				marker = m;
+				break;
+			}
+		}
+		
+		if (marker == null) {
+			return errorMav("Homology cluster does not contain desired marker");
+		}
+
+		String markerType = marker.getMarkerSubtype();
+		if (markerType == null) {
+			markerType = marker.getMarkerType();
+		}
+		
+		String accID = marker.getPrimaryID();
+		if ("human".equals(organism)) {
+			// Rely on HGNC ID for link, not Entrez Gene.
+			accID = marker.getHgncID().getAccID();
+		}
+		
+		// fill parameters and ship off to the JSP
+		
+		ModelAndView mav = new ModelAndView("alliance_redirect");
+		mav.addObject("pageTitle", "Retrieving " + organism + " " + markerType + " " + marker.getSymbol());
+		mav.addObject("dataType", organism + " " + markerType);
+		mav.addObject("accID", accID);
 		return mav;
 	}
 
