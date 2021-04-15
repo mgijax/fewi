@@ -223,9 +223,12 @@ public class HomologyController {
 			MarkerLocation mouseCoords = mouseMarker.getPreferredCoordinates();
 			if (mouseCoords != null) {
 				try {
+					// take half of the marker size and add to each end for flank (so roughly 50kb for a 100kb gene)
+					long flank = (new Double((mouseCoords.getEndCoordinate() - mouseCoords.getStartCoordinate()) / 2)).longValue();
+					
 					String chromosome = mouseCoords.getChromosome();
-					String startCoord = String.format("%.0f", mouseCoords.getStartCoordinate());
-					String endCoord = String.format("%.0f", mouseCoords.getEndCoordinate());
+					String startCoord = String.format("%.0f", mouseCoords.getStartCoordinate() - flank);
+					String endCoord = String.format("%.0f", mouseCoords.getEndCoordinate() + flank);
 
 					String mgvParams = "#ref=C57BL/6J&chr=" + chromosome + "&start=" + startCoord + "&end=" + endCoord;
 
@@ -243,7 +246,7 @@ public class HomologyController {
 						}
 					}
 
-					mgvParams = mgvParams + "&highlight=" + mouseMarker.getPrimaryID() + "&lock=on&paralogs=off";
+					mgvParams = mgvParams + "&highlight=" + mouseMarker.getPrimaryID() + "&lock=on&transcripts=open&paralogs=off";
 					mav.addObject("mgvParams", mgvParams);
 
 				} catch (NumberFormatException e) {
