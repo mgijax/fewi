@@ -223,8 +223,8 @@ public class HomologyController {
 			MarkerLocation mouseCoords = mouseMarker.getPreferredCoordinates();
 			if (mouseCoords != null) {
 				try {
-					// take half of the marker size and add to each end for flank (so roughly 50kb for a 100kb gene)
-					long flank = (new Double((mouseCoords.getEndCoordinate() - mouseCoords.getStartCoordinate()) / 2)).longValue();
+					// take 20% of the marker size and add to each end for flank (so roughly 50kb for a 100kb gene)
+					long flank = (new Double((mouseCoords.getEndCoordinate() - mouseCoords.getStartCoordinate()) / 5)).longValue();
 					
 					String chromosome = mouseCoords.getChromosome();
 					String startCoord = String.format("%.0f", mouseCoords.getStartCoordinate() - flank);
