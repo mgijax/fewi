@@ -31,7 +31,7 @@ function downloadGeneFile(obj) {
 				<td>{{ row.organism }}</td>
 				<td><nobr>
 					<a ng-if="row.organism == 'mouse'" target="_blank" href="{{FEWI_URL}}marker/{{ row.mgiId }}"><div ng-bind-html="row.symbol | handleSubscript "></div></a>
-					<a ng-if="row.organism == 'human' && row.homologyClusterKey != null" target="_blank" href="{{FEWI_URL}}homology/cluster/key/{{ row.homologyClusterKey }}"><div ng-bind-html="row.symbol | handleSubscript "></div></a>
+					<a ng-if="row.organism == 'human' && row.homologyClusterKey != null" target="_blank" href="{{FEWI_URL}}homology/alliance/gene?clusterKey={{ row.homologyClusterKey }}&organism=human&symbol={{ row.symbol }}"><div ng-bind-html="row.symbol | handleSubscript "></div></a>
 					<div ng-if="row.organism == 'human' && row.homologyClusterKey == null" ng-bind-html="row.symbol | handleSubscript "></div>
 				</nobr></td>
 				<td><nobr>{{ row.location }}</nobr></td>

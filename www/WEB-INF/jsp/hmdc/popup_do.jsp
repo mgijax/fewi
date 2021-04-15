@@ -37,7 +37,7 @@
 		</tr>
 
 		<c:forEach var="rowID" items="${diseaseGroup.humanRowIDs}">
-			<c:set var="markerUrl" value="${configBean.FEWI_URL}homology/cluster/key/${homologyClusterKeyMap[rowID]}"/>
+			<c:set var="markerUrl" value="${configBean.FEWI_URL}homology/alliance/gene?clusterKey=${homologyClusterKeyMap[rowID]}&organism=human&symbol=${humanSymbolMap[rowID]}"/>
 
 			<tr class="highlightable" title="click row to see homology details" onclick="window.open('${markerUrl}'); return true;">
 			<td class="border" <c:if test="${diseaseGroup.hasMouseRows}">colspan="2"</c:if>>${humanSymbolMap[rowID]}</td>

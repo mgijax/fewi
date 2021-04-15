@@ -2,6 +2,7 @@
 <%@ page import = "org.jax.mgi.fewi.util.*" %>
 
 <%@ page trimDirectiveWhitespaces="true" %>
+<!-- Is this file even used anymore?  I can't find reference to it in fewi/src or fewi/www. (jsb) -->
 
 <!-- Table and Wrapping div -->
 <div id="hdpSystemPopupWrap">
@@ -67,7 +68,7 @@
 		<c:set var="hasHomology" value="${not empty popupRow.marker.homologySource and not empty clusterKey}"/>
 		
 		<tr <c:if test="${hasHomology}">title="click gene for homology details"</c:if> class="genoRow ${status.index % 2 == 0 ? 'row1' : 'row2'}" 
-			<c:if test="${hasHomology}">onClick="window.open('${configBean.FEWI_URL}homology/cluster/key/${clusterKey}'); return true;"</c:if> >
+			<c:if test="${hasHomology}">onClick="window.open('${configBean.FEWI_URL}homology/alliance/gene?clusterKey=${clusterKey}&organism=human&symbol=${popupRow.marker.symbol}'); return true;"</c:if> >
 	    
 	    <td <c:if test="${hasHomology}">style="color:blue;"</c:if> > 
 	    ${popupRow.marker.symbol}
