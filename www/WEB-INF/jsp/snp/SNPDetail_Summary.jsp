@@ -8,7 +8,7 @@
 				<ul>
 					<li>
 						<div class="label">ID</div>
-						<div class="value">${snp.accid} <a href="${fn:replace(externalUrls.RefSNP, '@@@@', snp.accid)}" target="_blank">dbSNP</a></div>
+						<div class="value">${snp.accid} dbSNP</div>
 					</li>
 					<li>
 						<div class="label">Variation Type</div>

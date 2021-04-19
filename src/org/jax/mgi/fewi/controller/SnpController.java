@@ -293,8 +293,8 @@ public class SnpController {
 		yesNoOptions.put("no", "No");
 		mav.addObject("yesNoOptions", yesNoOptions);
 
-		mav.addObject("seoDescription", "Search for mouse SNPs represented in dbSNP by gene or genome region. Results include selected strains. Filter by dbSNP function class.");
-		mav.addObject("seoKeywords", "SNP, SNPs, refSNP, dbSNP, build 142, variation, variant, function class, intron, locus region, mRNA-UTR, coding-nonSynonymous, coding-synonymous, noncoding-transcript-variant, splice-site , allele, mouse strains, polymorphism.");
+		mav.addObject("seoDescription", "Search for mouse SNPs by gene or genome region. Results include selected strains. Filter by function class.");
+		mav.addObject("seoKeywords", "SNP, SNPs, refSNP, build 142, variation, variant, function class, intron, locus region, mRNA-UTR, coding-nonSynonymous, coding-synonymous, noncoding-transcript-variant, splice-site , allele, mouse strains, polymorphism.");
 
 	}
 
