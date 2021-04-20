@@ -293,7 +293,7 @@ var strainRibbonGoButtonClick = function() {
 	}
 		
 	if (option == 'fasta') {
-		// simples one -- just get the base pairs from seqfetch.
+		// simplest one -- just get the base pairs from seqfetch.
 		
 		ga_logEvent('MarkerDetailPageEvent', 'strainMarkerTable', 'FASTA download');
 		form.action = getUrl('seqfetch');
@@ -321,6 +321,9 @@ var strainRibbonGoButtonClick = function() {
 						if (!firstStrain) { url = url + ','; }
 						url = url + strains[s];
 						firstStrain = false;
+						console.log('included: ' + strains[s]);
+					} else {
+						console.log('excluded: ' + strains[s]);
 					}
 				}
 				
