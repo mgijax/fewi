@@ -230,23 +230,20 @@ public class HomologyController {
 					String startCoord = String.format("%.0f", mouseCoords.getStartCoordinate() - flank);
 					String endCoord = String.format("%.0f", mouseCoords.getEndCoordinate() + flank);
 
-					String mgvParams = "#ref=C57BL/6J&chr=" + chromosome + "&start=" + startCoord + "&end=" + endCoord;
+					String mgvParams = "#genomes=C57BL/6J";
 
 					if (hasRat || hasHuman) {
-						mgvParams = mgvParams + "&genomes=";
-
 						if (hasHuman) {
-							mgvParams = mgvParams + "H. sapiens";
-							if (hasRat) {
-								mgvParams = mgvParams + ",";
-							}
+							mgvParams = mgvParams + ",H. sapiens";
 						}
 						if (hasRat) {
-							mgvParams = mgvParams + "R. norvegicus";
+							mgvParams = mgvParams + ",R. norvegicus";
 						}
 					}
 
-					mgvParams = mgvParams + "&highlight=" + mouseMarker.getPrimaryID() + "&lock=on&transcripts=open&paralogs=off";
+					mgvParams = mgvParams + "&landmark=" + mouseMarker.getPrimaryID() + "&flank=2x";
+					mgvParams = mgvParams + "&highlight=" + mouseMarker.getPrimaryID() + "&lock=on&paralogs=off";
+					mgvParams = mgvParams + "&params=" + ContextLoader.getExternalUrls().getProperty("MGV_Style");
 					mav.addObject("mgvParams", mgvParams);
 
 				} catch (NumberFormatException e) {
