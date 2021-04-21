@@ -3,6 +3,7 @@ package org.jax.mgi.fewi.controller;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,9 @@ import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.Sequence;
 import mgi.frontend.datamodel.SequenceID;
 import mgi.frontend.datamodel.SequenceLocation;
+import mgi.frontend.datamodel.SequenceSource;
 
+import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.SequenceFinder;
@@ -195,7 +198,7 @@ public class SequenceController {
             mav.addObject("probes", probes);
         }
 
-        // package referenes
+        // package references
         List<Reference> references = sequence.getReferences();
         if (!references.isEmpty()) {
             mav.addObject("references", references);
@@ -243,9 +246,102 @@ public class SequenceController {
 
         mav.addObject("idLinker",idLinker);
         
+        String mgvUrl = this.getMgvUrl(sequence);
+        if (mgvUrl != null) {
+        	mav.addObject("mgvUrl", mgvUrl);
+        }
+        
         return mav;
     }
 
+    /*
+     * compute and return a URL for the Multiple Genome Viewer (MGV), if applicable
+     */
+    private String getMgvUrl(Sequence seq) {
+    	Set<Marker> markers = seq.getMarkers();
+    	Marker marker = null;
+    	if ((markers != null) && (markers.size() > 0)) {
+    		for (Marker m : markers) {
+    			marker = m;
+    		}
+    	}
+    	
+    	// If location is missing, just bail out.
+    	List<SequenceLocation> locations = seq.getLocations();
+    	if ((locations == null) || (locations.size() == 0)) {
+    		return null;
+    	}
+    	SequenceLocation location = locations.get(0);
+
+    	// If no source strain, default to B6.
+    	String seqStrain = "C57BL/6J";
+    	List<SequenceSource> sources = seq.getSources();
+    	if ((sources != null) && (sources.size() > 0)) {
+    		seqStrain = sources.get(0).getStrain();
+    	}
+
+    	// Analyze the DO/CC strains.
+    	Set<String> ccStrainSet = new HashSet<String>();
+    	List<String> ccStrains = new ArrayList<String>();
+    	for (String strain : ContextLoader.getExternalUrls().getProperty("MGV_DOCCFounder_Strains").split(",")) {
+    		ccStrainSet.add(strain);
+    		ccStrains.add(strain);
+    	}
+
+    	// Options for making links:
+    	// 1. has association to canonical marker and is from a CC strain
+    	// 2. has association to canonical marker and is not from a CC strain
+    	// 3. has no association to canonical marker and is from a CC strain
+    	// 4. has no association to canonical marker and is not from a CC strain
+    	
+    	String refStrain = "";
+    	String genomes = "";
+    	String highlight = "";
+    	String style = "&style=" + ContextLoader.getExternalUrls().getProperty("MGV_Style");
+    	String landmark = "";
+    	String flank = "";
+    	String region = "";
+    	String etc = "";
+
+    	if (marker != null) {
+   			landmark = "&landmark=" + marker.getPrimaryID();
+   			highlight = "&highlight=" + marker.getPrimaryID();
+   			flank = "&flank=2x";
+   			etc = "&lock=on&paralogs=off";
+
+    		if (ccStrainSet.contains(seqStrain)) {
+    			// case 1 -- sequence's strain + other CC strains, 2x flank, highlighted marker, plus standard params
+    			ccStrains.remove(seqStrain);
+    			genomes = "genomes=" + seqStrain + "," + String.join(",", ccStrains);
+
+    		} else {
+    			// case 2 -- sequence's strain + CC strains, 2x flank, highlighted marker, plus standard params
+    			genomes = "genomes=" + seqStrain + "," + String.join(",", ccStrains);
+    		}
+    		
+    	} else {
+    		refStrain = "ref=" + seqStrain;
+   			highlight = "&highlight=" + seq.getPrimaryID();
+
+   			long flankPerSide = 100000;
+   			long startCoord = location.getStartCoordinate().longValue() - flankPerSide;
+   			long endCoord = location.getEndCoordinate().longValue() + flankPerSide;
+   			region = "&chr=" + location.getChromosome() + "&start=" + startCoord + "&end=" + endCoord;
+   			
+    		if (ccStrainSet.contains(seqStrain)) {
+    			// case 3 -- sequence's strain as reference, CC strains, by coordinates + 100kb flank, highlight gene model  
+    			genomes = "&genomes=" + String.join(",", ccStrains);
+
+    		} else {
+    			// case 4 -- sequence's strain as reference, other CC strains, by coordinates + 100kb flank, highlight gene model  
+    			ccStrains.remove(seqStrain);
+    			genomes = "&genomes=" + String.join(",", ccStrains);
+    		}
+    	}
+
+    	String mgv = ContextLoader.getConfigBean().getProperty("MGV_URL");
+    	return mgv + "#" + refStrain + genomes + region + landmark + flank + highlight + etc + style;
+    }
 
     /*
      * Sequence Summary by Reference
