@@ -45,7 +45,7 @@
 		</div>
 		<div id="tabs-2">
 			<form:form id="form2" method="GET" commandName="snpQueryForm" action="${configBean.FEWI_URL}snp/summary">
-				<%@ include file="SNPForm_LocationSubmit.jsp" %><div style="padding-top: 5px;"><span style="margin-left: 10px;" class="label">Search for SNPs by Genome Region</span> - from ${buildNumber}</div>
+				<%@ include file="SNPForm_LocationSubmit.jsp" %><div style="padding-top: 5px;"><span style="margin-left: 10px;" class="label">Search for SNPs by Genome Region</span> - from ${assemblyVersion}</div>
 				<div id="error2" class="red noBorder hidden"></div>
 				<table width="100%" class="pad5 borderedTable">
 					<%@ include file="SNPForm_GenomeLocation.jsp" %>

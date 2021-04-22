@@ -44,8 +44,9 @@
 </style>
 <div id="outOfSync">
   <span id="outOfSyncLabel">Genome Coordinate Discrepancy</span><BR/>
-  The genome coordinates for mouse RefSNPs are derived from a different NCBI build of the mouse genome
-  than are the genome coordinates for MGI genes (see <a href="${configBean.USERHELP_URL}SNP_discrepancy_help.shtml" target="_blank">details</a>).
+  The genome coordinates for mouse SNPS shown in the results are from ${assemblyVersion}. The genome coordinates for mouse genes are from the most recent
+  mouse genome reference assembly (${buildNumber}). Mouse SNP coordinates will be updated after they have been updated to ${buildNumber} by
+  the European Variation Archive (EVA) (<a href="${configBean.USERHELP_URL}SNP_discrepancy_help.shtml" target="_blank">see details</a>).
 </div>
 </c:if>
 

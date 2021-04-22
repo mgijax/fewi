@@ -97,9 +97,7 @@ public class SnpController {
 	private static ArrayList<String> markerfeatureTypes = null;
 
 	// dbSNP build number
-	private static String buildNumber = null;
-
-	private static String assemblyVersion = null;
+	private static String snpBuildNumber = null;
 
 	private static String[] homologSymbolFields = new String[] {
         SearchConstants.MRK_SYMBOL, 
@@ -151,16 +149,16 @@ public class SnpController {
 	//--------------------------------------------------------------------//
 
 	public String getSnpBuildNumber() {
-		if (buildNumber == null) {
+		if (snpBuildNumber == null) {
 			SearchResults<QueryFormOption> options = queryFormOptionFinder.getQueryFormOptions("snp", "build number");
 			List<QueryFormOption> optionList = options.getResultObjects();
 
 			if (optionList.size() > 0) {
-				buildNumber = optionList.get(0).getDisplayValue();
-				logger.debug("Cached SNP build number: " + buildNumber);
+				snpBuildNumber = optionList.get(0).getDisplayValue();
+				logger.debug("Cached SNP build number: " + snpBuildNumber);
 			}
 		}
-		return buildNumber;
+		return snpBuildNumber;
 	}
 	
 	//----------------------------------------------------------//
@@ -193,7 +191,7 @@ public class SnpController {
 			logger.debug("Cached " + withinRanges.size() + " coordinate ranges");
 		}
 
-		String buildNumber = getSnpBuildNumber();
+		String dbSnpBuildNumber = getSnpBuildNumber();
 
 		if(referenceStrains == null) {
 			Map<String, String> tempList = queryFormOptionFinder.getOptionMap("snp", "strain");
@@ -248,16 +246,6 @@ public class SnpController {
 			logger.debug("Cached " + selectableStrains.size() + " selectable strains");
 		}
 
-		if (assemblyVersion == null) {
-			SearchResults<QueryFormOption> options = queryFormOptionFinder.getQueryFormOptions("marker", "build_number");
-			List<QueryFormOption> optionList = options.getResultObjects();
-
-			if (optionList.size() > 0) {
-				assemblyVersion = optionList.get(0).getDisplayValue();
-				logger.debug("Cached Assembly number: " + assemblyVersion);
-			}
-		}
-
 		if ((doccFounders == null) || (mgpStrains == null)) {
 			StrainQueryForm doccQuery = new StrainQueryForm();
 			doccQuery.setGroup("DOCCFounders");
@@ -278,8 +266,9 @@ public class SnpController {
 		mav.addObject("referenceStrains", referenceStrains);
 		mav.addObject("coordinateUnits", coordinateUnits);
 
-		mav.addObject("assemblyVersion", assemblyVersion);
-		mav.addObject("buildNumber", buildNumber);
+		mav.addObject("assemblyVersion", ContextLoader.getConfigBean().getProperty("SNP_ASSEMBLY_VERSION"));
+		mav.addObject("dbSnpBuildNumber", this.getSnpBuildNumber());
+		mav.addObject("buildNumber", ContextLoader.getConfigBean().getProperty("ASSEMBLY_VERSION"));
 
 		searchByOptions = new LinkedHashMap<String, String>();
 		searchByOptions.put(SearchConstants.MRK_HOMOLOG_SYMBOLS, "Current symbol (mouse or homologs)");
@@ -844,8 +833,9 @@ public class SnpController {
 			mav.addObject("hasMarkers", "true");
 		}
 
-		String snpAssemblyVersion = "GRCm" + ContextLoader.getConfigBean().getProperty("SNP_ASSEMBLY_VERSION");
-		mav.addObject("snpAssemblyVersion", snpAssemblyVersion);
+		mav.addObject("assemblyVersion", ContextLoader.getConfigBean().getProperty("SNP_ASSEMBLY_VERSION"));
+		mav.addObject("dbSnpBuildNumber", this.getSnpBuildNumber());
+		mav.addObject("buildNumber", ContextLoader.getConfigBean().getProperty("ASSEMBLY_VERSION"));
 
 		setupSeo(mav, snp);
 

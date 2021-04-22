@@ -8,7 +8,7 @@
 				<ul>
 					<li>
 						<div class="label">ID</div>
-						<div class="value">${snp.accid} dbSNP</div>
+						<div class="value">${snp.accid}</div>
 					</li>
 					<li>
 						<div class="label">Variation Type</div>

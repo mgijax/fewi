@@ -44,7 +44,7 @@
 </div>
 <table id="snpSummaryTable">
 <tr>
-	<th class="blueBG" id="snp_id">SNP ID<br/>(${buildNumber})</th>
+	<th class="blueBG" id="snp_id">SNP ID<br/>(${assemblyVersion})</th>
 	<th class="blueBG" id="map_position">Map Position<br/>(${assemblyVersion})</th>
 	<th class="blueBG" id="genes">Gene &amp; Category</th>
 	<th class="blueBG" id="variation_type">Variation<br/>Type</th>
@@ -70,7 +70,7 @@
 %>
     <c:if test="${!status.first && (status.index % 25 == 0)}">
 	<tr>
-	<td class="blueBG bold snpStrainHeader">SNP ID<br/>(${buildNumber})</td>
+	<td class="blueBG bold snpStrainHeader">SNP ID<br/>(${assemblyVersion})</td>
 	<td class="blueBG bold snpStrainHeader">Map Position<br/>(${assemblyVersion})</td>
 	<td class="blueBG bold snpStrainHeader">Gene &amp; Category</td>
 	<td class="blueBG bold snpStrainHeader">Variation<br/>Type</td>

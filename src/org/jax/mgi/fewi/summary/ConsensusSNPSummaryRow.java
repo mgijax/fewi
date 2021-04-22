@@ -37,8 +37,7 @@ public class ConsensusSNPSummaryRow {
 		
 		String ret = consensusSNP.getAccid() + "<br>";
 		
-		ret += "<font class=\"small\">dbSNP";
-		ret += "&nbsp;|&nbsp;";
+		ret += "<font class=\"small\">";
 		ret += "<a href=\"" + fewiUrl + "snp/" + consensusSNP.getAccid() + "\" target=\"_blank\">MGI&nbsp;SNP&nbsp;Detail</a></font>";
 		
 		return ret;
