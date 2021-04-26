@@ -5,7 +5,7 @@
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
 <fewi:simpleseo
-	title="Search Mouse SNPs
+	title="Search Mouse SNPs"
 	description="${seoDescription}"
 	keywords="${seoKeywords}"
 />
