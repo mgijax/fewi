@@ -39,6 +39,10 @@
 		float: left;
 	}
 
+	#body .wider {
+		width: 20em;
+	}
+
 	#body .value {
 		margin-left: 16.813em;
 	}
