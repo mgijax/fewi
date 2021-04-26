@@ -83,7 +83,7 @@ width: 1250px;
     <div id="contentcolumn">
 	<div id="filterDiv">
 		<span id="filterLabel" class="label">Filter SNPs by:</span>
-		<a id="functionClassFilter" class="filterButton">dbSNP&nbsp;Function&nbsp;Class<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
+		<a id="functionClassFilter" class="filterButton">Function&nbsp;Class<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
 		<a id="alleleAgreementFilter" class="filterButton">Allele&nbsp;Agreement<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
 	</div>
 	<div style="max-width:700px; margin-top: 10px;">
@@ -202,7 +202,7 @@ width: 1250px;
 	filters.setQueryStringFunction(getQuerystring);
 	filters.setSummaryNames('filterSummary', 'filterList');
 	filters.setHistoryManagement('historyModule', handleNavigation);
-	filters.addFilter('functionClassFilter', 'dbSNP Function Class', 'functionClassFilter', 'functionClassFilter', fewiurl + 'snp/facet/functionClass');
+	filters.addFilter('functionClassFilter', 'Function Class', 'functionClassFilter', 'functionClassFilter', fewiurl + 'snp/facet/functionClass');
 	filters.addFilter('alleleAgreementFilter', 'Allele Agreement', 'alleleAgreementFilter', 'alleleAgreementFilter', fewiurl + 'snp/facet/alleleAgreement',
 		null, filters.parseResponseRadio, 'Filter for SNPs where');
 	filters.registerCallback("pfs", updateRequest);
