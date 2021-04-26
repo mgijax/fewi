@@ -33,7 +33,7 @@
 	<div>
 		<div id="tabs-1">
 			<form:form id="form1" method="GET" commandName="snpQueryForm" action="${configBean.FEWI_URL}snp/summary">
-				<%@ include file="SNPForm_GeneSubmit.jsp" %><div style="padding-top: 5px;"><span style="margin-left: 10px;" class="label">Search for SNPs by Associated Gene(s)</span> - from ${buildNumber}</div>
+				<%@ include file="SNPForm_GeneSubmit.jsp" %><div style="padding-top: 5px;"><span style="margin-left: 10px;" class="label">Search for SNPs by Associated Gene(s)</span></div>
 				<div id="error1" class="red noBorder hidden"></div>
 				<table width="100%" class="pad5 borderedTable">
 					<%@ include file="SNPForm_AssociatedGenes.jsp" %>
