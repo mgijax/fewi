@@ -517,7 +517,7 @@ function formatFastaArgs() {
 		</tr>
 		</c:if>
 
-		<c:if test="${not empty gbrowseLink}">
+		<c:if test="${not empty jbrowseLink}">
 		<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">Genome Context:</font>&nbsp;</td>
 		<td width="1%" class='padded' style='vertical-align:top'>
 		  <div style='float:right; cursor:pointer; position:relative; z-index:1' id='rightArrowGenome' onClick='toggleGenomeContext()'><img src='${configBean.WEBSHARE_URL}images/rightArrow.gif'></div>
@@ -527,8 +527,8 @@ function formatFastaArgs() {
 		  Genome Browser view of this mutation<br/>
 		  <table id='genomeContextTable' style='display:none'>
 		    <tr><td class='padded' style='text-align:center; background-color: #ffffff'>
-		      ${gbrowseExtraLine}
-		      <a href='${gbrowseLink}' class='MP' target='_new'><span style='font-size: 90%'>${gbrowseLabel}</span></a>
+		      ${jbrowseExtraLine}
+		      <a href='${jbrowseLink}' class='MP' target='_new'><span style='font-size: 90%'>${jbrowseLabel}</span></a>
 		    </td></tr>
 		  </table>
 		</td></tr>
