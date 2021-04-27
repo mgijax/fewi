@@ -352,28 +352,48 @@ public class HomologyController {
 	}
 
 	//---------------------------------------------------------------
-	// Comparative GO Graph for a HomoloGene class (by HomoloGene ID)
+	// Comparative GO Graph for a homology class (by mouse marker symbol)
 	//---------------------------------------------------------------
-	@RequestMapping(value="/GOGraph/{homologyID:.+}", method = RequestMethod.GET)
-	public ModelAndView comparativeGOGraphByID(HttpServletRequest request, @PathVariable("homologyID") String homologyID) {
+	@RequestMapping(value="/GOGraph/{mouseSymbol:.+}", method = RequestMethod.GET)
+	public ModelAndView comparativeGOGraphBySymbol(HttpServletRequest request, @PathVariable("mouseSymbol") String mouseSymbol) {
 		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
 			return UserMonitor.getSharedInstance().getLimitedMessage();
 		}
 
-		logger.debug("->comparativeGOGraphByID started");
+		logger.debug("->comparativeGOGraphBySymbol started");
 
-		List<HomologyCluster> homologyList = homologyFinder.getHomologyClusterByID(homologyID);
+		// First, find a single mouse marker with the given symbol.
+		
+		SearchResults<Marker> markers = markerFinder.getMarkerBySymbol(mouseSymbol);
+		Marker mouseMarker = null;
 
-		// there can be only one...
-		if (homologyList.size() < 1) { // none found
-			return errorMav("No Homology Cluster Found");
-		} else if (homologyList.size() > 1) { // dupe found
-			return errorMav("Duplicate ID");
+		if ((markers != null) && (markers.getTotalCount() > 0)) {
+			for (Marker m : markers.getResultObjects()) {
+				if ("mouse".equals(m.getOrganism())) {
+					mouseMarker = m;
+					break;
+				}
+			}
 		}
-		// success - we have a single object
 
-		//pull out the HomologyCluster
-		HomologyCluster homology = homologyList.get(0);
+		if (mouseMarker == null) {
+			return errorMav("Cannot find marker matching specified symbol");
+		}
+		
+		// Then find the Alliance Direct homology cluster (if there is one) for that mouse marker.
+		
+		OrganismOrtholog oo = mouseMarker.getAllianceDirectOrganismOrtholog();
+		HomologyCluster homology = null;
+		
+		if (oo != null) {
+			homology = oo.getHomologyCluster();
+		}
+
+		if (homology == null) {
+			return errorMav("No Homology Cluster Found");
+		}
+
+		// success - we have a single object
 
 		// if this HomologyCluster has no comparative GO graph, it's an error
 		if (homology.getHasComparativeGOGraph() == 0) {
@@ -386,9 +406,9 @@ public class HomologyController {
 					ContextLoader.getConfigBean().getProperty("GO_GRAPHS_PATH");
 
 			if (!goGraphPath.endsWith("/")) {
-				goGraphPath = goGraphPath + "/orthology/" + homologyID + ".html";
+				goGraphPath = goGraphPath + "/orthology/" + mouseSymbol + ".html";
 			} else {
-				goGraphPath = goGraphPath + "orthology/" + homologyID + ".html";
+				goGraphPath = goGraphPath + "orthology/" + mouseSymbol + ".html";
 			}
 			logger.debug("Reading GO Graph from: " + goGraphPath);
 
@@ -411,26 +431,12 @@ public class HomologyController {
 			return errorMav("Could not read comparative GO graph from file");
 		}
 
-		// determine which organisms appear in the title (mouse, human, rat)
-		StringBuffer organisms = new StringBuffer();
+		// assume mouse and determine which other organisms appear in the title (human, rat, zebrafish)
+		StringBuffer organisms = new StringBuffer("mouse");
 
-		if (homology.getMouseMarkerCount() > 0) {
-			organisms.append("mouse");
-		}
-
-		if (homology.getHumanMarkerCount() > 0) {
-			if (organisms.length() > 0) {
-				organisms.append(", ");
-			}
-			organisms.append("human");
-		}
-
-		if (homology.getRatMarkerCount() > 0) {
-			if (organisms.length() > 0) {
-				organisms.append(", ");
-			}
-			organisms.append("rat");
-		}
+		if (homology.getHumanMarkerCount() > 0) { organisms.append(", human"); }
+		if (homology.getRatMarkerCount() > 0) { organisms.append(", rat"); }
+		if (homology.getZebrafishMarkerCount() > 0) { organisms.append(", zebrafish"); }
 
 		// generate ModelAndView object to be passed to detail page
 		ModelAndView mav = new ModelAndView("homology_go_graph");
