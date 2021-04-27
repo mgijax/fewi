@@ -191,6 +191,7 @@ public class HomologyController {
 		Marker mouseMarker = null;
 		boolean hasRat = false;
 		boolean hasHuman = false;
+		boolean hasZebrafish = false;		// not for MGV, but is for GO Graph link
 		
 		// kstone - Somehow pre-looping through the markers and sequences makes the MAV do half as many queries on average.
 		// I have no idea why, but it cuts a second or two off the load time.
@@ -214,6 +215,8 @@ public class HomologyController {
 				hasRat = true;
 			} else if ("human".equals(oo.getOrganism())) {
 				hasHuman = true;
+			} else if ("zebrafish".equals(oo.getOrganism())) {
+				hasZebrafish = true;
 			}
 		}
 
@@ -251,6 +254,17 @@ public class HomologyController {
 					logger.error("Caught: " + e.toString());
 				}
 			}
+		}
+		
+		// compose a GO Graph link and text string, if this cluster has a graph page
+		if ((homology.getHasComparativeGOGraph() == 1) && (mouseMarker != null)) {
+			String organisms = "mouse";
+			if (hasHuman) { organisms += ", human"; }
+			if (hasRat) { organisms += ", rat"; }
+			if (hasZebrafish) { organisms += ", zebrafish"; }
+
+			mav.addObject("goGraphUri", "homology/GOGraph/" + mouseMarker.getSymbol());
+			mav.addObject("goGraphOrganisms", organisms);
 		}
 		
 		mav.addObject("homology", homology);

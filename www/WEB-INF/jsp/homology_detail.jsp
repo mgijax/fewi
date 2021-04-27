@@ -96,8 +96,8 @@ function deselectAllSeqs() {
 	</div>
 	<div id="querySummary">
 		<div class="innertube">
-		  <c:if test="${homology.hasComparativeGOGraph == 1}">
-			<span class="small"><a href="${configBean.FEWI_URL}homology/GOGraph/${homology.clusterKey}">Comparative GO Graph</a> (mouse, human, rat)</span>	
+		  <c:if test="${(goGraphUri != null) && (goGraphOrganisms != null)}">
+			<span class="small"><a href="${configBean.FEWI_URL}${goGraphUri}">Comparative GO Graph</a> (${goGraphOrganisms})</span>	
 		  </c:if>&nbsp;
 		</div>
 	</div>
