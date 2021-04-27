@@ -95,7 +95,7 @@ function deselectAllSeqs() {
 		</div>
 	</div>
 	<div id="querySummary">
-		<div class="innertube">
+		<div class="innertube" style="white-space: nowrap">
 		  <c:if test="${(goGraphUri != null) && (goGraphOrganisms != null)}">
 			<span class="small"><a href="${configBean.FEWI_URL}${goGraphUri}">Comparative GO Graph</a> (${goGraphOrganisms})</span>	
 		  </c:if>&nbsp;
