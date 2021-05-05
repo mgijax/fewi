@@ -14,6 +14,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.owasp.encoder.Encode;
 
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.Genotype;
@@ -1059,7 +1060,7 @@ public class GXDController {
 			if (query.getDetectedFilter().size() > 1) {
 				query.setDetected("Yes</B> or <B>No");
 			} else {
-				query.setDetected(query.getDetectedFilter().get(0));
+				query.setDetected(Encode.forHtml(query.getDetectedFilter().get(0)));
 			}
 		}
 		
@@ -1162,7 +1163,7 @@ public class GXDController {
 			if ((nomenclature != null) && !"".equals(nomenclature)) {
 				sb = new StringBuffer();
 				sb.append("Gene nomenclature: ");
-				sb.append(FormatHelper.bold(nomenclature));
+				sb.append(FormatHelper.bold(FormatHelper.cleanHtml(nomenclature)));
 				sb.append(FormatHelper.smallGrey(" current symbol, name, synonyms"));
 				lines.add(sb.toString());
 			}
@@ -1206,10 +1207,10 @@ public class GXDController {
 			sb.append("Genome location(s): ");
 			if (locations.indexOf(":") >= 0) {
 				// location contains coordinate
-				sb.append(FormatHelper.bold(locations + " " + units));
+				sb.append(FormatHelper.bold(FormatHelper.cleanHtml(locations + " " + units)));
 			} else {
 				// location is just a chromosome
-				sb.append(FormatHelper.bold(locations));
+				sb.append(FormatHelper.bold(FormatHelper.cleanHtml(locations)));
 			}
 			lines.add(sb.toString());
 		}
@@ -1273,7 +1274,7 @@ public class GXDController {
 					} else {
 						isFirst = false;
 					}
-					tb.append(FormatHelper.bold(t));
+					tb.append(FormatHelper.bold(FormatHelper.cleanHtml(t)));
 				}
 				structureOut = tb.toString(); 
 			} else {
@@ -1283,7 +1284,7 @@ public class GXDController {
 		} else if ((structureID != null) && (!"".equals(structureID))) {
 			List<VocabTerm> vocabTerms = vocabFinder.getTermByID(structureID);
 			if ((vocabTerms != null) && (vocabTerms.size() > 0)) {
-				structureOut = FormatHelper.bold(getTermText(vocabTerms.get(0)));
+				structureOut = FormatHelper.bold(FormatHelper.cleanHtml(getTermText(vocabTerms.get(0))));
 			} else {
 				structureOut = "(unknown structure)";
 			}
@@ -1291,7 +1292,7 @@ public class GXDController {
 		} else if ((structureKey != null) && (!"".equals(structureKey))) {
 			VocabTerm structureTerm = vocabFinder.getTermByKey(structureKey);
 			if ((structureTerm != null) && (!"".equals(structureTerm))) {
-				structureOut = FormatHelper.bold(getTermText(structureTerm));
+				structureOut = FormatHelper.bold(FormatHelper.cleanHtml(getTermText(structureTerm)));
 			} else {
 				structureOut = "(unknown structure)";
 			}
@@ -1305,7 +1306,7 @@ public class GXDController {
 			sb.append(FormatHelper.bold(detectedText));
 			sb.append(" in ");
 			if ((structureOut != null) && !"".equals(structureOut)) {
-				sb.append(FormatHelper.bold(structureOut));
+				sb.append(FormatHelper.bold(FormatHelper.cleanHtml(structureOut)));
 				sb.append(FormatHelper.smallGrey(" includes substructures"));
 			} else {
 				sb.append(FormatHelper.bold("any structures"));
