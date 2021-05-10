@@ -17,7 +17,7 @@
 
 <div style="padding-bottom: 8px;">
 <form id="vocabBrowserSearchForm" name="vocabBrowserSearchForm" onSubmit="refreshSearchPane(); return false;">
-	<input type="text" size="35" id="searchTerm" name="searchTerm" value="${searchFieldValue}" style="width: auto; position: relative;">
+	<input type="text" size="35" id="searchTerm" name="searchTerm" value="${e:forHtml(searchFieldValue)}" style="width: auto; position: relative;">
     <div id="structureContainer" style="width: 250px; text-align: left; display: inline;"></div>
     <input type="button" value="Clear" name="Clear" onClick="resetSearch()">
 </form>
