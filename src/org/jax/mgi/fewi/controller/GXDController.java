@@ -779,9 +779,9 @@ public class GXDController {
 			mav.addObject("theilerStage", "");
 		}
 
-		// handle requests for a specific summary tab
+		// handle requests for a specific summary tab (excluding non-alphanumeric characters)
 		String tab = request.getParameter("tab");
-		if(tab != null) mav.addObject("tab", tab);
+		if(tab != null) mav.addObject("tab", tab.replaceAll("[^a-zA-Z0-9_]", ""));
 
 		// handle requests for a specific assay type
 		String assayType = request.getParameter("assayType");
