@@ -394,7 +394,7 @@
 									required: true,
 									options: [
 										{value: 'human', name: 'Human (GRCh38)'},
-										{value: 'mouse', name: 'Mouse (GRCm38)'},
+										{value: 'mouse', name: 'Mouse (GRCm39)'},
 									]
 								}
 							}

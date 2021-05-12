@@ -886,8 +886,7 @@ public class AlleleController {
 		mav.addObject("title", title);
 		mav.addObject("subtitle", subtitle);
 
-		// start colleting values needed for GBrowse thumbnail and link, with
-		// priorities as follows:
+		// start collecting values needed for JBrowse link, with priorities as follows:
 		//    1. coordinates from an associated marker
 		//    2. coordinates from representative sequence + a 5kb buffer
 		long pointCoord = -1;
@@ -895,11 +894,11 @@ public class AlleleController {
 		long endCoord = -1;
 		String chromosome = null;
 
-		// default text strings for GBrowse for the case where we do not have
+		// default text strings for JBrowse for the case where we do not have
 		// coordinates from a marker, but instead from a representative
 		// sequence.
-		String gbrowseExtraLine = "";
-		String gbrowseLabel = "View all gene trap sequence tags within a 10kb region";
+		String jbrowseExtraLine = "";
+		String jbrowseLabel = "View all gene trap sequence tags within a 10kb region";
 
 		// genomic and genetic locations of the marker
 		if (marker != null) {
@@ -1248,16 +1247,16 @@ public class AlleleController {
 			mav.addObject("transmissionPhrase", transmissionPhrase);
 		}
 
-		// GBrowse text strings -- adjust if we got coords from a marker, then
+		// JBrowse text strings -- adjust if we got coords from a marker, then
 		// add to the mav
 
 		if (startCoord > 0) {
-			gbrowseExtraLine = marker.getCountOfGeneTraps()+" gene trap insertions have trapped this gene<br/>";
-			gbrowseLabel = "View all gene trap sequence tags in this region";
+			jbrowseExtraLine = marker.getCountOfGeneTraps()+" gene trap insertions have trapped this gene<br/>";
+			jbrowseLabel = "View all gene trap sequence tags in this region";
 		}
 
-		mav.addObject("gbrowseExtraLine", gbrowseExtraLine);
-		mav.addObject("gbrowseLabel", gbrowseLabel);
+		mav.addObject("jbrowseExtraLine", jbrowseExtraLine);
+		mav.addObject("jbrowseLabel", jbrowseLabel);
 
 		// sequence tags
 
@@ -1268,7 +1267,7 @@ public class AlleleController {
 		if (representativeSeq != null) {
 			mav.addObject("representativeSeq", representativeSeq);
 
-			// need to pick up coords for GBrowse from representative sequence?
+			// need to pick up coords for JBrowse from representative sequence?
 			// if so, add 5kb to each end.
 			if (startCoord < 0) {
 				List<SequenceLocation> seqLocs = representativeSeq.getLocations();
@@ -1310,29 +1309,18 @@ public class AlleleController {
 			mav.addObject("sequenceCount",allele.getSequenceAssociations().size());
 		}
 
-		// assemble and include GBrowse URLs (do here because of complexity,
+		// assemble and include JBrowse URLs (do here because of complexity,
 		// rather than in the JSP)
 
 		if (startCoord >= 0 && endCoord >= 0 && chromosome != null) {
 			Properties externalUrls = ContextLoader.getExternalUrls();
 
-			// link to gbrowse
-			String gbrowseUrl = externalUrls.getProperty("GBrowse_Allele").replace("<chromosome>", chromosome).replace("<start>", Long.toString(startCoord)).replace("<end>", Long.toString(endCoord));
+			// link to jbrowse
+			String jbrowseUrl = externalUrls.getProperty("JBrowseGeneTrap").replace("<chromosome>", chromosome).replace("<start>", Long.toString(startCoord)).replace("<end>", Long.toString(endCoord));
 
-			// thumbnail image for gbrowse
-			String gbrowseThumbnailUrl = "foo";
-
-			if (pointCoord < 0) {
-				gbrowseThumbnailUrl = externalUrls.getProperty("GBrowse_Allele_Thumbnail").replace("<chromosome>", chromosome).replace("<start>", Long.toString(startCoord)).replace("<end>", Long.toString(endCoord));
-			} else {
-				gbrowseThumbnailUrl = externalUrls.getProperty("GBrowse_Allele_Thumbnail_With_Highlight").replace("<chromosome>", chromosome).replace("<start>", Long.toString(startCoord)).replace("<end>", Long.toString(endCoord)).replace("<point>", Long.toString(pointCoord));
-			}
-
-			// we only actually want the gbrowse thumbnail and link if we have
-			// a point coordinate.
+			// we only actually want the jbrowse link if we have a point coordinate.
 			if (pointCoord >= 0) {
-				mav.addObject("gbrowseLink", gbrowseUrl);
-				mav.addObject("gbrowseThumbnail", gbrowseThumbnailUrl);
+				mav.addObject("jbrowseLink", jbrowseUrl);
 			}
 		}
 
@@ -1343,7 +1331,7 @@ public class AlleleController {
 		//   	b. already tried to get from other sequences secondarily
 		//   2. from marker
 		//   3. from class variable
-		//   4. fall back on "GRCm38" if none for 1-3
+		//   4. fall back on "GRCm39" if none for 1-3
 
 		if(asmVersion==null) {
 			if (marker!=null) {
@@ -1356,7 +1344,7 @@ public class AlleleController {
 
 		// if still null, try the class variable
 		if(asmVersion==null) {
-			asmVersion = assemblyVersion!=null ? assemblyVersion : "GRCm38";
+			asmVersion = assemblyVersion!=null ? assemblyVersion : "GRCm39";
 		} else {
 			// cache the asmVersion in class variable
 			assemblyVersion=asmVersion;

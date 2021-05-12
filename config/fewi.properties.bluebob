@@ -20,7 +20,8 @@
 
 # Front-end development indexes
 solr.server1.url=http://bhmgipwi02lt.jax.org:13999/solr
-solr.server2.url=http://bhmgipwi02lt.jax.org:8983/solr
+#solr.server2.url=http://bhmgipwi02lt.jax.org:8983/solr
+solr.server2.url=http://bhmgisnpdb01lt.jax.org:18983/solr
 solr.server3.url=http://bhmgigxdsolr01ld.jax.org:14999/solr
 
 #-------------------------------------------------------------------------------

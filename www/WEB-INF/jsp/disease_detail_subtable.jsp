@@ -5,21 +5,10 @@
 	    <c:set var="diseaseRow" value="${diseaseGroupRow.diseaseRow}"/>
 	    <c:set var="cluster" value="${diseaseRow.homologyCluster}"/>
 	    <c:set var="clusterSource" value=""/>
-	    <c:set var="homologyUrl" value=""/>
-	    <c:set var="clusterKey" value=""/>
+		<c:set var="humanMarkerUrl" value="${fn:replace(externalUrls.AGR_Gene, '@@@@', '')}"/>
 
 	    <c:if test="${not empty cluster}">
-	      <c:set var="clusterSource" value="${cluster.secondarySource}"/>
-	    </c:if>
-
-	    <c:if test="${not empty clusterSource}">
-	      <c:set var="homologyUrl" value="${configBean.FEWI_URL}homology/cluster/key/"/>
-	      <c:if test="${fn:contains(clusterSource, 'HomoloGene')}">
-		<c:set var="clusterSource" value="HomoloGene"/>
-	      </c:if>
-	      <c:if test="${fn:contains(clusterSource, 'HGNC')}">
-		<c:set var="clusterSource" value="HGNC"/>
-	      </c:if>
+	      <c:set var="clusterSource" value="Alliance of Genome Resources"/>
 	    </c:if>
 
 	    <c:set var="rowCount" value="${rowCount + 1}"/>
@@ -50,16 +39,10 @@
 		  <c:set var="hSymbol" value="<b>${hSymbol}</b>"/>
 		</c:if>
 
-		<c:if test="${clusterSource == 'HomoloGene'}">
-		  <c:set var="clusterKey" value="${hMarker.marker.homoloGeneOrganismOrtholog.homologyCluster.clusterKey}"/>
-		</c:if>
+	    <c:set var="hgncID" value="${hMarker.marker.hgncID.accID}"/>
 
-		<c:if test="${clusterSource == 'HGNC'}">
-		  <c:set var="clusterKey" value="${hMarker.marker.hgncOrganismOrtholog.homologyCluster.clusterKey}"/>
-		</c:if>
-
-		<c:if test="${not empty homologyUrl}">
-		  <c:set var="hSymbol" value="<a href='${homologyUrl}${clusterKey}'>${hSymbol}</a>"/>
+		<c:if test="${not empty hgncID}">
+		  <c:set var="hSymbol" value="<a href='${humanMarkerUrl}${hgncID}'>${hSymbol}</a>"/>
 		</c:if>
 
 	      ${hSymbol}<c:if test="${hMarker.isCausative == 1}">${asterisk}</c:if><c:if test="${!hStatus.last}">, </c:if>
@@ -101,7 +84,7 @@
 	      </c:if>
 	    </td>
 	    <td class="${borders} ${stripe} leftAlign"><c:if test="${not empty diseaseRow.homologyCluster}">
-	    ${diseaseRow.homologyCluster.secondarySource}
+	    ${clusterSource}
 	    </c:if>
 	    </td>
 	    </tr>

@@ -8,7 +8,7 @@
 				<ul>
 					<li>
 						<div class="label">ID</div>
-						<div class="value">${snp.accid} <a href="${fn:replace(externalUrls.RefSNP, '@@@@', snp.accid)}" target="_blank">dbSNP</a></div>
+						<div class="value">${snp.accid}</div>
 					</li>
 					<li>
 						<div class="label">Variation Type</div>
@@ -34,6 +34,7 @@
 							${snp.buildUpdated}
 						</div>
 					</li>
+<c:if test="${configBean.snpsOutOfSync != 'true'}">
 					<li>
 						<div class="label">Additional Resources</div>
 						<div class="value">
@@ -50,7 +51,7 @@
 							</c:if>
 						</div>
 					</li>
-
+</c:if>
 				</ul>
 			</section>
 		</div>

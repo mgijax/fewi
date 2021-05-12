@@ -19,10 +19,10 @@
     <c:set var="i" value="${i + 1}"/>
     <c:if test="${i == 1 }">
       <tr>
-	<td<c:if test="${ss.exemplar}"> class="exemplar"</c:if>${rowspan}><a href="${fn:replace(externalUrls.SubSNP, '@@@@', ss.accid)}" target="_blank">${ss.accid}</a></td>
-	<td${rowspan}><a href="${fn:replace(externalUrls.SubmitterSNP, '@@@@', ss.submitterId)}" target="_blank">${ss.submitterId}</a></td>
-	<td><a href="${fn:replace(externalUrls.Submitter_Handle, '@@@@', pop.subHandleName)}" target="_blank">${pop.subHandleName}</a></td>
-	<td><a href="${fn:replace(externalUrls.SubSNP_Population, '@@@@', pop.accid)}" target="_blank">${pop.populationName}</a></td>
+	<td<c:if test="${ss.exemplar}"> class="exemplar"</c:if>${rowspan}>${ss.accid}</td>
+	<td${rowspan}>${ss.submitterId}</td>
+	<td>${pop.subHandleName}</td>
+	<td>${pop.populationName}</td>
 	<td${rowspan}>${ss.orientation}</td>
 	<td${rowspan}>${ss.variationClass}</td>
 	<c:set var="alleles" value="${pop.alleles}"/>

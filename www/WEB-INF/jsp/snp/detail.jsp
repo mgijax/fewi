@@ -35,6 +35,20 @@
 	</div>
 </div>
 
+<c:if test="${configBean.snpsOutOfSync == 'true'}">
+<style>
+#outOfSync { background-color:#FFFFCC; border: 1px solid black; font-size: 0.9em; padding: 5px; }
+#outOfSyncLabel { font-size: 1em; font-weight: bold; }
+</style>
+<div id="outOfSync">
+  <span id="outOfSyncLabel">Genome Coordinate Discrepancy</span><BR/>
+  The genome coordinates for mouse SNPS shown in the results are from ${assemblyVersion}. The genome coordinates for mouse genes are
+  from the most recent
+  mouse genome reference assembly (${buildNumber}). Mouse SNP coordinates will be updated after they have been updated to ${buildNumber} by
+  the European Variation Archive (EVA) (<a href="${configBean.USERHELP_URL}SNP_discrepancy_help.shtml" target="_blank">see details</a>).
+</div>
+</c:if>
+
 <div class="container detailStructureTable">
 
 	<%@ include file="SNPDetail_Summary.jsp" %>

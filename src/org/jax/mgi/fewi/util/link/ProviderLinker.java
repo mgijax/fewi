@@ -18,7 +18,7 @@ public class ProviderLinker
 	// logger for the class
 
 	private static String genBankUrl = "https://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nuccore&id=";
-	private static String emblUrl = "http://www.ebi.ac.uk/ena/data/view/";
+	private static String enaUrl = "http://www.ebi.ac.uk/ena/data/view/";
 	private static String ddbjUrl = "http://getentry.ddbj.nig.ac.jp/cgi-bin/get_entry.pl?";
 	private static String dfciUrl = "http://compbio.dfci.harvard.edu/tgi/cgi-bin/tgi/tc_report.pl?species=mouse&tc=";
 	private static String ensemblGmUrl = "http://www.ensembl.org/Mus_musculus/geneview?gene=";
@@ -66,7 +66,7 @@ public class ProviderLinker
         	}
 
 			links.append("<a href='" + genBankUrl + genbankID + "'>GenBank</a> | ");
-			links.append("<a href='" + emblUrl + genbankID + "'>EMBL</a> | ");
+			links.append("<a href='" + enaUrl + genbankID + "'>ENA</a> | ");
 			links.append("<a href='" + ddbjUrl + genbankID + "'>DDBJ</a>");
 		}
         else if (seqProvider.equals(DBConstants.PROVIDER_ENSEMBL)) {

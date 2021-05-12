@@ -15,7 +15,7 @@
 				</div>
 			</div>
 			<br/>
-			<div class="left" style="margin-left: 70px;">
+			<div id="rangeDiv" class="left" style="margin-left: 70px;">
 				For the gene(s) specified above return all SNPs:<br/><br/>
 				<fewi:radio name="withinRange" divider="<br/>" idPrefix="rangeDropList" items="${withinRanges}" value="${e:forHtml(snpQueryForm.withinRange)}" />
 			</div>
@@ -24,5 +24,19 @@
 				All SNP function classes will be returned.<br />
 				You can filter SNPs by function class in the search results.
 			</div>
+			<div id="outOfSyncGeneMessage" class="left" style="margin-left: 70px; display:none; color: red; padding-top: 10px;">
+				<br>
+				--This section is temporarily limited due to a discrepancy between the genome coordinates of RefSNPs and MGI genes.--
+			</div>
 		</td>
 	</tr>
+<c:if test="${configBean.snpsOutOfSync == 'true'}">
+<script>
+$('[name=withinRange]').attr('disabled', true);				// disable all three range radio options
+$('[name=withinRange]').first().attr('disabled', false);	// re-enable the first option
+$('[name=withinRange]').click();							// click the first option
+$('#outOfSyncGeneMessage').css({'display' : 'inline'});		// show the message
+$('#rangeDiv span').css({'color' : 'lightgray'});			// gray out the text of the options
+$('#rangeDiv span').first().css({'color' : 'black'});		// and re-color the allowed option
+</script>
+</c:if>

@@ -26,23 +26,25 @@
 		<span class="label">Export:</span>
 		<a id="snpsToTextFile" class="filterButton" href="${configBean.FEWI_URL}snp/report.txt?${querystring}"><img width="10" height="10" src="${configBean.WEBSHARE_URL}images/text.png"> SNPs to Text File </a> 
 	</div>
-	<c:if test="${not empty jbrowseLink or not empty markerSummaryLink}">
-		For this genome region: 
-	</c:if>
-	<c:if test="${not empty jbrowseLink}">
-		<div id="jbrowseDiv" class="padded inlineblock">
-			View <a href="${jbrowseLink}" target="_blank">JBrowse Genome Browser</a>
-		</div>
-	</c:if>
-	<c:if test="${not empty markerSummaryLink}">
-		<div id="markerSummaryLinkDiv" class="padded inlineblock">
-			View <a href="${markerSummaryLink}" target="_blank">MGI Genome Feature Summary</a>
-		</div>
+	<c:if test="${configBean.snpsOutOfSync != 'true'}">
+		<c:if test="${not empty jbrowseLink or not empty markerSummaryLink}">
+			For this genome region: 
+		</c:if>
+		<c:if test="${not empty jbrowseLink}">
+			<div id="jbrowseDiv" class="padded inlineblock">
+				View <a href="${jbrowseLink}" target="_blank">JBrowse Genome Browser</a>
+			</div>
+		</c:if>
+		<c:if test="${not empty markerSummaryLink}">
+			<div id="markerSummaryLinkDiv" class="padded inlineblock">
+				View <a href="${markerSummaryLink}" target="_blank">MGI Genome Feature Summary</a>
+			</div>
+		</c:if>
 	</c:if>
 </div>
 <table id="snpSummaryTable">
 <tr>
-	<th class="blueBG" id="snp_id">SNP ID<br/>(${buildNumber})</th>
+	<th class="blueBG" id="snp_id">SNP ID<br/>(${assemblyVersion})</th>
 	<th class="blueBG" id="map_position">Map Position<br/>(${assemblyVersion})</th>
 	<th class="blueBG" id="genes">Gene &amp; Category</th>
 	<th class="blueBG" id="variation_type">Variation<br/>Type</th>
@@ -68,7 +70,7 @@
 %>
     <c:if test="${!status.first && (status.index % 25 == 0)}">
 	<tr>
-	<td class="blueBG bold snpStrainHeader">SNP ID<br/>(${buildNumber})</td>
+	<td class="blueBG bold snpStrainHeader">SNP ID<br/>(${assemblyVersion})</td>
 	<td class="blueBG bold snpStrainHeader">Map Position<br/>(${assemblyVersion})</td>
 	<td class="blueBG bold snpStrainHeader">Gene &amp; Category</td>
 	<td class="blueBG bold snpStrainHeader">Variation<br/>Type</td>
