@@ -24,12 +24,16 @@
 <div id="querytabs">
 	<ul>
 		<li><span class="label"><a href="#tabs-1">Search by Gene</a></span></li>
-		<li><span class="label"><a href="#tabs-2">Search by Region</a></span></li>
+		<li><span class="label" id="regionTab"><a href="#tabs-2">Search by Region
+<c:if test="${configBean.snpsOutOfSync == 'true'}">
+<span style="font-size: 0.9em; color: red; font-weight: normal;">--disabled--</span>
+</c:if>
+		</a></span></li>
 	</ul>
 	<div>
 		<div id="tabs-1">
 			<form:form id="form1" method="GET" commandName="snpQueryForm" action="${configBean.FEWI_URL}snp/summary">
-				<%@ include file="SNPForm_GeneSubmit.jsp" %><div style="padding-top: 5px;"><span style="margin-left: 10px;" class="label">Search for SNPs by Associated Gene(s)</span> - from ${buildNumber}</div>
+				<%@ include file="SNPForm_GeneSubmit.jsp" %><div style="padding-top: 5px;"><span style="margin-left: 10px;" class="label">Search for SNPs by Associated Gene(s)</span></div>
 				<div id="error1" class="red noBorder hidden"></div>
 				<table width="100%" class="pad5 borderedTable">
 					<%@ include file="SNPForm_AssociatedGenes.jsp" %>
@@ -41,7 +45,7 @@
 		</div>
 		<div id="tabs-2">
 			<form:form id="form2" method="GET" commandName="snpQueryForm" action="${configBean.FEWI_URL}snp/summary">
-				<%@ include file="SNPForm_LocationSubmit.jsp" %><div style="padding-top: 5px;"><span style="margin-left: 10px;" class="label">Search for SNPs by Genome Region</span> - from ${buildNumber}</div>
+				<%@ include file="SNPForm_LocationSubmit.jsp" %><div style="padding-top: 5px;"><span style="margin-left: 10px;" class="label">Search for SNPs by Genome Region</span> - from ${assemblyVersion}</div>
 				<div id="error2" class="red noBorder hidden"></div>
 				<table width="100%" class="pad5 borderedTable">
 					<%@ include file="SNPForm_GenomeLocation.jsp" %>
@@ -53,6 +57,19 @@
 		</div>
 	</div>
 </div>
+
+<c:if test="${configBean.snpsOutOfSync == 'true'}">
+<script>
+// disable location fields and submit buttons if in out-of-sync mode 
+$('#chromosomeDropList').attr('disabled', true);				// disable all three location fields
+$('[name=coordinate]').attr('disabled', true);	
+$('#coordinateUnitDropList').attr('disabled', true);	
+$('[name=startMarker]').attr('disabled', true);	
+$('[name=endMarker]').attr('disabled', true);	
+$('#form2 [type=submit]').attr('disabled', true);
+$('#outOfSyncLocationMessage').css({'display' : 'inline'});		// show the message
+</script>
+</c:if>
 
 <c:if test="${not empty doccFounders}">
 <script>

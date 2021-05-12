@@ -25,7 +25,7 @@
 		</c:if>
 
 		<c:if test="${lastMarker != marker}">
-			<c:set var="markerUrl" value="${configBean.FEWI_URL}homology/cluster/key/${homologyClusterKeyMap[rowID]}"/>
+			<c:set var="markerUrl" value="${configBean.FEWI_URL}homology/alliance/gene?clusterKey=${homologyClusterKeyMap[rowID]}&organism=human&symbol=${marker}"/>
 			<c:set var="markerHeader" value="Disease(s) Associated with <a href='${markerUrl}' target='_blank'>${marker}</a>"/>
 			<c:if test="${empty showHeaders}">
 				<tr>

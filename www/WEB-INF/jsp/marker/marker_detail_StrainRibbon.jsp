@@ -43,7 +43,7 @@
 		<div class="detail <%=rightTdStyles.getNext() %>">
 			<div id="scToggle" title="Show More" class="toggleImage hdExpand">more</div>
 
-			<c:set var="mgvUrl" value="${externalUrls.MGV}#ref=C57BL/6J&genomes=${externalUrls.MGV_Strains}&landmark=${marker.primaryID}&flank=50000&highlight=${marker.primaryID}" />
+			<c:set var="mgvUrl" value="${configBean.MGV_URL}#flank=2x&genomes=${externalUrls.MGV_Strains}&landmark=${marker.primaryID}&highlight=${marker.primaryID}&lock=on&paralogs=off&style=${externalUrls.MGV_Style}" />
 			<script>
 			// used in marker_detail.jsp
 			var mgvUrl = "${mgvUrl}";

@@ -76,15 +76,7 @@ public class HomologyFinder {
     }
 
     public HomologyCluster getClusterByKey(String key) {
-	logger.debug("->getClusterByKey(" + key + ")");
-	return homologyGatherer.get (HomologyCluster.class, key);
+    	logger.debug("->getClusterByKey(" + key + ")");
+    	return homologyGatherer.get (HomologyCluster.class, key);
     }
-
-//    // convenience wrapper
-//    public SearchResults<HomologyCluster> getHomologyByID(String id) {
-//        SearchParams searchParams = new SearchParams();
-//        searchParams.setFilter(new Filter(SearchConstants.HOMOLOGY_ID,id,Filter.OP_EQUAL));
-//        return getHomologyByID(searchParams);
-//    }
-    
 }

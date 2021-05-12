@@ -40,9 +40,13 @@
 			  </td>
 			</tr>
 	    </c:if>
-		<c:if test="${not empty term.cleanComment}">
+		<c:if test="${not empty term.comment}">
           <tr><th class="rightBorderThinGray padded label top">Comment: </th>
-	          <td class="padded top">${term.cleanComment}</td>
+             <c:set var="termComment" value='${term.comment}'/>
+             <c:if test="${fn:startsWith(term.primaryID.accID, 'MP:')}">
+               <c:set var="termComment" value="<%= FormatHelper.cleanComment(term.getComment()) %>" />
+             </c:if>
+	          <td class="padded top">${termComment}</td>
 	    </c:if>
 		<c:if test="${not empty term.dagName}">
 	        <tr><th class="rightBorderThinGray padded label top">Category: </th>

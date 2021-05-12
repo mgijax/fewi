@@ -268,7 +268,7 @@ var getMungedStrainName = function(s) {
 	if (pieces.length == 3) {
 		name = pieces[1];
 	}
-	return name.replace(/\//g, '');
+	return name.replace(/\//g, '').replace('SPRETEiJ', 'SPRETUSEiJ');
 }
 
 // handle when the strain ribbon's Go button is clicked
@@ -293,7 +293,7 @@ var strainRibbonGoButtonClick = function() {
 	}
 		
 	if (option == 'fasta') {
-		// simples one -- just get the base pairs from seqfetch.
+		// simplest one -- just get the base pairs from seqfetch.
 		
 		ga_logEvent('MarkerDetailPageEvent', 'strainMarkerTable', 'FASTA download');
 		form.action = getUrl('seqfetch');
@@ -314,13 +314,16 @@ var strainRibbonGoButtonClick = function() {
 
 			if (urlPieces[j].startsWith('genomes=')) {
 				url = url + 'genomes=';							// add parameter name back in
-				var strains = urlPieces[j].split('=')[1].split('+');
+				var strains = urlPieces[j].split('=')[1].split(',');
 				var firstStrain = true;
 				for (s = 0; s < strains.length; s++) {
 					if (getMungedStrainName(strains[s]) in checked) {
-						if (!firstStrain) { url = url + '+'; }
+						if (!firstStrain) { url = url + ','; }
 						url = url + strains[s];
 						firstStrain = false;
+						console.log('included: ' + strains[s]);
+					} else {
+						console.log('excluded: ' + strains[s]);
 					}
 				}
 				
@@ -330,8 +333,7 @@ var strainRibbonGoButtonClick = function() {
 			}
 		}
 		
-		form.action = url;
-		form.submit();
+		window.open(url, '_blank');
 		
 	} else if (option == 'snps') {
 		window.open(getSangerUrl(), '_blank');

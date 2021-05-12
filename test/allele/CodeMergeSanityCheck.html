@@ -44,7 +44,7 @@
 		<li>run through whole system end-to-end</li>
 		<li>run sanity checks</li>
 		<li>don't need to test prod wi (?)</li>
-		<li>use new b38 db backups</li>
+		<li>use new b39 db backups</li>
 	</ul>
 	<p>scrumdog pages should look like those on Firien. - After Dec. 6 the 5.11 build will be Public.</p>
 </div>
@@ -91,8 +91,8 @@
                 </li>
                 <li><span concordion:manual="true">kstone 12/17/2012</span> - Sequence Detail Page renders
                 <ul>
-                	<li><a href="http://scrumdog.informatics.jax.org/sequence/OTTMUST00000035640">VEGA Version: OTTMUST00000035640.GRCm38 </a></li>
-                	<li><a href="http://scrumdog.informatics.jax.org/sequence/ENSMUST00000173007">EnSembl Version: ENSMUST00000173007.GRCm38 </a></li>
+                	<li><a href="http://scrumdog.informatics.jax.org/sequence/OTTMUST00000035640">VEGA Version: OTTMUST00000035640.GRCm39 </a></li>
+                	<li><a href="http://scrumdog.informatics.jax.org/sequence/ENSMUST00000173007">EnSembl Version: ENSMUST00000173007.GRCm39 </a></li>
                 	<li><a href="http://scrumdog.informatics.jax.org/sequence/NM_001244202">RefSeq Version: NM_001244202.1 </a></li>
                 	<li><a href="http://scrumdog.informatics.jax.org/sequence/AK140480">GenBank Version: AK140480.1 </a></li>
                 	<li><a href="http://scrumdog.informatics.jax.org/sequence/TC1714267">DFCI Version: TC1714267.v16 </a></li>
@@ -216,7 +216,7 @@ Last updated in dbSNP build: 125</a></li>
                 </li>
     		</ol>
     		</li>
-    		<li>Pages affected by Build 38 changes (new Genomic Chromosome data, new coordinates) have correct data.
+    		<li>Pages affected by Build 39 changes (new Genomic Chromosome data, new coordinates) have correct data.
     		<br/>
     		<i>Note: These tests require mock data to be inserted for marker Vamp7.</i>
     		<ol>
@@ -230,15 +230,15 @@ Last updated in dbSNP build: 125</a></li>
     			<li><span concordion:manual="true">klf 12/18/12</span> - Sequence detail pages
     			<ul>
     				<li>Several sequence detail pages for Vamp7. <a href="http://scrumdog.informatics.jax.org/sequence/U041303">Example.</a> Version includes text "mm9" when necessary.</li>
-    				<li>Several sequence detail pages for Pax6. <a href="http://scrumdog.informatics.jax.org/sequence/OTTMUSG00000015006">Example.</a> Version includes text "GRCm38" when necessary.</li>
+    				<li>Several sequence detail pages for Pax6. <a href="http://scrumdog.informatics.jax.org/sequence/OTTMUSG00000015006">Example.</a> Version includes text "GRCm39" when necessary.</li>
     			</ul>
     			</li>
 
     			<li>Quick Search. <i>Note: This is happening as part of the upgrade to Jboss7 story. We don't need to verify the changes to the quick search code, since we never branched.
     				Also. It would be a pain to regenerate the indexes from scratch to test this.</i></li>
     			<li><span concordion:manual="true">passed - klf 12/18/2012</span> - Expression Summary - Genes tab. Search for Vamp7 on GXD query form. Click the genes tab and verify that the chromosome shown is 13 (the genomic). 
-    				Also verify that the text "Genome Location - GRCm38" is displayed in the summary next to "Chr"</li>
-    			<li><span concordion:manual="true">passed - klf 12/18/2012</span> - Batch Query. Search for Vamp7. Verify that chr13 is shown for the location. Also verify that the text "Genome Location - GRCm38" appears in the summary above Chr</li>
+    				Also verify that the text "Genome Location - GRCm39" is displayed in the summary next to "Chr"</li>
+    			<li><span concordion:manual="true">passed - klf 12/18/2012</span> - Batch Query. Search for Vamp7. Verify that chr13 is shown for the location. Also verify that the text "Genome Location - GRCm39" appears in the summary above Chr</li>
     		</ol>
     		</li>
     		<li>Functionality affected by addition of Genomic Chromosome and Coordinates For Any Marker still works.

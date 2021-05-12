@@ -5,7 +5,7 @@
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
 <fewi:simpleseo
-	title="Search Mouse SNPs from dbSNP"
+	title="Search Mouse SNPs"
 	description="${seoDescription}"
 	keywords="${seoKeywords}"
 />
@@ -15,9 +15,24 @@
 <!-- begin header bar -->
 <div id="titleBarWrapper" userdoc="SNP_help.shtml">	
 	<!--myTitle -->
-	<span class="titleBarMainTitle">Search Mouse SNPs from dbSNP</span>
+	<span class="titleBarMainTitle">Search Mouse SNPs</span>
 </div>
 <!-- end header bar -->
+
+<c:if test="${configBean.snpsOutOfSync == 'true'}">
+<style>
+#outOfSync { background-color:#FFFFCC; border: 1px solid black; font-size: 0.9em; padding: 5px; }
+#outOfSyncLabel { font-size: 1em; font-weight: bold; }
+</style>
+<div id="outOfSync">
+  <span id="outOfSyncLabel">Genome Coordinate Discrepancy</span><BR/>
+  The genome coordinates for mouse SNPS shown in the results are from ${assemblyVersion}. The genome coordinates for mouse genes are from
+  the most recent
+  mouse genome reference assembly (${buildNumber}). Mouse SNP coordinates will be updated after they have been updated to ${buildNumber} by
+  the European Variation Archive (EVA) (<a href="${configBean.USERHELP_URL}SNP_discrepancy_help.shtml" target="_blank">see details</a>).
+</div>
+</c:if>
+
 
 <div id="outer">
 	<span id="toggleImg" class="qfCollapse"></span>

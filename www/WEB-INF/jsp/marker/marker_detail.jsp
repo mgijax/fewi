@@ -133,7 +133,6 @@ YAHOO.util.Event.addListener("sgPhenoHelpImage", "click", YAHOO.mp.container.phe
 </script>
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/marker/marker_detail.js"></script>
-<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/marker/minimap.js"></script>
 <c:if test="${showLocationNote}">
 	<script type="text/javascript">
 		// if we have a location note, open the Location ribbon by default

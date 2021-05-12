@@ -17,7 +17,6 @@ public class ConsensusSNPSummaryRow {
 	private ConsensusSNP consensusSNP;
 	
 	private String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
-	private String dbSnpUrl = ContextLoader.getConfigBean().getProperty("DBSNP_URL");
 	private HashMap<String, String> matchingMarkerIdList = new HashMap<String, String>();
 	
 	private Map<String,String> alleles = null;
@@ -39,8 +38,6 @@ public class ConsensusSNPSummaryRow {
 		String ret = consensusSNP.getAccid() + "<br>";
 		
 		ret += "<font class=\"small\">";
-		ret += "<a href=\"" + dbSnpUrl + consensusSNP.getAccid() + "\" target=\"_blank\">dbSNP</a>";
-		ret += "&nbsp;|&nbsp;";
 		ret += "<a href=\"" + fewiUrl + "snp/" + consensusSNP.getAccid() + "\" target=\"_blank\">MGI&nbsp;SNP&nbsp;Detail</a></font>";
 		
 		return ret;
@@ -117,6 +114,8 @@ public class ConsensusSNPSummaryRow {
 			}
 		}
 		
+		boolean outOfSync = ("true".equalsIgnoreCase(ContextLoader.getConfigBean().getProperty("snpsOutOfSync")));
+
 		String hr = "";
 		for(Integer sc: map.keySet()) {
 			ret += hr;
@@ -134,7 +133,7 @@ public class ConsensusSNPSummaryRow {
 							m.setFunctionClass(m.getDistanceFrom() + " bp " + m.getDistanceDirection());
 							//16 bp downstream of
 						}
-						if(m.getFunctionClass().equals("Locus-Region")) {
+						if(!outOfSync && m.getFunctionClass().equals("Locus-Region")) {
 							ret += "<a href=\"" + fewiUrl + "marker/" + m.getAccid() + "\" target=\"_blank\">" + m.getSymbol() + "</a> <nobr>" + m.getFunctionClass() + " " + m.getDistanceDirection() + "</nobr><br>";
 						} else {
 							ret += "<a href=\"" + fewiUrl + "marker/" + m.getAccid() + "\" target=\"_blank\">" + m.getSymbol() + "</a> <nobr>" + m.getFunctionClass() + "</nobr><br>";

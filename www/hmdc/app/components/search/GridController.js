@@ -355,7 +355,7 @@
 					var h = key.gridCluster.humanSymbols[human];
 					var temp = "";
 					if(key.gridCluster.homologyClusterKey) {
-						temp = "<a target=\"_blank\" href=\"/homology/cluster/key/" + key.gridCluster.homologyClusterKey + "\" title=\"Name: " + h.name + "\">";
+						temp = "<a target=\"_blank\" href=\"/homology/alliance/gene?organism=human&symbol=" + h.symbol + "&clusterKey=" + key.gridCluster.homologyClusterKey + "\" title=\"Name: " + h.name + "\">";
 						temp += h.symbol.replace(/<([^>]*)>/g, "<sup>$1</sup>");
 						temp += "</a>";
 					} else {

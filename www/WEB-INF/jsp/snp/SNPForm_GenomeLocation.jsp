@@ -19,6 +19,10 @@
 					</span>
 				</div>
 				
+				<div id="outOfSyncLocationMessage" style="display:none; color: red;">
+					--This section is temporarily disabled due to a discrepancy between the genome coordinates of RefSNPs and MGI genes.--
+				</div>
+
 				<div style="clear:both;">
 					<span class="label">
 					<a onclick="javascript:openUserhelpWindow('${userhelppage}#marker_range'); return false;" href="${helpPage}#marker_range">Marker Range</a></span>:

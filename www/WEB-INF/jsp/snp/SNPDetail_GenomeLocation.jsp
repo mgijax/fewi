@@ -9,7 +9,7 @@
 					<c:forEach var="coord" items="${snp.consensusCoordinates}" varStatus="status">
 						<li>
 							<div class="label">Location</div>
-							<div class="value">Chr${coord.chromosome}:${coord.startCoordinate} (${snpAssemblyVersion})</div>
+							<div class="value">Chr${coord.chromosome}:${coord.startCoordinate} (${assemblyVersion})</div>
 						</li>
 						<li>
 							<div class="label">SNP Orientation to the Genome</div>

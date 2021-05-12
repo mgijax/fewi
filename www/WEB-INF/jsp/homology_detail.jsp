@@ -69,48 +69,36 @@ function deselectAllSeqs() {
 <%@ include file="/WEB-INF/jsp/homology_header.jsp" %>
 <br/>
 
-<c:set var="popupTitle" value="MGI HomoloGene Information"/>
-<c:set var="popupText" value='<p>MGI loads vertebrate homology data from NCBI <A HREF="https://www.ncbi.nlm.nih.gov/homologene"><u>HomoloGene</u></A>, 
-		which programmatically detects homologs among the genome features of completely sequenced eukaryotic genomes 
-		(see: <A HREF="https://www.ncbi.nlm.nih.gov/HomoloGene/HTML/homologene_buildproc.html"><u>HomoloGene Build Procedure</u></A>).</p>
-		
-		<p>MGI includes homology for the following selected vertebrate species from HomoloGene:<br>
+<c:set var="popupTitle" value="Alliance Homology Information"/>
+<c:set var="popupText" value="<p>MGI loads orthology data based on the 'stringent' set from 
+		<A TARGET='_blank' HREF='https://www.alliancegenome.org/'><u>the Alliance of Genome Resources</u></A>. 
+		The Alliance sets are based on a scoring system developed by the Alliance in collaboration with 
+		<a href='https://www.flyrnai.org/diopt' target='_blank'>DIOPT</a>.
+		</p>
+		<p>MGI includes orthology for the following vertebrate species from the Alliance:<br>
 		&nbsp;- human<br>
 		&nbsp;- mouse<br>
 		&nbsp;- rat<br>
-		&nbsp;- cattle<br>
-		&nbsp;- chicken<br>
-		&nbsp;- chimpanzee<br>
-		&nbsp;- dog<br>
-		&nbsp;- monkey, Rhesus<br>
-		&nbsp;- western clawed frog (Xenopus tropicalis)<br>
-		&nbsp;- zebrafish<p>
+		&nbsp;- zebrafish</p>
 
-		<p>These are a subset of the total species represented in HomoloGene Classes at NCBI.<br>
-		Additional species may be present in an NCBI HomoloGene Class than appear in MGI.</font></p>'/>
-
-<c:if test="${source == 'HGNC'}">
-    <c:set var="popupTitle" value="MGI HGNC Homology Information"/>
-    <c:set var="popupText" value="MGI loads human and mouse homology data from <a href='http://www.genenames.org/'>HUGO Gene Nomenclature Committee (HGNC)</a>, which are made by expert analysis as part of nomenclature assignment."/>
-</c:if>
+		<p>These are a subset of the total species represented in the Alliance; there may be stringent set
+		orthologs in other Alliance species.</p>"/>
 
 <div id="summary">
 	<div id="breadbox">
 		<div id="contentcolumn">
-			<div class="innertube">
-				<c:if test="${not empty homology.primaryID}">
-				 <span class="small"><a href='https://www.ncbi.nlm.nih.gov/sites/entrez?cmd=Retrieve&db=homologene&dopt=MultipleAlignment&list_uids=${homology.primaryID}'>HomoloGene:${homology.primaryID} Multiple Sequence Alignment</a></span>
+			<div class="innertube" style="text-align: center;">
+				<c:if test="${not empty mgvParams}">
+				 <span class="small"><a href='${configBean.MGV_URL}${mgvParams}' target="_blank">Multiple Genome Viewer</a></span>
 				 </c:if>
 			</div>
 		</div>
 	</div>
 	<div id="querySummary">
-		<div class="innertube">
-		<c:if test="${source == 'HomoloGene'}">
-		    <c:if test="${homology.hasComparativeGOGraph == 1}">
-			<span class="small"><a href="${configBean.FEWI_URL}homology/GOGraph/${homology.primaryID}">Comparative GO Graph</a> (mouse, human, rat)</span>	
-		    </c:if>&nbsp;
-		</c:if>
+		<div class="innertube" style="white-space: nowrap">
+		  <c:if test="${(goGraphUri != null) && (goGraphOrganisms != null)}">
+			<span class="small"><a href="${configBean.FEWI_URL}${goGraphUri}">Comparative GO Graph</a> (${goGraphOrganisms})</span>	
+		  </c:if>&nbsp;
 		</div>
 	</div>
 	<div id="rightcolumn">
@@ -169,34 +157,16 @@ function deselectAllSeqs() {
 	    
 	    <td class="${style}" nowrap="nowrap">
 		<c:forEach var="link" items="${m.homologyLinks}" varStatus="linkStatus">
-		<c:if test="${not empty link.associatedID}">
-		  ${link.associatedID}
-		  <c:set var="fixedUrl" value="${configBean.FEWI_URL}accession/"/>
-		  (<a href='${fn:replace(link.url, "accession_report.cgi?id=", fixedUrl)}'>${link.displayText}</a>)<br/>
-		</c:if>
+			<c:if test="${not empty link.associatedID}">
+				${link.associatedID}
+				<c:set var="fixedUrl" value="${configBean.FEWI_URL}accession/"/>
+				(<a href='${fn:replace(link.url, "accession_report.cgi?id=", fixedUrl)}'>${link.displayText}</a>)<br/>
+			</c:if>
 
-		<c:if test="${empty link.associatedID}">
-		  <a href="${link.url}">${link.displayText}</a><br/>
-		</c:if>
-
+			<c:if test="${empty link.associatedID}">
+		  		<a href="${link.url}">${link.displayText}</a><br/>
+			</c:if>
 		</c:forEach>
-
-		<c:set var="clusterKey" value=""/>
-		<c:set var="clusterText" value=""/>
-
-		<c:if test="${source == 'HGNC'}">
-		  <c:set var="clusterKey" value="${m.homoloGeneClusterKey}"/> 
-		  <c:set var="clusterText" value="HomoloGene homology ${m.homoloGeneID.accID}"/>
-		</c:if>
-
-		<c:if test="${source == 'HomoloGene'}">
-		  <c:set var="clusterKey" value="${m.hgncClusterKey}"/> 
-		  <c:set var="clusterText" value="HGNC homology"/>
-		</c:if>
-
-		<c:if test="${not empty clusterText and not empty clusterKey}">
-		  <a href='${configBean.FEWI_URL}homology/cluster/key/${clusterKey}'>${clusterText}</a><br/>
-		</c:if>
 	    </td>
 	    
 	    <td class="${style}">
