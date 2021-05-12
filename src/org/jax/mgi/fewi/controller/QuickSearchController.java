@@ -348,6 +348,9 @@ public class QuickSearchController {
        				r.setChromosome(part.getChromosome());
        				r.setLocation(part.getLocation());
        				r.setStrand(part.getStrand());
+       				if ("Not Applicable allele".equals(r.getFeatureType())) {
+       					r.setFeatureType("");
+       				}
        			} else {
        				logger.debug("Cannot find " + r.getPrimaryID());
        			}
