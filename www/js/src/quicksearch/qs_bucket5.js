@@ -15,7 +15,7 @@ function b5Show(data) {
 	var toShow = b5PageSize;
 	if (data.rows.length > 0) {
 		tbl = '<TABLE ID="b5Table">';
-		tbl = tbl + '<TR><TH>Score</TH><TH>Type</TH><TH>Symbol</TH><TH>Name</TH><TH>Chr</TH><TH>Location</TH><TH>Str</TH><TH>Best Match</TH></TR>';
+		tbl = tbl + '<TR><TH>Score</TH><TH>Type</TH><TH>Symbol</TH><TH>Name</TH><TH>Chr</TH><TH>Location (Genome Build)</TH><TH>Str</TH><TH>Best Match</TH></TR>';
 
 		toShow = Math.min(100, data.rows.length);
 		for (var i = 0; i < toShow; i++) {
@@ -42,8 +42,10 @@ function b5Show(data) {
 
 			if (item.location === null) {
 				tbl = tbl + '<TD>&nbsp;</TD>';
-			} else {
+			} else if (item.location.indexOf('-') < 0){
 				tbl = tbl + '<TD class="nowrap small">' + item.location + '</TD>';
+			} else {
+				tbl = tbl + '<TD class="nowrap small">' + item.location + ' (' + genomeBuild + ')</TD>';
 			}
 
 			if (item.strand === null) {

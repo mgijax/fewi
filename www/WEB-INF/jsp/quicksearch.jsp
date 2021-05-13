@@ -249,6 +249,7 @@ function clearField() {
 var queryString="${e:forJavaScript(queryString)}";
 var query = "${query}";
 var fewiurl = "${configBean.FEWI_URL}";
+var genomeBuild = "${configBean.ASSEMBLY_VERSION}";
 
 qsMain();
 
