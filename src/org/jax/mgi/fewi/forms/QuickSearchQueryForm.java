@@ -1,7 +1,10 @@
 package org.jax.mgi.fewi.forms;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import org.jax.mgi.fewi.util.FewiUtil;
 
 /*-------*/
 /* class */
@@ -33,11 +36,14 @@ public class QuickSearchQueryForm {
     // last term.
     public List<String> getTerms() {
     	if ((terms == null) && (query != null)) {
-    		terms = new ArrayList<String>();
-    		for (String term : query.replace(',', ' ').split(" ")) {
-    			terms.add(term.toLowerCase());
+    		// If our split fails, it's because of an unbalanced number of double-quotes.  In that case,
+    		// just strip them out and proceed.
+    		try {
+    			terms = FewiUtil.intelligentSplit(query.replace(',', ' ').toLowerCase());
+    		} catch (Exception e) {
+    			terms = Arrays.asList(query.replace(',', ' ').replace('"',' ').toLowerCase().split(" "));
     		}
-    		terms.add(query);
+    		terms.add(query.replace('"',  ' '));
     	}
     	return terms;
     }

@@ -132,4 +132,45 @@ public class FewiUtil {
 	public static void failMonitoring(String key, String failure) {
 		SlowEventMonitor.getSharedMonitor().failEvent(key, failure);
 	}
+	
+	/* Split string s intelligently, keeping quoted strings together as a single item.  Split on whitespace.
+	 */
+	public static ArrayList<String> intelligentSplit(String s) throws Exception {
+		String t = s.replaceAll("\\s+", " ");		// convert any whitespace to single spaces
+		ArrayList<String> items = null;
+		
+		// If no quotes, just split and go.
+		if (!t.contains("\"")) {
+			items = new ArrayList<String>();
+			for (String q : t.split(" ")) {
+				items.add(q);
+			}
+			return items;
+		}
+		
+		// If we get here, we know we have double-quotes to deal with.
+		int leftQuote = t.indexOf('"');
+		int rightQuote = t.indexOf('"', leftQuote + 1);
+		
+		if (rightQuote < 0) {
+			throw new Exception("Unmatched quote");
+		}
+
+		// If there's something before the leftmost quote, split it separately.
+		if (leftQuote > 0) {
+			items = intelligentSplit(t.substring(0, leftQuote).trim());
+		} else {
+			items = new ArrayList<String>();
+		}
+		
+		// Then add the quoted part (without the quotes)
+		items.add(t.substring(leftQuote + 1, rightQuote).trim());
+		
+		// And, finally, if there's anything after the right quote, split that too.
+		if ((rightQuote > 0) && (rightQuote + 1 < t.length())) {
+			items.addAll(intelligentSplit(t.substring(rightQuote + 1).trim()));
+		}
+		
+		return items;
+	}
 }

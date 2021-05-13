@@ -5,11 +5,26 @@
 
 // main logic for quick search
 var qsMain = function() {
-	b1Fetch();		// bucket 1 : markers bucket
-	b2Fetch();		// bucket 2 : vocab terms + strains bucket
-	b3Fetch();		// bucket 3 : ID bucket
-	b4Fetch();		// bucket 4 : strains bucket
-	b5Fetch();		// bucket 5 : alleles bucket
+	// Only go ahead with queries if an even number of double-quotes in the search string.
+	var ct = 0;
+	var pos = query.indexOf('"');
+	
+	while (pos >= 0) {
+		ct++;
+		pos = query.indexOf('"', pos + 1);
+	}
+	
+	if (ct % 2 == 0) {
+		b1Fetch();		// bucket 1 : markers bucket
+		b2Fetch();		// bucket 2 : vocab terms + strains bucket
+		b3Fetch();		// bucket 3 : ID bucket
+		b4Fetch();		// bucket 4 : strains bucket
+		b5Fetch();		// bucket 5 : alleles bucket
+	} else {
+		$('#errorDiv').html('Error: Your search includes an odd number of quotation marks.  ' +
+			'Please edit your search to use quotation marks only in pairs.');
+		$('#errorDiv').removeClass('hidden');
+	}
 };
 
 // find a string beginning with the given string 'c' that doesn't appear in string 's'

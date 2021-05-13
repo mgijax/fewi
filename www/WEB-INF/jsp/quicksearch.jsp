@@ -58,6 +58,9 @@
 	</div>
 </div>
 	
+<div id="errorDiv" class="hidden">
+</div>
+
 <div id="b1Header" class="qsHeader">Genome Features
   <span id="b1Counts" class="resultCount"></span>
   <span class="helpCursor" onmouseover="return overlib('<div class=detailRowType>This list includes genes, QTL, cytogenetic markers, and other genome features whose name, symbol, synonym, or accession ID matched some or all of your search text.<br/><br/>This list also includes genome features associated with vocabulary terms matching your search text. <br/><br/></div><div class=\'detailRowType\'>See <a href=\'${configBean.USERHELP_URL}QUICK_SEARCH_help.shtml\'>Using the Quick Search Tool</a> for more information and examples.</div>', STICKY, CAPTION, 'Genome Features', HAUTO, BELOW, WIDTH, 375, DELAY, 600, CLOSECLICK, CLOSETEXT, 'Close X')" onmouseout="nd();">
@@ -222,6 +225,11 @@
     margin-right: 10px;
     text-decoration: none;
 }
+#errorDiv {
+	color: red;
+	padding-top: 10px;
+	font-weight: bold;
+}
 </style>
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/filters.js"></script>
@@ -247,7 +255,7 @@ function clearField() {
 }
 
 var queryString="${e:forJavaScript(queryString)}";
-var query = "${query}";
+var query = "${e:forJavaScript(query)}";
 var fewiurl = "${configBean.FEWI_URL}";
 var genomeBuild = "${configBean.ASSEMBLY_VERSION}";
 
