@@ -112,7 +112,7 @@
 						<select id="strainOp" name="strainOp">
 							<option value="mgv">Send to Multiple Genome Viewer (MGV)</option>
 							<option value="fasta">Get FASTA</option>
-							<option value="snps">Send to Sanger SNP Query (+/- 2kb)</option>
+<!--							<option value="snps">Send to Sanger SNP Query (+/- 2kb)</option> -->
 						</select>
 					</div>
 					<div id="strainGenesTableDiv">
