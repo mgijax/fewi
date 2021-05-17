@@ -44,7 +44,7 @@ function b2Show(data) {
 			if (item.bestMatchType === null) {
 				tbl = tbl + '<TD>&nbsp;</TD></TR>';
 			} else if (item.bestMatchText.startsWith(item.bestMatchType)) {
-				tbl = tbl + '<TD><span class="small">' + item.bestMatchText + '</span></TD></TR>'; 
+				tbl = tbl + '<TD><span class="small">ID: ' + item.bestMatchText + '</span></TD></TR>'; 
 			} else {
 				tbl = tbl + '<TD><span class="termType">' + item.bestMatchType + '</span><span class="small">: ' + item.bestMatchText + '</span></TD></TR>';
 			}
