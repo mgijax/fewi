@@ -3,6 +3,7 @@
 			<div class="header <%=leftTdStyles.getNext() %>">Homology</div>
 			<div class="detail <%=rightTdStyles.getNext() %>">
 
+				<c:set var="wider" value="" />
 				<c:set var="arrowstate" value="hdExpand" />
 				<c:set var="arrowtext" value="more" />
 				<c:set var="titletext" value="Show More" />
@@ -62,17 +63,20 @@
 				</c:if>
 
 				<div class="homologyExtra extra ${sectionstate}">
+					<c:if test="${fn:length(humanHomologs) > 0}">
+						<c:set var="wider" value="wider" />
 						<section class="summarySec1 wide">
-							<div class="label wider" style="height: 3em;">Vertebrate Orthology Source</div>
+							<div class="label ${wider}" style="height: 3em;">Vertebrate Orthology Source</div>
 							<div class="value">Alliance of Genome Resources</div>
 						</section>
+					</c:if>
 
 					<c:forEach var="humanHomolog" items="${humanHomologs}" varStatus="humanHomologStatus">
 
 						<section class="summarySec1 wide">
 							<ul>
 								<li>
-									<div class="label wider">
+									<div class="label ${wider}">
 										Human&nbsp;Ortholog
 									</div>
 									<div class="value">
@@ -98,7 +102,7 @@
 
 								<c:if test="${not empty humanHomolog.synonyms}">
 									<li>
-										<div class="label wider">
+										<div class="label ${wider}">
 											Synonyms
 										</div>
 										<div class="value">
@@ -110,7 +114,7 @@
 								</c:if>
 
 								<li>
-									<div class="label wider">
+									<div class="label ${wider}">
 										Links
 									</div>
 									<div class="value">
@@ -144,7 +148,7 @@
 								</li>
 
 								<li>
-									<div class="label wider">
+									<div class="label ${wider}">
 										Chr&nbsp;Location
 									</div>
 									<div class="value">
@@ -160,7 +164,7 @@
 							</ul>
 						</section>
 						<hr>
-					</c:forEach>
+					</c:forEach><!-- human homolog -->
 
 					<section class="summarySec1">
 						<ul>
@@ -168,7 +172,7 @@
 							<c:forEach var="homologyClass" items="${homologyClasses}">
 								<c:if test="${not empty homologyClass.clusterKey}">
 									<li>
-										<div class="label wider">Alliance of Genome Resources</div>
+										<div class="label ${wider}">Alliance of Genome Resources</div>
 										<div class="value">
 											<a href="${configBean.FEWI_URL}homology/cluster/key/${homologyClass.clusterKey}">${marker.symbol} stringent orthology</a><br/>
 											<c:forEach var="organismOrthology" items="${homologyClass.orthologs}" varStatus="status">${organismOrthology.markerCount} ${organismOrthology.organism}<c:if test="${!status.last}">;</c:if></c:forEach><br/>
@@ -179,7 +183,7 @@
 
 							<c:if test="${not empty hcopLinks}">
 								<li>
-									<div class="label wider">HCOP</div>
+									<div class="label ${wider}">HCOP</div>
 									<div class="value">
 										<c:forEach var="organism" items="${hcopLinks}">
 											<c:if test="${fn:length(organism.value) > 0}">
@@ -197,7 +201,7 @@
 
 							<c:if test="${not empty marker.pirsfAnnotation}">
 								<li>
-									<div class="label wider">Protein&nbsp;SuperFamily</div>
+									<div class="label ${wider}">Protein&nbsp;SuperFamily</div>
 									<div class="value">
 										<a href="${configBean.FEWI_URL}vocab/pirsf/${marker.pirsfAnnotation.termID}">${marker.pirsfAnnotation.term}</a>
 									</div>
@@ -208,7 +212,7 @@
 								<c:set var="genetreeUrl" value="${configBean.GENETREE_URL}"/>
 								<c:set var="genetreeUrl" value="${fn:replace(genetreeUrl, '<model_id>', marker.ensemblGeneModelID.accID)}"/>
 								<li>
-									<div class="label wider">Gene&nbsp;Tree</div>
+									<div class="label ${wider}">Gene&nbsp;Tree</div>
 									<div class="value">
 										<a href="${configBean.GENETREE_URL}${marker.ensemblGeneModelID.accID}" target="_blank">${marker.symbol}</a><br/>
 									</div>
