@@ -11,6 +11,8 @@ import org.jax.mgi.fewi.hunter.SolrQSAlleleResultHunter;
 import org.jax.mgi.fewi.hunter.SolrQSFeatureResultFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrQSFeatureResultTinyHunter;
 import org.jax.mgi.fewi.hunter.SolrQSLookupHunter;
+import org.jax.mgi.fewi.hunter.SolrQSOtherResultFacetHunter;
+import org.jax.mgi.fewi.hunter.SolrQSOtherResultHunter;
 import org.jax.mgi.fewi.hunter.SolrQSStrainResultFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrQSStrainResultHunter;
 import org.jax.mgi.fewi.hunter.SolrQSVocabResultFacetHunter;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Repository;
 import org.jax.mgi.fewi.summary.QSAlleleResult;
 import org.jax.mgi.fewi.summary.QSFeaturePart;
 import org.jax.mgi.fewi.summary.QSFeatureResult;
+import org.jax.mgi.fewi.summary.QSOtherResult;
 import org.jax.mgi.fewi.summary.QSStrainResult;
 import org.jax.mgi.fewi.summary.QSVocabResult;
 import org.jax.mgi.fewi.util.LimitedSizeCache;
@@ -51,6 +54,9 @@ public class QuickSearchFinder {
 	private SolrQSAlleleResultHunter qsAlleleHunter;
 
 	@Autowired
+	private SolrQSOtherResultHunter qsOtherHunter;
+
+	@Autowired
 	private SolrQSStrainResultHunter qsStrainHunter;
 
 	@Autowired
@@ -67,6 +73,9 @@ public class QuickSearchFinder {
 	
 	@Autowired
 	private SolrQSVocabResultFacetHunter vocabFacetHunter;
+	
+	@Autowired
+	private SolrQSOtherResultFacetHunter otherFacetHunter;
 	
 	@Autowired
 	private SolrQSStrainResultFacetHunter strainFacetHunter;
@@ -102,6 +111,21 @@ public class QuickSearchFinder {
 		// ask the hunter to identify which objects to return
 		qsStrainHunter.hunt(searchParams, searchResults);
 		logger.debug("->hunter found " + searchResults.getResultObjects().size() + " QS strain results");
+
+		return searchResults;
+	}
+
+	/* return all QSOtherResult (from Solr) objects matching the given search parameters
+	 */
+	public SearchResults<QSOtherResult> getOtherResults(SearchParams searchParams) {
+		logger.debug("->getOtherResults");
+
+		// result object to be returned
+		SearchResults<QSOtherResult> searchResults = new SearchResults<QSOtherResult>();
+
+		// ask the hunter to identify which objects to return
+		qsOtherHunter.hunt(searchParams, searchResults);
+		logger.debug("->hunter found " + searchResults.getResultObjects().size() + " QS Other ID results");
 
 		return searchResults;
 	}
@@ -160,6 +184,15 @@ public class QuickSearchFinder {
 		SearchResults<QSStrainResult> results = new SearchResults<QSStrainResult>();
 		strainFacetHunter.setFacetString(facetField);
 		strainFacetHunter.hunt(searchParams, results);
+		return results.getResultFacets();
+	}
+
+	/* get the specified facets for the matching other ID results
+	 */
+	public List<String> getOtherFacets(SearchParams searchParams, String facetField) {
+		SearchResults<QSOtherResult> results = new SearchResults<QSOtherResult>();
+		otherFacetHunter.setFacetString(facetField);
+		otherFacetHunter.hunt(searchParams, results);
 		return results.getResultFacets();
 	}
 

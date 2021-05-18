@@ -314,6 +314,8 @@ public class SearchConstants {
 	public static final String QS_SEARCH_TERM_TYPE = "searchTermType";
 	public static final String QS_SEARCH_TERM_WEIGHT = "searchTermWeight";
 
+	public static final String QS_OBJECT_TYPE = "objectType";			// special for other bucket:
+	public static final String QS_OBJECT_SUBTYPE = "objectSubType";		// special for other bucket:
 	public static final String QS_PRIMARY_ID = "primaryID";
 	public static final String QS_DETAIL_URI = "detailUri";
 	public static final String QS_SEQUENCE_NUM = "sequenceNum";

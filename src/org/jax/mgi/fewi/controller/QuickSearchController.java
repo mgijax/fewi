@@ -24,7 +24,6 @@ import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.AlleleFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.QuickSearchFinder;
-import org.jax.mgi.fewi.forms.AccessionQueryForm;
 import org.jax.mgi.fewi.forms.QuickSearchQueryForm;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -32,7 +31,6 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
-import org.jax.mgi.fewi.summary.AccessionSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.QSAlleleResult;
 import org.jax.mgi.fewi.summary.QSAlleleResultWrapper;
@@ -41,6 +39,8 @@ import org.jax.mgi.fewi.summary.QSVocabResult;
 import org.jax.mgi.fewi.summary.QSFeatureResult;
 import org.jax.mgi.fewi.summary.QSFeatureResultWrapper;
 import org.jax.mgi.fewi.summary.QSResult;
+import org.jax.mgi.fewi.summary.QSOtherResult;
+import org.jax.mgi.fewi.summary.QSOtherResultWrapper;
 import org.jax.mgi.fewi.summary.QSStrainResult;
 import org.jax.mgi.fewi.summary.QSStrainResultWrapper;
 import org.jax.mgi.fewi.summary.QSVocabResultWrapper;
@@ -92,6 +92,7 @@ public class QuickSearchController {
 	private static int VOCAB_TERM = 2;
 	private static int STRAIN = 3;
 	private static int ALLELE = 4;
+	private static int OTHER = 3;
 
 	private static String BY_EXACT_MATCH = "exact_match";		// requires exact matching
 	private static String BY_INEXACT_MATCH = "inexact_match";	// allows partial matches after stopword removal
@@ -148,6 +149,7 @@ public class QuickSearchController {
 	private static LimitedSizeCache<List<QSFeatureResult>> featureResultCache = new LimitedSizeCache<List<QSFeatureResult>>();
 	private static LimitedSizeCache<List<QSVocabResult>> vocabResultCache = new LimitedSizeCache<List<QSVocabResult>>();
 	private static LimitedSizeCache<List<QSStrainResult>> strainResultCache = new LimitedSizeCache<List<QSStrainResult>>();
+	private static LimitedSizeCache<List<QSOtherResult>> otherResultCache = new LimitedSizeCache<List<QSOtherResult>>();
 	private static LimitedSizeCache<List<QSAlleleResult>> alleleResultCache = new LimitedSizeCache<List<QSAlleleResult>>();
 	
     //--------------------//
@@ -155,9 +157,6 @@ public class QuickSearchController {
     //--------------------//
 
     private Logger logger = LoggerFactory.getLogger(QuickSearchController.class);
-
-    @Autowired
-    private AccessionController accessionController;
 
     @Autowired
     private GXDController gxdController;
@@ -555,6 +554,21 @@ public class QuickSearchController {
 		}
 		return out;
 	}
+
+	// consolidate the lists of matching other IDs, add star values, and setting best match values, then return
+	private List<QSOtherResult> unifyOtherMatches (List<String> searchTerms, List<QSOtherResult> allMatches) {
+		List<QSResult> a = new ArrayList<QSResult>(allMatches.size());
+		for (QSOtherResult r : allMatches) {
+			a.add((QSResult) r);
+		}
+		List<QSResult> unified = unifyMatches(searchTerms, a, null);
+		
+		List<QSOtherResult> out = new ArrayList<QSOtherResult>(unified.size());
+		for (QSResult u : unified) {
+			out.add((QSOtherResult) u);
+		}
+		return out;
+	}
 	
 	// run the stemmer on each string in the list, and remove any stopwords
 	private List<String> stemAndRemoveStopwords(List<String> searchTerms) {
@@ -823,8 +837,9 @@ public class QuickSearchController {
 		List<String> featureFacets = getFeatureFacets(qf, facetField);
 		List<String> vocabFacets = getVocabFacets(qf, facetField);
 		List<String> strainFacets = getStrainFacets(qf, facetField);
+		List<String> otherFacets = getOtherFacets(qf, facetField);
 		List<String> alleleFacets = getAlleleFacets(qf, facetField);
-		List<String> resultList = unifyFacets(featureFacets, vocabFacets, strainFacets, alleleFacets);
+		List<String> resultList = unifyFacets(featureFacets, vocabFacets, strainFacets, alleleFacets, otherFacets);
 		String error = null;
 		
         if (resultList.size() == 0) {
@@ -847,7 +862,7 @@ public class QuickSearchController {
 	/* Unify 3 groups of facets into a single, ordered list for return.  Modifies group1 by adding entries
 	 * from the other groups and then sorting.
 	 */
-	private List<String> unifyFacets(List<String> group1, List<String> group2, List<String> group3, List<String> group4) {
+	private List<String> unifyFacets(List<String> group1, List<String> group2, List<String> group3, List<String> group4, List<String> group5) {
 		Set<String> seenIt = new HashSet<String>();
 
 		if (group1 != null) {
@@ -862,6 +877,7 @@ public class QuickSearchController {
 		toUnify.add(group2);
 		toUnify.add(group3);
 		toUnify.add(group4);
+		toUnify.add(group5);
 		
 		for (List<String> group : toUnify) {
 			if (group != null) {
@@ -945,6 +961,24 @@ public class QuickSearchController {
         	resultList = qsFinder.getStrainFacets(anySearch, filterName);
         } else {
         	throw new Exception("getStrainFacets: Invalid facet name: " + filterName);
+        }
+        return resultList;
+	}
+	
+	/* Execute the search for facets for the other ID bucket using the given filterName, returning them as an
+	 * unordered list of strings.
+	 */
+	private List<String> getOtherFacets(QuickSearchQueryForm queryForm, String filterName) throws Exception {
+        // match either ID, term, or synonyms
+        
+        SearchParams anySearch = getSearchParams(queryForm, BY_ANY, facetLimit, OTHER);
+
+        List<String> resultList = null;		// list of strings, each a value for a facet
+        
+        if (validFacetFields.contains(filterName)) {
+        	resultList = qsFinder.getOtherFacets(anySearch, filterName);
+        } else {
+        	throw new Exception("getOtherFacets: Invalid facet name: " + filterName);
         }
         return resultList;
 	}
@@ -1205,6 +1239,77 @@ public class QuickSearchController {
         return response;
     }
 
+    //-------------------------//
+    // QS Results - bucket 5 JSON (other IDs)
+    //-------------------------//
+	@RequestMapping("/otherBucket")
+	public @ResponseBody JsonSummaryResponse<QSOtherResultWrapper> getOtherBucket(HttpServletRequest request,
+			@ModelAttribute QuickSearchQueryForm queryForm, @ModelAttribute Paginator page) {
+
+        logger.debug("->getOtherBucket started (seeking results " + page.getStartIndex() + " to " + (page.getStartIndex() + page.getResults()) + ")");
+
+        int startIndex = page.getStartIndex();
+        int endIndex = startIndex + page.getResults();
+        
+        String cacheKey = withoutPagination(request.getQueryString());
+        List<QSOtherResult> out = otherResultCache.get(cacheKey);
+        
+        if (out != null) {
+        	logger.debug(" - got " + out.size() + " other ID results from cache");
+        } else {
+        	// The index has been rebuilt to instead have each document be a point of data that can be matched, so
+        	// we now need to retrieve all matching documents and then process them.  Guessing too high a number of
+        	// expected results can be detrimental to efficiency, so we can do an initial query to get the count
+        	// and then a second query to return them.
+        
+        	SearchParams exactSearch = getSearchParams(queryForm, BY_EXACT_MATCH, 0, OTHER);
+        	SearchParams inexactSearch = getSearchParams(queryForm, BY_INEXACT_MATCH, 0, OTHER);
+        	SearchParams stemmedSearch = getSearchParams(queryForm, BY_STEMMED_MATCH, 0, OTHER);
+
+        	SearchParams orSearch = new SearchParams();
+        	orSearch.setPaginator(new Paginator(0));
+        	List<Filter> any = new ArrayList<Filter>();
+        	any.add(exactSearch.getFilter());
+        	any.add(inexactSearch.getFilter());
+        	any.add(stemmedSearch.getFilter());
+        	orSearch.setFilter(Filter.or(any));
+        
+        	SearchResults<QSOtherResult> anyResults = qsFinder.getOtherResults(orSearch);
+        	Integer resultCount = anyResults.getTotalCount();
+        	logger.debug("Identified " + resultCount + " other ID matches");
+
+        	// Now do the query to retrieve all results.
+        	String key = FewiUtil.startMonitoring("QS Other ID Search", queryForm.toString());
+        	orSearch.setPaginator(new Paginator(resultCount));
+        	List<QSOtherResult> allMatches = qsFinder.getOtherResults(orSearch).getResultObjects();
+        	logger.debug("Loaded " + allMatches.size() + " other matches");
+        	FewiUtil.endMonitoring(key);
+        
+        	out = (List<QSOtherResult>) unifyOtherMatches(queryForm.getTerms(), allMatches);
+        	logger.debug("Consolidated down to " + out.size() + " other IDs");
+        	
+        	otherResultCache.put(cacheKey, out);
+        	logger.debug(" - added " + out.size() + " other ID results to cache");
+        }
+        
+        List<QSOtherResultWrapper> wrapped = new ArrayList<QSOtherResultWrapper>();
+        if (out.size() >= startIndex) {
+        	logger.debug(" - extracting results " + startIndex + " to " + Math.min(out.size(), endIndex));
+        	for (QSOtherResult r : out.subList(startIndex, Math.min(out.size(), endIndex))) {
+        		wrapped.add(new QSOtherResultWrapper(r));
+        	}
+        } else { 
+        	logger.debug(" - not extracting,just returning empty term list");
+        }
+        
+        JsonSummaryResponse<QSOtherResultWrapper> response = new JsonSummaryResponse<QSOtherResultWrapper>();
+        response.setSummaryRows(wrapped);
+        response.setTotalCount(out.size());
+        logger.debug("Returning " + wrapped.size() + " term matches");
+
+        return response;
+    }
+
 	// Process the given parameters and return an appropriate SearchParams object (ready to use in a search).
 	private SearchParams getSearchParams (QuickSearchQueryForm qf, String queryMode, Integer resultCount, int bucket) {
         Filter myFilter;
@@ -1257,42 +1362,6 @@ public class QuickSearchController {
 	private String withoutPagination(String queryString) {
 		return queryString.replaceAll("&startIndex=[0-9]+", "").replaceAll("&results=[0-9]+", "");
 	}
-	
-    //-------------------------//
-    // QS Results - bucket 3 JSON (accession ID matches)
-    //-------------------------//
-	@RequestMapping("/idBucket")
-	public @ResponseBody JsonSummaryResponse<AccessionSummaryRow> getIDBucket(HttpServletRequest request,
-			@ModelAttribute QuickSearchQueryForm queryForm) {
-
-        logger.debug("->getIDBucket started");
-        
-        JsonSummaryResponse<AccessionSummaryRow> out = new JsonSummaryResponse<AccessionSummaryRow>();
-        
-        // handle multiple terms joined by commas or spaces
-        String[] terms = queryForm.getQuery().replace(',', ' ').split(" ");
-
-       	AccessionQueryForm accQF = new AccessionQueryForm();
-        Paginator page = new Paginator(1000);
-       	accQF.setFlag("QS");
-
-        for (String term : terms) {
-        	accQF.setId(term);
-        	if (out.getTotalCount() == 0) {
-        		out = accessionController.accessionSummaryJson(request, accQF, page);
-        	} else {
-        		// could merge sets to avoid duplication, but just append for simplicity for now
-        		List<AccessionSummaryRow> oldResults = out.getSummaryRows();
-        		out = accessionController.accessionSummaryJson(request, accQF, page);
-
-        		oldResults.addAll(out.getSummaryRows());
-
-        		out.setSummaryRows(oldResults);
-        		out.setTotalCount(oldResults.size());
-        	}
-        }
-        return out;
-    }
 	
 	// private inner class for scoring / sorting QS results.  We use a 3-level sort:  star rating,
 	// weight of matched item (from indexer), and sequence num (smart-alpha, from indexer)

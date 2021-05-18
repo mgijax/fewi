@@ -1,5 +1,5 @@
 /* Name: qs_bucket3.js
- * Purpose: data retrieval and processing logic for the quicksearch's third data bucket (results by ID)
+ * Purpose: data retrieval and processing logic for the quicksearch's third data bucket (results by other ID)
  * Notes: Functions here will be prefixed by "b3".
  */
 
@@ -9,16 +9,16 @@ var b3Failed = false;		// did retrieval for the ID bucket fail?
 
 // Fetch the data items for bucket 3 (matches by ID).
 var b3Fetch = function() {
-		var url = fewiurl + '/quicksearch/idBucket?' + queryString;
+		var url = fewiurl + '/quicksearch/otherBucket?' + queryString;
 		$.get(url, function(data) {
 			try {
 				b3Show(data);
 			} catch (e) {
-				console.log("Failed to display data for the ID bucket: " + e);
+				console.log("Failed to display data for the Other ID bucket: " + e);
 				failed = true;
 			}
 		}).fail(function() {
-				console.log("Failed to retrieve data for the ID bucket: " + e); 
+				console.log("Failed to retrieve data for the Other ID bucket: " + e); 
 				failed = true;
 		});
 };
@@ -30,16 +30,18 @@ var b3Show = function(data) {
 		tbl = tbl + '<TABLE ID="b3Table">';
 		tbl = tbl + '<TR><TH>Type</TH><TH>Name/Description</TH><TH>Why did this match?</TH></TR>';
 
+		console.log('here 1');
 		for (var i = 0; i < data.summaryRows.length; i++) {
+			console.log('here 2');
 			var item = data.summaryRows[i];
 			
-			if (item.mgiLink.indexOf('MGI MA: Detail') >= 0) {
-				item.mgiLink = item.mgiLink.replaceAll(/MGI MA: Detail/g, 'MA Browser Detail');
-				item.displayType = 'ID';
+			if (item.objectSubtype === null) {
+				tbl = tbl + '<TD><a href="' + item.detailUri + '">' + item.objectType + '</a></TD>';
+			} else {
+				tbl = tbl + '<TD><a href="' + item.detailUri + '">' + item.objectType + '</a>, ' + item.objectSubtype + '</TD>';
 			}
-			tbl = tbl + '<TR><TD>' + item.mgiLink + '</TD>';
-			tbl = tbl + '<TD>' + item.description + '</TD>';
-			tbl = tbl + '<TD>' + item.displayType + ': ' + item.accId + '</TD></TR>';
+			tbl = tbl + '<TD>' + item.name + '</TD>';
+			tbl = tbl + '<TD><SPAN CLASS="termType">' + item.bestMatchType + '</SPAN>: <SPAN CLASS="small">' + item.bestMatchText + '</SPAN></TD></TR>';
 		}
 		$('#b3Results').html(tbl);
 		console.log("Populated " + data.summaryRows.length + " b3Results");
