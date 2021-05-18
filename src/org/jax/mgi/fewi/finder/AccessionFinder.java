@@ -103,26 +103,8 @@ public class AccessionFinder {
     /* Retrieval of multiple accession objects
     /*---------------------------------------*/
     public SearchResults<Accession> getAccessions(String accID) {
-    	return this.getAccessions(accID, null);
-    }
-
-    public SearchResults<Accession> getAccessions(String accID, String flag) {
         logger.debug("->getAccessions(" + accID + ")");
 
-        boolean includeMarkers = true;
-        boolean includeAlleles = true;
-        boolean includeStrains = true;
-        boolean includeNonAmaTerms = true;
-        
-        // When called by the Quick Search (for bucket 3), we need to exclude markers, alleles, strains, and
-        // non-AMA terms from consideration.  (Those are already handled in other buckets.)
-        if ("QS".equals(flag)) {
-        	includeMarkers = false;
-        	includeAlleles = false;
-        	includeStrains = false;
-        	includeNonAmaTerms = false;
-        }
-        
         // result object to be returned
         SearchResults<Accession> searchResults = new SearchResults<Accession>();
         searchResults.setTotalCount(0);
@@ -134,7 +116,7 @@ public class AccessionFinder {
 
         // If we have one of the standard vocabulary IDs for our vocab browsers, we can just
         // look for terms and skip all the others.
-        if (upperID.startsWith("MA:") || includeNonAmaTerms) {
+        if (upperID.startsWith("MA:")) {
         	for (String vocabPrefix : VOCAB_PREFIXES) {
         		if (upperID.startsWith(vocabPrefix)) {
         			getTerms(accID, searchResults);
@@ -145,15 +127,15 @@ public class AccessionFinder {
 
         // These types of objects have multiple types of IDs - some MGI IDs and some not.
         // Pretty much always need to check them.
-        if (includeMarkers) { getMouseMarkers(accID, searchResults); }
-        if (includeAlleles) { getAlleles(accID, searchResults); }
+        getMouseMarkers(accID, searchResults);
+        getAlleles(accID, searchResults);
         getReferences(accID, searchResults);
-        if (includeStrains) { getStrains(accID, searchResults); }
+        getStrains(accID, searchResults);
        	getGenotypes(accID, searchResults);
         getProbes(accID, searchResults);
         getImages(accID, searchResults);
         getHomology(accID, searchResults);
-        if (includeNonAmaTerms) { getTerms(accID, searchResults); }
+        getTerms(accID, searchResults);
         getSequences(accID, searchResults);
         
         // These types of data only have MGI IDs, so we can skip them for other prefixes.

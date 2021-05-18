@@ -11,9 +11,6 @@ public class AccessionQueryForm {
     //--------------------//
     private String id;
     
-    private String flag;		// flag for special handling (optional)
-
-    //--------------------//
     // accessors
     //--------------------//
     public String getId() {
@@ -22,13 +19,6 @@ public class AccessionQueryForm {
     public void setId(String id) {
         this.id = id;
     }
-
-    public String getFlag() {
-		return flag;
-	}
-	public void setFlag(String flag) {
-		this.flag = flag;
-	}
 
 	@Override
 	public String toString() {

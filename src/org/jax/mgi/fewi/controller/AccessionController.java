@@ -196,7 +196,7 @@ public class AccessionController {
 		params.setFilter(genFilters(queryForm));
 
 		// perform query, and pull out the requested objects
-		SearchResults<Accession> searchResults = accessionFinder.getAccessions(queryForm.getId(), queryForm.getFlag());
+		SearchResults<Accession> searchResults = accessionFinder.getAccessions(queryForm.getId());
 		List<Accession> fooList = searchResults.getResultObjects();
 
 		// create/load the list of SummaryRow wrapper objects
