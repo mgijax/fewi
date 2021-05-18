@@ -30,17 +30,15 @@ var b3Show = function(data) {
 		tbl = tbl + '<TABLE ID="b3Table">';
 		tbl = tbl + '<TR><TH>Type</TH><TH>Name/Description</TH><TH>Why did this match?</TH></TR>';
 
-		console.log('here 1');
 		for (var i = 0; i < data.summaryRows.length; i++) {
-			console.log('here 2');
 			var item = data.summaryRows[i];
 			
 			if (item.objectSubtype === null) {
-				tbl = tbl + '<TD><a href="' + item.detailUri + '">' + item.objectType + '</a></TD>';
+				tbl = tbl + '<TD style="padding-right: 30px"><a href="' + item.detailUri + '">' + item.objectType + '</a></TD>';
 			} else {
-				tbl = tbl + '<TD><a href="' + item.detailUri + '">' + item.objectType + '</a>, ' + item.objectSubtype + '</TD>';
+				tbl = tbl + '<TD style="padding-right: 30px"><a href="' + item.detailUri + '">' + item.objectType + '</a>, ' + item.objectSubtype + '</TD>';
 			}
-			tbl = tbl + '<TD>' + item.name + '</TD>';
+			tbl = tbl + '<TD style="padding-right: 30px">' + item.name + '</TD>';
 			tbl = tbl + '<TD><SPAN CLASS="termType">' + item.bestMatchType + '</SPAN>: <SPAN CLASS="small">' + item.bestMatchText + '</SPAN></TD></TR>';
 		}
 		$('#b3Results').html(tbl);
