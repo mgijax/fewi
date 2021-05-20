@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jax.mgi.fewi.hunter.SolrQSVocabResultHunter;
+import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.hunter.SolrQSAlleleResultFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrQSAlleleResultHunter;
 import org.jax.mgi.fewi.hunter.SolrQSFeatureResultFacetHunter;
@@ -32,6 +33,8 @@ import org.jax.mgi.fewi.summary.QSOtherResult;
 import org.jax.mgi.fewi.summary.QSStrainResult;
 import org.jax.mgi.fewi.summary.QSVocabResult;
 import org.jax.mgi.fewi.util.LimitedSizeCache;
+import org.jax.mgi.snpdatamodel.ConsensusCoordinateSNP;
+import org.jax.mgi.snpdatamodel.ConsensusSNP;
 
 /*
  * This finder is responsible for finding results for the quick search
@@ -49,6 +52,9 @@ public class QuickSearchFinder {
 	//--- instance variables ---//
 	
 	private Logger logger = LoggerFactory.getLogger(QuickSearchFinder.class);
+
+	@Autowired
+	private SnpFinder snpFinder;
 
 	@Autowired
 	private SolrQSAlleleResultHunter qsAlleleHunter;
@@ -126,6 +132,61 @@ public class QuickSearchFinder {
 		// ask the hunter to identify which objects to return
 		qsOtherHunter.hunt(searchParams, searchResults);
 		logger.debug("->hunter found " + searchResults.getResultObjects().size() + " QS Other ID results");
+
+		return searchResults;
+	}
+	
+	/* return all SNP results (from Solr) as QSOtherResult objects, given the search words/phrases
+	 */
+	public SearchResults<QSOtherResult> getOtherSnpResults(List<String> terms) {
+		logger.debug("->getOtherSnpResults");
+
+		List<QSOtherResult> results = new ArrayList<QSOtherResult>();
+
+		for (String term : terms) {
+			if ((term != null) && (term.startsWith("rs"))) {
+				SearchResults<ConsensusSNP> snpResults = snpFinder.getSnpByID(term);
+
+				for (ConsensusSNP snp : snpResults.getResultObjects()) {
+					QSOtherResult result = new QSOtherResult();
+					result.setStars("****");
+					result.setDetailUri("/snp/" + snp.getAccid());
+					result.setObjectType(snp.getVariationClass());
+					result.setPrimaryID(snp.getAccid());
+					result.setSearchTermDisplay(snp.getAccid());
+					result.setSearchTermType("SNP");
+					result.setSearchTermExact(snp.getAccid());
+					result.setSearchTermWeight(100);
+					result.setSequenceNum(1L);
+					result.setUniqueKey(snp.getAccid());
+					
+					String name = snp.getAccid();
+					List<ConsensusCoordinateSNP> coords = snp.getConsensusCoordinates();
+					if ((coords != null) && (coords.size() > 0)) {
+						if (coords.size() > 1) {
+							name = name + ", multiple coordinates";
+						} else {
+							ConsensusCoordinateSNP coord = coords.get(0);
+							name = name + ", Chr" + coord.getChromosome();
+							name = name + ": " + coord.getStartCoordinate();
+							name = name + " (" + ContextLoader.getConfigBean().getProperty("SNP_ASSEMBLY_VERSION") + ")";
+						}
+					}
+					name = name + ", " + snp.getVariationClass() + ", " + snp.getAlleleSummary();
+
+					result.setName(name);
+					results.add(result);
+				}
+			}
+		}
+
+		// result object to be returned
+		SearchResults<QSOtherResult> searchResults = new SearchResults<QSOtherResult>();
+		searchResults.setResultObjects(results);
+		searchResults.setTotalCount(results.size());
+
+		// ask the hunter to identify which objects to return
+		logger.debug("->snpFinder found " + searchResults.getResultObjects().size() + " QS Other ID SNP results");
 
 		return searchResults;
 	}

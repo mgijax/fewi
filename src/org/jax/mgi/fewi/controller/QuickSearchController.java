@@ -1283,6 +1283,11 @@ public class QuickSearchController {
         	orSearch.setPaginator(new Paginator(resultCount));
         	List<QSOtherResult> allMatches = qsFinder.getOtherResults(orSearch).getResultObjects();
         	logger.debug("Loaded " + allMatches.size() + " other matches");
+
+        	List<QSOtherResult> snpMatches = qsFinder.getOtherSnpResults(queryForm.getTerms()).getResultObjects();
+        	logger.debug("Loaded " + snpMatches.size() + " SNP matches");
+
+        	allMatches.addAll(snpMatches);
         	FewiUtil.endMonitoring(key);
         
         	out = (List<QSOtherResult>) unifyOtherMatches(queryForm.getTerms(), allMatches);
