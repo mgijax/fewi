@@ -164,7 +164,7 @@
 #b2Table tr:nth-child(odd) { background-color: #f2f2f2; }
 #b2Table tr:first-child { background-color: #dfefff; }
 
-#b3Table { border-collapse: collapse }
+#b3Table { border-collapse: collapse; width: 100% }
 #b3Table th { font-weight: bold; padding: 3px; }
 #b3Table td { padding: 3px; }
 #b3Table tr:nth-child(odd) { background-color: #f2f2f2; }
