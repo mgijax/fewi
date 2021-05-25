@@ -602,6 +602,9 @@ public class QuickSearchController {
 		// original search term will be the last item in the list of search terms
 		String originalSearchTerm = searchTerms.get(searchTerms.size() - 1).toLowerCase();
 		
+		// Used for preferential boosting of whole words (gene 6) over contains (gene 6000).
+		Pattern wholeWordRegex = Pattern.compile("\\b" + originalSearchTerm + "\\b");
+
 		// search terms with stemming and stopword removal
 		List<String> stemmedSearchTerms = stemAndRemoveStopwords(searchTerms);
 		
@@ -692,7 +695,8 @@ public class QuickSearchController {
 			// boost to be applied to the weight (based on whether the indexed string contains all terms in the right order)
 			int inOrderBoost = 0;	
 			
-			// boost to be applied to the weight if the user's search string matches exactly a substring of the indexed string
+			// boost to be applied to the weight if the user's search string matches exactly a substring of the indexed string.
+			// bonus boost of 3 to bring those that match whole words to the top of that section (gene 6 vs. gene 6000)
 			int exactSubstringBoost = 0;
 			
 			// boost to be applied if the non-stemmed search string is contained in the non-stemmed display string
@@ -758,6 +762,13 @@ public class QuickSearchController {
 					} // end -- toCheckOrder.size() > 1
 				} // end -- else is not a 4-star match
 			
+				// Another little boost for contains with whole words (gene 6 vs. gene 6000) to the search string.
+				
+				Matcher mat = wholeWordRegex.matcher(match.getSearchTermDisplay().toLowerCase());
+				if (mat.find()) {
+					exactSubstringBoost += 3;
+				}
+				
 				// One more boost to check -- does the search term appear exactly in the display term?  If so, kick those
 				// up the list.  (e.g.- "running" matches names containing "run" because it is a stemmed field.  But names
 				// containing "running" in their display value should be kicked up higher, so we need to compare the
