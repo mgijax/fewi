@@ -1,6 +1,6 @@
 <style>
 .helpCursor { cursor: help; }
-.qsHeader { width: 100%; background-color: #F0F8FF; color: #002255; margin-top: 0.75em; 
+.qsHeader { background-color: #F0F8FF; color: #002255; margin-top: 0.75em; 
 	font-size: 18px; font-weight: bold; line-height: 1.25; vertical-align: top;
 	padding-left: 5px; padding-right: 5px; padding-top: 2px; padding-bottom: 2px; 
 	clear: both;
