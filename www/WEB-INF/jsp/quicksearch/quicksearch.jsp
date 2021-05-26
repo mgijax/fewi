@@ -37,11 +37,39 @@
 <div id="errorDiv" class="hidden">
 </div>
 
-<%@ include file="/WEB-INF/jsp/quicksearch/qs_feature_bucket.jsp" %>
-<%@ include file="/WEB-INF/jsp/quicksearch/qs_allele_bucket.jsp" %>
-<%@ include file="/WEB-INF/jsp/quicksearch/qs_vocab_term_bucket.jsp" %>
-<%@ include file="/WEB-INF/jsp/quicksearch/qs_strain_bucket.jsp" %>
-<%@ include file="/WEB-INF/jsp/quicksearch/qs_other_ids_bucket.jsp" %>
+<script>
+	// turn on tabbed display
+	$(function() {
+		$( "#querytabs" ).tabs(<c:if test="${not empty snpQueryForm.selectedTab}">{active: ${e:forJavaScript(snpQueryForm.selectedTab)}}</c:if>);
+	});
+</script>
+
+<div id="querytabs" style="margin-top: 15px;">
+  <ul style="background-color: #F0F8FF;">
+		<li><span class="label" id="featureTab"><a href="#tabs-gf">Genome Features <span id="gfCount"></span></a></span></li>
+		<li><span class="label" id="alleleTab"><a href="#tabs-a">Alleles <span id="aCount"></span></a></span></li>
+		<li><span class="label" id="vocabTermTab"><a href="#tabs-vt">Vocabulary Terms <span id="vtCount"></span></a></span></li>
+		<li><span class="label" id="strainTab"><a href="#tabs-ss">Strains and Stocks <span id="ssCount"></span></a></span></li>
+		<li><span class="label" id="otherIdTab"><a href="#tabs-id">Other Results by ID <span id="idCount"></span></a></span></li>
+  </ul>
+	<div>
+		<div id="tabs-gf">
+			<%@ include file="/WEB-INF/jsp/quicksearch/qs_feature_bucket.jsp" %>
+		</div> <!-- tabs-gf -->
+		<div id="tabs-a">
+			<%@ include file="/WEB-INF/jsp/quicksearch/qs_allele_bucket.jsp" %>
+		</div> <!-- tabs-a -->
+		<div id="tabs-vt">
+			<%@ include file="/WEB-INF/jsp/quicksearch/qs_vocab_term_bucket.jsp" %>
+		</div> <!-- tabs-vt -->
+		<div id="tabs-ss">
+			<%@ include file="/WEB-INF/jsp/quicksearch/qs_strain_bucket.jsp" %>
+		</div> <!-- tabs-ss -->
+		<div id="tabs-id">
+			<%@ include file="/WEB-INF/jsp/quicksearch/qs_other_ids_bucket.jsp" %>
+		</div> <!-- tabs-id -->
+	</div> <!-- unnamed -->
+</div> <!-- querytabs -->
 
 <div id="b5Header" class="qsHeader">Search MGI with Google
   <span id="b5Counts" class="resultCount"></span>

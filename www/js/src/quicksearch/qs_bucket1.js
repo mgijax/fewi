@@ -62,6 +62,7 @@ function b1Show(data) {
 	} else {
 		console.log("No b1Results");
 	}
+	$('#gfCount').html("(" + data.totalCount + ")");
 	var header = qsResultHeader(data.start, data.end, data.totalCount);
 	$('#b1Counts').html(header);
 	$('#b1Results').html(tbl);

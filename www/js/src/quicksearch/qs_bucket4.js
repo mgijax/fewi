@@ -58,6 +58,7 @@ function b4Show(data) {
 		console.log("No b4Results");
 	}
 	var header = qsResultHeader(data.start, data.end, data.totalCount);
+	$('#ssCount').html("(" + data.totalCount + ")");
 	$('#b4Counts').html(header);
 	$('#b4Results').html(tbl);
 	pgUpdatePaginator(b4CacheName, 'strainPaginator', data.totalCount, b4PageSize, dcGetPage)

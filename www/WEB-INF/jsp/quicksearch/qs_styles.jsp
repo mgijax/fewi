@@ -109,4 +109,5 @@
 	padding-top: 10px;
 	font-weight: bold;
 }
+#breadbox { float: none; }
 </style>

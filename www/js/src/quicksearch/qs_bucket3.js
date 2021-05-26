@@ -48,6 +48,7 @@ var b3Show = function(data) {
 	}
 
 	var header = qsResultHeader(1, data.totalCount, data.totalCount);
+	$('#idCount').html("(" + data.totalCount + ")");
 	$('#b3Counts').html(header);
 	$('#b3Results').html(tbl);
 };

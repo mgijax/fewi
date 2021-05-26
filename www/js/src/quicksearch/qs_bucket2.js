@@ -53,6 +53,7 @@ function b2Show(data) {
 		console.log("No b2Results");
 	}
 	var header = qsResultHeader(data.start, data.end, data.totalCount);
+	$('#vtCount').html("(" + data.totalCount + ")");
 	$('#b2Counts').html(header);
 	$('#b2Results').html(tbl);
 	pgUpdatePaginator(b2CacheName, 'vocabPaginator', data.totalCount, b2PageSize, dcGetPage)

@@ -63,6 +63,7 @@ function b5Show(data) {
 		console.log("No b5Results");
 	}
 	var header = qsResultHeader(data.start, data.end, data.totalCount);
+	$('#aCount').html("(" + data.totalCount + ")");
 	$('#b5Counts').html(header);
 	$('#b5Results').html(tbl);
 	pgUpdatePaginator(b5CacheName, 'allelePaginator', data.totalCount, b5PageSize, dcGetPage);
