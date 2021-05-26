@@ -32,80 +32,16 @@
 </div>
 </form>
 
-<div id="filterButtons">
-   <b>Filter results by: </b>
-   <a id="functionFilter" class="filterButton">Molecular Function <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
-   <a id="processFilter" class="filterButton">Biological Process <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
-   <a id="componentFilter" class="filterButton">Cellular Component <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
-</div>
-<div id="breadbox" class="hidden">
-  <div id="filterSummary">
-  	<b>Filtered by: </b>
-    <span id="filterList"></span>
-  </div>
-</div>
+<%@ include file="/WEB-INF/jsp/quicksearch/qs_filters.jsp" %>
 
-<!-- for filter popup (re-used by all filter buttons) -->
-<div class="facetFilter">
-	<div id="facetDialog">
-		<div class="hd">Filter</div>
-		<div class="bd">
-			<form:form method="GET"
-				action="${configBean.FEWI_URL}quicksearch/summary">
-				<img src="/fewi/mgi/assets/images/loading.gif">
-			</form:form>
-		</div>
-	</div>
-</div>
-	
 <div id="errorDiv" class="hidden">
 </div>
 
-<div id="b1Header" class="qsHeader">Genome Features
-  <span id="b1Counts" class="resultCount"></span>
-  <span class="helpCursor" onmouseover="return overlib('<div class=detailRowType>This list includes genes, QTL, cytogenetic markers, and other genome features whose name, symbol, synonym, or accession ID matched some or all of your search text.<br/><br/>This list also includes genome features associated with vocabulary terms matching your search text. <br/><br/></div><div class=\'detailRowType\'>See <a href=\'${configBean.USERHELP_URL}QUICK_SEARCH_help.shtml\'>Using the Quick Search Tool</a> for more information and examples.</div>', STICKY, CAPTION, 'Genome Features', HAUTO, BELOW, WIDTH, 375, DELAY, 600, CLOSECLICK, CLOSETEXT, 'Close X')" onmouseout="nd();">
-       <img src="${configBean.WEBSHARE_URL}images/blue_info_icon.gif" border="0">
-  </span>
-  <div id="featurePaginator" class="featurePaginator"></div>
-</div>
-<div id="b1Results"></div>
-
-<!-- Note: b5 appears out of order (before b2) for historical reasons. -->
-<div id="b5Header" class="qsHeader">Alleles
-  <span id="b5Counts" class="resultCount"></span>
-  <span class="helpCursor" onmouseover="return overlib('<div class=detailRowType>This list includes alleles whose name, symbol, synonym, or accession ID matched some or all of your search text.<br/><br/>This list also includes alleles associated with vocabulary terms matching your search text. <br/><br/></div><div class=\'detailRowType\'>See <a href=\'${configBean.USERHELP_URL}QUICK_SEARCH_help.shtml\'>Using the Quick Search Tool</a> for more information and examples.</div>', STICKY, CAPTION, 'Alleles', HAUTO, BELOW, WIDTH, 375, DELAY, 600, CLOSECLICK, CLOSETEXT, 'Close X')" onmouseout="nd();">
-       <img src="${configBean.WEBSHARE_URL}images/blue_info_icon.gif" border="0">
-  </span>
-  <div id="allelePaginator" class="allelePaginator"></div>
-</div>
-<div id="b5Results"></div>
-
-<div id="b2Header" class="qsHeader">Vocabulary Terms
-  <span id="b2Counts" class="resultCount"></span>
-  <span class="helpCursor" onmouseover="return overlib('<div class=detailRowType>Use the vocabulary terms listed here <ul><li>to learn MGI\'s official terms</li><li>to focus on detailed research topics</li><li>to explore related research areas</li><li>to investigate alternative areas</li></ul></div><div class=\'detailRowType\'>See <a href=\'${configBean.USERHELP_URL}QUICK_SEARCH_help.shtml\'>Using the Quick Search Tool</a> for more information and examples.</div>', STICKY, CAPTION, 'Vocabulary Terms', HAUTO, BELOW, WIDTH, 375, DELAY, 600, CLOSECLICK, CLOSETEXT, 'Close X')" onmouseout="nd();">
-    <img src="${configBean.WEBSHARE_URL}images/blue_info_icon.gif" border="0">
-  </span>
-  <div id="vocabPaginator" class="vocabPaginator"></div>
-</div>
-<div id="b2Results"></div>
-
-<!-- Note: b4 appears out of order (before b3) for historical reasons. -->
-<div id="b4Header" class="qsHeader">Strains and Stocks
-  <span id="b4Counts" class="resultCount"></span>
-  <span class="helpCursor" onmouseover="return overlib('<div class=detailRowType>This list includes mouse strains or stocks that matched the name, synonym, or accession ID matched some or all of your search text.</div><div class=\'detailRowType\'>See <a href=\'${configBean.USERHELP_URL}QUICK_SEARCH_help.shtml\'>Using the Quick Search Tool</a> for more information and examples.</div>', STICKY, CAPTION, 'Strains', HAUTO, BELOW, WIDTH, 375, DELAY, 600, CLOSECLICK, CLOSETEXT, 'Close X')" onmouseout="nd();">
-    <img src="${configBean.WEBSHARE_URL}images/blue_info_icon.gif" border="0">
-  </span>
-  <div id="strainPaginator" class="strainPaginator"></div>
-</div>
-<div id="b4Results"></div>
-
-<div id="b3Header" class="qsHeader">Other Results by ID
-  <span id="b3Counts" class="resultCount"></span>
-  <span class="helpCursor" onmouseover="return overlib('<div class=detailRowType>This section includes links to sequences, orthology relationships, SNPs and other results whose accession ID matched an item in your search text.</div><div class=\'detailRowType\'>See <a href=\'${configBean.USERHELP_URL}QUICK_SEARCH_help.shtml\'>Using the Quick Search Tool</a> for more information and examples.</div>', STICKY, CAPTION, 'Other Results By ID', HAUTO, BELOW, WIDTH, 375, DELAY, 600, CLOSECLICK, CLOSETEXT, 'Close X')" onmouseout="nd();">
-    <img src="${configBean.WEBSHARE_URL}images/blue_info_icon.gif" border="0">
-  </span>
-</div>
-<div id="b3Results"></div>
+<%@ include file="/WEB-INF/jsp/quicksearch/qs_feature_bucket.jsp" %>
+<%@ include file="/WEB-INF/jsp/quicksearch/qs_allele_bucket.jsp" %>
+<%@ include file="/WEB-INF/jsp/quicksearch/qs_vocab_term_bucket.jsp" %>
+<%@ include file="/WEB-INF/jsp/quicksearch/qs_strain_bucket.jsp" %>
+<%@ include file="/WEB-INF/jsp/quicksearch/qs_other_ids_bucket.jsp" %>
 
 <div id="b5Header" class="qsHeader">Search MGI with Google
   <span id="b5Counts" class="resultCount"></span>
@@ -119,118 +55,7 @@
   <input type="hidden" name="sitesearch" value="informatics.jax.org">
 </form>
 
-<style>
-.helpCursor { cursor: help; }
-.qsHeader { width: 100%; background-color: #F0F8FF; color: #002255; margin-top: 0.75em; 
-	font-size: 18px; font-weight: bold; line-height: 1.25; vertical-align: top;
-	padding-left: 5px; padding-right: 5px; padding-top: 2px; padding-bottom: 2px; 
-	clear: both;
-	}
-.resultCount { font-size: 10px; font-weight: normal; color: #676767; }
-.hidden { display: none; }
-.shown { display: inline; }
-
-.qsButton {
-    font-size: 12px;
-    font-family: Verdana,Arial,Helvetica;
-    color: #002255;
-    font-weight: bolder;
-    background-color: #eeeeee;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #7d95b9;
-    padding: 2px;
-    display: inline;
-    text-decoration: none;
-    cursor: hand;
-}
-
-#filterSummary { margin-top: 5px; margin-bottom: 5px; }
-
-#b1Results { max-height: 300px; overflow-y: auto; width: 100%; }
-#b2Results { max-height: 300px; overflow-y: auto; width: 100%; }
-#b4Results { max-height: 300px; overflow-y: auto; width: 100%; }
-#b5Results { max-height: 300px; overflow-y: auto; width: 100%; }
-
-#b1Table { border-collapse: collapse; width: 100% }
-#b1Table th { font-weight: bold; padding: 3px; }
-#b1Table td { padding: 3px; }
-#b1Table tr:nth-child(odd) { background-color: #f2f2f2; }
-#b1Table tr:first-child { background-color: #dfefff; }
-
-#b2Table { border-collapse: collapse; width: 100% }
-#b2Table th { font-weight: bold; padding: 3px; }
-#b2Table td { padding: 3px; }
-#b2Table tr:nth-child(odd) { background-color: #f2f2f2; }
-#b2Table tr:first-child { background-color: #dfefff; }
-
-#b3Table { border-collapse: collapse; width: 100% }
-#b3Table th { font-weight: bold; padding: 3px; }
-#b3Table td { padding: 3px; }
-#b3Table tr:nth-child(odd) { background-color: #f2f2f2; }
-#b3Table tr:first-child { background-color: #dfefff; }
-
-#b4Table { border-collapse: collapse; width: 100% }
-#b4Table th { font-weight: bold; padding: 3px; }
-#b4Table td { padding: 3px; }
-#b4Table tr:nth-child(odd) { background-color: #f2f2f2; }
-#b4Table tr:first-child { background-color: #dfefff; }
-
-#b5Table { border-collapse: collapse; width: 100% }
-#b5Table th { font-weight: bold; padding: 3px; }
-#b5Table td { padding: 3px; }
-#b5Table td sup { padding: 3px; line-height: 1.9em; }
-#b5Table tr:nth-child(odd) { background-color: #f2f2f2; }
-#b5Table tr:first-child { background-color: #dfefff; }
-
-.noWrap { white-space: nowrap; }
-.facetFilter .yui-panel .bd { width: 285px; }
-
-.termType { font-variant: small-caps; font-size: 10px; font-family: Verdana, Arial, Helvetica; }
-.nameCol { width: 25%; }
-.termCol { width: 40%; }
-.dataCol { width: 10%; }
-.bestMatchCol { } 
-.small { font-size: 10px; }
-
-#featurePaginator {
-	float: right;
-    font-size: 12px;
-    margin-top: 10px;
-    font-weight: normal;
-    margin-right: 10px;
-    text-decoration: none;
-}
-#allelePaginator {
-	float: right;
-    font-size: 12px;
-    margin-top: 10px;
-    font-weight: normal;
-    margin-right: 10px;
-    text-decoration: none;
-}
-#vocabPaginator {
-	float: right;
-    font-size: 12px;
-    margin-top: 10px;
-    font-weight: normal;
-    margin-right: 10px;
-    text-decoration: none;
-}
-#strainPaginator {
-	float: right;
-    font-size: 12px;
-    margin-top: 10px;
-    font-weight: normal;
-    margin-right: 10px;
-    text-decoration: none;
-}
-#errorDiv {
-	color: red;
-	padding-top: 10px;
-	font-weight: bold;
-}
-</style>
+<%@ include file="/WEB-INF/jsp/quicksearch/qs_styles.jsp" %>
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/filters.js"></script>
 <script>
