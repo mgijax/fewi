@@ -196,7 +196,7 @@ public class QuickSearchController {
 		}
         logger.debug("->getQSSummary started");
 
-        ModelAndView mav = new ModelAndView("quicksearch");
+        ModelAndView mav = new ModelAndView("/quicksearch/quicksearch");
         mav.addObject("query", queryForm.getQuery());
 		mav.addObject("queryString", request.getQueryString());
         return mav;
