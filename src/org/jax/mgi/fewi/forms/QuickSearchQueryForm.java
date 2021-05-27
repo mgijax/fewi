@@ -3,6 +3,8 @@ package org.jax.mgi.fewi.forms;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jax.mgi.fewi.util.FewiUtil;
 
@@ -31,11 +33,29 @@ public class QuickSearchQueryForm {
         this.query = query;
     }
 
+    /* For certain circumstances, we want to automatically wrap a query string in double-quotes, to ensure it doesn't
+     * get split up.  The current list of circumstances is:
+     * 	1. cases where the input string begins with a number, is followed by a comma, then has other numbers and letters.
+     * 		(but not spaces)
+     */
+    private Pattern case1 = Pattern.compile("^[0-9]+,[A-Za-z0-9]+$");
+    private String autoQuote(String query) {
+    	Matcher case1match = case1.matcher(query);
+    	if (case1match.matches()) {
+    		return "\"" + query + "\"";
+    	}
+    	
+    	// no special handling needed, just return the original string
+    	return query;
+    }
+    
     // Return a list of search "terms", all in lowercase and computed from this.query.  (cannot be set; this is read-only)
     // Note: once computed, the value of 'terms' is cached in this.terms.  Puts the full string as the
     // last term.
     public List<String> getTerms() {
     	if ((terms == null) && (query != null)) {
+    		query = autoQuote(query);
+    		
     		// If our split fails, it's because of an unbalanced number of double-quotes.  In that case,
     		// just strip them out and proceed.
     		try {

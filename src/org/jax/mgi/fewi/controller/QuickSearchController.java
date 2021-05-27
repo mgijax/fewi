@@ -602,7 +602,7 @@ public class QuickSearchController {
 			boolean mustMatchDisplay) {
 
 		// original search term will be the last item in the list of search terms
-		String originalSearchTerm = searchTerms.get(searchTerms.size() - 1).toLowerCase();
+		String originalSearchTerm = searchTerms.get(searchTerms.size() - 1).toLowerCase().replaceAll("\"", "").trim();
 		
 		// Used for preferential boosting of whole words (gene 6) over contains (gene 6000).
 		Pattern wholeWordRegex = Pattern.compile("\\b" + originalSearchTerm + "\\b");
@@ -712,6 +712,12 @@ public class QuickSearchController {
 			// boost to be applied if the non-stemmed search string is contained in the non-stemmed display string
 			int nonStemmedMatchBoost = 0;
 
+			logger.info("displayType: " + match.getSearchTermDisplay());
+			logger.info("originalSearchTerm: " + originalSearchTerm);
+			logger.info("lowerTerm:          " + lowerTerm);
+			logger.info("lowerDisplayTerm:   " + lowerDisplayTerm);
+			logger.info("----------------------------------------");
+			
 			if (lowerTerm != null) {
 				// search terms can be exact (4-star), contain all terms (3-star), or contain some terms (2-star)
 				if (!limitedType && (lowerTerm.equals(originalSearchTerm) || lowerDisplayTerm.equals(originalSearchTerm))) {
