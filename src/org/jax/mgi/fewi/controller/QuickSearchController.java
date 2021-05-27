@@ -496,7 +496,7 @@ public class QuickSearchController {
 		for (QSFeatureResult r : allMatches) {
 			a.add((QSResult) r);
 		}
-		List<QSResult> unified = unifyMatches(searchTerms, a, bestMatches);
+		List<QSResult> unified = unifyMatches(searchTerms, a, bestMatches, false);
 		
 		List<QSFeatureResult> out = new ArrayList<QSFeatureResult>(unified.size());
 		for (QSResult u : unified) {
@@ -511,7 +511,7 @@ public class QuickSearchController {
 		for (QSVocabResult r : allMatches) {
 			a.add((QSResult) r);
 		}
-		List<QSResult> unified = unifyMatches(searchTerms, a, null);
+		List<QSResult> unified = unifyMatches(searchTerms, a, null, false);
 		
 		List<QSVocabResult> out = new ArrayList<QSVocabResult>(unified.size());
 		for (QSResult u : unified) {
@@ -531,7 +531,7 @@ public class QuickSearchController {
 		for (QSAlleleResult r : allMatches) {
 			a.add((QSResult) r);
 		}
-		List<QSResult> unified = unifyMatches(searchTerms, a, bestMatches);
+		List<QSResult> unified = unifyMatches(searchTerms, a, bestMatches, false);
 		
 		List<QSAlleleResult> out = new ArrayList<QSAlleleResult>(unified.size());
 		for (QSResult u : unified) {
@@ -546,7 +546,7 @@ public class QuickSearchController {
 		for (QSStrainResult r : allMatches) {
 			a.add((QSResult) r);
 		}
-		List<QSResult> unified = unifyMatches(searchTerms, a, null);
+		List<QSResult> unified = unifyMatches(searchTerms, a, null, true);
 		
 		List<QSStrainResult> out = new ArrayList<QSStrainResult>(unified.size());
 		for (QSResult u : unified) {
@@ -561,7 +561,7 @@ public class QuickSearchController {
 		for (QSOtherResult r : allMatches) {
 			a.add((QSResult) r);
 		}
-		List<QSResult> unified = unifyMatches(searchTerms, a, null);
+		List<QSResult> unified = unifyMatches(searchTerms, a, null, false);
 		
 		List<QSOtherResult> out = new ArrayList<QSOtherResult>(unified.size());
 		for (QSResult u : unified) {
@@ -597,8 +597,10 @@ public class QuickSearchController {
 
 	// consolidate the lists of matching (abstract) QSResult objects, add star values, and setting best match values,
 	// then return.  bestMatches can be passed in for processing batches via multiple invocations; if null, it will be
-	// instantiated herein.
-	private List<QSResult> unifyMatches (List<String> searchTerms, List<QSResult> allMatches, Map<String,QSResult> bestMatches) {
+	// instantiated herein.  Pass mustMatchDisplay = true to require matching to display term for 4-star.
+	private List<QSResult> unifyMatches (List<String> searchTerms, List<QSResult> allMatches, Map<String,QSResult> bestMatches,
+			boolean mustMatchDisplay) {
+
 		// original search term will be the last item in the list of search terms
 		String originalSearchTerm = searchTerms.get(searchTerms.size() - 1).toLowerCase();
 		
@@ -686,6 +688,14 @@ public class QuickSearchController {
 					if (!lowerTerm.equals(lowerDisplayTerm)) {
 						limitedType = true;
 					}
+				}
+			}
+			
+			// special consideration for 4-star matches
+			if (mustMatchDisplay) {
+				// If we're requiring an exact match to the display term, we can be forgiving about hyphens.
+				if (!lowerTerm.equals(lowerDisplayTerm) && !lowerTerm.contentEquals(lowerDisplayTerm.replace("-", " "))) {
+					limitedType = true;
 				}
 			}
 			
