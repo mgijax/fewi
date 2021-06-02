@@ -123,6 +123,9 @@ function initializeFilterLibrary(delay) {
 		filters.addFilter('goProcessFilter', 'Process', 'processFilter', 'processFilter', fewiurl + 'quicksearch/featureBucket/process');
 		filters.addFilter('goFunctionFilter', 'Function', 'functionFilter', 'functionFilter', fewiurl + 'quicksearch/featureBucket/function');
 		filters.addFilter('goComponentFilter', 'Component', 'componentFilter', 'componentFilter', fewiurl + 'quicksearch/featureBucket/component');
+		filters.addFilter('phenotypeFilter', 'Phenotype', 'phenotypeFilter', 'phenotypeFilter', fewiurl + 'quicksearch/featureBucket/phenotype');
+		filters.addFilter('diseaseFilter', 'Disease', 'diseaseFilter', 'diseaseFilter', fewiurl + 'quicksearch/featureBucket/disease');
+		filters.addFilter('featureTypeFilter', 'Feature Type', 'featureTypeFilter', 'featureTypeFilter', fewiurl + 'quicksearch/featureBucket/featureType');
 		filters.registerCallback("filterCallback", qsProcessFilters);
 		filters.registerCallback("gaLogCallback", qsLogFilters);
 		filters.setRemovalDivStyle('block');

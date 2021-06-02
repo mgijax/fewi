@@ -105,6 +105,9 @@ public class QuickSearchController {
 		validFacetFields.add(SearchConstants.QS_GO_COMPONENT_FACETS);
 		validFacetFields.add(SearchConstants.QS_GO_PROCESS_FACETS);
 		validFacetFields.add(SearchConstants.QS_GO_FUNCTION_FACETS);
+		validFacetFields.add(SearchConstants.QS_PHENOTYPE_FACETS);
+		validFacetFields.add(SearchConstants.QS_DISEASE_FACETS);
+		validFacetFields.add(SearchConstants.QS_MARKER_TYPE_FACETS);
 	}
 
 	// Stemmed "words" that should not be matched alone in annotation-related fields (only in combination with
@@ -371,6 +374,15 @@ public class QuickSearchController {
 		
 		Filter componentFilter = getFilterForOneField(SearchConstants.QS_GO_COMPONENT_FACETS, qf.getComponentFilter());
 		if (componentFilter != null) { filters.add(componentFilter); }
+		
+		Filter phenotypeFilter = getFilterForOneField(SearchConstants.QS_PHENOTYPE_FACETS, qf.getPhenotypeFilter());
+		if (phenotypeFilter != null) { filters.add(phenotypeFilter); }
+		
+		Filter diseaseFilter = getFilterForOneField(SearchConstants.QS_DISEASE_FACETS, qf.getDiseaseFilter());
+		if (diseaseFilter != null) { filters.add(diseaseFilter); }
+
+		Filter featureTypeFilter = getFilterForOneField(SearchConstants.QS_MARKER_TYPE_FACETS, qf.getFeatureTypeFilter());
+		if (featureTypeFilter != null) { filters.add(featureTypeFilter); }
 		
 		if (filters.size() > 0) {
 			return Filter.and(filters);
@@ -871,6 +883,30 @@ public class QuickSearchController {
 	public @ResponseBody Map<String, List<String>> getComponentFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
 		AjaxUtils.prepareAjaxHeaders(response);
 		return getFacets(qf, SearchConstants.QS_GO_COMPONENT_FACETS);
+	}
+
+	/* Get the set of phenotype filter options for the current result set, including facets from all QS buckets
+	 */
+	@RequestMapping("/featureBucket/phenotype")
+	public @ResponseBody Map<String, List<String>> getPhenotypeFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_PHENOTYPE_FACETS);
+	}
+
+	/* Get the set of disease filter options for the current result set, including facets from all QS buckets
+	 */
+	@RequestMapping("/featureBucket/disease")
+	public @ResponseBody Map<String, List<String>> getDiseaseFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_DISEASE_FACETS);
+	}
+
+	/* Get the set of feature type filter options for the current result set, including facets from all QS buckets
+	 */
+	@RequestMapping("/featureBucket/featureType")
+	public @ResponseBody Map<String, List<String>> getFeatureTypeFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_MARKER_TYPE_FACETS);
 	}
 
 	// Retrieve the facets for the specified field, in a form suitable for conversion to JSON.

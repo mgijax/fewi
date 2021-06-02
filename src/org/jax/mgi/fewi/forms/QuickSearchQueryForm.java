@@ -21,6 +21,9 @@ public class QuickSearchQueryForm {
     private List<String> processFilter;
     private List<String> componentFilter;
     private List<String> functionFilter;
+    private List<String> phenotypeFilter;
+    private List<String> diseaseFilter;
+    private List<String> featureTypeFilter;
     private List<String> terms;
 
     //--------------------//
@@ -68,7 +71,25 @@ public class QuickSearchQueryForm {
     	return terms;
     }
     
-    public List<String> getComponentFilter() {
+    public List<String> getPhenotypeFilter() {
+		return phenotypeFilter;
+	}
+	public void setPhenotypeFilter(List<String> phenotypeFilter) {
+		this.phenotypeFilter = phenotypeFilter;
+	}
+	public List<String> getDiseaseFilter() {
+		return diseaseFilter;
+	}
+	public void setDiseaseFilter(List<String> diseaseFilter) {
+		this.diseaseFilter = diseaseFilter;
+	}
+	public List<String> getFeatureTypeFilter() {
+		return featureTypeFilter;
+	}
+	public void setFeatureTypeFilter(List<String> featureTypeFilter) {
+		this.featureTypeFilter = featureTypeFilter;
+	}
+	public List<String> getComponentFilter() {
 		return componentFilter;
 	}
 	public void setComponentFilter(List<String> componentFilter) {
