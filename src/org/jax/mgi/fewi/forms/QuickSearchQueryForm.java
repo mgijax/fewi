@@ -22,6 +22,7 @@ public class QuickSearchQueryForm {
     private List<String> componentFilter;
     private List<String> functionFilter;
     private List<String> phenotypeFilter;
+    private List<String> expressionFilter;
     private List<String> diseaseFilter;
     private List<String> featureTypeFilter;
     private List<String> terms;
@@ -71,7 +72,13 @@ public class QuickSearchQueryForm {
     	return terms;
     }
     
-    public List<String> getPhenotypeFilter() {
+    public List<String> getExpressionFilter() {
+		return expressionFilter;
+	}
+	public void setExpressionFilter(List<String> expressionFilter) {
+		this.expressionFilter = expressionFilter;
+	}
+	public List<String> getPhenotypeFilter() {
 		return phenotypeFilter;
 	}
 	public void setPhenotypeFilter(List<String> phenotypeFilter) {

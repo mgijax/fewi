@@ -108,6 +108,7 @@ public class QuickSearchController {
 		validFacetFields.add(SearchConstants.QS_PHENOTYPE_FACETS);
 		validFacetFields.add(SearchConstants.QS_DISEASE_FACETS);
 		validFacetFields.add(SearchConstants.QS_MARKER_TYPE_FACETS);
+		validFacetFields.add(SearchConstants.QS_EXPRESSION_FACETS);
 	}
 
 	// Stemmed "words" that should not be matched alone in annotation-related fields (only in combination with
@@ -377,6 +378,9 @@ public class QuickSearchController {
 		
 		Filter phenotypeFilter = getFilterForOneField(SearchConstants.QS_PHENOTYPE_FACETS, qf.getPhenotypeFilter());
 		if (phenotypeFilter != null) { filters.add(phenotypeFilter); }
+		
+		Filter expressionFilter = getFilterForOneField(SearchConstants.QS_EXPRESSION_FACETS, qf.getExpressionFilter());
+		if (expressionFilter != null) { filters.add(expressionFilter); }
 		
 		Filter diseaseFilter = getFilterForOneField(SearchConstants.QS_DISEASE_FACETS, qf.getDiseaseFilter());
 		if (diseaseFilter != null) { filters.add(diseaseFilter); }
@@ -724,12 +728,6 @@ public class QuickSearchController {
 			// boost to be applied if the non-stemmed search string is contained in the non-stemmed display string
 			int nonStemmedMatchBoost = 0;
 
-			logger.info("displayType: " + match.getSearchTermDisplay());
-			logger.info("originalSearchTerm: " + originalSearchTerm);
-			logger.info("lowerTerm:          " + lowerTerm);
-			logger.info("lowerDisplayTerm:   " + lowerDisplayTerm);
-			logger.info("----------------------------------------");
-			
 			if (lowerTerm != null) {
 				// search terms can be exact (4-star), contain all terms (3-star), or contain some terms (2-star)
 				if (!limitedType && (lowerTerm.equals(originalSearchTerm) || lowerDisplayTerm.equals(originalSearchTerm))) {
@@ -883,6 +881,14 @@ public class QuickSearchController {
 	public @ResponseBody Map<String, List<String>> getComponentFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
 		AjaxUtils.prepareAjaxHeaders(response);
 		return getFacets(qf, SearchConstants.QS_GO_COMPONENT_FACETS);
+	}
+
+	/* Get the set of expression filter options for the current result set, including facets from all QS buckets
+	 */
+	@RequestMapping("/featureBucket/expression")
+	public @ResponseBody Map<String, List<String>> getExpressionFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_EXPRESSION_FACETS);
 	}
 
 	/* Get the set of phenotype filter options for the current result set, including facets from all QS buckets

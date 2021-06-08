@@ -126,6 +126,7 @@ function initializeFilterLibrary(delay) {
 		filters.addFilter('phenotypeFilter', 'Phenotype', 'phenotypeFilter', 'phenotypeFilter', fewiurl + 'quicksearch/featureBucket/phenotype');
 		filters.addFilter('diseaseFilter', 'Disease', 'diseaseFilter', 'diseaseFilter', fewiurl + 'quicksearch/featureBucket/disease');
 		filters.addFilter('featureTypeFilter', 'Feature Type', 'featureTypeFilter', 'featureTypeFilter', fewiurl + 'quicksearch/featureBucket/featureType');
+		filters.addFilter('expressionFilter', 'Expression', 'expressionFilter', 'expressionFilter', fewiurl + 'quicksearch/featureBucket/expression');
 		filters.registerCallback("filterCallback", qsProcessFilters);
 		filters.registerCallback("gaLogCallback", qsLogFilters);
 		filters.setRemovalDivStyle('block');
