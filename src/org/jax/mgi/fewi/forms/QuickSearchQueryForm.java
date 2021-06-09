@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jax.mgi.fewi.util.FewiUtil;
+import org.jax.mgi.shr.fe.IndexConstants;
 
 /*-------*/
 /* class */
@@ -20,13 +21,13 @@ public class QuickSearchQueryForm {
 	public static List<String> QUERY_TYPE_OPTIONS = new ArrayList<String>();
 	public static Map<String, String> QUERY_TYPE_OPTION_MAP = new LinkedHashMap<String,String>();
 	static {
-		QUERY_TYPE_OPTIONS.add("text");
-		QUERY_TYPE_OPTIONS.add("mouse location");
-		QUERY_TYPE_OPTIONS.add("human location");
+		QUERY_TYPE_OPTIONS.add(IndexConstants.QS_SEARCHTYPE_TEXT);
+		QUERY_TYPE_OPTIONS.add(IndexConstants.QS_SEARCHTYPE_MOUSE_COORD);
+		QUERY_TYPE_OPTIONS.add(IndexConstants.QS_SEARCHTYPE_HUMAN_COORD);
 
-		QUERY_TYPE_OPTION_MAP.put("text", "text");
-		QUERY_TYPE_OPTION_MAP.put("mouse location", "mouse location");
-		QUERY_TYPE_OPTION_MAP.put("human location", "human location");
+		QUERY_TYPE_OPTION_MAP.put(IndexConstants.QS_SEARCHTYPE_TEXT, IndexConstants.QS_SEARCHTYPE_TEXT);
+		QUERY_TYPE_OPTION_MAP.put(IndexConstants.QS_SEARCHTYPE_MOUSE_COORD, IndexConstants.QS_SEARCHTYPE_MOUSE_COORD);
+		QUERY_TYPE_OPTION_MAP.put(IndexConstants.QS_SEARCHTYPE_HUMAN_COORD, IndexConstants.QS_SEARCHTYPE_HUMAN_COORD);
 	};
 			
     //--------------------//
@@ -55,8 +56,8 @@ public class QuickSearchQueryForm {
 
     public String getQueryType() {
    		// If missing or unrecognized, default to standard text search mechanism.
-    	if ((queryType == null) || (QUERY_TYPE_OPTIONS.indexOf(queryType) < 0)) {
-    		return "text";
+    	if ((queryType == null) || !QUERY_TYPE_OPTION_MAP.containsKey(queryType)) {
+    		return IndexConstants.QS_SEARCHTYPE_TEXT;
     	}
 		return queryType;
 	}
