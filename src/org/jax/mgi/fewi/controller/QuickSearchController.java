@@ -203,6 +203,8 @@ public class QuickSearchController {
         ModelAndView mav = new ModelAndView("/quicksearch/quicksearch");
         mav.addObject("query", queryForm.getQuery());
 		mav.addObject("queryString", request.getQueryString());
+		mav.addObject("queryTypes", QuickSearchQueryForm.QUERY_TYPE_OPTION_MAP);
+		mav.addObject("queryType", queryForm.getQueryType());
         return mav;
     }
 

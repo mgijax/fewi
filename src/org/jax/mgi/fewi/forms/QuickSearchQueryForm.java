@@ -2,7 +2,10 @@ package org.jax.mgi.fewi.forms;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,10 +17,23 @@ import org.jax.mgi.fewi.util.FewiUtil;
 
 public class QuickSearchQueryForm {
 
+	public static List<String> QUERY_TYPE_OPTIONS = new ArrayList<String>();
+	public static Map<String, String> QUERY_TYPE_OPTION_MAP = new LinkedHashMap<String,String>();
+	static {
+		QUERY_TYPE_OPTIONS.add("text");
+		QUERY_TYPE_OPTIONS.add("mouse location");
+		QUERY_TYPE_OPTIONS.add("human location");
+
+		QUERY_TYPE_OPTION_MAP.put("text", "text");
+		QUERY_TYPE_OPTION_MAP.put("mouse location", "mouse location");
+		QUERY_TYPE_OPTION_MAP.put("human location", "human location");
+	};
+			
     //--------------------//
     // instance variables
     //--------------------//
     private String query;
+    private String queryType;
     private List<String> processFilter;
     private List<String> componentFilter;
     private List<String> functionFilter;
@@ -37,7 +53,18 @@ public class QuickSearchQueryForm {
         this.query = query;
     }
 
-    /* For certain circumstances, we want to automatically wrap a query string in double-quotes, to ensure it doesn't
+    public String getQueryType() {
+   		// If missing or unrecognized, default to standard text search mechanism.
+    	if ((queryType == null) || (QUERY_TYPE_OPTIONS.indexOf(queryType) < 0)) {
+    		return "text";
+    	}
+		return queryType;
+	}
+	public void setQueryType(String queryType) {
+		this.queryType = queryType;
+	}
+
+	/* For certain circumstances, we want to automatically wrap a query string in double-quotes, to ensure it doesn't
      * get split up.  The current list of circumstances is:
      * 	1. cases where the input string begins with a number, is followed by a comma, then has other numbers and letters.
      * 		(but not spaces)

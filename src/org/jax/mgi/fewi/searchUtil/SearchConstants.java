@@ -314,6 +314,12 @@ public class SearchConstants {
 	public static final String QS_SEARCH_TERM_TYPE = "searchTermType";
 	public static final String QS_SEARCH_TERM_WEIGHT = "searchTermWeight";
 
+	public static final String QS_SEARCH_COORD_TYPE = "searchCoordType";
+	public static final String QS_SEARCH_CHROMOSOME = "searchChromosome";
+	public static final String QS_SEARCH_START_COORD = "searchStartCoord";
+	public static final String QS_SEARCH_END_COORD = "searchEndCoord";
+	public static final String QS_COORD_SEQUENCE_NUM = "coordSequenceNum";
+
 	public static final String QS_OBJECT_TYPE = "objectType";			// special for other bucket:
 	public static final String QS_OBJECT_SUBTYPE = "objectSubType";		// special for other bucket:
 	public static final String QS_PRIMARY_ID = "primaryID";
