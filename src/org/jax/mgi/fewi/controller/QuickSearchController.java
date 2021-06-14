@@ -201,6 +201,13 @@ public class QuickSearchController {
 		}
         logger.debug("->getQSSummary started");
 
+        // If we can auto-detect a coordinate search, update the operator on the form to match.
+        if ((queryForm.getQueryType() == null) || (queryForm.getQueryType().equals(IndexConstants.QS_SEARCHTYPE_TEXT))) {
+        	Filter coordSearch = this.createCoordinateFilter(queryForm);
+        	if (coordSearch != null) {
+        		queryForm.setQueryType(IndexConstants.QS_SEARCHTYPE_MOUSE_COORD);
+        	}
+        }
         ModelAndView mav = new ModelAndView("/quicksearch/quicksearch");
         mav.addObject("query", queryForm.getQuery());
 		mav.addObject("queryString", request.getQueryString());
@@ -429,13 +436,13 @@ public class QuickSearchController {
 	private Filter createCoordinateFilter(QuickSearchQueryForm qf) {
         List<Filter> coordFilters = new ArrayList<Filter>();
 
-        Pattern fullRange = Pattern.compile("[cC][hH][rR]([0-9XY]+):([0-9]+)-([0-9]+)");
+        Pattern fullRange = Pattern.compile("[cC][hH][rR]([0-9XYMT]+):([0-9]+)-([0-9]+)");
         Matcher fullRangeMatcher = fullRange.matcher(qf.getQuery());
 
-        Pattern pointCoord = Pattern.compile("[cC][hH][rR]([0-9XY]+):([0-9]+)");
+        Pattern pointCoord = Pattern.compile("[cC][hH][rR]([0-9XYMT]+):([0-9]+)");
         Matcher pointCoordMatcher = pointCoord.matcher(qf.getQuery());
         
-        Pattern onlyChromosome = Pattern.compile("[cC][hH][rR]([0-9XY]+)");
+        Pattern onlyChromosome = Pattern.compile("[cC][hH][rR]([0-9XYMT]+)");
         Matcher onlyChromosomeMatcher = onlyChromosome.matcher(qf.getQuery());
         
         if (fullRangeMatcher.matches()) {
@@ -459,11 +466,11 @@ public class QuickSearchController {
         	return null;
         }
 
-        // Ensure that we are looking at either mouse or human coordinates, as selected by the user.
-        if (IndexConstants.QS_SEARCHTYPE_MOUSE_COORD.equals(qf.getQueryType())) {
-        	coordFilters.add(new Filter(SearchConstants.QS_SEARCH_COORD_TYPE, IndexConstants.QS_SEARCHTYPE_MOUSE_COORD, Operator.OP_EQUAL));
-        } else {
+        // Ensure that we are looking at either mouse or human coordinates, as selected by the user.  (default to mouse)
+        if (IndexConstants.QS_SEARCHTYPE_HUMAN_COORD.equals(qf.getQueryType())) {
         	coordFilters.add(new Filter(SearchConstants.QS_SEARCH_COORD_TYPE, IndexConstants.QS_SEARCHTYPE_HUMAN_COORD, Operator.OP_EQUAL));
+        } else {
+        	coordFilters.add(new Filter(SearchConstants.QS_SEARCH_COORD_TYPE, IndexConstants.QS_SEARCHTYPE_MOUSE_COORD, Operator.OP_EQUAL));
         }
         
         return Filter.and(coordFilters);
