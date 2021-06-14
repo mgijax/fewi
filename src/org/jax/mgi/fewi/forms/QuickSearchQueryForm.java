@@ -57,6 +57,14 @@ public class QuickSearchQueryForm {
     public String getQueryType() {
    		// If missing or unrecognized, default to standard text search mechanism.
     	if ((queryType == null) || !QUERY_TYPE_OPTION_MAP.containsKey(queryType)) {
+    		// If this appears to be a coordinate, assume it's a mouse coordinate.
+    		if (this.query.matches("[cC][hH][rR][0-9XY]+:[0-9]+-[0-9]+")) {		// full coordinate range
+    			return IndexConstants.QS_SEARCHTYPE_MOUSE_COORD;
+    		} else if (this.query.matches("[cC][hH][rR][0-9XY]+:[0-9]+")) {		// point coordinate
+    			return IndexConstants.QS_SEARCHTYPE_MOUSE_COORD;
+    		} else if (this.query.matches("[cC][hH][rR][0-9XY]+")) {			// just a chromosome
+    			return IndexConstants.QS_SEARCHTYPE_MOUSE_COORD;
+    		}
     		return IndexConstants.QS_SEARCHTYPE_TEXT;
     	}
 		return queryType;

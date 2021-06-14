@@ -94,6 +94,7 @@ public class QuickSearchController {
 	private static int ALLELE = 4;
 	private static int OTHER = 3;
 
+	private static String BY_COORDS = "coordinate_match";		// requires overlapping coordinates
 	private static String BY_EXACT_MATCH = "exact_match";		// requires exact matching
 	private static String BY_INEXACT_MATCH = "inexact_match";	// allows partial matches after stopword removal
 	private static String BY_STEMMED_MATCH = "stemmed match";	// matches after stemming and stopword removal
@@ -223,6 +224,8 @@ public class QuickSearchController {
         String cacheKey = withoutPagination(request.getQueryString());
         List<QSFeatureResult> out = featureResultCache.get(cacheKey);
         
+        boolean isCoordSearch = false;
+        
         if (out != null) {
         	logger.debug(" - got " + out.size() + " feature results from cache");
         	
@@ -232,17 +235,25 @@ public class QuickSearchController {
         	// expected results can be detrimental to efficiency, so we can do an initial query to get the count
         	// and then a second query to return them.
         
-        	SearchParams exactSearch = getSearchParams(queryForm, BY_EXACT_MATCH, 0, FEATURE);
-        	SearchParams inexactSearch = getSearchParams(queryForm, BY_INEXACT_MATCH, 0, FEATURE);
-        	SearchParams stemmedSearch = getSearchParams(queryForm, BY_STEMMED_MATCH, 0, FEATURE);
-
         	SearchParams orSearch = new SearchParams();
         	orSearch.setPaginator(new Paginator(0));
-        	List<Filter> either = new ArrayList<Filter>();
-        	either.add(exactSearch.getFilter());
-        	either.add(inexactSearch.getFilter());
-        	either.add(stemmedSearch.getFilter());
-        	orSearch.setFilter(Filter.or(either));
+
+        	SearchParams coordFilter = getSearchParams(queryForm, BY_COORDS, 0, FEATURE);
+        	if (coordFilter != null) {
+        		orSearch.setFilter(coordFilter.getFilter());
+        		isCoordSearch = true;
+
+        	} else {
+        		SearchParams exactSearch = getSearchParams(queryForm, BY_EXACT_MATCH, 0, FEATURE);
+        		SearchParams inexactSearch = getSearchParams(queryForm, BY_INEXACT_MATCH, 0, FEATURE);
+        		SearchParams stemmedSearch = getSearchParams(queryForm, BY_STEMMED_MATCH, 0, FEATURE);
+
+        		List<Filter> either = new ArrayList<Filter>();
+        		either.add(exactSearch.getFilter());
+        		either.add(inexactSearch.getFilter());
+        		either.add(stemmedSearch.getFilter());
+        		orSearch.setFilter(Filter.or(either));
+        	}
         
         	// Begin monitoring when we get our count.
         	String key = FewiUtil.startMonitoring("QS Feature Search", queryForm.toString());
@@ -281,7 +292,14 @@ public class QuickSearchController {
 
         		logger.debug("Found " + allMatches.size() + " feature matches");
         
-        		out = unifyFeatureMatches(queryForm.getTerms(), allMatches, out);
+        		if (!isCoordSearch) {
+        			out = unifyFeatureMatches(queryForm.getTerms(), allMatches, out);
+        		} else {
+        			for (QSFeatureResult result : allMatches) {
+        				result.setStars("****");
+        			}
+        			out.addAll(allMatches);
+        		}
         		logger.debug("Currently tracking " + out.size() + " features");
         		
         		start = start + SOLR_BATCH_SIZE;
@@ -405,6 +423,50 @@ public class QuickSearchController {
 			filters.add(new Filter(facetField, choice, Filter.Operator.OP_EQUAL));
 		}
 		return Filter.or(filters);
+	}
+	
+	// Return a single filter that looks for features using a coordinate-based search.
+	private Filter createCoordinateFilter(QuickSearchQueryForm qf) {
+        List<Filter> coordFilters = new ArrayList<Filter>();
+
+        Pattern fullRange = Pattern.compile("[cC][hH][rR]([0-9XY]+):([0-9]+)-([0-9]+)");
+        Matcher fullRangeMatcher = fullRange.matcher(qf.getQuery());
+
+        Pattern pointCoord = Pattern.compile("[cC][hH][rR]([0-9XY]+):([0-9]+)");
+        Matcher pointCoordMatcher = pointCoord.matcher(qf.getQuery());
+        
+        Pattern onlyChromosome = Pattern.compile("[cC][hH][rR]([0-9XY]+)");
+        Matcher onlyChromosomeMatcher = onlyChromosome.matcher(qf.getQuery());
+        
+        if (fullRangeMatcher.matches()) {
+        	// Match chromosome and overlapping coordinates.
+        	coordFilters.add(new Filter(SearchConstants.QS_SEARCH_CHROMOSOME, fullRangeMatcher.group(1), Operator.OP_EQUAL));
+        	coordFilters.add(new Filter(SearchConstants.QS_SEARCH_START_COORD, fullRangeMatcher.group(3), Operator.OP_LESS_OR_EQUAL));
+        	coordFilters.add(new Filter(SearchConstants.QS_SEARCH_END_COORD, fullRangeMatcher.group(2), Operator.OP_GREATER_OR_EQUAL));
+        	
+        } else if (pointCoordMatcher.matches()) {
+        	// Match chromosome and contained coordinate.
+        	coordFilters.add(new Filter(SearchConstants.QS_SEARCH_CHROMOSOME, pointCoordMatcher.group(1), Operator.OP_EQUAL));
+        	coordFilters.add(new Filter(SearchConstants.QS_SEARCH_START_COORD, pointCoordMatcher.group(2), Operator.OP_LESS_OR_EQUAL));
+        	coordFilters.add(new Filter(SearchConstants.QS_SEARCH_END_COORD, pointCoordMatcher.group(2), Operator.OP_GREATER_OR_EQUAL));
+        	
+        } else if (onlyChromosomeMatcher.matches()) {
+        	// Match chromosome (any coordinates on it).
+        	coordFilters.add(new Filter(SearchConstants.QS_SEARCH_CHROMOSOME, onlyChromosomeMatcher.group(1), Operator.OP_EQUAL));
+
+        } else {
+        	// If we can't decipher a coordinate specification, bail out.
+        	return null;
+        }
+
+        // Ensure that we are looking at either mouse or human coordinates, as selected by the user.
+        if (IndexConstants.QS_SEARCHTYPE_MOUSE_COORD.equals(qf.getQueryType())) {
+        	coordFilters.add(new Filter(SearchConstants.QS_SEARCH_COORD_TYPE, IndexConstants.QS_SEARCHTYPE_MOUSE_COORD, Operator.OP_EQUAL));
+        } else {
+        	coordFilters.add(new Filter(SearchConstants.QS_SEARCH_COORD_TYPE, IndexConstants.QS_SEARCHTYPE_HUMAN_COORD, Operator.OP_EQUAL));
+        }
+        
+        return Filter.and(coordFilters);
 	}
 	
 	// Return a single filter that looks for features using the exact field, with multiple terms joined by an OR.
@@ -984,12 +1046,15 @@ public class QuickSearchController {
 	private List<String> getFeatureFacets(QuickSearchQueryForm queryForm, String filterName) throws Exception {
         // match either ID, nomenclature, or other (annotations and ortholog nomen)
         
-        SearchParams anySearch = getSearchParams(queryForm, BY_ANY, facetLimit, FEATURE);
+       	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, facetLimit, FEATURE);
+       	if (searchParams == null) {
+       		searchParams = getSearchParams(queryForm, BY_ANY, facetLimit, FEATURE);
+       	}
 
         List<String> resultList = null;		// list of strings, each a value for a facet
         
         if (validFacetFields.contains(filterName)) {
-        	resultList = qsFinder.getFeatureFacets(anySearch, filterName);
+        	resultList = qsFinder.getFeatureFacets(searchParams, filterName);
         } else {
         	throw new Exception("getFeatureFacets: Invalid facet name: " + filterName);
         }
@@ -1002,12 +1067,15 @@ public class QuickSearchController {
 	private List<String> getVocabFacets(QuickSearchQueryForm queryForm, String filterName) throws Exception {
         // match either ID, term, or synonyms
         
-        SearchParams anySearch = getSearchParams(queryForm, BY_ANY, facetLimit, VOCAB_TERM);
+       	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, facetLimit, FEATURE);
+       	if (searchParams == null) {
+       		searchParams = getSearchParams(queryForm, BY_ANY, facetLimit, VOCAB_TERM);
+       	}
 
         List<String> resultList = null;		// list of strings, each a value for a facet
         
         if (validFacetFields.contains(filterName)) {
-        	resultList = qsFinder.getVocabFacets(anySearch, filterName);
+        	resultList = qsFinder.getVocabFacets(searchParams, filterName);
         } else {
         	throw new Exception("getVocabFacets: Invalid facet name: " + filterName);
         }
@@ -1020,12 +1088,15 @@ public class QuickSearchController {
 	private List<String> getAlleleFacets(QuickSearchQueryForm queryForm, String filterName) throws Exception {
         // match either ID, term, or synonyms
         
-        SearchParams anySearch = getSearchParams(queryForm, BY_ANY, facetLimit, ALLELE);
+       	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, facetLimit, FEATURE);
+       	if (searchParams == null) {
+       		searchParams = getSearchParams(queryForm, BY_ANY, facetLimit, ALLELE);
+       	}
 
         List<String> resultList = null;		// list of strings, each a value for a facet
         
         if (validFacetFields.contains(filterName)) {
-        	resultList = qsFinder.getAlleleFacets(anySearch, filterName);
+        	resultList = qsFinder.getAlleleFacets(searchParams, filterName);
         } else {
         	throw new Exception("getAlleleFacets: Invalid facet name: " + filterName);
         }
@@ -1038,12 +1109,15 @@ public class QuickSearchController {
 	private List<String> getStrainFacets(QuickSearchQueryForm queryForm, String filterName) throws Exception {
         // match either ID, term, or synonyms
         
-        SearchParams anySearch = getSearchParams(queryForm, BY_ANY, facetLimit, STRAIN);
+       	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, facetLimit, FEATURE);
+       	if (searchParams == null) {
+       		searchParams = getSearchParams(queryForm, BY_ANY, facetLimit, STRAIN);
+       	}
 
         List<String> resultList = null;		// list of strings, each a value for a facet
         
         if (validFacetFields.contains(filterName)) {
-        	resultList = qsFinder.getStrainFacets(anySearch, filterName);
+        	resultList = qsFinder.getStrainFacets(searchParams, filterName);
         } else {
         	throw new Exception("getStrainFacets: Invalid facet name: " + filterName);
         }
@@ -1056,12 +1130,15 @@ public class QuickSearchController {
 	private List<String> getOtherFacets(QuickSearchQueryForm queryForm, String filterName) throws Exception {
         // match either ID, term, or synonyms
         
-        SearchParams anySearch = getSearchParams(queryForm, BY_ANY, facetLimit, OTHER);
-
+       	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, facetLimit, FEATURE);
+       	if (searchParams == null) {
+       		searchParams = getSearchParams(queryForm, BY_ANY, facetLimit, OTHER);
+       	}
+       	
         List<String> resultList = null;		// list of strings, each a value for a facet
         
         if (validFacetFields.contains(filterName)) {
-        	resultList = qsFinder.getOtherFacets(anySearch, filterName);
+        	resultList = qsFinder.getOtherFacets(searchParams, filterName);
         } else {
         	throw new Exception("getOtherFacets: Invalid facet name: " + filterName);
         }
@@ -1091,16 +1168,22 @@ public class QuickSearchController {
         	// expected results can be detrimental to efficiency, so we can do an initial query to get the count
         	// and then a second query to return them.
         
-        	SearchParams idSearch = getSearchParams(queryForm, BY_EXACT_MATCH, 0, VOCAB_TERM);
-        	SearchParams nomenSearch = getSearchParams(queryForm, BY_STEMMED_MATCH, 0, VOCAB_TERM);
-
         	SearchParams orSearch = new SearchParams();
         	orSearch.setPaginator(new Paginator(0));
-        	List<Filter> idOrNomen = new ArrayList<Filter>();
-        	idOrNomen.add(idSearch.getFilter());
-        	idOrNomen.add(nomenSearch.getFilter());
-        	orSearch.setFilter(Filter.or(idOrNomen));
-        
+
+        	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, facetLimit, FEATURE);
+        	if (searchParams != null) {
+        		orSearch.setFilter(searchParams.getFilter());
+        	} else {
+        		SearchParams idSearch = getSearchParams(queryForm, BY_EXACT_MATCH, 0, VOCAB_TERM);
+        		SearchParams nomenSearch = getSearchParams(queryForm, BY_STEMMED_MATCH, 0, VOCAB_TERM);
+
+        		List<Filter> idOrNomen = new ArrayList<Filter>();
+        		idOrNomen.add(idSearch.getFilter());
+        		idOrNomen.add(nomenSearch.getFilter());
+        		orSearch.setFilter(Filter.or(idOrNomen));
+        	}
+
         	SearchResults<QSVocabResult> idOrNomenResults = qsFinder.getVocabResults(orSearch);
         	Integer resultCount = idOrNomenResults.getTotalCount();
         	logger.debug("Identified " + resultCount + " term matches");
@@ -1178,17 +1261,23 @@ public class QuickSearchController {
         	// expected results can be detrimental to efficiency, so we can do an initial query to get the count
         	// and then a second query to return them.
         
-        	SearchParams exactSearch = getSearchParams(queryForm, BY_EXACT_MATCH, 0, STRAIN);
-        	SearchParams inexactSearch = getSearchParams(queryForm, BY_INEXACT_MATCH, 0, STRAIN);
-        	SearchParams stemmedSearch = getSearchParams(queryForm, BY_STEMMED_MATCH, 0, STRAIN);
-
         	SearchParams orSearch = new SearchParams();
         	orSearch.setPaginator(new Paginator(0));
-        	List<Filter> any = new ArrayList<Filter>();
-        	any.add(exactSearch.getFilter());
-        	any.add(inexactSearch.getFilter());
-        	any.add(stemmedSearch.getFilter());
-        	orSearch.setFilter(Filter.or(any));
+
+        	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, facetLimit, FEATURE);
+        	if (searchParams != null) {
+        		orSearch.setFilter(searchParams.getFilter());
+        	} else {
+        		SearchParams exactSearch = getSearchParams(queryForm, BY_EXACT_MATCH, 0, STRAIN);
+        		SearchParams inexactSearch = getSearchParams(queryForm, BY_INEXACT_MATCH, 0, STRAIN);
+        		SearchParams stemmedSearch = getSearchParams(queryForm, BY_STEMMED_MATCH, 0, STRAIN);
+
+        		List<Filter> any = new ArrayList<Filter>();
+        		any.add(exactSearch.getFilter());
+        		any.add(inexactSearch.getFilter());
+        		any.add(stemmedSearch.getFilter());
+        		orSearch.setFilter(Filter.or(any));
+        	}
         
         	SearchResults<QSStrainResult> anyResults = qsFinder.getStrainResults(orSearch);
         	Integer resultCount = anyResults.getTotalCount();
@@ -1240,6 +1329,7 @@ public class QuickSearchController {
         
         String cacheKey = withoutPagination(request.getQueryString());
         List<QSAlleleResult> out = alleleResultCache.get(cacheKey);
+        boolean isCoordSearch = false;
         
         if (out != null) {
         	logger.debug(" - got " + out.size() + " allele results from cache");
@@ -1249,17 +1339,24 @@ public class QuickSearchController {
         	// expected results can be detrimental to efficiency, so we can do an initial query to get the count
         	// and then a second query to return them.
         
-        	SearchParams exactSearch = getSearchParams(queryForm, BY_EXACT_MATCH, 0, ALLELE);
-        	SearchParams inexactSearch = getSearchParams(queryForm, BY_INEXACT_MATCH, 0, ALLELE);
-        	SearchParams stemmedSearch = getSearchParams(queryForm, BY_STEMMED_MATCH, 0, ALLELE);
-
         	SearchParams orSearch = new SearchParams();
         	orSearch.setPaginator(new Paginator(0));
-        	List<Filter> any = new ArrayList<Filter>();
-        	any.add(exactSearch.getFilter());
-        	any.add(inexactSearch.getFilter());
-        	any.add(stemmedSearch.getFilter());
-        	orSearch.setFilter(Filter.or(any));
+
+        	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, facetLimit, FEATURE);
+        	if (searchParams != null) {
+        		orSearch.setFilter(searchParams.getFilter());
+        		isCoordSearch = true;
+        	} else {
+        		SearchParams exactSearch = getSearchParams(queryForm, BY_EXACT_MATCH, 0, ALLELE);
+        		SearchParams inexactSearch = getSearchParams(queryForm, BY_INEXACT_MATCH, 0, ALLELE);
+        		SearchParams stemmedSearch = getSearchParams(queryForm, BY_STEMMED_MATCH, 0, ALLELE);
+
+        		List<Filter> any = new ArrayList<Filter>();
+        		any.add(exactSearch.getFilter());
+        		any.add(inexactSearch.getFilter());
+        		any.add(stemmedSearch.getFilter());
+        		orSearch.setFilter(Filter.or(any));
+        	}
         
         	SearchResults<QSAlleleResult> anyResults = qsFinder.getAlleleResults(orSearch);
         	Integer resultCount = anyResults.getTotalCount();
@@ -1295,7 +1392,14 @@ public class QuickSearchController {
 
         		logger.debug("Found " + allMatches.size() + " allele matches");
 
-        		out = unifyAlleleMatches(queryForm.getTerms(), allMatches, out);
+        		if (!isCoordSearch) {
+        			out = unifyAlleleMatches(queryForm.getTerms(), allMatches, out);
+        		} else {
+        			for (QSAlleleResult result : allMatches) {
+        				result.setStars("****");
+        			}
+        			out.addAll(allMatches);
+        		}
         		logger.debug("Currently tracking " + out.size() + " alleles");
 
         		start = start + SOLR_BATCH_SIZE;
@@ -1347,17 +1451,23 @@ public class QuickSearchController {
         	// expected results can be detrimental to efficiency, so we can do an initial query to get the count
         	// and then a second query to return them.
         
-        	SearchParams exactSearch = getSearchParams(queryForm, BY_EXACT_MATCH, 0, OTHER);
-        	SearchParams inexactSearch = getSearchParams(queryForm, BY_INEXACT_MATCH, 0, OTHER);
-        	SearchParams stemmedSearch = getSearchParams(queryForm, BY_STEMMED_MATCH, 0, OTHER);
-
         	SearchParams orSearch = new SearchParams();
         	orSearch.setPaginator(new Paginator(0));
-        	List<Filter> any = new ArrayList<Filter>();
-        	any.add(exactSearch.getFilter());
-        	any.add(inexactSearch.getFilter());
-        	any.add(stemmedSearch.getFilter());
-        	orSearch.setFilter(Filter.or(any));
+
+        	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, facetLimit, FEATURE);
+        	if (searchParams != null) {
+        		orSearch.setFilter(searchParams.getFilter());
+        	} else {
+        		SearchParams exactSearch = getSearchParams(queryForm, BY_EXACT_MATCH, 0, OTHER);
+        		SearchParams inexactSearch = getSearchParams(queryForm, BY_INEXACT_MATCH, 0, OTHER);
+        		SearchParams stemmedSearch = getSearchParams(queryForm, BY_STEMMED_MATCH, 0, OTHER);
+
+        		List<Filter> any = new ArrayList<Filter>();
+        		any.add(exactSearch.getFilter());
+        		any.add(inexactSearch.getFilter());
+        		any.add(stemmedSearch.getFilter());
+        		orSearch.setFilter(Filter.or(any));
+        	}
         
         	SearchResults<QSOtherResult> anyResults = qsFinder.getOtherResults(orSearch);
         	Integer resultCount = anyResults.getTotalCount();
@@ -1402,7 +1512,7 @@ public class QuickSearchController {
 
 	// Process the given parameters and return an appropriate SearchParams object (ready to use in a search).
 	private SearchParams getSearchParams (QuickSearchQueryForm qf, String queryMode, Integer resultCount, int bucket) {
-        Filter myFilter;
+        Filter myFilter = null;
         
         if (BY_EXACT_MATCH.equals(queryMode)) {
         	myFilter = createExactTermFilter(qf);
@@ -1410,6 +1520,11 @@ public class QuickSearchController {
         	myFilter = createInexactTermFilter(qf, bucket);
         } else if (BY_STEMMED_MATCH.equals(queryMode)) {
         	myFilter = createStemmedTermFilter(qf, bucket);
+        } else if (BY_COORDS.equals(queryMode)) {
+        	myFilter = createCoordinateFilter(qf);
+        	if (myFilter == null) {
+        		return null;
+        	}
         } else { 	// BY_ANY
         	List<Filter> orFilters = new ArrayList<Filter>(2);
         	orFilters.add(createExactTermFilter(qf));
