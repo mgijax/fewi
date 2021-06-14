@@ -1195,6 +1195,7 @@ public class QuickSearchController {
         	logger.debug("Loaded " + allMatches.size() + " term matches");
         	FewiUtil.endMonitoring(key);
         
+        	// For coordinate searches, no matches will result, so don't need to worry about doing anything special.
         	out = (List<QSVocabResult>) unifyVocabMatches(queryForm.getTerms(), allMatches);
         	logger.debug("Consolidated down to " + out.size() + " terms");
         	
@@ -1290,6 +1291,7 @@ public class QuickSearchController {
         	logger.debug("Loaded " + allMatches.size() + " strain matches");
         	FewiUtil.endMonitoring(key);
         
+        	// For coordinate searches, no matches will result, so don't need to worry about doing anything special.
         	out = (List<QSStrainResult>) unifyStrainMatches(queryForm.getTerms(), allMatches);
         	logger.debug("Consolidated down to " + out.size() + " strains");
         	
@@ -1485,6 +1487,7 @@ public class QuickSearchController {
         	allMatches.addAll(snpMatches);
         	FewiUtil.endMonitoring(key);
         
+        	// For coordinate searches, no matches will result, so don't need to worry about doing anything special.
         	out = (List<QSOtherResult>) unifyOtherMatches(queryForm.getTerms(), allMatches);
         	logger.debug("Consolidated down to " + out.size() + " other IDs");
         	
