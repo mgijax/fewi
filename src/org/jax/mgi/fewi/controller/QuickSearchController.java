@@ -207,7 +207,15 @@ public class QuickSearchController {
         	if (coordSearch != null) {
         		queryForm.setQueryType(IndexConstants.QS_SEARCHTYPE_MOUSE_COORD);
         	}
+        } else if (!queryForm.getQueryType().equals(IndexConstants.QS_SEARCHTYPE_TEXT)) {
+        	// Or if a coordinate search is specified, but we can't see a location, fall back on a text search.
+
+        	Filter coordSearch = this.createCoordinateFilter(queryForm);
+        	if (coordSearch == null) {
+        		queryForm.setQueryType(IndexConstants.QS_SEARCHTYPE_TEXT);
+        	}
         }
+
         ModelAndView mav = new ModelAndView("/quicksearch/quicksearch");
         mav.addObject("query", queryForm.getQuery());
 		mav.addObject("queryString", request.getQueryString());
