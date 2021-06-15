@@ -33,6 +33,7 @@ public class QSFeatureResult extends QSResult {
 	private List<String> diseaseFacets;
 	private List<String> phenotypeFacets;
 	private List<String> markerTypeFacets;
+	private List<String> expressionFacets;
 
 	public String getSearchTermInexact() {
 		return searchTermInexact;
@@ -105,6 +106,12 @@ public class QSFeatureResult extends QSResult {
 	}
 	public void setPhenotypeFacets(List<String> phenotypeFacets) {
 		this.phenotypeFacets = phenotypeFacets;
+	}
+	public List<String> getExpressionFacets() {
+		return expressionFacets;
+	}
+	public void setExpressionFacets(List<String> expressionFacets) {
+		this.expressionFacets = expressionFacets;
 	}
 	public List<String> getMarkerTypeFacets() {
 		return markerTypeFacets;

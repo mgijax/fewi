@@ -1061,9 +1061,9 @@ public class QuickSearchController {
 	private List<String> getFeatureFacets(QuickSearchQueryForm queryForm, String filterName) throws Exception {
         // match either ID, nomenclature, or other (annotations and ortholog nomen)
         
-       	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, facetLimit, FEATURE);
+       	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, FEATURE);
        	if (searchParams == null) {
-       		searchParams = getSearchParams(queryForm, BY_ANY, facetLimit, FEATURE);
+       		searchParams = getSearchParams(queryForm, BY_ANY, 0, FEATURE);
        	}
 
         List<String> resultList = null;		// list of strings, each a value for a facet
@@ -1082,9 +1082,9 @@ public class QuickSearchController {
 	private List<String> getVocabFacets(QuickSearchQueryForm queryForm, String filterName) throws Exception {
         // match either ID, term, or synonyms
         
-       	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, facetLimit, FEATURE);
+       	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, FEATURE);
        	if (searchParams == null) {
-       		searchParams = getSearchParams(queryForm, BY_ANY, facetLimit, VOCAB_TERM);
+       		searchParams = getSearchParams(queryForm, BY_ANY, 0, VOCAB_TERM);
        	}
 
         List<String> resultList = null;		// list of strings, each a value for a facet
@@ -1103,9 +1103,9 @@ public class QuickSearchController {
 	private List<String> getAlleleFacets(QuickSearchQueryForm queryForm, String filterName) throws Exception {
         // match either ID, term, or synonyms
         
-       	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, facetLimit, FEATURE);
+       	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, FEATURE);
        	if (searchParams == null) {
-       		searchParams = getSearchParams(queryForm, BY_ANY, facetLimit, ALLELE);
+       		searchParams = getSearchParams(queryForm, BY_ANY, 0, ALLELE);
        	}
 
         List<String> resultList = null;		// list of strings, each a value for a facet
@@ -1124,9 +1124,9 @@ public class QuickSearchController {
 	private List<String> getStrainFacets(QuickSearchQueryForm queryForm, String filterName) throws Exception {
         // match either ID, term, or synonyms
         
-       	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, facetLimit, FEATURE);
+       	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, FEATURE);
        	if (searchParams == null) {
-       		searchParams = getSearchParams(queryForm, BY_ANY, facetLimit, STRAIN);
+       		searchParams = getSearchParams(queryForm, BY_ANY, 0, STRAIN);
        	}
 
         List<String> resultList = null;		// list of strings, each a value for a facet
@@ -1145,9 +1145,9 @@ public class QuickSearchController {
 	private List<String> getOtherFacets(QuickSearchQueryForm queryForm, String filterName) throws Exception {
         // match either ID, term, or synonyms
         
-       	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, facetLimit, FEATURE);
+       	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, FEATURE);
        	if (searchParams == null) {
-       		searchParams = getSearchParams(queryForm, BY_ANY, facetLimit, OTHER);
+       		searchParams = getSearchParams(queryForm, BY_ANY, 0, OTHER);
        	}
        	
         List<String> resultList = null;		// list of strings, each a value for a facet
@@ -1186,7 +1186,7 @@ public class QuickSearchController {
         	SearchParams orSearch = new SearchParams();
         	orSearch.setPaginator(new Paginator(0));
 
-        	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, facetLimit, FEATURE);
+        	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, FEATURE);
         	if (searchParams != null) {
         		orSearch.setFilter(searchParams.getFilter());
         	} else {
@@ -1280,7 +1280,7 @@ public class QuickSearchController {
         	SearchParams orSearch = new SearchParams();
         	orSearch.setPaginator(new Paginator(0));
 
-        	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, facetLimit, FEATURE);
+        	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, FEATURE);
         	if (searchParams != null) {
         		orSearch.setFilter(searchParams.getFilter());
         	} else {
@@ -1359,7 +1359,7 @@ public class QuickSearchController {
         	SearchParams orSearch = new SearchParams();
         	orSearch.setPaginator(new Paginator(0));
 
-        	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, facetLimit, FEATURE);
+        	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, FEATURE);
         	if (searchParams != null) {
         		orSearch.setFilter(searchParams.getFilter());
         		isCoordSearch = true;
@@ -1471,7 +1471,7 @@ public class QuickSearchController {
         	SearchParams orSearch = new SearchParams();
         	orSearch.setPaginator(new Paginator(0));
 
-        	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, facetLimit, FEATURE);
+        	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, FEATURE);
         	if (searchParams != null) {
         		orSearch.setFilter(searchParams.getFilter());
         	} else {

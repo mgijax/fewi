@@ -59,6 +59,7 @@ public class SolrQSFeatureResultBaseHunter extends SolrHunter<QSFeatureResult> {
 		propertyMap.put(SearchConstants.QS_DISEASE_FACETS, new SolrPropertyMapper(IndexConstants.QS_DISEASE_FACETS));
 		propertyMap.put(SearchConstants.QS_PHENOTYPE_FACETS, new SolrPropertyMapper(IndexConstants.QS_PHENOTYPE_FACETS));
 		propertyMap.put(SearchConstants.QS_MARKER_TYPE_FACETS, new SolrPropertyMapper(IndexConstants.QS_MARKER_TYPE_FACETS));
+		propertyMap.put(SearchConstants.QS_EXPRESSION_FACETS, new SolrPropertyMapper(IndexConstants.QS_EXPRESSION_FACETS));
 
 		/*
 		 *  The name of the field we want to iterate through the documents for
