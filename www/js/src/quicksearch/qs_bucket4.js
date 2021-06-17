@@ -62,6 +62,7 @@ function b4Show(data) {
 	$('#b4Counts').html(header);
 	$('#b4Results').html(tbl);
 	pgUpdatePaginator(b4CacheName, 'strainPaginator', data.totalCount, b4PageSize, dcGetPage)
+	qsStyleTabText(data.totalCount, 4);
 	console.log("Populated " + data.rows.length + " b4Results");
 };
 

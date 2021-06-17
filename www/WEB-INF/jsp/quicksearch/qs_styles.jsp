@@ -121,4 +121,12 @@
 	font-weight: bold;
 }
 #breadbox { float: none; }
+#hasResults {
+	color: green;
+	font-weight: bold;
+}
+#noResults {
+	color: black;
+	font-weight: normal;
+}
 </style>

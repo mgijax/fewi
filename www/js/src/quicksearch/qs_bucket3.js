@@ -51,4 +51,5 @@ var b3Show = function(data) {
 	$('#idCount').html("(" + commaDelimit(data.totalCount) + ")");
 	$('#b3Counts').html(header);
 	$('#b3Results').html(tbl);
+	qsStyleTabText(data.totalCount, 5);
 };

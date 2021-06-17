@@ -3,11 +3,14 @@
  * Notes: Functions here will be prefixed by "qs".
  */
 
+var qsWaitFor = 0;		// number of tabs for which we're waiting for results
+
 // main logic for quick search
 var qsMain = function() {
 	// Only go ahead with queries if an even number of double-quotes in the search string.
 	var ct = 0;
 	var pos = query.indexOf('"');
+	qsWaitFor = 0;
 	
 	while (pos >= 0) {
 		ct++;
@@ -20,6 +23,7 @@ var qsMain = function() {
 		b3Fetch();		// bucket 3 : ID bucket
 		b4Fetch();		// bucket 4 : strains bucket
 		b5Fetch();		// bucket 5 : alleles bucket
+		qsWaitFor = 5;
 	} else {
 		$('#errorDiv').html('Error: Your search includes an odd number of quotation marks.  ' +
 			'Please edit your search to use quotation marks only in pairs.');
@@ -84,4 +88,22 @@ var qsLogFilters = function() {
 // show the "waiting" spinner in the given 'divName' (including the pound sign)
 var qsShowSpinner = function(divName) {
 	$(divName).html("<img src='/fewi/mgi/assets/images/loading.gif' height='21' width='21'> Waiting for results...");
+}
+
+// used to set tab text color and font weight based on number of results
+var qsStyleTabText = function(resultCount, tabNumber) {
+	if (resultCount > 0) {
+		$('#ui-id-' + tabNumber).removeClass('noResults');
+		$('#ui-id-' + tabNumber).addClass('hasResults');
+		$('#ui-id-' + tabNumber).css({ 'color' : 'green', 'font-weight' : 'bold'});
+	} else {
+		$('#ui-id-' + tabNumber).removeClass('hasResults');
+		$('#ui-id-' + tabNumber).addClass('noResults');
+		$('#ui-id-' + tabNumber).css({ 'color' : 'black', 'font-weight' : 'normal'});
+	}
+	qsWaitFor = qsWaitFor - 1;
+	
+	if (qsWaitFor == 0) {
+		$('.hasResults').first().click();
+	}
 }

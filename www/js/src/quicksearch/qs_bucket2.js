@@ -1,5 +1,5 @@
 /* Name: qs_bucket2.js
- * Purpose: data retrieval and processing logic for the quicksearch's second data bucket (vocab terms + strains)
+ * Purpose: data retrieval and processing logic for the quicksearch's second data bucket (vocab terms)
  * Notes: Functions here will be prefixed by "b2".
  */
 
@@ -57,6 +57,7 @@ function b2Show(data) {
 	$('#b2Counts').html(header);
 	$('#b2Results').html(tbl);
 	pgUpdatePaginator(b2CacheName, 'vocabPaginator', data.totalCount, b2PageSize, dcGetPage)
+	qsStyleTabText(data.totalCount, 3);
 	console.log("Populated " + data.rows.length + " b2Results");
 };
 

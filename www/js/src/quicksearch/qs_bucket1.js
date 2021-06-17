@@ -1,5 +1,5 @@
 /* Name: qs_bucket1.js
- * Purpose: data retrieval and processing logic for the quicksearch's first data bucket (markers + alleles)
+ * Purpose: data retrieval and processing logic for the quicksearch's first data bucket (markers)
  * Notes: Functions here will be prefixed by "b1".
  */
 
@@ -67,6 +67,7 @@ function b1Show(data) {
 	$('#b1Counts').html(header);
 	$('#b1Results').html(tbl);
 	pgUpdatePaginator(b1CacheName, 'featurePaginator', data.totalCount, b1PageSize, dcGetPage);
+	qsStyleTabText(data.totalCount, 1);
 	console.log("Populated " + data.rows.length + " b1Results");
 };
 
