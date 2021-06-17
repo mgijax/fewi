@@ -699,6 +699,9 @@ public class QuickSearchController {
 		// original search term will be the last item in the list of search terms
 		String originalSearchTerm = searchTerms.get(searchTerms.size() - 1).toLowerCase().replaceAll("\"", "").trim();
 		
+		// original search term with spaces converted to hyphens
+		String hyphenatedSearchTerm = originalSearchTerm.replaceAll(" ", "-");
+		
 		// Used for preferential boosting of whole words (gene 6) over contains (gene 6000).
 		Pattern wholeWordRegex = Pattern.compile("\\b" + originalSearchTerm + "\\b");
 
@@ -809,7 +812,8 @@ public class QuickSearchController {
 
 			if (lowerTerm != null) {
 				// search terms can be exact (4-star), contain all terms (3-star), or contain some terms (2-star)
-				if (!limitedType && (lowerTerm.equals(originalSearchTerm) || lowerDisplayTerm.equals(originalSearchTerm))) {
+				if (!limitedType && (lowerTerm.equals(originalSearchTerm) || lowerDisplayTerm.equals(originalSearchTerm) ||
+						lowerTerm.equals(hyphenatedSearchTerm) || lowerDisplayTerm.equals(hyphenatedSearchTerm))) {
 					match.setStars("****");
 				} else {
 					int matchCount = 0;

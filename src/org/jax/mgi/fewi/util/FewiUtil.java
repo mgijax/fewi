@@ -144,6 +144,16 @@ public class FewiUtil {
 			items = new ArrayList<String>();
 			for (String q : t.split(" ")) {
 				items.add(q);
+				
+				// Along with the word in 'q', also split it into hyphen-separate pieces to search for
+				// individually.
+				
+				String[] pieces = q.split("-");
+				if (pieces.length > 1) {
+					for (String r : pieces) {
+						items.add(r);
+					}
+				}
 			}
 			return items;
 		}
