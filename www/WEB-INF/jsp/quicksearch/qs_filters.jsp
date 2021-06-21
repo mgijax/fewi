@@ -20,8 +20,9 @@
 	<div id="facetDialog">
 		<div class="hd">Filter</div>
 		<div class="bd">
+			<!-- Form action is intended to be just a no-op here. -->
 			<form:form method="GET"
-				action="${configBean.FEWI_URL}quicksearch/summary">
+				action="${configBean.WEBSHARE_URL}images/filter.png">
 				<img src="/fewi/mgi/assets/images/loading.gif">
 			</form:form>
 		</div>
