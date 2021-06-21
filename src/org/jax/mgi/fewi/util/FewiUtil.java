@@ -145,10 +145,10 @@ public class FewiUtil {
 			for (String q : t.split(" ")) {
 				items.add(q);
 				
-				// Along with the word in 'q', also split it into hyphen-separate pieces to search for
-				// individually.
+				// Along with the word in 'q', also split it into hyphen-separated pieces to search for
+				// individually.  Split on greater-than and less-than, too.
 				
-				String[] pieces = q.split("-");
+				String[] pieces = q.replaceAll("<", "-").replaceAll(">", "-").split("-");
 				if (pieces.length > 1) {
 					for (String r : pieces) {
 						items.add(r);
