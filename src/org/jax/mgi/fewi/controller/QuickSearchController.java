@@ -310,6 +310,7 @@ public class QuickSearchController {
         		if (!isCoordSearch) {
         			out = unifyFeatureMatches(queryForm.getTerms(), allMatches, out);
         		} else {
+        			// Coordinate searches automatically generate 4-star matches.
         			for (QSFeatureResult result : allMatches) {
         				result.setStars("****");
         			}
@@ -811,9 +812,9 @@ public class QuickSearchController {
 			int nonStemmedMatchBoost = 0;
 
 			if (lowerTerm != null) {
-				// search terms can be exact (4-star), contain all terms (3-star), or contain some terms (2-star)
-				if (!limitedType && (lowerTerm.equals(originalSearchTerm) || lowerDisplayTerm.equals(originalSearchTerm) ||
-						lowerTerm.equals(hyphenatedSearchTerm) || lowerDisplayTerm.equals(hyphenatedSearchTerm))) {
+				// Search terms can be exact (4-star), contain all terms (3-star), or contain some terms (2-star).
+				// Note that 4-star matches now must be through comparison to the display terms.
+				if (!limitedType && (lowerDisplayTerm.equals(originalSearchTerm) || lowerDisplayTerm.equals(hyphenatedSearchTerm))) {
 					match.setStars("****");
 				} else {
 					int matchCount = 0;
@@ -1416,6 +1417,7 @@ public class QuickSearchController {
         		if (!isCoordSearch) {
         			out = unifyAlleleMatches(queryForm.getTerms(), allMatches, out);
         		} else {
+        			// Coordinate searches automatically generate 4-star matches.
         			for (QSAlleleResult result : allMatches) {
         				result.setStars("****");
         			}
