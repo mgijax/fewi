@@ -66,6 +66,12 @@
 				i++;
 			}
 
+			sft.sort(function(a,b) {
+				if (a.label.toLowerCase() < b.label.toLowerCase()) { return -1; }
+				else if (a.label.toLowerCase() > b.label.toLowerCase()) { return 1; }
+				return a.id - b.id;
+			});
+
 			$rootScope.selectedFeatureTypes = sft;		// options for the feature types filter
 		}
 		
