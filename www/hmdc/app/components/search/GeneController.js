@@ -60,17 +60,21 @@
 			// At this point, we have ft as { 'feature type 1' : [ 'symbol 1', 'symbol 2', ... ], 'feature type 2' : ... }
 			
 			var sft = [];
-			var i = 0;
 			for (var featureType in ft) {
-				sft.push( { id: i, label: featureType, symbols: ft[featureType] } );
-				i++;
+				sft.push( { label: featureType, symbols: ft[featureType] } );
 			}
 
+			// Sort the options by feature type (alphabetic).
 			sft.sort(function(a,b) {
 				if (a.label.toLowerCase() < b.label.toLowerCase()) { return -1; }
 				else if (a.label.toLowerCase() > b.label.toLowerCase()) { return 1; }
-				return a.id - b.id;
+				return 0;
 			});
+
+			// Assign IDs now that the options are sorted.
+			for (var i = 0; i < sft.length; i++) {
+				sft[i].id = i;
+			}
 
 			$rootScope.selectedFeatureTypes = sft;		// options for the feature types filter
 		}
