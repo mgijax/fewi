@@ -112,8 +112,9 @@
 		});
 
 		vm.removeFilters = function() {
-			$rootScope.selectedPhenoTypesAndDiseasesModel = [];
-			$rootScope.selectedGenesModel = [];
+			$rootScope.selectedPhenoTypesAndDiseasesModel = [];		// selected phenotype and disease filter values
+			$rootScope.selectedGenesModel = [];						// selected genes filter values
+			$rootScope.selectedFeatureTypesModel = [];				// selected feature types filter values
 			$rootScope.$emit("FilterChanged");
 		}
 
@@ -167,8 +168,9 @@
 			if(i != -1) vm.jsonData.gridMPHeaders.push("normal phenotype");
 			vm.jsonData.gridDiseaseHeaders.sort(naturalSortService.naturalSortFunction)
 
-			$rootScope.selectedPhenoTypesAndDiseases = [];
-			$rootScope.selectedPhenoTypesAndDiseasesModel = [];
+			$rootScope.selectedPhenoTypesAndDiseases = [];			// options for phenotype/disease filter
+			$rootScope.selectedPhenoTypesAndDiseasesModel = [];		// user-selected options
+			
 			for (var j = 0; j < vm.jsonData.gridMPHeaders.length; j++) {
 				$rootScope.selectedPhenoTypesAndDiseases.push({id: vm.jsonData.gridMPHeaders[j], label: vm.jsonData.gridMPHeaders[j], type: "1"});
 			}
@@ -177,48 +179,97 @@
 				$rootScope.selectedPhenoTypesAndDiseases.push({id: vm.jsonData.gridDiseaseHeaders[j], label: vm.jsonData.gridDiseaseHeaders[j], type: "2"});
 			}
 
-			$rootScope.selectedGenes = [];
-			$rootScope.selectedGenesModel = [];
+//			$rootScope.selectedFeatureTypes = [];		// options for the feature types filter (computed in GeneController.js)
+			$rootScope.selectedFeatureTypesModel = [];	// user-selected options
+
+			$rootScope.selectedGenes = [];				// options for the genes filter
+			$rootScope.selectedGenesModel = [];			// user-selected options
 			for(var key in vm.jsonData.gridRows) {
 				var index = key;
 				key = vm.jsonData.gridRows[key];
 				var humanSymbolString = [];
+				var rowSymbols = [];
 				for(var human in key.gridCluster.humanSymbols) {
 					var h = key.gridCluster.humanSymbols[human];
 					humanSymbolString.push(h.symbol.replace(/<([^>]*)>/g, "<sup>$1</sup>"));
+					rowSymbols.push(h.symbol);
 				}
 
 				var markerSymbolString = [];
 				for(var marker in key.gridCluster.mouseSymbols) {
 					var m = key.gridCluster.mouseSymbols[marker];
 					markerSymbolString.push(m.symbol.replace(/<([^>]*)>/g, "<sup>$1</sup>"));
+					rowSymbols.push(m.symbol);
 				}
 				if(humanSymbolString.length > 0 && markerSymbolString.length > 0) {
-					$rootScope.selectedGenes.push({id: index, label: humanSymbolString.join(", ") + " - " + markerSymbolString.join(", ")});
+					$rootScope.selectedGenes.push({id: index, symbols: rowSymbols, label: humanSymbolString.join(", ") + " - " + markerSymbolString.join(", ")});
 				} else if(humanSymbolString.length > 0) {
-					$rootScope.selectedGenes.push({id: index, label: humanSymbolString.join(", ")});
+					$rootScope.selectedGenes.push({id: index, symbols: rowSymbols, label: humanSymbolString.join(", ")});
 				} else if(markerSymbolString.length > 0) {
-					$rootScope.selectedGenes.push({id: index, label: markerSymbolString.join(", ")});
+					$rootScope.selectedGenes.push({id: index, symbols: rowSymbols, label: markerSymbolString.join(", ")});
 				}
 			}
 		}
 	
+		// Filter the grid tab.
 		function filterGrid() {
 			vm.displayRows = [];
 			vm.displayCols = [];
-			$rootScope.filteredDiseases = [];
-			$rootScope.filteredGenes = [];
+			$rootScope.filteredDiseases = [];		// list of diseases to hide from being displayed
+			$rootScope.filteredGenes = [];			// list of genes to hide from being displayed
 
 			var selectedPhenoTypesAndDiseases = [];
 			for(var i = 0; i < $rootScope.selectedPhenoTypesAndDiseasesModel.length; i++) {
 				selectedPhenoTypesAndDiseases.push($rootScope.selectedPhenoTypesAndDiseasesModel[i].id);
 			}
 
-			var selectedGenes = [];
+			// Gene symbols to show, based on the feature types filter.  Will be empty if FT filter not used.
+			var ftSymbols = {};
+			var ftHadAny = false;
+
+			for (var i in $rootScope.selectedFeatureTypesModel) {
+				var myID = $rootScope.selectedFeatureTypesModel[i].id;
+				var sft = $rootScope.selectedFeatureTypes[myID];
+				for (var s in sft.symbols) {
+					ftSymbols[sft.symbols[s]] = 1;
+					ftHadAny = true;
+				}
+			}
+			
+			// Gene symbols to show, based on the Genes filter.  Will be empty if Genes filter not used.
+			var gfSymbols = {};
+			var gfHadAny = false;
+
 			for(var i = 0; i < $rootScope.selectedGenesModel.length; i++) {
-				selectedGenes.push($rootScope.selectedGenesModel[i].id);
+				var myID = $rootScope.selectedGenesModel[i].id;
+				var row = $rootScope.selectedGenes[myID];
+				for (var s in row.symbols) {
+					gfSymbols[row.symbols[s]] = 1;
+					gfHadAny = true;
+				}
 			}
 
+			// List of row IDs for the genes we want to show, based on both Feature Types and Genes filters.  Will be empty
+			// if neither filter was used.
+			
+			var selectedGenes = [];
+			for (var i = 0; i < $rootScope.selectedGenes.length; i++) {
+				var myID = $rootScope.selectedGenes[i].id;
+				var row = $rootScope.selectedGenes[myID];
+				for (var s = 0; s < row.symbols.length; s++) {
+					var symbol = row.symbols[s];
+
+					var okFT = (!ftHadAny) || (symbol in ftSymbols);
+					var okGF = (!gfHadAny) || (symbol in gfSymbols);
+
+					if (okFT && okGF) {
+						selectedGenes.push(row.id);
+					}
+				}
+			}
+			
+			// Proceed with filtering.
+			
 			for(var key in vm.jsonData.gridRows) {
 				var index = key;
 				key = vm.jsonData.gridRows[key];

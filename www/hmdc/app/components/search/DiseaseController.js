@@ -14,6 +14,7 @@
 			ngDialog.open({ template: 'DiseaseSource' });
 		}
 
+		// Filter the disease tab.
 		function filterMethod() {
 			var localFilteredResults = [];
 			if($rootScope.filteredDiseases && $rootScope.filteredDiseases.length > 0) {
@@ -38,6 +39,7 @@
 		vm.removeFilters = function() {
 			$rootScope.selectedPhenoTypesAndDiseasesModel = [];
 			$rootScope.selectedGenesModel = [];
+			$rootScope.selectedFeatureTypesModel = [];
 			$rootScope.$emit("FilterChanged");
 		}
 

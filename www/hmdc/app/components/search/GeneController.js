@@ -13,6 +13,7 @@
 			ngDialog.open({ template: 'GeneSource' });
 		}
 
+		// Filter the genes tab.
 		function filterMethod() {
 			var localFilteredResults = [];
 
@@ -35,9 +36,43 @@
 
 		$rootScope.$on("GridFilterFinished", filterMethod);
 
+		// Go through response from geneQuery endpoint and collect feature types for a filter.
+		function collectFeatureTypes() {
+			var ft = {};
+			
+			for (var key in vm.results) {
+				var row = vm.results[key];
+				var symbol = row.symbol;
+				var featureTypes = row.filterableFeatureType;
+				
+				for (var i in featureTypes) {
+					var featureType = featureTypes[i];
+					
+					if (featureType in ft) {
+						ft[featureType].push(symbol);
+					} else {
+						ft[featureType] = [];
+						ft[featureType].push(symbol);
+					}
+				}
+			}
+				
+			// At this point, we have ft as { 'feature type 1' : [ 'symbol 1', 'symbol 2', ... ], 'feature type 2' : ... }
+			
+			var sft = [];
+			var i = 0;
+			for (var featureType in ft) {
+				sft.push( { id: i, label: featureType, symbols: ft[featureType] } );
+				i++;
+			}
+
+			$rootScope.selectedFeatureTypes = sft;		// options for the feature types filter
+		}
+		
 		vm.removeFilters = function() {
 			$rootScope.selectedPhenoTypesAndDiseasesModel = [];
 			$rootScope.selectedGenesModel = [];
+			$rootScope.selectedFeatureTypesModel = [];
 			$rootScope.$emit("FilterChanged");
 		}
 
@@ -50,6 +85,7 @@
 					vm.results = response.data;
 					vm.resetGeneTable = true;
 					vm.loading = false;
+					collectFeatureTypes();
 					filterMethod();
 					vm.removeFilters();
 				}, function (error) {

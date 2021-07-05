@@ -78,6 +78,14 @@
 
 						<div class="btn-group pad10bottom"
 							ng-dropdown-multiselect=""
+							options="selectedFeatureTypes"
+							selected-model="selectedFeatureTypesModel"
+							translation-texts="selectFeatureTypesCustemText"
+							extra-settings="selectFeatureTypesSettings"
+							events="handleEvents"></div>
+
+						<div class="btn-group pad10bottom"
+							ng-dropdown-multiselect=""
 							options="selectedGenes"
 							selected-model="selectedGenesModel"
 							translation-texts="selectGenesCustemText"
