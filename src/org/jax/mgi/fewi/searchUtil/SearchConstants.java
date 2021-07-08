@@ -34,6 +34,7 @@ public class SearchConstants {
     // marker constants
     public static final String MRK_KEY              = "marker_key";
     public static final String MRK_ID               = "marker_id";
+    public static final String MARKER_ID            = "markerID";
 	public static final String MRK_TERM_ID 			= "markerTermId";
     public static final String MRK_SYMBOL               = "marker_symbol";
     public static final String MRK_SYMBOL_LOWER         = "markerSymbolLower";
@@ -305,6 +306,8 @@ public class SearchConstants {
 	// general
 	public static final String COLUMN_ID = "columnID";
 	public static final String HAS_IMAGE = "hasImage";
+	public static final String ORGANISM = "organism";
+	public static final String COORD_TYPE = "coordType";
 	
 	// quick search
 	public static final String QS_SEARCH_TERM_EXACT = "searchTermExact";

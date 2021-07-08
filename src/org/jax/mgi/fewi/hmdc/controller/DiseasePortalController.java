@@ -203,7 +203,7 @@ public class DiseasePortalController {
 			return null;
 		}
 		for(DiseasePortalConditionQuery cq: group.getQueries()) {
-			filterList.add(cq.genFilter());
+			filterList.add(cq.genFilter(hdpFinder));
 		}
 
 		if("AND".equals(group.getOperator())) {

@@ -5,12 +5,18 @@ import java.util.List;
 
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.Operator;
+import org.jax.mgi.fewi.searchUtil.SearchConstants;
+import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 import org.jax.mgi.shr.fe.query.SolrLocationTranslator;
+import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Joiner;
 
 public class DiseasePortalConditionQuery {
+	private Logger logger = LoggerFactory.getLogger(DiseasePortalConditionQuery.class);
 
 	private String field;
 	private DiseasePortalCondition condition;
@@ -34,7 +40,7 @@ public class DiseasePortalConditionQuery {
 		this.condition = condition;
 	}
 	
-	public Filter genFilter() {
+	public Filter genFilter(DiseasePortalFinder hdpFinder) {
 		List<String> tokens = null;
 		if(field.equals(DiseasePortalFields.MARKER_ID_SEARCH) || field.equals(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_ID) || field.equals(DiseasePortalFields.TERM_SEARCH_GENE_UPLOAD)) {
 			tokens = condition.getIdTokens();
@@ -47,15 +53,25 @@ public class DiseasePortalConditionQuery {
 				}
 			}
 			return Filter.or(filterList);
+
 		} else if(field.equals(DiseasePortalFields.LOCATION)) {
-			String locationQuery = SolrLocationTranslator.getQueryValue(condition.getInput(), null);
+			String coords = condition.getInput();
+			String organism = "mouse";
 			
-			if(condition.getParameters().contains("mouse")) {
-				return new Filter(DiseasePortalFields.MOUSE_COORDINATE, locationQuery, Operator.OP_HAS_WORD);
-			} else if(condition.getParameters().contains("human")) {
-				return new Filter(DiseasePortalFields.HUMAN_COORDINATE, locationQuery, Operator.OP_HAS_WORD);
+			if (condition.getParameters().contains("human")) {
+				organism = "human";
 			}
-			return null;
+			
+			List<String> markerKeys = new ArrayList<String>();
+
+			List<Integer> keys = hdpFinder.getMarkersByCoord(organism, coords);
+			if (keys != null) {
+				for (Integer key : keys) {
+					markerKeys.add(key.toString());
+				}
+			}
+
+			return new Filter(DiseasePortalFields.MARKER_KEY, markerKeys, Filter.Operator.OP_IN);
 			
 		} else {
 			tokens = condition.getWordTokens();
