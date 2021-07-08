@@ -16,7 +16,7 @@
 				if(value.humanAnnotCount > 0) {
 					return "<div title=\"" + value.title + "\" class=\"normal normaloffset\">N</div>";
 				} else {
-					ret = "<div title=\"" + value.title + "\" class=\"normal\">N</div>";
+					var ret = "<div title=\"" + value.title + "\" class=\"normal\">N</div>";
 					formattedValue = ret;
 					return ret;
 				}
