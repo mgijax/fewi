@@ -9,7 +9,7 @@ var b3Failed = false;		// did retrieval for the ID bucket fail?
 
 // Fetch the data items for bucket 3 (matches by ID).
 var b3Fetch = function() {
-		var url = fewiurl + '/quicksearch/otherBucket?' + queryString;
+		var url = fewiurl + '/quicksearch/otherBucket?' + getQuerystring();
 		$.get(url, function(data) {
 			try {
 				b3Show(data);

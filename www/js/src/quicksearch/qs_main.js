@@ -60,6 +60,7 @@ var qsProcessFilters = function() {
 	instantiatedPaginator = false;
 	b1Fetch();
 	b2Fetch();
+	b3Fetch();
 	b4Fetch();
 	b5Fetch();
 
