@@ -290,7 +290,7 @@ public class QuickSearchFinder {
 	 * Utilize the given cache to avoid retrieving common items from Solr.
 	 */
 	private Map<String,QSFeaturePart> getFeatureParts(List<String> ids, LimitedSizeCache<QSFeaturePart> cache) {
-		logger.info("->getFeatureParts (" + ids.size() + " IDs), cache size: " + cache.size());
+		logger.debug("->getFeatureParts (" + ids.size() + " IDs), cache size: " + cache.size());
 		
 		// mapping we're compiling to return
 		Map<String,QSFeaturePart> out = new HashMap<String,QSFeaturePart>();
@@ -306,7 +306,7 @@ public class QuickSearchFinder {
 				toFind.add(id);
 			}
 		}
-		logger.info("Got " + out.size() + " from cache, " + toFind.size() + " yet to find");
+		logger.debug("Got " + out.size() + " from cache, " + toFind.size() + " yet to find");
 
 		int sliceSize = 500;
 		Paginator page = new Paginator(500);
@@ -318,13 +318,13 @@ public class QuickSearchFinder {
 			
 			SearchParams params = new SearchParams();
 			params.setPaginator(page);
-			logger.info("Looking up " + slice.size() + " IDs");
+			logger.debug("Looking up " + slice.size() + " IDs");
 			params.setFilter(new Filter(SearchConstants.QS_PRIMARY_ID, slice, Filter.Operator.OP_IN));
 			
 			SearchResults<QSFeaturePart> results = new SearchResults<QSFeaturePart>();
 			lookupHunter.hunt(params, results);
 			
-			logger.info("Looked up " + results.getResultObjects().size() + " objects from Solr");
+			logger.debug("Looked up " + results.getResultObjects().size() + " objects from Solr");
 			for (QSFeaturePart fp : results.getResultObjects()) {
 				out.put(fp.getPrimaryID(), fp);
 				cache.put(fp.getPrimaryID(), fp);
@@ -333,7 +333,7 @@ public class QuickSearchFinder {
 			start = end;
 		}
 		
-		logger.info("->hunter found " + out.size() + " feature parts");
+		logger.debug("->hunter found " + out.size() + " feature parts");
 		return out;
 	}
 }
