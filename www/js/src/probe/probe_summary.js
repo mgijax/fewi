@@ -95,7 +95,7 @@ var updateResultsDiv = function(startIndex, rowsPerPage) {
 			var totalCount = parseInt(lines[1]);
 			
 			if ((count == 0) || (totalCount == 0)) {
-				$("#resultSummary").html("No molecular probes are available for ${markerID}.");
+				$("#resultSummary").html("No molecular probes are available for this marker.");
 				updatePageReport(null, null, null, "probe");
 				updatePaginator(totalCount, null, updatePaginationParameters);
 				return;

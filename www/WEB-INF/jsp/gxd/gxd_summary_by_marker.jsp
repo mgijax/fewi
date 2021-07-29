@@ -110,9 +110,9 @@ body.yui-skin-sam div#outer {position:relative;}
     var searchedAssayType = "${e:forJavaScript(assayType)}";
     var searchedStructure = "${e:forJavaScript(structure)}";
     var searchedStructureId = "${e:forJavaScript(strucureId)}";
-    var querystring = "markerMgiId=" + mgiMarkerId + "&theilerStage=${e:forJavaScript(theilerStage)}&assayType=${e:forJavaScript(assayType)}&tab=${e:forJavaScript(tab)}";
+    var querystring = "markerMgiId=" + mgiMarkerId + "&theilerStage=${e:forJavaScript(theilerStage)}&assayType=${e:forJavaScript(assayType)}&tab=${e:forHtml(tab)}";
     if (searchedWildtypeFilter != '') {
-    	querystring = "markerMgiId=" + mgiMarkerId + "&theilerStage=${e:forJavaScript(theilerStage)}&assayType=${e:forJavaScript(assayType)}&tab=${e:forJavaScript(tab)}&wildtypeFilter=${e:forJavaScript(wildtypeFilter)}";
+    	querystring = "markerMgiId=" + mgiMarkerId + "&theilerStage=${e:forJavaScript(theilerStage)}&assayType=${e:forJavaScript(assayType)}&tab=${e:forHtml(tab)}&wildtypeFilter=${e:forJavaScript(wildtypeFilter)}";
     }
     var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>

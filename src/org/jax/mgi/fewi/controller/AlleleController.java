@@ -161,7 +161,12 @@ public class AlleleController {
 		String formName = request.getParameter("formName");
 
 		ModelAndView mav = new ModelAndView("allele_query_system_popup");
-		if(notEmpty(formName)) mav.addObject("formName",formName);
+		if(notEmpty(formName)) {
+			// Protect against unexpected values (only two allowed).
+			if ("markerQF".equals(formName) || "alleleQueryForm".equals(formName)) {
+				mav.addObject("formName",formName);
+			}
+		}
 		mav.addObject("widgetValues1",FormWidgetValues.getPhenoSystemWidgetValues1());
 		mav.addObject("widgetValues2",FormWidgetValues.getPhenoSystemWidgetValues2());
 

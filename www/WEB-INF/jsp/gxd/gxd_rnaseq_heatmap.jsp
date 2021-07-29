@@ -122,7 +122,7 @@
 <script type="text/javascript" src="${externalUrls.MORPHEUS}/js/morpheus-external-latest.min.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd/rnaseq_heatmap.js"></script>
 <script type="text/javascript">
-var queryString = '${queryString}';
+var queryString = '${e:forHtml(queryString)}';
 main();
 </script>
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
