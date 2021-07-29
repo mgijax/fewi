@@ -288,7 +288,7 @@ public class QuickSearchController {
         	}
 
         	while (start < resultCount) {
-        		logger.info("> Seeking from " + start + " to " + (start + batch.getResults()));
+        		logger.debug("> Seeking from " + start + " to " + (start + batch.getResults()));
 
         		batch.setStartIndex(start);
         		orSearch.setPaginator(batch);
@@ -495,6 +495,12 @@ public class QuickSearchController {
         return Filter.or(exactFilters);
 	}
 	
+	// Return a single filter that looks for features using the inexact field, assuming we have a single word
+	// that contains a wildcard.  Does not need to worry about stopwords, as they don't have wildcards.
+	private Filter createWildcardFilter(QuickSearchQueryForm qf, int bucket) {
+       	return new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT, qf.getQuery(), Operator.OP_EQUAL_WILDCARD_ALLOWED);
+	}
+
 	// Return a single filter that looks for features using the inexact field, with multiple terms joined by an OR.
 	// Removes stopwords.
 	private Filter createInexactTermFilter(QuickSearchQueryForm qf, int bucket) {
@@ -698,7 +704,7 @@ public class QuickSearchController {
 			boolean mustMatchDisplay) {
 
 		// original search term will be the last item in the list of search terms
-		String originalSearchTerm = searchTerms.get(searchTerms.size() - 1).toLowerCase().replaceAll("\"", "").trim();
+		String originalSearchTerm = searchTerms.get(searchTerms.size() - 1).toLowerCase().replaceAll("\"", "").replaceAll("[*]", " ").trim();
 		
 		// original search term with spaces converted to hyphens
 		String hyphenatedSearchTerm = originalSearchTerm.replaceAll(" ", "-");
@@ -1395,7 +1401,7 @@ public class QuickSearchController {
         	}
         	
         	while (start < resultCount) {
-        		logger.info("> Seeking from " + start + " to " + (start + batch.getResults()));
+        		logger.debug("> Seeking from " + start + " to " + (start + batch.getResults()));
 
         		batch.setStartIndex(start);
         		orSearch.setPaginator(batch);
@@ -1534,6 +1540,21 @@ public class QuickSearchController {
         return response;
     }
 
+	// determine if the search string has at least one wildcard and is likely a symbol (thus needing special
+	// handling)
+	private boolean isInexactSymbol (String query, int bucket) {
+		if ((bucket == FEATURE) || (bucket == ALLELE)) {
+			if ((query != null) && (query.trim().length() > 0)) {
+				if (query.indexOf("*") >= 0) {
+					if (query.split("[ \t]").length < 2) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
 	// Process the given parameters and return an appropriate SearchParams object (ready to use in a search).
 	private SearchParams getSearchParams (QuickSearchQueryForm qf, String queryMode, Integer resultCount, int bucket) {
         Filter myFilter = null;
@@ -1541,7 +1562,11 @@ public class QuickSearchController {
         if (BY_EXACT_MATCH.equals(queryMode)) {
         	myFilter = createExactTermFilter(qf);
         } else if (BY_INEXACT_MATCH.equals(queryMode)) {
-        	myFilter = createInexactTermFilter(qf, bucket);
+        	if (isInexactSymbol(qf.getQuery(), bucket)) {
+        		myFilter = createWildcardFilter(qf, bucket);
+        	} else {
+        		myFilter = createInexactTermFilter(qf, bucket);
+        	}
         } else if (BY_STEMMED_MATCH.equals(queryMode)) {
         	myFilter = createStemmedTermFilter(qf, bucket);
         } else if (BY_COORDS.equals(queryMode)) {
