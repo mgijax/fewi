@@ -57,9 +57,11 @@
 					</section>
 				</c:if>
 
+				<c:set var="padIfNoHuman" value="" />
 				<c:set var="sectionstate" value="closed" />
 				<c:if test="${fn:length(humanHomologs) == 0}">
 					<c:set var="sectionstate" value="open" />
+					<c:set var="padIfNoHuman" value=" style='margin-left: 60px;'" />
 				</c:if>
 
 				<div class="homologyExtra extra ${sectionstate}">
@@ -166,7 +168,7 @@
 						<hr>
 					</c:forEach><!-- human homolog -->
 
-					<section class="summarySec1">
+					<section class="summarySec1"${padIfNoHuman}>
 						<ul>
 
 							<c:forEach var="homologyClass" items="${homologyClasses}">
