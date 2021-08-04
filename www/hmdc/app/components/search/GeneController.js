@@ -13,22 +13,31 @@
 			ngDialog.open({ template: 'GeneSource' });
 		}
 
-		// Filter the genes tab.
+		// Filter the genes tab.  If no genes selected from the genes filter (which uses values only drawn from the grid)
+		// then show all genes (even those which do not appear on the grid).
 		function filterMethod() {
 			var localFilteredResults = [];
 
-			if($rootScope.filteredGenes && $rootScope.filteredGenes.length > 0) {
-				for(var key in vm.results) {
-					if($rootScope.filteredGenes.indexOf(vm.results[key].symbol) > -1) {
-						localFilteredResults.push(vm.results[key]);
+			// If any filters have values selected, then we need to only show genes that match those selected filters.
+			if (
+				(($rootScope.selectedGenesModel !== undefined) && ($rootScope.selectedGenesModel.length > 0)) || 
+				(($rootScope.selectedFeatureTypesModel !== undefined) && ($rootScope.selectedFeatureTypesModel.length > 0)) ||
+				(($rootScope.selectedPhenoTypesAndDiseasesModel !== undefined) && ($rootScope.selectedPhenoTypesAndDiseasesModel.length > 0))
+				) {
+
+				// Any genes left after filtering?  If so, show them.  If not, show a blank tab.
+				if($rootScope.filteredGenes && $rootScope.filteredGenes.length > 0) {
+					for(var key in vm.results) {
+						if($rootScope.filteredGenes.indexOf(vm.results[key].symbol) > -1) {
+							localFilteredResults.push(vm.results[key]);
+						}
 					}
+					vm.filteredResults = localFilteredResults;
+				} else {
+					vm.filteredResults = localFilteredResults;
 				}
-				vm.filteredResults = localFilteredResults;
-			} else if (($rootScope.selectedGenesModel !== undefined) && (($rootScope.selectedGenesModel.length > 0) || 
-					($rootScope.selectedPhenoTypesAndDiseasesModel !== undefined) && ($rootScope.selectedPhenoTypesAndDiseasesModel.length > 0))) {
-				// user chose filter combination that left us with no genes on the grid
-				vm.filteredResults = localFilteredResults;
 			} else {
+				// No filters selected by user, so show all genes.
 				vm.filteredResults = vm.results;
 			}
 			$scope.$parent.$parent.tab.count = vm.filteredResults.length;
@@ -43,16 +52,19 @@
 			for (var key in vm.results) {
 				var row = vm.results[key];
 				var symbol = row.symbol;
-				var featureTypes = row.filterableFeatureType;
+
+				if (($rootScope.allGenes === undefined) || ($rootScope.allGenes.indexOf(symbol) >= 0)) {
+					var featureTypes = row.filterableFeatureType;
 				
-				for (var i in featureTypes) {
-					var featureType = featureTypes[i];
+					for (var i in featureTypes) {
+						var featureType = featureTypes[i];
 					
-					if (featureType in ft) {
-						ft[featureType].push(symbol);
-					} else {
-						ft[featureType] = [];
-						ft[featureType].push(symbol);
+						if (featureType in ft) {
+							ft[featureType].push(symbol);
+						} else {
+							ft[featureType] = [];
+							ft[featureType].push(symbol);
+						}
 					}
 				}
 			}
@@ -86,6 +98,10 @@
 			$rootScope.$emit("FilterChanged");
 		}
 
+		// Once the Gene and Pheno/Disease filters are built in the GridController, bring the Feature Type
+		// filter in sync.
+		$rootScope.$on("GridFiltersBuilt", collectFeatureTypes);
+		
 		$rootScope.$on("CallSearchMethod", function(event, data) {
 			vm.model = data;
 			vm.loading = true;

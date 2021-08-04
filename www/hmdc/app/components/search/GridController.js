@@ -182,6 +182,7 @@
 //			$rootScope.selectedFeatureTypes = [];		// options for the feature types filter (computed in GeneController.js)
 			$rootScope.selectedFeatureTypesModel = [];	// user-selected options
 
+			$rootScope.allGenes = [];					// all gene symbols in the grid
 			$rootScope.selectedGenes = [];				// options for the genes filter
 			$rootScope.selectedGenesModel = [];			// user-selected options
 			for(var key in vm.jsonData.gridRows) {
@@ -193,6 +194,7 @@
 					var h = key.gridCluster.humanSymbols[human];
 					humanSymbolString.push(h.symbol.replace(/<([^>]*)>/g, "<sup>$1</sup>"));
 					rowSymbols.push(h.symbol);
+					$rootScope.allGenes.push(h.symbol);
 				}
 
 				var markerSymbolString = [];
@@ -200,6 +202,7 @@
 					var m = key.gridCluster.mouseSymbols[marker];
 					markerSymbolString.push(m.symbol.replace(/<([^>]*)>/g, "<sup>$1</sup>"));
 					rowSymbols.push(m.symbol);
+					$rootScope.allGenes.push(m.symbol);
 				}
 				if(humanSymbolString.length > 0 && markerSymbolString.length > 0) {
 					$rootScope.selectedGenes.push({id: index, symbols: rowSymbols, label: humanSymbolString.join(", ") + " - " + markerSymbolString.join(", ")});
@@ -209,6 +212,9 @@
 					$rootScope.selectedGenes.push({id: index, symbols: rowSymbols, label: markerSymbolString.join(", ")});
 				}
 			}
+			
+			// Let the GeneController know that we finished updating the Gene and Pheno/Disease filters.
+			$rootScope.$emit("GridFiltersBuilt");
 		}
 	
 		// Filter the grid tab.
