@@ -102,8 +102,12 @@
 						<li>
 							<div class="label">Other IDs</div>
 							<div class="value">
+								<c:set var="hasBroad" value="no"/>
 								<c:forEach var="secID" items="${probe.secondaryIds}">
 									${secID.accID}
+									<c:if test="${secID.logicalDB == 'BROAD'}">
+										<c:set var="hasBroad" value="yes"/>
+									</c:if>
 									<c:choose>
 										<c:when test="${fn:indexOf(suppressedLogicalDatabases, secID.logicalDB) >= 0}">
 											<br/>
@@ -125,6 +129,7 @@
 							<div class="label">Note</div>
 							<div class="value">
 								${probe.probeNote}
+								<c:if test="${hasBroad == 'yes'}"><br>Additional information: <a href="${configBean.FEWI_URL}downloads/datasets/index.html#mit">MIT STS Marker Data Files</a></c:if>
 							</div>
 						</li>
 					</c:if>
