@@ -32,7 +32,7 @@
     Your Input Welcome
   </span>
   <div id="examples" class="example" style="text-align: center; padding-top: 4px;">
-  Examples:&nbsp;&nbsp;embry*&nbsp;develop*&nbsp;&nbsp;&nbsp;&nbsp;NM_013627&nbsp;&nbsp;&nbsp;&nbsp;MGI:97490&nbsp;&nbsp;&nbsp;&nbsp;Fas&lt;lpr&gt;&nbsp;&nbsp;&nbsp;&nbsp;Pax*&nbsp;&nbsp;&nbsp;&nbsp;axial&nbsp;"skeletal&nbsp;dysplasia"&nbsp;&nbsp;&nbsp;&nbsp;Tg(ACTB-cre)2Mrt&nbsp;&nbsp;&nbsp;&nbsp;
+  Examples:&nbsp;&nbsp;embry*&nbsp;develop*&nbsp;&nbsp;&nbsp;&nbsp;NM_013627&nbsp;&nbsp;&nbsp;&nbsp;MGI:97490&nbsp;&nbsp;&nbsp;&nbsp;Pax*&nbsp;&nbsp;&nbsp;&nbsp;axial&nbsp;"skeletal&nbsp;dysplasia"&nbsp;&nbsp;&nbsp;&nbsp;Tg(ACTB-cre)2Mrt&nbsp;&nbsp;&nbsp;&nbsp;
   Chr1&nbsp;&nbsp;&nbsp;&nbsp;Chr1:194732198&nbsp;&nbsp;&nbsp;&nbsp;Chr1:194732198-294732198
   </div>
 </div>
