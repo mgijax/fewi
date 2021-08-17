@@ -96,11 +96,11 @@ var qsStyleTabText = function(resultCount, tabNumber) {
 	if (resultCount > 0) {
 		$('#ui-id-' + tabNumber).removeClass('noResults');
 		$('#ui-id-' + tabNumber).addClass('hasResults');
-		$('#ui-id-' + tabNumber).css({ 'color' : 'green', 'font-weight' : 'bold'});
+		$('#ui-id-' + tabNumber).css({ 'color' : '#002255', 'font-weight' : 'bold'});	// standard button text color
 	} else {
 		$('#ui-id-' + tabNumber).removeClass('hasResults');
 		$('#ui-id-' + tabNumber).addClass('noResults');
-		$('#ui-id-' + tabNumber).css({ 'color' : 'black', 'font-weight' : 'normal'});
+		$('#ui-id-' + tabNumber).css({ 'color' : 'black', 'font-weight' : 'normal'});	// lighter button text
 	}
 	qsWaitFor = qsWaitFor - 1;
 	

@@ -22,7 +22,7 @@
 
 <!-- header bar -->
 <form action="${configBean.FEWI_URL}quicksearch/summary" METHOD="get">
-<div id="titleBarWrapper" userdoc="QUICK_SEARCH_help.shtml">	
+<div id="titleBarWrapper" userdoc="QUICK_SEARCH_help.shtml" style="height: 54px">	
 	<span class="titleBarMainTitle">Quick Search Results</span> for:
 	<fewi:select id="queryType" name="queryType" items="${queryTypes}" value="${queryType}" />
 	<input id='queryField' name='query' size='30' type='text' value='${query}'>
@@ -31,6 +31,10 @@
 	&nbsp; <span class="qsButton" style="margin-left:35px;" onclick="window.open('${configBean.MGIHOME_URL}feedback/feedback_form.cgi?subject=Quick Search')">
     Your Input Welcome
   </span>
+  <div id="examples" class="example" style="text-align: center; padding-top: 4px;">
+  Examples:&nbsp;&nbsp;embry*&nbsp;develop*&nbsp;&nbsp;&nbsp;&nbsp;NM_013627&nbsp;&nbsp;&nbsp;&nbsp;MGI:97490&nbsp;&nbsp;&nbsp;&nbsp;Fas&lt;lpr&gt;&nbsp;&nbsp;&nbsp;&nbsp;Pax*&nbsp;&nbsp;&nbsp;&nbsp;axial&nbsp;"skeletal&nbsp;dysplasia"&nbsp;&nbsp;&nbsp;&nbsp;Tg(ACTB-cre)2Mrt&nbsp;&nbsp;&nbsp;&nbsp;
+  Chr1&nbsp;&nbsp;&nbsp;&nbsp;Chr1:194732198&nbsp;&nbsp;&nbsp;&nbsp;Chr1:194732198-294732198
+  </div>
 </div>
 </form>
 
