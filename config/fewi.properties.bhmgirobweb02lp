@@ -11,7 +11,7 @@
 
 #----- solr server urls -----#
 
-solr.server1.url=http://bhmgirobweb02lp.jax.org:9995/solr
+solr.server1.url=http://bhmgibfesolr02lp.jax.org:9995/solr
 solr.server2.url=http://bhmgibsnp01lp.jax.org:28983/solr
 solr.server3.url=http://bhmgibgxd02lp.jax.org:9995/solr
 

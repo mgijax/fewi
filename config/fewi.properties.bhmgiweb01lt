@@ -12,7 +12,7 @@
 #----- solr server urls -----#
 
 # Weekly Proto
-solr.server1.url=http://bhmgiweb01lt.jax.org:9995/solr
+solr.server1.url=http://bhmgifesolr01lt.jax.org:9995/solr
 solr.server2.url=http://bhmgisnpdb01lt.jax.org:18983/solr
 #solr.server3.url=http://bhmgigxdsolr01lt.jax.org:9995/solr
 solr.server3.url=http://bhmgiweb01lt.jax.org:9992/solr
