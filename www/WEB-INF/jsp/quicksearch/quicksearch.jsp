@@ -25,7 +25,7 @@
 <div id="titleBarWrapper" userdoc="QUICK_SEARCH_help.shtml" style="height: 54px">	
 	<span class="titleBarMainTitle">Quick Search Results</span> for:
 	<fewi:select id="queryType" name="queryType" items="${queryTypes}" value="${queryType}" />
-	<input id='queryField' name='query' size='30' type='text' value='${query}'>
+	<input id='queryField' name='query' size='30' type='text' value='${displayQuery}'>
 	&nbsp; <input class="qsButton" type="submit" name="submit" value="Search Again">
 	&nbsp; <input class="qsButton" type="submit" name="reset" value="Reset" onClick="clearField(); return false;">
 	&nbsp; <span class="qsButton" style="margin-left:35px;" onclick="window.open('${configBean.MGIHOME_URL}feedback/feedback_form.cgi?subject=Quick Search')">
