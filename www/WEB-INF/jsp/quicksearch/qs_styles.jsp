@@ -115,6 +115,14 @@
     margin-right: 10px;
     text-decoration: none;
 }
+#otherIdPaginator {
+	float: right;
+    font-size: 12px;
+    margin-top: 10px;
+    font-weight: normal;
+    margin-right: 10px;
+    text-decoration: none;
+}
 #errorDiv {
 	color: red;
 	padding-top: 10px;
