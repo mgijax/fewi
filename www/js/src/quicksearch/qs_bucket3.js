@@ -47,17 +47,4 @@ var b3Fetch = function() {
 		var url = fewiurl + '/quicksearch/otherBucket?' + getQuerystring();
 		dcStartCache(b3CacheName, url, b3Show, b3PageSize, '#b3Results');
 		dcGetPage(b3CacheName, 1);
-		/*
-		$.get(url, function(data) {
-			try {
-				b3Show(data);
-			} catch (e) {
-				console.log("Failed to display data for the Other ID bucket: " + e);
-				failed = true;
-			}
-		}).fail(function() {
-				console.log("Failed to retrieve data for the Other ID bucket: " + e); 
-				failed = true;
-		});
-		*/
 };
