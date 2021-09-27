@@ -1578,6 +1578,12 @@ public class QuickSearchController {
         } else { 	// BY_ANY
         	List<Filter> orFilters = new ArrayList<Filter>(2);
         	orFilters.add(createExactTermFilter(qf));
+        	if ((qf.getQuery() != null) && (qf.getQuery().indexOf("*") >= 0)) {
+        		Filter wcFilter = createWildcardFilter(qf, bucket);
+        		if (wcFilter != null) {
+        			orFilters.add(wcFilter);
+        		}
+        	}
         	orFilters.add(createInexactTermFilter(qf, bucket));
         	orFilters.add(createStemmedTermFilter(qf, bucket));
         	myFilter = Filter.or(orFilters);
