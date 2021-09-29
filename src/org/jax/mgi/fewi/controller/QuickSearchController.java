@@ -201,18 +201,25 @@ public class QuickSearchController {
 		}
         logger.debug("->getQSSummary started");
 
-        // If we can auto-detect a coordinate search, update the operator on the form to match.
-        if ((queryForm.getQueryType() == null) || (queryForm.getQueryType().equals(IndexConstants.QS_SEARCHTYPE_TEXT))) {
+        // Default to exact phrase matching.  If we can auto-detect a coordinate search, update the operator on the form to match.
+        if ((queryForm.getQueryType() == null) || (queryForm.getQueryType().equals(IndexConstants.QS_SEARCHTYPE_EXACT_PHRASE))) {
+        	Filter coordSearch = this.createCoordinateFilter(queryForm);
+        	if (coordSearch != null) {
+        		queryForm.setQueryType(IndexConstants.QS_SEARCHTYPE_MOUSE_COORD);
+        	} else {
+        		queryForm.setQueryType(IndexConstants.QS_SEARCHTYPE_EXACT_PHRASE);		// ensure nulls are updated
+        	}
+        } else if (queryForm.getQueryType().equals(IndexConstants.QS_SEARCHTYPE_KEYWORDS)) {
         	Filter coordSearch = this.createCoordinateFilter(queryForm);
         	if (coordSearch != null) {
         		queryForm.setQueryType(IndexConstants.QS_SEARCHTYPE_MOUSE_COORD);
         	}
-        } else if (!queryForm.getQueryType().equals(IndexConstants.QS_SEARCHTYPE_TEXT)) {
-        	// Or if a coordinate search is specified, but we can't see a location, fall back on a text search.
+        } else if (!queryForm.getQueryType().equals(IndexConstants.QS_SEARCHTYPE_KEYWORDS)) {
+        	// Or if a coordinate search is specified, but we can't see a location, fall back on an exact phrase search.
 
         	Filter coordSearch = this.createCoordinateFilter(queryForm);
         	if (coordSearch == null) {
-        		queryForm.setQueryType(IndexConstants.QS_SEARCHTYPE_TEXT);
+        		queryForm.setQueryType(IndexConstants.QS_SEARCHTYPE_EXACT_PHRASE);
         	}
         }
 

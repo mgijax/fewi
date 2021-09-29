@@ -21,14 +21,17 @@ public class QuickSearchQueryForm {
 	public static List<String> QUERY_TYPE_OPTIONS = new ArrayList<String>();
 	public static Map<String, String> QUERY_TYPE_OPTION_MAP = new LinkedHashMap<String,String>();
 	static {
-		QUERY_TYPE_OPTIONS.add(IndexConstants.QS_SEARCHTYPE_TEXT);
+		QUERY_TYPE_OPTIONS.add(IndexConstants.QS_SEARCHTYPE_EXACT_PHRASE);
+		QUERY_TYPE_OPTIONS.add(IndexConstants.QS_SEARCHTYPE_KEYWORDS);
 		QUERY_TYPE_OPTIONS.add(IndexConstants.QS_SEARCHTYPE_MOUSE_COORD);
 		QUERY_TYPE_OPTIONS.add(IndexConstants.QS_SEARCHTYPE_HUMAN_COORD);
 
-		QUERY_TYPE_OPTION_MAP.put(IndexConstants.QS_SEARCHTYPE_TEXT, IndexConstants.QS_SEARCHTYPE_TEXT);
-		QUERY_TYPE_OPTION_MAP.put(IndexConstants.QS_SEARCHTYPE_MOUSE_COORD, IndexConstants.QS_SEARCHTYPE_MOUSE_COORD);
-		QUERY_TYPE_OPTION_MAP.put(IndexConstants.QS_SEARCHTYPE_HUMAN_COORD, IndexConstants.QS_SEARCHTYPE_HUMAN_COORD);
+		QUERY_TYPE_OPTION_MAP.put(IndexConstants.QS_SEARCHTYPE_EXACT_PHRASE, "keywords, symbols, or IDs (exact phrase)");
+		QUERY_TYPE_OPTION_MAP.put(IndexConstants.QS_SEARCHTYPE_KEYWORDS, "keywords, symbols, or IDs");
+		QUERY_TYPE_OPTION_MAP.put(IndexConstants.QS_SEARCHTYPE_MOUSE_COORD, "mouse location");
+		QUERY_TYPE_OPTION_MAP.put(IndexConstants.QS_SEARCHTYPE_HUMAN_COORD, "human location");
 	};
+	public static String QUERY_TYPE_DEFAULT = IndexConstants.QS_SEARCHTYPE_EXACT_PHRASE;
 			
     //--------------------//
     // instance variables
@@ -67,7 +70,7 @@ public class QuickSearchQueryForm {
     				return IndexConstants.QS_SEARCHTYPE_MOUSE_COORD;
     			}
     		}
-    		return IndexConstants.QS_SEARCHTYPE_TEXT;
+    		return QUERY_TYPE_DEFAULT;
     	}
 		return queryType;
 	}
@@ -79,11 +82,12 @@ public class QuickSearchQueryForm {
      * get split up.  The current list of circumstances is:
      * 	1. cases where the input string begins with a number, is followed by a comma, then has other numbers and letters.
      * 		(but not spaces)
+     *  2. cases where the query type is set to look for an exact phrase
      */
     private Pattern case1 = Pattern.compile("^[0-9]+,[A-Za-z0-9]+$");
     private String autoQuote(String query) {
     	Matcher case1match = case1.matcher(query);
-    	if (case1match.matches()) {
+    	if (case1match.matches() || IndexConstants.QS_SEARCHTYPE_EXACT_PHRASE.equals(this.getQueryType())) {
     		return "\"" + query + "\"";
     	}
     	
