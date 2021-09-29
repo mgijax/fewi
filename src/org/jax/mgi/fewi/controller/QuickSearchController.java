@@ -222,6 +222,13 @@ public class QuickSearchController {
         		queryForm.setQueryType(IndexConstants.QS_SEARCHTYPE_EXACT_PHRASE);
         	}
         }
+        
+        // If we're looking for an exact match but our search string contains a wildcard, we
+        // need to revert to keyword searching.
+        if (IndexConstants.QS_SEARCHTYPE_EXACT_PHRASE.equals(queryForm.getQueryType()) &&
+        	(queryForm.getQuery() != null) && (queryForm.getQuery().indexOf("*") >= 0)) {
+        		queryForm.setQueryType(IndexConstants.QS_SEARCHTYPE_KEYWORDS);
+        }
 
         ModelAndView mav = new ModelAndView("/quicksearch/quicksearch");
         mav.addObject("query", queryForm.getQuery());

@@ -70,8 +70,14 @@ public class QuickSearchQueryForm {
     				return IndexConstants.QS_SEARCHTYPE_MOUSE_COORD;
     			}
     		}
+    		if (this.query.indexOf("*") >= 0) {
+    			return IndexConstants.QS_SEARCHTYPE_KEYWORDS;					// fall back on keywords for wildcard search
+    		}
     		return QUERY_TYPE_DEFAULT;
     	}
+   		if (this.query.indexOf("*") >= 0) {
+   			return IndexConstants.QS_SEARCHTYPE_KEYWORDS;					// fall back on keywords for wildcard search
+   		}
 		return queryType;
 	}
 	public void setQueryType(String queryType) {
