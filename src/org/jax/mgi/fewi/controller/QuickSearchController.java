@@ -48,6 +48,7 @@ import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.FewiUtil;
 import org.jax.mgi.fewi.util.LimitedSizeCache;
 import org.jax.mgi.fewi.util.UserMonitor;
+import org.jax.mgi.fewi.util.WildcardHelper;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.sort.SmartAlphaComparator;
 import org.jax.mgi.shr.fe.util.EasyStemmer;
@@ -758,6 +759,9 @@ public class QuickSearchController {
 			}
 		}
 		
+		// Is there a wildcard anywhere in the search term?
+		boolean hasWildcard = originalSearchTerm.indexOf('*') >= 0;
+		
 		// last search term is the full string, so this is the count of individual words
 		int wordCount = searchTerms.size() - 1;
 		
@@ -837,15 +841,22 @@ public class QuickSearchController {
 				// Note that 4-star matches now must be through comparison to the display terms.
 				if (!limitedType && (lowerDisplayTerm.equals(originalSearchTerm) || lowerDisplayTerm.equals(hyphenatedSearchTerm))) {
 					match.setStars("****");
+				} else if (!limitedType && hasWildcard && WildcardHelper.matches(lowerDisplayTerm, originalSearchTerm)) {
+					match.setStars("****");
 				} else {
 					int matchCount = 0;
 
 					// check non-numeric search terms
 					for (String word : termsToCheck) {
-						if (lowerTerm.indexOf(word) >= 0) {
+						int index = lowerTerm.indexOf(word);
+						if ((index < 0) && (hasWildcard)) {
+							index = WildcardHelper.indexOf(lowerTerm, word);
+						}
+
+						if (index >= 0) {
 							matchCount++;
 							
-							if (lowerTerm.indexOf(word) == 0) {
+							if (index == 0) {
 								prefixBoost = 5;
 							}
 						}
@@ -879,15 +890,21 @@ public class QuickSearchController {
 						for (String term : toCheckOrder) {
 							int termIndex = lowerTerm.indexOf(term);
 							if (termIndex < lastTermIndex) {
-								// Found a word that was in the wrong order, so take away the boost.
-								inOrderBoost = 0;
-								break;
+								if (hasWildcard) {
+									termIndex = WildcardHelper.indexOf(lowerTerm, term);
+								}
+								
+								if (termIndex < lastTermIndex) {
+									// Found a word that was in the wrong order, so take away the boost.
+									inOrderBoost = 0;
+									break;
+								}
 							}
 							lastTermIndex = termIndex;
 						}
 						
 						String exactSubstring = StringUtils.join(toCheckOrder, " ");
-						if (lowerTerm.indexOf(exactSubstring) >= 0) {
+						if ((lowerTerm.indexOf(exactSubstring) >= 0) || (hasWildcard && WildcardHelper.indexOf(lowerTerm, exactSubstring) >= 0)) {
 							exactSubstringBoost = 15;
 						}
 					} // end -- toCheckOrder.size() > 1
@@ -905,7 +922,7 @@ public class QuickSearchController {
 				// containing "running" in their display value should be kicked up higher, so we need to compare the
 				// non-stemmed versions.
 			
-				if (match.getSearchTermDisplay().contains(originalSearchTerm)) {
+				if (match.getSearchTermDisplay().contains(originalSearchTerm) || (hasWildcard && WildcardHelper.contains(lowerDisplayTerm, originalSearchTerm))) {
 					nonStemmedMatchBoost = 20;
 				}
 			} // if lowerTerm is not null
