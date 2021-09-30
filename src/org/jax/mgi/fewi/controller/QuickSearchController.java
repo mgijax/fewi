@@ -838,10 +838,6 @@ public class QuickSearchController {
 			int nonStemmedMatchBoost = 0;
 
 			if (lowerTerm != null) {
-				if ("hoxd1".equals(lowerDisplayTerm)) {
-					logger.info(" [" + lowerDisplayTerm + "] vs [" + wildcardSearchTerm + "] = " + 
-						WildcardHelper.matches(lowerDisplayTerm, wildcardSearchTerm));
-				}
 				// Search terms can be exact (4-star), contain all terms (3-star), or contain some terms (2-star).
 				// Note that 4-star matches now must be through comparison to the display terms.
 				if (!limitedType && (lowerDisplayTerm.equals(originalSearchTerm) || lowerDisplayTerm.equals(hyphenatedSearchTerm))) {
