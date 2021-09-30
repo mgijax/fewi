@@ -721,6 +721,7 @@ public class QuickSearchController {
 
 		// original search term will be the last item in the list of search terms
 		String originalSearchTerm = searchTerms.get(searchTerms.size() - 1).toLowerCase().replaceAll("\"", "").replaceAll("[*]", " ").trim();
+		String wildcardSearchTerm = searchTerms.get(searchTerms.size() - 1).toLowerCase().replaceAll("\"", "").trim();
 		
 		// original search term with spaces converted to hyphens
 		String hyphenatedSearchTerm = originalSearchTerm.replaceAll(" ", "-");
@@ -760,7 +761,7 @@ public class QuickSearchController {
 		}
 		
 		// Is there a wildcard anywhere in the search term?
-		boolean hasWildcard = originalSearchTerm.indexOf('*') >= 0;
+		boolean hasWildcard = wildcardSearchTerm.indexOf('*') >= 0;
 		
 		// last search term is the full string, so this is the count of individual words
 		int wordCount = searchTerms.size() - 1;
@@ -837,11 +838,15 @@ public class QuickSearchController {
 			int nonStemmedMatchBoost = 0;
 
 			if (lowerTerm != null) {
+				if ("hoxd1".equals(lowerDisplayTerm)) {
+					logger.info(" [" + lowerDisplayTerm + "] vs [" + wildcardSearchTerm + "] = " + 
+						WildcardHelper.matches(lowerDisplayTerm, wildcardSearchTerm));
+				}
 				// Search terms can be exact (4-star), contain all terms (3-star), or contain some terms (2-star).
 				// Note that 4-star matches now must be through comparison to the display terms.
 				if (!limitedType && (lowerDisplayTerm.equals(originalSearchTerm) || lowerDisplayTerm.equals(hyphenatedSearchTerm))) {
 					match.setStars("****");
-				} else if (!limitedType && hasWildcard && WildcardHelper.matches(lowerDisplayTerm, originalSearchTerm)) {
+				} else if (!limitedType && hasWildcard && WildcardHelper.matches(lowerDisplayTerm, wildcardSearchTerm)) {
 					match.setStars("****");
 				} else {
 					int matchCount = 0;
@@ -922,7 +927,7 @@ public class QuickSearchController {
 				// containing "running" in their display value should be kicked up higher, so we need to compare the
 				// non-stemmed versions.
 			
-				if (match.getSearchTermDisplay().contains(originalSearchTerm) || (hasWildcard && WildcardHelper.contains(lowerDisplayTerm, originalSearchTerm))) {
+				if (match.getSearchTermDisplay().contains(originalSearchTerm) || (hasWildcard && WildcardHelper.contains(lowerDisplayTerm, wildcardSearchTerm))) {
 					nonStemmedMatchBoost = 20;
 				}
 			} // if lowerTerm is not null
