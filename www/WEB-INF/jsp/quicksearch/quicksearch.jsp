@@ -46,7 +46,7 @@
 <script>
 	// turn on tabbed display
 	$(function() {
-		$( "#querytabs" ).tabs(<c:if test="${not empty snpQueryForm.selectedTab}">{active: ${e:forJavaScript(snpQueryForm.selectedTab)}}</c:if>);
+		$( "#querytabs" ).tabs(<c:if test="${not empty querytabs.selectedTab}">{active: ${e:forJavaScript(querytabs.selectedTab)}}</c:if>);
 	});
 </script>
 

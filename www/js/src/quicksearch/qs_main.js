@@ -104,6 +104,8 @@ var qsStyleTabText = function(resultCount, tabNumber) {
 	}
 	qsWaitFor = qsWaitFor - 1;
 	
+	// If all the tabs have come back with data, select the first one that has results.
+	// TODO: For long-running searches, often the leftmost tab with results will not be selected.  Why?
 	if (qsWaitFor == 0) {
 		$('.hasResults').first().click();
 	}
