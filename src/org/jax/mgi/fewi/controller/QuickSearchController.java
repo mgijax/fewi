@@ -514,7 +514,9 @@ public class QuickSearchController {
 	// Return a single filter that looks for features using the inexact field, assuming we have a single word
 	// that contains a wildcard.  Does not need to worry about stopwords, as they don't have wildcards.
 	private Filter createWildcardFilter(QuickSearchQueryForm qf, int bucket) {
-       	return new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT, qf.getQuery(), Operator.OP_EQUAL_WILDCARD_ALLOWED);
+		// Allele symbols work better with no angle brackets, so remove them.
+       	return new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT, qf.getQuery().replaceAll("<", "").replaceAll(">",  ""),
+       		Operator.OP_EQUAL_WILDCARD_ALLOWED);
 	}
 
 	// Return a single filter that looks for features using the inexact field, with multiple terms joined by an OR.

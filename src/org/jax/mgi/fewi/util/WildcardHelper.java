@@ -82,7 +82,7 @@ public class WildcardHelper {
 		
 		// Need to adjust the start and end values for cases of leading or trailing wildcards.
 		if (t.startsWith("*")) { overallStart = 0; }
-		if (t.endsWith("*")) { lastEnd = t.length() - 1; }
+		if (t.endsWith("*")) { lastEnd = s.length() - 1; }
 
 		return new Pair(overallStart, lastEnd);
 	}
