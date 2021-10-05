@@ -154,7 +154,7 @@ public class QuickSearchFinder {
 					result.setObjectType(snp.getVariationClass());
 					result.setPrimaryID(snp.getAccid());
 					result.setSearchTermDisplay(snp.getAccid());
-					result.setSearchTermType("SNP");
+					result.setSearchTermType("SNP ID");
 					result.setSearchTermExact(snp.getAccid());
 					result.setSearchTermWeight(100);
 					result.setSequenceNum(1L);
