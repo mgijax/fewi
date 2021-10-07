@@ -26,10 +26,10 @@ public class QuickSearchQueryForm {
 		QUERY_TYPE_OPTIONS.add(IndexConstants.QS_SEARCHTYPE_MOUSE_COORD);
 		QUERY_TYPE_OPTIONS.add(IndexConstants.QS_SEARCHTYPE_HUMAN_COORD);
 
-		QUERY_TYPE_OPTION_MAP.put(IndexConstants.QS_SEARCHTYPE_EXACT_PHRASE, "keywords, symbols, or IDs (exact phrase)");
-		QUERY_TYPE_OPTION_MAP.put(IndexConstants.QS_SEARCHTYPE_KEYWORDS, "keywords, symbols, or IDs");
-		QUERY_TYPE_OPTION_MAP.put(IndexConstants.QS_SEARCHTYPE_MOUSE_COORD, "mouse location");
-		QUERY_TYPE_OPTION_MAP.put(IndexConstants.QS_SEARCHTYPE_HUMAN_COORD, "human location");
+		QUERY_TYPE_OPTION_MAP.put(IndexConstants.QS_SEARCHTYPE_EXACT_PHRASE, "Keywords, Symbols, or IDs (exact phrase)");
+		QUERY_TYPE_OPTION_MAP.put(IndexConstants.QS_SEARCHTYPE_KEYWORDS, "Keywords, Symbols, or IDs");
+		QUERY_TYPE_OPTION_MAP.put(IndexConstants.QS_SEARCHTYPE_MOUSE_COORD, "Mouse Location");
+		QUERY_TYPE_OPTION_MAP.put(IndexConstants.QS_SEARCHTYPE_HUMAN_COORD, "Human Location");
 	};
 	public static String QUERY_TYPE_DEFAULT = IndexConstants.QS_SEARCHTYPE_EXACT_PHRASE;
 			

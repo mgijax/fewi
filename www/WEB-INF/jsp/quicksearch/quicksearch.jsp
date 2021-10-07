@@ -23,7 +23,7 @@
 <!-- header bar -->
 <form action="${configBean.FEWI_URL}quicksearch/summary" METHOD="get">
 <div id="titleBarWrapper" userdoc="QUICK_SEARCH_help.shtml" style="height: 54px">	
-	<span class="titleBarMainTitle">Quick Search Results</span> for:
+	<span class="titleBarMainTitle">Quick Search Results for:</span>
 	<fewi:select id="queryType" name="queryType" items="${queryTypes}" value="${queryType}" />
 	<input id='queryField' name='query' size='30' type='text' value='${displayQuery}'>
 	&nbsp; <input class="qsButton" type="submit" name="submit" value="Search Again">
