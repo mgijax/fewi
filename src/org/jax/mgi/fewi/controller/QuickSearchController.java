@@ -241,7 +241,7 @@ public class QuickSearchController {
     }
 
     //-------------------------//
-    // QS Results - bucket 1 JSON (markers and alleles)
+    // QS Results - bucket 1 JSON (markers)
     //-------------------------//
 	@RequestMapping("/featureBucket")
 	public @ResponseBody JsonSummaryResponse<QSFeatureResultWrapper> getFeatureBucket(HttpServletRequest request,
@@ -502,11 +502,17 @@ public class QuickSearchController {
 	}
 	
 	// Return a single filter that looks for features using the exact field, with multiple terms joined by an OR.
-	private Filter createExactTermFilter(QuickSearchQueryForm qf) {
+	private Filter createExactTermFilter(QuickSearchQueryForm qf, int bucket) {
         List<Filter> exactFilters = new ArrayList<Filter>();
 
-        for (String term : qf.getTerms()) {
-        	exactFilters.add(new Filter(SearchConstants.QS_SEARCH_TERM_EXACT, term, Operator.OP_EQUAL));
+        // If we're looking for alleles and the search term has angle brackets, look for matches for the full string (not
+        // the pieces of the string).
+        if ((bucket == ALLELE) && (qf.getTerms().size() > 0) && (qf.getTerms().get(0).indexOf("<") > 0)) {
+        		exactFilters.add(new Filter(SearchConstants.QS_SEARCH_TERM_EXACT, qf.getTerms().get(0), Operator.OP_EQUAL));
+        } else {
+        	for (String term : qf.getTerms()) {
+        		exactFilters.add(new Filter(SearchConstants.QS_SEARCH_TERM_EXACT, term, Operator.OP_EQUAL));
+        	}
         }
         return Filter.or(exactFilters);
 	}
@@ -1407,6 +1413,7 @@ public class QuickSearchController {
 
         	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, FEATURE);
         	if (searchParams != null) {
+        		// is a coordinate search
         		orSearch.setFilter(searchParams.getFilter());
         		isCoordSearch = true;
         	} else {
@@ -1415,9 +1422,19 @@ public class QuickSearchController {
         		SearchParams stemmedSearch = getSearchParams(queryForm, BY_STEMMED_MATCH, 0, ALLELE);
 
         		List<Filter> any = new ArrayList<Filter>();
-        		any.add(exactSearch.getFilter());
-        		any.add(inexactSearch.getFilter());
-        		any.add(stemmedSearch.getFilter());
+
+        		// If the user specifies an allele symbol with brackets, they know what they're looking for, so we
+        		// want to restrict what we return to only those matching the full gene<allele> symbol (but also
+        		// considering wildcards).
+        		if ((queryForm.getTerms().size() > 0) && (queryForm.getTerms().get(0).indexOf("<") > 0)) {
+        			any.add(exactSearch.getFilter());
+        			any.add(inexactSearch.getFilter());
+        		} else {
+        			any.add(exactSearch.getFilter());
+        			any.add(inexactSearch.getFilter());
+        			any.add(stemmedSearch.getFilter());
+        		}
+
         		orSearch.setFilter(Filter.or(any));
         	}
         
@@ -1595,7 +1612,7 @@ public class QuickSearchController {
         Filter myFilter = null;
         
         if (BY_EXACT_MATCH.equals(queryMode)) {
-        	myFilter = createExactTermFilter(qf);
+        	myFilter = createExactTermFilter(qf, bucket);
         } else if (BY_INEXACT_MATCH.equals(queryMode)) {
         	if (isInexactSymbol(qf.getQuery(), bucket)) {
         		myFilter = createWildcardFilter(qf, bucket);
@@ -1611,7 +1628,7 @@ public class QuickSearchController {
         	}
         } else { 	// BY_ANY
         	List<Filter> orFilters = new ArrayList<Filter>(2);
-        	orFilters.add(createExactTermFilter(qf));
+        	orFilters.add(createExactTermFilter(qf, bucket));
         	if ((qf.getQuery() != null) && (qf.getQuery().indexOf("*") >= 0)) {
         		Filter wcFilter = createWildcardFilter(qf, bucket);
         		if (wcFilter != null) {
