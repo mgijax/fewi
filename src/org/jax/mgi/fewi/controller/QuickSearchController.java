@@ -1066,6 +1066,7 @@ public class QuickSearchController {
 
         Map<String, List<String>> out = new HashMap<String, List<String>>();
         if (error == null) {
+        	Collections.sort(resultList, String.CASE_INSENSITIVE_ORDER);
 			out.put("resultFacets", resultList);
         } else {
         	List<String> messages = new ArrayList<String>(1);
