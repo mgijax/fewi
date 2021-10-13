@@ -1,9 +1,15 @@
 package org.jax.mgi.fewi.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /* Is: a helper for computing various comparisons with search strings containing wildcards.
  * Assumes: All comparisons will be case-insensitive.
  */
 public class WildcardHelper {
+
+    private static Logger logger = LoggerFactory.getLogger(WildcardHelper.class);
+
 	// Determine whether the 'source' String begins with the given 'target' String,
 	// considering properly any wildcards (*) in 'target'.
 	public static boolean startsWith(String source, String target) {

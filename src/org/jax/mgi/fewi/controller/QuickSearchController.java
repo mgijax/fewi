@@ -852,6 +852,8 @@ public class QuickSearchController {
 					match.setStars("****");
 				} else if (!limitedType && hasWildcard && WildcardHelper.matches(lowerDisplayTerm, wildcardSearchTerm)) {
 					match.setStars("****");
+				} else if (limitedType && hasWildcard && WildcardHelper.matches(lowerDisplayTerm, wildcardSearchTerm)) {
+					match.setStars("***");
 				} else {
 					int matchCount = 0;
 
