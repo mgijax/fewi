@@ -1269,6 +1269,7 @@ public class QuickSearchController {
         	out = (List<QSVocabResult>) unifyVocabMatches(queryForm.getTerms(), allMatches);
         	logger.debug("Consolidated down to " + out.size() + " terms");
         	
+        	Collections.sort(out, new VocabResultComparator());		// tweak the sorting to group by vocab within a star tier
         	vocabResultCache.put(cacheKey, out);
         	logger.debug(" - added " + out.size() + " vocab results to cache");
         }
@@ -1573,6 +1574,7 @@ public class QuickSearchController {
         	out = (List<QSOtherResult>) unifyOtherMatches(queryForm.getTerms(), allMatches);
         	logger.debug("Consolidated down to " + out.size() + " other IDs");
         	
+        	Collections.sort(out, new OtherResultComparator());		// tweak the sorting to group by object type within a star tier
         	otherResultCache.put(cacheKey, out);
         	logger.debug(" - added " + out.size() + " other ID results to cache");
         }
@@ -1676,6 +1678,52 @@ public class QuickSearchController {
 	// the set of search results for caching.
 	private String withoutPagination(String queryString) {
 		return queryString.replaceAll("&startIndex=[0-9]+", "").replaceAll("&results=[0-9]+", "");
+	}
+	
+	// comparator for sorting items in the Vocab Term bucket such that they are grouped by star tier then vocabulary
+	private class VocabResultComparator implements Comparator<QSVocabResult> {
+		public int compare(QSVocabResult a, QSVocabResult b) {
+			// primarily sort by star tier (backward, since we want highest first)
+			int i = Integer.compare(b.getStarCount(), a.getStarCount());
+			
+			// secondarily by score (match type plus various boosts), backward so highest first
+			if (i == 0) {
+				i = Integer.compare(b.getSearchTermWeight(), a.getSearchTermWeight());
+			}
+			
+			// then sort by vocab name, then term
+			if ((i == 0) && (a.getVocabName() != null) && (b.getVocabName() != null)) {
+				i = a.getVocabName().compareToIgnoreCase(b.getVocabName());
+			}
+			if ((i == 0) && (a.getTerm() != null) && (b.getTerm() != null)) {
+				i = a.getTerm().compareToIgnoreCase(b.getTerm());
+			}
+			
+			return i;
+		}
+	}
+
+	// comparator for sorting items in the Other IDs bucket such that they are grouped by object type.
+	private class OtherResultComparator implements Comparator<QSOtherResult> {
+		public int compare(QSOtherResult a, QSOtherResult b) {
+			// star ratings should be all the same for the Other IDs bucket, but let's make sure.
+			// primarily sort by star tier (backward, since we want highest first)
+			int i = Integer.compare(b.getStarCount(), a.getStarCount());
+			
+			// then sort by object type, then object subtype
+			if ((i == 0) && (a.getObjectType() != null) && (b.getObjectType() != null)) {
+				i = a.getObjectType().compareToIgnoreCase(b.getObjectType());
+			}
+			if ((i == 0) && (a.getObjectSubtype() != null) && (b.getObjectSubtype() != null)) {
+				i = a.getObjectSubtype().compareToIgnoreCase(b.getObjectSubtype());
+			}
+			
+			// finally sort by name/description
+			if ((i == 0) && (a.getName() != null) && (b.getName() != null)) {
+				i = a.getName().compareToIgnoreCase(b.getName());
+			}
+			return i;
+		}
 	}
 	
 	// private inner class for scoring / sorting QS results.  We use a 3-level sort:  star rating,
