@@ -3,14 +3,14 @@
  * Notes: Functions here will be prefixed by "qs".
  */
 
-var qsWaitFor = 0;		// number of tabs for which we're waiting for results
+var qsWaitFor = {};		// numbers of tabs for which we're waiting for results
 
 // main logic for quick search
 var qsMain = function() {
 	// Only go ahead with queries if an even number of double-quotes in the search string.
 	var ct = 0;
 	var pos = query.indexOf('"');
-	qsWaitFor = 0;
+	qsWaitFor = {};
 	
 	while (pos >= 0) {
 		ct++;
@@ -23,7 +23,9 @@ var qsMain = function() {
 		b3Fetch();		// bucket 3 : ID bucket
 		b4Fetch();		// bucket 4 : strains bucket
 		b5Fetch();		// bucket 5 : alleles bucket
-		qsWaitFor = 5;
+		for (var i = 1; i < 5; i++) {
+			qsWaitFor[i] = true;
+		}
 	} else {
 		$('#errorDiv').html('Error: Your search includes an odd number of quotation marks.  ' +
 			'Please edit your search to use quotation marks only in pairs.');
@@ -102,11 +104,12 @@ var qsStyleTabText = function(resultCount, tabNumber) {
 		$('#ui-id-' + tabNumber).addClass('noResults');
 		$('#ui-id-' + tabNumber).css({ 'color' : 'black', 'font-weight' : 'normal'});	// lighter button text
 	}
-	qsWaitFor = qsWaitFor - 1;
+	if (tabNumber in qsWaitFor) {
+		delete qsWaitFor[tabNumber];
+	}
 	
 	// If all the tabs have come back with data, select the first one that has results.
-	// TODO: For long-running searches, often the leftmost tab with results will not be selected.  Why?
-	if (qsWaitFor == 0) {
+	if (Object.keys(qsWaitFor).length == 0) {
 		$('.hasResults').first().click();
 	}
 }
