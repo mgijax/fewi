@@ -5,6 +5,12 @@
 
 var qsWaitFor = {};		// numbers of tabs for which we're waiting for results
 
+// If the user clicks through to one of the linked objects, remember what tab was displayed (so we can come
+// back to it).
+$(window).on('unload beforeunload', function() {
+	sessionStorage.setItem(sessionID, parseInt($('.ui-tabs-active a').attr('id').replace('ui-id-', '')));
+});
+
 // main logic for quick search
 var qsMain = function() {
 	// Only go ahead with queries if an even number of double-quotes in the search string.
@@ -108,8 +114,16 @@ var qsStyleTabText = function(resultCount, tabNumber) {
 		delete qsWaitFor[tabNumber];
 	}
 	
-	// If all the tabs have come back with data, select the first one that has results.
+	// If all the tabs have come back with data, choose which one to display.
+	// 1. If we remember a previously selected tab (because the user clicked to see a linked object and then
+	//	came Back to this page, show that tab.
+	// 2. Or, if there is no remembered tab, then just show the first one that has results.
 	if (Object.keys(qsWaitFor).length == 0) {
-		$('.hasResults').first().click();
+		var tabID = sessionStorage.getItem(sessionID);
+		if (tabID == null) {
+			$('.hasResults').first().click();
+		} else {
+			$('#ui-id-' + tabID).first().click();
+		}
 	}
 }

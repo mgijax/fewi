@@ -237,6 +237,7 @@ public class QuickSearchController {
 		mav.addObject("queryString", request.getQueryString());
 		mav.addObject("queryTypes", QuickSearchQueryForm.QUERY_TYPE_OPTION_MAP);
 		mav.addObject("queryType", queryForm.getQueryType());
+		mav.addObject("sessionID", Math.round(Math.random() * 100000));		// used for caching current tab to aid Back button usage
         return mav;
     }
 
