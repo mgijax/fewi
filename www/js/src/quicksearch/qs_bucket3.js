@@ -34,11 +34,17 @@ var b3Show = function(data) {
 	}
 
 	var header = qsResultHeader(data.start, data.end, data.totalCount);
+	var firstTime = false;							// first time through for the current search?
+	if ($('#idCount').html().indexOf('(') < 0) {	// if no count on the Other IDs tab yet, then yes.
+		firstTime = true;
+	}
 	$('#idCount').html("(" + commaDelimit(data.totalCount) + ")");
 	$('#b3Counts').html(header);
 	$('#b3Results').html(tbl);
 	pgUpdatePaginator(b3CacheName, 'otherIdPaginator', data.totalCount, b3PageSize, dcGetPage)
-	qsStyleTabText(data.totalCount, 5);
+	if (firstTime) {
+		qsStyleTabText(data.totalCount, 5);
+	}
 };
 
 // Fetch the data items for bucket 3 (matches by ID).

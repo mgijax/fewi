@@ -53,11 +53,17 @@ function b2Show(data) {
 		console.log("No b2Results");
 	}
 	var header = qsResultHeader(data.start, data.end, data.totalCount);
+	var firstTime = false;							// first time through for the current search?
+	if ($('#vtCount').html().indexOf('(') < 0) {	// if no count on the Vocab tab yet, then yes.
+		firstTime = true;
+	}
 	$('#vtCount').html("(" + commaDelimit(data.totalCount) + ")");
 	$('#b2Counts').html(header);
 	$('#b2Results').html(tbl);
 	pgUpdatePaginator(b2CacheName, 'vocabPaginator', data.totalCount, b2PageSize, dcGetPage)
-	qsStyleTabText(data.totalCount, 3);
+	if (firstTime) {
+		qsStyleTabText(data.totalCount, 3);
+	}
 	console.log("Populated " + data.rows.length + " b2Results");
 };
 

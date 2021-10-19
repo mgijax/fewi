@@ -58,11 +58,17 @@ function b4Show(data) {
 		console.log("No b4Results");
 	}
 	var header = qsResultHeader(data.start, data.end, data.totalCount);
+	var firstTime = false;							// first time through for the current search?
+	if ($('#ssCount').html().indexOf('(') < 0) {	// if no count on the Strains tab yet, then yes.
+		firstTime = true;
+	}
 	$('#ssCount').html("(" + commaDelimit(data.totalCount) + ")");
 	$('#b4Counts').html(header);
 	$('#b4Results').html(tbl);
 	pgUpdatePaginator(b4CacheName, 'strainPaginator', data.totalCount, b4PageSize, dcGetPage)
-	qsStyleTabText(data.totalCount, 4);
+	if (firstTime) {
+		qsStyleTabText(data.totalCount, 4);
+	}
 	console.log("Populated " + data.rows.length + " b4Results");
 };
 

@@ -63,11 +63,17 @@ function b5Show(data) {
 		console.log("No b5Results");
 	}
 	var header = qsResultHeader(data.start, data.end, data.totalCount);
+	var firstTime = false;							// first time through for the current search?
+	if ($('#aCount').html().indexOf('(') < 0) {		// if no count on the Alleles tab yet, then yes.
+		firstTime = true;
+	}
 	$('#aCount').html("(" + commaDelimit(data.totalCount) + ")");
 	$('#b5Counts').html(header);
 	$('#b5Results').html(tbl);
 	pgUpdatePaginator(b5CacheName, 'allelePaginator', data.totalCount, b5PageSize, dcGetPage);
-	qsStyleTabText(data.totalCount, 2);
+	if (firstTime) {
+		qsStyleTabText(data.totalCount, 2);
+	}
 	console.log("Populated " + data.rows.length + " b5Results");
 };
 
