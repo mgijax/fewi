@@ -934,7 +934,7 @@ public class QuickSearchController {
 				// containing "running" in their display value should be kicked up higher, so we need to compare the
 				// non-stemmed versions.
 			
-				if (match.getSearchTermDisplay().contains(originalSearchTerm) || (hasWildcard && WildcardHelper.contains(lowerDisplayTerm, wildcardSearchTerm))) {
+				if (match.getSearchTermDisplay().toLowerCase().contains(originalSearchTerm) || (hasWildcard && WildcardHelper.contains(lowerDisplayTerm, wildcardSearchTerm))) {
 					nonStemmedMatchBoost = 20;
 				}
 			} // if lowerTerm is not null
