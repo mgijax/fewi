@@ -420,25 +420,25 @@ public class QuickSearchController {
 	private Filter getFilterFacets (QuickSearchQueryForm qf) {
 		List<Filter> filters = new ArrayList<Filter>();
 		
-		Filter processFilter = getFilterForOneField(SearchConstants.QS_GO_PROCESS_FACETS, qf.getProcessFilter());
+		Filter processFilter = getFilterForOneField(SearchConstants.QS_GO_PROCESS_FACETS, qf.getProcessFilterF());
 		if (processFilter != null) { filters.add(processFilter); }
 		
-		Filter functionFilter = getFilterForOneField(SearchConstants.QS_GO_FUNCTION_FACETS, qf.getFunctionFilter());
+		Filter functionFilter = getFilterForOneField(SearchConstants.QS_GO_FUNCTION_FACETS, qf.getFunctionFilterF());
 		if (functionFilter != null) { filters.add(functionFilter); }
 		
-		Filter componentFilter = getFilterForOneField(SearchConstants.QS_GO_COMPONENT_FACETS, qf.getComponentFilter());
+		Filter componentFilter = getFilterForOneField(SearchConstants.QS_GO_COMPONENT_FACETS, qf.getComponentFilterF());
 		if (componentFilter != null) { filters.add(componentFilter); }
 		
-		Filter phenotypeFilter = getFilterForOneField(SearchConstants.QS_PHENOTYPE_FACETS, qf.getPhenotypeFilter());
+		Filter phenotypeFilter = getFilterForOneField(SearchConstants.QS_PHENOTYPE_FACETS, qf.getPhenotypeFilterF());
 		if (phenotypeFilter != null) { filters.add(phenotypeFilter); }
 		
-		Filter expressionFilter = getFilterForOneField(SearchConstants.QS_EXPRESSION_FACETS, qf.getExpressionFilter());
+		Filter expressionFilter = getFilterForOneField(SearchConstants.QS_EXPRESSION_FACETS, qf.getExpressionFilterF());
 		if (expressionFilter != null) { filters.add(expressionFilter); }
 		
-		Filter diseaseFilter = getFilterForOneField(SearchConstants.QS_DISEASE_FACETS, qf.getDiseaseFilter());
+		Filter diseaseFilter = getFilterForOneField(SearchConstants.QS_DISEASE_FACETS, qf.getDiseaseFilterF());
 		if (diseaseFilter != null) { filters.add(diseaseFilter); }
 
-		Filter featureTypeFilter = getFilterForOneField(SearchConstants.QS_MARKER_TYPE_FACETS, qf.getFeatureTypeFilter());
+		Filter featureTypeFilter = getFilterForOneField(SearchConstants.QS_MARKER_TYPE_FACETS, qf.getFeatureTypeFilterF());
 		if (featureTypeFilter != null) { filters.add(featureTypeFilter); }
 		
 		if (filters.size() > 0) {

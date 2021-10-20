@@ -38,13 +38,13 @@ public class QuickSearchQueryForm {
     //--------------------//
     private String query;
     private String queryType;
-    private List<String> processFilter;
-    private List<String> componentFilter;
-    private List<String> functionFilter;
-    private List<String> phenotypeFilter;
-    private List<String> expressionFilter;
-    private List<String> diseaseFilter;
-    private List<String> featureTypeFilter;
+    private List<String> processFilterF;
+    private List<String> componentFilterF;
+    private List<String> functionFilterF;
+    private List<String> phenotypeFilterF;
+    private List<String> expressionFilterF;
+    private List<String> diseaseFilterF;
+    private List<String> featureTypeFilterF;
     private List<String> terms;
 
     //--------------------//
@@ -120,56 +120,56 @@ public class QuickSearchQueryForm {
     	return terms;
     }
     
-    public List<String> getExpressionFilter() {
-		return expressionFilter;
+    public List<String> getExpressionFilterF() {
+		return expressionFilterF;
 	}
-	public void setExpressionFilter(List<String> expressionFilter) {
-		this.expressionFilter = expressionFilter;
+	public void setExpressionFilterF(List<String> expressionFilter) {
+		this.expressionFilterF = expressionFilter;
 	}
-	public List<String> getPhenotypeFilter() {
-		return phenotypeFilter;
+	public List<String> getPhenotypeFilterF() {
+		return phenotypeFilterF;
 	}
-	public void setPhenotypeFilter(List<String> phenotypeFilter) {
-		this.phenotypeFilter = phenotypeFilter;
+	public void setPhenotypeFilterF(List<String> phenotypeFilter) {
+		this.phenotypeFilterF = phenotypeFilter;
 	}
-	public List<String> getDiseaseFilter() {
-		return diseaseFilter;
+	public List<String> getDiseaseFilterF() {
+		return diseaseFilterF;
 	}
-	public void setDiseaseFilter(List<String> diseaseFilter) {
-		this.diseaseFilter = diseaseFilter;
+	public void setDiseaseFilterF(List<String> diseaseFilter) {
+		this.diseaseFilterF = diseaseFilter;
 	}
-	public List<String> getFeatureTypeFilter() {
-		return featureTypeFilter;
+	public List<String> getFeatureTypeFilterF() {
+		return featureTypeFilterF;
 	}
-	public void setFeatureTypeFilter(List<String> featureTypeFilter) {
-		this.featureTypeFilter = featureTypeFilter;
+	public void setFeatureTypeFilterF(List<String> featureTypeFilter) {
+		this.featureTypeFilterF = featureTypeFilter;
 	}
-	public List<String> getComponentFilter() {
-		return componentFilter;
+	public List<String> getComponentFilterF() {
+		return componentFilterF;
 	}
-	public void setComponentFilter(List<String> componentFilter) {
-		this.componentFilter = componentFilter;
+	public void setComponentFilterF(List<String> componentFilter) {
+		this.componentFilterF = componentFilter;
 	}
-	public List<String> getFunctionFilter() {
-		return functionFilter;
+	public List<String> getFunctionFilterF() {
+		return functionFilterF;
 	}
-	public void setFunctionFilter(List<String> functionFilter) {
-		this.functionFilter = functionFilter;
+	public void setFunctionFilterF(List<String> functionFilter) {
+		this.functionFilterF = functionFilter;
 	}
-	public List<String> getProcessFilter() {
-		return processFilter;
+	public List<String> getProcessFilterF() {
+		return processFilterF;
 	}
-	public void setProcessFilter(List<String> processFilter) {
-		this.processFilter = processFilter;
+	public void setProcessFilterF(List<String> processFilter) {
+		this.processFilterF = processFilter;
 	}
 
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer("QS");
 		if (query != null) { sb.append(" query="); sb.append(query); }
-		if (processFilter != null) { sb.append(", processFilter="); sb.append(processFilter); }
-		if (componentFilter != null) { sb.append(", componentFilter="); sb.append(componentFilter); }
-		if (functionFilter != null) { sb.append(", functionFilter="); sb.append(functionFilter); }
+		if (processFilterF != null) { sb.append(", processFilter="); sb.append(processFilterF); }
+		if (componentFilterF != null) { sb.append(", componentFilter="); sb.append(componentFilterF); }
+		if (functionFilterF != null) { sb.append(", functionFilter="); sb.append(functionFilterF); }
 		return sb.toString();
 	}
 }
