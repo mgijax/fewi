@@ -104,9 +104,9 @@ filters.registerHmdcButton = function (id, text, tooltip, visible, callback) {
  */
 filters.setHmdcButtonVisible = function (visible) {
     if (filters.hmdcButtonID) {
-	filters.hmdcButtonVisible = visible;
+	    filters.hmdcButtonVisible = visible;
     } else {
-	filters.hmdcButtonVisible = false;
+	    filters.hmdcButtonVisible = false;
     }
 };
 
@@ -186,8 +186,8 @@ filters.defaultFilterFormatter = function(mydata) {
     // this formatter is only appropriate for single-field filters; bail out
     // otherwise
     if (mydata.fields.length > 1) {
-	filters.log('too many fieldnames for defaultFilterFormatter()');
-	return list;
+	    filters.log('too many fieldnames for defaultFilterFormatter()');
+	    return list;
     }
 
     var fieldname = mydata.fields[0];	// name of the field for this filter
@@ -195,44 +195,44 @@ filters.defaultFilterFormatter = function(mydata) {
     // don't need any removal buttons if there are no values specified
     
     if (fieldname in mydata.values) {
-	filters.log(fieldname + ' has values in ' + mydata.name);
+	    filters.log(fieldname + ' has values in ' + mydata.name);
     } else {
-	filters.log(fieldname + ' has no values in ' + mydata.name);
-	return list;
+	    filters.log(fieldname + ' has no values in ' + mydata.name);
+	    return list;
     }
 
     var valueCount = mydata.values[fieldname].length;
 
     if (valueCount <= 0) {
-	return list;
+	    return list;
     }
 
     // build the buttons
     var myValues = mydata.values[fieldname];
     if (typeof(myValues) === 'string') {
-	myValues = [ myValues ];
+	    myValues = [ myValues ];
     }
 
     for (var pos in myValues) {
 
-	var value = myValues[pos];
-	var id = mydata.name + ':' + fieldname + ':' + value;
-	var text = mydata.nameForUser + ': ' + filters.decode(value);
+	    var value = myValues[pos];
+	    var id = mydata.name + ':' + fieldname + ':' + value;
+	    var text = mydata.nameForUser + ': ' + filters.decode(value);
 
-	var el = document.createElement('a');
-	el.setAttribute('class', 'filterItem'); 
-	el.setAttribute('id', id);
-	el.setAttribute('style', 'line-height: 2.2');
-	el.setAttribute('title', 'click to remove this filter');
+	    var el = document.createElement('a');
+	    el.setAttribute('class', 'filterItem'); 
+	    el.setAttribute('id', id);
+	    el.setAttribute('style', 'line-height: 2.2');
+	    el.setAttribute('title', 'click to remove this filter');
 
-	// if we have a left parenthesis in the text, assume that it was
-	// converted from a comma and change it back for the displayed text.
-	if (find('(', text)) {
-	    setText(el, text.replace(/\(/g, ','));
-	} else {
-	    setText(el, text);
-	}
-	list.push(el);
+	    // if we have a left parenthesis in the text, assume that it was
+	    // converted from a comma and change it back for the displayed text.
+	    if (find('(', text)) {
+	        setText(el, text.replace(/\(/g, ','));
+	    } else {
+	        setText(el, text);
+	    }
+	    list.push(el);
     } 
     filters.log('returning ' + list.length + ' buttons for ' + mydata.name);
     return list;
@@ -251,8 +251,8 @@ filters.sliderFormatter = function(mydata) {
     // this formatter is only appropriate for single-field filters; bail out
     // otherwise
     if (mydata.fields.length > 1) {
-	filters.log('too many fieldnames for sliderFormatter()');
-	return list;
+	    filters.log('too many fieldnames for sliderFormatter()');
+	    return list;
     }
 
     var fieldname = mydata.fields[0];	// name of the field for this filter
@@ -260,22 +260,22 @@ filters.sliderFormatter = function(mydata) {
     // don't need any removal buttons if there are no values specified
     
     if (fieldname in mydata.values) {
-	filters.log(fieldname + ' has values in ' + mydata.name);
+	    filters.log(fieldname + ' has values in ' + mydata.name);
     } else {
-	filters.log(fieldname + ' has no values in ' + mydata.name);
-	return list;
+	    filters.log(fieldname + ' has no values in ' + mydata.name);
+	    return list;
     }
 
     var valueCount = mydata.values[fieldname].length;
 
     if (valueCount <= 0) {
-	return list;
+	    return list;
     }
 
     // build the buttons
     var myValue = mydata.values[fieldname];
     if (typeof(myValue) === 'object') {
-	myValue = myValue[0];
+	    myValue = myValue[0];
     }
 
     var id = mydata.name + ':' + fieldname + ':' + myValue;
@@ -321,7 +321,7 @@ filters.addFilter = function(
 
     var fields = fieldnames;
     if (typeof fields === 'string') {
-	fields = [ fields ];
+	    fields = [ fields ];
     }
 
     // build the dialog box, if it isn't already built
@@ -336,22 +336,22 @@ filters.addFilter = function(
     // how to handle errors when retrieving data from the data source
 
     var handleError = function (oRequest, oResponse, oPayload) {
-	buttons = filters.dialogBox.getButtons();
-	for (var k in buttons) {
-	    buttons[k].set('disabled', 'true');
-	}
-	filters.dialogBox.setHeader(popupTitle);
-	filters.dialogBox.form.innerHTML = oPayload.error;
+	    buttons = filters.dialogBox.getButtons();
+	    for (var k in buttons) {
+	        buttons[k].set('disabled', 'true');
+	    }
+	    filters.dialogBox.setHeader(popupTitle);
+	    filters.dialogBox.form.innerHTML = oPayload.error;
     };
 
     // build a callback for when retrieving data from the data source
  
     var buildCallback = function (filterName, popupTitle) {
-	return { success: parser,
-	    failure: handleError,
-	    scope: this,
-	    argument: { name: filterName, title: popupTitle }
-	};
+	    return { success: parser,
+	        failure: handleError,
+	        scope: this,
+	        argument: { name: filterName, title: popupTitle }
+	    };
     };
 
     // create the filter
@@ -360,29 +360,29 @@ filters.addFilter = function(
 
     filters.filterNames.push(filterName);
     filters.filtersByName[filterName] = {
-	'name' : filterName,
-	'nameForUser' : nameForUser,
-	'buttonID' : buttonID,
-	'url' : url,
-	'formatter' : formatter,
-	'fields' : fields,
-	'values' : {},		// fieldname -> [ value 1, ... value n ]
-	'dataSource' : filterDS,
-	'callback' : buildCallback(filterName, nameForUser),
-	'parser' : parser,
-	'title' : popupTitle
-    	};
+	    'name' : filterName,
+	    'nameForUser' : nameForUser,
+	    'buttonID' : buttonID,
+	    'url' : url,
+	    'formatter' : formatter,
+	    'fields' : fields,
+	    'values' : {},		// fieldname -> [ value 1, ... value n ]
+	    'dataSource' : filterDS,
+	    'callback' : buildCallback(filterName, nameForUser),
+	    'parser' : parser,
+	    'title' : popupTitle
+    };
 
     // remember which fields are managed by this filter
     for (var i in fields) {
-	filters.fieldnameToFilterName[fields[i]] = filterName;
+	    filters.fieldnameToFilterName[fields[i]] = filterName;
     }
 
     // remove any old handling for the click, and hook it to the new button
     YAHOO.util.Event.removeListener(buttonID, 'click')
     YAHOO.util.Event.addListener(buttonID, 'click', function() {
-	filters.populateDialogForFilter(filterName);
-	}, true);
+	    filters.populateDialogForFilter(filterName);
+	    }, true);
 
     filters.log('Added filter: ' + filterName);
 };
@@ -396,24 +396,24 @@ filters.removeFilter = function(
  
     var pos = filters.listIndexOf(filters.filterNames, filterName);
     if (pos >= 0) {
-	var hadValues = filters.filtersByName[filterName].values.length;
+	    var hadValues = filters.filtersByName[filterName].values.length;
 
-	filters.filterNames.splice(pos, 1);
-	delete filters.filtersByName[filterName];
+	    filters.filterNames.splice(pos, 1);
+	    delete filters.filtersByName[filterName];
 
-	filters.log('Removed filter: ' + filterName);
+	    filters.log('Removed filter: ' + filterName);
 
-	if (hadValues > 0) {
-	    filters.issueCallbacks();
-	}
+	    if (hadValues > 0) {
+	        filters.issueCallbacks();
+	    }
     }
 
     // remove fieldnames mapping to this filterName
 
     for (var fieldname in filters.fieldnameToFilterName) {
-	if (filters.fieldnameToFilterName[fieldname] == filterName) {
-	    delete filters.fieldnameToFilterName[fieldname];
-	}
+	    if (filters.fieldnameToFilterName[fieldname] == filterName) {
+	        delete filters.fieldnameToFilterName[fieldname];
+	    }
     }
 };
 
@@ -436,14 +436,14 @@ filters.clearAllFilters = function(suppressCallback) {
     filters.callbacksOff();
 
     for (var i = 0; i < filters.filterNames.length; i++) {
-	hadValues = hadValues + filters.clearAllValuesForFilter(
-	    filters.filterNames[i]);
+	    hadValues = hadValues + filters.clearAllValuesForFilter(
+	        filters.filterNames[i]);
     }
     
     filters.callbacksOn();
 
     if (!suppressCallback && (hadValues > 0)) {
-	filters.issueCallbacks();
+	    filters.issueCallbacks();
     }
 };
 
@@ -452,17 +452,17 @@ filters.clearAllFilters = function(suppressCallback) {
  */
 filters.clearAllValuesForFilter = function(filterName) {
     if (filterName in filters.filtersByName) {
-	var hadValues = 0;
-	for (var i in filters.filtersByName[filterName].values) {
-	    hadValues = hadValues + 1;
-	}
+	    var hadValues = 0;
+	    for (var i in filters.filtersByName[filterName].values) {
+	        hadValues = hadValues + 1;
+	    }
 
-	filters.filtersByName[filterName]['values'] = {}
+	    filters.filtersByName[filterName]['values'] = {}
 
-	if (hadValues > 0) {
-	    filters.issueCallbacks();
-	    return 1;
-	}
+	    if (hadValues > 0) {
+	        filters.issueCallbacks();
+	        return 1;
+	    }
     }
     return 0;
 };
@@ -490,10 +490,10 @@ filters.registerCallback = function(callbackName, callbackFn) {
 filters.removeCallback = function(callbackName) {
     var pos = filters.listIndexOf(filters.callbackNames, callbackName);
     if (pos >= 0) {
-	filters.callbackNames.splice(pos, 1);
-	delete filters.callbacksByName[callbackName];
+	    filters.callbackNames.splice(pos, 1);
+	    delete filters.callbacksByName[callbackName];
 
-	filters.log('Removed callback: ' + callbackName);
+	    filters.log('Removed callback: ' + callbackName);
     }
 };
 
@@ -507,7 +507,7 @@ filters.getUrlFragment = function() {
     var i = 0;		// walks through filters
 
     for (var i = 0; i < filters.filterNames.length; i++) {
-	s = s + filters.getUrlFragmentForFilter(filters.filterNames[i]);
+	    s = s + filters.getUrlFragmentForFilter(filters.filterNames[i]);
     }
 
     filters.log('Got URL fragment: ' + s);
@@ -527,43 +527,43 @@ filters.getAllSummaryButtons = function() {
 
     filters.log('in getAllSummaryButtons()');
     for (var i = 0; i < filters.filterNames.length; i++) {
-	f = filters.filtersByName[filters.filterNames[i]]['formatter'];
-	data = filters.filtersByName[filters.filterNames[i]];
+	    f = filters.filtersByName[filters.filterNames[i]]['formatter'];
+	    data = filters.filtersByName[filters.filterNames[i]];
 
-	var results = f(data);
-	if (results) {
-	    list = list.concat(results);
-	}
+	    var results = f(data);
+	    if (results) {
+	        list = list.concat(results);
+	    }
     }
 
     // add the extra HMDC button, if needed
     if (filters.hmdcButtonVisible) {
-	var el = document.createElement('a');
-	el.setAttribute('class', 'filterItem'); 
-	el.setAttribute('id', filters.hmdcButtonID);
-	el.setAttribute('style', 'line-height: 2.2');
-	el.setAttribute('title', filters.hmdcButtonTooltip);
-	setText(el, filters.hmdcButtonText);
-	list.push(el); 
+	    var el = document.createElement('a');
+	    el.setAttribute('class', 'filterItem'); 
+	    el.setAttribute('id', filters.hmdcButtonID);
+	    el.setAttribute('style', 'line-height: 2.2');
+	    el.setAttribute('title', filters.hmdcButtonTooltip);
+	    setText(el, filters.hmdcButtonText);
+	    list.push(el); 
     }
 
     if (list.length > 0) {
-	// if there were some filters selected, need to add a 'clear all'
-	// button
+	    // if there were some filters selected, need to add a 'clear all'
+	    // button
 	
-	var el = document.createElement('a');
-	el.setAttribute('class', 'filterItem'); 
-	el.setAttribute('id', 'clearAllFilters');
-	el.setAttribute('style', 'line-height: 2.2');
-	el.setAttribute('title', 'click to remove all filters');
-	setText(el, 'Remove All Filters');
-	list.push(el); 
+	    var el = document.createElement('a');
+	    el.setAttribute('class', 'filterItem'); 
+	    el.setAttribute('id', 'clearAllFilters');
+	    el.setAttribute('style', 'line-height: 2.2');
+	    el.setAttribute('title', 'click to remove all filters');
+	    setText(el, 'Remove All Filters');
+	    list.push(el); 
 
-	// wire up all the buttons to the clearFilter() function
+	    // wire up all the buttons to the clearFilter() function
 
-	for (var i = 0; i < list.length; i++) {
-	    YAHOO.util.Event.addListener(list[i], 'click', filters.clearFilter);
-	}
+	    for (var i = 0; i < list.length; i++) {
+	        YAHOO.util.Event.addListener(list[i], 'click', filters.clearFilter);
+	    }
     }
     return list;
 };
@@ -637,40 +637,40 @@ filters.setAllFilters = function(pRequest) {
     filters.clearAllFilters();
 
     for (var field in pRequest) {
-	if ((pRequest[field]) && (field in filters.fieldnameToFilterName)) {
-	    var filterName = filters.fieldnameToFilterName[field];
-	    var fValues = pRequest[field];
+	    if ((pRequest[field]) && (field in filters.fieldnameToFilterName)) {
+	        var filterName = filters.fieldnameToFilterName[field];
+	        var fValues = pRequest[field];
 
-	    if ((fValues == []) || (fValues == '')) {
-	    	continue;
-	    }
+	        if ((fValues == []) || (fValues == '')) {
+	    	    continue;
+	        }
 	    
-	    // need to handle strings and lists, split comma-separate terms,
-	    // and remove redundancy
+	        // need to handle strings and lists, split comma-separate terms,
+	        // and remove redundancy
 
-	    d = {};
+	        d = {};
 
-	    if (typeof(fValues) === 'string') {
-		fValues = fValues.split(',');
+	        if (typeof(fValues) === 'string') {
+		        fValues = fValues.split(',');
+	        }
+
+	        for (var k = 0; k < fValues.length; k++) {
+		        var v = fValues[k];
+		        if (typeof(v === 'string')) {
+		            v = v.split(',')
+		        }
+		        for (var i = 0; i < v.length; i++) {
+		            d[v[i]] = 1;
+		        }
+	        }
+
+	        fValues = [];
+	        for (var fv in d) {
+		        fValues.push(fv);
+	        }
+
+	        filters.filtersByName[filterName]['values'][field] = fValues;
 	    }
-
-	    for (var k = 0; k < fValues.length; k++) {
-		var v = fValues[k];
-		if (typeof(v === 'string')) {
-		    v = v.split(',')
-		}
-		for (var i = 0; i < v.length; i++) {
-		    d[v[i]] = 1;
-		}
-	    }
-
-	    fValues = [];
-	    for (var fv in d) {
-		fValues.push(fv);
-	    }
-
-	    filters.filtersByName[filterName]['values'][field] = fValues;
-	}
     }
     filters.populateFilterSummary();
 };
@@ -699,16 +699,16 @@ filters.listIndexOf = function(myList, myItem) {
     if (!myList) { return -1; }
 
     if (typeof Array.prototype.indexOf === 'function') {
-	return myList.indexOf(myItem);
+	    return myList.indexOf(myItem);
     }
 
     // otherwise, do it manually
     
     var i = 0;
     for (var i = 0; i < myList.length; i++) {
-	if (myList[i] === myItem) {
-	    return i;
-	}
+	    if (myList[i] === myItem) {
+	        return i;
+	    }
     }
     return -1;
 }
@@ -734,20 +734,20 @@ filters.callbacksOn = function() {
  */
 filters.issueCallbacks = function() {
     if (filters.callbacksActive) {
-	if (filters.callbacksInProgress) {
-	    return;
-	}
+	    if (filters.callbacksInProgress) {
+	        return;
+	    }
 
         filters.log('Issuing callbacks...');
-	filters.callbacksInProgress = true;
-	var i = 0;
-	for (var i = 0; i < filters.callbackNames.length; i++) {
-	    filters.log('invoking callback: ' + filters.callbackNames[i]);
-	    filters.callbacksByName[filters.callbackNames[i]]();
-	    filters.log('returned from callback: ' + filters.callbackNames[i]);
-	}
+	    filters.callbacksInProgress = true;
+	    var i = 0;
+	    for (var i = 0; i < filters.callbackNames.length; i++) {
+	        filters.log('invoking callback: ' + filters.callbackNames[i]);
+	        filters.callbacksByName[filters.callbackNames[i]]();
+	        filters.log('returned from callback: ' + filters.callbackNames[i]);
+	    }
         filters.log('Issued ' + filters.callbackNames.length + ' callbacks');
-	filters.callbacksInProgress = false;
+	    filters.callbacksInProgress = false;
     }
 }
 
@@ -764,36 +764,36 @@ filters.getUrlFragmentForFilter = function(filterName) {
     var numValues = 0;	// number of values selected for this fieldname
 
     for (var j = 0; j < filters.filtersByName[filterName].fields.length; j++) {
-	fieldname = filters.filtersByName[filterName].fields[j];
+	    fieldname = filters.filtersByName[filterName].fields[j];
 
-	var items = [];
+	    var items = [];
 
-	if (fieldname in filters.filtersByName[filterName].values) {
-	    items = filters.filtersByName[filterName].values[fieldname];
-	    if (typeof(items) === 'string') {
-		items = [ items ];
+	    if (fieldname in filters.filtersByName[filterName].values) {
+	        items = filters.filtersByName[filterName].values[fieldname];
+	        if (typeof(items) === 'string') {
+		        items = [ items ];
+	        }
 	    }
-	}
 
-	if (!filters.filtersByName[filterName].values[fieldname]) {
-	    return '';
-	}
-
-	if (filters.filtersByName[filterName].values[fieldname] === undefined) {
-	    return '';
-	}
-
-	numValues = items.length;
-
-	if (numValues > 0) {
-	    for (var k = 0; k < numValues; k++) {
-		var item = items[k];
-
-		if (item.toString().length > 0) {
-	            s = s + '&' + fieldname + '=' + item;
-		}
+	    if (!filters.filtersByName[filterName].values[fieldname]) {
+	        return '';
 	    }
-	}
+
+	    if (filters.filtersByName[filterName].values[fieldname] === undefined) {
+	        return '';
+	    }
+
+	    numValues = items.length;
+
+	    if (numValues > 0) {
+	        for (var k = 0; k < numValues; k++) {
+		        var item = items[k];
+
+		        if (item.toString().length > 0) {
+	                s = s + '&' + fieldname + '=' + item;
+		        }
+	        }
+	    }
     }
     return s;
 };
@@ -802,7 +802,7 @@ filters.getUrlFragmentForFilter = function(filterName) {
  */
 filters.decode = function(val) {
     if (typeof(val) !== 'string') {
-	val = '' + val;
+	    val = '' + val;
     }
     return val.replace('%26', '&');
 };
@@ -829,7 +829,7 @@ filters.log = function(msg) {
  */
 filters.getQueryString = function() {
     if (filters.queryStringFunction) {
-	return filters.queryStringFunction();
+	    return filters.queryStringFunction();
     }
     return "";
 };
@@ -843,27 +843,26 @@ filters.buildFilterDataSource = function(name, url) {
 
     if (filters.dataTable) {
     	oCallback = {
-	    success : filters.dataTable.onDataReturnInitializeTable,
-	    failure : filters.dataTable.onDataReturnInitializeTable,
-	    scope : this
-	};
+	        success : filters.dataTable.onDataReturnInitializeTable,
+	        failure : filters.dataTable.onDataReturnInitializeTable,
+	        scope : this
+	    };
     } else if (filters.alternateCallback) {
     	oCallback = {
-	    success : filters.alternateCallback,
-	    failure : filters.alternateCallback,
-	    scope : this
-	};
+	        success : filters.alternateCallback,
+	        failure : filters.alternateCallback,
+	        scope : this
+	    };
     } else {
-	filters.log("Must set either dataTable or alternateCallback");
+	    filters.log("Must set either dataTable or alternateCallback");
     }
 
     var qs = filters.getQueryString();
 
     if (qs) {
-	qs = qs + '&';
+	    qs = qs + '&';
     }
 
-//    var dsUrl = url + "?" + qs;
     var dsUrl = url + "?";
     filters.log("Data source URL: " + dsUrl);
 
@@ -871,13 +870,13 @@ filters.buildFilterDataSource = function(name, url) {
 
     facetDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
     facetDS.responseSchema = { resultsList: "resultFacets",
-	metaFields: { message : "message" } };
+	    metaFields: { message : "message" } };
 
     facetDS.maxCacheEntries = 3;
 
     facetDS.doBeforeParseData = function (oRequest, oFullResponse, oCallback) {
-	oCallback.argument.error = oFullResponse.error;
-	return oFullResponse;
+	    oCallback.argument.error = oFullResponse.error;
+	    return oFullResponse;
     };
 
     return facetDS;
@@ -968,34 +967,33 @@ filters.buildDialogBox = function() {
 
     // function to be called on successful submission
     var handleSuccess = function(o) {
-	filters.log('entered handleSuccess()');
-	var response = o.responseText;
-	response = response.split("<!")[0];
-	filters.log("handleSuccess() response: " + response);
+	    filters.log('entered handleSuccess()');
+	    var response = o.responseText;
+	    response = response.split("<!")[0];
+	    filters.log("handleSuccess() response: " + response);
     };
 
     // function to be called on failed submission
     var handleFailure = function(o) {
-	filters.log('entered handleFailure()');
-	this.form.innerHTML = '<img src="' + filters.fewiUrl + 'assets/images/loading.gif">';
-	alert("Submission failed: " + o.status);
+	    filters.log('entered handleFailure()');
+	    this.form.innerHTML = '<img src="' + filters.fewiUrl + 'assets/images/loading.gif">';
+	    alert("Submission failed: " + o.status);
     };
 
     // build the dialog box itself
     filters.dialogBox = new YAHOO.widget.Dialog("facetDialog", {
-	visible : false,
-	context : [ "filterDiv", "tl", "bl", [ "beforeShow" ] ],
-	constraintoviewport : true,
-	width: "305px",
-	buttons : [{ text:"Filter", handler: handleSubmit, isDefault: true} ]
+	    visible : false,
+	    context : [ "filterDiv", "tl", "bl", [ "beforeShow" ] ],
+	    constraintoviewport : true,
+	    width: "305px",
+	    buttons : [{ text:"Filter", handler: handleSubmit, isDefault: true} ]
     } );
 
     filters.dialogBox.hideEvent.subscribe(function() {
-	this.form.innerHTML = '<img src="' + filters.fewiUrl + 'assets/images/loading.gif">';
+	    this.form.innerHTML = '<img src="' + filters.fewiUrl + 'assets/images/loading.gif">';
     } );
 
-    filters.dialogBox.callback = { success: handleSuccess,
-	failure: handleFailure };
+    filters.dialogBox.callback = { success: handleSuccess, failure: handleFailure };
 
     filters.dialogBox.render();
     filters.log ("Built global filters.dialogBox");
@@ -1008,12 +1006,12 @@ filters.consolidateParameters = function(s) {
     var hash = {};
 
     for (var i = 0; i < parms.length; i++) {
-	hash[parms[i]] = 1;
+	    hash[parms[i]] = 1;
     }
 
     var out = [];
     for (var parm in hash) {
-	out.push(parm);
+	    out.push(parm);
     }
     return out.join('&');
 };
@@ -1026,19 +1024,18 @@ filters.populateDialogForFilter = function(filterName) {
 
     var parms = filters.getQueryString();
     if (parms) {
-	parms = parms + '&';
+	    parms = parms + '&';
     }
     parms = filters.consolidateParameters(parms + filters.getUrlFragment());
 
     if (filters.listIndexOf(filters.filterNames, filterName) >= 0) {
-	filters.fillAndShowDialog('Retrieving filter values', 'Please wait...',
-	    true);
-	var dataSource = filters.filtersByName[filterName]['dataSource'];
-	dataSource.flushCache();
-	dataSource.sendRequest(parms,
-	    filters.filtersByName[filterName]['callback']);
+	    filters.fillAndShowDialog('Retrieving filter values', 'Please wait...', true);
+	    var dataSource = filters.filtersByName[filterName]['dataSource'];
+	    dataSource.flushCache();
+	    dataSource.sendRequest(parms,
+	        filters.filtersByName[filterName]['callback']);
     } else {
-	filters.log("Unknown filterName in populateDialogForFilter(" + filterName + ")");
+	    filters.log("Unknown filterName in populateDialogForFilter(" + filterName + ")");
     }
 };
 
@@ -1049,11 +1046,11 @@ filters.fillAndShowDialog = function (title, body, error) {
     filters.log('in fillAndShowDialog()');
 
     if (filters.dialogBox === null) {
-	filters.buildDialogBox();
+	    filters.buildDialogBox();
     }
 
     if (!body) {
-	body = 'No values in results to filter';
+	    body = 'No values in results to filter';
     }
 
     filters.dialogBox.setHeader(title);
@@ -1062,7 +1059,7 @@ filters.fillAndShowDialog = function (title, body, error) {
     var buttons = filters.dialogBox.getButtons();
 
     for (var k in buttons) {
-	buttons[k].set('disabled', error);
+	    buttons[k].set('disabled', error);
     }
 
     filters.log('showing dialogBox');
@@ -1092,56 +1089,54 @@ filters.parseResponseShared = function(oRequest, oResponse, oPayload, widgetType
 
     var fieldname = null;
     if (oPayload.name in filters.filtersByName) {
-	var fields = filters.filtersByName[oPayload.name].fields;
-	if (fields.length > 0) {
-	    fieldname = fields[0];
-	}
+	    var fields = filters.filtersByName[oPayload.name].fields;
+	    if (fields.length > 0) {
+	        fieldname = fields[0];
+	    }
         filters.log('fieldname: ' + fieldname); 
-	title = filters.filtersByName[oPayload.name].title;
+	    title = filters.filtersByName[oPayload.name].title;
     } else {
-	filters.log('Unknown filter name: ' + oPayload.name);
-	return;
+	    filters.log('Unknown filter name: ' + oPayload.name);
+	    return;
     }
 
     var filteredValues = filters.filtersByName[oPayload.name].values[fieldname];
     filters.logObject(filteredValues, 'filteredValues');
     if (typeof(filteredValues) == 'string') {
-	filteredValues = [ filteredValues ];
+	    filteredValues = [ filteredValues ];
     } else if (!filteredValues) {
-	filteredValues = [];
+	    filteredValues = [];
     }
 
     var selectedList = [];
     for (var y in filteredValues) {
-	var fvList = filteredValues[y];
-	if (typeof(fvList) == 'string') {
-	    fvList = fvList.split(',');
-	}
+	    var fvList = filteredValues[y];
+	    if (typeof(fvList) == 'string') {
+	        fvList = fvList.split(',');
+	    }
 
-//	var fvList = filteredValues[y].split(',');
-
-	for (var z in fvList) {
-	    selectedList.push(fvList[z]);
-	}
+	    for (var z in fvList) {
+	        selectedList.push(fvList[z]);
+	    }
     }
 
     for (var x in res) {
-	var checked = '';
-	var fVal = filters.encode(res[x]);
-	var fVal2 = fVal.replace(/\(/g, ',');
+	    var checked = '';
+	    var fVal = filters.encode(res[x]);
+	    var fVal2 = fVal.replace(/\(/g, ',');
 
-	var i = selectedList.length;
-	while (i--) {
-	    if (selectedList[i] == fVal) {
-		checked = ' CHECKED';
-		break;
-	    }
+	    var i = selectedList.length;
+	    while (i--) {
+	        if (selectedList[i] == fVal) {
+		        checked = ' CHECKED';
+		        break;
+	        }
 
 	    // need to also check if there would be a match if we converted
 	    // left parentheses back to commas
 	    if (selectedList[i].replace(/\(/g, ',') == fVal2) {
-		checked = ' CHECKED';
-		break;
+		    checked = ' CHECKED';
+		    break;
 	    }
 	}
 
@@ -1183,40 +1178,40 @@ filters.sliderParser = function(oRequest, oResponse, oPayload) {
 
     var fieldname = null;
     if (oPayload.name in filters.filtersByName) {
-	var fields = filters.filtersByName[oPayload.name].fields;
-	if (fields.length > 0) {
-	    fieldname = fields[0];
-	}
+	    var fields = filters.filtersByName[oPayload.name].fields;
+	    if (fields.length > 0) {
+	        fieldname = fields[0];
+	    }
         filters.log('fieldname: ' + fieldname); 
-	title = filters.filtersByName[oPayload.name].title;
+	    title = filters.filtersByName[oPayload.name].title;
     } else {
-	filters.log('Unknown filter name: ' + oPayload.name);
-	return;
+	    filters.log('Unknown filter name: ' + oPayload.name);
+	    return;
     }
 
     var filteredValue = filters.filtersByName[oPayload.name].values[fieldname];
     filters.logObject(filteredValue, 'filteredValue');
     if (typeof(filteredValue) == 'object') {
-	filteredValue = filteredValue[0];
+	    filteredValue = filteredValue[0];
     }
 
     if (typeof(filteredValue) === 'undefined') {
-	filteredValue = 0;
+	    filteredValue = 0;
     } else if (typeof(filteredValue) === 'string') {
-	filteredValue = Number(filteredValue);
+	    filteredValue = Number(filteredValue);
     } else if (!filteredValue) {
-	filteredValue = 0;
+	    filteredValue = 0;
     }
 
     var values = [];
     for (var x in res) {
-	values.push(Number(res[x]));
+	    values.push(Number(res[x]));
     }
     values.sort(function(a,b) { return a-b; } );
 
     if (values.length != 2) {
-	filters.log('too few values: ' + values);
-	values = [ 0, 1 ];
+	    filters.log('too few values: ' + values);
+	    values = [ 0, 1 ];
     }
 
     options.push('<div style="float:left">' + values[0] + '</div>');
@@ -1227,14 +1222,14 @@ filters.sliderParser = function(oRequest, oResponse, oPayload) {
     options.push('</div>');
     options.push('Minimum score: <span id="sliderValueShown"></span>');
     options.push('<input type="hidden" id="sliderValueHidden" name="' +
-	fieldname + '" value="">');
+	    fieldname + '" value="">');
 
     filters.fillAndShowDialog(title, options.join(''), false);
 
 
     var sliderbg = YAHOO.util.Dom.get('sliderbg');
     var slider = YAHOO.widget.Slider.getHorizSlider(sliderbg, 'sliderthumb',
-	0, 235);
+	    0, 235);
 
     filters.filtersByName[oPayload.name]['slider'] = slider;
 
@@ -1266,44 +1261,44 @@ filters.sliderParser = function(oRequest, oResponse, oPayload) {
 filters.logObject = function(obj, objectName, level) {
     var myLevel = 3;
     if (level) {
-	myLevel = level;
+	    myLevel = level;
     }
     
     if (myLevel <= 0) {
-	return;
+	    return;
     }
 
     if (obj === null) {
-	filters.log(objectName + ' is null');
-	return;
+	    filters.log(objectName + ' is null');
+	    return;
     } else if (obj === undefined) {
-	filters.log(objectName + ' is undefined');
-	return;
+	    filters.log(objectName + ' is undefined');
+	    return;
     }
 
     if (typeof(obj) === 'object') {
-	for (var name in obj) {
-	    if (typeof(obj[name]) === 'function') {
-		filters.log('skipping ' + name.toString());
-		continue;
-	    }
+	    for (var name in obj) {
+	        if (typeof(obj[name]) === 'function') {
+		        filters.log('skipping ' + name.toString());
+		        continue;
+	        }
 
-	    var nameStr = name.toString();
+	        var nameStr = name.toString();
 
-	    if (typeof(obj[name]) === 'object') {
-		filters.logObject (obj[name], objectName + '.' + nameStr,
-		    myLevel - 1);
-	    } else {
-	        filters.log(objectName + '.' + nameStr + ' = '
-		    + obj[name].toString());
-	    }
-	}
+	        if (typeof(obj[name]) === 'object') {
+		        filters.logObject (obj[name], objectName + '.' + nameStr,
+		            myLevel - 1);
+	        } else {
+	            filters.log(objectName + '.' + nameStr + ' = '
+		            + obj[name].toString());
+	        }
+    	}
     } else {
-	filters.log(objectName + ' = ' + obj.toString());
+	    filters.log(objectName + ' = ' + obj.toString());
     }
 
     if (myLevel >= 3) {
-	filters.log('logObject() finished');
+	    filters.log('logObject() finished');
     }
 };
 
@@ -1320,31 +1315,31 @@ filters.clearFilter = function() {
     // special case where we want to clear the HMDC row/column filters
 
     if (this.id == filters.hmdcButtonID) {
-	filters.hmdcButtonVisible = false;
-	filters.hmdcButtonCallback();
-	return;
+	    filters.hmdcButtonVisible = false;
+	    filters.hmdcButtonCallback();
+	    return;
     }
 
     // special case where we want to clear all filters
 
     if (this.id === 'clearAllFilters') {
-	if (filters.hmdcButtonVisible) {
-	    /* We've filtered by rows/columns (possibly in addition to other
-	     * filters), which needs special handling.
-	     */
+	    if (filters.hmdcButtonVisible) {
+	        /* We've filtered by rows/columns (possibly in addition to other
+	         * filters), which needs special handling.
+	         */
 
-	    filters.clearAllFilters(true);
-	    hmdcFilters.updateHiddenFields();
-	    filters.hmdcButtonVisible = false;
-	    filters.hmdcButtonCallback();
-	} else {
-	    /* We've only filtered by filters in this library, not by rows
-	     * and column on the HMDC grid.
-	     */
-	    filters.clearAllFilters();
-	    filters.addHistoryEntry();
-	}
-	return;
+	        filters.clearAllFilters(true);
+	        hmdcFilters.updateHiddenFields();
+	        filters.hmdcButtonVisible = false;
+	        filters.hmdcButtonCallback();
+	    } else {
+	        /* We've only filtered by filters in this library, not by rows
+	         * and column on the HMDC grid.
+	         */
+	        filters.clearAllFilters();
+	        filters.addHistoryEntry();
+	    }
+	    return;
     }
 
     var kv = this.id.split(':');
@@ -1352,18 +1347,18 @@ filters.clearFilter = function() {
     // special case where we want to clear all values for a filter
 
     if (kv.length == 2) {
-	if (kv[1] === 'clear') {
-	    filters.clearAllValuesForFilter(kv[0]);
-	    filters.addHistoryEntry();
-	    return;
-	}
+	    if (kv[1] === 'clear') {
+	        filters.clearAllValuesForFilter(kv[0]);
+	        filters.addHistoryEntry();
+	        return;
+	    }
     }
 
     // normal case -- clear a value for a single field of a single filter
 
     if (kv.length != 3) {
-	filters.log('unexpected button ID: ' + this.id);
-	return;
+	    filters.log('unexpected button ID: ' + this.id);
+	    return;
     }
 
     var filterName = kv[0];
@@ -1371,30 +1366,30 @@ filters.clearFilter = function() {
     var fieldValue = kv[2];
 
     if (filterName in filters.filtersByName) {
-	var pairs = filters.filtersByName[filterName]['values'];
+	    var pairs = filters.filtersByName[filterName]['values'];
 
-	if (fieldName in pairs) {
-	    var pos = filters.listIndexOf (pairs[fieldName], fieldValue);
+	    if (fieldName in pairs) {
+	        var pos = filters.listIndexOf (pairs[fieldName], fieldValue);
 
-	    if (pos >= 0) {
-		if (typeof(pairs[fieldName]) === 'string') {
-		    pairs[fieldName] = [];
-		} else {
-		    pairs[fieldName].splice(pos, 1);
-		}
-		filters.log('removed ' + fieldValue + ' from field '
-		    + fieldName + ' in filter ' + filterName);
+	        if (pos >= 0) {
+		    if (typeof(pairs[fieldName]) === 'string') {
+		        pairs[fieldName] = [];
+		    } else {
+		        pairs[fieldName].splice(pos, 1);
+		    }
+		    filters.log('removed ' + fieldValue + ' from field '
+		        + fieldName + ' in filter ' + filterName);
 
+	        } else {
+		        filters.log('value ' + fieldValue + ' not selected for field '
+		        + fieldName + ' in filter ' + filterName);
+	        }
 	    } else {
-		filters.log('value ' + fieldValue + ' not selected for field '
-		    + fieldName + ' in filter ' + filterName);
-	    }
-	} else {
-	    filters.log('field ' + fieldName + ' unknown for filter '
-		+ filterName);
-	}
+	        filters.log('field ' + fieldName + ' unknown for filter '
+		    + filterName);
+    	}
     } else {
-	filters.log('unknown filter name: ' + filterName);
+	    filters.log('unknown filter name: ' + filterName);
     }
 
     filters.addHistoryEntry();
@@ -1406,23 +1401,23 @@ filters.clearFilter = function() {
 filters.populateFilterSummary = function() {
     filters.log('in populateFilterSummary()');
     if ((filters.filterSummary === null) || (filters.filterList === null)) {
-	filters.log('need to call setSummaryNames()');
-	return;
+	    filters.log('need to call setSummaryNames()');
+	    return;
     }
 
     var fSum = YAHOO.util.Dom.get(filters.filterSummary);
     if (fSum === null) {
-	filters.log('filterSummary is unrecognized: ' + filters.filterSummary);
-	return;
+	    filters.log('filterSummary is unrecognized: ' + filters.filterSummary);
+	    return;
     }
 
     var fList = new YAHOO.util.Element(filters.filterList);
 
     if (!YAHOO.lang.isNull(YAHOO.util.Dom.get(filters.filterList))) {
-	// clean out any existing buttons from the filter list
+	    // clean out any existing buttons from the filter list
 
-	while (fList.hasChildNodes()) {
-	    fList.removeChild(fList.get('firstChild'));
+	    while (fList.hasChildNodes()) {
+	        fList.removeChild(fList.get('firstChild'));
         }
     }
 
@@ -1430,16 +1425,16 @@ filters.populateFilterSummary = function() {
 
     filters.log('adding ' + buttons.length + ' buttons');
     for (var i in buttons) {
-	var button = buttons[i];
+	    var button = buttons[i];
 
-	fList.appendChild(button);
-	fList.appendChild(document.createTextNode(' '));
+	    fList.appendChild(button);
+	    fList.appendChild(document.createTextNode(' '));
     }
 
     if (buttons.length > 0) {
-	YAHOO.util.Dom.setStyle(fSum, 'display', filters.removalDivStyle);
+	    YAHOO.util.Dom.setStyle(fSum, 'display', filters.removalDivStyle);
     } else {
-	YAHOO.util.Dom.setStyle(fSum, 'display', 'none');
+	    YAHOO.util.Dom.setStyle(fSum, 'display', 'none');
     }
 };
 
