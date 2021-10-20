@@ -65,7 +65,12 @@ var qsResultHeader = function(start, end, total) {
 // update the request & data in the feature bucket (after a filtering event)
 var qsProcessFilters = function() {
 	filters.populateFilterSummary();
-	instantiatedPaginator = false;
+	// instantiatedPaginator = false;			seems to not be needed
+	pgClearPaginator('featurePaginator');
+	pgClearPaginator('vocabPaginator');
+	pgClearPaginator('otherIdPaginator');
+	pgClearPaginator('strainPaginator');
+	pgClearPaginator('allelePaginator');
 	b1Fetch();
 	b2Fetch();
 	b3Fetch();
