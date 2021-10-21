@@ -172,7 +172,6 @@ These JS files and local definitions need be defined in this order
 
 <script type="text/javascript">
 	filters.setQueryStringFunction(getQuerystring);
-	filters.setSummaryNames('filterSummary', 'filterList');
     filters.setFewiUrl("${configBean.FEWI_URL}");
     filters.setHistoryManagement("myDataTable", handleNavigationRaw);
     filters.setDataTable(getRecombinaseDataTable());
@@ -181,6 +180,7 @@ These JS files and local definitions need be defined in this order
  	filters.addFilter('inducerFilter', 'Inducer', 'inducerFilter', 'inducer', fewiurl + 'recombinase/facet/inducer');
  	filters.addFilter('systemDetectedFilter', 'Detected in System', 'systemDetectedFilter', 'systemDetected', fewiurl + 'recombinase/facet/systemDetected');
  	filters.addFilter('systemNotDetectedFilter', 'Not Detected in System', 'systemNotDetectedFilter', 'systemNotDetected', fewiurl + 'recombinase/facet/systemNotDetected');
+	filters.setSummaryNames('filterSummary', 'filterList');
 </script>
 
 

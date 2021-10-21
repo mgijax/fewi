@@ -143,9 +143,9 @@ function initializeFilterLibrary(delay) {
 		}
 		filters.setFewiUrl(fewiurl);
 		filters.setQueryStringFunction(getQuerystring);
-		filters.setSummaryNames('filterSummary', 'filterList');
 		filters.addFilter('variableFilter', 'Variable', 'variableFilter', 'variableFilter', fewiurl + 'gxd/htexp_index/facet/variable');
 		filters.addFilter('studyTypeFilter', 'Study Type', 'studyTypeFilter', 'studyTypeFilter', fewiurl + 'gxd/htexp_index/facet/studyType');
+		filters.setSummaryNames('filterSummary', 'filterList');
 		filters.registerCallback("htCallback", gs_updateRequest);
 		filters.registerCallback("htCallback2", gs_logFilters);
 		filters.setRemovalDivStyle('block');

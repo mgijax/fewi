@@ -200,11 +200,11 @@ width: 1250px;
 
 	filters.setFewiUrl(fewiurl);
 	filters.setQueryStringFunction(getQuerystring);
-	filters.setSummaryNames('filterSummary', 'filterList');
 	filters.setHistoryManagement('historyModule', handleNavigation);
 	filters.addFilter('functionClassFilter', 'Function Class', 'functionClassFilter', 'functionClassFilter', fewiurl + 'snp/facet/functionClass');
 	filters.addFilter('alleleAgreementFilter', 'Allele Agreement', 'alleleAgreementFilter', 'alleleAgreementFilter', fewiurl + 'snp/facet/alleleAgreement',
 		null, filters.parseResponseRadio, 'Filter for SNPs where');
+	filters.setSummaryNames('filterSummary', 'filterList');
 	filters.registerCallback("pfs", updateRequest);
 
 	// if we came in with a url that has hideStrains = false, then we need to ensure we show it that way
