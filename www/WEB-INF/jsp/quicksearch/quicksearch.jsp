@@ -126,7 +126,6 @@ function initializeFilterLibrary(delay) {
 		console.log('initializing filters');
 		filters.setFewiUrl(fewiurl);
 		filters.setQueryStringFunction(getQuerystring);
-		filters.setSummaryNames('filterSummary', 'filterList');
 		filters.addFilter('goProcessFilterF', 'Process', 'processFilterF', 'processFilterF', fewiurl + 'quicksearch/featureBucket/process');
 		filters.addFilter('goFunctionFilterF', 'Function', 'functionFilterF', 'functionFilterF', fewiurl + 'quicksearch/featureBucket/function');
 		filters.addFilter('goComponentFilterF', 'Component', 'componentFilterF', 'componentFilterF', fewiurl + 'quicksearch/featureBucket/component');
@@ -134,6 +133,18 @@ function initializeFilterLibrary(delay) {
 		filters.addFilter('diseaseFilterF', 'Disease', 'diseaseFilterF', 'diseaseFilterF', fewiurl + 'quicksearch/featureBucket/disease');
 		filters.addFilter('featureTypeFilterF', 'Feature Type', 'featureTypeFilterF', 'featureTypeFilterF', fewiurl + 'quicksearch/featureBucket/featureType');
 		filters.addFilter('expressionFilterF', 'Expression', 'expressionFilterF', 'expressionFilterF', fewiurl + 'quicksearch/featureBucket/expression');
+		var mapping = {
+			'goProcessFilterF' : [ 'filterSummaryF', 'filterListF' ],
+			'goFunctionFilterF' : [ 'filterSummaryF', 'filterListF' ],
+			'goComponentFilterF' : [ 'filterSummaryF', 'filterListF' ],
+			'goPhenotypeFilterF' : [ 'filterSummaryF', 'filterListF' ],
+			'goDiseaseFilterF' : [ 'filterSummaryF', 'filterListF' ],
+			'goFeatureTypeFilterF' : [ 'filterSummaryF', 'filterListF' ],
+			'goExpressionFilterF' : [ 'filterSummaryF', 'filterListF' ],
+			};
+		filters.setSummaryNames('filterSummary', 'filterList');
+// need to convert to use mapping:
+//		filters.setSummaryNames('filterSummary', 'filterList');
 		filters.registerCallback("filterCallback", qsProcessFilters);
 		filters.registerCallback("gaLogCallback", qsLogFilters);
 		filters.setRemovalDivStyle('block');

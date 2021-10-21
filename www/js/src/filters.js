@@ -65,6 +65,8 @@ filters.filterSummary = null;	// name of div containing the whole filter
 filters.filterList = null;	// name of the span containing the filter
 				// ...buttons
 
+filters.buttonInfo = null;	// mapping of where to put "remove filter" buttons
+
 filters.callbacksInProgress = false;	// are we currently handling callbacks?
 
 filters.fewiUrl = null;		// base URL to fewi, used to pick up images
@@ -164,12 +166,52 @@ filters.setAlternateCallback = function(alternateFn) {
     filters.alternateCallback = alternateFn;
 };
 
-/* notify this module of the names for the filter summary div and the span
- * within it that will contain the filter removal buttons.
+/* Notify this module of the names for the filter summary div and the span
+ * within it that will contain the filter removal buttons.  There is a newer
+ * alternative setButtonInfo() that allows for a page to have multiple,
+ * independently-filtered tabs (like the quick search).
  */
 filters.setSummaryNames = function(filterSummary, filterList) {
+	if (filters.buttonInfo !== null) {
+		filters.log('Use either setSummaryNames() or setButtonInfo() but not both');
+	}
     filters.filterSummary = filterSummary;
     filters.filterList = filterList;
+    filters.convertToNewMethod();
+};
+
+/* This is really a special case of the new setButtonInfo() functionality, as all buttons
+ * just work with a single DIV and SPAN.  So, set up the proper mapping, initialize via
+ * setButtonInfo() and go from there.  But we don't want to do this setup until we're
+ * sure that all the buttons have been initialized, which is typically done after the
+ * call set setSummaryNames(), so we do it when needed.
+ */
+filters.convertToNewMethod = function() {
+	var myDict = {};
+	for (var i in filters.filterNames) {
+		var filterName = filters.filterNames[i];
+		myDict[filterName] = [ filters.filterSummary, filters.filterList ];
+	}
+	// Now remove the old-style values, and set up the new.
+	filters.filterSummary = null;
+	filters.filterList = null;
+	filters.setButtonInfo(myDict);
+}
+
+/* Notify this module of a mapping between HTML fieldnames and a two-item list
+ * identifying the name of the DIV and the name of the SPAN it contains, for
+ * where that field's "remove filter" buttons should be placed.  Example:
+ * { 'processFilter' : [ 'geneFilterDiv', 'geneFilterSpan' ],
+ *   'phenotypeFilter' : [ 'geneFilterDiv', 'geneFilterSpan' ]
+ * }
+ * This function is a newer alternative to setSummaryNames(), for pages with
+ * multiple tabs that allow independent filtering (like the quick search).
+ */
+filters.setButtonInfo = function(filterButtonInfo) {
+	if ((filters.filterSummary !== null) || (filters.filterList !== null)) {
+		filters.log('Use either setSummaryNames() or setButtonInfo() but not both');
+	}
+	filters.buttonInfo = filterButtonInfo;
 };
 
 /* builds and returns list of DOM elements, one for each buttons to remove
@@ -517,18 +559,19 @@ filters.getUrlFragment = function() {
 /* get all the buttons for the filter summary div (the buttons which show the
  * currently selected filter values and allow you to click and remove them).
  * returns an empty string if there are no filter values currently selected.
+ * Pass in the list of HTML names for the fields we want to consider.
  */
-filters.getAllSummaryButtons = function() {
+filters.getAllSummaryButtons = function(fieldnames) {
     var list = [];	// list of DOM elements to return
     var i = 0;		// walks through filters
     var f;		// formatting function for each filter
     var data;		// hash of data for each filter
     var elements;	// list of DOM elements for a single filter
 
-    filters.log('in getAllSummaryButtons()');
-    for (var i = 0; i < filters.filterNames.length; i++) {
-	    f = filters.filtersByName[filters.filterNames[i]]['formatter'];
-	    data = filters.filtersByName[filters.filterNames[i]];
+    filters.log('in getAllSummaryButtons() -- ' + fieldnames.length + ' fields');
+    for (var i = 0; i < fieldnames.length; i++) {
+	    f = filters.filtersByName[fieldnames[i]]['formatter'];
+	    data = filters.filtersByName[fieldnames[i]];
 
 	    var results = f(data);
 	    if (results) {
@@ -1398,43 +1441,85 @@ filters.clearFilter = function() {
 
 /* populate the filter summary on the form
  */
+var npd = null;
+var spd = null;
+var d = null;
 filters.populateFilterSummary = function() {
     filters.log('in populateFilterSummary()');
-    if ((filters.filterSummary === null) || (filters.filterList === null)) {
-	    filters.log('need to call setSummaryNames()');
+    if (filters.buttonInfo === null) {
+	    filters.log('need to call either setSummaryNames() or setButtonInfo() for initialization');
 	    return;
     }
 
-    var fSum = YAHOO.util.Dom.get(filters.filterSummary);
-    if (fSum === null) {
-	    filters.log('filterSummary is unrecognized: ' + filters.filterSummary);
-	    return;
+    // Gather lists of fields by DIV name and also the SPAN for each DIV.  Assumes 1-to-1 relationship
+    // between DIV and SPAN--unspecified behavior if violated.
+    
+    var namesPerDiv = {};	// { div name : list of filter fieldnames }
+    var spanPerDiv = {};	// { div name : span name }
+    var divs = [];			// list of unique DIV names
+    
+    for (var i in filters.filterNames) {
+    	var filterName = filters.filterNames[i];
+    	if (filterName in filters.buttonInfo) {
+    		var div = filters.buttonInfo[filterName][0];
+    		var span = filters.buttonInfo[filterName][1];
+    		
+    		if (!(div in namesPerDiv)) {
+    			namesPerDiv[div] = [ filterName ];
+    			divs.push(div);
+    		} else {
+    			namesPerDiv[div].push(filterName);
+    		}
+    		
+    		if (!(div in spanPerDiv)) {
+    			spanPerDiv[div] = span;
+    		} else if (span != spanPerDiv[div]) {
+    			filters.log('Found extra SPAN (' + span + ') for DIV (' + div + ')');
+    		}
+    	} else {
+    		filters.log('Unknown button name (' + filterName + ') not included');
+    	}
     }
-
-    var fList = new YAHOO.util.Element(filters.filterList);
-
-    if (!YAHOO.lang.isNull(YAHOO.util.Dom.get(filters.filterList))) {
-	    // clean out any existing buttons from the filter list
-
-	    while (fList.hasChildNodes()) {
-	        fList.removeChild(fList.get('firstChild'));
+    
+    npd = namesPerDiv;
+    spd = spanPerDiv;
+    d = divs;
+    
+    // Now walk through and populate each DIV/SPAN with applicable "remove filter" buttons.
+    
+    for (var i in divs) {
+    	var div = divs[i];
+    	
+        var fSum = YAHOO.util.Dom.get(div);
+        if (fSum === null) {
+	        filters.log('unrecognized DIV name: ' + div);
+	        return;
         }
-    }
 
-    var buttons = filters.getAllSummaryButtons();
+        var fList = new YAHOO.util.Element(spanPerDiv[div]);
+        var filterNames = namesPerDiv[div];
+    	
+        // clean out any existing buttons from the filter list
+        if (!YAHOO.lang.isNull(YAHOO.util.Dom.get(spanPerDiv[div]))) {
+	        while (fList.hasChildNodes()) {
+	            fList.removeChild(fList.get('firstChild'));
+            }
+        }
+    	
+        var buttons = filters.getAllSummaryButtons(namesPerDiv[div]);
 
-    filters.log('adding ' + buttons.length + ' buttons');
-    for (var i in buttons) {
-	    var button = buttons[i];
+        filters.log('adding ' + buttons.length + ' buttons for DIV ' + div);
+        for (var b in buttons) {
+        	var button = buttons[b];
+        	fList.appendChild(button);
+        	fList.appendChild(document.createTextNode(' '));
+        }
 
-	    fList.appendChild(button);
-	    fList.appendChild(document.createTextNode(' '));
-    }
-
-    if (buttons.length > 0) {
-	    YAHOO.util.Dom.setStyle(fSum, 'display', filters.removalDivStyle);
-    } else {
-	    YAHOO.util.Dom.setStyle(fSum, 'display', 'none');
+        if (buttons.length > 0) {
+        	YAHOO.util.Dom.setStyle(fSum, 'display', filters.removalDivStyle);
+        } else {
+        	YAHOO.util.Dom.setStyle(fSum, 'display', 'none');
+        }
     }
 };
 
