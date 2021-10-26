@@ -1,3 +1,14 @@
+<div id="filterButtonsS">
+   <b>Filter Strains and Stocks results by: </b>
+   <a id="phenotypeFilterS" class="filterButton">Phenotype <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
+   <a id="diseaseFilterS" class="filterButton">Disease <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
+</div>
+<div id="breadboxS" class="hidden removeFilterDiv">
+  <div id="filterSummaryS">
+  	<b>Filtered by: </b>
+    <span id="filterListS"></span>
+  </div>
+</div>
 <!-- Note: b4 appears out of order (before b3) for historical reasons. -->
 <div id="b4Header" class="qsHeader">Strains and Stocks
   <span id="b4Counts" class="resultCount"></span>

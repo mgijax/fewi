@@ -146,6 +146,11 @@ function initializeFilterLibrary(delay) {
 		filters.addFilter('diseaseFilterV', 'Disease', 'diseaseFilterV', 'diseaseFilterV', fewiurl + 'quicksearch/vocabBucket/disease');
 		filters.addFilter('expressionFilterV', 'Expression', 'expressionFilterV', 'expressionFilterV', fewiurl + 'quicksearch/vocabBucket/expression');
 
+		filters.addFilter('phenotypeFilterS', 'Phenotype', 'phenotypeFilterS', 'phenotypeFilterS', fewiurl + 'quicksearch/strainBucket/phenotype');
+		filters.addFilter('diseaseFilterS', 'Disease', 'diseaseFilterS', 'diseaseFilterS', fewiurl + 'quicksearch/strainBucket/disease');
+
+		filters.addFilter('featureTypeFilterO', 'Feature Type', 'featureTypeFilterO', 'featureTypeFilterO', fewiurl + 'quicksearch/otherBucket/featureType');
+
 		var mapping = {
 			'goProcessFilterF' : [ 'filterSummaryF', 'filterListF' ],		// genome feature filters
 			'goFunctionFilterF' : [ 'filterSummaryF', 'filterListF' ],
@@ -165,6 +170,11 @@ function initializeFilterLibrary(delay) {
 			'phenotypeFilterV' : [ 'filterSummaryV', 'filterListV' ],
 			'diseaseFilterV' : [ 'filterSummaryV', 'filterListV' ],
 			'expressionFilterV' : [ 'filterSummaryV', 'filterListV' ],
+
+			'featureTypeFilterO' : [ 'filterSummaryO', 'filterListO' ],		// other IDs filters
+
+			'phenotypeFilterS' : [ 'filterSummaryS', 'filterListS' ],		// strains filters
+			'diseaseFilterS' : [ 'filterSummaryS', 'filterListS' ],
 			}
 		filters.setButtonInfo(mapping);
 		filters.registerCallback("filterCallback", qsProcessFilters);

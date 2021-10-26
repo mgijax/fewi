@@ -82,10 +82,14 @@ var qsProcessFilters = function() {
 		$('#breadboxGF').addClass('hidden');
 		$('#breadboxA').addClass('hidden');
 		$('#breadboxV').addClass('hidden');
+		$('#breadboxO').addClass('hidden');
+		$('#breadboxS').addClass('hidden');
 	} else {
 		$('#breadboxGF').removeClass('hidden');
 		$('#breadboxA').removeClass('hidden');
 		$('#breadboxV').removeClass('hidden');
+		$('#breadboxO').removeClass('hidden');
+		$('#breadboxS').removeClass('hidden');
 	}
 }
 

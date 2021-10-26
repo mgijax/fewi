@@ -59,6 +59,11 @@ public class QuickSearchQueryForm {
     private List<String> expressionFilterV;
     private List<String> diseaseFilterV;
 
+    private List<String> phenotypeFilterS;		// strain filters
+    private List<String> diseaseFilterS;
+
+    private List<String> featureTypeFilterO;	// other IDs filters
+
     //--------------------//
     // accessors
     //--------------------//
@@ -232,6 +237,24 @@ public class QuickSearchQueryForm {
 		this.diseaseFilterV = diseaseFilterV;
 	}
 
+	public List<String> getPhenotypeFilterS() {
+		return phenotypeFilterS;
+	}
+	public void setPhenotypeFilterS(List<String> phenotypeFilterS) {
+		this.phenotypeFilterS = phenotypeFilterS;
+	}
+	public List<String> getDiseaseFilterS() {
+		return diseaseFilterS;
+	}
+	public void setDiseaseFilterS(List<String> diseaseFilterS) {
+		this.diseaseFilterS = diseaseFilterS;
+	}
+	public List<String> getFeatureTypeFilterO() {
+		return featureTypeFilterO;
+	}
+	public void setFeatureTypeFilterO(List<String> featureTypeFilterO) {
+		this.featureTypeFilterO = featureTypeFilterO;
+	}
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer("QS");

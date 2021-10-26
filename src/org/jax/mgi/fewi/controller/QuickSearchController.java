@@ -93,7 +93,7 @@ public class QuickSearchController {
 	private static int VOCAB_TERM = 2;
 	private static int STRAIN = 3;
 	private static int ALLELE = 4;
-	private static int OTHER = 3;
+	private static int OTHER = 5;
 
 	private static String BY_COORDS = "coordinate_match";		// requires overlapping coordinates
 	private static String BY_EXACT_MATCH = "exact_match";		// requires exact matching
@@ -436,6 +436,8 @@ public class QuickSearchController {
 			filters.add(getFilterForOneField(SearchConstants.QS_MARKER_TYPE_FACETS, qf.getFeatureTypeFilterA()));
 
 		} else if (bucket == STRAIN) {
+			filters.add(getFilterForOneField(SearchConstants.QS_PHENOTYPE_FACETS, qf.getPhenotypeFilterS()));
+			filters.add(getFilterForOneField(SearchConstants.QS_DISEASE_FACETS, qf.getDiseaseFilterS()));
 
 		} else if (bucket == VOCAB_TERM) {
 			filters.add(getFilterForOneField(SearchConstants.QS_GO_PROCESS_FACETS, qf.getProcessFilterV()));
@@ -446,6 +448,7 @@ public class QuickSearchController {
 			filters.add(getFilterForOneField(SearchConstants.QS_DISEASE_FACETS, qf.getDiseaseFilterV()));
 
 		} else if (bucket == OTHER) {
+			filters.add(getFilterForOneField(SearchConstants.QS_MARKER_TYPE_FACETS, qf.getFeatureTypeFilterO()));
 		}
 
 		// Boil it down to a list of non-null filters.
@@ -1009,7 +1012,7 @@ public class QuickSearchController {
 		return grouper.toList();
 	}
 	
-	/* Get the set of GO Process filter options for the feature bucket's current result set, including facets from all QS buckets
+	/* Get the set of GO Process filter options for the feature bucket's current result set
 	 */
 	@RequestMapping("/featureBucket/process")
 	public @ResponseBody Map<String, List<String>> getProcessFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
@@ -1017,7 +1020,7 @@ public class QuickSearchController {
 		return getFacets(qf, SearchConstants.QS_GO_PROCESS_FACETS, FEATURE);
 	}
 
-	/* Get the set of GO Function filter options for the feature bucket's current result set, including facets from all QS buckets
+	/* Get the set of GO Function filter options for the feature bucket's current result set
 	 */
 	@RequestMapping("/featureBucket/function")
 	public @ResponseBody Map<String, List<String>> getFunctionFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
@@ -1025,7 +1028,7 @@ public class QuickSearchController {
 		return getFacets(qf, SearchConstants.QS_GO_FUNCTION_FACETS, FEATURE);
 	}
 
-	/* Get the set of GO Component filter options for the feature bucket's current result set, including facets from all QS buckets
+	/* Get the set of GO Component filter options for the feature bucket's current result set
 	 */
 	@RequestMapping("/featureBucket/component")
 	public @ResponseBody Map<String, List<String>> getComponentFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
@@ -1033,7 +1036,7 @@ public class QuickSearchController {
 		return getFacets(qf, SearchConstants.QS_GO_COMPONENT_FACETS, FEATURE);
 	}
 
-	/* Get the set of expression filter options for the feature bucket's current result set, including facets from all QS buckets
+	/* Get the set of expression filter options for the feature bucket's current result set
 	 */
 	@RequestMapping("/featureBucket/expression")
 	public @ResponseBody Map<String, List<String>> getExpressionFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
@@ -1041,7 +1044,7 @@ public class QuickSearchController {
 		return getFacets(qf, SearchConstants.QS_EXPRESSION_FACETS, FEATURE);
 	}
 
-	/* Get the set of phenotype filter options for the feature bucket's current result set, including facets from all QS buckets
+	/* Get the set of phenotype filter options for the feature bucket's current result set
 	 */
 	@RequestMapping("/featureBucket/phenotype")
 	public @ResponseBody Map<String, List<String>> getPhenotypeFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
@@ -1049,7 +1052,7 @@ public class QuickSearchController {
 		return getFacets(qf, SearchConstants.QS_PHENOTYPE_FACETS, FEATURE);
 	}
 
-	/* Get the set of disease filter options for the feature bucket's current result set, including facets from all QS buckets
+	/* Get the set of disease filter options for the feature bucket's current result set
 	 */
 	@RequestMapping("/featureBucket/disease")
 	public @ResponseBody Map<String, List<String>> getDiseaseFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
@@ -1057,7 +1060,7 @@ public class QuickSearchController {
 		return getFacets(qf, SearchConstants.QS_DISEASE_FACETS, FEATURE);
 	}
 
-	/* Get the set of feature type filter options for the feature bucket's current result set, including facets from all QS buckets
+	/* Get the set of feature type filter options for the feature bucket's current result set
 	 */
 	@RequestMapping("/featureBucket/featureType")
 	public @ResponseBody Map<String, List<String>> getFeatureTypeFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
@@ -1065,7 +1068,7 @@ public class QuickSearchController {
 		return getFacets(qf, SearchConstants.QS_MARKER_TYPE_FACETS, FEATURE);
 	}
 
-	/* Get the set of phenotype filter options for the allele bucket's current result set, including facets from all QS buckets
+	/* Get the set of phenotype filter options for the allele bucket's current result set
 	 */
 	@RequestMapping("/alleleBucket/phenotype")
 	public @ResponseBody Map<String, List<String>> getPhenotypeFacetA (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
@@ -1073,7 +1076,7 @@ public class QuickSearchController {
 		return getFacets(qf, SearchConstants.QS_PHENOTYPE_FACETS, ALLELE);
 	}
 
-	/* Get the set of disease filter options for the allele bucket's current result set, including facets from all QS buckets
+	/* Get the set of disease filter options for the allele bucket's current result set
 	 */
 	@RequestMapping("/alleleBucket/disease")
 	public @ResponseBody Map<String, List<String>> getDiseaseFacetA (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
@@ -1081,7 +1084,7 @@ public class QuickSearchController {
 		return getFacets(qf, SearchConstants.QS_DISEASE_FACETS, ALLELE);
 	}
 
-	/* Get the set of feature type filter options for the allele bucket's current result set, including facets from all QS buckets
+	/* Get the set of feature type filter options for the allele bucket's current result set
 	 */
 	@RequestMapping("/alleleBucket/featureType")
 	public @ResponseBody Map<String, List<String>> getFeatureTypeFacetA (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
@@ -1089,7 +1092,7 @@ public class QuickSearchController {
 		return getFacets(qf, SearchConstants.QS_MARKER_TYPE_FACETS, ALLELE);
 	}
 
-	/* Get the set of GO Process filter options for the vocab bucket's current result set, including facets from all QS buckets
+	/* Get the set of GO Process filter options for the vocab bucket's current result set
 	 */
 	@RequestMapping("/vocabBucket/process")
 	public @ResponseBody Map<String, List<String>> getProcessFacetV (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
@@ -1097,7 +1100,7 @@ public class QuickSearchController {
 		return getFacets(qf, SearchConstants.QS_GO_PROCESS_FACETS, VOCAB_TERM);
 	}
 
-	/* Get the set of GO Function filter options for the vocab bucket's current result set, including facets from all QS buckets
+	/* Get the set of GO Function filter options for the vocab bucket's current result set
 	 */
 	@RequestMapping("/vocabBucket/function")
 	public @ResponseBody Map<String, List<String>> getFunctionFacetV (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
@@ -1105,7 +1108,7 @@ public class QuickSearchController {
 		return getFacets(qf, SearchConstants.QS_GO_FUNCTION_FACETS, VOCAB_TERM);
 	}
 
-	/* Get the set of GO Component filter options for the vocab bucket's current result set, including facets from all QS buckets
+	/* Get the set of GO Component filter options for the vocab bucket's current result set
 	 */
 	@RequestMapping("/vocabBucket/component")
 	public @ResponseBody Map<String, List<String>> getComponentFacetV (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
@@ -1113,7 +1116,7 @@ public class QuickSearchController {
 		return getFacets(qf, SearchConstants.QS_GO_COMPONENT_FACETS, VOCAB_TERM);
 	}
 
-	/* Get the set of expression filter options for the vocab bucket's current result set, including facets from all QS buckets
+	/* Get the set of expression filter options for the vocab bucket's current result set
 	 */
 	@RequestMapping("/vocabBucket/expression")
 	public @ResponseBody Map<String, List<String>> getExpressionFacetV (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
@@ -1121,7 +1124,7 @@ public class QuickSearchController {
 		return getFacets(qf, SearchConstants.QS_EXPRESSION_FACETS, VOCAB_TERM);
 	}
 
-	/* Get the set of phenotype filter options for the vocab bucket's current result set, including facets from all QS buckets
+	/* Get the set of phenotype filter options for the vocab bucket's current result set
 	 */
 	@RequestMapping("/vocabBucket/phenotype")
 	public @ResponseBody Map<String, List<String>> getPhenotypeFacetV (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
@@ -1129,12 +1132,36 @@ public class QuickSearchController {
 		return getFacets(qf, SearchConstants.QS_PHENOTYPE_FACETS, VOCAB_TERM);
 	}
 
-	/* Get the set of disease filter options for the vocab bucket's current result set, including facets from all QS buckets
+	/* Get the set of disease filter options for the vocab bucket's current result set
 	 */
 	@RequestMapping("/vocabBucket/disease")
 	public @ResponseBody Map<String, List<String>> getDiseaseFacetV (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
 		AjaxUtils.prepareAjaxHeaders(response);
 		return getFacets(qf, SearchConstants.QS_DISEASE_FACETS, VOCAB_TERM);
+	}
+
+	/* Get the set of phenotype filter options for the strain bucket's current result set
+	 */
+	@RequestMapping("/strainBucket/phenotype")
+	public @ResponseBody Map<String, List<String>> getPhenotypeFacetS (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_PHENOTYPE_FACETS, STRAIN);
+	}
+
+	/* Get the set of disease filter options for the strain bucket's current result set
+	 */
+	@RequestMapping("/strainBucket/disease")
+	public @ResponseBody Map<String, List<String>> getDiseaseFacetS (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_DISEASE_FACETS, STRAIN);
+	}
+
+	/* Get the set of feature type filter options for the other ID bucket's current result set
+	 */
+	@RequestMapping("/otherBucket/featureType")
+	public @ResponseBody Map<String, List<String>> getFeatureTypeFacetO (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_MARKER_TYPE_FACETS, OTHER);
 	}
 
 	// Retrieve the facets for the specified field, in a form suitable for conversion to JSON.
