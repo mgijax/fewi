@@ -135,9 +135,9 @@ function initializeFilterLibrary(delay) {
 		filters.addFilter('featureTypeFilterF', 'Feature Type', 'featureTypeFilterF', 'featureTypeFilterF', fewiurl + 'quicksearch/featureBucket/featureType');
 		filters.addFilter('expressionFilterF', 'Expression', 'expressionFilterF', 'expressionFilterF', fewiurl + 'quicksearch/featureBucket/expression');
 
-		filters.addFilter('phenotypeFilterA', 'Phenotype', 'phenotypeFilterA', 'phenotypeFilterA', fewiurl + 'quicksearch/featureBucket/phenotype');
-		filters.addFilter('diseaseFilterA', 'Disease', 'diseaseFilterA', 'diseaseFilterA', fewiurl + 'quicksearch/featureBucket/disease');
-		filters.addFilter('featureTypeFilterA', 'Feature Type', 'featureTypeFilterA', 'featureTypeFilterA', fewiurl + 'quicksearch/featureBucket/featureType');
+		filters.addFilter('phenotypeFilterA', 'Phenotype', 'phenotypeFilterA', 'phenotypeFilterA', fewiurl + 'quicksearch/alleleBucket/phenotype');
+		filters.addFilter('diseaseFilterA', 'Disease', 'diseaseFilterA', 'diseaseFilterA', fewiurl + 'quicksearch/alleleBucket/disease');
+		filters.addFilter('featureTypeFilterA', 'Feature Type', 'featureTypeFilterA', 'featureTypeFilterA', fewiurl + 'quicksearch/alleleBucket/featureType');
 
 		var mapping = {
 			'goProcessFilterF' : [ 'filterSummaryF', 'filterListF' ],		// genome feature filters

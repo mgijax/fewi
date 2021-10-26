@@ -1000,82 +1000,108 @@ public class QuickSearchController {
 		return grouper.toList();
 	}
 	
-	/* Get the set of GO Process filter options for the current result set, including facets from all QS buckets
+	/* Get the set of GO Process filter options for the feature bucket's current result set, including facets from all QS buckets
 	 */
 	@RequestMapping("/featureBucket/process")
 	public @ResponseBody Map<String, List<String>> getProcessFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
 		AjaxUtils.prepareAjaxHeaders(response);
-		return getFacets(qf, SearchConstants.QS_GO_PROCESS_FACETS);
+		return getFacets(qf, SearchConstants.QS_GO_PROCESS_FACETS, FEATURE);
 	}
 
-	/* Get the set of GO Function filter options for the current result set, including facets from all QS buckets
+	/* Get the set of GO Function filter options for the feature bucket's current result set, including facets from all QS buckets
 	 */
 	@RequestMapping("/featureBucket/function")
 	public @ResponseBody Map<String, List<String>> getFunctionFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
 		AjaxUtils.prepareAjaxHeaders(response);
-		return getFacets(qf, SearchConstants.QS_GO_FUNCTION_FACETS);
+		return getFacets(qf, SearchConstants.QS_GO_FUNCTION_FACETS, FEATURE);
 	}
 
-	/* Get the set of GO Component filter options for the current result set, including facets from all QS buckets
+	/* Get the set of GO Component filter options for the feature bucket's current result set, including facets from all QS buckets
 	 */
 	@RequestMapping("/featureBucket/component")
 	public @ResponseBody Map<String, List<String>> getComponentFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
 		AjaxUtils.prepareAjaxHeaders(response);
-		return getFacets(qf, SearchConstants.QS_GO_COMPONENT_FACETS);
+		return getFacets(qf, SearchConstants.QS_GO_COMPONENT_FACETS, FEATURE);
 	}
 
-	/* Get the set of expression filter options for the current result set, including facets from all QS buckets
+	/* Get the set of expression filter options for the feature bucket's current result set, including facets from all QS buckets
 	 */
 	@RequestMapping("/featureBucket/expression")
 	public @ResponseBody Map<String, List<String>> getExpressionFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
 		AjaxUtils.prepareAjaxHeaders(response);
-		return getFacets(qf, SearchConstants.QS_EXPRESSION_FACETS);
+		return getFacets(qf, SearchConstants.QS_EXPRESSION_FACETS, FEATURE);
 	}
 
-	/* Get the set of phenotype filter options for the current result set, including facets from all QS buckets
+	/* Get the set of phenotype filter options for the feature bucket's current result set, including facets from all QS buckets
 	 */
 	@RequestMapping("/featureBucket/phenotype")
 	public @ResponseBody Map<String, List<String>> getPhenotypeFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
 		AjaxUtils.prepareAjaxHeaders(response);
-		return getFacets(qf, SearchConstants.QS_PHENOTYPE_FACETS);
+		return getFacets(qf, SearchConstants.QS_PHENOTYPE_FACETS, FEATURE);
 	}
 
-	/* Get the set of disease filter options for the current result set, including facets from all QS buckets
+	/* Get the set of disease filter options for the feature bucket's current result set, including facets from all QS buckets
 	 */
 	@RequestMapping("/featureBucket/disease")
 	public @ResponseBody Map<String, List<String>> getDiseaseFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
 		AjaxUtils.prepareAjaxHeaders(response);
-		return getFacets(qf, SearchConstants.QS_DISEASE_FACETS);
+		return getFacets(qf, SearchConstants.QS_DISEASE_FACETS, FEATURE);
 	}
 
-	/* Get the set of feature type filter options for the current result set, including facets from all QS buckets
+	/* Get the set of feature type filter options for the feature bucket's current result set, including facets from all QS buckets
 	 */
 	@RequestMapping("/featureBucket/featureType")
 	public @ResponseBody Map<String, List<String>> getFeatureTypeFacet (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
 		AjaxUtils.prepareAjaxHeaders(response);
-		return getFacets(qf, SearchConstants.QS_MARKER_TYPE_FACETS);
+		return getFacets(qf, SearchConstants.QS_MARKER_TYPE_FACETS, FEATURE);
+	}
+
+	/* Get the set of phenotype filter options for the allele bucket's current result set, including facets from all QS buckets
+	 */
+	@RequestMapping("/alleleBucket/phenotype")
+	public @ResponseBody Map<String, List<String>> getPhenotypeFacetA (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_PHENOTYPE_FACETS, ALLELE);
+	}
+
+	/* Get the set of disease filter options for the allele bucket's current result set, including facets from all QS buckets
+	 */
+	@RequestMapping("/alleleBucket/disease")
+	public @ResponseBody Map<String, List<String>> getDiseaseFacetA (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_DISEASE_FACETS, ALLELE);
+	}
+
+	/* Get the set of feature type filter options for the allele bucket's current result set, including facets from all QS buckets
+	 */
+	@RequestMapping("/alleleBucket/featureType")
+	public @ResponseBody Map<String, List<String>> getFeatureTypeFacetA (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_MARKER_TYPE_FACETS, ALLELE);
 	}
 
 	// Retrieve the facets for the specified field, in a form suitable for conversion to JSON.
-	private Map<String, List<String>> getFacets (QuickSearchQueryForm qf, String facetField) throws Exception {
-		List<String> featureFacets = getFeatureFacets(qf, facetField);
-		List<String> vocabFacets = getVocabFacets(qf, facetField);
-		List<String> strainFacets = getStrainFacets(qf, facetField);
-		List<String> otherFacets = getOtherFacets(qf, facetField);
-		List<String> alleleFacets = getAlleleFacets(qf, facetField);
-		List<String> resultList = unifyFacets(featureFacets, vocabFacets, strainFacets, alleleFacets, otherFacets);
+	private Map<String, List<String>> getFacets (QuickSearchQueryForm qf, String facetField, int bucket) throws Exception {
+		List<String> facets = new ArrayList<String>();
+		
+		if (bucket == FEATURE) { facets = getFeatureFacets(qf, facetField); }
+		else if (bucket == VOCAB_TERM) { facets = getVocabFacets(qf, facetField); }
+		else if (bucket == STRAIN) { facets = getStrainFacets(qf, facetField); }
+		else if (bucket == OTHER) { facets = getOtherFacets(qf, facetField); }
+		else if (bucket == ALLELE) { facets = getAlleleFacets(qf, facetField); }
+		
 		String error = null;
 		
-        if (resultList.size() == 0) {
+        if ((facets == null) || (facets.size() == 0)) {
         	error = "No values for filtering";
-        } else if (resultList.size() > facetLimit) {
+        } else if (facets.size() > facetLimit) {
         	error = "Too many values; please use another filter to reduce the data set first.";
         }
 
         Map<String, List<String>> out = new HashMap<String, List<String>>();
         if (error == null) {
-        	Collections.sort(resultList, String.CASE_INSENSITIVE_ORDER);
-			out.put("resultFacets", resultList);
+        	Collections.sort(facets, String.CASE_INSENSITIVE_ORDER);
+			out.put("resultFacets", facets);
         } else {
         	List<String> messages = new ArrayList<String>(1);
         	messages.add(error);
@@ -1084,40 +1110,6 @@ public class QuickSearchController {
 		return out;
 	}
 	
-	/* Unify 3 groups of facets into a single, ordered list for return.  Modifies group1 by adding entries
-	 * from the other groups and then sorting.
-	 */
-	private List<String> unifyFacets(List<String> group1, List<String> group2, List<String> group3, List<String> group4, List<String> group5) {
-		Set<String> seenIt = new HashSet<String>();
-
-		if (group1 != null) {
-			for (String item : group1) {
-				seenIt.add(item);
-			}
-		} else {
-			group1 = new ArrayList<String>();
-		}
-		
-		List<List<String>> toUnify = new ArrayList<List<String>>();
-		toUnify.add(group2);
-		toUnify.add(group3);
-		toUnify.add(group4);
-		toUnify.add(group5);
-		
-		for (List<String> group : toUnify) {
-			if (group != null) {
-				for (String item : group) {
-					if (!seenIt.contains(item)) {
-						group1.add(item);
-						seenIt.add(item);
-					}
-				}
-			}
-		}
-		Collections.sort(group1);
-		return group1;
-	}
-
 	/* Execute the search for facets for the feature bucket using the given filterName, returning them as an
 	 * unordered list of strings.
 	 */
