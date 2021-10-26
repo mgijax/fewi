@@ -62,7 +62,7 @@ var qsResultHeader = function(start, end, total) {
 	return "sorted by best match, showing " + commaDelimit(start) + "-" + commaDelimit(end) + " of " + commaDelimit(total);
 };
 
-// update the request & data in the feature bucket (after a filtering event)
+// update the request & data due to a change of state in one of the filters (is a callback for the filters.js library)
 var qsProcessFilters = function() {
 	filters.populateFilterSummary();
 	// instantiatedPaginator = false;			seems to not be needed

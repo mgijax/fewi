@@ -1,4 +1,4 @@
-<div id="filterButtons">
+<div id="filterButtonsV">
    <b>Filter Vocabulary Terms results by: </b>
    <a id="functionFilterV" class="filterButton">Molecular Function <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
    <a id="processFilterV" class="filterButton">Biological Process <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
