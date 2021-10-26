@@ -79,9 +79,9 @@ var qsProcessFilters = function() {
 
 	// If no active filters, hide the remove filter buttons.
 	if (queryString == getQuerystring()) {
-		$('#breadbox').addClass('hidden');
+		$('#breadboxGF').addClass('hidden');
 	} else {
-		$('#breadbox').removeClass('hidden');
+		$('#breadboxGF').removeClass('hidden');
 	}
 }
 

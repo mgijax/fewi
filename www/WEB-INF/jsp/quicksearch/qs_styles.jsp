@@ -128,7 +128,21 @@
 	padding-top: 10px;
 	font-weight: bold;
 }
-#breadbox { float: none; }
+.filterItem {
+    white-space: nowrap;
+    font-size: 10px;
+    color: #025;
+    border: 1px solid #7d95b9;
+    padding: 2px 1.5em 2px 2px;
+    margin: 1em .2em;
+    cursor: pointer;
+    background: url(${configBean.WEBSHARE_URL}images/remove.gif) no-repeat right;
+}
+.removeFilterDiv {
+	float: none; 
+	padding-top: 5px;
+	width: 100%;
+}
 #hasResults {
 	color: green;
 	font-weight: bold;

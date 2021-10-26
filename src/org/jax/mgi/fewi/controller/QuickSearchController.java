@@ -417,32 +417,35 @@ public class QuickSearchController {
 	}
 	
 	// distill the various facet parameters down to a single Filter (should work across both all QS buckets)
-	private Filter getFilterFacets (QuickSearchQueryForm qf) {
-		List<Filter> filters = new ArrayList<Filter>();
+	private Filter getFilterFacets (QuickSearchQueryForm qf, int bucket) {
+		List<Filter> filters = new ArrayList<Filter>(10);
 		
-		Filter processFilter = getFilterForOneField(SearchConstants.QS_GO_PROCESS_FACETS, qf.getProcessFilterF());
-		if (processFilter != null) { filters.add(processFilter); }
-		
-		Filter functionFilter = getFilterForOneField(SearchConstants.QS_GO_FUNCTION_FACETS, qf.getFunctionFilterF());
-		if (functionFilter != null) { filters.add(functionFilter); }
-		
-		Filter componentFilter = getFilterForOneField(SearchConstants.QS_GO_COMPONENT_FACETS, qf.getComponentFilterF());
-		if (componentFilter != null) { filters.add(componentFilter); }
-		
-		Filter phenotypeFilter = getFilterForOneField(SearchConstants.QS_PHENOTYPE_FACETS, qf.getPhenotypeFilterF());
-		if (phenotypeFilter != null) { filters.add(phenotypeFilter); }
-		
-		Filter expressionFilter = getFilterForOneField(SearchConstants.QS_EXPRESSION_FACETS, qf.getExpressionFilterF());
-		if (expressionFilter != null) { filters.add(expressionFilter); }
-		
-		Filter diseaseFilter = getFilterForOneField(SearchConstants.QS_DISEASE_FACETS, qf.getDiseaseFilterF());
-		if (diseaseFilter != null) { filters.add(diseaseFilter); }
+		// Consider the facet fields appropriate to the current bucket, collecting them in a List.
+		if (bucket == FEATURE) {
+			filters.add(getFilterForOneField(SearchConstants.QS_GO_PROCESS_FACETS, qf.getProcessFilterF()));
+			filters.add(getFilterForOneField(SearchConstants.QS_GO_FUNCTION_FACETS, qf.getFunctionFilterF()));
+			filters.add(getFilterForOneField(SearchConstants.QS_GO_COMPONENT_FACETS, qf.getComponentFilterF()));
+			filters.add(getFilterForOneField(SearchConstants.QS_PHENOTYPE_FACETS, qf.getPhenotypeFilterF()));
+			filters.add(getFilterForOneField(SearchConstants.QS_EXPRESSION_FACETS, qf.getExpressionFilterF()));
+			filters.add(getFilterForOneField(SearchConstants.QS_DISEASE_FACETS, qf.getDiseaseFilterF()));
+			filters.add(getFilterForOneField(SearchConstants.QS_MARKER_TYPE_FACETS, qf.getFeatureTypeFilterF()));
+		} else if (bucket == ALLELE) {
+		} else if (bucket == STRAIN) {
+		} else if (bucket == VOCAB_TERM) {
+		} else if (bucket == OTHER) {
+		}
 
-		Filter featureTypeFilter = getFilterForOneField(SearchConstants.QS_MARKER_TYPE_FACETS, qf.getFeatureTypeFilterF());
-		if (featureTypeFilter != null) { filters.add(featureTypeFilter); }
-		
-		if (filters.size() > 0) {
-			return Filter.and(filters);
+		// Boil it down to a list of non-null filters.
+		List<Filter> nonNullFilterList = new ArrayList<Filter>(10);
+		for (Filter filter : filters) {
+			if (filter != null) {
+				nonNullFilterList.add(filter);
+			}
+		}
+
+		// If we found filters, return an AND-ed version of them.  If not, just return null.
+		if (nonNullFilterList.size() > 0) {
+			return Filter.and(nonNullFilterList);
 		}
 		return null;
 	}
@@ -1646,7 +1649,7 @@ public class QuickSearchController {
         	myFilter = Filter.or(orFilters);
         }
         
-        Filter facetFilters = getFilterFacets(qf);
+        Filter facetFilters = getFilterFacets(qf, bucket);
         if (facetFilters != null) {
         	List<Filter> filtered = new ArrayList<Filter>();
         	filtered.add(myFilter);
