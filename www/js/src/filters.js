@@ -1439,7 +1439,7 @@ filters.clearFilter = function() {
     filters.issueCallbacks();
 };
 
-/* populate the filter summary on the form
+/* populate the filter summary DIVs on the form (does all of them)
  */
 var npd = null;
 var spd = null;

@@ -64,8 +64,12 @@ var qsResultHeader = function(start, end, total) {
 
 // update the request & data due to a change of state in one of the filters (is a callback for the filters.js library)
 var qsProcessFilters = function() {
-	filters.populateFilterSummary();
-	// instantiatedPaginator = false;			seems to not be needed
+	filters.populateFilterSummary();		// fills all the filter summary DIVs with remove filter buttons
+	
+	// Now need to identify which tab(s) have changed filters, based on comparing parameter values to the last time
+	// this method was called.  For each, we will need to update the paginator, data, formatting of the tab itself,
+	// and the hidden/shown status of the DIV with the remove filter buttons.
+
 	pgClearPaginator('featurePaginator');
 	pgClearPaginator('vocabPaginator');
 	pgClearPaginator('otherIdPaginator');
