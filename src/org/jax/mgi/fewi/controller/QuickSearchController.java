@@ -434,8 +434,17 @@ public class QuickSearchController {
 			filters.add(getFilterForOneField(SearchConstants.QS_PHENOTYPE_FACETS, qf.getPhenotypeFilterA()));
 			filters.add(getFilterForOneField(SearchConstants.QS_DISEASE_FACETS, qf.getDiseaseFilterA()));
 			filters.add(getFilterForOneField(SearchConstants.QS_MARKER_TYPE_FACETS, qf.getFeatureTypeFilterA()));
+
 		} else if (bucket == STRAIN) {
+
 		} else if (bucket == VOCAB_TERM) {
+			filters.add(getFilterForOneField(SearchConstants.QS_GO_PROCESS_FACETS, qf.getProcessFilterV()));
+			filters.add(getFilterForOneField(SearchConstants.QS_GO_FUNCTION_FACETS, qf.getFunctionFilterV()));
+			filters.add(getFilterForOneField(SearchConstants.QS_GO_COMPONENT_FACETS, qf.getComponentFilterV()));
+			filters.add(getFilterForOneField(SearchConstants.QS_PHENOTYPE_FACETS, qf.getPhenotypeFilterV()));
+			filters.add(getFilterForOneField(SearchConstants.QS_EXPRESSION_FACETS, qf.getExpressionFilterV()));
+			filters.add(getFilterForOneField(SearchConstants.QS_DISEASE_FACETS, qf.getDiseaseFilterV()));
+
 		} else if (bucket == OTHER) {
 		}
 
@@ -1078,6 +1087,54 @@ public class QuickSearchController {
 	public @ResponseBody Map<String, List<String>> getFeatureTypeFacetA (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
 		AjaxUtils.prepareAjaxHeaders(response);
 		return getFacets(qf, SearchConstants.QS_MARKER_TYPE_FACETS, ALLELE);
+	}
+
+	/* Get the set of GO Process filter options for the vocab bucket's current result set, including facets from all QS buckets
+	 */
+	@RequestMapping("/vocabBucket/process")
+	public @ResponseBody Map<String, List<String>> getProcessFacetV (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_GO_PROCESS_FACETS, VOCAB_TERM);
+	}
+
+	/* Get the set of GO Function filter options for the vocab bucket's current result set, including facets from all QS buckets
+	 */
+	@RequestMapping("/vocabBucket/function")
+	public @ResponseBody Map<String, List<String>> getFunctionFacetV (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_GO_FUNCTION_FACETS, VOCAB_TERM);
+	}
+
+	/* Get the set of GO Component filter options for the vocab bucket's current result set, including facets from all QS buckets
+	 */
+	@RequestMapping("/vocabBucket/component")
+	public @ResponseBody Map<String, List<String>> getComponentFacetV (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_GO_COMPONENT_FACETS, VOCAB_TERM);
+	}
+
+	/* Get the set of expression filter options for the vocab bucket's current result set, including facets from all QS buckets
+	 */
+	@RequestMapping("/vocabBucket/expression")
+	public @ResponseBody Map<String, List<String>> getExpressionFacetV (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_EXPRESSION_FACETS, VOCAB_TERM);
+	}
+
+	/* Get the set of phenotype filter options for the vocab bucket's current result set, including facets from all QS buckets
+	 */
+	@RequestMapping("/vocabBucket/phenotype")
+	public @ResponseBody Map<String, List<String>> getPhenotypeFacetV (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_PHENOTYPE_FACETS, VOCAB_TERM);
+	}
+
+	/* Get the set of disease filter options for the vocab bucket's current result set, including facets from all QS buckets
+	 */
+	@RequestMapping("/vocabBucket/disease")
+	public @ResponseBody Map<String, List<String>> getDiseaseFacetV (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_DISEASE_FACETS, VOCAB_TERM);
 	}
 
 	// Retrieve the facets for the specified field, in a form suitable for conversion to JSON.

@@ -139,6 +139,13 @@ function initializeFilterLibrary(delay) {
 		filters.addFilter('diseaseFilterA', 'Disease', 'diseaseFilterA', 'diseaseFilterA', fewiurl + 'quicksearch/alleleBucket/disease');
 		filters.addFilter('featureTypeFilterA', 'Feature Type', 'featureTypeFilterA', 'featureTypeFilterA', fewiurl + 'quicksearch/alleleBucket/featureType');
 
+		filters.addFilter('goProcessFilterV', 'Process', 'processFilterV', 'processFilterV', fewiurl + 'quicksearch/vocabBucket/process');
+		filters.addFilter('goFunctionFilterV', 'Function', 'functionFilterV', 'functionFilterV', fewiurl + 'quicksearch/vocabBucket/function');
+		filters.addFilter('goComponentFilterV', 'Component', 'componentFilterV', 'componentFilterV', fewiurl + 'quicksearch/vocabBucket/component');
+		filters.addFilter('phenotypeFilterV', 'Phenotype', 'phenotypeFilterV', 'phenotypeFilterV', fewiurl + 'quicksearch/vocabBucket/phenotype');
+		filters.addFilter('diseaseFilterV', 'Disease', 'diseaseFilterV', 'diseaseFilterV', fewiurl + 'quicksearch/vocabBucket/disease');
+		filters.addFilter('expressionFilterV', 'Expression', 'expressionFilterV', 'expressionFilterV', fewiurl + 'quicksearch/vocabBucket/expression');
+
 		var mapping = {
 			'goProcessFilterF' : [ 'filterSummaryF', 'filterListF' ],		// genome feature filters
 			'goFunctionFilterF' : [ 'filterSummaryF', 'filterListF' ],
@@ -151,8 +158,14 @@ function initializeFilterLibrary(delay) {
 			'phenotypeFilterA' : [ 'filterSummaryA', 'filterListA' ],		// allele filters
 			'diseaseFilterA' : [ 'filterSummaryA', 'filterListA' ],
 			'featureTypeFilterA' : [ 'filterSummaryA', 'filterListA' ],
-			};
-//		filters.setSummaryNames('filterSummary', 'filterList');
+
+			'goProcessFilterV' : [ 'filterSummaryV', 'filterListV' ],		// vocabulary terms filters
+			'goFunctionFilterV' : [ 'filterSummaryV', 'filterListV' ],
+			'goComponentFilterV' : [ 'filterSummaryV', 'filterListV' ],
+			'phenotypeFilterV' : [ 'filterSummaryV', 'filterListV' ],
+			'diseaseFilterV' : [ 'filterSummaryV', 'filterListV' ],
+			'expressionFilterV' : [ 'filterSummaryV', 'filterListV' ],
+			}
 		filters.setButtonInfo(mapping);
 		filters.registerCallback("filterCallback", qsProcessFilters);
 		filters.registerCallback("gaLogCallback", qsLogFilters);

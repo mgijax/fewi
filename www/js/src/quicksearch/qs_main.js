@@ -81,9 +81,11 @@ var qsProcessFilters = function() {
 	if (queryString == getQuerystring()) {
 		$('#breadboxGF').addClass('hidden');
 		$('#breadboxA').addClass('hidden');
+		$('#breadboxV').addClass('hidden');
 	} else {
 		$('#breadboxGF').removeClass('hidden');
 		$('#breadboxA').removeClass('hidden');
+		$('#breadboxV').removeClass('hidden');
 	}
 }
 

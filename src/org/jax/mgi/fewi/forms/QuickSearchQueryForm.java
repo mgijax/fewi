@@ -52,6 +52,13 @@ public class QuickSearchQueryForm {
     private List<String> phenotypeFilterA;
     private List<String> diseaseFilterA;
 
+    private List<String> processFilterV;		// Vocabulary Term filters
+    private List<String> componentFilterV;
+    private List<String> functionFilterV;
+    private List<String> phenotypeFilterV;
+    private List<String> expressionFilterV;
+    private List<String> diseaseFilterV;
+
     //--------------------//
     // accessors
     //--------------------//
@@ -185,6 +192,44 @@ public class QuickSearchQueryForm {
 	}
 	public void setDiseaseFilterA(List<String> diseaseFilterA) {
 		this.diseaseFilterA = diseaseFilterA;
+	}
+
+
+	public List<String> getProcessFilterV() {
+		return processFilterV;
+	}
+	public void setProcessFilterV(List<String> processFilterV) {
+		this.processFilterV = processFilterV;
+	}
+	public List<String> getComponentFilterV() {
+		return componentFilterV;
+	}
+	public void setComponentFilterV(List<String> componentFilterV) {
+		this.componentFilterV = componentFilterV;
+	}
+	public List<String> getFunctionFilterV() {
+		return functionFilterV;
+	}
+	public void setFunctionFilterV(List<String> functionFilterV) {
+		this.functionFilterV = functionFilterV;
+	}
+	public List<String> getPhenotypeFilterV() {
+		return phenotypeFilterV;
+	}
+	public void setPhenotypeFilterV(List<String> phenotypeFilterV) {
+		this.phenotypeFilterV = phenotypeFilterV;
+	}
+	public List<String> getExpressionFilterV() {
+		return expressionFilterV;
+	}
+	public void setExpressionFilterV(List<String> expressionFilterV) {
+		this.expressionFilterV = expressionFilterV;
+	}
+	public List<String> getDiseaseFilterV() {
+		return diseaseFilterV;
+	}
+	public void setDiseaseFilterV(List<String> diseaseFilterV) {
+		this.diseaseFilterV = diseaseFilterV;
 	}
 
 	@Override
