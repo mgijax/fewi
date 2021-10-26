@@ -126,6 +126,7 @@ function initializeFilterLibrary(delay) {
 		console.log('initializing filters');
 		filters.setFewiUrl(fewiurl);
 		filters.setQueryStringFunction(getQuerystring);
+
 		filters.addFilter('goProcessFilterF', 'Process', 'processFilterF', 'processFilterF', fewiurl + 'quicksearch/featureBucket/process');
 		filters.addFilter('goFunctionFilterF', 'Function', 'functionFilterF', 'functionFilterF', fewiurl + 'quicksearch/featureBucket/function');
 		filters.addFilter('goComponentFilterF', 'Component', 'componentFilterF', 'componentFilterF', fewiurl + 'quicksearch/featureBucket/component');
@@ -133,18 +134,26 @@ function initializeFilterLibrary(delay) {
 		filters.addFilter('diseaseFilterF', 'Disease', 'diseaseFilterF', 'diseaseFilterF', fewiurl + 'quicksearch/featureBucket/disease');
 		filters.addFilter('featureTypeFilterF', 'Feature Type', 'featureTypeFilterF', 'featureTypeFilterF', fewiurl + 'quicksearch/featureBucket/featureType');
 		filters.addFilter('expressionFilterF', 'Expression', 'expressionFilterF', 'expressionFilterF', fewiurl + 'quicksearch/featureBucket/expression');
+
+		filters.addFilter('phenotypeFilterA', 'Phenotype', 'phenotypeFilterA', 'phenotypeFilterA', fewiurl + 'quicksearch/featureBucket/phenotype');
+		filters.addFilter('diseaseFilterA', 'Disease', 'diseaseFilterA', 'diseaseFilterA', fewiurl + 'quicksearch/featureBucket/disease');
+		filters.addFilter('featureTypeFilterA', 'Feature Type', 'featureTypeFilterA', 'featureTypeFilterA', fewiurl + 'quicksearch/featureBucket/featureType');
+
 		var mapping = {
-			'goProcessFilterF' : [ 'filterSummaryF', 'filterListF' ],
+			'goProcessFilterF' : [ 'filterSummaryF', 'filterListF' ],		// genome feature filters
 			'goFunctionFilterF' : [ 'filterSummaryF', 'filterListF' ],
 			'goComponentFilterF' : [ 'filterSummaryF', 'filterListF' ],
-			'goPhenotypeFilterF' : [ 'filterSummaryF', 'filterListF' ],
-			'goDiseaseFilterF' : [ 'filterSummaryF', 'filterListF' ],
-			'goFeatureTypeFilterF' : [ 'filterSummaryF', 'filterListF' ],
-			'goExpressionFilterF' : [ 'filterSummaryF', 'filterListF' ],
+			'phenotypeFilterF' : [ 'filterSummaryF', 'filterListF' ],
+			'diseaseFilterF' : [ 'filterSummaryF', 'filterListF' ],
+			'featureTypeFilterF' : [ 'filterSummaryF', 'filterListF' ],
+			'expressionFilterF' : [ 'filterSummaryF', 'filterListF' ],
+
+			'phenotypeFilterA' : [ 'filterSummaryA', 'filterListA' ],		// allele filters
+			'diseaseFilterA' : [ 'filterSummaryA', 'filterListA' ],
+			'featureTypeFilterA' : [ 'filterSummaryA', 'filterListA' ],
 			};
-		filters.setSummaryNames('filterSummary', 'filterList');
-// need to convert to use mapping:
 //		filters.setSummaryNames('filterSummary', 'filterList');
+		filters.setButtonInfo(mapping);
 		filters.registerCallback("filterCallback", qsProcessFilters);
 		filters.registerCallback("gaLogCallback", qsLogFilters);
 		filters.setRemovalDivStyle('block');

@@ -9,9 +9,9 @@
    <a id="diseaseFilterF" class="filterButton">Disease <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
 </div>
 <div id="breadboxGF" class="hidden removeFilterDiv">
-  <div id="filterSummary">
+  <div id="filterSummaryF">
   	<b>Filtered by: </b>
-    <span id="filterList"></span>
+    <span id="filterListF"></span>
   </div>
 </div>
 <div id="b1Header" class="qsHeader">Genome Features

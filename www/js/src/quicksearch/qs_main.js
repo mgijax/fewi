@@ -80,8 +80,10 @@ var qsProcessFilters = function() {
 	// If no active filters, hide the remove filter buttons.
 	if (queryString == getQuerystring()) {
 		$('#breadboxGF').addClass('hidden');
+		$('#breadboxA').addClass('hidden');
 	} else {
 		$('#breadboxGF').removeClass('hidden');
+		$('#breadboxA').removeClass('hidden');
 	}
 }
 

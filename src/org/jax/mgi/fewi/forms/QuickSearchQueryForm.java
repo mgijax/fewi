@@ -36,16 +36,21 @@ public class QuickSearchQueryForm {
     //--------------------//
     // instance variables
     //--------------------//
-    private String query;
+    private String query;						// basic search fields
     private String queryType;
-    private List<String> processFilterF;
+    private List<String> terms;
+
+    private List<String> processFilterF;		// Genome Feature filters
     private List<String> componentFilterF;
     private List<String> functionFilterF;
     private List<String> phenotypeFilterF;
     private List<String> expressionFilterF;
     private List<String> diseaseFilterF;
     private List<String> featureTypeFilterF;
-    private List<String> terms;
+
+    private List<String> featureTypeFilterA;	// Allele filters
+    private List<String> phenotypeFilterA;
+    private List<String> diseaseFilterA;
 
     //--------------------//
     // accessors
@@ -161,6 +166,25 @@ public class QuickSearchQueryForm {
 	}
 	public void setProcessFilterF(List<String> processFilter) {
 		this.processFilterF = processFilter;
+	}
+
+	public List<String> getFeatureTypeFilterA() {
+		return featureTypeFilterA;
+	}
+	public void setFeatureTypeFilterA(List<String> featureTypeFilterA) {
+		this.featureTypeFilterA = featureTypeFilterA;
+	}
+	public List<String> getPhenotypeFilterA() {
+		return phenotypeFilterA;
+	}
+	public void setPhenotypeFilterA(List<String> phenotypeFilterA) {
+		this.phenotypeFilterA = phenotypeFilterA;
+	}
+	public List<String> getDiseaseFilterA() {
+		return diseaseFilterA;
+	}
+	public void setDiseaseFilterA(List<String> diseaseFilterA) {
+		this.diseaseFilterA = diseaseFilterA;
 	}
 
 	@Override

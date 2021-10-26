@@ -429,7 +429,11 @@ public class QuickSearchController {
 			filters.add(getFilterForOneField(SearchConstants.QS_EXPRESSION_FACETS, qf.getExpressionFilterF()));
 			filters.add(getFilterForOneField(SearchConstants.QS_DISEASE_FACETS, qf.getDiseaseFilterF()));
 			filters.add(getFilterForOneField(SearchConstants.QS_MARKER_TYPE_FACETS, qf.getFeatureTypeFilterF()));
+
 		} else if (bucket == ALLELE) {
+			filters.add(getFilterForOneField(SearchConstants.QS_PHENOTYPE_FACETS, qf.getPhenotypeFilterA()));
+			filters.add(getFilterForOneField(SearchConstants.QS_DISEASE_FACETS, qf.getDiseaseFilterA()));
+			filters.add(getFilterForOneField(SearchConstants.QS_MARKER_TYPE_FACETS, qf.getFeatureTypeFilterA()));
 		} else if (bucket == STRAIN) {
 		} else if (bucket == VOCAB_TERM) {
 		} else if (bucket == OTHER) {
