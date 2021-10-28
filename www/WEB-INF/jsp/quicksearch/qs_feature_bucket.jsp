@@ -8,7 +8,7 @@
    <a id="phenotypeFilterF" class="filterButton">Phenotype <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
    <a id="diseaseFilterF" class="filterButton">Disease <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
 </div>
-<div id="breadboxGF" class="hidden removeFilterDiv">
+<div id="breadboxF" class="hidden removeFilterDiv">
   <div id="filterSummaryF">
   	<b>Filtered by: </b>
     <span id="filterListF"></span>

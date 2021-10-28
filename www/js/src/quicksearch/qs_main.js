@@ -4,6 +4,7 @@
  */
 
 var qsWaitFor = {};		// numbers of tabs for which we're waiting for results
+var qsLastFilters = {};	// map of the filters most recently applied, as:  { filter : [ selected values ] }
 
 // If the user clicks through to one of the linked objects, remember what tab was displayed (so we can come
 // back to it).
@@ -70,31 +71,37 @@ var qsProcessFilters = function() {
 	// this method was called.  For each, we will need to update the paginator, data, formatting of the tab itself,
 	// and the hidden/shown status of the DIV with the remove filter buttons.
 
-	pgClearPaginator('featurePaginator');
-	pgClearPaginator('vocabPaginator');
-	pgClearPaginator('otherIdPaginator');
-	pgClearPaginator('strainPaginator');
-	pgClearPaginator('allelePaginator');
-	b1Fetch();
-	b2Fetch();
-	b3Fetch();
-	b4Fetch();
-	b5Fetch();
-
-	// If no active filters, hide the remove filter buttons.
-	if (queryString == getQuerystring()) {
-		$('#breadboxGF').addClass('hidden');
-		$('#breadboxA').addClass('hidden');
-		$('#breadboxV').addClass('hidden');
-		$('#breadboxO').addClass('hidden');
-		$('#breadboxS').addClass('hidden');
-	} else {
-		$('#breadboxGF').removeClass('hidden');
-		$('#breadboxA').removeClass('hidden');
-		$('#breadboxV').removeClass('hidden');
-		$('#breadboxO').removeClass('hidden');
-		$('#breadboxS').removeClass('hidden');
+	switch (qsTabWithChangedFilters()) {
+		case 'F' :
+			pgClearPaginator('featurePaginator');
+			b1Fetch();
+			qsHideShowRemoveFilterButtons('F');
+			break;
+		case 'A' :
+			pgClearPaginator('allelePaginator');
+			b5Fetch();
+			qsHideShowRemoveFilterButtons('A');
+			break;
+		case 'V' :
+			pgClearPaginator('vocabPaginator');
+			b2Fetch();
+			qsHideShowRemoveFilterButtons('V');
+			break;
+		case 'S' :
+			pgClearPaginator('strainPaginator');
+			b4Fetch();
+			qsHideShowRemoveFilterButtons('S');
+			break;
+		case 'O' :
+			pgClearPaginator('otherIdPaginator');
+			b3Fetch();
+			qsHideShowRemoveFilterButtons('O');
+			break;
+		default:
+			return;
 	}
+	// Remember this set of filters as the "last" one for next time.
+	qsLastFilters = qsGetSelectedFilters();
 }
 
 // callback function: should be wired into the filters.js module as a callback.  This will track which filters are
@@ -142,5 +149,80 @@ var qsStyleTabText = function(resultCount, tabNumber) {
 		} else {
 			$('#ui-id-' + tabID).first().click();
 		}
+	}
+}
+
+// Get a mapping comparable to the global qsLastFilters but with the currently selected filter values.
+var qsGetSelectedFilters = function() {
+	// String begins with an ampersand, so trim that off first.  Then convert from URL to map.
+	return filters.urlToHash(filters.getUrlFragment().substring(1));
+}
+
+// Return string of comma-separated values selected for the specified filterName, or an empty string if none selected.
+var qsFilterValues = function(filterMap, filterName) {
+	if (filterName in filterMap) {
+		var filterValue = filterMap[filterName];
+		
+		// If the value is just natively a string, return it as-is.  Otherwise, assume it's a list and convert it to
+		// a comma-delimited string of values.
+		if (typeof(filterValue) == typeof('a')) {
+			return filterValue;
+		} else {
+			return filterValue.join(',');
+		}
+	}
+	return '';
+}
+
+// Return true if the filter with the given filterName has changed from qsLastFilters, false if the same.
+var qsFilterChanged = function(filterMap, filterName) {
+	var oldVal = qsFilterValues(qsLastFilters, filterName);
+	var newVal = qsFilterValues(filterMap, filterName);
+	return (oldVal != newVal);
+}
+
+// Return a one-letter code to indicate which tab had a changed filter (F, A, V, O, or S), or null if none changed.
+// (returns the first one found, but given that this works with a filter-change event, there should only be one at
+// a time)
+var qsTabWithChangedFilters = function() {
+	var myFilters = qsGetSelectedFilters();
+	
+	var bothFilterSets = [ myFilters, qsLastFilters ];
+	var union = {};
+	for (var i in bothFilterSets) {
+		for (var filterName in bothFilterSets[i]) {
+			union[filterName] = true;
+		}
+	}
+	
+	for (var filterName in union) {
+		if (qsFilterChanged(myFilters, filterName)) {
+			// assumption:  Filter fieldnames have a one-letter tag at the end that indicate which bucket contains
+			// that filter button.  If that ending character is one of the expected letters, return it.
+			var bucket = filterName.substring(filterName.length - 1);
+			if (['F', 'A', 'V', 'O', 'S'].indexOf(bucket) >= 0) {
+				return bucket;
+			}
+		}
+	}
+	return null;
+}
+
+// For the given bucket abbreviation (F, A, V, S, or O), hide or show the "remove filter" buttons as needed.  (depends
+// on whether any filters for that bucket are currently selected)
+var qsHideShowRemoveFilterButtons = function(bucket) {
+	var myFilters = qsGetSelectedFilters();
+	var foundAny = false;
+	for (var filterName in myFilters) {
+		var thisBucket = filterName.substring(filterName.length - 1);
+		if (thisBucket == bucket) {
+			foundAny = true;
+			break;
+		}
+	}
+	if (foundAny) {
+		$('#breadbox' + bucket).removeClass('hidden');
+	} else {
+		$('#breadbox' + bucket).addClass('hidden');
 	}
 }
