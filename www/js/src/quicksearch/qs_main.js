@@ -70,32 +70,31 @@ var qsProcessFilters = function() {
 	// Now need to identify which tab(s) have changed filters, based on comparing parameter values to the last time
 	// this method was called.  For each, we will need to update the paginator, data, formatting of the tab itself,
 	// and the hidden/shown status of the DIV with the remove filter buttons.
-
 	switch (qsTabWithChangedFilters()) {
 		case 'F' :
 			pgClearPaginator('featurePaginator');
 			b1Fetch();
-			qsHideShowRemoveFilterButtons('F');
+			qsHideShowRemoveFilterButtons('feature');
 			break;
 		case 'A' :
 			pgClearPaginator('allelePaginator');
 			b5Fetch();
-			qsHideShowRemoveFilterButtons('A');
+			qsHideShowRemoveFilterButtons('allele');
 			break;
 		case 'V' :
 			pgClearPaginator('vocabPaginator');
 			b2Fetch();
-			qsHideShowRemoveFilterButtons('V');
+			qsHideShowRemoveFilterButtons('vocabTerm');
 			break;
 		case 'S' :
 			pgClearPaginator('strainPaginator');
 			b4Fetch();
-			qsHideShowRemoveFilterButtons('S');
+			qsHideShowRemoveFilterButtons('strain');
 			break;
 		case 'O' :
 			pgClearPaginator('otherIdPaginator');
 			b3Fetch();
-			qsHideShowRemoveFilterButtons('O');
+			qsHideShowRemoveFilterButtons('otherId');
 			break;
 		default:
 			return;
@@ -128,11 +127,11 @@ var qsStyleTabText = function(resultCount, tabNumber) {
 	if (resultCount > 0) {
 		$('#ui-id-' + tabNumber).removeClass('noResults');
 		$('#ui-id-' + tabNumber).addClass('hasResults');
-		$('#ui-id-' + tabNumber).css({ 'color' : '#002255', 'font-weight' : 'bold'});	// standard button text color
+//		$('#ui-id-' + tabNumber).css({ 'color' : '#002255', 'font-weight' : 'bold'});	// standard button text color
 	} else {
 		$('#ui-id-' + tabNumber).removeClass('hasResults');
 		$('#ui-id-' + tabNumber).addClass('noResults');
-		$('#ui-id-' + tabNumber).css({ 'color' : 'black', 'font-weight' : 'normal'});	// lighter button text
+//		$('#ui-id-' + tabNumber).css({ 'color' : 'black', 'font-weight' : 'normal'});	// lighter button text
 	}
 	if (tabNumber in qsWaitFor) {
 		delete qsWaitFor[tabNumber];
@@ -208,21 +207,35 @@ var qsTabWithChangedFilters = function() {
 	return null;
 }
 
-// For the given bucket abbreviation (F, A, V, S, or O), hide or show the "remove filter" buttons as needed.  (depends
-// on whether any filters for that bucket are currently selected)
+// For the given bucket abbreviation (feature, allele, vocabTerm, strain, or otherId), hide or show the "remove
+// filter" buttons as needed.  (depends on whether any filters for that bucket are currently selected)  Also
+// will alter tab text and its color as needed.
 var qsHideShowRemoveFilterButtons = function(bucket) {
 	var myFilters = qsGetSelectedFilters();
+	var firstLetter = bucket.substring(0,1).toUpperCase();
+	var fullTabName = bucket + 'Tab';
+
 	var foundAny = false;
 	for (var filterName in myFilters) {
 		var thisBucket = filterName.substring(filterName.length - 1);
-		if (thisBucket == bucket) {
+		if (thisBucket == firstLetter) {
 			foundAny = true;
 			break;
 		}
 	}
+
 	if (foundAny) {
-		$('#breadbox' + bucket).removeClass('hidden');
+		$('#breadbox' + firstLetter).removeClass('hidden');
+		if (!($('#' + fullTabName).hasClass('filtered'))) {
+			$('#' + fullTabName).addClass('filtered');
+			$('#' + firstLetter + 'Text').html('filtered results');
+		}
+
 	} else {
-		$('#breadbox' + bucket).addClass('hidden');
+		$('#breadbox' + firstLetter).addClass('hidden');
+		if (!($('#' + fullTabName).hasClass('filtered'))) {
+			$('#' + fullTabName).removeClass('filtered');
+			$('#' + firstLetter + 'Text').html('');
+		}
 	}
 }

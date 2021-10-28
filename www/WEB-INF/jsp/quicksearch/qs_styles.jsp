@@ -128,6 +128,13 @@
 	padding-top: 10px;
 	font-weight: bold;
 }
+.filtered {
+	color: #97454C;
+}
+.filteredText {
+	font-size:80%;
+	text-decoration: italic;
+}
 .filterItem {
     white-space: nowrap;
     font-size: 10px;
@@ -144,7 +151,7 @@
 	width: 100%;
 }
 #hasResults {
-	color: green;
+	color: #002255;
 	font-weight: bold;
 }
 #noResults {
