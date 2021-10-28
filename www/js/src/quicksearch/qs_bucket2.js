@@ -54,10 +54,10 @@ function b2Show(data) {
 	}
 	var header = qsResultHeader(data.start, data.end, data.totalCount);
 	var firstTime = false;							// first time through for the current search?
-	if ($('#vtCount').html().indexOf('(') < 0) {	// if no count on the Vocab tab yet, then yes.
+	if ($('#vCount').html().indexOf('(') < 0) {	// if no count on the Vocab tab yet, then yes.
 		firstTime = true;
 	}
-	$('#vtCount').html("(" + commaDelimit(data.totalCount) + ")");
+	$('#vCount').html("(" + commaDelimit(data.totalCount) + ")");
 	$('#b2Counts').html(header);
 	$('#b2Results').html(tbl);
 	pgUpdatePaginator(b2CacheName, 'vocabPaginator', data.totalCount, b2PageSize, dcGetPage)

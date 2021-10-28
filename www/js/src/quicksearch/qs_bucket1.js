@@ -64,10 +64,10 @@ function b1Show(data) {
 	}
 
 	var firstTime = false;							// first time through for the current search?
-	if ($('#gfCount').html().indexOf('(') < 0) {	// if no count on the Features tab yet, then yes.
+	if ($('#fCount').html().indexOf('(') < 0) {	// if no count on the Features tab yet, then yes.
 		firstTime = true;
 	}
-	$('#gfCount').html("(" + commaDelimit(data.totalCount) + ")");
+	$('#fCount').html("(" + commaDelimit(data.totalCount) + ")");
 	var header = qsResultHeader(data.start, data.end, data.totalCount);
 	$('#b1Counts').html(header);
 	$('#b1Results').html(tbl);

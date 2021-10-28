@@ -59,10 +59,10 @@ function b4Show(data) {
 	}
 	var header = qsResultHeader(data.start, data.end, data.totalCount);
 	var firstTime = false;							// first time through for the current search?
-	if ($('#ssCount').html().indexOf('(') < 0) {	// if no count on the Strains tab yet, then yes.
+	if ($('#sCount').html().indexOf('(') < 0) {	// if no count on the Strains tab yet, then yes.
 		firstTime = true;
 	}
-	$('#ssCount').html("(" + commaDelimit(data.totalCount) + ")");
+	$('#sCount').html("(" + commaDelimit(data.totalCount) + ")");
 	$('#b4Counts').html(header);
 	$('#b4Results').html(tbl);
 	pgUpdatePaginator(b4CacheName, 'strainPaginator', data.totalCount, b4PageSize, dcGetPage)
