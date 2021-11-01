@@ -52,11 +52,11 @@
 
 <div id="querytabs" style="margin-top: 15px;">
   <ul style="background-color: #F0F8FF;">
-		<li><span class="label" id="featureTab"><a href="#tabs-gf">Genome Features <span id="fCount" style="padding: 0em"></span></a><span id="fText"></span></span></li>
-		<li><span class="label" id="alleleTab"><a href="#tabs-a">Alleles <span id="aCount"></span></a><span id="aText"></span></span></li>
-		<li><span class="label" id="vocabTermTab"><a href="#tabs-vt">Vocabulary Terms <span id="vCount"></span></a><span id="vText"></span></span></li>
-		<li><span class="label" id="strainTab"><a href="#tabs-ss">Strains and Stocks <span id="sCount"></span></a><span id="sText"></span></span></li>
-		<li><span class="label" id="otherIdTab"><a href="#tabs-id">Other Results by ID <span id="oCount"></span></a><span id="oText"></span></span></li>
+		<li><span class="label" id="featureTab"><a id="fLink" href="#tabs-gf">Genome Features <span id="fCount" style="padding: 0em"></span><span id="fText"></span></a></span></li>
+		<li><span class="label" id="alleleTab"><a id="aLink" href="#tabs-a">Alleles <span id="aCount"></span><span id="aText"></span></a></span></li>
+		<li><span class="label" id="vocabTermTab"><a id="vLink" href="#tabs-vt">Vocabulary Terms <span id="vCount"></span><span id="vText"></span></a></span></li>
+		<li><span class="label" id="strainTab"><a id="sLink" href="#tabs-ss">Strains and Stocks <span id="sCount"></span><span id="sText"></span></a></span></li>
+		<li><span class="label" id="otherIdTab"><a id="oLink" href="#tabs-id">Other Results by ID <span id="oCount"></span><span id="oText"></span></a></span></li>
   </ul>
 	<div>
 		<div id="tabs-gf">

@@ -213,10 +213,16 @@ var qsTabWithChangedFilters = function() {
 var qsHideShowRemoveFilterButtons = function(bucket) {
 	var myFilters = qsGetSelectedFilters();
 	var firstLetter = bucket.substring(0,1).toUpperCase();
-	var fullTabName = bucket + 'Tab';
+	var bucketLink = firstLetter.toLowerCase() + 'Link';
 
 	var foundAny = false;
+	var filterCount = 0;
+	var hasAnyFilters = false;
+
 	for (var filterName in myFilters) {
+		if (filterName != '') {
+			hasAnyFilters = true;
+		}
 		var thisBucket = filterName.substring(filterName.length - 1);
 		if (thisBucket == firstLetter) {
 			foundAny = true;
@@ -224,18 +230,25 @@ var qsHideShowRemoveFilterButtons = function(bucket) {
 		}
 	}
 
+	// need to increase height of all tabs if there is at least one filtered tab
+	if (hasAnyFilters) {
+		$('[role=tab]').css({'height':'40px'});
+	} else {
+		$('[role=tab]').css({'height':'inherit'});
+	}
+
 	if (foundAny) {
 		$('#breadbox' + firstLetter).removeClass('hidden');
-		if (!($('#' + fullTabName).hasClass('filtered'))) {
-			$('#' + fullTabName).addClass('filtered');
-			$('#' + firstLetter + 'Text').html('filtered results');
+		if (!($('#' + bucketLink).hasClass('filtered'))) {
+			$('#' + firstLetter.toLowerCase() + 'Text').html('<br/>filtered results');
+			$('#' + bucketLink).addClass('filtered');
 		}
 
 	} else {
 		$('#breadbox' + firstLetter).addClass('hidden');
-		if (!($('#' + fullTabName).hasClass('filtered'))) {
-			$('#' + fullTabName).removeClass('filtered');
-			$('#' + firstLetter + 'Text').html('');
+		if ($('#' + bucketLink).hasClass('filtered')) {
+			$('#' + firstLetter.toLowerCase() + 'Text').html('');
+			$('#' + bucketLink).removeClass('filtered');
 		}
 	}
 }

@@ -130,6 +130,7 @@
 }
 .filtered {
 	color: #97454C;
+	text-align: center;
 }
 .filteredText {
 	font-size:80%;
