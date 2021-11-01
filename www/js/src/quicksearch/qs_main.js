@@ -242,6 +242,9 @@ var qsHideShowRemoveFilterButtons = function(bucket) {
 		if (!($('#' + bucketLink).hasClass('filtered'))) {
 			$('#' + firstLetter.toLowerCase() + 'Text').html('<br/>filtered results');
 			$('#' + bucketLink).addClass('filtered');
+			// Since jQuery takes over control of tab coloring, we can't rely on the 'filtered' class
+			// doing the job for the color.  Need to actually do that through a specific style.
+			$('#' + bucketLink).css({ 'color' : '#97454C' });
 		}
 
 	} else {
@@ -249,6 +252,9 @@ var qsHideShowRemoveFilterButtons = function(bucket) {
 		if ($('#' + bucketLink).hasClass('filtered')) {
 			$('#' + firstLetter.toLowerCase() + 'Text').html('');
 			$('#' + bucketLink).removeClass('filtered');
+			// Since jQuery takes over control of tab coloring, we can't rely on the 'filtered' class
+			// doing the job for the color.  Need to actually do that through a specific style.
+			$('#' + bucketLink).css({ 'color' : 'inherit' });
 		}
 	}
 }
