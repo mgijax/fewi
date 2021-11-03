@@ -1013,7 +1013,7 @@ filters.buildDialogBox = function() {
 	    filters.log('entered handleSuccess()');
 	    var response = o.responseText;
 	    response = response.split("<!")[0];
-	    filters.log("handleSuccess() response: " + response);
+	    filters.log("handleSuccess() finished");
     };
 
     // function to be called on failed submission
