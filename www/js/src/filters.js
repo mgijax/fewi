@@ -561,7 +561,7 @@ filters.getUrlFragment = function() {
  * returns an empty string if there are no filter values currently selected.
  * Pass in the list of HTML names for the fields we want to consider.
  */
-filters.getAllSummaryButtons = function(fieldnames) {
+filters.getAllSummaryButtons = function(fieldnames, skipRemoveAllButton) {
     var list = [];	// list of DOM elements to return
     var i = 0;		// walks through filters
     var f;		// formatting function for each filter
@@ -590,7 +590,7 @@ filters.getAllSummaryButtons = function(fieldnames) {
 	    list.push(el); 
     }
 
-    if (list.length > 0) {
+    if ((list.length > 0) && (!skipRemoveAllButton)) {
 	    // if there were some filters selected, need to add a 'clear all'
 	    // button
 	
@@ -1485,6 +1485,9 @@ filters.populateFilterSummary = function() {
     spd = spanPerDiv;
     d = divs;
     
+    // For cases with multiple divs, do not show a Remove All Filters button.
+    var multipleDivs = (divs.length > 1);
+    
     // Now walk through and populate each DIV/SPAN with applicable "remove filter" buttons.
     
     for (var i in divs) {
@@ -1506,7 +1509,7 @@ filters.populateFilterSummary = function() {
             }
         }
     	
-        var buttons = filters.getAllSummaryButtons(namesPerDiv[div]);
+        var buttons = filters.getAllSummaryButtons(namesPerDiv[div], multipleDivs);
 
         filters.log('adding ' + buttons.length + ' buttons for DIV ' + div);
         for (var b in buttons) {
