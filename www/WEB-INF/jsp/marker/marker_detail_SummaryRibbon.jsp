@@ -88,14 +88,6 @@
 							</div>
 						</li>
 					</c:if>
-					<c:if test="${(not empty marker.myGeneSymbol) and (not empty marker.myGeneID)}">
-						<li>
-							<div class="label">Gene Overview</div>
-							<div class="value">
-								MyGene.info: <a href="${fn:replace(externalUrls.MyGene, '@@@@', marker.myGeneID.accID)}" target="_blank">${marker.myGeneSymbol}</a>
-							</div>
-						</li>
-					</c:if>
 					<c:if test="${(marker.markerType == 'Gene') or (marker.markerType == 'Pseudogene')}">
 						<li>
 							<div class="label">Alliance</div>
