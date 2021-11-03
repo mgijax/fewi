@@ -20,9 +20,9 @@ var b3Show = function(data) {
 			var item = data.rows[i];
 			
 			if (item.objectSubtype === null) {
-				tbl = tbl + '<TD style="padding-right: 30px"><a href="' + item.detailUri + '">' + item.objectType + '</a></TD>';
+				tbl = tbl + '<TD style="padding-right: 30px"><a target="_blank" href="' + item.detailUri + '">' + item.objectType + '</a></TD>';
 			} else {
-				tbl = tbl + '<TD style="padding-right: 30px"><a href="' + item.detailUri + '">' + item.objectType + '</a>, ' + item.objectSubtype + '</TD>';
+				tbl = tbl + '<TD style="padding-right: 30px"><a target="_blank" href="' + item.detailUri + '">' + item.objectType + '</a>, ' + item.objectSubtype + '</TD>';
 			}
 			tbl = tbl + '<TD style="padding-right: 30px">' + item.name + '</TD>';
 			tbl = tbl + '<TD><SPAN CLASS="termType">' + item.bestMatchType + '</SPAN>: <SPAN CLASS="small">' + item.bestMatchText + '</SPAN></TD></TR>';

@@ -30,7 +30,7 @@ function b5Show(data) {
 			if (item.detailUrl === null) {
 				tbl = tbl + '<TD>' + symbol + '</TD>';
 			} else {
-				tbl = tbl + '<TD><a href="' + item.detailUri + '">' + symbol + '</a></TD>';
+				tbl = tbl + '<TD><a target="_blank" href="' + item.detailUri + '">' + symbol + '</a></TD>';
 			}
 			tbl = tbl + '<TD class="nameCol">' + name + '</TD>';
 

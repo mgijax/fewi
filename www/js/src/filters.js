@@ -37,7 +37,7 @@ filters.callbacksByName = {};	// maps from callback name to function to call
 filters.callbacksActive = true;	// are the callback functions active?
 
 filters.logging = false;	// write log messages to browser error log?
-filters.loggingConsole = false; // write log message to browser console?
+filters.loggingConsole = true; // write log message to browser console?
 
 filters.queryStringFunction = null;	// funtion to call to get parameter
 					// ...string for general query form
@@ -590,24 +590,30 @@ filters.getAllSummaryButtons = function(fieldnames, skipRemoveAllButton) {
 	    list.push(el); 
     }
 
-    if ((list.length > 0) && (!skipRemoveAllButton)) {
-	    // if there were some filters selected, need to add a 'clear all'
-	    // button
-	
-	    var el = document.createElement('a');
-	    el.setAttribute('class', 'filterItem'); 
-	    el.setAttribute('id', 'clearAllFilters');
-	    el.setAttribute('style', 'line-height: 2.2');
-	    el.setAttribute('title', 'click to remove all filters');
-	    setText(el, 'Remove All Filters');
-	    list.push(el); 
+    filters.log('point 1');
+    if (list.length > 0) {
+	    // if there were some filters selected, may need to add a 'clear all' button
+    	filters.log('point 2');
+    	if (!skipRemoveAllButton) {
+    		filters.log('point 3');
+    		var el = document.createElement('a');
+    		el.setAttribute('class', 'filterItem'); 
+    		el.setAttribute('id', 'clearAllFilters');
+    		el.setAttribute('style', 'line-height: 2.2');
+    		el.setAttribute('title', 'click to remove all filters');
+    		setText(el, 'Remove All Filters');
+    		list.push(el); 
+    		filters.log('point 4');
+	    }
 
-	    // wire up all the buttons to the clearFilter() function
-
+   		filters.log('point 5');
+	    // And, wire up all the buttons to the clearFilter() function.
 	    for (var i = 0; i < list.length; i++) {
 	        YAHOO.util.Event.addListener(list[i], 'click', filters.clearFilter);
 	    }
+   		filters.log('point 6');
     }
+    filters.log('exiting getAllSummaryButtons() -- list.length = ' + list.length);
     return list;
 };
 
@@ -1510,6 +1516,7 @@ filters.populateFilterSummary = function() {
         }
     	
         var buttons = filters.getAllSummaryButtons(namesPerDiv[div], multipleDivs);
+        filters.log('Returned from getAllSummaryButtons()');
 
         filters.log('adding ' + buttons.length + ' buttons for DIV ' + div);
         for (var b in buttons) {

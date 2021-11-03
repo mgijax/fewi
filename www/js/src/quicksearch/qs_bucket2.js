@@ -29,13 +29,13 @@ function b2Show(data) {
 			if (item.detailUri === null) {
 				tbl = tbl + '<TD><span class="termType">' + item.vocabName + '</span>: ' + item.term + '</TD>';
 			} else {
-				tbl = tbl + '<TD><span class="termType">' + item.vocabName + '</span>: <a href="' + item.detailUri + '">' + item.term + '</a></TD>';
+				tbl = tbl + '<TD><span class="termType">' + item.vocabName + '</span>: <a target="_blank" href="' + item.detailUri + '">' + item.term + '</a></TD>';
 			}
 			if (item.annotationCount > 0) {
 				if (item.annotationUri === null) {
 					tbl = tbl + '<TD><span class="small">' + item.annotationText + '</span></TD>';
 				} else {
-					tbl = tbl + '<TD class="nowrap"><a class="small" href="' + item.annotationUri + '">'+ item.annotationText + '</a></TD>';
+					tbl = tbl + '<TD class="nowrap"><a class="small" target="_blank" href="' + item.annotationUri + '">'+ item.annotationText + '</a></TD>';
 				}
 			} else {
 				tbl = tbl + '<TD>&nbsp;</TD>';

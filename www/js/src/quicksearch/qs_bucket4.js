@@ -33,7 +33,7 @@ function b4Show(data) {
 			if (item.detailUri === null) {
 				tbl = tbl + '<TD>' + name + '</TD>';
 			} else {
-				tbl = tbl + '<TD><a href="' + item.detailUri + '">' + name + '</a></TD>';
+				tbl = tbl + '<TD><a target="_blank" href="' + item.detailUri + '">' + name + '</a></TD>';
 			}
 			if (item.referenceCount > 0) {
 				var label = ' references';
@@ -42,7 +42,7 @@ function b4Show(data) {
 				if (item.referenceUri === null) {
 					tbl = tbl + '<TD><span class="small">' + item.referenceCount + label + '</span></TD>';
 				} else {
-					tbl = tbl + '<TD class="nowrap"><a class="small" href="' + item.referenceUri + '">'+ item.referenceCount + label + '</a></TD>';
+					tbl = tbl + '<TD class="nowrap"><a class="small" target="_blank" href="' + item.referenceUri + '">'+ item.referenceCount + label + '</a></TD>';
 				}
 			} else {
 				tbl = tbl + '<TD>&nbsp;</TD>';
