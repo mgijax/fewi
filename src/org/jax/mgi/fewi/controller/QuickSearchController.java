@@ -551,23 +551,49 @@ public class QuickSearchController {
         List<Filter> filters = new ArrayList<Filter>();
         StopwordRemover stopwordRemover = new StopwordRemover();
 
+        // Single letters or digits should only be matched if there is another search token that also matches.  And
+        // they should be matched as tokens, not as "string contains".  (Match the word "a" but not "cat".)
+        List<Filter> soloFilters = new ArrayList<Filter>();
+        
         for (String term : qf.getTerms()) {
         	term = stopwordRemover.remove(term);
         	if ((term != null) && (term.length() > 0)) {
-        		filters.add(new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT, term, Operator.OP_STRING_CONTAINS));
+        		if (term.length() > 1) {
+        			filters.add(new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT, term, Operator.OP_STRING_CONTAINS));
+        		} else {
+        			soloFilters.add(new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT, term, Operator.OP_CONTAINS));
+        		}
         	}
         }
 
-        // All search terms were removed by stemming, so don't return anything for this.
-        if (filters.size() == 0) {
-        	filters.add(new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT, "abcdefghijklmn", Operator.OP_EQUAL));
+        // So...
+        // 1. If we have only regular (non-solo) tokens, just OR them.
+        // 2. If we have only non-solo (no regular) tokens, AND them.  (Require ALL single-character tokens to match.)
+        // 3. If we have some of each, matches can come either from (a) at least one multi-character token,
+        //	or (b) all single-character tokens.
+        // 4. If no filters have survived stemming, just don't return any matches.
+        
+        Filter combo = null;
+        if ((filters.size() > 0) && (soloFilters.size() == 0)) {
+        	combo = Filter.or(filters);
+
+        } else if ((filters.size() == 0) && (soloFilters.size() > 0)) {
+        	combo = Filter.and(soloFilters);
+        	
+        } else if ((filters.size() > 0) && (soloFilters.size() > 0)) {
+        	filters.add(Filter.and(soloFilters));
+        	combo = Filter.or(filters);
+
+        } else {
+        	// no filters survived
+        	combo = new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT, "abcdefghijklmn", Operator.OP_EQUAL);
         }
         
         if (bucket == VOCAB_TERM) {
         	// When looking for vocab terms by the inexact field, we do not want EMAPS terms
-        	return notEmaps(Filter.or(filters));
+        	return notEmaps(combo);
         }
-        return Filter.or(filters);
+        return combo;
 	}
 	
 	// Return a single filter that looks for documents by any non-ID type of field, with multiple
@@ -588,6 +614,7 @@ public class QuickSearchController {
         // 4. Non-restrictedWords can be matched to any type of data.
 
         // Note: The full [potentially] multi-token query string is in the last position of qf.getTerms().
+        // Also:  Single letters and digits should also be treated as restricted words when searching stemmed fields.
         
         String lastRestrictedWord = null; 
         
@@ -596,7 +623,7 @@ public class QuickSearchController {
         	if ((term != null) && (term.length() > 0)) {
 
         		// case 3 and case 4 (see comments above)
-        		if (!restrictedWords.contains(term)) {
+        		if (!restrictedWords.contains(term) && (term.length() > 1)) {
         			termFilters.add(new Filter(SearchConstants.QS_SEARCH_TERM_STEMMED, term, Operator.OP_CONTAINS_WITH_COLON)); 
         			lastRestrictedWord = null;
         		}
@@ -604,10 +631,15 @@ public class QuickSearchController {
         		// case 1 (see above)
         		else if (lastRestrictedWord == null) {
         			lastRestrictedWord = term;				// Remember this in case the next is restricted too.
-        			List<Filter> f = new ArrayList<Filter>();
-        			f.add(new Filter(SearchConstants.QS_SEARCH_TERM_STEMMED, term, Operator.OP_CONTAINS_WITH_COLON)); 
-        			f.add(Filter.notIn(SearchConstants.QS_SEARCH_TERM_TYPE, restrictedTypes));
-        			termFilters.add(Filter.and(f));
+
+        			// Cannot find solo letters and digits without other tokens.  If more letters, can find in a field of
+        			// a non-restricted type.
+        			if (term.length() > 1) {
+        				List<Filter> f = new ArrayList<Filter>();
+        				f.add(new Filter(SearchConstants.QS_SEARCH_TERM_STEMMED, term, Operator.OP_CONTAINS_WITH_COLON)); 
+        				f.add(Filter.notIn(SearchConstants.QS_SEARCH_TERM_TYPE, restrictedTypes));
+        				termFilters.add(Filter.and(f));
+        			}
         		}
 
         		// case 2 (see above)
@@ -880,6 +912,19 @@ public class QuickSearchController {
 					// check non-numeric search terms
 					for (String word : termsToCheck) {
 						int index = lowerTerm.indexOf(word);
+						
+						// special case for 1-character search words (letters, since digits are already in numericPatterns)
+						if (word.length() == 1) {
+							Pattern p = Pattern.compile("\\b" + word + "\\b");
+							Matcher m = p.matcher(lowerTerm);
+							if (m.find()) {
+								index = m.start();
+							} else {
+								index = -1;			// didn't find the letter as a word, so reset the index.
+							}
+						}
+						
+						// If we didn't find the word yet, then we may need to consider any wildcards included in it.
 						if ((index < 0) && (hasWildcard)) {
 							index = WildcardHelper.indexOf(lowerTerm, word);
 						}
