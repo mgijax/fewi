@@ -1,5 +1,5 @@
 <div id="filterNote" class="example" style="padding-top: 6px;">
-  Note: Filters can be applied to data within each tab.
+  Note: Filters can be applied to data within each tab. Filters applied in one tab do not affect the results or counts in other tabs.
 </div>
 <!-- for filter popup (re-used by all filter buttons) -->
 <div class="facetFilter">
