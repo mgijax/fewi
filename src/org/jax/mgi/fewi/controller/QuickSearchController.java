@@ -560,7 +560,7 @@ public class QuickSearchController {
         	if ((term != null) && (term.length() > 0)) {
         		if (term.length() > 1) {
         			filters.add(new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT, term, Operator.OP_STRING_CONTAINS));
-        		} else {
+        		} else if (term.trim().length() == 1) {
         			soloFilters.add(new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT, term, Operator.OP_CONTAINS));
         		}
         	}
