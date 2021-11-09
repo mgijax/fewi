@@ -541,7 +541,8 @@ public class QuickSearchController {
 	// that contains a wildcard.  Does not need to worry about stopwords, as they don't have wildcards.
 	private Filter createWildcardFilter(QuickSearchQueryForm qf, int bucket) {
 		// Allele symbols work better with no angle brackets, so remove them.
-       	return new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT, qf.getQuery().replaceAll("<", "").replaceAll(">",  ""),
+       	return new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT,
+       		qf.getQuery().replaceAll("<", "").replaceAll(">",  "").replaceAll("\\\\[*]", "*").replaceAll("[*]+", "*"),
        		Operator.OP_EQUAL_WILDCARD_ALLOWED);
 	}
 
@@ -1729,7 +1730,7 @@ public class QuickSearchController {
 	// determine if the search string has at least one wildcard and is likely a symbol (thus needing special
 	// handling)
 	private boolean isInexactSymbol (String query, int bucket) {
-		if ((bucket == FEATURE) || (bucket == ALLELE)) {
+		if ((bucket == FEATURE) || (bucket == ALLELE) || (bucket == STRAIN)) {
 			if ((query != null) && (query.trim().length() > 0)) {
 				if (query.indexOf("*") >= 0) {
 					if (query.split("[ \t]").length < 2) {
