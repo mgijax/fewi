@@ -525,9 +525,10 @@ public class QuickSearchController {
 	private Filter createExactTermFilter(QuickSearchQueryForm qf, int bucket) {
         List<Filter> exactFilters = new ArrayList<Filter>();
 
-        // If we're looking for alleles and the search term has angle brackets, look for matches for the full string (not
+        // If we're looking for alleles/strains and the search term has angle brackets, look for matches for the full string (not
         // the pieces of the string).
-        if ((bucket == ALLELE) && (qf.getTerms().size() > 0) && (qf.getTerms().get(0).indexOf("<") > 0)) {
+        if ( ((bucket == ALLELE) || (bucket == STRAIN)) 
+        	&& (qf.getTerms().size() > 0) && (qf.getTerms().get(0).indexOf("<") > 0)) {
         		exactFilters.add(new Filter(SearchConstants.QS_SEARCH_TERM_EXACT, qf.getTerms().get(0), Operator.OP_EQUAL));
         } else {
         	for (String term : qf.getTerms()) {
@@ -608,6 +609,13 @@ public class QuickSearchController {
         List<Filter> termFilters = new ArrayList<Filter>();
         EasyStemmer stemmer = new EasyStemmer();
         StopwordRemover stopwordRemover = new StopwordRemover();
+
+        // If we're looking for alleles/strains and the search term has angle brackets, look for matches for the full string (not
+        // the pieces of the string).
+        if ( ((bucket == ALLELE) || (bucket == STRAIN)) 
+        	&& (qf.getTerms().size() > 0) && (qf.getTerms().get(0).indexOf("<") > 0)) {
+        		return new Filter(SearchConstants.QS_SEARCH_TERM_STEMMED, qf.getTerms().get(0), Operator.OP_EQUAL);
+        }
 
         // If we are searching in the restrictedTypes of data, we need to consider what to do with restrictedWords.
         // These are words (really word stems) that are so overwhelmingly common that we don't want to match them
