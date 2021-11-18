@@ -551,6 +551,7 @@ public class QuickSearchController {
 	private Filter createInexactTermFilter(QuickSearchQueryForm qf, int bucket) {
         List<Filter> filters = new ArrayList<Filter>();
         StopwordRemover stopwordRemover = new StopwordRemover();
+        boolean onlyExact = IndexConstants.QS_SEARCHTYPE_EXACT_PHRASE.equalsIgnoreCase(qf.getQueryType());
 
         // Single letters or digits should only be matched if there is another search token that also matches.  And
         // they should be matched as tokens, not as "string contains".  (Match the word "a" but not "cat".)
@@ -560,7 +561,11 @@ public class QuickSearchController {
         	term = stopwordRemover.remove(term);
         	if ((term != null) && (term.length() > 0)) {
         		if (term.length() > 1) {
-        			filters.add(new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT, term, Operator.OP_STRING_CONTAINS));
+        			if (!onlyExact) {
+        				filters.add(new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT, term, Operator.OP_STRING_CONTAINS));
+        			} else {
+        				filters.add(new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT, term, Operator.OP_EQUAL));
+        			}
         		} else if (term.trim().length() == 1) {
         			soloFilters.add(new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT, term, Operator.OP_CONTAINS));
         		}
