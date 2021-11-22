@@ -688,7 +688,7 @@ public class QuickSearchController {
 		for (QSFeatureResult r : allMatches) {
 			a.add((QSResult) r);
 		}
-		List<QSResult> unified = unifyMatches(searchTerms, a, bestMatches, false);
+		List<QSResult> unified = unifyMatches(searchTerms, a, bestMatches, false, FEATURE);
 		
 		List<QSFeatureResult> out = new ArrayList<QSFeatureResult>(unified.size());
 		for (QSResult u : unified) {
@@ -703,7 +703,7 @@ public class QuickSearchController {
 		for (QSVocabResult r : allMatches) {
 			a.add((QSResult) r);
 		}
-		List<QSResult> unified = unifyMatches(searchTerms, a, null, false);
+		List<QSResult> unified = unifyMatches(searchTerms, a, null, false, VOCAB_TERM);
 		
 		List<QSVocabResult> out = new ArrayList<QSVocabResult>(unified.size());
 		for (QSResult u : unified) {
@@ -723,7 +723,7 @@ public class QuickSearchController {
 		for (QSAlleleResult r : allMatches) {
 			a.add((QSResult) r);
 		}
-		List<QSResult> unified = unifyMatches(searchTerms, a, bestMatches, false);
+		List<QSResult> unified = unifyMatches(searchTerms, a, bestMatches, false, ALLELE);
 		
 		List<QSAlleleResult> out = new ArrayList<QSAlleleResult>(unified.size());
 		for (QSResult u : unified) {
@@ -738,7 +738,7 @@ public class QuickSearchController {
 		for (QSStrainResult r : allMatches) {
 			a.add((QSResult) r);
 		}
-		List<QSResult> unified = unifyMatches(searchTerms, a, null, true);
+		List<QSResult> unified = unifyMatches(searchTerms, a, null, true, STRAIN);
 		
 		List<QSStrainResult> out = new ArrayList<QSStrainResult>(unified.size());
 		for (QSResult u : unified) {
@@ -753,7 +753,7 @@ public class QuickSearchController {
 		for (QSOtherResult r : allMatches) {
 			a.add((QSResult) r);
 		}
-		List<QSResult> unified = unifyMatches(searchTerms, a, null, false);
+		List<QSResult> unified = unifyMatches(searchTerms, a, null, false, OTHER);
 		
 		List<QSOtherResult> out = new ArrayList<QSOtherResult>(unified.size());
 		for (QSResult u : unified) {
@@ -791,8 +791,12 @@ public class QuickSearchController {
 	// then return.  bestMatches can be passed in for processing batches via multiple invocations; if null, it will be
 	// instantiated herein.  Pass mustMatchDisplay = true to require matching to display term for 4-star.
 	private List<QSResult> unifyMatches (List<String> searchTerms, List<QSResult> allMatches, Map<String,QSResult> bestMatches,
-			boolean mustMatchDisplay) {
+			boolean mustMatchDisplay, int bucket) {
 
+		// pattern for pulling just the allele symbol piece out of a combined marker-allele pair (whitespace disallowed)
+		// e.g.- "abc<def>" ==> "def"
+		Pattern alleleSymbolPattern = Pattern.compile("[^<]+[<]([^>]+)[>]");
+		
 		// original search term will be the last item in the list of search terms
 		String originalSearchTerm = searchTerms.get(searchTerms.size() - 1).toLowerCase().replaceAll("\"", "").replaceAll("[*]", " ").trim();
 		String wildcardSearchTerm = searchTerms.get(searchTerms.size() - 1).toLowerCase().replaceAll("\"", "").trim();
@@ -912,15 +916,37 @@ public class QuickSearchController {
 			int nonStemmedMatchBoost = 0;
 
 			if (lowerTerm != null) {
+				boolean foundOne = false;
+				
 				// Search terms can be exact (4-star), contain all terms (3-star), or contain some terms (2-star).
 				// Note that 4-star matches now must be through comparison to the display terms.
 				if (!limitedType && (lowerDisplayTerm.equals(originalSearchTerm) || lowerDisplayTerm.equals(hyphenatedSearchTerm))) {
 					match.setStars("****");
+					foundOne = true;
+					
 				} else if (!limitedType && hasWildcard && WildcardHelper.matches(lowerDisplayTerm, wildcardSearchTerm)) {
 					match.setStars("****");
+					foundOne = true;
+					
 				} else if (limitedType && hasWildcard && WildcardHelper.matches(lowerDisplayTerm, wildcardSearchTerm)) {
 					match.setStars("***");
-				} else {
+					foundOne = true;
+					
+				} else if (bucket == ALLELE) {
+					// For allele symbols (and synonyms), we also want to recognize as 4-stars matches to just the allele piece
+					// of the combined marker<allele> symbol.  But we want to skip any that are from multi-word strings, like:
+					// "suppressor of yeast G<a> deletion" -- because "a" is in the midst of a multi-word string, this cannot
+					// be an exact match, even though the allele symbol piece matches exactly.
+					Matcher mat = alleleSymbolPattern.matcher(lowerDisplayTerm);
+					if (mat.find()) {
+						if (originalSearchTerm.equalsIgnoreCase(mat.group(1))) {
+							match.setStars("****");
+							foundOne = true;
+						}
+					}
+				}
+
+				if (!foundOne) {
 					int matchCount = 0;
 
 					// check non-numeric search terms
