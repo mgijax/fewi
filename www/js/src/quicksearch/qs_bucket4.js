@@ -15,7 +15,7 @@ function b4Show(data) {
 	var tbl = '';
 	if (data.rows.length > 0) {
 		tbl = '<TABLE ID="b4Table">';
-		tbl = tbl + '<TR><TH>Score</TH><TH class="termCol">Name</TH><TH class="dataCol">References</TH><TH class="bestMatchCol">Best Match</TH></TR>';
+		tbl = tbl + '<TR><TH>Score' + qsScoreHelp() + '</TH><TH class="termCol">Name</TH><TH class="dataCol">References</TH><TH class="bestMatchCol">Best Match</TH></TR>';
 
 		toShow = Math.min(100, data.rows.length);
 		for (var i = 0; i < toShow; i++) {

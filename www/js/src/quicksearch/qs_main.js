@@ -275,3 +275,15 @@ var qsFormatStars = function(s) {
 	}
 	return t;
 }
+
+// returns a string with HTML for a help icon and popup for the Score column
+var qsScoreHelp = function() {
+	var s = '<span class="helpCursor" '
+		+ 'onmouseover="return overlib(\'<div class=detailRowType>'
+		+ qsFormatStars('****') + ' exact matches<br/>'
+		+ qsFormatStars('***') + ' all words in the search string appear (even if out of order)<br/>'
+		+ qsFormatStars('**') + ' at least one word from the search string appears</div>\', '
+		+ 'STICKY, CAPTION, \'Score\', HAUTO, BELOW, WIDTH, 375, DELAY, 600, CLOSECLICK, CLOSETEXT, \'Close X\')" '
+		+ 'onmouseout="nd();"> <img src="/webshare/images/blue_info_icon.gif" style="height:11px" border="0"> </span>';
+	return s;
+}

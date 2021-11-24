@@ -15,7 +15,7 @@ function b1Show(data) {
 	var toShow = b1PageSize;
 	if (data.rows.length > 0) {
 		tbl = '<TABLE ID="b1Table">';
-		tbl = tbl + '<TR><TH>Score</TH><TH>Type</TH><TH>Symbol</TH><TH>Name</TH><TH>Chr</TH><TH>Location (Genome Build)</TH><TH>Str</TH><TH>Best Match</TH></TR>';
+		tbl = tbl + '<TR><TH>Score ' + qsScoreHelp() + '</TH><TH>Type</TH><TH>Symbol</TH><TH>Name</TH><TH>Chr</TH><TH>Location (Genome Build)</TH><TH>Str</TH><TH>Best Match</TH></TR>';
 
 		toShow = Math.min(100, data.rows.length);
 		for (var i = 0; i < toShow; i++) {
