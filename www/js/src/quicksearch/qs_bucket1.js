@@ -20,7 +20,7 @@ function b1Show(data) {
 		toShow = Math.min(100, data.rows.length);
 		for (var i = 0; i < toShow; i++) {
 			var item = data.rows[i];
-			tbl = tbl + '<TR><TD>' + item.stars.replace(/[*]/g, "&#9733;") + '</TD>';
+			tbl = tbl + '<TR><TD>' + qsFormatStars(item.stars) + '</TD>';
 			tbl = tbl + '<TD class="small">' + item.featureType + '</TD>';
 
 			var symbol = qsSuperscript(item.symbol);

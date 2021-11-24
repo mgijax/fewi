@@ -20,12 +20,7 @@ function b2Show(data) {
 		toShow = Math.min(100, data.rows.length);
 		for (var i = 0; i < toShow; i++) {
 			var item = data.rows[i];
-			tbl = tbl + '<TR>';
-			if (item.stars === null) {
-				tbl = tbl + '<TD>TBD</TD>';
-			} else {
-				tbl = tbl + '<TD>' + item.stars.replace(/[*]/g, "&#9733;") + '</TD>';
-			}
+			tbl = tbl + '<TR><TD>' + qsFormatStars(item.stars) + '</TD>';
 			if (item.detailUri === null) {
 				tbl = tbl + '<TD><span class="termType">' + item.vocabName + '</span>: ' + item.term + '</TD>';
 			} else {

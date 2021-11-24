@@ -256,3 +256,22 @@ var qsHideShowRemoveFilterButtons = function(bucket) {
 		}
 	}
 }
+
+/* switch from a series of asterisks representing filled-in stars to the full string for display
+ */
+var qsFormatStars = function(s) {
+	var count = 0;
+	var t = '';
+	
+	// Convert any existing asterisks to be filled-in stars.
+	if (s != null) {
+		count = s.length;
+		t = s.replace(/[*]/g, "&#9733;");
+	}
+
+	// Pad the string up to length 4 with hollow stars.
+	for (var i = 4; i > count; i--) {
+		t = t + '&#9734;';
+	}
+	return t;
+}
