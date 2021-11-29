@@ -543,7 +543,8 @@ public class QuickSearchController {
 	private Filter createWildcardFilter(QuickSearchQueryForm qf, int bucket) {
 		// Allele symbols work better with no angle brackets, so remove them.
        	return new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT,
-       		qf.getQuery().replaceAll("<", "").replaceAll(">",  "").replaceAll("\\\\[*]", "*").replaceAll("[*]+", "*"),
+       		qf.getQuery().replaceAll("<", "").replaceAll(">",  "").replaceAll("\\\\[*]", "*").replaceAll("[*]+", "*")
+       			.replaceAll("[(]", "\\\\(").replaceAll("[)]", "\\\\)"),
        		Operator.OP_EQUAL_WILDCARD_ALLOWED);
 	}
 
