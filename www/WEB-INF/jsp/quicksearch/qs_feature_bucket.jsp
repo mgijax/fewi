@@ -20,5 +20,10 @@
        <img src="${configBean.WEBSHARE_URL}images/blue_info_icon.gif" border="0">
   </span>
   <div id="featurePaginator" class="featurePaginator"></div>
+  <div id="featureDownloads" class="featureDownloads">
+    <div class="export">Export:</div>
+    <a id="fExcelDownload" href="${configBean.FEWI_URL}/quicksearch/features/report.xlsx?queryType=${queryType}&query=${query}" title="Excel File"><span class="material-icons">table_view</span></a>
+    <a id="fTextDownload" href="${configBean.FEWI_URL}/quicksearch/features/report.txt?queryType=${queryType}&query=${query}" title="Text File"><span class="material-icons">text_snippet</span></a>
+  </div>
 </div>
 <div id="b1Results"></div>

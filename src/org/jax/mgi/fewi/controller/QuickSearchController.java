@@ -100,6 +100,8 @@ public class QuickSearchController {
 	private static String BY_INEXACT_MATCH = "inexact_match";	// allows partial matches after stopword removal
 	private static String BY_STEMMED_MATCH = "stemmed match";	// matches after stemming and stopword removal
 	private static String BY_ANY = "any match";	
+
+	private static int downloadRowMax = 250000;			// maximum number of rows to allow in download file
 	
 	private static Set<String> validFacetFields;
 	static {
@@ -173,7 +175,6 @@ public class QuickSearchController {
 	@Value("${solr.factetNumberDefault}")
 	private Integer facetLimit; 			// max values to display for a single facet
 
-    
     //--------------------------------------------------------------------//
     // public methods
     //--------------------------------------------------------------------//
@@ -250,9 +251,31 @@ public class QuickSearchController {
 
         logger.debug("->getFeatureBucket started (seeking results " + page.getStartIndex() + " to " + (page.getStartIndex() + page.getResults()) + ")");
         
+        List<QSFeatureResult> out = getFeatureResults(request, queryForm);
+        
         int startIndex = page.getStartIndex();
         int endIndex = startIndex + page.getResults();
         
+        List<QSFeatureResultWrapper> wrapped = new ArrayList<QSFeatureResultWrapper>();
+        if (out.size() >= startIndex) {
+        	logger.debug(" - extracting features " + startIndex + " to " + Math.min(out.size(), endIndex));
+        	wrapped = wrapFeatureResults(out.subList(startIndex, Math.min(out.size(), endIndex)));
+        } else { 
+        	logger.debug(" - not extracting,just returning empty list");
+        }
+        
+        JsonSummaryResponse<QSFeatureResultWrapper> response = new JsonSummaryResponse<QSFeatureResultWrapper>();
+        response.setSummaryRows(wrapped);
+        response.setTotalCount(out.size());
+        logger.debug("Returning " + wrapped.size() + " feature matches");
+
+        return response;
+    }
+
+	/* Retrieve the feature results from Solr, managing the featureResult cache too. (Retrieve from cache where
+	 * possible.  If this query is not already cached, retrieve from Solr and then add them to cache.)
+	 */
+	private List<QSFeatureResult> getFeatureResults(HttpServletRequest request, QuickSearchQueryForm queryForm) {
         String cacheKey = withoutPagination(request.getQueryString());
         List<QSFeatureResult> out = featureResultCache.get(cacheKey);
         
@@ -344,23 +367,9 @@ public class QuickSearchController {
         	featureResultCache.put(cacheKey, out);
         	logger.debug(" - added " + out.size() + " feature results to cache");
        	}
-        
-        List<QSFeatureResultWrapper> wrapped = new ArrayList<QSFeatureResultWrapper>();
-        if (out.size() >= startIndex) {
-        	logger.debug(" - extracting features " + startIndex + " to " + Math.min(out.size(), endIndex));
-        	wrapped = wrapFeatureResults(out.subList(startIndex, Math.min(out.size(), endIndex)));
-        } else { 
-        	logger.debug(" - not extracting,just returning empty list");
-        }
-        
-        JsonSummaryResponse<QSFeatureResultWrapper> response = new JsonSummaryResponse<QSFeatureResultWrapper>();
-        response.setSummaryRows(wrapped);
-        response.setTotalCount(out.size());
-        logger.debug("Returning " + wrapped.size() + " feature matches");
-
-        return response;
-    }
-
+        return out;
+	}
+	
 	/* Take a list of QSFeatureResult objects (that are missing crucial information for display), look up the remaining
 	 * data from a memory cache (retrieving additional data as needed), and wrap them up in objects for display.
 	 */
@@ -1767,6 +1776,28 @@ public class QuickSearchController {
         return response;
     }
 
+    //-------------------------//
+    // QS Feature Bucket Results - as file download [Excel (xls) or tab-delimited (txt) -- specified by extension]
+    //-------------------------//
+	@RequestMapping("/features/report*")
+	public ModelAndView featureSummaryExport(HttpServletRequest request, @ModelAttribute QuickSearchQueryForm query) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
+		logger.debug("Generating feature bucket report");
+
+        List<QSFeatureResult> out = getFeatureResults(request, query);
+        int endIndex = Math.min(downloadRowMax, out.size());			// Stop if we happen to return more rows than our download limit.
+        
+        List<QSFeatureResultWrapper> wrapped = wrapFeatureResults(out.subList(0, endIndex));
+        logger.debug("Returning " + wrapped.size() + " feature matches");
+
+		ModelAndView mav = new ModelAndView("qsFeatureSummaryReport");
+		mav.addObject("features", wrapped);
+		return mav;
+    }
+		
 	// determine if the search string has at least one wildcard and is likely a symbol (thus needing special
 	// handling)
 	private boolean isInexactSymbol (String query, int bucket) {

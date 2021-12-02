@@ -159,4 +159,24 @@
 	color: black;
 	font-weight: normal;
 }
+#featureDownloads {
+	display: inline-block;
+	margin-left: 250px;
+	font-size: 12px;
+}
+#featureDownloads a {
+	font-size: 12px;
+	font-family: Arial,Helvetica;
+	color: #000001;
+	font-weight: normal;
+	font-size: 20px;
+}
+#featureDownloads .export {
+	display: inline;
+	font-family: Verdana,Arial,sans-serif;
+	font-size: 1.1em;
+}
 </style>
+
+/* from https://developers.google.com/fonts/docs/material_icons */
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">

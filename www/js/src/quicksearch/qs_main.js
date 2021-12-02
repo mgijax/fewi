@@ -69,12 +69,15 @@ var qsProcessFilters = function() {
 	
 	// Now need to identify which tab(s) have changed filters, based on comparing parameter values to the last time
 	// this method was called.  For each, we will need to update the paginator, data, formatting of the tab itself,
-	// and the hidden/shown status of the DIV with the remove filter buttons.
+	// and the hidden/shown status of the DIV with the remove filter buttons.  Also update the links for any
+	// download buttons on the affected filter.
 	switch (qsTabWithChangedFilters()) {
 		case 'F' :
 			pgClearPaginator('featurePaginator');
 			b1Fetch();
 			qsHideShowRemoveFilterButtons('feature');
+			$('#fTextDownload')[0].href = fewiurl + 'quicksearch/features/report.txt?' + getQuerystring();
+			$('#fExcelDownload')[0].href = fewiurl + 'quicksearch/features/report.xlsx?' + getQuerystring();
 			break;
 		case 'A' :
 			pgClearPaginator('allelePaginator');
