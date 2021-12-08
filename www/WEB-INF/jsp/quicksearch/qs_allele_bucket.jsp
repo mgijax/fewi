@@ -17,5 +17,10 @@
        <img src="${configBean.WEBSHARE_URL}images/blue_info_icon.gif" border="0">
   </span>
   <div id="allelePaginator" class="allelePaginator"></div>
+  <div id="alleleDownloads" class="alleleDownloads">
+    <div class="export">Export:</div>
+    <a id="aExcelDownload" href="${configBean.FEWI_URL}/quicksearch/alleles/report.xlsx?queryType=${queryType}&query=${query}" title="Excel File"><span class="material-icons">table_view</span></a>
+    <a id="aTextDownload" href="${configBean.FEWI_URL}/quicksearch/alleles/report.txt?queryType=${queryType}&query=${query}" title="Text File"><span class="material-icons">text_snippet</span></a>
+  </div>
 </div>
 <div id="b5Results"></div>

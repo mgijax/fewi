@@ -1576,9 +1576,31 @@ public class QuickSearchController {
 
         logger.debug("->getAlleleBucket started (seeking results " + page.getStartIndex() + " to " + (page.getStartIndex() + page.getResults()) + ")");
 
+        List<QSAlleleResult> out = getAlleleResults(request, queryForm);
+        
         int startIndex = page.getStartIndex();
         int endIndex = startIndex + page.getResults();
         
+        List<QSAlleleResultWrapper> wrapped = new ArrayList<QSAlleleResultWrapper>();
+        if (out.size() >= startIndex) {
+        	logger.debug(" - extracting results " + startIndex + " to " + Math.min(out.size(), endIndex));
+        	wrapped = wrapAlleleResults(out.subList(startIndex, Math.min(out.size(), endIndex)));
+        } else { 
+        	logger.debug(" - not extracting,just returning empty term list");
+        }
+        
+        JsonSummaryResponse<QSAlleleResultWrapper> response = new JsonSummaryResponse<QSAlleleResultWrapper>();
+        response.setSummaryRows(wrapped);
+        response.setTotalCount(out.size());
+        logger.debug("Returning " + wrapped.size() + " term matches");
+
+        return response;
+	}       
+        
+	/* Retrieve the allele results from Solr, managing the alleleResult cache too. (Retrieve from cache where
+	 * possible.  If this query is not already cached, retrieve from Solr and then add them to cache.)
+	 */
+     private List<QSAlleleResult> getAlleleResults(HttpServletRequest request, QuickSearchQueryForm queryForm) {   
         String cacheKey = withoutPagination(request.getQueryString());
         List<QSAlleleResult> out = alleleResultCache.get(cacheKey);
         boolean isCoordSearch = false;
@@ -1676,20 +1698,7 @@ public class QuickSearchController {
         	logger.debug(" - added " + out.size() + " allele results to cache");
         }
         
-        List<QSAlleleResultWrapper> wrapped = new ArrayList<QSAlleleResultWrapper>();
-        if (out.size() >= startIndex) {
-        	logger.debug(" - extracting results " + startIndex + " to " + Math.min(out.size(), endIndex));
-        	wrapped = wrapAlleleResults(out.subList(startIndex, Math.min(out.size(), endIndex)));
-        } else { 
-        	logger.debug(" - not extracting,just returning empty term list");
-        }
-        
-        JsonSummaryResponse<QSAlleleResultWrapper> response = new JsonSummaryResponse<QSAlleleResultWrapper>();
-        response.setSummaryRows(wrapped);
-        response.setTotalCount(out.size());
-        logger.debug("Returning " + wrapped.size() + " term matches");
-
-        return response;
+        return out;
     }
 
     //-------------------------//
@@ -1795,6 +1804,25 @@ public class QuickSearchController {
 
 		ModelAndView mav = new ModelAndView("qsFeatureSummaryReport");
 		mav.addObject("features", wrapped);
+		return mav;
+    }
+
+	@RequestMapping("/alleles/report*")
+	public ModelAndView alleleSummaryExport(HttpServletRequest request, @ModelAttribute QuickSearchQueryForm query) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
+		logger.debug("Generating allele bucket report");
+
+        List<QSAlleleResult> out = getAlleleResults(request, query);
+        int endIndex = Math.min(downloadRowMax, out.size());			// Stop if we happen to return more rows than our download limit.
+        
+        List<QSAlleleResultWrapper> wrapped = wrapAlleleResults(out.subList(0, endIndex));
+        logger.debug("Returning " + wrapped.size() + " allele matches");
+
+		ModelAndView mav = new ModelAndView("qsAlleleSummaryReport");
+		mav.addObject("alleles", wrapped);
 		return mav;
     }
 		
