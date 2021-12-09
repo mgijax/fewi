@@ -1403,9 +1403,31 @@ public class QuickSearchController {
 
         logger.debug("->getVocabBucket started (seeking results " + page.getStartIndex() + " to " + (page.getStartIndex() + page.getResults()) + ")");
 
+        List<QSVocabResult> out = getVocabResults(request, queryForm);
+
         int startIndex = page.getStartIndex();
         int endIndex = startIndex + page.getResults();
         
+        List<QSVocabResultWrapper> wrapped = new ArrayList<QSVocabResultWrapper>();
+        if (out.size() >= startIndex) {
+        	logger.debug(" - extracting vocab terms " + startIndex + " to " + Math.min(out.size(), endIndex));
+        	wrapped = wrapVocabResults(out.subList(startIndex, Math.min(out.size(), endIndex)));
+        } else { 
+        	logger.debug(" - not extracting,just returning empty list");
+        }
+        
+        JsonSummaryResponse<QSVocabResultWrapper> response = new JsonSummaryResponse<QSVocabResultWrapper>();
+        response.setSummaryRows(wrapped);
+        response.setTotalCount(out.size());
+        logger.debug("Returning " + wrapped.size() + " term matches");
+
+        return response;
+    }
+
+	/* Retrieve the vocab results from Solr, managing the vocabResult cache too. (Retrieve from cache where
+	 * possible.  If this query is not already cached, retrieve from Solr and then add them to cache.)
+	 */
+	private List<QSVocabResult> getVocabResults(HttpServletRequest request, QuickSearchQueryForm queryForm) {
         String cacheKey = withoutPagination(request.getQueryString());
         List<QSVocabResult> out = vocabResultCache.get(cacheKey);
         
@@ -1452,42 +1474,34 @@ public class QuickSearchController {
         	vocabResultCache.put(cacheKey, out);
         	logger.debug(" - added " + out.size() + " vocab results to cache");
         }
+        return out;
+	}
         
+	/* prepare the given list of QSVocabResults for return as JSON
+	 */
+	private List<QSVocabResultWrapper> wrapVocabResults(List<QSVocabResult> results) {
         List<QSVocabResultWrapper> wrapped = new ArrayList<QSVocabResultWrapper>();
-        if (out.size() >= startIndex) {
-        	logger.debug(" - extracting results " + startIndex + " to " + Math.min(out.size(), endIndex));
-        	for (QSVocabResult r : out.subList(startIndex, Math.min(out.size(), endIndex))) {
-
-        		// For EMAPA and EMAPS terms, we need to retrieve and remember annotation counts.
-        		if ("<<gxdCount>>".equals(r.getAnnotationText())) {
-        			Integer resultCount = gxdController.getResultCountForID(r.getPrimaryID());
-        			logger.debug("count for " + r.getPrimaryID() + ": " + resultCount);
-        			if (resultCount > 0) {
-        				String s = "";
-        				if (resultCount > 1) {
-        					s = "s";
-        				}
-        				r.setAnnotationCount(new Long(resultCount));
-        				r.setAnnotationText(resultCount + " gene expression result" + s);
-        			} else {
-        				r.setAnnotationCount(0L);
-        				r.setAnnotationText(null);
+        for (QSVocabResult r : results) {
+        	// For EMAPA and EMAPS terms, we need to retrieve and remember annotation counts.
+        	if ("<<gxdCount>>".equals(r.getAnnotationText())) {
+        		Integer resultCount = gxdController.getResultCountForID(r.getPrimaryID());
+        		logger.debug("count for " + r.getPrimaryID() + ": " + resultCount);
+        		if (resultCount > 0) {
+        			String s = "";
+        			if (resultCount > 1) {
+        				s = "s";
         			}
+        			r.setAnnotationCount(new Long(resultCount));
+        			r.setAnnotationText(resultCount + " gene expression result" + s);
+        		} else {
+        			r.setAnnotationCount(0L);
+        			r.setAnnotationText(null);
         		}
-
-        		wrapped.add(new QSVocabResultWrapper(r));
         	}
-        } else { 
-        	logger.debug(" - not extracting,just returning empty term list");
+        	wrapped.add(new QSVocabResultWrapper(r));
         }
-        
-        JsonSummaryResponse<QSVocabResultWrapper> response = new JsonSummaryResponse<QSVocabResultWrapper>();
-        response.setSummaryRows(wrapped);
-        response.setTotalCount(out.size());
-        logger.debug("Returning " + wrapped.size() + " term matches");
-
-        return response;
-    }
+        return wrapped;
+	}
 
     //-------------------------//
     // QS Results - bucket 3 JSON (strains)
@@ -1823,6 +1837,25 @@ public class QuickSearchController {
 
 		ModelAndView mav = new ModelAndView("qsAlleleSummaryReport");
 		mav.addObject("alleles", wrapped);
+		return mav;
+    }
+		
+	@RequestMapping("/vocab/report*")
+	public ModelAndView vocabSummaryExport(HttpServletRequest request, @ModelAttribute QuickSearchQueryForm query) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
+		logger.debug("Generating vocab bucket report");
+
+        List<QSVocabResult> out = getVocabResults(request, query);
+        int endIndex = Math.min(downloadRowMax, out.size());			// Stop if we happen to return more rows than our download limit.
+        
+        List<QSVocabResultWrapper> wrapped = wrapVocabResults(out.subList(0, endIndex));
+        logger.debug("Returning " + wrapped.size() + " vocab matches");
+
+		ModelAndView mav = new ModelAndView("qsVocabSummaryReport");
+		mav.addObject("terms", wrapped);
 		return mav;
     }
 		

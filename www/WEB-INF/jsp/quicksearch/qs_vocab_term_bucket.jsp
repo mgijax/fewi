@@ -19,5 +19,10 @@
     <img src="${configBean.WEBSHARE_URL}images/blue_info_icon.gif" border="0">
   </span>
   <div id="vocabPaginator" class="vocabPaginator"></div>
+  <div id="vocabDownloads" class="vocabDownloads">
+    <div class="export">Export:</div>
+    <a id="vExcelDownload" href="${configBean.FEWI_URL}/quicksearch/vocab/report.xlsx?queryType=${queryType}&query=${query}" title="Excel File"><span class="material-icons">table_view</span></a>
+    <a id="vTextDownload" href="${configBean.FEWI_URL}/quicksearch/vocab/report.txt?queryType=${queryType}&query=${query}" title="Text File"><span class="material-icons">text_snippet</span></a>
+  </div>
 </div>
 <div id="b2Results"></div>

@@ -90,6 +90,8 @@ var qsProcessFilters = function() {
 			pgClearPaginator('vocabPaginator');
 			b2Fetch();
 			qsHideShowRemoveFilterButtons('vocabTerm');
+			$('#vTextDownload')[0].href = fewiurl + 'quicksearch/vocab/report.txt?' + getQuerystring();
+			$('#vExcelDownload')[0].href = fewiurl + 'quicksearch/vocab/report.xlsx?' + getQuerystring();
 			break;
 		case 'S' :
 			pgClearPaginator('strainPaginator');

@@ -18,4 +18,5 @@ public class QSVocabResultWrapper {
 	public String getAnnotationText() { return result.getAnnotationText(); }
 	public String getBestMatchText() { return result.getSearchTermDisplay(); }
 	public String getBestMatchType() { return result.getSearchTermType(); }
+	public String getPrimaryID() { return result.getPrimaryID(); }
 }
