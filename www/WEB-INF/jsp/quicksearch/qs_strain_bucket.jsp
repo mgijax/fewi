@@ -16,5 +16,10 @@
     <img src="${configBean.WEBSHARE_URL}images/blue_info_icon.gif" border="0">
   </span>
   <div id="strainPaginator" class="strainPaginator"></div>
+  <div id="strainDownloads" class="strainDownloads">
+    <div class="export">Export:</div>
+    <a id="sExcelDownload" href="${configBean.FEWI_URL}/quicksearch/strains/report.xlsx?queryType=${queryType}&query=${query}" title="Excel File"><span class="material-icons">table_view</span></a>
+    <a id="sTextDownload" href="${configBean.FEWI_URL}/quicksearch/strains/report.txt?queryType=${queryType}&query=${query}" title="Text File"><span class="material-icons">text_snippet</span></a>
+  </div>
 </div>
 <div id="b4Results"></div>

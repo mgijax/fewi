@@ -97,6 +97,8 @@ var qsProcessFilters = function() {
 			pgClearPaginator('strainPaginator');
 			b4Fetch();
 			qsHideShowRemoveFilterButtons('strain');
+			$('#sTextDownload')[0].href = fewiurl + 'quicksearch/strains/report.txt?' + getQuerystring();
+			$('#sExcelDownload')[0].href = fewiurl + 'quicksearch/strains/report.xlsx?' + getQuerystring();
 			break;
 		case 'O' :
 			pgClearPaginator('otherIdPaginator');
