@@ -104,6 +104,8 @@ var qsProcessFilters = function() {
 			pgClearPaginator('otherIdPaginator');
 			b3Fetch();
 			qsHideShowRemoveFilterButtons('otherId');
+			$('#oTextDownload')[0].href = fewiurl + 'quicksearch/otherIDs/report.txt?' + getQuerystring();
+			$('#oExcelDownload')[0].href = fewiurl + 'quicksearch/otherIDs/report.xlsx?' + getQuerystring();
 			break;
 		default:
 			return;

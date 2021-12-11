@@ -14,5 +14,10 @@
     <img src="${configBean.WEBSHARE_URL}images/blue_info_icon.gif" border="0">
   </span>
   <div id="otherIdPaginator" class="otherIdPaginator"></div>
+  <div id="otherIDDownloads" class="otherIDDownloads">
+    <div class="export">Export:</div>
+    <a id="oExcelDownload" href="${configBean.FEWI_URL}/quicksearch/otherIDs/report.xlsx?queryType=${queryType}&query=${query}" title="Excel File"><span class="material-icons">table_view</span></a>
+    <a id="oTextDownload" href="${configBean.FEWI_URL}/quicksearch/otherIDs/report.txt?queryType=${queryType}&query=${query}" title="Text File"><span class="material-icons">text_snippet</span></a>
+  </div>
 </div>
 <div id="b3Results"></div>

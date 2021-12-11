@@ -16,4 +16,5 @@ public class QSOtherResultWrapper {
 	public String getObjectSubtype() { return result.getObjectSubtype(); }
 	public String getBestMatchType() { return result.getSearchTermType(); }
 	public String getBestMatchText() { return result.getSearchTermDisplay(); }
+	public String getPrimaryID() { return result.getPrimaryID(); }
 }

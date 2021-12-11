@@ -1739,9 +1739,31 @@ public class QuickSearchController {
 
         logger.debug("->getOtherBucket started (seeking results " + page.getStartIndex() + " to " + (page.getStartIndex() + page.getResults()) + ")");
 
+        List<QSOtherResult> out = getOtherResults(request, queryForm);
+        
         int startIndex = page.getStartIndex();
         int endIndex = startIndex + page.getResults();
         
+        List<QSOtherResultWrapper> wrapped = new ArrayList<QSOtherResultWrapper>();
+        if (out.size() >= startIndex) {
+        	logger.debug(" - extracting results " + startIndex + " to " + Math.min(out.size(), endIndex));
+       		wrapped = wrapOtherResults(out.subList(startIndex, Math.min(out.size(), endIndex)));
+        } else { 
+        	logger.debug(" - not extracting,just returning empty term list");
+        }
+        
+        JsonSummaryResponse<QSOtherResultWrapper> response = new JsonSummaryResponse<QSOtherResultWrapper>();
+        response.setSummaryRows(wrapped);
+        response.setTotalCount(out.size());
+        logger.debug("Returning " + wrapped.size() + " term matches");
+
+        return response;
+	}
+	
+	/* Retrieve the other ID results from Solr, managing the otherResult cache too. (Retrieve from cache where
+	 * possible.  If this query is not already cached, retrieve from Solr and then add them to cache.)
+	 */
+	private List<QSOtherResult> getOtherResults(HttpServletRequest request, QuickSearchQueryForm queryForm) {
         String cacheKey = withoutPagination(request.getQueryString());
         List<QSOtherResult> out = otherResultCache.get(cacheKey);
         
@@ -1795,25 +1817,18 @@ public class QuickSearchController {
         	otherResultCache.put(cacheKey, out);
         	logger.debug(" - added " + out.size() + " other ID results to cache");
         }
-        
-        List<QSOtherResultWrapper> wrapped = new ArrayList<QSOtherResultWrapper>();
-        if (out.size() >= startIndex) {
-        	logger.debug(" - extracting results " + startIndex + " to " + Math.min(out.size(), endIndex));
-        	for (QSOtherResult r : out.subList(startIndex, Math.min(out.size(), endIndex))) {
-        		wrapped.add(new QSOtherResultWrapper(r));
-        	}
-        } else { 
-        	logger.debug(" - not extracting,just returning empty term list");
-        }
-        
-        JsonSummaryResponse<QSOtherResultWrapper> response = new JsonSummaryResponse<QSOtherResultWrapper>();
-        response.setSummaryRows(wrapped);
-        response.setTotalCount(out.size());
-        logger.debug("Returning " + wrapped.size() + " term matches");
-
-        return response;
+        return out;
     }
 
+	// prepare the given list of Other ID results for return as JSON
+	private List<QSOtherResultWrapper> wrapOtherResults (List<QSOtherResult> results) {
+        List<QSOtherResultWrapper> wrapped = new ArrayList<QSOtherResultWrapper>();
+       	for (QSOtherResult r : results) {
+       		wrapped.add(new QSOtherResultWrapper(r));
+       	}
+       	return wrapped;
+	}
+	
     //-------------------------//
     // QS Feature Bucket Results - as file download [Excel (xls) or tab-delimited (txt) -- specified by extension]
     //-------------------------//
@@ -1890,6 +1905,25 @@ public class QuickSearchController {
 
 		ModelAndView mav = new ModelAndView("qsStrainSummaryReport");
 		mav.addObject("strains", wrapped);
+		return mav;
+    }
+
+	@RequestMapping("/otherIDs/report*")
+	public ModelAndView otherIDSummaryExport(HttpServletRequest request, @ModelAttribute QuickSearchQueryForm query) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
+		logger.debug("Generating other ID bucket report");
+
+        List<QSOtherResult> out = getOtherResults(request, query);
+        int endIndex = Math.min(downloadRowMax, out.size());			// Stop if we happen to return more rows than our download limit.
+        
+        List<QSOtherResultWrapper> wrapped = wrapOtherResults(out.subList(0, endIndex));
+        logger.debug("Returning " + wrapped.size() + " other ID matches");
+
+		ModelAndView mav = new ModelAndView("qsOtherIDSummaryReport");
+		mav.addObject("otherIDs", wrapped);
 		return mav;
     }
 		

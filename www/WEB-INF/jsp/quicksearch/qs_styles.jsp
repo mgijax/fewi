@@ -227,6 +227,23 @@
 	font-family: Verdana,Arial,sans-serif;
 	font-size: 1.1em;
 }
+#otherIDDownloads {
+	display: inline-block;
+	margin-left: 250px;
+	font-size: 12px;
+}
+#otherIDDownloads a {
+	font-size: 12px;
+	font-family: Arial,Helvetica;
+	color: #000001;
+	font-weight: normal;
+	font-size: 20px;
+}
+#otherIDDownloads .export {
+	display: inline;
+	font-family: Verdana,Arial,sans-serif;
+	font-size: 1.1em;
+}
 </style>
 
 /* from https://developers.google.com/fonts/docs/material_icons */
