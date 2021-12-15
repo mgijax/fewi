@@ -36,7 +36,7 @@
 #b1Table th { font-weight: bold; padding: 3px; }
 #b1Table td { padding: 3px; }
 #b1Table tr:nth-child(odd) { background-color: #f2f2f2; }
-#b1Table tr:first-child { background-color: #dfefff; position: sticky; top:0px; }
+#b1Table tr:first-child { background-color: #dfefff; position: sticky; top:0px; z-index:999; }
 #b1Table a { text-decoration: none; color: blue; }
 #b1Header a { text-decoration: none; color: blue; }
 
@@ -44,7 +44,7 @@
 #b2Table th { font-weight: bold; padding: 3px; }
 #b2Table td { padding: 3px; }
 #b2Table tr:nth-child(odd) { background-color: #f2f2f2; }
-#b2Table tr:first-child { background-color: #dfefff; position: sticky; top:0px; }
+#b2Table tr:first-child { background-color: #dfefff; position: sticky; top:0px; z-index:999 }
 #b2Table a { text-decoration: none; color: blue; }
 #b2Header a { text-decoration: none; color: blue; }
 
@@ -52,7 +52,7 @@
 #b3Table th { font-weight: bold; padding: 3px; }
 #b3Table td { padding: 3px; }
 #b3Table tr:nth-child(odd) { background-color: #f2f2f2; }
-#b3Table tr:first-child { background-color: #dfefff; position: sticky; top:0px; }
+#b3Table tr:first-child { background-color: #dfefff; position: sticky; top:0px; z-index:999 }
 #b3Table a { text-decoration: none; color: blue; }
 #b3Header a { text-decoration: none; color: blue; }
 
@@ -60,7 +60,7 @@
 #b4Table th { font-weight: bold; padding: 3px; }
 #b4Table td { padding: 3px; }
 #b4Table tr:nth-child(odd) { background-color: #f2f2f2; }
-#b4Table tr:first-child { background-color: #dfefff; position: sticky; top:0px; }
+#b4Table tr:first-child { background-color: #dfefff; position: sticky; top:0px; z-index:999 }
 #b4Table a { text-decoration: none; color: blue; }
 #b4Header a { text-decoration: none; color: blue; }
 
@@ -69,7 +69,7 @@
 #b5Table td { padding: 3px; }
 #b5Table td sup { padding: 3px; line-height: 1.9em; }
 #b5Table tr:nth-child(odd) { background-color: #f2f2f2; }
-#b5Table tr:first-child { background-color: #dfefff; position: sticky; top:0px; }
+#b5Table tr:first-child { background-color: #dfefff; position: sticky; top:0px; z-index:999 }
 #b5Table a { text-decoration: none; color: blue; }
 #b5Header a { text-decoration: none; color: blue; }
 
