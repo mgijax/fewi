@@ -232,6 +232,11 @@ function toggleSpecimenInfo(idToHide, idToShow) {
         <table style='' id='assayResultTable'>
           <tr BGCOLOR="#E0E0E0">
           <th style='padding:4px;' align=left>Structure</th>
+          <c:set var="ctLabel" value="Cell Type"/>
+          <c:if test="${not assaySpecimen.hasCellTypeData}">				<!-- include line break if no data -->
+            <c:set var="ctLabel" value="Cell<br/>Type"/>
+          </c:if>
+ 	      <th style='padding:4px;' align=left>${ctLabel}</th>
           <th style='padding:4px;' align=left>Level</th>
           <th style='padding:4px;' align=left>Pattern</th>
           <th style='padding:4px; max-width:20em;' align=left>Image</th>
@@ -244,6 +249,9 @@ function toggleSpecimenInfo(idToHide, idToShow) {
             <td style=''> 
               <a href="${configBean.FEWI_URL}vocab/gxd/anatomy/${specimenResult.structureTerm.primaryId}">${specimenResult.structure}</a>
             </td>
+           	<td style=''>
+           	  ${specimenResult.cellTypeString}
+           	</td>
             <td style=''>
               ${specimenResult.level}
             </td>
