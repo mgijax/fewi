@@ -158,7 +158,17 @@ public class RecomSpecificitySummaryRow {
         return "<span class='summaryDataCell'>" + alleleSystemAssayResult.getSex() + "</span>";
     }
 
-    // specimem note
+    // cell types
+    public String getCellTypes() {
+        if (alleleSystemAssayResult.getCellTypes() != null) {
+          return "<span class='summaryDataCell'>" + alleleSystemAssayResult.getCellTypes() + "</span>";
+	    }
+	    else {
+	    	return "";
+		}
+    }
+
+    // specimen note
     public String getSpecimenNote() {
         if (alleleSystemAssayResult.getSpecimenNote() != null) {
           return "<span class='summaryDataCell'>" + alleleSystemAssayResult.getSpecimenNote() + "</span>";
