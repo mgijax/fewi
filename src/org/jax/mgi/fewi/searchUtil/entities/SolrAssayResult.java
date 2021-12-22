@@ -18,6 +18,7 @@ public class SolrAssayResult implements SolrGxdEntity
 	private Integer theilerStage;
 	private List<String> figures;
 	private List<String> figuresPlain;
+	private String cellType;
 	
 	private String genotype;
 	private String age;
@@ -191,5 +192,11 @@ public class SolrAssayResult implements SolrGxdEntity
 	}
 	public void setNotes(String notes) {
 		this.notes = notes;
+	}
+	public String getCellType() {
+		return cellType;
+	}
+	public void setCellType(String cellType) {
+		this.cellType = cellType;
 	}
 }
