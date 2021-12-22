@@ -43,7 +43,7 @@ var resultsTableDefs = [
 	{key: "assayType", label: "Assay Type", sortable: true },
 	{key: "age", label: "Age", sortable: true },
 	{key: "structure", label: "Structure",sortable: true},
-	{key: "cellType", label: "Cell Type", sortable: false},
+	{key: "cellType", label: "Cell<br/>Type", sortable: false},
 	{key: "detectionLevel",label: "Detected?",sortable: true},
 	{key: "tpmLevel",label: "TPM Level<br/>(RNA-Seq)",sortable: false,hidden: false},
 	{key: "biologicalReplicates",label: "Biological Replicates<br/>(RNA-Seq)",sortable: false,hidden: true},
