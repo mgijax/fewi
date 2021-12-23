@@ -12,12 +12,12 @@ var qsfIDs = [];
 
 // Fetch the data items to be forwarded.
 var qsfGetData = function(url) {
-		dcStartCache(qsfCacheName, url, qsfShow, qsfPageSize, '#errorDiv');
+		dcStartCache(qsfCacheName, url, qsfProcessData, qsfPageSize, '#errorDiv');
 		dcGetPage(qsfCacheName, 1);
 };
 
 // Having received 'data' from the server, update the page.
-function qsfShow(data) {
+function qsfProcessData(data) {
 	
 	if (data.rows.length == 0) {
 		$('#errorDiv').html("Error: No results found.");
