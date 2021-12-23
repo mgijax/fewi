@@ -246,5 +246,5 @@
 }
 </style>
 
-/* from https://developers.google.com/fonts/docs/material_icons */
+<!-- from https://developers.google.com/fonts/docs/material_icons -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">

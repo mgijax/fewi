@@ -61,6 +61,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -241,6 +242,63 @@ public class QuickSearchController {
 		mav.addObject("sessionID", Math.round(Math.random() * 100000));		// used for caching current tab to aid Back button usage
         return mav;
     }
+
+    //-------------------------//
+    // QS Forwarding Page (MGI batch query, GXD batch query, MouseMine, etc.)
+    //-------------------------//
+	@RequestMapping(value="/forward", params= {"forwardTo", "tab"})
+	public ModelAndView getQSForwardPage(HttpServletRequest request,
+			@ModelAttribute QuickSearchQueryForm queryForm,
+			@RequestParam("forwardTo") String forwardTo,		// what resource to forward the info to
+			@RequestParam("tab") String tab						// what tab (on the QS) we're coming from
+			) {
+
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+        logger.debug("->getQSForwardPage started");
+
+        String forwardToText = null;
+        String forwardToUrl = null;
+        String dataEndpoint = null;
+        
+        // go through possible options for 'forwardTo' and map them to a user-friendly name, the
+        // endpoints for getting a count of objects and the set of IDs/symbols to forward, and
+        // the URL to which to forward them.
+        if ("mgibq".equalsIgnoreCase(forwardTo)) {
+        	forwardToText = "MGI Batch Query";
+        	forwardToUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "batch/summary";
+        	dataEndpoint = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "quicksearch/featureBucket";
+        } else {
+        	return errorMav("Unexpected value for parameter 'forwardTo'");
+        }
+        
+        // just make sure we didn't miss anything
+        if ((forwardToText == null) || (forwardToUrl == null) || (dataEndpoint == null)) {
+        	return errorMav("Unexpected value for parameter 'forwardTo'");
+        }
+
+        ModelAndView mav = new ModelAndView("/quicksearch/qs_forward");
+        mav.addObject("forwardToText", forwardToText);
+        mav.addObject("forwardToUrl", forwardToUrl);
+		mav.addObject("dataEndpoint", dataEndpoint);
+
+        mav.addObject("query", queryForm.getQuery());
+        mav.addObject("displayQuery", queryForm.getQuery().replaceAll("'", "&#39;"));
+		mav.addObject("queryString", request.getQueryString());
+		mav.addObject("queryTypes", QuickSearchQueryForm.QUERY_TYPE_OPTION_MAP);
+		mav.addObject("queryType", queryForm.getQueryType());
+		mav.addObject("tab", tab);
+        return mav;
+    }
+
+	/* return a mav for an error screen with the given message filled in
+	 */
+	private ModelAndView errorMav(String msg) {
+		ModelAndView mav = new ModelAndView("error");
+		mav.addObject("errorMsg", msg);
+		return mav;
+	}
 
     //-------------------------//
     // QS Results - bucket 1 JSON (markers)

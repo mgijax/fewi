@@ -78,6 +78,7 @@ var qsProcessFilters = function() {
 			qsHideShowRemoveFilterButtons('feature');
 			$('#fTextDownload')[0].href = fewiurl + 'quicksearch/features/report.txt?' + getQuerystring();
 			$('#fExcelDownload')[0].href = fewiurl + 'quicksearch/features/report.xlsx?' + getQuerystring();
+			$('#fBatchQuery')[0].href = fewiurl + 'quicksearch/forward?forwardTo=mgibq&tab=feature&' + getQuerystring();
 			break;
 		case 'A' :
 			pgClearPaginator('allelePaginator');
