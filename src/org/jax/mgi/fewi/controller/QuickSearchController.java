@@ -43,6 +43,7 @@ import org.jax.mgi.fewi.summary.QSOtherResult;
 import org.jax.mgi.fewi.summary.QSOtherResultWrapper;
 import org.jax.mgi.fewi.summary.QSStrainResult;
 import org.jax.mgi.fewi.summary.QSStrainResultWrapper;
+import org.jax.mgi.fewi.summary.QSTinyResult;
 import org.jax.mgi.fewi.summary.QSVocabResultWrapper;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.FewiUtil;
@@ -268,7 +269,7 @@ public class QuickSearchController {
         if ("mgibq".equalsIgnoreCase(forwardTo)) {
         	forwardToText = "MGI Batch Query";
         	forwardToUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "batch/summary";
-        	dataEndpoint = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "quicksearch/featureBucket";
+        	dataEndpoint = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "quicksearch/featureBucketIDs";
         } else {
         	return errorMav("Unexpected value for parameter 'forwardTo'");
         }
@@ -326,6 +327,34 @@ public class QuickSearchController {
         response.setSummaryRows(wrapped);
         response.setTotalCount(out.size());
         logger.debug("Returning " + wrapped.size() + " feature matches");
+
+        return response;
+    }
+
+	@RequestMapping("/featureBucketIDs")
+	public @ResponseBody JsonSummaryResponse<QSTinyResult> getFeatureBucketIDs(HttpServletRequest request,
+			@ModelAttribute QuickSearchQueryForm queryForm, @ModelAttribute Paginator page) {
+
+        logger.debug("->getFeatureBucketIDs started (seeking results " + page.getStartIndex() + " to " + (page.getStartIndex() + page.getResults()) + ")");
+        
+        List<QSFeatureResult> out = getFeatureResults(request, queryForm);
+        
+        int startIndex = page.getStartIndex();
+        int endIndex = startIndex + page.getResults();
+        
+        List<QSTinyResult> results = new ArrayList<QSTinyResult>();
+        if (out.size() >= startIndex) {
+        	for (QSFeatureResult result : out.subList(startIndex, Math.min(out.size(), endIndex))) {
+        		results.add(new QSTinyResult(result.getPrimaryID()));
+        	}
+        } else { 
+        	logger.debug(" - not extracting,just returning empty list");
+        }
+        
+        JsonSummaryResponse<QSTinyResult> response = new JsonSummaryResponse<QSTinyResult>();
+        response.setSummaryRows(results);
+        response.setTotalCount(out.size());
+        logger.debug("Returning " + results.size() + " feature IDs");
 
         return response;
     }

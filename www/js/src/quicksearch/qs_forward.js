@@ -25,8 +25,7 @@ function qsfShow(data) {
 	}
 	
 	for (var i = 0; i < data.rows.length; i++) {
-		var uriParts = data.rows[i].detailUri.split('/');
-		qsfIDs.push(uriParts[uriParts.length - 1]);
+		qsfIDs.push(data.rows[i].item);
 	}
 	
 	if ((data != null) && (data.rows != null) && (data.rows.length >= qsfPageSize)) {
