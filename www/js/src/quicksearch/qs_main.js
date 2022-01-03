@@ -86,6 +86,7 @@ var qsProcessFilters = function() {
 			qsHideShowRemoveFilterButtons('allele');
 			$('#aTextDownload')[0].href = fewiurl + 'quicksearch/alleles/report.txt?' + getQuerystring();
 			$('#aExcelDownload')[0].href = fewiurl + 'quicksearch/alleles/report.xlsx?' + getQuerystring();
+			$('#aBatchQuery')[0].href = fewiurl + 'quicksearch/forward?forwardTo=mgibq&tab=allele&' + getQuerystring();
 			break;
 		case 'V' :
 			pgClearPaginator('vocabPaginator');

@@ -17,6 +17,8 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import mgi.frontend.datamodel.Allele;
+import mgi.frontend.datamodel.Marker;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.apache.commons.lang.StringUtils;
@@ -174,6 +176,9 @@ public class QuickSearchController {
     @Autowired
     private QuickSearchFinder qsFinder;
     
+	@Autowired
+	private AlleleFinder alleleFinder;
+
 	@Value("${solr.factetNumberDefault}")
 	private Integer facetLimit; 			// max values to display for a single facet
 
@@ -269,7 +274,13 @@ public class QuickSearchController {
         if ("mgibq".equalsIgnoreCase(forwardTo)) {
         	forwardToText = "MGI Batch Query";
         	forwardToUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "batch/summary";
-        	dataEndpoint = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "quicksearch/featureBucketIDs";
+        	if ("feature".equals(tab)) {
+        		dataEndpoint = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "quicksearch/featureBucketIDs";
+        	} else if ("allele".equals(tab)) {
+        		dataEndpoint = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "quicksearch/alleleBucketIDs";
+        	} else {
+        		return errorMav("Unexpected value for parameter 'tab'");
+        	}
         } else {
         	return errorMav("Unexpected value for parameter 'forwardTo'");
         }
@@ -483,6 +494,77 @@ public class QuickSearchController {
 		return wrapped;
 	}
 	
+	// Look up alleles matching the given query, find the marker ID for each, and return the unique set of marker IDs.
+	@RequestMapping("/alleleBucketIDs")
+	public @ResponseBody JsonSummaryResponse<QSTinyResult> getAlleleBucketIDs(HttpServletRequest request,
+			@ModelAttribute QuickSearchQueryForm queryForm, @ModelAttribute Paginator page) {
+
+        logger.debug("->getAlleleBucketIDs started (seeking results " + page.getStartIndex() + " to " + (page.getStartIndex() + page.getResults()) + ")");
+        
+        List<QSAlleleResult> out = getAlleleResults(request, queryForm);
+        logger.debug("- retrieved " + out.size() + " alleles");
+        
+        List<String> markerIDs = getMarkerIDsForAlleles(out);
+        
+        List<QSTinyResult> results = new ArrayList<QSTinyResult>(markerIDs.size());
+        for (String markerID : markerIDs) {
+        	results.add(new QSTinyResult(markerID));
+        }
+        
+        JsonSummaryResponse<QSTinyResult> response = new JsonSummaryResponse<QSTinyResult>();
+        response.setSummaryRows(results);
+        response.setTotalCount(out.size());
+        logger.debug("Returning " + results.size() + " allele IDs");
+
+        return response;
+    }
+	
+	// Look up the unique list of marker IDs for the given alleles.
+	private List<String> getMarkerIDsForAlleles(List<QSAlleleResult> alleles) {
+		Map<String,String> markerMap = new HashMap<String,String>();		// maps from marker symbol to ID
+
+		int chunkSize = 250;			// number of alleles to look up at a time from the database
+		int start = 0;					// start of this slice of alleles
+		
+		// Assumptions:  1. We only want to return each marker once, even if there are multiple alleles of the same
+		// marker.  2. We want markers returned in smart-alpha order, rather than trying to match allele order.
+		// (Otherwise we'd need to show the same marker multiple times for cases where alleles of multiple markers
+		// are interspersed.)
+		
+		// Process alleles in chunks (so we can retrieve multiples at a time from the AlleleFinder).
+		while (start < alleles.size()) {
+			List<String> alleleIDs = new ArrayList<String>();
+			for (QSAlleleResult allele : alleles.subList(start, Math.min(alleles.size(), start + chunkSize))) {
+				alleleIDs.add(allele.getPrimaryID());
+			}
+
+			// With each returned Allele object, get its corresponding marker and note its symbol and ID.
+			for (Allele dbAllele : alleleFinder.getAlleleByID(alleleIDs)) {
+				Marker dbMarker = dbAllele.getMarker();
+				if (dbMarker != null) {
+					markerMap.put(dbMarker.getSymbol(), dbMarker.getPrimaryID());
+				}
+			}
+			// next batch of alleles...
+			start = start + chunkSize;
+		}
+		
+		// At this point, we have a Map of marker symbols and IDs for all alleles.  Need pull out the list of
+		// symbols and order them by smart-alpha.
+		
+		List<String> markerSymbols = new ArrayList<String>(markerMap.size());
+		for (String symbol : markerMap.keySet()) {
+			markerSymbols.add(symbol);
+		}
+		Collections.sort(markerSymbols, new SmartAlphaComparator());
+		
+		List<String> markerIDs = new ArrayList<String>(markerSymbols.size());
+		for (String symbol : markerSymbols) {
+			markerIDs.add(markerMap.get(symbol));
+		}
+		return markerIDs;
+	}
+
 	/* Take a list of QSAlleleResult objects (that are missing crucial information for display), look up the remaining
 	 * data from a memory cache (retrieving additional data as needed), and wrap them up in objects for display.
 	 */

@@ -21,6 +21,7 @@
     <div class="export">Export:</div>
     <a id="aExcelDownload" href="${configBean.FEWI_URL}/quicksearch/alleles/report.xlsx?queryType=${queryType}&query=${query}" title="Excel File"><span class="material-icons">table_view</span></a>
     <a id="aTextDownload" href="${configBean.FEWI_URL}/quicksearch/alleles/report.txt?queryType=${queryType}&query=${query}" title="Text File"><span class="material-icons">text_snippet</span></a>
+    <a id="aBatchQuery" target="_blank" style="font-size: 14px; outline: 1px solid black; border-radius: 5px; padding: 1px; background-color: #000001; color: #dfefff;" href="${configBean.FEWI_URL}/quicksearch/forward?forwardTo=mgibq&tab=allele&queryType=${queryType}&query=${query}" title="forward corresponding features to MGI Batch Query">BQ</a>
   </div>
 </div>
 <div id="b5Results"></div>
