@@ -111,7 +111,7 @@ public class QuickSearchQueryForm {
     private String autoQuote(String query) {
     	Matcher case1match = case1.matcher(query);
     	if (case1match.matches() || IndexConstants.QS_SEARCHTYPE_EXACT_PHRASE.equals(this.getQueryType())) {
-    		return "\"" + query + "\"";
+    		return "\"" + query.replaceAll("\"", "") + "\"";
     	}
     	
     	// no special handling needed, just return the original string

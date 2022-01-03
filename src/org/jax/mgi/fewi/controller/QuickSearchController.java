@@ -413,7 +413,7 @@ public class QuickSearchController {
         	
         	SearchResults<QSFeatureResult> eitherResults = qsFinder.getFeatureResults(orSearch);
         	Integer resultCount = eitherResults.getTotalCount();
-        	logger.info("> Identified " + resultCount + " feature matches");
+        	logger.debug("> Identified " + resultCount + " feature matches");
         
         	// Now that we know how many results we're looking for, we can retrieve them in batches.
         	
