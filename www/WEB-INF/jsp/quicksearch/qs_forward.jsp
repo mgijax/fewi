@@ -41,7 +41,6 @@
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/fewi_utils.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/widgets/DataCache.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/widgets/Paginator.js"></script>
-<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/quicksearch/qs_main.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/quicksearch/qs_forward.js"></script>
 <script>
   var queryString="${e:forJavaScript(queryString)}";
