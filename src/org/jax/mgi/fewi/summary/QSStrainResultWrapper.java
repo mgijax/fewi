@@ -17,4 +17,5 @@ public class QSStrainResultWrapper {
 	public String getBestMatchType() { return result.getSearchTermType(); }
 	public String getBestMatchText() { return result.getSearchTermDisplay(); }
 	public String getPrimaryID() { return result.getPrimaryID(); }
+	public String getImsrID() { return result.getImsrID(); }
 }

@@ -118,6 +118,7 @@ var query = "${e:forJavaScript(query)}";
 var fewiurl = "${configBean.FEWI_URL}";
 var genomeBuild = "${configBean.ASSEMBLY_VERSION}";
 var sessionID = "${sessionID}";
+var imsrUrl = "${configBean.IMSRURL}summary?strainid=";
 
 qsMain();
 

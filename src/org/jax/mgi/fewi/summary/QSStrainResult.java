@@ -23,6 +23,7 @@ public class QSStrainResult extends QSResult {
 	private String detailUri;
 	private Integer referenceCount;
 	private String referenceUri;
+	private String imsrID;
 	private Long sequenceNum;
 
 	private List<String> goProcessFacets;
@@ -161,6 +162,12 @@ public class QSStrainResult extends QSResult {
 	}
 	public void setSequenceNum(Long sequenceNum) {
 		this.sequenceNum = sequenceNum;
+	}
+	public String getImsrID() {
+		return imsrID;
+	}
+	public void setImsrID(String imsrID) {
+		this.imsrID = imsrID;
 	}
 	@Override
 	public String toString() {

@@ -48,6 +48,7 @@ public class SolrQSStrainResultBaseHunter extends SolrHunter<QSStrainResult> {
 		propertyMap.put(SearchConstants.QS_REFERENCE_COUNT, new SolrPropertyMapper(IndexConstants.QS_REFERENCE_COUNT));
 		propertyMap.put(SearchConstants.QS_REFERENCE_URI, new SolrPropertyMapper(IndexConstants.QS_REFERENCE_URI));
 		propertyMap.put(SearchConstants.QS_SEQUENCE_NUM, new SolrPropertyMapper(IndexConstants.QS_SEQUENCE_NUM));
+		propertyMap.put(SearchConstants.QS_IMSR_ID, new SolrPropertyMapper(IndexConstants.QS_IMSR_ID));
 
 		propertyMap.put(SearchConstants.QS_GO_PROCESS_FACETS, new SolrPropertyMapper(IndexConstants.QS_GO_PROCESS_FACETS));
 		propertyMap.put(SearchConstants.QS_GO_FUNCTION_FACETS, new SolrPropertyMapper(IndexConstants.QS_GO_FUNCTION_FACETS));
@@ -89,6 +90,7 @@ public class SolrQSStrainResultBaseHunter extends SolrHunter<QSStrainResult> {
 				result.setSearchTermStemmed((String) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_STEMMED));
 				result.setSearchTermDisplay((String) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_DISPLAY));
 				result.setSearchTermType((String) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_TYPE));
+				result.setImsrID((String) doc.getFieldValue(IndexConstants.QS_IMSR_ID));
 
 				Integer weight = (Integer) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_WEIGHT);
 				if (weight == null) {

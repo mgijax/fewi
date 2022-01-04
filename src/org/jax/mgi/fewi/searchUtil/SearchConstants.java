@@ -345,6 +345,7 @@ public class SearchConstants {
 	public static final String QS_ANNOTATION_COUNT = "annotationCount";
 	public static final String QS_ANNOTATION_TEXT = "annotationText";
 	public static final String QS_ANNOTATION_URI = "annotationUri";
+	public static final String QS_IMSR_ID = "imsrID";
 
 	public static final String QS_GO_PROCESS_FACETS = "goProcessFacets";
 	public static final String QS_GO_FUNCTION_FACETS = "goFunctionFacets";
