@@ -238,7 +238,6 @@ public class HomepageController {
 		allStats.addAll(statisticFinder.getStatisticsByGroup("stats page gxd"));
 		allStats.addAll(statisticFinder.getStatisticsByGroup("stats page recombinase"));
 		allStats.addAll(statisticFinder.getStatisticsByGroup("stats page go"));
-		allStats.addAll(statisticFinder.getStatisticsByGroup("stats page pathways"));
 		allStats.addAll(statisticFinder.getStatisticsByGroup("stats page polymorphisms"));
 		allStats.addAll(statisticFinder.getStatisticsByGroup("stats page orthology"));
 		allStats.addAll(statisticFinder.getStatisticsByGroup("stats page sequences"));
