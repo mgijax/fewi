@@ -30,11 +30,15 @@ function b4Show(data) {
 			} else {
 				tbl = tbl + '<TD><a target="_blank" href="' + item.detailUri + '">' + name + '</a></TD>';
 			}
-			if (item.imsrID === null) {
-				tbl = tbl + '<TD>&nbsp;</TD>';
+
+			tbl = tbl + '<TD>';
+			if ((item.imsrID === null) || (item.imsrID == null) || (item.imsrID.trim().length == 0)) {
+				tbl = tbl + '&nbsp;';
 			} else {
-				tbl = tbl + '<TD><a target="_blank" href="' + imsrUrl + item.imsrID + '">' + item.imsrID + '</a></TD>';
+				tbl = tbl + '<a target="_blank" href="' + imsrUrl + item.imsrID + '">' + item.imsrID + '</a>';
 			}
+			tbl = tbl + '</TD>';
+
 			if (item.referenceCount > 0) {
 				var label = ' references';
 				if (item.referenceCount == 1) { label = ' reference'; }
