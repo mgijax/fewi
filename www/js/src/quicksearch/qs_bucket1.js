@@ -85,3 +85,19 @@ var b1Fetch = function() {
 		dcStartCache(b1CacheName, url, b1Show, b1PageSize, '#b1Results');
 		dcGetPage(b1CacheName, 1);
 };
+
+// process the download option choice for the Features tab
+var b1Download = function() {
+	if ($('#fDownloads option:selected').length > 0) {
+		var url = $('#fDownloads option:selected').attr('url');
+		window.location.href = url;
+	}
+};
+
+// process the forward option choice for the Features tab
+var b1Forward = function() {
+	if ($('#fForwards option:selected').length > 0) {
+		var url = $('#fForwards option:selected').attr('url');
+		window.location.href = url;
+	}
+};

@@ -21,10 +21,18 @@
   </span>
   <div id="featurePaginator" class="featurePaginator"></div>
   <div id="featureDownloads" class="featureDownloads">
-    <div class="export">Export:</div>
-    <a id="fExcelDownload" href="${configBean.FEWI_URL}/quicksearch/features/report.xlsx?queryType=${queryType}&query=${query}" title="Excel File"><span class="material-icons">table_view</span></a>
-    <a id="fTextDownload" href="${configBean.FEWI_URL}/quicksearch/features/report.txt?queryType=${queryType}&query=${query}" title="Text File"><span class="material-icons">text_snippet</span></a>
-    <a id="fBatchQuery" target="_blank" style="font-size: 14px; outline: 1px solid black; border-radius: 5px; padding: 1px; background-color: #000001; color: #dfefff;" href="${configBean.FEWI_URL}/quicksearch/forward?forwardTo=mgibq&tab=feature&queryType=${queryType}&query=${query}" title="MGI Batch Query">BQ</a>
+    <div class="export">Export to:</div>
+    <select id="fDownloads" class="selectList">
+    	<option id="fTextDownload" value="text" url="${configBean.FEWI_URL}/quicksearch/features/report.txt?queryType=${queryType}&query=${query}">Text</option>
+    	<option id="fExcelDownload" value="excel" url="${configBean.FEWI_URL}/quicksearch/features/report.xlsx?queryType=${queryType}&query=${query}">Excel</option>
+    </select>
+    <button id="fExportGo" onClick="b1Download()">Go</button>
+
+    <div class="export" style="padding-left: 25px">Batch Analysis Tools:</div>
+    <select id="fForwards" class="selectList">
+    	<option id="fBatchForward" value="batch" url="${configBean.FEWI_URL}/quicksearch/forward?forwardTo=mgibq&tab=feature&queryType=${queryType}&query=${query}">MGI batch query</option>
+    </select>
+    <button id="fForwardGo" onClick="b1Forward()">Go</button>
   </div>
 </div>
 <div id="b1Results"></div>

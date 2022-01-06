@@ -161,15 +161,8 @@
 }
 #featureDownloads {
 	display: inline-block;
-	margin-left: 250px;
+	margin-left: 165px;
 	font-size: 12px;
-}
-#featureDownloads a {
-	font-size: 12px;
-	font-family: Arial,Helvetica;
-	color: #000001;
-	font-weight: normal;
-	font-size: 20px;
 }
 #featureDownloads .export {
 	display: inline;
@@ -243,6 +236,9 @@
 	display: inline;
 	font-family: Verdana,Arial,sans-serif;
 	font-size: 1.1em;
+}
+.selectList {
+	font-weight: normal;
 }
 </style>
 
