@@ -21,14 +21,14 @@
   </span>
   <div id="featurePaginator" class="featurePaginator"></div>
   <div id="featureDownloads" class="featureDownloads">
-    <div class="export">Export to:</div>
+    <div class="export">Download as:</div>
     <select id="fDownloads" class="selectList">
     	<option id="fTextDownload" value="text" url="${configBean.FEWI_URL}/quicksearch/features/report.txt?queryType=${queryType}&query=${query}">Text</option>
     	<option id="fExcelDownload" value="excel" url="${configBean.FEWI_URL}/quicksearch/features/report.xlsx?queryType=${queryType}&query=${query}">Excel</option>
     </select>
     <button id="fExportGo" onClick="b1Download()">Go</button>
 
-    <div class="export" style="padding-left: 25px">Batch Analysis Tools:</div>
+    <div class="export" style="padding-left: 25px">Forward to:</div>
     <select id="fForwards" class="selectList">
     	<option id="fBatchForward" value="batch" url="${configBean.FEWI_URL}/quicksearch/forward?forwardTo=mgibq&tab=feature&queryType=${queryType}&query=${query}">MGI batch query</option>
     </select>
