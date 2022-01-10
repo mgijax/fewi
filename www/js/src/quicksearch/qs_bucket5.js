@@ -87,16 +87,10 @@ var b5Fetch = function() {
 
 // process the download option choice for the Alleles tab
 var b5Download = function() {
-	if ($('#aDownloads option:selected').length > 0) {
-		var url = $('#aDownloads option:selected').attr('url');
-		window.location.href = url;
-	}
+	qsDownload('aDownloads');
 };
 
 // process the forward option choice for the Alleles tab
 var b5Forward = function() {
-	if ($('#aForwards option:selected').length > 0) {
-		var url = $('#aForwards option:selected').attr('url');
-		window.location.href = url;
-	}
+	qsForward('aForwards');
 };

@@ -88,16 +88,10 @@ var b1Fetch = function() {
 
 // process the download option choice for the Features tab
 var b1Download = function() {
-	if ($('#fDownloads option:selected').length > 0) {
-		var url = $('#fDownloads option:selected').attr('url');
-		window.location.href = url;
-	}
+	qsDownload('fDownloads');
 };
 
 // process the forward option choice for the Features tab
 var b1Forward = function() {
-	if ($('#fForwards option:selected').length > 0) {
-		var url = $('#fForwards option:selected').attr('url');
-		window.location.href = url;
-	}
+	qsForward('fForwards');
 };

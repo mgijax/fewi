@@ -300,3 +300,20 @@ var qsScoreHelp = function() {
 		+ 'onmouseout="nd();"> <img src="/webshare/images/blue_info_icon.gif" style="height:11px" border="0"> </span>';
 	return s;
 }
+
+// process the download option choice for the results of the current tab, downloading a file in the format
+// specified in the given selectList
+var qsDownload = function(selectList) {
+	if ($('#' + selectList + ' option:selected').length > 0) {
+		var url = $('#' + selectList + ' option:selected').attr('url');
+		window.location.href = url;
+	}
+};
+
+// opens a new tab to forward the results of the current tab to the tool of the given selectList
+var qsForward = function(selectList) {
+	if ($('#' + selectList + ' option:selected').length > 0) {
+		var url = $('#' + selectList + ' option:selected').attr('url');
+		window.open(url, '_blank');
+	}
+}
