@@ -84,3 +84,19 @@ var b5Fetch = function() {
 		dcStartCache(b5CacheName, url, b5Show, b5PageSize, '#b5Results');
 		dcGetPage(b5CacheName, 1);
 };
+
+// process the download option choice for the Alleles tab
+var b5Download = function() {
+	if ($('#aDownloads option:selected').length > 0) {
+		var url = $('#aDownloads option:selected').attr('url');
+		window.location.href = url;
+	}
+};
+
+// process the forward option choice for the Alleles tab
+var b5Forward = function() {
+	if ($('#aForwards option:selected').length > 0) {
+		var url = $('#aForwards option:selected').attr('url');
+		window.location.href = url;
+	}
+};

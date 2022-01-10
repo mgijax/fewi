@@ -171,15 +171,8 @@
 }
 #alleleDownloads {
 	display: inline-block;
-	margin-left: 250px;
+	margin-left: 165px;
 	font-size: 12px;
-}
-#alleleDownloads a {
-	font-size: 12px;
-	font-family: Arial,Helvetica;
-	color: #000001;
-	font-weight: normal;
-	font-size: 20px;
 }
 #alleleDownloads .export {
 	display: inline;

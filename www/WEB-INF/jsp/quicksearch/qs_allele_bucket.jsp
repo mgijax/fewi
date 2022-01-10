@@ -18,10 +18,18 @@
   </span>
   <div id="allelePaginator" class="allelePaginator"></div>
   <div id="alleleDownloads" class="alleleDownloads">
-    <div class="export">Export:</div>
-    <a id="aExcelDownload" href="${configBean.FEWI_URL}/quicksearch/alleles/report.xlsx?queryType=${queryType}&query=${query}" title="Excel File"><span class="material-icons">table_view</span></a>
-    <a id="aTextDownload" href="${configBean.FEWI_URL}/quicksearch/alleles/report.txt?queryType=${queryType}&query=${query}" title="Text File"><span class="material-icons">text_snippet</span></a>
-    <a id="aBatchQuery" target="_blank" style="font-size: 14px; outline: 1px solid black; border-radius: 5px; padding: 1px; background-color: #000001; color: #dfefff;" href="${configBean.FEWI_URL}/quicksearch/forward?forwardTo=mgibq&tab=allele&queryType=${queryType}&query=${query}" title="forward corresponding features to MGI Batch Query">BQ</a>
+    <div class="export">Download as:</div>
+    <select id="aDownloads" class="selectList">
+    	<option id="aTextDownload" value="text" url="${configBean.FEWI_URL}/quicksearch/alleles/report.txt?queryType=${queryType}&query=${query}">Text</option>
+    	<option id="aExcelDownload" value="excel" url="${configBean.FEWI_URL}/quicksearch/alleles/report.xlsx?queryType=${queryType}&query=${query}">Excel</option>
+    </select>
+    <button id="aExportGo" onClick="b5Download()">Go</button>
+
+    <div class="export" style="padding-left: 25px">Forward to:</div>
+    <select id="aForwards" class="selectList">
+    	<option id="aBatchForward" value="batch" url="${configBean.FEWI_URL}/quicksearch/forward?forwardTo=mgibq&tab=allele&queryType=${queryType}&query=${query}" title="forward corresponding features to MGI Batch Query">MGI batch query</option>
+    </select>
+    <button id="aForwardGo" onClick="b5Forward()">Go</button>
   </div>
 </div>
 <div id="b5Results"></div>
