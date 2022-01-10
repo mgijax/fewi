@@ -54,3 +54,8 @@ var b3Fetch = function() {
 		dcStartCache(b3CacheName, url, b3Show, b3PageSize, '#b3Results');
 		dcGetPage(b3CacheName, 1);
 };
+
+// process the download option choice for the Other IDs tab
+var b3Download = function() {
+	qsDownload('oDownloads');
+};

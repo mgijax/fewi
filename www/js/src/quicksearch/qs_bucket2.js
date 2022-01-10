@@ -69,3 +69,8 @@ var b2Fetch = function() {
 		dcStartCache(b2CacheName, url, b2Show, b2PageSize, '#b2Results');
 		dcGetPage(b2CacheName, 1);
 };
+
+// process the download option choice for the Vocab Terms tab
+var b2Download = function() {
+	qsDownload('vDownloads');
+};

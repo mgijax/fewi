@@ -17,9 +17,12 @@
   </span>
   <div id="strainPaginator" class="strainPaginator"></div>
   <div id="strainDownloads" class="strainDownloads">
-    <div class="export">Export:</div>
-    <a id="sExcelDownload" href="${configBean.FEWI_URL}/quicksearch/strains/report.xlsx?queryType=${queryType}&query=${query}" title="Excel File"><span class="material-icons">table_view</span></a>
-    <a id="sTextDownload" href="${configBean.FEWI_URL}/quicksearch/strains/report.txt?queryType=${queryType}&query=${query}" title="Text File"><span class="material-icons">text_snippet</span></a>
+    <div class="export">Download as:</div>
+    <select id="sDownloads" class="selectList">
+    	<option id="sTextDownload" value="text" url="${configBean.FEWI_URL}/quicksearch/strains/report.txt?queryType=${queryType}&query=${query}">Text</option>
+    	<option id="sExcelDownload" value="excel" url="${configBean.FEWI_URL}/quicksearch/strains/report.xlsx?queryType=${queryType}&query=${query}">Excel</option>
+    </select>
+    <button id="sExportGo" onClick="b4Download()">Go</button>
   </div>
 </div>
 <div id="b4Results"></div>

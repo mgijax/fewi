@@ -184,13 +184,6 @@
 	margin-left: 250px;
 	font-size: 12px;
 }
-#vocabDownloads a {
-	font-size: 12px;
-	font-family: Arial,Helvetica;
-	color: #000001;
-	font-weight: normal;
-	font-size: 20px;
-}
 #vocabDownloads .export {
 	display: inline;
 	font-family: Verdana,Arial,sans-serif;
@@ -201,13 +194,6 @@
 	margin-left: 250px;
 	font-size: 12px;
 }
-#strainDownloads a {
-	font-size: 12px;
-	font-family: Arial,Helvetica;
-	color: #000001;
-	font-weight: normal;
-	font-size: 20px;
-}
 #strainDownloads .export {
 	display: inline;
 	font-family: Verdana,Arial,sans-serif;
@@ -217,13 +203,6 @@
 	display: inline-block;
 	margin-left: 250px;
 	font-size: 12px;
-}
-#otherIDDownloads a {
-	font-size: 12px;
-	font-family: Arial,Helvetica;
-	color: #000001;
-	font-weight: normal;
-	font-size: 20px;
 }
 #otherIDDownloads .export {
 	display: inline;

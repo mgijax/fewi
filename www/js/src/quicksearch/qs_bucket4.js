@@ -83,3 +83,8 @@ var b4Fetch = function() {
 		dcStartCache(b4CacheName, url, b4Show, b4PageSize, '#b4Results');
 		dcGetPage(b4CacheName, 1);
 };
+
+// process the download option choice for the Strains tab
+var b4Download = function() {
+	qsDownload('sDownloads');
+};

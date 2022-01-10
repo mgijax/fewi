@@ -15,9 +15,12 @@
   </span>
   <div id="otherIdPaginator" class="otherIdPaginator"></div>
   <div id="otherIDDownloads" class="otherIDDownloads">
-    <div class="export">Export:</div>
-    <a id="oExcelDownload" href="${configBean.FEWI_URL}/quicksearch/otherIDs/report.xlsx?queryType=${queryType}&query=${query}" title="Excel File"><span class="material-icons">table_view</span></a>
-    <a id="oTextDownload" href="${configBean.FEWI_URL}/quicksearch/otherIDs/report.txt?queryType=${queryType}&query=${query}" title="Text File"><span class="material-icons">text_snippet</span></a>
+    <div class="export">Download as:</div>
+    <select id="oDownloads" class="selectList">
+    	<option id="oTextDownload" value="text" url="${configBean.FEWI_URL}/quicksearch/otherIDs/report.txt?queryType=${queryType}&query=${query}">Text</option>
+    	<option id="oExcelDownload" value="excel" url="${configBean.FEWI_URL}/quicksearch/otherIDs/report.xlsx?queryType=${queryType}&query=${query}">Excel</option>
+    </select>
+    <button id="oExportGo" onClick="b3Download()">Go</button>
   </div>
 </div>
 <div id="b3Results"></div>
