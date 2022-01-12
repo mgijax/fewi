@@ -136,6 +136,8 @@ var querystring = "${queryString}";
 $(function() {
 	// fill in marker IDs from quick search
 	$('#ids')[0].value = "${markerIDs}";
+	// and execute the search
+	$('#submit6')[0].click();
 });
 </c:if>
 </script>

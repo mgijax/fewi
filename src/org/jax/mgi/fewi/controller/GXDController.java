@@ -386,6 +386,7 @@ public class GXDController {
 		StringBuffer markerIDs = new StringBuffer();
 		for (QSFeatureResult qsResult : qsController.getFeatureResults(request, qsQF)) {
 			markerIDs.append(qsResult.getPrimaryID());
+			markerIDs.append(" ");
 		}
 
 		// Add the marker IDs to the GXD batch QF.
@@ -396,7 +397,7 @@ public class GXDController {
 		// If the set of IDs doesn't auto-populate into the field, we can updated it in JQuery.
 		
 		ModelAndView mav = new ModelAndView("gxd/gxd_query");
-		mav.addObject("markerIDs", gxdQF.getIds());
+		mav.addObject("markerIDs", markerIDs.toString());
 
 		// boilerplate
 		
@@ -411,7 +412,7 @@ public class GXDController {
 
 		String queryString = "ids=" + gxdQF.getIds();
 		for (String headerID : structureIDs) {
-			queryString = queryString + "&structureIDFilter=" + headerID;
+//			queryString = queryString + "&structureIDFilter=" + headerID;
 		}
 		
 		mav.addObject("queryString", request.getQueryString());
@@ -425,25 +426,31 @@ public class GXDController {
 			for (String term : terms) {
 				// If we've already seen this header, just use the cached lookup of the ID.
 				if (emapaHeaders.containsKey(term)) {
+					logger.info("emapaHeaders[" + term + "] = " + emapaHeaders.get(term));
 					structureIDs.add(emapaHeaders.get(term));
 				} else {
 					// Otherwise, look up the record from Solr and add it to the cache.
-					Filter exactTerm = new Filter(SearchConstants.STRUCTURE_EXACT, term, Filter.Operator.OP_EQUAL);
+					Filter exactTerm = new Filter(SearchConstants.STRUCTURE, term, Filter.Operator.OP_EQUAL);
 
 					SearchParams params = new SearchParams();
 					params.setPaginator(new Paginator());
 					params.setFilter(exactTerm);
 					List<SolrAnatomyTerm> termList = vocabFinder.getAnatomyTerms(params).getResultObjects();
+					logger.info("Filter = " + exactTerm.toString());
+					logger.info("Found " + termList.size() + " terms");
 					
 					if ((termList != null) && (termList.size() > 0)) {
 						SolrAnatomyTerm header = termList.get(0);
+						logger.info("Found term " + header.toString());
 						if (header.getAccID() != null) {
 							structureIDs.add(header.getAccID());
+							logger.info("Found term with ID " + header.getAccID());
 						}
 					}
 				}
 			}
 		}
+		logger.info("Returning " + structureIDs.size() + " IDs");
 		return structureIDs;
 	}
 	
