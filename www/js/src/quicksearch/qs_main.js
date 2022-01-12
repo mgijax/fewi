@@ -78,7 +78,8 @@ var qsProcessFilters = function() {
 			qsHideShowRemoveFilterButtons('feature');
 			$('#fTextDownload').attr('url', fewiurl + 'quicksearch/features/report.txt?' + getQuerystring());
 			$('#fExcelDownload').attr('url', fewiurl + 'quicksearch/features/report.xlsx?' + getQuerystring());
-			$('#fBatchQuery').attr('url', fewiurl + 'quicksearch/forward?forwardTo=mgibq&tab=feature&' + getQuerystring());
+			$('#fBatchForward').attr('url', fewiurl + 'quicksearch/forward?forwardTo=mgibq&tab=feature&' + getQuerystring());
+			$('#fGxdBatchForward').attr('url', fewiurl + 'gxd/batchForward?' + getQuerystring());
 			break;
 		case 'A' :
 			pgClearPaginator('allelePaginator');
@@ -86,7 +87,7 @@ var qsProcessFilters = function() {
 			qsHideShowRemoveFilterButtons('allele');
 			$('#aTextDownload').attr('url', fewiurl + 'quicksearch/alleles/report.txt?' + getQuerystring());
 			$('#aExcelDownload').attr('url', fewiurl + 'quicksearch/alleles/report.xlsx?' + getQuerystring());
-			$('#aBatchQuery').attr('url', fewiurl + 'quicksearch/forward?forwardTo=mgibq&tab=allele&' + getQuerystring());
+			$('#aBatchForward').attr('url', fewiurl + 'quicksearch/forward?forwardTo=mgibq&tab=allele&' + getQuerystring());
 			break;
 		case 'V' :
 			pgClearPaginator('vocabPaginator');

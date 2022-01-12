@@ -132,6 +132,12 @@ prepFilters();
 <c:if test="${not empty queryString}">
 var querystring = "${queryString}";
 </c:if>
+<c:if test="${not empty markerIDs}">
+$(function() {
+	// fill in marker IDs from quick search
+	$('#ids')[0].value = "${markerIDs}";
+});
+</c:if>
 </script>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

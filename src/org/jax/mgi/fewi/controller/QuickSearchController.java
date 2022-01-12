@@ -373,7 +373,7 @@ public class QuickSearchController {
 	/* Retrieve the feature results from Solr, managing the featureResult cache too. (Retrieve from cache where
 	 * possible.  If this query is not already cached, retrieve from Solr and then add them to cache.)
 	 */
-	private List<QSFeatureResult> getFeatureResults(HttpServletRequest request, QuickSearchQueryForm queryForm) {
+	protected List<QSFeatureResult> getFeatureResults(HttpServletRequest request, QuickSearchQueryForm queryForm) {
         String cacheKey = withoutPagination(request.getQueryString());
         List<QSFeatureResult> out = featureResultCache.get(cacheKey);
         
