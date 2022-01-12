@@ -76,38 +76,38 @@ var qsProcessFilters = function() {
 			pgClearPaginator('featurePaginator');
 			b1Fetch();
 			qsHideShowRemoveFilterButtons('feature');
-			$('#fTextDownload')[0].href = fewiurl + 'quicksearch/features/report.txt?' + getQuerystring();
-			$('#fExcelDownload')[0].href = fewiurl + 'quicksearch/features/report.xlsx?' + getQuerystring();
-			$('#fBatchQuery')[0].href = fewiurl + 'quicksearch/forward?forwardTo=mgibq&tab=feature&' + getQuerystring();
+			$('#fTextDownload').attr('url', fewiurl + 'quicksearch/features/report.txt?' + getQuerystring());
+			$('#fExcelDownload').attr('url', fewiurl + 'quicksearch/features/report.xlsx?' + getQuerystring());
+			$('#fBatchQuery').attr('url', fewiurl + 'quicksearch/forward?forwardTo=mgibq&tab=feature&' + getQuerystring());
 			break;
 		case 'A' :
 			pgClearPaginator('allelePaginator');
 			b5Fetch();
 			qsHideShowRemoveFilterButtons('allele');
-			$('#aTextDownload')[0].href = fewiurl + 'quicksearch/alleles/report.txt?' + getQuerystring();
-			$('#aExcelDownload')[0].href = fewiurl + 'quicksearch/alleles/report.xlsx?' + getQuerystring();
-			$('#aBatchQuery')[0].href = fewiurl + 'quicksearch/forward?forwardTo=mgibq&tab=allele&' + getQuerystring();
+			$('#aTextDownload').attr('url', fewiurl + 'quicksearch/alleles/report.txt?' + getQuerystring());
+			$('#aExcelDownload').attr('url', fewiurl + 'quicksearch/alleles/report.xlsx?' + getQuerystring());
+			$('#aBatchQuery').attr('url', fewiurl + 'quicksearch/forward?forwardTo=mgibq&tab=allele&' + getQuerystring());
 			break;
 		case 'V' :
 			pgClearPaginator('vocabPaginator');
 			b2Fetch();
 			qsHideShowRemoveFilterButtons('vocabTerm');
-			$('#vTextDownload')[0].href = fewiurl + 'quicksearch/vocab/report.txt?' + getQuerystring();
-			$('#vExcelDownload')[0].href = fewiurl + 'quicksearch/vocab/report.xlsx?' + getQuerystring();
+			$('#vTextDownload').attr('url', fewiurl + 'quicksearch/vocab/report.txt?' + getQuerystring());
+			$('#vExcelDownload').attr('url', fewiurl + 'quicksearch/vocab/report.xlsx?' + getQuerystring());
 			break;
 		case 'S' :
 			pgClearPaginator('strainPaginator');
 			b4Fetch();
 			qsHideShowRemoveFilterButtons('strain');
-			$('#sTextDownload')[0].href = fewiurl + 'quicksearch/strains/report.txt?' + getQuerystring();
-			$('#sExcelDownload')[0].href = fewiurl + 'quicksearch/strains/report.xlsx?' + getQuerystring();
+			$('#sTextDownload').attr('url', fewiurl + 'quicksearch/strains/report.txt?' + getQuerystring());
+			$('#sExcelDownload').attr('url', fewiurl + 'quicksearch/strains/report.xlsx?' + getQuerystring());
 			break;
 		case 'O' :
 			pgClearPaginator('otherIdPaginator');
 			b3Fetch();
 			qsHideShowRemoveFilterButtons('otherId');
-			$('#oTextDownload')[0].href = fewiurl + 'quicksearch/otherIDs/report.txt?' + getQuerystring();
-			$('#oExcelDownload')[0].href = fewiurl + 'quicksearch/otherIDs/report.xlsx?' + getQuerystring();
+			$('#oTextDownload').attr('url', fewiurl + 'quicksearch/otherIDs/report.txt?' + getQuerystring());
+			$('#oExcelDownload').attr('url', fewiurl + 'quicksearch/otherIDs/report.xlsx?' + getQuerystring());
 			break;
 		default:
 			return;
