@@ -140,6 +140,17 @@ $(function() {
 	$('#submit6')[0].click();
 });
 </c:if>
+
+// hack to handle the odd case where we propagate structure filter values in from the Quick Search --
+// If we don't remove the hidden fields and do an initial call to 'remove', then we need to click the
+// remove buttons twice.
+if ($('[name=structureIDFilter]').length > 0) {
+	// need to wait a second for requests to be issued before removing the extra structure filter pieces...
+	setTimeout(function() {
+	    $('[name=structureIDFilter]').remove();
+    	$('#clearFilter')[0].click();
+	}, 1000);
+}
 </script>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

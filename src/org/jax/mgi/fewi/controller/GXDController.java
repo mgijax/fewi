@@ -415,7 +415,7 @@ public class GXDController {
 //			queryString = queryString + "&structureIDFilter=" + headerID;
 		}
 		
-		mav.addObject("queryString", request.getQueryString());
+		mav.addObject("queryString", queryString);
 		mav.addObject("structureIDs", structureIDs);
 		return mav;
 	}
