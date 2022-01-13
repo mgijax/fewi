@@ -146,7 +146,52 @@ var getCurrentForm = function() {
  */
 
 //TODO: refactor these functions to use the shared lib names (i.e. mgiParseRequest() instead of parseRequest())
-var parseRequest=mgiParseRequest;
+
+// dealing with odd problem when passing along anatomical system filter values from Quick Search to
+// GXD batch search -- if submit multiple values, one of the buttons has a string of IDs rather
+// than the name of the value itself.  Need to make sure that our values are unique when parsing the request.
+var parseRequest = function(request) {
+	var req = mgiParseRequest(request);
+	
+	if ('structureIDFilter' in req) {
+		// split any IDs on commas and keep only unique ones
+		var emapaIDs = req['structureIDFilter'];
+		var uniqueIDs = {};
+		var idList = [];
+		
+		// if only one ID, still treat it as a list for standardization
+		if (typeof(emapaIDs) == typeof('')) {
+			emapaIDs = [ emapaIDs ];
+		}
+
+		// Go through all list items for this filter, split each on commas, and keep only those that are unique.
+		for (var i = 0; i < emapaIDs.length; i++) {
+			var separateIDs = emapaIDs[i].split(',');
+			for (var j = 0; j < separateIDs.length; j++) {
+				var thisID = separateIDs[j].trim();
+				if (!(thisID in uniqueIDs)) {
+					uniqueIDs[thisID] = thisID;
+					idList.push(thisID);
+				}
+			}
+		}
+		
+		// If only one left, do as a string.  If >1, keep as a list.  If no IDs (shouldn't happen), delete the parameter.
+		if (idList.length == 1) {
+			req['structureIDFilter'] = idList[0];
+			
+		} else if (idList.length > 1) {
+			req['structureIDFilter'] = idList;
+			
+		} else {
+			delete req['structureIDFilter'];
+		}
+	}
+	
+	return req;
+}
+
+
 //need to add grid filters to the generateRequest function via extraParams
 mgiTab._rp.getExtraParams = function()
 {
