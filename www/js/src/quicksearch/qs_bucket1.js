@@ -93,5 +93,15 @@ var b1Download = function() {
 
 // process the forward option choice for the Features tab
 var b1Forward = function() {
+	if ($('#fForwards option:selected').length > 0) {
+		var selection = $('#fForwards option:selected').val();
+		if (selection == 'gxdBatch') {
+			var featureCount = parseInt($('#fCount').text().replace(/[(,)]/g, ''));
+			if (featureCount > 5000) {
+				alert('Please use filters to reduce the set of Genome Features to no more than 5,000.');
+				return;
+			}
+		}
+	}
 	qsForward('fForwards');
 };
