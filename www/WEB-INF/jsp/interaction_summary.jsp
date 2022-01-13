@@ -207,7 +207,6 @@ circle {
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/interaction_graph_summary.js"></script>
 <script type="text/javascript">
     filters.setQueryStringFunction(getQuerystring);
-    filters.setSummaryNames('filterSummary', 'filterList');
     filters.setFewiUrl("${configBean.FEWI_URL}");
     filters.setHistoryManagement("myDataTable", handleNavigationRaw);
     filters.setDataTable(is_getDataTable());
@@ -216,7 +215,8 @@ circle {
     filters.addFilter('validationFilter', 'Validation', 'validationFilter', 'validationFilter', fewiurl + 'interaction/facet/validation');
     filters.addFilter('dataSourceFilter', 'Data Source', 'dataSourceFilter', 'dataSourceFilter', fewiurl + 'interaction/facet/dataSource');
     filters.addFilter('scoreFilter', 'Score', 'scoreFilter', 'scoreFilter', fewiurl + 'interaction/facet/score',
-	filters.sliderFormatter, filters.sliderParser, 'Filter Predicted Interactions by Score');
+		filters.sliderFormatter, filters.sliderParser, 'Filter Predicted Interactions by Score');
+    filters.setSummaryNames('filterSummary', 'filterList');
 </script>
 
 <div id="graphHelpDivDialog" class="facetFilter">

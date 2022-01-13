@@ -14,6 +14,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.owasp.encoder.Encode;
 
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.Genotype;
@@ -27,7 +28,6 @@ import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.AlleleFinder;
-import org.jax.mgi.fewi.finder.BatchFinder;
 import org.jax.mgi.fewi.finder.CdnaFinder;
 import org.jax.mgi.fewi.finder.GxdBatchFinder;
 import org.jax.mgi.fewi.finder.GxdFinder;
@@ -41,6 +41,7 @@ import org.jax.mgi.fewi.forms.BatchQueryForm;
 import org.jax.mgi.fewi.forms.GxdHtQueryForm;
 import org.jax.mgi.fewi.forms.GxdLitQueryForm;
 import org.jax.mgi.fewi.forms.GxdQueryForm;
+import org.jax.mgi.fewi.forms.QuickSearchQueryForm;
 import org.jax.mgi.fewi.forms.RecombinaseQueryForm;
 import org.jax.mgi.fewi.handler.GxdMatrixHandler;
 import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
@@ -82,6 +83,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrGxdStageMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrMPCorrelationMatrixCell;
 import org.jax.mgi.fewi.searchUtil.entities.SolrRecombinaseMatrixCell;
 import org.jax.mgi.fewi.searchUtil.entities.SolrString;
+import org.jax.mgi.fewi.searchUtil.entities.SolrAnatomyTerm;
 import org.jax.mgi.fewi.summary.GxdAssayResultSummaryRow;
 import org.jax.mgi.fewi.summary.GxdAssaySummaryRow;
 import org.jax.mgi.fewi.summary.GxdCountsSummary;
@@ -90,6 +92,7 @@ import org.jax.mgi.fewi.summary.GxdMarkerSummaryRow;
 import org.jax.mgi.fewi.summary.GxdRnaSeqHeatMapMarker;
 import org.jax.mgi.fewi.summary.GxdRnaSeqHeatMapSample;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
+import org.jax.mgi.fewi.summary.QSFeatureResult;
 import org.jax.mgi.fewi.util.FewiUtil;
 import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
@@ -147,14 +150,14 @@ public class GXDController {
 	private static Map<String, GxdRnaSeqHeatMapMarker> hmMarkers = new HashMap<String, GxdRnaSeqHeatMapMarker>();
 	private static Map<String, GxdRnaSeqHeatMapSample> hmSamples = new HashMap<String, GxdRnaSeqHeatMapSample>();
 	
+	// maps from EMAPA header term to its ID (for caching)
+	private static Map<String, String> emapaHeaders = new HashMap<String, String>();
+	
 	// --------------------//
 	// instance variables
 	// --------------------//
 
 	private final Logger logger = LoggerFactory.getLogger(GXDController.class);
-
-	@Autowired
-	private BatchFinder batchFinder;
 
 	@Autowired
 	private MarkerFinder markerFinder;
@@ -178,6 +181,9 @@ public class GXDController {
 
 	@Autowired
 	private RecombinaseMatrixCellFinder recombinaseMatrixCellFinder;
+
+	@Autowired
+	private QuickSearchController qsController;
 
 	@Autowired
 	private GXDLitController gxdLitController;
@@ -364,6 +370,90 @@ public class GXDController {
 		return mav;
 	}
 
+	// "batch search" forwarded from quick search Features tab.
+	@RequestMapping("batchForward")
+	public ModelAndView forwardToBatchSearchForm(HttpSession session, @ModelAttribute QuickSearchQueryForm qsQF,
+		HttpServletRequest request) {
+
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
+		logger.debug("->forwardToBatchSearchForm started");
+
+		// Query string and filter values come in from Quick Search.  Use the QS controller to look up markers.
+		
+		StringBuffer markerIDs = new StringBuffer();
+		for (QSFeatureResult qsResult : qsController.getFeatureResults(request, qsQF)) {
+			markerIDs.append(qsResult.getPrimaryID());
+			markerIDs.append(" ");
+		}
+
+		// Add the marker IDs to the GXD batch QF.
+
+		GxdQueryForm gxdQF = new GxdQueryForm();
+		gxdQF.setIds(markerIDs.toString());
+
+		// If the set of IDs doesn't auto-populate into the field, we can updated it in JQuery.
+		
+		ModelAndView mav = new ModelAndView("gxd/gxd_query");
+		mav.addObject("markerIDs", markerIDs.toString());
+
+		// boilerplate
+		
+		mav.addObject("gxdQueryForm", new GxdQueryForm());
+		mav.addObject("gxdBatchQueryForm", gxdQF);
+		mav.addObject("gxdDifferentialQueryForm", new GxdQueryForm());
+		mav.addObject("showBatchSearchForm",true);
+		
+		// Translate the anatomy filter value from terms to term IDs, to be added to the GXD batch QF as structureIDFilter.
+		
+		List<String> structureIDs = translateStructureFilterValues(qsQF.getExpressionFilterF());
+
+		String queryString = "ids=" + gxdQF.getIds();
+		for (String headerID : structureIDs) {
+//			queryString = queryString + "&structureIDFilter=" + headerID;
+		}
+		
+		mav.addObject("queryString", queryString);
+		mav.addObject("structureIDs", structureIDs);
+		return mav;
+	}
+	
+	private List<String> translateStructureFilterValues(List<String> terms) {
+		List<String> structureIDs = new ArrayList<String>();
+		if ((terms != null) && (terms.size() > 0)) {
+			for (String term : terms) {
+				// If we've already seen this header, just use the cached lookup of the ID.
+				if (emapaHeaders.containsKey(term)) {
+					logger.info("emapaHeaders[" + term + "] = " + emapaHeaders.get(term));
+					structureIDs.add(emapaHeaders.get(term));
+				} else {
+					// Otherwise, look up the record from Solr and add it to the cache.
+					Filter exactTerm = new Filter(SearchConstants.STRUCTURE, term, Filter.Operator.OP_EQUAL);
+
+					SearchParams params = new SearchParams();
+					params.setPaginator(new Paginator());
+					params.setFilter(exactTerm);
+					List<SolrAnatomyTerm> termList = vocabFinder.getAnatomyTerms(params).getResultObjects();
+					logger.info("Filter = " + exactTerm.toString());
+					logger.info("Found " + termList.size() + " terms");
+					
+					if ((termList != null) && (termList.size() > 0)) {
+						SolrAnatomyTerm header = termList.get(0);
+						logger.info("Found term " + header.toString());
+						if (header.getAccID() != null) {
+							structureIDs.add(header.getAccID());
+							logger.info("Found term with ID " + header.getAccID());
+						}
+					}
+				}
+			}
+		}
+		logger.info("Returning " + structureIDs.size() + " IDs");
+		return structureIDs;
+	}
+	
 	/*
 	 * generic summary report
 	 */
@@ -778,9 +868,9 @@ public class GXDController {
 			mav.addObject("theilerStage", "");
 		}
 
-		// handle requests for a specific summary tab
+		// handle requests for a specific summary tab (excluding non-alphanumeric characters)
 		String tab = request.getParameter("tab");
-		if(tab != null) mav.addObject("tab", tab);
+		if(tab != null) mav.addObject("tab", tab.replaceAll("[^a-zA-Z0-9_]", ""));
 
 		// handle requests for a specific assay type
 		String assayType = request.getParameter("assayType");
@@ -796,7 +886,7 @@ public class GXDController {
 
 
 	/*
-	 * Forward to Batch Query
+	 * Forward to MGI Batch Query (from Genes tab of GXD summary page)
 	 */
 	@RequestMapping(value="/batch")
 	public String forwardToBatch(
@@ -1059,7 +1149,7 @@ public class GXDController {
 			if (query.getDetectedFilter().size() > 1) {
 				query.setDetected("Yes</B> or <B>No");
 			} else {
-				query.setDetected(query.getDetectedFilter().get(0));
+				query.setDetected(Encode.forHtml(query.getDetectedFilter().get(0)));
 			}
 		}
 		
@@ -1162,7 +1252,7 @@ public class GXDController {
 			if ((nomenclature != null) && !"".equals(nomenclature)) {
 				sb = new StringBuffer();
 				sb.append("Gene nomenclature: ");
-				sb.append(FormatHelper.bold(nomenclature));
+				sb.append(FormatHelper.bold(FormatHelper.cleanHtml(nomenclature)));
 				sb.append(FormatHelper.smallGrey(" current symbol, name, synonyms"));
 				lines.add(sb.toString());
 			}
@@ -1206,10 +1296,10 @@ public class GXDController {
 			sb.append("Genome location(s): ");
 			if (locations.indexOf(":") >= 0) {
 				// location contains coordinate
-				sb.append(FormatHelper.bold(locations + " " + units));
+				sb.append(FormatHelper.bold(FormatHelper.cleanHtml(locations + " " + units)));
 			} else {
 				// location is just a chromosome
-				sb.append(FormatHelper.bold(locations));
+				sb.append(FormatHelper.bold(FormatHelper.cleanHtml(locations)));
 			}
 			lines.add(sb.toString());
 		}
@@ -1273,7 +1363,7 @@ public class GXDController {
 					} else {
 						isFirst = false;
 					}
-					tb.append(FormatHelper.bold(t));
+					tb.append(FormatHelper.bold(FormatHelper.cleanHtml(t)));
 				}
 				structureOut = tb.toString(); 
 			} else {
@@ -1283,7 +1373,7 @@ public class GXDController {
 		} else if ((structureID != null) && (!"".equals(structureID))) {
 			List<VocabTerm> vocabTerms = vocabFinder.getTermByID(structureID);
 			if ((vocabTerms != null) && (vocabTerms.size() > 0)) {
-				structureOut = FormatHelper.bold(getTermText(vocabTerms.get(0)));
+				structureOut = FormatHelper.bold(FormatHelper.cleanHtml(getTermText(vocabTerms.get(0))));
 			} else {
 				structureOut = "(unknown structure)";
 			}
@@ -1291,7 +1381,7 @@ public class GXDController {
 		} else if ((structureKey != null) && (!"".equals(structureKey))) {
 			VocabTerm structureTerm = vocabFinder.getTermByKey(structureKey);
 			if ((structureTerm != null) && (!"".equals(structureTerm))) {
-				structureOut = FormatHelper.bold(getTermText(structureTerm));
+				structureOut = FormatHelper.bold(FormatHelper.cleanHtml(getTermText(structureTerm)));
 			} else {
 				structureOut = "(unknown structure)";
 			}
@@ -1305,7 +1395,7 @@ public class GXDController {
 			sb.append(FormatHelper.bold(detectedText));
 			sb.append(" in ");
 			if ((structureOut != null) && !"".equals(structureOut)) {
-				sb.append(FormatHelper.bold(structureOut));
+				sb.append(FormatHelper.bold(FormatHelper.cleanHtml(structureOut)));
 				sb.append(FormatHelper.smallGrey(" includes substructures"));
 			} else {
 				sb.append(FormatHelper.bold("any structures"));
@@ -2770,6 +2860,19 @@ public class GXDController {
 
 		return gxdFinder.getAssayResultCount(params);
 	}
+	
+	// lookup of result count based solely on EMAPA/EMAPS ID
+	public Integer getResultCountForID(String termID) {
+		logger.debug("in getResultCountForID(" + termID + ")");
+		SearchParams params = new SearchParams();
+		GxdQueryForm form = new GxdQueryForm();
+		form.setStructureID(termID);
+		params.setFilter(parseGxdQueryForm(form));
+		params.setPageSize(0);
+
+		return gxdFinder.getAssayResultCount(params);
+	}
+	
 	@RequestMapping("/images/totalCount")
 	public @ResponseBody Integer getGxdImageCount(
 			HttpSession session,

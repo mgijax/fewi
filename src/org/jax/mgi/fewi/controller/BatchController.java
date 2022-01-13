@@ -153,7 +153,7 @@ public class BatchController {
 
 	private ModelAndView processSummary (HttpSession session, BatchQueryForm queryForm){
 
-		logger.info(queryForm.toString());
+		// logger.info(queryForm.toString());
 
 		session.removeAttribute("idSet");        
 		logger.debug("sessionId: " + session.getId());

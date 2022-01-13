@@ -2,6 +2,7 @@ package org.jax.mgi.fewi.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.jax.mgi.fewi.util.SlowEventMonitor;
 import org.jax.mgi.fewi.util.UserMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,6 +119,16 @@ public class AdminController {
         ModelAndView mav = new ModelAndView("traffic_report");
         mav.addObject("monitor", UserMonitor.getSharedInstance());
 
+        return mav;
+    }
+
+    @RequestMapping("/slowEventLog")
+    public ModelAndView getSlowEventLog(HttpServletRequest request) {
+
+        logger.debug("->getSlowEventLog started");
+ 
+        ModelAndView mav = new ModelAndView("slow_event_log");
+        mav.addObject("monitor", SlowEventMonitor.getSharedMonitor());
         return mav;
     }
 

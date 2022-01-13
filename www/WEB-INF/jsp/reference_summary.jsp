@@ -51,13 +51,13 @@
 					<span class="label">First Author:</span></c:if>
 				<c:if test="${referenceQueryForm.authorScope eq 'last'}">
 					<span class="label">Last Author:</span></c:if>					
-				${referenceQueryForm.author}<br/></c:if>
+				${e:forHtml(referenceQueryForm.author)}<br/></c:if>
 			<c:if test="${not empty referenceQueryForm.journal}">
 				<span class="label">Journal:</span>
-				${referenceQueryForm.journal}<br/></c:if>
+				${e:forHtml(referenceQueryForm.journal)}<br/></c:if>
 			<c:if test="${not empty referenceQueryForm.year}">
 				<span class="label">Year:</span> 
-				${referenceQueryForm.year}<br/></c:if>
+				${e:forHtml(referenceQueryForm.year)}<br/></c:if>
 			<c:if test="${not empty referenceQueryForm.text}">
 				<span class="label">Text 
 				<c:choose>
@@ -71,11 +71,11 @@
 					</c:when>				
 				</c:choose>
 				:</span>
-				${referenceQueryForm.text}<br/>
+				${e:forHtml(referenceQueryForm.text)}<br/>
 			</c:if>	
 			<c:if test="${not empty referenceQueryForm.id}">
 				<span class="label">ID:</span> 
-				${referenceQueryForm.id}<br/></c:if>
+				${e:forHtml(referenceQueryForm.id)}<br/></c:if>
 				<span class="bold"><span id="totalCount" class="count">0</span> reference(s)</span> match your unfiltered search.<br/>
 		</div>
 	</div>

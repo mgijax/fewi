@@ -872,7 +872,7 @@ public class ReferenceController {
 		// build year query filter
 		String year = query.getYear().trim();
 		Integer minYear = new Integer(1800);
-		Integer maxYear = Calendar.getInstance().get(Calendar.YEAR);
+		Integer maxYear = Calendar.getInstance().get(Calendar.YEAR) + 2;
 		if(year != null && !"".equals(year)){
 			int rangeLoc = year.indexOf("-");
 			if(rangeLoc > -1){

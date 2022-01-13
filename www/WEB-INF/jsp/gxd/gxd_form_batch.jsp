@@ -78,6 +78,11 @@ div.middle { vertical-align: middle }
 		</td>
 	</tr>
 </table>
+<c:if test="${not empty structureIDs}">
+	<c:forEach var="headerID" items="${structureIDs}">
+	<input type="hidden" name="structureIDFilter" value="${headerID}"/>
+	</c:forEach>
+</c:if>
 </form:form>
 <script>
 $("#ids").scrollTop(0);		// scroll ID text box up to top of its list

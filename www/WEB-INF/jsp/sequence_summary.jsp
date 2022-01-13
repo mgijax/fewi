@@ -114,12 +114,12 @@
 	}
 	filters.setFewiUrl(fewiurl);
 	filters.setQueryStringFunction(getQuerystring);
-	filters.setSummaryNames('filterSummary', 'filterList');
 	filters.setHistoryManagement("myDataTable", handleHistoryNavigation);
     filters.setGeneratePageRequestFunction(generateRequest);
 	filters.setDataTable(myDataTable);
 	filters.addFilter('strainFilter', 'Strain', 'strainFilter', 'strain', '${configBean.FEWI_URL}sequence/facet/strain');
 	filters.addFilter('typeFilter', 'Type', 'typeFilter', 'type', '${configBean.FEWI_URL}sequence/facet/type');
+	filters.setSummaryNames('filterSummary', 'filterList');
 	filters.registerCallback('scrollAfterFilter', scrollUp);
 </script>
 

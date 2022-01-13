@@ -165,4 +165,8 @@ public class GxdAssayResultSummaryRow {
 	public String getNotes() {
 		return result.getNotes();
 	}
+	
+	public String getCellType() {
+		return result.getCellType();
+	}
 }

@@ -110,4 +110,77 @@ public class FewiUtil {
 
 		return Arrays.asList(tokenArray);
 	}
+	
+	/* Convenience wrapper over monitoring functions (for looking for slow-running queries and such).  This one
+	 * starts monitoring an event of the given type, identified by the given identifier.  Returns a unique key
+	 * to identify it for the endMonitoring method.
+	 */
+	public static String startMonitoring(String eventType, String identifier) {
+		return SlowEventMonitor.getSharedMonitor().startEvent(eventType, identifier);
+	}
+
+	/* Convenience wrapper over monitoring functions (for looking for slow-running queries and such).  This one
+	 * ends monitoring of the event with the given key (which was assigned by the startMonitoring method).
+	 */
+	public static void endMonitoring(String key) {
+		SlowEventMonitor.getSharedMonitor().endEvent(key);
+	}
+
+	/* Convenience wrapper over monitoring functions (for looking for slow-running queries and such).  This one
+	 * notes that the event with the given key has failed for the given reason.
+	 */
+	public static void failMonitoring(String key, String failure) {
+		SlowEventMonitor.getSharedMonitor().failEvent(key, failure);
+	}
+	
+	/* Split string s intelligently, keeping quoted strings together as a single item.  Split on whitespace.
+	 */
+	public static ArrayList<String> intelligentSplit(String s) throws Exception {
+		String t = s.replaceAll("\\s+", " ");		// convert any whitespace to single spaces
+		ArrayList<String> items = null;
+		
+		// If no quotes, just split and go.
+		if (!t.contains("\"")) {
+			items = new ArrayList<String>();
+			for (String q : t.split(" ")) {
+				items.add(q);
+				
+				// Along with the word in 'q', also split it into hyphen-separated pieces to search for
+				// individually.  Split on greater-than and less-than, too.
+				
+				String[] pieces = q.replaceAll("<", "-").replaceAll(">", "-").split("-");
+				if (pieces.length > 1) {
+					for (String r : pieces) {
+						items.add(r);
+					}
+				}
+			}
+			return items;
+		}
+		
+		// If we get here, we know we have double-quotes to deal with.
+		int leftQuote = t.indexOf('"');
+		int rightQuote = t.indexOf('"', leftQuote + 1);
+		
+		if (rightQuote < 0) {
+			throw new Exception("Unmatched quote");
+		}
+
+		// If there's something before the leftmost quote, split it separately.
+		if (leftQuote > 0) {
+			items = intelligentSplit(t.substring(0, leftQuote).trim());
+		} else {
+			items = new ArrayList<String>();
+		}
+		
+		// Then add the quoted part (without the quotes)
+		items.add(t.substring(leftQuote + 1, rightQuote).trim());
+		
+		// And, finally, if there's anything after the right quote, split that too.
+		if ((rightQuote > 0) && (rightQuote + 1 < t.length())) {
+			items.addAll(intelligentSplit(t.substring(rightQuote + 1).trim()));
+		}
+		
+		return items;
+	}
 }

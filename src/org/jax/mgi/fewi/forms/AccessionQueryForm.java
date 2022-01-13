@@ -10,8 +10,7 @@ public class AccessionQueryForm {
     // instance variables
     //--------------------//
     private String id;
-
-    //--------------------//
+    
     // accessors
     //--------------------//
     public String getId() {
@@ -21,7 +20,7 @@ public class AccessionQueryForm {
         this.id = id;
     }
 
-    @Override
+	@Override
 	public String toString() {
 		return "AccessionQueryForm [id=" + id + "]";
 	}

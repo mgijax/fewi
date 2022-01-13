@@ -25,6 +25,7 @@ public class SolrHdpMarker implements SolrHdpEntityInterface
 	List<String> disease;
 	List<String> mouseSystem = new ArrayList<String>();
 	List<String> humanSystem = new ArrayList<String>();
+	List<String> filterableFeatureType = new ArrayList<String>();
 
 	public String getHomologySource() { return homologySource; }
 	public void setHomologySource(String homologySource) {
@@ -62,6 +63,12 @@ public class SolrHdpMarker implements SolrHdpEntityInterface
 	}
 	public void setMarkerId(String markerId) {
 		this.mgiId = markerId;
+	}
+	public List<String> getFilterableFeatureType() {
+		return filterableFeatureType;
+	}
+	public void setFilterableFeatureType(List<String> filterableFeatureType) {
+		this.filterableFeatureType = filterableFeatureType;
 	}
 	public String getType() {return type;}
 	public void   setType(String type) {

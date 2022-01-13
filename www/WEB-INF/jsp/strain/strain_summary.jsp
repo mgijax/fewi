@@ -113,8 +113,8 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 	}
 	filters.setFewiUrl(fewiurl);
 	filters.setQueryStringFunction(getQuerystring);
-	filters.setSummaryNames('filterSummary', 'filterList');
 	filters.addFilter('attributeFilter', 'Attributes', 'attributeFilter', 'attributeFilter', fewiurl + 'strain/facet/attribute');
+	filters.setSummaryNames('filterSummary', 'filterList');
 	filters.registerCallback("strainCallback", updateRequest);
 </script>
 

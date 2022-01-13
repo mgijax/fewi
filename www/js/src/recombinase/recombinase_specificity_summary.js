@@ -9,6 +9,10 @@ function main() {
             label:"<b>Structure</b>",
             width:112, 
             sortable:true},
+        {key:"cellTypes", 
+            label:"<b>Cell Type</b>",
+            maxAutoWidth:80, 
+            sortable:false},
         {key:"assayedAge", 
             label:"<b>Assayed Age</b>",
             width:80, 
@@ -72,6 +76,7 @@ function main() {
         resultsList: "summaryRows",
         fields: [
             {key:"structure"},
+            {key:"cellTypes"},
             {key:"assayedAge"},
             {key:"level"},
             {key:"pattern"},

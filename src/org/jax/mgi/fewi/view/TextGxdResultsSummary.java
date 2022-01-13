@@ -47,6 +47,7 @@ public class TextGxdResultsSummary extends AbstractTextView
 				"Age",
 				"Theiler Stage",
 				"Structure",
+				"Cell Type",
 				"Detected",
 				"TPM Level (RNA-Seq)",
 				"Biological Replicates (RNA-Seq)",
@@ -81,6 +82,12 @@ public class TextGxdResultsSummary extends AbstractTextView
 				writer.write(r.getAge() + "\t");
 				writer.write(r.getTheilerStage() + "\t");
 				writer.write(r.getPrintname() + "\t");
+				
+				String cellType = "";
+				if (r.getCellType() != null) {
+					cellType = r.getCellType();
+				}
+				writer.write(cellType + "\t");
 				writer.write(format(r.getDetectionLevel()) + "\t");
 
 				writer.write(nullProtected(r.getTpmLevel()) + "\t");

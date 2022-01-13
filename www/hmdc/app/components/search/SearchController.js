@@ -10,14 +10,17 @@
 
 		$rootScope.selectedPhenoTypesAndDiseasesModel = [];
 		$rootScope.selectedGenesModel = [];
+		$rootScope.selectedFeatureTypesModel = [];
 
 		$rootScope.selectPhenoTypesAndDiseasesCustemText = { buttonDefaultText: 'Filter by Phenotypes/Disease(s)', dynamicButtonTextSuffix: 'Phenotype/Disease(s) checked' };
 		$rootScope.selectGenesCustemText = { buttonDefaultText: 'Filter by Genes', dynamicButtonTextSuffix: 'Gene(s) checked' };
+		$rootScope.selectFeatureTypesCustemText = { buttonDefaultText: 'Filter by Feature Types', dynamicButtonTextSuffix: 'Feature Type(s) checked' };
 
 		$rootScope.selectPhenoTypesAndDiseasesSettings = { buttonClasses: "", scrollableHeight: '500px', scrollable: true, enableSearch: true,
 			groupByTextProvider: function(groupValue) { if(groupValue == '1') { return "Phenotype(s)"; } else { return "Disease(s)"; } } };
 
 		$rootScope.selectGenesSettings = { buttonClasses: "", scrollableHeight: '500px', scrollable: true, enableSearch: true };
+		$rootScope.selectFeatureTypesSettings = { buttonClasses: "", scrollableHeight: '500px', scrollable: true, enableSearch: true };
 
 		vm.autoComplete = [];
 
@@ -46,6 +49,7 @@
 		vm.removeFilters = function() {
 			$rootScope.selectedPhenoTypesAndDiseasesModel = [];
 			$rootScope.selectedGenesModel = [];
+			$rootScope.selectedFeatureTypesModel = [];
 			$rootScope.$emit("FilterChanged");
 			$rootScope.$emit("ClearFilterText");
 		}

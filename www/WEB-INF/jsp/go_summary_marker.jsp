@@ -164,7 +164,6 @@ All GO annotations for ${marker.symbol} (<a href="${configBean.FEWI_URL}go/marke
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/go_summary_marker.js"></script>
 <script type="text/javascript">
     filters.setQueryStringFunction(getQuerystring);
-    filters.setSummaryNames('filterSummary', 'filterList');
     filters.setFewiUrl("${configBean.FEWI_URL}");
     filters.setHistoryManagement("myDataTable", handleNavigationRaw);
     filters.setDataTable(getPageDataTable());
@@ -173,6 +172,7 @@ All GO annotations for ${marker.symbol} (<a href="${configBean.FEWI_URL}go/marke
     filters.addFilter('categoryFilter', 'Category', 'categoryFilterMenu', 'categoryFilter', fewiurl + 'go/facet/category');
     filters.addFilter('evidenceFilter', 'Evidence', 'evidenceFilterMenu', 'evidenceFilter', fewiurl + 'go/facet/evidence');
     filters.addFilter('referenceFilter', 'Reference', 'referenceFilterMenu', 'referenceFilter', fewiurl + 'go/facet/reference');
+    filters.setSummaryNames('filterSummary', 'filterList');
     filters.registerCallback('scrollUp', scrollToTableTop);
 </script>
 

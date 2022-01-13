@@ -7,6 +7,7 @@ package org.jax.mgi.fewi.searchUtil;
 * receptive to index change
 */
 public class SearchConstants {
+    public static final String UNIQUE_KEY		    = "uniqueKey";
 
     // reference constants
     public static final String REF_ID			    = "reference_id";
@@ -33,6 +34,7 @@ public class SearchConstants {
     // marker constants
     public static final String MRK_KEY              = "marker_key";
     public static final String MRK_ID               = "marker_id";
+    public static final String MARKER_ID            = "markerID";
 	public static final String MRK_TERM_ID 			= "markerTermId";
     public static final String MRK_SYMBOL               = "marker_symbol";
     public static final String MRK_SYMBOL_LOWER         = "markerSymbolLower";
@@ -304,4 +306,56 @@ public class SearchConstants {
 	// general
 	public static final String COLUMN_ID = "columnID";
 	public static final String HAS_IMAGE = "hasImage";
+	public static final String ORGANISM = "organism";
+	public static final String COORD_TYPE = "coordType";
+	
+	// quick search
+	public static final String QS_SEARCH_TERM_EXACT = "searchTermExact";
+	public static final String QS_SEARCH_TERM_INEXACT = "searchTermInexact";
+	public static final String QS_SEARCH_TERM_STEMMED = "searchTermStemmed";
+	public static final String QS_SEARCH_TERM_DISPLAY = "searchTermDisplay";
+	public static final String QS_SEARCH_TERM_TYPE = "searchTermType";
+	public static final String QS_SEARCH_TERM_WEIGHT = "searchTermWeight";
+
+	public static final String QS_SEARCH_COORD_TYPE = "searchCoordType";
+	public static final String QS_SEARCH_CHROMOSOME = "searchChromosome";
+	public static final String QS_SEARCH_START_COORD = "searchStartCoord";
+	public static final String QS_SEARCH_END_COORD = "searchEndCoord";
+	public static final String QS_COORD_SEQUENCE_NUM = "coordSequenceNum";
+
+	public static final String QS_OBJECT_TYPE = "objectType";			// special for other bucket:
+	public static final String QS_OBJECT_SUBTYPE = "objectSubType";		// special for other bucket:
+	public static final String QS_PRIMARY_ID = "primaryID";
+	public static final String QS_DETAIL_URI = "detailUri";
+	public static final String QS_SEQUENCE_NUM = "sequenceNum";
+	public static final String QS_SYMBOL = "symbol";
+	public static final String QS_NAME = "name";
+	public static final String QS_IS_MARKER = "isMarker";
+	public static final String QS_FEATURE_TYPE = "featureType";
+	public static final String QS_CHROMOSOME = "chromosome";
+	public static final String QS_START_COORD = "startCoord";
+	public static final String QS_END_COORD = "endCoord";
+	public static final String QS_STRAND = "strand";
+	public static final String QS_LOCATION = "location";
+
+	public static final String QS_TERM = "term";
+	public static final String QS_TERM_TYPE = "termType";
+	public static final String QS_VOCAB_NAME = "vocabName";				// for display in QS
+	public static final String QS_RAW_VOCAB_NAME = "rawVocabName";		// for certain filtering
+	public static final String QS_ANNOTATION_COUNT = "annotationCount";
+	public static final String QS_ANNOTATION_TEXT = "annotationText";
+	public static final String QS_ANNOTATION_URI = "annotationUri";
+	public static final String QS_IMSR_ID = "imsrID";
+
+	public static final String QS_GO_PROCESS_FACETS = "goProcessFacets";
+	public static final String QS_GO_FUNCTION_FACETS = "goFunctionFacets";
+	public static final String QS_GO_COMPONENT_FACETS = "goComponentFacets";
+	public static final String QS_DISEASE_FACETS = "diseaseFacets";
+	public static final String QS_PHENOTYPE_FACETS = "phenotypeFacets";
+	public static final String QS_MARKER_TYPE_FACETS = "markerTypeFacets";
+	public static final String QS_EXPRESSION_FACETS = "expressionFacets";
+	
+	public static final String QS_ATTRIBUTES = "attributes";			// special for strain bucket
+	public static final String QS_REFERENCE_COUNT = "referenceCount";
+	public static final String QS_REFERENCE_URI = "referenceUri";
 }

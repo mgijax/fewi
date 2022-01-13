@@ -232,6 +232,9 @@ function toggleSpecimenInfo(idToHide, idToShow) {
         <table style='' id='assayResultTable'>
           <tr BGCOLOR="#E0E0E0">
           <th style='padding:4px;' align=left>Structure</th>
+          <c:if test="${assaySpecimen.hasCellTypeData}">				<!-- include cell-type data if available -->
+ 	        <th style='padding:4px;' align=left>Cell Type</th>
+          </c:if>
           <th style='padding:4px;' align=left>Level</th>
           <th style='padding:4px;' align=left>Pattern</th>
           <th style='padding:4px; max-width:20em;' align=left>Image</th>
@@ -240,21 +243,18 @@ function toggleSpecimenInfo(idToHide, idToShow) {
   
           <c:forEach var="specimenResult" items="${assaySpecimen.specimenResults}" >
 
-            <tr>
-            <td style=''> 
-              <a href="${configBean.FEWI_URL}vocab/gxd/anatomy/${specimenResult.structureTerm.primaryId}">${specimenResult.structure}</a>
-            </td>
-            <td style=''>
-              ${specimenResult.level}
-            </td>
-            <td style=''>
-              ${specimenResult.pattern}
-            </td>
-            <td style=''>
-              <c:forEach var="imagepane" items="${specimenResult.imagepanes}" varStatus="istatus">
-				<% ImagePane imagepane = (ImagePane) pageContext.getAttribute("imagepane"); %>
-                <c:if test="${istatus.index>0 }">, </c:if>
-                <c:choose>
+			<c:set var="structureLink" value="${configBean.FEWI_URL}vocab/gxd/anatomy/${specimenResult.structureTerm.primaryId}"/>
+			
+            <c:if test="${not assaySpecimen.hasCellTypeData}">				<!-- no cell-type data, so omit column -->
+              <tr>
+              <td style=''><a href="${structureLink}">${specimenResult.structure}</a></td>
+              <td style=''>${specimenResult.level}</td>
+              <td style=''>${specimenResult.pattern}</td>
+              <td style=''>
+                <c:forEach var="imagepane" items="${specimenResult.imagepanes}" varStatus="istatus">
+				  <% ImagePane imagepane = (ImagePane) pageContext.getAttribute("imagepane"); %>
+                  <c:if test="${istatus.index>0 }">, </c:if>
+                  <c:choose>
 	                <c:when test="${not empty imagepane.image.pixeldbNumericID}">
 		                <a href='${configBean.FEWI_URL}image/${imagepane.image.mgiID}'>
 		                <%= FormatHelper.superscript(imagepane.getCombinedLabel()) %></a>
@@ -262,16 +262,49 @@ function toggleSpecimenInfo(idToHide, idToShow) {
 	                <c:otherwise>
 	                	<%= FormatHelper.superscript(imagepane.getCombinedLabel()) %>
 	                </c:otherwise>
-                </c:choose>
-              </c:forEach>
-            </td>
-            <td style=''>
+                  </c:choose>
+                </c:forEach>
+              </td>
+              <td style=''>
             	<c:if test="${not empty specimenResult.note }">
 	          		<% SpecimenResult specimenResult = (SpecimenResult) pageContext.getAttribute("specimenResult"); %>
 			      	<%= FormatHelper.formatVerbatim(specimenResult.getNote()) %>
 		      	</c:if>
-            </td>
-            </tr>
+              </td>
+              </tr>
+            </c:if>
+
+            <c:if test="${assaySpecimen.hasCellTypeData}">				<!-- has cell-type data, so include column -->
+              <c:forEach var="cellType" items="${specimenResult.cellTypes}">
+                <tr>
+                <td style=''><a href="${structureLink}">${specimenResult.structure}</a></td>
+                <td style=''>${cellType.cellType}</td>
+                <td style=''>${specimenResult.level}</td>
+                <td style=''>${specimenResult.pattern}</td>
+                <td style=''>
+                  <c:forEach var="imagepane" items="${specimenResult.imagepanes}" varStatus="istatus">
+				    <% ImagePane imagepane = (ImagePane) pageContext.getAttribute("imagepane"); %>
+                    <c:if test="${istatus.index>0 }">, </c:if>
+                    <c:choose>
+	                  <c:when test="${not empty imagepane.image.pixeldbNumericID}">
+		                <a href='${configBean.FEWI_URL}image/${imagepane.image.mgiID}'>
+		                  <%= FormatHelper.superscript(imagepane.getCombinedLabel()) %></a>
+	                  </c:when>
+	                  <c:otherwise>
+	                	<%= FormatHelper.superscript(imagepane.getCombinedLabel()) %>
+	                  </c:otherwise>
+                    </c:choose>
+                  </c:forEach>
+                </td>
+                <td style=''>
+            	  <c:if test="${not empty specimenResult.note }">
+	          		<% SpecimenResult specimenResult = (SpecimenResult) pageContext.getAttribute("specimenResult"); %>
+			      	<%= FormatHelper.formatVerbatim(specimenResult.getNote()) %>
+		      	  </c:if>
+                </td>
+                </tr>
+                </c:forEach>
+            </c:if>
 
           </c:forEach>
 

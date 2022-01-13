@@ -116,10 +116,12 @@ public class AccessionFinder {
 
         // If we have one of the standard vocabulary IDs for our vocab browsers, we can just
         // look for terms and skip all the others.
-        for (String vocabPrefix : VOCAB_PREFIXES) {
-        	if (upperID.startsWith(vocabPrefix)) {
-        		getTerms(accID, searchResults);
-        		return searchResults;
+        if (upperID.startsWith("MA:")) {
+        	for (String vocabPrefix : VOCAB_PREFIXES) {
+        		if (upperID.startsWith(vocabPrefix)) {
+        			getTerms(accID, searchResults);
+        			return searchResults;
+        		}
         	}
         }
 
