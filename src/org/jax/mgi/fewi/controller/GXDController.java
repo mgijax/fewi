@@ -396,7 +396,7 @@ public class GXDController {
 
 		// If the set of IDs doesn't auto-populate into the field, we can updated it in JQuery.
 		
-		ModelAndView mav = new ModelAndView("gxd/gxd_generic_summary");
+		ModelAndView mav = new ModelAndView("gxd/gxd_query");
 		mav.addObject("markerIDs", markerIDs.toString());
 
 		// boilerplate
@@ -412,7 +412,7 @@ public class GXDController {
 
 		String queryString = "ids=" + gxdQF.getIds();
 		for (String headerID : structureIDs) {
-			queryString = queryString + "&structureIDFilter=" + headerID;
+//			queryString = queryString + "&structureIDFilter=" + headerID;
 		}
 		
 		mav.addObject("queryString", queryString);
