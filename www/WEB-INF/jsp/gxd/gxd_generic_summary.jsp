@@ -128,6 +128,11 @@ body.yui-skin-sam div#outer {position:relative;}
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary_filters.js"></script>
 <script type="text/javascript">
 prepFilters();
+// Wait a few seconds for data retrieval, then alter the querystring so we'll be able to delete filters
+// as desired.
+setTimeout(function() {
+	querystring = querystring.replaceAll(/ *&structureIDFilter=EMAPA:[0-9]*/g, ''); 
+	}, 2000);
 </script>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
