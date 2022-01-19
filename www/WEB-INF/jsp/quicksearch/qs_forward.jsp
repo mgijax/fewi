@@ -24,7 +24,10 @@
 <form id="forwardForm" action="${forwardToUrl}" METHOD="post">
 <div id="titleBarWrapper" userdoc="QUICK_SEARCH_help.shtml" style="height: 54px">	
   <span class="titleBarMainTitle">Forwarding Quick Search Results to ${forwardToText}</span>
-  <input type="hidden" id="ids" name="ids" value="" />
+  <input type="hidden" id="ids" name="${idFieldname}" value="" />
+  <c:if test="${not empty classField}">
+	  <input type="hidden" value="${classField}" name="class">
+  </c:if>
 </div>
 </form>
 
@@ -46,6 +49,7 @@
   var queryString="${e:forJavaScript(queryString)}";
   var fewiurl = "${configBean.FEWI_URL}";
   var dataEndpoint = "${dataEndpoint}" + "?" + queryString;
+  var delimiter = "${idDelimiter}";
   qsfGetData(dataEndpoint);
 </script>
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

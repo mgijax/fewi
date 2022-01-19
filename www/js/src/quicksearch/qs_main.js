@@ -80,6 +80,7 @@ var qsProcessFilters = function() {
 			$('#fExcelDownload').attr('url', fewiurl + 'quicksearch/features/report.xlsx?' + getQuerystring());
 			$('#fBatchForward').attr('url', fewiurl + 'quicksearch/forward?forwardTo=mgibq&tab=feature&' + getQuerystring());
 			$('#fGxdBatchForward').attr('url', fewiurl + 'gxd/batchForward?' + getQuerystring());
+			$('#fMouseMineForward').attr('url', fewiurl + 'quicksearch/forward?forwardTo=mouseMine&tab=feature&' + getQuerystring());
 			break;
 		case 'A' :
 			pgClearPaginator('allelePaginator');
@@ -88,6 +89,7 @@ var qsProcessFilters = function() {
 			$('#aTextDownload').attr('url', fewiurl + 'quicksearch/alleles/report.txt?' + getQuerystring());
 			$('#aExcelDownload').attr('url', fewiurl + 'quicksearch/alleles/report.xlsx?' + getQuerystring());
 			$('#aBatchForward').attr('url', fewiurl + 'quicksearch/forward?forwardTo=mgibq&tab=allele&' + getQuerystring());
+			$('#aMouseMineForward').attr('url', fewiurl + 'quicksearch/forward?forwardTo=mouseMine&tab=allele&' + getQuerystring());
 			break;
 		case 'V' :
 			pgClearPaginator('vocabPaginator');

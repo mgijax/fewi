@@ -267,6 +267,9 @@ public class QuickSearchController {
         String forwardToText = null;
         String forwardToUrl = null;
         String dataEndpoint = null;
+        String idFieldname = "ids";
+        String classField = null;
+        String idDelimiter = " ";
         
         // go through possible options for 'forwardTo' and map them to a user-friendly name, the
         // endpoints for getting a count of objects and the set of IDs/symbols to forward, and
@@ -277,10 +280,25 @@ public class QuickSearchController {
         	if ("feature".equals(tab)) {
         		dataEndpoint = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "quicksearch/featureBucketIDs";
         	} else if ("allele".equals(tab)) {
+        		dataEndpoint = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "quicksearch/alleleBucketFeatureIDs";
+        	} else {
+        		return errorMav("Unexpected value for parameter 'tab'");
+        	}
+        } else if ("mouseMine".equalsIgnoreCase(forwardTo)) {
+        	forwardToText = "MouseMine";
+        	idFieldname = "externalids";
+        	idDelimiter = ",";
+        	forwardToUrl = ContextLoader.getConfigBean().getProperty("MOUSEMINE_URL") + "mousemine/portal.do";
+        	if ("feature".equals(tab)) {
+        		classField = "SequenceFeature";
+        		dataEndpoint = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "quicksearch/featureBucketIDs";
+        	} else if ("allele".equals(tab)) {
+        		classField = "Allele";
         		dataEndpoint = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "quicksearch/alleleBucketIDs";
         	} else {
         		return errorMav("Unexpected value for parameter 'tab'");
         	}
+
         } else {
         	return errorMav("Unexpected value for parameter 'forwardTo'");
         }
@@ -294,6 +312,9 @@ public class QuickSearchController {
         mav.addObject("forwardToText", forwardToText);
         mav.addObject("forwardToUrl", forwardToUrl);
 		mav.addObject("dataEndpoint", dataEndpoint);
+		mav.addObject("idFieldname", idFieldname);
+		mav.addObject("classField", classField);
+		mav.addObject("idDelimiter", idDelimiter);
 
         mav.addObject("query", queryForm.getQuery());
         mav.addObject("displayQuery", queryForm.getQuery().replaceAll("'", "&#39;"));
@@ -495,11 +516,11 @@ public class QuickSearchController {
 	}
 	
 	// Look up alleles matching the given query, find the marker ID for each, and return the unique set of marker IDs.
-	@RequestMapping("/alleleBucketIDs")
-	public @ResponseBody JsonSummaryResponse<QSTinyResult> getAlleleBucketIDs(HttpServletRequest request,
+	@RequestMapping("/alleleBucketFeatureIDs")
+	public @ResponseBody JsonSummaryResponse<QSTinyResult> getAlleleBucketFeatureIDs(HttpServletRequest request,
 			@ModelAttribute QuickSearchQueryForm queryForm, @ModelAttribute Paginator page) {
 
-        logger.debug("->getAlleleBucketIDs started (seeking results " + page.getStartIndex() + " to " + (page.getStartIndex() + page.getResults()) + ")");
+        logger.debug("->getAlleleBucketFeatureIDs started (seeking results " + page.getStartIndex() + " to " + (page.getStartIndex() + page.getResults()) + ")");
         
         List<QSAlleleResult> out = getAlleleResults(request, queryForm);
         logger.debug("- retrieved " + out.size() + " alleles");
@@ -509,6 +530,29 @@ public class QuickSearchController {
         List<QSTinyResult> results = new ArrayList<QSTinyResult>(markerIDs.size());
         for (String markerID : markerIDs) {
         	results.add(new QSTinyResult(markerID));
+        }
+        
+        JsonSummaryResponse<QSTinyResult> response = new JsonSummaryResponse<QSTinyResult>();
+        response.setSummaryRows(results);
+        response.setTotalCount(out.size());
+        logger.debug("Returning " + results.size() + " marker IDs for " + out.size() + " alleles");
+
+        return response;
+    }
+
+	// Look up alleles matching the given query, find the allele ID for each, and return the unique set of IDs.
+	@RequestMapping("/alleleBucketIDs")
+	public @ResponseBody JsonSummaryResponse<QSTinyResult> getAlleleBucketIDs(HttpServletRequest request,
+			@ModelAttribute QuickSearchQueryForm queryForm, @ModelAttribute Paginator page) {
+
+        logger.debug("->getAlleleBucketIDs started (seeking results " + page.getStartIndex() + " to " + (page.getStartIndex() + page.getResults()) + ")");
+        
+        List<QSAlleleResult> out = getAlleleResults(request, queryForm);
+        logger.debug("- retrieved " + out.size() + " alleles");
+        
+        List<QSTinyResult> results = new ArrayList<QSTinyResult>(out.size());
+        for (QSAlleleResult allele : out) {
+        	results.add(new QSTinyResult(allele.getPrimaryID()));
         }
         
         JsonSummaryResponse<QSTinyResult> response = new JsonSummaryResponse<QSTinyResult>();

@@ -32,6 +32,7 @@
     <select id="fForwards" class="selectList">
     	<option id="fBatchForward" value="batch" url="${configBean.FEWI_URL}/quicksearch/forward?forwardTo=mgibq&tab=feature&queryType=${queryType}&query=${query}">MGI batch query</option>
     	<option id="fGxdBatchForward" value="gxdBatch" url="${configBean.FEWI_URL}/gxd/batchForward?${queryString}">Gene Expression Data</option>
+    	<option id="fMouseMineForward" value="mouseMine" url="${configBean.FEWI_URL}/quicksearch/forward?forwardTo=mouseMine&tab=feature&${queryString}">MouseMine</option>
     </select>
     <button id="fForwardGo" onClick="b1Forward()">Go</button>
   </div>

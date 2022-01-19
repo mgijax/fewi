@@ -28,6 +28,7 @@
     <div class="export" style="padding-left: 25px">Forward to:</div>
     <select id="aForwards" class="selectList">
     	<option id="aBatchForward" value="batch" url="${configBean.FEWI_URL}/quicksearch/forward?forwardTo=mgibq&tab=allele&queryType=${queryType}&query=${query}" title="forward corresponding features to MGI Batch Query">MGI batch query</option>
+    	<option id="aMouseMineForward" value="mouseMine" url="${configBean.FEWI_URL}/quicksearch/forward?forwardTo=mouseMine&tab=allele&${queryString}" title="forward alleles to MouseMine">MouseMine</option>
     </select>
     <button id="aForwardGo" onClick="b5Forward()">Go</button>
   </div>

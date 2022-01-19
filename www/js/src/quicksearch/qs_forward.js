@@ -42,7 +42,7 @@ var qsfGetIDs = function(url, expectedCount) {
 			console.log('Got ' + qsfIDs.length + ' IDs');
 
 			$('#statusDiv').html('Finished...  Forwarding...');
-			$('#ids')[0].value = qsfIDs.join(' ');
+			$('#ids')[0].value = qsfIDs.join(delimiter);
 			$('#forwardForm')[0].submit();
 		} catch (e) {
 			console.log('E3: Failed to get IDs to forward.');
