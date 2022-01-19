@@ -169,7 +169,7 @@ circle {
 			//	    return "markerIDs=" + markerIDs.join(",");
 		}
 	</script>
-	<script type="text/javascript" charset="utf-8" src="http://d3js.org/d3.v3.js"></script>
+	<script type="text/javascript" charset="utf-8" src="https://d3js.org/d3.v3.js"></script>
 	<!--  <script type="text/javascript" charset="utf-8" src="${configBean.FEWI_URL}assets/js/d3.v3.js"></script> -->
 
 	<div id="panes" style="clear: both; white-space: nowrap;">
