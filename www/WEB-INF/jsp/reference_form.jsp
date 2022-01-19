@@ -45,7 +45,7 @@
 				<div style="height:3em;" class="example">
 					<div style="float:left;text-align:left;vertical-align:middle;width:7em;" class="example">
 						Examples:<br/>
-						(See <a href="ftp://ftp.ncbi.nih.gov/pubmed/J_Medline.txt">NLM</a>.)
+						(See <a href="https://www.ncbi.nlm.nih.gov/nlmcatalog?term=journalspmc">NLM</a>.)
 					</div>
 					<div style="text-align:left;" class="example">
 						Proc Natl Acad Sci USA<br/>
