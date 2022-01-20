@@ -34,7 +34,7 @@
     	<option id="fGxdBatchForward" value="gxdBatch" url="${configBean.FEWI_URL}/gxd/batchForward?${queryString}">Gene Expression Data</option>
     	<option id="fMouseMineForward" value="mouseMine" url="${configBean.FEWI_URL}/quicksearch/forward?forwardTo=mouseMine&tab=feature&${queryString}">MouseMine</option>
     </select>
-    <button id="fForwardGo" onClick="b1Forward()">Go</button>
+    <button id="fForwardGo" onClick="b1Forward()" title="Results may be sorted differently depending on destination.">Go</button>
   </div>
 </div>
 <div id="b1Results"></div>
