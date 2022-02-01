@@ -68,10 +68,11 @@ public class QuickSearchQueryForm {
     // accessors
     //--------------------//
     public String getQuery() {
-        return query.replaceAll("&#39;", ",");			// reverse escaping done for display of single-quotes in query box
+        // reverse escaping done for display of single-quotes in query box, remove leading/trailing spaces
+        return query.replaceAll("&#39;", ",").trim();
     }
     public void setQuery(String query) {
-        this.query = query;
+        this.query = query.trim();				// ensure no leading/trailing spaces
     }
 
     public String getQueryType() {
