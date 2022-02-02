@@ -320,3 +320,17 @@ var qsForward = function(selectList) {
 		window.open(url, '_blank');
 	}
 }
+
+// If any text on the page is selected, clear the selection.  (hack for odd bug where the left parenthesis
+// of the next tab to the right is selected whenever a filter is added)
+// From https://stackoverflow.com/questions/3169786/clear-text-selection-with-javascript
+var qsClearSelection = function() {
+	var sel = window.getSelection ? window.getSelection() : document.selection;
+	if (sel) {
+    	if (sel.removeAllRanges) {
+        	sel.removeAllRanges();
+    	} else if (sel.empty) {
+        	sel.empty();
+    	}
+	}
+}

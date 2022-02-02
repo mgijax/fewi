@@ -180,6 +180,7 @@ function initializeFilterLibrary(delay) {
 		filters.setButtonInfo(mapping);
 		filters.registerCallback("filterCallback", qsProcessFilters);
 		filters.registerCallback("gaLogCallback", qsLogFilters);
+		filters.registerCallback("qsClearSelection", qsClearSelection);
 		filters.setRemovalDivStyle('block');
 	} else {
 		setTimeout(function() { initializeFilterLibrary(delay) }, delay);
