@@ -212,6 +212,9 @@
 .selectList {
 	font-weight: normal;
 }
+.lightYellow { background-color: #ffd; }
+.lightGray { background-color: #dadada; }
+.italic { font-style: italic; }
 </style>
 
 <!-- from https://developers.google.com/fonts/docs/material_icons -->
