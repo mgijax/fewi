@@ -797,7 +797,13 @@ public class QuickSearchController {
         	if ((term != null) && (term.length() > 0)) {
         		if (term.length() > 1) {
         			if (!onlyExact) {
-        				filters.add(new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT, term, Operator.OP_STRING_CONTAINS));
+        				// handling for skel* dypl* example
+        				if ((term.indexOf("*") >= 0) && (term.indexOf(" ") < 0)) {
+        					filters.add(new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT, term, Operator.OP_EQUAL_WILDCARD_ALLOWED));
+        				} else {
+        					filters.add(new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT, term, Operator.OP_STRING_CONTAINS));
+        				}
+        				
         			} else {
         				filters.add(new Filter(SearchConstants.QS_SEARCH_TERM_INEXACT, term, Operator.OP_EQUAL));
         			}
@@ -2193,8 +2199,9 @@ public class QuickSearchController {
         		if (wcFilter != null) {
         			orFilters.add(wcFilter);
         		}
+        	} else {
+        		orFilters.add(createInexactTermFilter(qf, bucket));
         	}
-        	orFilters.add(createInexactTermFilter(qf, bucket));
         	orFilters.add(createStemmedTermFilter(qf, bucket));
         	myFilter = Filter.or(orFilters);
         }
