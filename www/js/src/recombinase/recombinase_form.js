@@ -100,16 +100,21 @@ $(function(){
             const structureInput = tr.querySelector('input[type="text"]')
             attachAutocomplete(structureInput)
             // wire in NotDetected/NowhereElse incompatibility
+            const ane = $creForm.find("#nowhereElse")[0]
             const radios = tr.querySelectorAll('input[type="radio"]')
             radios.forEach(r => {
                 r.addEventListener('click', check_nd_nwe_incompatibility)
+                if (r.value === "false" && ane.checked) {
+                   r.disabled = true
+                }
             })
-            const ane = $creForm.find("#nowhereElse")[0]
-            ane.addEventListener('click', check_nd_nwe_incompatibility)
         }
 
         /* add  the first row */
         addStructureRow()
+
+        const ane = $creForm.find("#nowhereElse")[0]
+        ane.addEventListener('click', check_nd_nwe_incompatibility)
 
 	/* Clicking ADD button adds a row to the structure table */
 	$creForm.find(".addButton").click(function(e){
