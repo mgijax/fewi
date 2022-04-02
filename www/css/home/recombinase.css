@@ -50,9 +50,8 @@
 	margin-left: 20px;
 }
 
-#creForm input[type="text"] {
-	display: block;
-	margin-left: 20px;
+#creForm tr > td:first-child {
+	padding-left: 20px;
 }
 
 /* The "AND" text between inputs */
@@ -71,15 +70,29 @@
 	margin-bottom: 12px;
 }
 
+#creForm table.structure-table button.removeButton {
+        font-weight: bold;
+        padding-left: 1px;
+        padding-right: 1px;
+        cursor: pointer;
+}
+#creForm table.structure-table button.removeButton:hover {
+        color: red;
+}
+
+#creForm table.wrapper-table td.search-cell {
+    border-left: thin solid #ddd;
+    padding-left: 50px;
+}
+
 #creForm table.structure-table td, 
 #creForm table.structure-table th {
     text-align: center;
     padding-right: 10px;
 }
 
+
 #creForm .goButton {
-	clear: left;
-	margin-top: 30px;
 	padding: 4px 16px;
 	cursor: pointer;
 }

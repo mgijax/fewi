@@ -10,6 +10,7 @@ var disableColor = "#CCC";
 $(function(){
 
 	var $creForm = $("#creForm");
+        var rowCount = 0;
 
         //--------------------------------------
         // wire in the structure autocomplete.
@@ -57,7 +58,7 @@ $(function(){
         var check_nd_nwe_incompatibility = function () {
             const creForm = document.getElementById('creForm')
             const ndRadios = creForm.querySelectorAll('input[type="radio"][value="false"]')
-            const ndHeader = creForm.querySelector('thead th.nd-header')
+            const ndHeader = creForm.querySelector('table.structure-table thead th.nd-header')
             const ane = creForm.querySelector('#nowhereElse')
             const aneLabel = creForm.querySelector('label.nowhereElseLabel')
             //
@@ -66,7 +67,11 @@ $(function(){
             if (ndChecked) {
                 ane.disabled = true
                 aneLabel.classList.add('disabled')
+                ndRadios.forEach(r => r.disabled = false)
+                ndHeader.classList.remove('disabled')
             } else if (ane.checked) {
+                ane.disabled = false
+                aneLabel.classList.remove('disabled')
                 ndRadios.forEach(r => r.disabled = true)
                 ndHeader.classList.add('disabled')
             } else {
@@ -80,22 +85,28 @@ $(function(){
         /* add another structure input with detected/not detected radios */
         var addStructureRow = function () {
             const stbody = $creForm.find("table.structure-table tbody")[0]
-            const nrows = stbody.childNodes.length
+            const nrows = $(stbody).find('tr').length
             const tr = document.createElement('tr')
+            rowCount += 1
             tr.innerHTML =
                 `<td>
+                    <button type="button" class="removeButton" title="Remove this structure.">X</button>
                     <input type="text" size="40"
-                        name="structure_${nrows}"
+                        name="structure_${rowCount}"
                         class="ui-autocomplete-input structure-input"
                         style="margin-bottom:8px"
                         name="creStructureAC"
                         placeholder="any anatomical structure" value="" />
                 </td><td>
-                    <input type="radio" name="detected_${nrows}" value="true" checked />
+                    <input type="radio" name="detected_${rowCount}" value="true" checked />
                 </td><td>
-                    <input type="radio" name="detected_${nrows}" value="false" />
+                    <input type="radio" name="detected_${rowCount}" value="false" />
                 </td>`
             stbody.appendChild(tr)
+            // click handler for delete-row button
+            $(tr).find("button.removeButton").click(function(e){
+                removeStructureRow(tr)
+            });
             // wire in autocomplete behavior
             const structureInput = tr.querySelector('input[type="text"]')
             attachAutocomplete(structureInput)
@@ -104,10 +115,20 @@ $(function(){
             const radios = tr.querySelectorAll('input[type="radio"]')
             radios.forEach(r => {
                 r.addEventListener('click', check_nd_nwe_incompatibility)
-                if (r.value === "false" && ane.checked) {
-                   r.disabled = true
-                }
             })
+            check_nd_nwe_incompatibility()
+        }
+
+        /* remove another last structure row (unless there's only one row) */
+        var removeStructureRow = function (tr) {
+            // hang on to the parent, then remove the row
+            const pnode = tr.parentNode
+            tr.remove()
+            // don't allow zero rows
+            const nremaining = pnode.querySelectorAll('tr').length
+            if (nremaining === 0) addStructureRow()
+            //
+            check_nd_nwe_incompatibility()
         }
 
         /* add  the first row */
@@ -117,7 +138,7 @@ $(function(){
         ane.addEventListener('click', check_nd_nwe_incompatibility)
 
 	/* Clicking ADD button adds a row to the structure table */
-	$creForm.find(".addButton").click(function(e){
+	$creForm.find("button.addButton").click(function(e){
             addStructureRow()
 	});
 
@@ -168,7 +189,12 @@ $(function(){
                             .appendTo(ul);
         };
         //--------------------------------------
-        /* validate form inputs */
+        /* (1) Validates form inputs and (2) encodes the multiple structures and 
+         * detected/not-detected into a single string field ("structures")
+         *
+         * Current validation rules:
+         * - no two structures can be the same
+         */
         var validate_form_inputs = function () {
             const creForm = document.getElementById('creForm')
             const hinput = creForm.querySelector('input[name="structures"]')
@@ -182,18 +208,19 @@ $(function(){
                 const sname = si.value.trim()
                 const nd = ndRadios[i].checked
                 if (sname) {
-                    if (snames.has(sname) && retVal) {
+                    if (snames.has(sname) && retVal /* avoids multiple alerts */) {
                         const msg = "Query error: Duplicate structure name detected: " +
                                     sname + ". Please modify your query and try again."
                         alert(msg)
                         retVal = false // cancel form submission
                     }
                     snames.add(sname)
-                    structs.push((nd?"-":"") + sname)
+                    structs.push((nd?"-":"+") + sname)
                 }
             })
+            // sets the hidden "structures" field
             hinput.value = structs.join('|')
-            return retVal // proceed with form submission
+            return retVal
         }
 
         // attach the validation routing as the onsubmit handler

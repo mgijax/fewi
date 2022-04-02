@@ -288,7 +288,7 @@ public class SolrHunter<T> implements Hunter<T> {
 
 		// Add the facets, can be overwritten.
 		addFacets(query);
-		if(!searchParams.getSuppressLogs()) logger.debug("SolrQuery:" + query);
+		if(!searchParams.getSuppressLogs()) logger.info("SolrQuery:" + query);
 
 
 
