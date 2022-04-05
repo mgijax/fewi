@@ -6,7 +6,7 @@
 
 	<label class="searchLabel">Recombinase activity profile</label>
         
-        <button type="button" class="addButton" style="margin-left:20px;">Add structure</button>
+        <button type="button" class="addButton" style="margin-left:40px;">Add structure</button>
         <%-- <button type="button" class="removeButton">Remove structure</button> --%>
         <%-- multiple structres with detected/not-detected encoded into this field for 
              easier  processing on the server side. E.g., "heart and not liver" would be

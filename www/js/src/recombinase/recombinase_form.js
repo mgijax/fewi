@@ -80,6 +80,10 @@ $(function(){
                 ndRadios.forEach(r => r.disabled = false)
                 ndHeader.classList.remove('disabled')
             }
+            //
+            const displayValue = ndRadios.length > 1 ? 'initial' : 'none'
+            const removeButtons = creForm.querySelectorAll('button.removeButton')
+            removeButtons.forEach(b => b.style.display = displayValue)
         }
 
         /* add another structure input with detected/not detected radios */
