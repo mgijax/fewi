@@ -4,11 +4,7 @@
 
 <form method="GET" target="_blank" action="${configBean.FEWI_URL}recombinase/summary" id="creForm" name="recombinaseQueryForm">
 
-	<label class="searchLabel">Recombinase activity profile</label>
-        
-        <button type="button" class="addButton" style="margin-left:40px;">Add structure</button>
-        <%-- <button type="button" class="removeButton">Remove structure</button> --%>
-        <%-- multiple structres with detected/not-detected encoded into this field for 
+        <%-- multiple structures with detected/not-detected encoded into this field for 
              easier  processing on the server side. E.g., "heart and not liver" would be
              encoded as "heart|-liver" (see recombinase_form.js) --%>
         <input type="hidden" name="structures" value="" />
@@ -20,6 +16,8 @@
         <tr>
         <td>
             <div class="wrapper">
+                <label class="searchLabel">Recombinase activity profile</label>
+                <button type="button" class="addButton" style="margin-left:20px;">Add structure</button>
 		<table class="structure-table">
                 <thead>
 		        <tr> <th></th> <th>Detected</th> <th class="nd-header">Not detected</th> </tr>
@@ -39,6 +37,7 @@
 		<label class="searchLabel">Recombinase driven by</label>
 		<input type="text" size="40" name="driver" id="creDriverAC"
 			placeholder="any driver or promoter"
+                        style="margin-left: 20px;"
 			value="" />
             </div>
         </td>
