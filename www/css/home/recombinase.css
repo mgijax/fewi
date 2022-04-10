@@ -92,7 +92,8 @@
 }
 
 
-#creForm .goButton {
+#creForm .goButton,
+#creForm .resetButton {
 	padding: 4px 16px;
 	cursor: pointer;
 }

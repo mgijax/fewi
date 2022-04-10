@@ -43,6 +43,7 @@
         </td>
         <td class="search-cell">
             <button type="submit" class="goButton">Search</button>
+            <button type="button" class="resetButton">Reset</button>
         </td>
         </tr>
 

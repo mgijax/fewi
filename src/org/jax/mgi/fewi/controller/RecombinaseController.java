@@ -127,8 +127,18 @@ public class RecombinaseController {
         // issue the query and get back the matching Allele objects
         SearchResults<Allele> searchResults = recombinaseFinder.searchRecombinases(params);
         
+        // Need at least one detected-in structure
+        boolean hasDetectedStructure = false;
+        String[] tokens = query.getStructures().trim().toLowerCase().split("[|]");
+        for(String t : tokens) {
+            t = t.trim();
+            if (t.length() > 1 && t.charAt(0) == '+') {
+                hasDetectedStructure = true;
+            }
+        }
+
         RecombinaseHighlightInfo highlightInfo = new RecombinaseHighlightInfo();
-        if (!empty(query.getStructures()) || !empty(query.getSystem()) || !empty(query.getDetected()))
+        if (hasDetectedStructure || !empty(query.getSystem()) || !empty(query.getDetected()))
         {
         	// get highlight information
         	highlightInfo = recombinaseFinder.searchRecombinaseHighlights(params);
@@ -626,7 +636,11 @@ public class RecombinaseController {
                 qualResultsFilter.setFilterJoinClause(Filter.JoinClause.FC_OR);
                 qualResultsFilter.setNestedFilters(resultStructureFilterList);
                 filterList.add(qualResultsFilter);
-        }
+                //
+                // only return detected results 
+                filterList.add(new Filter(SearchConstants.CRE_DETECTED, "true", Filter.Operator.OP_HAS_WORD));
+
+        };
 
 /*
         // Structure queries

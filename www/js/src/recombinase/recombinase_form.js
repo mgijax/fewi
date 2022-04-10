@@ -135,15 +135,36 @@ $(function(){
             check_nd_nwe_incompatibility()
         }
 
+        /* clears the form to the initial state: 
+         * - one structuure row, nothing in text box, and detected is checked
+         * - the "and nowhere else box is unchecked.
+         * - the driver field is blank
+         */
+        var resetForm = function () {
+            const creForm = document.getElementById('creForm')
+            const trs = creForm.querySelectorAll('table.structure-table tbody > tr')
+            const ane = creForm.querySelector('#nowhereElse')
+            const driver = creForm.querySelector('#creDriverAC')
+
+            ane.checked = false
+            driver.value = ''
+            trs.forEach(tr => removeStructureRow(tr))
+        }
+
         /* add  the first row */
         addStructureRow()
 
         const ane = $creForm.find("#nowhereElse")[0]
         ane.addEventListener('click', check_nd_nwe_incompatibility)
 
-	/* Clicking ADD button adds a row to the structure table */
+	/* Clicking Add button adds a row to the structure table */
 	$creForm.find("button.addButton").click(function(e){
             addStructureRow()
+	});
+
+	/* Clicking Reset button clears the form */
+	$creForm.find("button.resetButton").click(function(e){
+            resetForm()
 	});
 
         //--------------------------------------
