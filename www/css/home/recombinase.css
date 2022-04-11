@@ -92,8 +92,15 @@
 }
 
 
-#creForm .goButton,
-#creForm .resetButton {
+#creForm .goButton {
+    color: green;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+#creForm .resetButton,
+#creForm .goButton {
+        width: 78px;
 	padding: 4px 16px;
 	cursor: pointer;
 }

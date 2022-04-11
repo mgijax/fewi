@@ -42,8 +42,12 @@
             </div>
         </td>
         <td class="search-cell">
-            <button type="submit" class="goButton">Search</button>
-            <button type="button" class="resetButton">Reset</button>
+            <table>
+            <tbody>
+                <tr><td><button type="submit" class="goButton">Search</button></td></tr>
+                <tr><td><button type="button" class="resetButton">Reset</button></td></tr>
+            </tbody>
+            </table>
         </td>
         </tr>
 
