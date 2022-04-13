@@ -19,6 +19,6 @@ lib_java_fe.dir=/usr/local/mgi/live/lib/java/
 global_config.dir=/usr/local/mgi/live/mgiconfig/web/
 
 <!--config files -->
-#onfig.file=fewi.properties.bluebob
+config.file=fewi.properties.bluebob
 web_xml.file=web.xml.public
 #web_xml.file=web.xml.dev
