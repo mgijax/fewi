@@ -20,7 +20,13 @@
                 <button type="button" class="addButton" style="margin-left:20px;">Add structure</button>
 		<table class="structure-table">
                 <thead>
-		        <tr> <th></th> <th>Detected</th> <th class="nd-header">Not detected</th> </tr>
+		        <tr>
+                            <th></th>
+                            <th>Detected</th>
+                            <th class="nd-header" style="position:relative; padding-right:18px;">Not detected 
+                                <img style="position: absolute; top:-10px; right:2px; cursor:help;" title="Not detected means the search will return alleles whose recombinase activity was absent (not detected), as well as alleles whose recombinase activity has not been analyzed or recorded in the database for the specified structure." src="${configBean.WEBSHARE_URL}images/blue_info_icon.gif" />
+                            </th>
+                        </tr>
                 </thead>
                 <tbody>
                     <!-- rows added by www/js/src/recombinase/recombinase_form.js --></tbody>
