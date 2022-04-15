@@ -90,6 +90,23 @@
 				<span class="enhance">You searched for:</span><br/>
 				<c:if test="${not empty recombinaseQueryForm.driver}"><span class="label">Driver</span> equals
 					<span class="label">${fn:replace(e:forHtml(recombinaseQueryForm.driver),";", ",") }</span><br/></c:if>
+				<c:if test="${not empty recombinaseQueryForm.structures}">
+					<b>Activity detected</b>:
+                                        <c:forTokens items="${recombinaseQueryForm.structures}" delims="|" var="struct" varStatus="status">
+                                            <c:set var = "firstChar" value = "${fn:substring(struct, 0, 1)}" />
+                                            <c:set var = "struct2" value = "${fn:substring(struct, 1, fn:length(struct))}" />
+                                            <c:if test="${firstChar == '-'}">not </c:if> in 
+                                            <b>${e:forHtml(struct2)}</b>
+                                            <c:if test="${not status.last}"> and </c:if>
+                                        </c:forTokens>
+					<c:if test="${not empty recombinaseQueryForm.nowhereElse}">
+						and <b>nowhere else</b>
+					</c:if>
+					<span class="smallGrey"> includes synonyms &amp; substructures</span>
+					<br/>
+					<span>System(s) in bold contain matching search terms.</span>
+					<br/></c:if>
+
 				<c:if test="${not empty recombinaseQueryForm.structure}">
 					<b>Activity ${operator}</b> in <b>${e:forHtml(recombinaseQueryForm.structure)}</b>
 					<c:if test="${not empty recombinaseQueryForm.nowhereElse}">
@@ -121,6 +138,7 @@
 			<a id="inducerFilter" class="filterButton">Inducer&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
 			<a id="systemDetectedFilter" class="filterButton">Detected in System&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
 			<a id="systemNotDetectedFilter" class="filterButton">Not Detected in System&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
+                        <img style="cursor:help;" title="Not detected means the search will return alleles whose recombinase activity was absent (not detected), as well as alleles whose recombinase activity has not been analyzed or recorded in the database for the specified structure." src="http://bluebob.informatics.jax.org/webshare/images/blue_info_icon.gif">
 		</div><br />
 		<div id="breadbox" style="width: 765px; margin-top: 10px;">
 			<div id="filterSummary" class="filters" style="display: none">

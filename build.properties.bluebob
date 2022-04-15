@@ -13,12 +13,12 @@ testoutput.dir=testoutput
 
 <!--local server directories -->
 #fedatamodel.dir=dist
-fedatamodel.dir=/home/jsb/jax/pub/fedatamodel/dist/
-snpdatamodel.dir=/home/jsb/jax/pub/snpdatamodel/dist/
-lib_java_fe.dir=/home/jsb/jax/pub/lib/java/
-global_config.dir=/home/jsb/jax/pub/mgiconfig/web
+fedatamodel.dir=/usr/local/mgi/live/fedatamodel/dist/
+snpdatamodel.dir=/usr/local/mgi/live/snpdatamodel/dist/
+lib_java_fe.dir=/usr/local/mgi/live/lib/java/
+global_config.dir=/usr/local/mgi/live/mgiconfig/web/
 
 <!--config files -->
-#onfig.file=fewi.properties.bluebob
+config.file=fewi.properties.bluebob
 web_xml.file=web.xml.public
 #web_xml.file=web.xml.dev

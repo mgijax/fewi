@@ -95,7 +95,7 @@ public class RecombinaseController {
     public String recombinaseSummary(HttpServletRequest request, Model model,
             @ModelAttribute RecombinaseQueryForm queryForm) {
 
-        logger.debug("recombinase /summary queryString: " + request.getQueryString());
+        logger.info("recombinase /summary queryString: " + request.getQueryString());
 
         // objects needed by display
         model.addAttribute("recombinaseQueryForm", queryForm);
@@ -114,7 +114,7 @@ public class RecombinaseController {
             @ModelAttribute RecombinaseQueryForm query,
             @ModelAttribute Paginator page)
     {
-        logger.debug(query.toString());
+        logger.info(query.toString());
 
         // set up search parameters
         SearchParams params = new SearchParams();
@@ -127,8 +127,18 @@ public class RecombinaseController {
         // issue the query and get back the matching Allele objects
         SearchResults<Allele> searchResults = recombinaseFinder.searchRecombinases(params);
         
+        // Need at least one detected-in structure
+        boolean hasDetectedStructure = false;
+        String[] tokens = query.getStructures().trim().toLowerCase().split("[|]");
+        for(String t : tokens) {
+            t = t.trim();
+            if (t.length() > 1 && t.charAt(0) == '+') {
+                hasDetectedStructure = true;
+            }
+        }
+
         RecombinaseHighlightInfo highlightInfo = new RecombinaseHighlightInfo();
-        if (!empty(query.getStructure()) || !empty(query.getSystem()) || !empty(query.getDetected()))
+        if (hasDetectedStructure || !empty(query.getSystem()) || !empty(query.getDetected()))
         {
         	// get highlight information
         	highlightInfo = recombinaseFinder.searchRecombinaseHighlights(params);
@@ -540,6 +550,9 @@ public class RecombinaseController {
         // start filter list to add filters to
         List<Filter> filterList = new ArrayList<Filter>();
 
+        // List of OR-ed structures getting qulifying results
+        List<Filter> resultStructureFilterList = new ArrayList<Filter>();
+
         // build driver query filter
         String driver = query.getDriver();
         if ((driver != null) && (!"".equals(driver))) {
@@ -563,13 +576,75 @@ public class RecombinaseController {
                 Filter.Operator.OP_EQUAL));
         }
 
-        // structure operator (detected vs. assayed) and 'nowhere else' checkbox
-        boolean detectedOperator = "detected".equalsIgnoreCase(query.getStructureOperator());
+        // structure operator (detected vs. assayed)
+        //boolean detectedOperator = "detected".equalsIgnoreCase(query.getStructureOperator());
+        // 'nowhere else' checkbox
         boolean nowhereElse = "true".equalsIgnoreCase(query.getNowhereElse());
         
+
+        // structures detected/not-detected. 
+        // Build filter to return the qualifying results of qualifying alleles.
+        // To find _all_ results of qualifying alleles, look in the allStructures field.
+        // To find qualifying results of qualifying results, look in the structureSearch field.
+        // Example: heart and lung but not liver. 
+        //      All results for qualifying alleles are have heart AND lung in allStructures field but not liver
+        //      Qualifying results additionally have heart OR lung in the structureSearch field.
+        //              (No need to check that structureSearch doesn't contain liver. Already know 
+        //              there are no results in liver for this allele.)
+        // The final filter should generate this query:
+        //      allStructures:heart AND 
+        //      allStructures:lung AND
+        //      -allStructures:liver AND 
+        //      (structureSearch:heart OR structureSearch:lung)
+        //
+        String structures = query.getStructures();
+        if ((structures != null) && (!"".equals(structures))) {
+                /* The structures parameter is a pipe-separated list of structures.
+                 * Each structure may optionally begin with a "-", indicating "NOT"
+                 */
+                logger.info("structures query= " + structures);
+                String[] structures2 = structures.trim().toLowerCase().split("[|]");
+                Collection<String> structureTokens = new ArrayList<String>(Arrays.asList(structures2));
+                for(String structureToken : structureTokens) {
+                        // every struct begins with either + (detected) or - (not-detected)
+                        char firstChar = structureToken.charAt(0);
+                        structureToken = structureToken.substring(1).trim();
+                        boolean notDetected = firstChar == '-';
+			if(!structureToken.equals(""))
+			{
+                                logger.info("token= "+ (notDetected ? "NOT " : "") + structureToken);
+				String sToken = "\""+structureToken+"\"";
+                                Filter f = new Filter(SearchConstants.CRE_ALL_STRUCTURES, sToken, Filter.Operator.OP_HAS_WORD);
+                                if (notDetected) {
+                                        f.negate();
+                                        filterList.add(f);
+                                } else {
+                                        filterList.add(f);
+                                        Filter f2 = new Filter(SearchConstants.CRE_STRUCTURE, sToken, Filter.Operator.OP_HAS_WORD);
+                                        resultStructureFilterList.add(f2);
+				        // nowhere else operator -- search exclusiveStructures field to see if the specified 
+                                        // structure is one that contains ALL the 'detected' results for the particular allele
+				        if (nowhereElse) {
+					        filterList.add(new Filter(SearchConstants.CRE_EXCLUSIVE_STRUCTURES,sToken,Filter.Operator.OP_HAS_WORD));
+				        }
+                                }
+				
+
+			}
+                }
+                Filter qualResultsFilter = new Filter();
+                qualResultsFilter.setFilterJoinClause(Filter.JoinClause.FC_OR);
+                qualResultsFilter.setNestedFilters(resultStructureFilterList);
+                filterList.add(qualResultsFilter);
+                //
+                // only return detected results 
+                filterList.add(new Filter(SearchConstants.CRE_DETECTED, "true", Filter.Operator.OP_HAS_WORD));
+
+        };
+
+/*
         // Structure queries
         String structure = query.getStructure();
-
         if ((structure != null) && (!"".equals(structure))) {
         	logger.debug("splitting structure query into tokens");
 			Collection<String> structureTokens = QueryParser.parseNomenclatureSearch(structure);
@@ -619,6 +694,7 @@ public class RecombinaseController {
 
         	filterList.add(Filter.and(Arrays.asList(notPresentFilter, absentFilter)));
         }
+*/
 
         // inducer
 		if (query.getInducer().size() > 0){

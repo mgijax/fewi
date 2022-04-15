@@ -97,6 +97,7 @@ public class SearchConstants {
 	public static final String CRE_STRUCTURE 			= "structure";
 	public static final String CRE_DETECTED 			= "detected";
 	public static final String CRE_SYSTEM_HL_GROUP		= "systemHlGroup";
+	public static final String CRE_ALL_STRUCTURES	= "allStructures";
 	public static final String CRE_EXCLUSIVE_STRUCTURES	= "exclusiveStructures";
 
 	public static final String CRE_SYSTEM_DETECTED		= "alleleSystemDetected";

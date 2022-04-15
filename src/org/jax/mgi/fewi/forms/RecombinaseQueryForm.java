@@ -10,12 +10,13 @@ public class RecombinaseQueryForm {
 	private String alleleKey;
 	private String system;
 	private String systemKey;
-	private String structure;
+	private String structure; /* obsolete? */
+        private String structures;
 	private String nowhereElse;
-	private String structureOperator;
+	private String structureOperator; /* obsolete? */
 
-	private String detected;
-	private String notDetected;
+	private String detected; /* obsolete? */
+	private String notDetected; /* obsolete? */
 
 	private List<String> inducer = new ArrayList<String>();
 	private List<String> systemDetected = new ArrayList<String>();
@@ -85,6 +86,14 @@ public class RecombinaseQueryForm {
 		return structure;
 	}
 
+	// Structures
+	public void setStructures(String structures) {
+		this.structures = structures;
+	}
+	public String getStructures() {
+		return structures;
+	}
+
 	// Detected
 	public void setDetected(String detected) {
 		this.detected = detected;
@@ -130,6 +139,7 @@ public class RecombinaseQueryForm {
 				+ ", alleleKey=" + alleleKey
 				+ ", system=" + system
 				+ ", structure=" + structure
+				+ ", structures=" + structures
 				+ ", inducer=" + inducer
 				+ ", detected=" + detected
 				+ ", notDetected=" + notDetected

@@ -19,13 +19,13 @@
 #----- solr server urls -----#
 
 # Front-end development indexes
-solr.server1.url=http://bhmgipwi02lt.jax.org:13999/solr
+solr.server1.url=http://bhmgipwi02lt.jax.org:9885/solr
 solr.server2.url=http://bhmgipwi02lt.jax.org:8983/solr
-solr.server3.url=http://bhmgigxdsolr01ld.jax.org:14999/solr
+solr.server3.url=http://bhmgigxdsolr01ld.jax.org:9885/solr
 
 #-------------------------------------------------------------------------------
 #----- INSTALL VALUES
 #-------------------------------------------------------------------------------
 
 # directory in which to find the standard mgi template
-template.dir=/home/jsb/jax/pub/mgiconfig/web/
+template.dir=/usr/local/mgi/live/mgiconfig/web/
