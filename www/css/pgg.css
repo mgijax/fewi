@@ -1,0 +1,205 @@
+ /*
+  * pgg.css
+  *
+  * 'pgg' stands for 'Pretty Good Grid', both a reference and a contrast with the SuperGrid.
+  * See companion Javascript in pgg.js
+  *
+  */
+
+.pgg-table {
+    border-spacing: 0px;
+    border-collapse: collapse;
+}
+
+.pgg-table th {
+    white-space: nowrap;
+    padding: 10px;
+    text-align: center;
+    vertical-align: middle;
+    transform: translate(-4px, 40px) rotate(315deg);
+    transform-origin: 0% 0%;
+    max-width: var(--cell-size);
+}
+
+.pgg-table th:first-child {
+    transform: rotate(0deg);
+}
+
+/* Fix for Firefox rendering issue. Without it, cell borders disappear.
+ *     https://stackoverflow.com/questions/7517127/borders-not-shown-in-firefox-with-border-collapse-on-table-position-relative-o
+ */
+.pgg-table td {
+    background-clip: padding-box;
+}
+
+.pgg-table > tbody {
+    border: thin solid black;
+}
+
+.pgg-table tbody tr:hover .row-label {
+    background-color: #f8f8f8;
+}
+
+.pgg-table .cell {
+    padding: 0px;
+    position: relative;
+    width: var(--cell-size);
+    height: var(--cell-size);
+    border: 1px solid black;
+}
+
+.pgg-table .decorator {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+.pgg-table .row-label {
+    white-space: nowrap;
+    padding-left: 12px;
+    padding-right: 12px;
+    position: relative;
+}
+
+.pgg-table .stripe0 .row-label {
+    background-color: white;
+}
+
+.pgg-table .stripe1 .row-label {
+    background-color: #f0f0f0;
+}
+
+.pgg-table .has-children .row-label {
+    font-weight: bold;
+    padding-left: 4px;
+    cursor: pointer;
+}
+
+.pgg-table .has-children .row-label .turnstile {
+    position: absolute;
+    right: 0px;
+    top: 8px;
+}
+
+.pgg-table .has-children.closed .row-label .turnstile {
+    transform: rotate(270deg);
+}
+
+.pgg-table {
+    /* define color variables */
+    --color-blue1: rgb(215,228,255);
+    --color-blue2: rgb(102,153,255);
+    --color-blue3: rgb(0,64,192);
+    --color-red1: rgb(255,215,215);
+    --color-red2: rgb(255,103,103);
+    --color-red3: rgb(192,0,0);
+    --color-gold: rgb(255,219,103);
+    --color-gray: rgb(166,166,166);
+    --color-white: rgb(255,255,255);
+    /* define some shape variables (i.e., clip paths) */
+    --path-triangle: polygon(100% 0%, 40% 0%, 100% 60%);
+    --path-sash: polygon(25% 0%,0% 0%,0% 25%,75% 100%,100% 100%,100% 75%);
+    /* sizes */
+    --cell-size: 24px;
+    --cell-half-size: 12px;
+}   
+
+/* for all solid-color styles, disappear the decorator div */
+.pgg-table .b1 > .decorator,
+.pgg-table .b2 > .decorator,
+.pgg-table .b3 > .decorator,
+.pgg-table .r1 > .decorator,
+.pgg-table .r2 > .decorator,
+.pgg-table .r3 > .decorator {
+    display: none;
+}   
+
+/* cells with blue backgrounds */
+.pgg-table .b1,
+.pgg-table .b1r1,
+.pgg-table .b1r2,
+.pgg-table .b1r3 {
+    background-color: var(--color-blue1);
+}
+
+.pgg-table .b2,
+.pgg-table .b2r1,
+.pgg-table .b2r2,
+.pgg-table .b2r3 {
+    background-color: var(--color-blue2);
+}
+
+.pgg-table .b3,
+.pgg-table .b3r1,
+.pgg-table .b3r2,
+.pgg-table .b3r3 {
+    background-color: var(--color-blue3);
+}
+
+/* cells with red backgrounds */
+.pgg-table .r1 {
+    background-color: var(--color-red1);
+}
+
+.pgg-table .r2 {
+    background-color: var(--color-red2);
+}
+
+.pgg-table .r3 {
+    background-color: var(--color-red3);
+}
+
+/* cells with blue backgrounds and red corners */
+.pgg-table .b1r1 > .decorator,
+.pgg-table .b2r1 > .decorator,
+.pgg-table .b3r1 > .decorator {
+    background-color: var(--color-red1);
+    clip-path: var(--path-triangle);
+}   
+
+.pgg-table .b1r2 > .decorator,
+.pgg-table .b2r2 > .decorator,
+.pgg-table .b3r2 > .decorator {
+    background-color: var(--color-red2);
+    clip-path: var(--path-triangle);
+}
+
+.pgg-table .b1r3 > .decorator,
+.pgg-table .b2r3 > .decorator,
+.pgg-table .b3r3 > .decorator {
+    background-color: var(--color-red3);
+    clip-path: var(--path-triangle);
+}
+
+/* other cell styles */
+
+.pgg-table .gold-corner,
+.pgg-table .gray-sash,
+.pgg-table .empty-circle,
+.pgg-table .empty {
+    background-color: var(--color-white);
+}
+
+.pgg-table .gold-corner > .decorator {
+    clip-path: var(--path-triangle);
+    background-color: var(--color-gold);
+}
+
+.pgg-table .gray-sash > .decorator {
+    clip-path: var(--path-sash);
+    background-color: var(--color-gray);
+}
+
+.pgg-table .empty-circle > .decorator {
+    background-color: var(--color-white);
+    border: 1px solid black;
+    border-radius: var(--cell-half-size);
+    transform: scale(0.5);
+}
+
+.pgg-table .empty > .decorator {
+    display: none;
+}
+
