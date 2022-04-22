@@ -374,7 +374,7 @@ td.padTop { padding-top:4px }
 
     // apply the heights & widths
 
-    document.getElementById('sourceRow').style.height = maxHeight + 'px';
+    if (document.getElementById('sourceRow')) document.getElementById('sourceRow').style.height = maxHeight + 'px';
 
     for (i = 0; i < cellIDs.length; i++) {
 	var el = document.getElementById(cellIDs[i]);
