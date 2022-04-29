@@ -40,15 +40,20 @@
     background-color: #f8f8f8;
 }
 
-.pgg-table .cell {
+.pgg-cell {
     padding: 0px;
     position: relative;
     width: var(--cell-size);
     height: var(--cell-size);
     border: 1px solid black;
+    cursor: pointer;
+}
+.pgg-cell.empty,
+.pgg-cell.empty-circle {
+    cursor: default;
 }
 
-.pgg-table .decorator {
+.pgg-cell .decorator {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -87,7 +92,13 @@
     transform: rotate(270deg);
 }
 
-.pgg-table {
+/**************************************************
+ * STYLES FOR DRAWING CELLS
+ **************************************************/
+
+.pgg-table,
+.pgg-row,
+.pgg-cell {
     /* define color variables */
     --color-blue1: rgb(215,228,255);
     --color-blue2: rgb(102,153,255);
@@ -107,99 +118,195 @@
 }   
 
 /* for all solid-color styles, disappear the decorator div */
-.pgg-table .b1 > .decorator,
-.pgg-table .b2 > .decorator,
-.pgg-table .b3 > .decorator,
-.pgg-table .r1 > .decorator,
-.pgg-table .r2 > .decorator,
-.pgg-table .r3 > .decorator {
+.pgg-cell.b1 > .decorator,
+.pgg-cell.b2 > .decorator,
+.pgg-cell.b3 > .decorator,
+.pgg-cell.r1 > .decorator,
+.pgg-cell.r2 > .decorator,
+.pgg-cell.r3 > .decorator {
     display: none;
 }   
 
 /* cells with blue backgrounds */
-.pgg-table .b1,
-.pgg-table .b1r1,
-.pgg-table .b1r2,
-.pgg-table .b1r3 {
+.pgg-cell.b1,
+.pgg-cell.b1r1,
+.pgg-cell.b1r2,
+.pgg-cell.b1r3 {
     background-color: var(--color-blue1);
 }
 
-.pgg-table .b2,
-.pgg-table .b2r1,
-.pgg-table .b2r2,
-.pgg-table .b2r3 {
+.pgg-cell.b2,
+.pgg-cell.b2r1,
+.pgg-cell.b2r2,
+.pgg-cell.b2r3 {
     background-color: var(--color-blue2);
 }
 
-.pgg-table .b3,
-.pgg-table .b3r1,
-.pgg-table .b3r2,
-.pgg-table .b3r3 {
+.pgg-cell.b3,
+.pgg-cell.b3r1,
+.pgg-cell.b3r2,
+.pgg-cell.b3r3 {
     background-color: var(--color-blue3);
 }
 
 /* cells with red backgrounds */
-.pgg-table .r1 {
+.pgg-cell.r1 {
     background-color: var(--color-red1);
 }
 
-.pgg-table .r2 {
+.pgg-cell.r2 {
     background-color: var(--color-red2);
 }
 
-.pgg-table .r3 {
+.pgg-cell.r3 {
     background-color: var(--color-red3);
 }
 
 /* cells with blue backgrounds and red corners */
-.pgg-table .b1r1 > .decorator,
-.pgg-table .b2r1 > .decorator,
-.pgg-table .b3r1 > .decorator {
+.pgg-cell.b1r1 > .decorator,
+.pgg-cell.b2r1 > .decorator,
+.pgg-cell.b3r1 > .decorator {
     background-color: var(--color-red1);
     clip-path: var(--path-triangle);
 }   
 
-.pgg-table .b1r2 > .decorator,
-.pgg-table .b2r2 > .decorator,
-.pgg-table .b3r2 > .decorator {
+.pgg-cell.b1r2 > .decorator,
+.pgg-cell.b2r2 > .decorator,
+.pgg-cell.b3r2 > .decorator {
     background-color: var(--color-red2);
     clip-path: var(--path-triangle);
 }
 
-.pgg-table .b1r3 > .decorator,
-.pgg-table .b2r3 > .decorator,
-.pgg-table .b3r3 > .decorator {
+.pgg-cell.b1r3 > .decorator,
+.pgg-cell.b2r3 > .decorator,
+.pgg-cell.b3r3 > .decorator {
     background-color: var(--color-red3);
     clip-path: var(--path-triangle);
 }
 
 /* other cell styles */
 
-.pgg-table .gold-corner,
-.pgg-table .gray-sash,
-.pgg-table .empty-circle,
-.pgg-table .empty {
+.pgg-cell.gold-corner,
+.pgg-cell.gray-sash,
+.pgg-cell.empty-circle,
+.pgg-cell.empty {
     background-color: var(--color-white);
 }
 
-.pgg-table .gold-corner > .decorator {
+.pgg-cell.gold-corner > .decorator {
     clip-path: var(--path-triangle);
     background-color: var(--color-gold);
 }
 
-.pgg-table .gray-sash > .decorator {
+.pgg-cell.gray-sash > .decorator {
     clip-path: var(--path-sash);
     background-color: var(--color-gray);
 }
 
-.pgg-table .empty-circle > .decorator {
+.pgg-cell.empty-circle > .decorator {
     background-color: var(--color-white);
     border: 1px solid black;
     border-radius: var(--cell-half-size);
     transform: scale(0.5);
 }
 
-.pgg-table .empty > .decorator {
+.pgg-cell.empty > .decorator {
     display: none;
+}
+
+/**************************************************
+ * STYLES FOR POPUPS
+ **************************************************/
+
+.pgg-popup {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    z-index: 100;
+    border: thin solid black;
+    max-width: 300px;
+    padding: 4px;
+}
+.hidden {
+    visibility: hidden;
+}
+.pgg-popup-head {
+    font-weight: bold;
+    color: white;
+    background-color: #002255;
+    max-width: 300px;
+    padding: 4px;
+    padding-right: 16px;
+    margin-bottom: 8px;
+    position: relative;
+    cursor: move;
+    min-height:16px;
+}
+.pgg-popup-head .close-button {
+    position: absolute;
+    right: 4px;
+    top: 2px;
+    cursor: pointer;
+}
+.pgg-popup-body {
+}
+
+.pgg-legend-wrapper {
+    background-color: #eee;
+}
+
+.pgg-legend-wrapper h3 {
+    text-align: center;
+    font-weight: bold;
+}
+.pgg-legend-wrapper .section {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+    padding-top: 10px;
+}
+.pgg-legend-wrapper .swatch {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-top: 8px;
+}
+.pgg-legend-wrapper .swatch > * { 
+    margin-left: 6px;
+}
+.pgg-legend-wrapper .caption {
+    max-width: 185px;
+    white-space: normal;
+}
+.pgg-legend-wrapper .m1 {
+    margin-left: 30px;
+}
+.pgg-legend-wrapper .m2 {
+    margin-left: 60px;
+}
+
+.pgg-cell-popup-wrapper {
+    background-color: #d6e5ff;
+}
+
+.pgg-cell-popup-wrapper .cell-data-table {
+    background-color: white;
+    width: 100%;
+}
+
+.cell-data-table td,
+.cell-data-table th {
+    text-align: center;
+    padding: 6px;
+}
+
+.pgg-cell-popup-wrapper .cell-data-table thead th {
+    background-color: #d6e5ff;
+}
+
+.pgg-cell-popup-wrapper .view-results-button button {
+    width: 100%;
+    padding: 6px;
+    margin-top: 6px;
 }
 

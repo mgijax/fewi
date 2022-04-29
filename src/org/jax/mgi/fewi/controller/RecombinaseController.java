@@ -129,11 +129,13 @@ public class RecombinaseController {
         
         // Need at least one detected-in structure
         boolean hasDetectedStructure = false;
-        String[] tokens = query.getStructures().trim().toLowerCase().split("[|]");
-        for(String t : tokens) {
-            t = t.trim();
-            if (t.length() > 1 && t.charAt(0) == '+') {
-                hasDetectedStructure = true;
+        if (query.getStructures() != null) {
+            String[] tokens = query.getStructures().trim().toLowerCase().split("[|]");
+            for(String t : tokens) {
+                t = t.trim();
+                if (t.length() > 1 && t.charAt(0) == '+') {
+                    hasDetectedStructure = true;
+                }
             }
         }
 

@@ -568,7 +568,7 @@ function formatFastaArgs() {
 	      <img src='${configBean.WEBSHARE_URL}images/rightArrow.gif'>&nbsp;Tissue activity of this recombinase allele
 	    </div>
 	    <div id='recomRibbonWrapper' style='${recomWrapperStyle}'>
-	      <span onClick='toggleRecomGrid();' style='cursor:pointer; float:left; padding-left:1px; padding-right:2px;'><img src='${configBean.WEBSHARE_URL}images/downArrow.gif'></span>
+	      <span onClick='toggleRecomGrid();' style='cursor:pointer; padding-left:1px; padding-right:2px;'><img src='${configBean.WEBSHARE_URL}images/downArrow.gif'></span>
 	      <div id='recomTableInsert'>
 		<div id='recomTable_loading'>
 		  <img src='${configBean.WEBSHARE_URL}images/loading.gif' alt='Loading...' />
