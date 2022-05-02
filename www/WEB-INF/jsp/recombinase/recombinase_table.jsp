@@ -80,8 +80,6 @@ NotesTagConverter ntc = new NotesTagConverter();
         <div class='swatch' >
                 <div class='pgg-cell empty-circle'><div class="decorator" /></div>
                 <span class='caption'> tissue exists in this age range but has no annotations
-                <br/>
-                <span style="color:red;">Not yet implemented.</span>
                 </span>
         </div>
         
@@ -156,7 +154,7 @@ NotesTagConverter ntc = new NotesTagConverter();
          return 'gold-corner'
      } else if (cd.amb) {
          return 'gray-sash'
-     } else if (cd.validStructure) {
+     } else if (cd.sv) {
          return 'empty-circle'
      } else {
          return 'empty'

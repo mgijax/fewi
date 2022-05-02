@@ -1,7 +1,7 @@
  /*
   * pgg.css
   *
-  * 'pgg' stands for 'Pretty Good Grid', both a reference and a contrast with the SuperGrid.
+  * Stylesheet for the Pretty Good Grid (PGG).
   * See companion Javascript in pgg.js
   *
   */
@@ -114,7 +114,6 @@
     --path-sash: polygon(25% 0%,0% 0%,0% 25%,75% 100%,100% 100%,100% 75%);
     /* sizes */
     --cell-size: 24px;
-    --cell-half-size: 12px;
 }   
 
 /* for all solid-color styles, disappear the decorator div */
@@ -204,10 +203,13 @@
 }
 
 .pgg-cell.empty-circle > .decorator {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    border-radius: calc(var(--cell-size) / 2);
     background-color: var(--color-white);
-    border: 1px solid black;
-    border-radius: var(--cell-half-size);
-    transform: scale(0.5);
+    border: 0.5px solid black;
+    transform: scale(0.3);
+    left: calc(50% - var(--cell-size) / 2);
 }
 
 .pgg-cell.empty > .decorator {

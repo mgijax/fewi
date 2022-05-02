@@ -178,7 +178,7 @@
              return 'gold-corner'
          } else if (cd.amb) {
              return 'gray-sash'
-         } else if (cd.validStructure) {
+         } else if (cd.sv) {
              return 'empty-circle'
          } else {
              return 'empty'
