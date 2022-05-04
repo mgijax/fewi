@@ -163,30 +163,8 @@
          })
      }
 
-     function cellData2class (cd) {
-         const blueLevel = cd.d == 0 ? 0 : (cd.d <= 4 ? 1 : (cd.d<= 50 ? 2 : 3))
-         const redLevel  = cd.nd == 0 ? 0 : (cd.nd <= 4 ? 1 : (cd.nd<= 20 ? 2 : 3))
-         if (blueLevel) {
-             if (redLevel) {
-                 return 'b' + blueLevel + 'r' + redLevel
-             } else {
-                 return 'b' + blueLevel
-             }
-         } else if (redLevel) {
-             return 'r' + redLevel
-         } else if (cd.ndd) {
-             return 'gold-corner'
-         } else if (cd.amb) {
-             return 'gray-sash'
-         } else if (cd.sv) {
-             return 'empty-circle'
-         } else {
-             return 'empty'
-         }
-     }
-
-     function renderCell (cellData) {
-         const cellClass = cellData2class(cellData)
+     function renderCell (cellData, cellRenderer) {
+         const cellClass = cellRenderer(cellData)
          const _data = encodeURIComponent(JSON.stringify(cellData))
          return `<td class="pgg-cell ${cellClass}" _data="${_data}"><div class="decorator"></div></td>`
      }
@@ -197,24 +175,24 @@
          return `<td class="row-label"><span>${rowData.name}</span>${turnstile}</td>`
      }
 
-     function renderRow (rowData, level) {
+     function renderRow (rowData, level, cellRenderer) {
          const hasChildren = Array.isArray(rowData.children)
          const rowNameHtml = renderNameCell (rowData)
-         const cellsHtml = rowData.cellData.map(cd => renderCell(cd)).join('')
+         const cellsHtml = rowData.cellData.map(cd => renderCell(cd, cellRenderer)).join('')
          // zebra striping - each top-level group alternates color. All structures within the group have same background color.
          const stripeIndex = parseInt((level || "0").split("-")[0])
          const stripeClass = 'stripe' + (stripeIndex % 2)
          //
          const rowHtml = `<tr name="${level}" class="pgg-row ${hasChildren ? 'has-children' : ''} ${stripeClass}">${rowNameHtml}${cellsHtml}</tr>`
          // recursive call to render descendant rows
-         const childrenHtml = hasChildren ? renderRows(rowData.children, level) : ''
+         const childrenHtml = hasChildren ? renderRows(rowData.children, level, cellRenderer) : ''
          //
          return rowHtml + childrenHtml
      }
 
-     function renderRows (rowsData, level) {
+     function renderRows (rowsData, level, cellRenderer) {
          const joiner = level ? '-' : ''
-         return rowsData.map((rowData, rowNum) => renderRow(rowData, level+joiner+rowNum)).join('')
+         return rowsData.map((rowData, rowNum) => renderRow(rowData, level+joiner+rowNum, cellRenderer)).join('')
      }
 
      function renderColumnHeaders (tbl, columnData, legendFcns) {
@@ -251,25 +229,42 @@
      //
      // Returns an object containing the grid element, and a list of popups, each one containing a name,
      // a ref to the popup element, and control functions for opening/closing/moving popups.
-     function renderGrid (wrapperId, rowData, columnData, legendConfig, cellPopupConfig) {
+     // 
+     // Args:
+     //     wrapperId (string) id of div node to inject the grid and its friends
+     //     config (object) config object for the grid (see description at top of file)
+     //
+     function renderGrid (wrapperId, config) {
          // find the wrapper element
+         if (typeof(wrapperId) !== 'string') throw "wrapperId not specified"
          const wrapper = document.getElementById(wrapperId)
-         if (!wrapper) {
-                throw "Cannot render grid. Target element not found: #" + wrapperId
-         }
+         if (!wrapper) throw "Cannot find wrapper element: #" + wrapperId
+         //
+         const rowData = config.rowData
+         if (!Array.isArray(rowData)) throw "No row data in config."
+         //
+         const columnData = config.columnData || []
+         //
+         const cellRenderer = config.cellRenderer
+         if (typeof(cellRenderer) != 'function') throw "Cell renderer is not a function."
+         //
+         const legendPopupConfig = config.legendPopupConfig
+         //
+         const cellPopupConfig = config.cellPopupConfig
+
          // initialize empty table
-         wrapper.innerHTML = '<table class="pgg-table"><thead></thead><tbody></tbody></table>'
-         // get refs to the nodes we just created
+         wrapper.innerHTML = `<table class="pgg-table"><thead></thead><tbody></tbody></table>`
          const tbl = wrapper.querySelector('table')
          const thead = tbl.childNodes[0]
          const tbody = tbl.childNodes[1]
+         //
          const popups = []
          // create the legend popup
          let legendFcns
-         if (legendConfig) {
-             legendConfig.id = wrapperId + '-legend-popup'
-             legendConfig.extraClass = "pgg-legend-wrapper"
-             legendFcns = initPopup(wrapper, legendConfig)
+         if (legendPopupConfig) {
+             legendPopupConfig.id = wrapperId + '-legend-popup'
+             legendPopupConfig.extraClass = "pgg-legend-wrapper"
+             legendFcns = initPopup(wrapper, legendPopupConfig)
              popups.push({ name: 'legend', popup: legendFcns.popup, controls: legendFcns })
          }
          // create the cell popup
@@ -284,7 +279,7 @@
          // Draw column headers
          if (columnData) renderColumnHeaders(tbl, columnData, legendFcns)
          // Draw rows 
-         const rowsHtml = renderRows(rowData, '')
+         const rowsHtml = renderRows(rowData, '', cellRenderer)
          tbody.innerHTML = rowsHtml
          // Add click handler for the table
          tbl.addEventListener('click', (ev) => {

@@ -15,14 +15,15 @@
 NotesTagConverter ntc = new NotesTagConverter(); 
 %>
 
-<!-- Pull in the PrettyGoodGrid -->
+<!-- Pull in the Pretty Good Grid -->
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/pgg.css">
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/pgg.js"></script>
 
 <!-- A place to draw the table -->
 <div id="recombinaseTableWrapper"></div>
 
-<!-- define legend contents as a template, then instantiate during popup initialization. -->
+<!-- Legend contents.
+     Define as a template, then instantiate during popup initialization. -->
 <template id="recombinaseTableLegendPopup">
     <h3>Number of results annotated as:</h3>
 
@@ -91,8 +92,7 @@ NotesTagConverter ntc = new NotesTagConverter();
 </template>
 
 <!-- Define cell popup contents as a template, then instantiate during popup initialization.
-     After instantiation of the popup, certain fields are filled in dynamically each time
-     the popup is opened.
+     When cell is clicked, the context string and the table tbody are filled in by the click handler.
 -->
 <template id="recombinaseTableCellPopup">
   <div>
@@ -164,7 +164,7 @@ NotesTagConverter ntc = new NotesTagConverter();
  // -------------------------------------------------------------------
  // Define config for the legend popup
  const legendTemplate = document.getElementById('recombinaseTableLegendPopup')
- const legendConfig = {
+ const legendPopupConfig = {
     initiallyOpen: false,
     extraClass: '',
     title: 'Matrix Legend',
@@ -240,16 +240,16 @@ NotesTagConverter ntc = new NotesTagConverter();
  // Put it all together into a config 
  const gridConfig = {
      targetId: "recombinaseTableWrapper",
+     rowData: recombinaseTableRowData,
+     columnData: columnData,
      cellRenderer: cellData2class,
-     data: recombinaseTableRowData,
-     columnLabels: columnData,
-     legendConfig: legendConfig,
+     legendPopupConfig: legendPopupConfig,
      cellPopupConfig: cellPopupConfig
  }
 
  // -------------------------------------------------------------------
  // And finally
- pgg.renderGrid ("recombinaseTableWrapper", recombinaseTableRowData, columnData, legendConfig, cellPopupConfig)
+ pgg.renderGrid ("recombinaseTableWrapper", gridConfig)
 
 
 </script>
