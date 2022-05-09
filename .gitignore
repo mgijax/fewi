@@ -22,6 +22,7 @@ www/WEB-INF/properties/GlobalConfig.properties
 www/WEB-INF/properties/fewi.properties
 www/WEB-INF/web.xml
 www/hmdc/assets/
+*.tmp
 *.swp
 server.log
 *~
