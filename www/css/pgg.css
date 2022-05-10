@@ -128,6 +128,7 @@
 
 /* cells with blue backgrounds */
 .pgg-cell.b1,
+.pgg-cell.b1g,
 .pgg-cell.b1r1,
 .pgg-cell.b1r2,
 .pgg-cell.b1r3 {
@@ -135,6 +136,7 @@
 }
 
 .pgg-cell.b2,
+.pgg-cell.b2g,
 .pgg-cell.b2r1,
 .pgg-cell.b2r2,
 .pgg-cell.b2r3 {
@@ -142,6 +144,7 @@
 }
 
 .pgg-cell.b3,
+.pgg-cell.b3g,
 .pgg-cell.b3r1,
 .pgg-cell.b3r2,
 .pgg-cell.b3r3 {
@@ -161,7 +164,7 @@
     background-color: var(--color-red3);
 }
 
-/* cells with blue backgrounds and red corners */
+/* cells with blue backgrounds and red or gold corners */
 .pgg-cell.b1r1 > .decorator,
 .pgg-cell.b2r1 > .decorator,
 .pgg-cell.b3r1 > .decorator {
@@ -180,6 +183,13 @@
 .pgg-cell.b2r3 > .decorator,
 .pgg-cell.b3r3 > .decorator {
     background-color: var(--color-red3);
+    clip-path: var(--path-triangle);
+}
+
+.pgg-cell.b1g > .decorator,
+.pgg-cell.b2g > .decorator,
+.pgg-cell.b3g > .decorator {
+    background-color: var(--color-gold);
     clip-path: var(--path-triangle);
 }
 
@@ -226,7 +236,7 @@
     right: 0px;
     z-index: 100;
     border: thin solid black;
-    max-width: 300px;
+    width: 250px;
     padding: 4px;
 }
 .hidden {

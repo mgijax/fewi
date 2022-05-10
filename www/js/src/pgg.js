@@ -78,10 +78,12 @@
   */
 
  (function () {
-     function clickHandler (ev, cellPopupFcns) {
+     function clickHandler (ev, tbl, gridControls) {
          // A single click handler for the table.
-         const tbl = ev.target.closest(".pgg-table")
+         //const tbl = ev.target.closest(".pgg-table")
          if (!tbl) return
+
+         const cellPopup = gridControls ? gridControls.cellPopup : null
 
          // Check if click was on one of the open/close all buttons
          if (ev.target.tagName === 'A') {
@@ -110,10 +112,10 @@
                  cellData = JSON.parse(decodeURIComponent(cell.getAttribute('_data')))
              }
              // open the popup near the clicked cell
-             if (cellPopupFcns) {
-                 cellPopupFcns.open(cell, cellData)
+             if (cellPopup) {
+                 cellPopup.controls.open(cell, cellData)
                  const cr = cell.getBoundingClientRect()
-                 cellPopupFcns.moveTo(cr.right + 20, cr.top - 20)
+                 cellPopup.controls.moveTo(cr.right + 20, cr.top - 20)
                  ev.stopPropagation()
              }
              return
@@ -138,7 +140,7 @@
                 if (rdepth === tdepth + 1) r.style.display = isClosed ? "none" : ""
              })
              //
-             cellPopupFcns.close()
+             cellPopup && cellPopup.controls.close()
              //
              ev.stopPropagation()
              return
@@ -216,11 +218,7 @@
 
          if (legendFcns) {
              const lbutton = thead.querySelector('button[name="showLegend"]')
-             lbutton.addEventListener('click', () => {
-                 legendFcns.open()
-                 const bb = tbl.getBoundingClientRect()
-                 legendFcns.moveTo(bb.right + 20, bb.top + 40)
-             })
+             lbutton.addEventListener('click', () => legendFcns.open(tbl))
          }
      }
 
@@ -235,6 +233,7 @@
      //     config (object) config object for the grid (see description at top of file)
      //
      function renderGrid (wrapperId, config) {
+         console.log("pgg.renderGrid wrapperId=" + wrapperId)
          // find the wrapper element
          if (typeof(wrapperId) !== 'string') throw "wrapperId not specified"
          const wrapper = document.getElementById(wrapperId)
@@ -264,7 +263,7 @@
          if (legendPopupConfig) {
              legendPopupConfig.id = wrapperId + '-legend-popup'
              legendPopupConfig.extraClass = "pgg-legend-wrapper"
-             legendFcns = initPopup(wrapper, legendPopupConfig)
+             legendFcns = initPopup(wrapper, tbl, legendPopupConfig)
              popups.push({ name: 'legend', popup: legendFcns.popup, controls: legendFcns })
          }
          // create the cell popup
@@ -273,7 +272,7 @@
          if (cellPopupConfig) {
              cellPopupConfig.id = wrapperId + '-cell-popup'
              cellPopupConfig.extraClass = 'pgg-cell-popup-wrapper'
-             cellPopupFcns = initPopup(wrapper, cellPopupConfig)
+             cellPopupFcns = initPopup(wrapper, tbl, cellPopupConfig)
              popups.push({ name: 'cellPopup', popup: cellPopupFcns.popup, controls: cellPopupFcns })
          }
          // Draw column headers
@@ -281,10 +280,6 @@
          // Draw rows 
          const rowsHtml = renderRows(rowData, '', cellRenderer)
          tbody.innerHTML = rowsHtml
-         // Add click handler for the table
-         tbl.addEventListener('click', (ev) => {
-             return clickHandler(ev, cellPopupFcns)
-         })
          // Initially close everything
          closeAllRows(tbl)
          // Get coordinates/dimensions of rendered table. Then set initial position of popups just to the table's right.
@@ -292,12 +287,19 @@
          legendFcns.moveTo( bcr.right + 20, bcr.top )
          cellPopupFcns.moveTo( bcr.left + 200, bcr.top + 100)
          //
-         const renderReturn = {
+         const gridControls = {
              grid: tbl,
-             popups: popups
+             resetView: function() {
+                 legendFcns.open(tbl)
+                 cellPopupFcns.close()
+             },
+             legendPopup: { name: 'legend', popup: legendFcns.popup, controls: legendFcns },
+             cellPopup: { name: 'cellPopup', popup: cellPopupFcns.popup, controls: cellPopupFcns },
          }
-         //console.log('pgg.renderGrid. Returning: ', renderReturn)
-         return renderReturn
+         // Add click handler for the table
+         tbl.addEventListener('click', ev => clickHandler(ev, tbl, gridControls))
+         //
+         return gridControls
      }
 
      // Initialize a new popup.
@@ -317,9 +319,9 @@
      //         initiallyOpen - (boolean) If true, popup is initially in the open state. (Rendering functions if any
      //             will be called without arguments and should be ready for that.)
      // Returns:
-     //    An object containing three functions for opening/closing/toggling the popup.
+     //    An object containing controller functions { open, close, toggle,  moveTo, moveBy }
      //
-     function initPopup (wrapperElt, config) {
+     function initPopup (wrapperElt, tbl, config) {
          const popup = document.createElement('div')
          const phead = document.createElement('div')
          const pbody = document.createElement('div')
@@ -341,44 +343,37 @@
          closeButton.classList.add('close-button')
          closeButton.innerText = 'X'
 
+         // title rendering function
+         //
          let titleFcn
          if (!config.title) {
-             titleFcn = () => ''
+             titleFcn = () => 'No title specified.'
          } else if (typeof(config.title) === 'string') {
              const cc = config.title
              titleFcn = () => cc
          } else if (typeof(config.title) === 'function') {
              titleFcn = config.title
+         } else {
+             throw "Title is neither a function nor a string."
          }
+
+         // content rendering function
+         //
          let contentFcn
          if (! config.content) {
-             contentFcn = () => ''
+             contentFcn = () => 'No content specified.'
          } else if (typeof(config.content) === 'string') {
              const cc = config.content
              contentFcn = () => cc
          } else if (typeof(config.content) === 'function') {
              contentFcn = config.content
+         } else {
+             throw "Content is neither a function nor a string."
          }
 
-         const openFunction = function () {
-             popup.classList.remove('hidden')
-             // invoke the rendering functions. Pass along any/all arguments
-             ptitle.innerText = titleFcn.apply(null, arguments)
-             pbody.innerHTML = contentFcn.apply(null, arguments)
-         }
+         // controller functions --------------------
 
-         const closeFunction = () => {
-             popup.classList.add('hidden')
-         }
-
-         const toggleFunction = (ev) => {
-             if (popup.classList.contains('hidden')) {
-                 openFunction(ev)
-             } else {
-                 closeFunction()
-             }
-         }
-
+         // Move popup's upper left corner to x,y
          const moveToFunction = (x, y) => {
              // x,y are client coords (relative to upper left corner of browser visible area)
              const bbox = document.body.getBoundingClientRect()
@@ -386,6 +381,7 @@
              popup.style.top = (y - bbox.top) + 'px'
          }
 
+         // Move popup by dx, dy pixels
          const moveByFunction  = (dx, dy) => {
              const r = popup.getBoundingClientRect()
              const bbox = document.body.getBoundingClientRect()
@@ -393,18 +389,34 @@
              popup.style.top = (r.top - bbox.top + dy) + 'px'
          }
          
-         if (config.initiallyOpen) {
-             openFunction()
-         } else {
-             closeFunction()
+         // Open the popup near the specified element
+         const openFunction = function (near) {
+             popup.classList.remove('hidden')
+             // invoke the rendering functions. Pass along any/all arguments
+             ptitle.innerText = titleFcn.apply(null, arguments)
+             pbody.innerHTML = contentFcn.apply(null, arguments)
+             if (near) {
+                 const nbb = near.getBoundingClientRect()
+                 moveToFunction(nbb.right + 20, nbb.top - 10)
+             }
          }
 
-         closeButton.addEventListener('click', () => closeFunction())
+         // Close the popup
+         const closeFunction = () => {
+             popup.classList.add('hidden')
+         }
 
-         // Make the popup draggable
-         dragify(popup, phead)
+         // Open the popup if it's closed, and close the popup if it's open.
+         const toggleFunction = (elt) => {
+             if (popup.classList.contains('hidden')) {
+                 openFunction(elt)
+             } else {
+                 closeFunction()
+             }
+         }
 
-         return {
+         // package up the controllers. This is what we'll return.
+         const controllers = {
              popup: popup, 
              open: openFunction,
              close: closeFunction,
@@ -412,6 +424,22 @@
              moveTo: moveToFunction,
              moveBy: moveByFunction
          }
+
+         // wire the close button
+         closeButton.addEventListener('click', () => closeFunction())
+  
+         // Set initial open/closed state
+         if (config.initiallyOpen) {
+             window.setTimeout( () => openFunction(tbl), 500)
+         } else {
+             closeFunction()
+         }
+
+         // Make the popup draggable
+         dragify(popup, phead)
+
+         // done!
+         return controllers
      }
 
     // Lifted and adapted from https://www.w3schools.com/howto/howto_js_draggable.asp

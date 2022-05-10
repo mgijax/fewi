@@ -42,6 +42,7 @@ function toggleMutationDescription ()
 function toggleRecomGrid() {
     toggle("recomRibbonTeaser");
     toggle("recomRibbonWrapper");
+    recombinaseGrid.resetView()
 }
 
 function toggleUserNotes() {

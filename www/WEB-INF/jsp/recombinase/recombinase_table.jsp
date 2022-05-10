@@ -64,18 +64,23 @@ NotesTagConverter ntc = new NotesTagConverter();
         <h3>Other Symbols</h3>
 
         <div class="swatch">
-                <div class='pgg-cell b2r1'><div class="decorator" /></div>
+                <div class='pgg-cell b2r3'><div class="decorator" /></div>
                 <span class='caption'> structure has both present and absent results</span> <br/>
         </div>
 
-        <div class='swatch'>
-                <div class='pgg-cell gray-sash'><div class="decorator" /></div>
-                <span class='caption'> ambiguous in structure </span>
+        <div class="swatch">
+                <div class='pgg-cell b2g'><div class="decorator" /></div>
+                <span class='caption'> structure has both present and absent results in substructures</span> <br/>
         </div>
 
         <div class='swatch'>
                 <div class='pgg-cell gold-corner'><div class="decorator" /></div>
                 <span class='caption'> either absent or ambiguous results in substructures</span> <br/>
+        </div>
+
+        <div class='swatch'>
+                <div class='pgg-cell gray-sash'><div class="decorator" /></div>
+                <span class='caption'> ambiguous in structure </span>
         </div>
 
         <div class='swatch' >
@@ -145,6 +150,8 @@ NotesTagConverter ntc = new NotesTagConverter();
      if (blueLevel) {
          if (redLevel) {
              return 'b' + blueLevel + 'r' + redLevel
+         } else if (cd.ndd) {
+             return 'b' + blueLevel + 'g'
          } else {
              return 'b' + blueLevel
          }   
@@ -165,7 +172,7 @@ NotesTagConverter ntc = new NotesTagConverter();
  // Define config for the legend popup
  const legendTemplate = document.getElementById('recombinaseTableLegendPopup')
  const legendPopupConfig = {
-    initiallyOpen: false,
+    initiallyOpen: true,
     extraClass: '',
     title: 'Matrix Legend',
     content: legendTemplate.innerHTML // pass the HTML as a string
@@ -215,7 +222,7 @@ NotesTagConverter ntc = new NotesTagConverter();
              ['No', data.nd],
              ['Ambiguous', data.amb],
              ['No/Ambiguous<br/>in descendants', data.ndd]
-         ]
+         ].filter(p => p[1] > 0)
          const rowHtml = rows.map(r => '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>').join('')
          const tbody2 = div.querySelector('table.cell-data-table > tbody')
          tbody2.innerHTML = rowHtml
@@ -249,8 +256,7 @@ NotesTagConverter ntc = new NotesTagConverter();
 
  // -------------------------------------------------------------------
  // And finally
- pgg.renderGrid ("recombinaseTableWrapper", gridConfig)
-
+ window.recombinaseGrid = pgg.renderGrid ("recombinaseTableWrapper", gridConfig)
 
 </script>
 
