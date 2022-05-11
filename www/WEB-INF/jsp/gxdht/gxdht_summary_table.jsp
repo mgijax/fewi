@@ -14,11 +14,18 @@
 <fewi:count count="${count}" /> <fewi:count count="${totalCount}" />
 <div id="injectedResults">
   <c:forEach var="exp" items="${experiments}" varStatus="status">
-  	<c:set var="aeLink" value="${fn:replace(externalUrls.ArrayExpressExperiment, '@@@@', exp.arrayExpressID)}" />
-  	<c:set var="geoLink" value="" />
-  	<c:if test="${not empty exp.geoID}">
-	  	<c:set var="geoLink" value="${fn:replace(externalUrls.GEOSeries, '@@@@', exp.geoID)}" />
-	</c:if>
+        <c:set var="expID" value="${exp.arrayExpressID}" />
+        <c:if test="${empty expID}">
+            <c:set var="expID" value="${exp.geoID}" />
+        </c:if>
+        <c:set var="aeLink" value="" />
+        <c:if test="${not empty exp.arrayExpressID}">
+            <c:set var="aeLink" value="${fn:replace(externalUrls.ArrayExpressExperiment, '@@@@', exp.arrayExpressID)}" />
+        </c:if>
+        <c:set var="geoLink" value="" />
+        <c:if test="${not empty exp.geoID}">
+                <c:set var="geoLink" value="${fn:replace(externalUrls.GEOSeries, '@@@@', exp.geoID)}" />
+        </c:if>
   	<c:set var="atlasLink" value="" />
   	<c:if test="${exp.isInAtlas == 1}">
 	  	<c:set var="atlasLink" value="${fn:replace(externalUrls.ExpressionAtlas, '@@@@', exp.arrayExpressID)}" />
@@ -50,7 +57,7 @@
 		<tr id="detailDataRow${status.index}" class="detailDataRow">
 			<td id="sampleData${status.index}">
 		  	  	<a id="row${status.index}sampleCount" onClick="gs_samplePopup('${exp.arrayExpressID}')">${exp.sampleCount}</a> samples&nbsp;&nbsp;
-		  	  	<a id="row${status.index}button" class="filterButton" onClick="gs_samplePopup('${exp.arrayExpressID}')">View</a>
+		  	  	<a id="row${status.index}button" class="filterButton" onClick="gs_samplePopup('${expID}')">View</a>
 		  	  	<c:if test="${highlightSamples}"><br/>
 		  	  		${exp.matchingSampleCount} match the search criteria
 		  	  	</c:if>
@@ -73,10 +80,14 @@
 		  		</c:if>
 		  	</td>
 			<td id="viewData${status.index}">
-				<c:if test="${not empty gxdLink}">GXD: <a href="${gxdLink}">${exp.arrayExpressID}</a> <br/></c:if>
-				<c:if test="${not empty atlasLink}">Expression Atlas: <a href="${atlasLink}" target="_blank" class="extUrl">${exp.arrayExpressID}</a> <br/></c:if>
-				ArrayExpress: <a href="${aeLink}" target="_blank" class="extUrl">${exp.arrayExpressID}</a> 
-				<c:if test="${not empty geoLink}"><br/>GEO: <a href="${geoLink}" target="_blank" class="extUrl">${exp.geoID}</a> </c:if>
+                            <table class="id-table">
+                            <tbody>
+				<c:if test="${not empty gxdLink}"><tr><td>GXD:</td><td><a href="${gxdLink}">${exp.arrayExpressID}</a></td></tr></c:if>
+				<c:if test="${not empty atlasLink}"><tr><td>Expression Atlas:</td><td><a href="${atlasLink}" target="_blank" class="extUrl">${exp.arrayExpressID}</a> </td></tr></c:if>
+				<c:if test="${not empty aeLink}"><tr><td>ArrayExpress:</td><td><a href="${aeLink}" target="_blank" class="extUrl">${exp.arrayExpressID}</a></td></tr> </c:if>
+				<c:if test="${not empty geoLink}"><tr><td>GEO:</td><td><a href="${geoLink}" target="_blank" class="extUrl">${exp.geoID}</a></td></tr> </c:if>
+                            </tbody>
+                            </table>
 			</td>
 		</tr>
 

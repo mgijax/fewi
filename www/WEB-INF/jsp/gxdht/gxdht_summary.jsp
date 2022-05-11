@@ -24,6 +24,10 @@ a { text-decoration: none; }
 .yellow { background-color: yellow; }
 #contentcolumn { margin: 0 425px 0 425px; }
 .facetFilter .yui-panel .bd { width: 284px; }
+
+table.id-table * {
+    border: none !important;
+}
 </style>
 
 <div id="summary">

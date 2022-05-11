@@ -23,9 +23,21 @@ th { background-color: #E2AC00; text-align: left; vertical-align: top; border: 1
 td { background-color: #F0F0F0; text-align: left; vertical-align: top; border: 1px solid gray; padding: 2px; }
 td.center { text-align: center; }
 a { text-decoration: none; }
+
+.idtable {
+    float: left;
+    max-width: 200px;
+}
+.idtable * {
+    border: none !important;
+    background-color: transparent !important;
+}
 </style>
 
-<c:set var="aeLink" value="${fn:replace(externalUrls.ArrayExpressExperiment, '@@@@', experiment.arrayExpressID)}" />
+<c:set var="aeLink" value="" />
+<c:if test="${not empty experiment.arrayExpressID}">
+    <c:set var="aeLink" value="${fn:replace(externalUrls.ArrayExpressExperiment, '@@@@', experiment.arrayExpressID)}" />
+</c:if>
 <c:set var="geoLink" value="" />
 <c:if test="${not empty experiment.geoID}">
 	<c:set var="geoLink" value="${fn:replace(externalUrls.GEOSeries, '@@@@', experiment.geoID)}" />
@@ -43,9 +55,14 @@ a { text-decoration: none; }
   <div id="pageWrapper" class="experimentWrapper dataShade1">
     <div id="experimentWrapper" class="idWrapper headerShade2">
       <c:if test="${not empty experiment}">
-	    <div id="idLabels" class="idLabels"><c:if test="${not empty gxdLink}">GXD:<br/></c:if><c:if test="${not empty atlasLink}">Expression Atlas:<br/><script>$('#idLabels').width('120px');</script></c:if>ArrayExpress:<c:if test="${not empty geoLink}"><br/>GEO:</c:if></div>
-	    <div id="ids" class="ids"><c:if test="${not empty gxdLink}"><a href="${gxdLink}" target="_blank">${experiment.arrayExpressID}</a><br/></c:if><c:if test="${not empty atlasLink}"><a href="${atlasLink}" target="_blank" class="extUrl">${experiment.arrayExpressID}</a><br/></c:if><a href="${aeLink}" target="_blank" class="extUrl">${experiment.arrayExpressID}</a> 
-		  <c:if test="${not empty geoLink}"><br/><a href="${geoLink}" target="_blank" class="extUrl">${experiment.geoID}</a> </c:if></div>
+            <table class="idtable">
+            <tbody>
+            <c:if test="${not empty gxdLink}"><tr><td>GXD:</td><td><a href="${gxdLink}">${experiment.arrayExpressID}</a></td></tr> </c:if>
+            <c:if test="${not empty atlasLink}"><tr><td>Expression Atlas:</td><td><a href="${atlasLink}" target="_blank" class="extUrl">${experiment.arrayExpressID}</a></td></tr> <br/></c:if>
+            <c:if test="${not empty aeLink}"><tr><td>ArrayExpress:</td><td><a href="${aeLink}" target="_blank" class="extUrl">${experiment.arrayExpressID}</a></td></tr> </c:if>
+            <c:if test="${not empty geoLink}"><tr><td>GEO:</td><td><a href="${geoLink}" target="_blank" class="extUrl">${experiment.geoID}</a></td></tr> </c:if>
+            </tbody>
+            </table>
 	    <div id="title" class="title">${experiment.title}</div>
       </c:if>
       <c:if test="${empty experiment}">
