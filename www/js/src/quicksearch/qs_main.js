@@ -9,7 +9,10 @@ var qsLastFilters = {};	// map of the filters most recently applied, as:  { filt
 // If the user clicks through to one of the linked objects, remember what tab was displayed (so we can come
 // back to it).
 $(window).on('unload beforeunload', function() {
-	sessionStorage.setItem(sessionID, parseInt($('.ui-tabs-active a').attr('id').replace('ui-id-', '')));
+        const activeTab=$('.ui-tabs-active')[0]
+        const allTabs = Array.from($('.ui-tabs-nav > li'))
+        const tabIndex = allTabs.indexOf(activeTab) + 1 // use 1-based indexes
+	sessionStorage.setItem(sessionID, tabIndex)
 });
 
 // main logic for quick search
@@ -140,12 +143,13 @@ var qsShowSpinner = function(divName) {
 
 // used to set tab text color and font weight based on number of results
 var qsStyleTabText = function(resultCount, tabNumber) {
+        const tagAnchor = $($('#querytabs a.ui-tabs-anchor')[tabNumber - 1])
 	if (resultCount > 0) {
-		$('#ui-id-' + tabNumber).removeClass('noResults');
-		$('#ui-id-' + tabNumber).addClass('hasResults');
+		tagAnchor.removeClass('noResults');
+		tagAnchor.addClass('hasResults');
 	} else {
-		$('#ui-id-' + tabNumber).removeClass('hasResults');
-		$('#ui-id-' + tabNumber).addClass('noResults');
+		tagAnchor.removeClass('hasResults');
+		tagAnchor.addClass('noResults');
 	}
 	if (tabNumber in qsWaitFor) {
 		delete qsWaitFor[tabNumber];
@@ -156,11 +160,11 @@ var qsStyleTabText = function(resultCount, tabNumber) {
 	//	came Back to this page, show that tab.
 	// 2. Or, if there is no remembered tab, then just show the first one that has results.
 	if (Object.keys(qsWaitFor).length == 0) {
-		var tabID = sessionStorage.getItem(sessionID);
-		if (tabID == null) {
+		const tabIndex = sessionStorage.getItem(sessionID);
+		if (tabIndex == null) {
 			$('.hasResults').first().click();
 		} else {
-			$('#ui-id-' + tabID).first().click();
+                        $(`.ui-tabs-nav > li:nth-child(${tabIndex}) a`).first().click()
 		}
 	}
 }
