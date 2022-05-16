@@ -173,7 +173,6 @@ NotesTagConverter ntc = new NotesTagConverter();
  const legendTemplate = document.getElementById('recombinaseTableLegendPopup')
  const legendPopupConfig = {
     initiallyOpen: true,
-    extraClass: '',
     title: 'Matrix Legend',
     content: legendTemplate.innerHTML // pass the HTML as a string
  }
@@ -236,17 +235,18 @@ NotesTagConverter ntc = new NotesTagConverter();
  var columnData = [
      'Activity in Systems/Structures',
      'E 0-8.9',
-     'E 9.0-13.9',
-     'E 14-19.5',
-     'P 0-21',
-     'P 22-42',
-     'P >43'
+     'E 9-13.9',
+     'E 14-21',
+     'P 0-3.9',
+     'P 4-21.9',
+     'P 22-42.9',
+     'P >43',
+     'Postnatal'
  ]
 
  // -------------------------------------------------------------------
  // Put it all together into a config 
  const gridConfig = {
-     targetId: "recombinaseTableWrapper",
      rowData: recombinaseTableRowData,
      columnData: columnData,
      cellRenderer: cellData2class,

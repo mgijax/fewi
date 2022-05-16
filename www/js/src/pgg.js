@@ -4,7 +4,9 @@
   * Overview:
   *
   * 'PGG' stands for 'Pretty Good Grid' (in contrast to the SuperGrid).
-  * PGG is lightweight, consisting of this Javascript file and its companion style sheet, pgg.css
+  * PGG is lightweight, dealing only with grid rendering and popup support. 
+  * It does not know how to go get data (unlike supergrid) - you have to supply it.
+  * PGG is small, consisting of just this Javascript file and its companion style sheet, pgg.css
   * It has no outside dependencies.
   * 
   * PGG knows how to take data in a defined format (see below) and draw a table with rows and cells
@@ -18,7 +20,74 @@
   * (PGG still won't know how to get the data, but it will allow you to add data (rows) in increments, and it will allow you to
   * catch open/close events so you know when to get more data.)
   *
-  * Drawing mnatrix cells.
+  * How to use PGG.
+  *
+  * (For a working example of how to use PGG, see recombinase activity grid implementation in
+  * fewi/www/WEB-INF/jsp/recombinase/recombinase_table.jsp)
+  *
+  * Include pgg.js and pgg.css 
+  *     <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/pgg.css">
+  *     <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/pgg.js"></script>
+  *
+  * Provide a place to draw the grid:
+  *     <div id="myGridWrapper"></div>
+  *
+  * Draw it:
+  *     myGrid = pgg.renderGrid ("myGridWrapper", gridConfig)
+  *
+  * Grid configuration object: GridConfig is a configuration object having these fields:
+  *
+  *     rowData: list of data objects for drawing the grid, one per row.
+  *         Each row looks like:
+  *            { name: <string>, cellData: [ <celldataobject> ], children: [<row>] }
+  *         where:
+  *            name: is the label to display in the first column
+  *            cellData: is a list of data objects for the cells in this row 
+  *                cellData must have the same number of elements in all rows.
+  *                <celldataobject> can be anything you like. Pgg will pass this 
+  *                object to other functions (supplied by you) used in the
+  *                rendering process.
+  *            children: (optional) rows may contain rows, recursively. Rows that
+  *                have a children[] field will be openy/closey in the display. 
+  *
+  *     columnData: list of column names (strings). Number of elements
+  *         should be 1 + number of cellData elements in a row.
+  *
+  *     cellRenderer (function) function that takes a cell's data object and returns
+  *             a class name. See pgg.css for defined class names
+  *
+  *     cellPopupConfig: config object for the cell popups. Has these fields.
+  *         content: (function or string) The HTML content for main body of the popup. 
+  *             For static content use a string. For dynamic content, use a function.
+  *             The function will be passed the cell's DOM element and the cell's data object.
+  *             The function's return value is used as the HTML content.
+  *         title (function or string) Specifies the text of the popup's title section
+  *             Same argument format as for content.
+  *         initiallyOpen (boolean) If true, popup will be opened at render time, using null
+  *             cell element and null cell data object. (default=false)
+  *         extraClass (string) Additional class name to give to the popup's root div. (default=none)
+  *
+  *     legendConfig: config object for the grid legend popup.
+  *         Same format as cellPopupConfig, EXCEPT that the content and title functions are passed
+  *         the grid's root element and no data object.
+  *
+  * The grid object. The returned object contains functions for controlling the grid and its popups:
+  *     {
+  *         grid: <DOM node of grid's root element>
+  *         resetView: <function>
+  *         legendPopup: {
+  *             name: 'legend',
+  *             popup: <DOM node of popup's root eleemnt>
+  *             controls: { open, close, toggle, moveTo, moveBy }
+  *             },
+  *         cellPopup: {
+  *             name: 'cellPopup',
+  *             popup: <DOM node of popup's root eleemnt>
+  *             controls: { open, close, toggle, moveTo, moveBy }
+  *         }
+  *     }
+  *
+  * How PGG draws matrix cells.
   *
   * Drawing matrix cells is almost exclusively done with CSS.
   * In the DOM, a matrix cell has a simple structure.
@@ -33,47 +102,12 @@
   *   <!-- empty square with open circle -->
   *   <td class="pgg-cell empty-circle"><div class="decorator" /></td>
   *
-  * So, the key thing needed to draw a cell is a function that takes the data object for
-  * the cell and returns the class name to use.
+  * So, the key thing needed to draw a cell is the class name of the specific style you want.
+  * That's the job of the cellRenderer function (see above).
   *
-  * Popups.
-  *
-  * PGG provides support for creating moveable, closable popups for a grid legend and for cell popups.
-  * It takes care of creating the containers, givening them the required behaviors, and connecting them
-  * with buttons/click events.
-  * However, the *content* of these popups are the caller's responsibiltiy: callbacks must be provided that return 
-  * the title and main body content.
-  *
-  * How to use:
-  *
-  * Provide a place to draw the grid:
-  *     <div id="myGridWrapper"></div>
-  *
-  * Include pgg.js and pgg.css 
-  *     <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/pgg.css">
-  *     <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/pgg.js"></script>
-  *
-  * Get the data for the grid:
-  *     1. a list of rows
-  *     2. each row is an object with fields:
-  *        - name : label to show in lefthand column
-  *        - cellData : list of data objects for each cell in this row
-  *        - children : list of rows (recursive)
-  *
-  * To draw a grid, call the main entry point:
-  *     pgg.renderGrid (targetId, data, columns, legendConfig, cellPopupConfig)
-  *
-  * where:
-  *
-  *     targetId is the id of an empty div element where the grid will be injected
-  *
-  *     data is a list of row data objects. Row data includes the name to show in
-  *             the left column and a list of cell data objects. All rows must have
-  *             the same number of cell data objets. A cell data object can be anything.
-  *             Typical use case: cell data contains cup ounts of annotations.
-  *     columns is a list of column names. 
-  *
-  *
+  * The JS code here does not know or care what CSS class names are defined (or by whom). 
+  * You're free to define your own rendering styles, within the constraint of having one one
+  * cell node and one decorator node to play with.
   *
   */
 
@@ -397,7 +431,7 @@
              pbody.innerHTML = contentFcn.apply(null, arguments)
              if (near) {
                  const nbb = near.getBoundingClientRect()
-                 moveToFunction(nbb.right + 20, nbb.top - 10)
+                 moveToFunction(nbb.right + 30, nbb.top - 10)
              }
          }
 
