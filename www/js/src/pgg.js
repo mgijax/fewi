@@ -5,7 +5,7 @@
   *
   * 'PGG' stands for 'Pretty Good Grid' (in contrast to the SuperGrid).
   * PGG is lightweight, dealing only with grid rendering and popup support. 
-  * It does not know how to go get data (unlike supergrid) - you have to supply it.
+  * It does not know how to get data (unlike supergrid) - you have to supply it.
   * PGG is small, consisting of just this Javascript file and its companion style sheet, pgg.css
   * It has no outside dependencies.
   * 
@@ -22,20 +22,22 @@
   *
   * How to use PGG.
   *
-  * (For a working example of how to use PGG, see recombinase activity grid implementation in
+  * (For a working example, see recombinase activity grid implementation in
   * fewi/www/WEB-INF/jsp/recombinase/recombinase_table.jsp)
   *
-  * Include pgg.js and pgg.css 
+  * 1. Include pgg.js and pgg.css 
   *     <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/pgg.css">
   *     <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/pgg.js"></script>
   *
-  * Provide a place to draw the grid:
+  * 2. Provide a place to draw the grid:
   *     <div id="myGridWrapper"></div>
   *
-  * Draw it:
+  * 3. Assemble a grid configuration object. Details below.
+  *
+  * 4. Draw it:
   *     myGrid = pgg.renderGrid ("myGridWrapper", gridConfig)
   *
-  * Grid configuration object: GridConfig is a configuration object having these fields:
+  * Grid configuration object: gridConfig is a configuration object having these fields:
   *
   *     rowData: list of data objects for drawing the grid, one per row.
   *         Each row looks like:
@@ -51,7 +53,8 @@
   *                have a children[] field will be openy/closey in the display. 
   *
   *     columnData: list of column names (strings). Number of elements
-  *         should be 1 + number of cellData elements in a row.
+  *         should be equal to the number of cellData elements in a row
+  *         plus one (for the label column).
   *
   *     cellRenderer (function) function that takes a cell's data object and returns
   *             a class name. See pgg.css for defined class names
@@ -71,10 +74,13 @@
   *         Same format as cellPopupConfig, EXCEPT that the content and title functions are passed
   *         the grid's root element and no data object.
   *
-  * The grid object. The returned object contains functions for controlling the grid and its popups:
+  * The grid object. The returned object contains references to the grid and popup DOM elements, plus
+  * functions for controlling them.
   *     {
   *         grid: <DOM node of grid's root element>
-  *         resetView: <function>
+  *         resetView: <function> - closes the cell popup
+  *             and opens the legend popup to the right of the grid.
+  *             (E.g., call whenever section containing the grid is opened.)
   *         legendPopup: {
   *             name: 'legend',
   *             popup: <DOM node of popup's root eleemnt>
@@ -87,10 +93,22 @@
   *         }
   *     }
   *
+  * Popup control functions:
+  *     open(near) - opens the popup, where near is an optional DOM element.
+  *         If provided, opens the popup near (just to the right of) the element.
+  *         (This API could be expanded in the future to allow more positioning
+  *         options,(
+  *     close() - closes the popup]
+  *     toggle() - opens/closes
+  *     moveTo(x,y) - moves the top left corner of the popup to x,y
+  *         Coordinates are client coordinate (the kind you
+  *         get from getBoundingClientRect)
+  *     moveBy(dx, dy) - moves the popup by dx, dy pixels.
+  *
   * How PGG draws matrix cells.
   *
   * Drawing matrix cells is almost exclusively done with CSS.
-  * In the DOM, a matrix cell has a simple structure.
+  * In the DOM, every matrix cell has the same simple structure:
   *
   *     <td class="pgg-cell CELLSTYLE"><div class="decorator" /></td>
   *
@@ -108,6 +126,16 @@
   * The JS code here does not know or care what CSS class names are defined (or by whom). 
   * You're free to define your own rendering styles, within the constraint of having one one
   * cell node and one decorator node to play with.
+  *
+  * How PGG simulates hierarchical grids (i.e., levels of openy/closey).
+  *
+  * Underneath, the grid is just a <table>, and HTML tables are "flat", i.e. a row cannot contain
+  * other rows. (Yes you are free to put a <table> inside another <table>, but it won't look
+  * like what we want. At least, I can't get it to.) So anyway, how do you simulate the hierarchical
+  * structure with a simple list of rows? PGG does it by giving each <tr> a name attribute that is
+  * basically its address in the hierarchy. For example, the first child of the second child of the root
+  * has the name "2-1". Its first child would be named "2-1-1". The code uses the names to decide
+  * which rows to show/hide when an openy/closy row is clicked.
   *
   */
 
@@ -158,29 +186,76 @@
          // See if an openy/closey row was clicked
          const tgtRow = ev.target.closest('.has-children')
          if (tgtRow) {
-             // toggle the row's state
-             tgtRow.classList.toggle('closed')
-             // now show/hide descendant rows.
-             const isClosed = tgtRow.classList.contains('closed')
-             const tname = tgtRow.getAttribute("name")
-             const tdepth = tname.split("-").length
-             const cssPattern = `tr[name|="${tname}"]`
-             const rows = tbl.querySelectorAll(cssPattern)
-             rows.forEach(r => {
-                // css pattern returns all desecndants. Only want to open/close
-                // immediate children of the tgtRow
-                const rname = r.getAttribute('name')
-                const rdepth = rname.split('-').length
-                if (rdepth === tdepth + 1) r.style.display = isClosed ? "none" : ""
-             })
-             //
+             toggleRow(tgtRow)
              cellPopup && cellPopup.controls.close()
-             //
              ev.stopPropagation()
              return
          }
      }
 
+     // Returns immediate child rows of the specified row
+     function getChildren (row) {
+         return getDescendants(row, true)
+     }
+
+     // Returns descendant rows of the specified row. If immediate is
+     // true, returns only immediate children. Otherwise, returns all
+     // descendants.
+     function getDescendants (row, immediate) {
+         const tbl = row.closest('table')
+         const rname = row.getAttribute("name")
+         const rlevel = rname.split("-").length
+         const cssPattern = `tr[name|="${rname}"]`
+         const rows = tbl.querySelectorAll(cssPattern)
+         const descendants = []
+         rows.forEach(r => {
+             const rn = r.getAttribute("name")
+             const rd = rn.split("-").length
+             if ((immediate && rd === rlevel + 1) || (!immediate && rd > rlevel)) descendants.push(r)
+         })
+         return descendants
+     }
+
+     // Opens the specified row. Immediate children become visible.
+     // If any child is openy/closey and is open, then its
+     // children become visible, recursively.
+     function openRow (row) {
+         row.classList.remove('closed')
+         getChildren(row).forEach(c => {
+             c.style.display = ""
+             if (c.classList.contains("has-children") && !c.classList.contains("closed")) {
+                 openRow(c)
+             }
+         })
+     }
+
+     // Closes the specified row. All descendant rows are hidden.
+     function closeRow (row) {
+         row.classList.add('closed')
+         getDescendants(row).forEach(d => {
+             d.style.display = "none"
+         })
+     }
+
+     // If the specified row is open, close it.
+     // If closed, open it.
+     function toggleRow (row) {
+         if (row.classList.contains('closed')) {
+             openRow(row)
+         } else {
+             closeRow(row)
+         }
+     }
+
+     // Opens all rows in the specified table.
+     function openAllRows (tbl) {
+         tbl.querySelectorAll('tbody > tr[name]').forEach(tr => {
+             tr.style.display = ''
+             tr.classList.remove("closed")
+         })
+     }
+
+     // Closes all rows in the specified table
      function closeAllRows (tbl) {
          tbl.querySelectorAll('tbody > tr[name]').forEach(tr => {
              if (tr.getAttribute("name").split("-").length === 1) {
@@ -192,25 +267,21 @@
          })
      }
 
-     function openAllRows (tbl) {
-         tbl.querySelectorAll('tbody > tr[name]').forEach(tr => {
-             tr.style.display = ''
-             tr.classList.remove("closed")
-         })
-     }
-
+     // Returns the HTML for one cell. 
      function renderCell (cellData, cellRenderer) {
          const cellClass = cellRenderer(cellData)
          const _data = encodeURIComponent(JSON.stringify(cellData))
          return `<td class="pgg-cell ${cellClass}" _data="${_data}"><div class="decorator"></div></td>`
      }
 
+     // Returns the HTML for the row's name column.
      function renderNameCell (rowData) {
          const hasChildren = Array.isArray(rowData.children)
          const turnstile = hasChildren ? '<div class="turnstile">▼</div>' : ''
          return `<td class="row-label"><span>${rowData.name}</span>${turnstile}</td>`
      }
 
+     // Returns the HTML for one row.
      function renderRow (rowData, level, cellRenderer) {
          const hasChildren = Array.isArray(rowData.children)
          const rowNameHtml = renderNameCell (rowData)
@@ -226,11 +297,15 @@
          return rowHtml + childrenHtml
      }
 
+     // Returns the HTML for all the rows
      function renderRows (rowsData, level, cellRenderer) {
          const joiner = level ? '-' : ''
          return rowsData.map((rowData, rowNum) => renderRow(rowData, level+joiner+rowNum, cellRenderer)).join('')
      }
 
+     // Returns the HTML for the column headers (<th> elements).
+     // Inserts the Legend button, and open all/close all buttons into
+     // the header for the name column.
      function renderColumnHeaders (tbl, columnData, legendFcns) {
          const thead = tbl.querySelector('thead')
          // Caller supplies column names.
@@ -477,6 +552,8 @@
      }
 
     // Lifted and adapted from https://www.w3schools.com/howto/howto_js_draggable.asp
+    // Makes the specified element draggable. dragHandle is element under eltToMove that
+    // is the active area for dragging. (For grid popups, it's the title bar of the popup.)
     function dragify (eltToMove, dragHandle) {
       var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
