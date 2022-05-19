@@ -587,7 +587,7 @@ public class RecombinaseController {
         // structures detected/not-detected. 
         // Build filter to return the qualifying results of qualifying alleles.
         // To find _all_ results of qualifying alleles, look in the allStructures field.
-        // To find qualifying results of qualifying results, look in the structureSearch field.
+        // To find qualifying results of qualifying alleles, look in the structureSearch field.
         // Example: heart and lung but not liver. 
         //      All results for qualifying alleles are have heart AND lung in allStructures field but not liver
         //      Qualifying results additionally have heart OR lung in the structureSearch field.

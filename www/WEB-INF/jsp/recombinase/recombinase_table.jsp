@@ -70,12 +70,12 @@ NotesTagConverter ntc = new NotesTagConverter();
 
         <div class="swatch">
                 <div class='pgg-cell b2g'><div class="decorator" /></div>
-                <span class='caption'> structure has both present and absent results in substructures</span> <br/>
+                <span class='caption'> structure has both present and absent and/or ambiguous results in substructures</span> <br/>
         </div>
 
         <div class='swatch'>
                 <div class='pgg-cell gold-corner'><div class="decorator" /></div>
-                <span class='caption'> either absent or ambiguous results in substructures</span> <br/>
+                <span class='caption'> only absent or ambiguous results in substructures</span> <br/>
         </div>
 
         <div class='swatch'>
@@ -93,6 +93,11 @@ NotesTagConverter ntc = new NotesTagConverter();
                 <div class='pgg-cell empty'><div class="decorator" /></div>
                 <span class='caption'> tissue does not exist in this age range</span>
         </div>
+    </div>
+
+    <div class="section">
+        <h3>Note</h3>
+        <div>Click on a grid cell to access annotation details and images.</div>
     </div>
 </template>
 
