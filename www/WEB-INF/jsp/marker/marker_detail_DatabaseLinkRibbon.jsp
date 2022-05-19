@@ -1,3 +1,11 @@
+        <style>
+        #otherIdsRibbon table.extra {
+            margin-left: 65px;
+        }
+        #otherIdsRibbon table.extra td {
+            padding-right: 8px;
+        }
+        </style>
 	<c:if test="${not empty logicalDBs}">
 		<div class="row" id="otherIdsRibbon">
 			<div class="header <%=leftTdStyles.getNext() %>">
@@ -6,14 +14,16 @@
 			<div class="detail <%=rightTdStyles.getNext() %>">
 				<section class="summarySec1">
 					<div id="odbToggle" title="Show Less" class="toggleImage hdCollapse">less</div>
-					<ul class="extra open">
-						<c:forEach var="item" items="${logicalDBs}">
-							<li>
-								<div class="label">${item}</div>
-								<div class="value">${otherIDs[item]}</div>
-							</li>
-						</c:forEach>
-					</ul>
+                                        <table class = "extra" >
+                                        <tbody>
+                                            <c:forEach var="item" items="${logicalDBs}">
+                                                <tr>
+                                                    <td class="label">${item}</td>
+                                                    <td class="value">${otherIDs[item]}</td>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
+                                        </table>
 				</section>
 			</div>
 		</div>
