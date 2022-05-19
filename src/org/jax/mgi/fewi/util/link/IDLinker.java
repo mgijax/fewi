@@ -392,7 +392,7 @@ public class IDLinker {
 
 	public String getLink (AccessionID id) {
 		String accID = id.getAccID();
-		return getLink(id.getLogicalDB(), accID, accID, "");
+		return getLink(id.getLogicalDB(), accID);
 	}
 
 	public String getLink (AccessionID id, String linkText) {
@@ -404,7 +404,14 @@ public class IDLinker {
 	}
 
 	public String getLink (String logicalDB, String id) {
-		return getLink(logicalDB, id, id, "");
+                String linkId = id;
+                // Special case for VISTA elements. An id looks like "mm472".
+                // The link only wants the numeric part "442". Link text should
+                // be the whole id.
+                if ("VISTA Enhancer Element".equals(logicalDB)) {
+                    linkId = id.replaceAll("^[^0-9]*", "");
+                }
+		return getLink(logicalDB, linkId, id, "");
 	}
 
 	public String getLink (String logicalDB, String id, String linkText) {
