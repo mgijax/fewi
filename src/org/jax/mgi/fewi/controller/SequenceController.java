@@ -265,7 +265,11 @@ public class SequenceController {
     			marker = m;
     		}
     	}
-    	
+        // Until regulatory features are available in MGV, suppress the link (CRM-105).
+        String pname = seq.getProvider();
+        if (pname.equals("VISTA Enhancer Element") || pname.equals("Ensembl Regulatory Feature")) {
+            return null;
+        }
     	// If location is missing, just bail out.
     	List<SequenceLocation> locations = seq.getLocations();
     	if ((locations == null) || (locations.size() == 0)) {

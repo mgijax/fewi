@@ -138,7 +138,7 @@
 			<a id="inducerFilter" class="filterButton">Inducer&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
 			<a id="systemDetectedFilter" class="filterButton">Detected in System&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
 			<a id="systemNotDetectedFilter" class="filterButton">Not Detected in System&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
-                        <img style="cursor:help;" title="Not detected means the search will return alleles whose recombinase activity was absent (not detected), as well as alleles whose recombinase activity has not been analyzed or recorded in the database for the specified structure." src="http://bluebob.informatics.jax.org/webshare/images/blue_info_icon.gif">
+                        <img style="cursor:help;" title="Not detected means the search will return alleles whose recombinase activity was absent (not detected), as well as alleles whose recombinase activity has not been analyzed or recorded in the database for the specified structure." src="${configBean.WEBSHARE_URL}images/blue_info_icon.gif">
 		</div><br />
 		<div id="breadbox" style="width: 765px; margin-top: 10px;">
 			<div id="filterSummary" class="filters" style="display: none">
