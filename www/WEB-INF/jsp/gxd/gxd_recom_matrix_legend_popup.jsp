@@ -65,7 +65,7 @@
 		  	<div class='inSubStructIndicator'></div>
 		  </div>
 		</div>
-		<span class='legendExampleRange'> either absent or ambiguous results </span> <br/>
+		<span class='legendExampleRange'> only absent or ambiguous results </span> <br/>
 		<span class='legendExampleRange'> in substructures </span>
 	</div>
 
@@ -79,6 +79,10 @@
 		<span class='legendExampleRange'> tissue </span>
 	</div>
 	
+        <div class="legendSection" style="text-align: center;font-style: italic;">
+             Click on a grid cell to access annotation details and images.
+        </div>
+
 	<div class='legendSection legendFilterSection'>
 	    <h4>Note</h4>
 		<div>Not all recombinase-carrying alleles are displayed in this matrix.  Alleles whose tissue activity data has not yet been recorded and those using non-mouse drivers are omitted.</div>
