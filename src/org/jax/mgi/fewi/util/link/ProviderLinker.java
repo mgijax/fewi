@@ -15,8 +15,6 @@ public class ProviderLinker
     /* instance variables */
     /*--------------------*/
 
-	// logger for the class
-
 	private static String genBankUrl = "https://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nuccore&id=";
 	private static String enaUrl = "http://www.ebi.ac.uk/ena/data/view/";
 	private static String ddbjUrl = "http://getentry.ddbj.nig.ac.jp/cgi-bin/get_entry.pl?";
@@ -32,6 +30,8 @@ public class ProviderLinker
 	private static String refSeqUrl = "https://www.ncbi.nlm.nih.gov/entrez/viewer.cgi?val=";
 	private static String dotsUrl = "http://genomics.betacell.org/gbco/showSummary.do?questionFullName=TranscriptQuestions.TranscriptFromDtIds&myProp%28dtIdP%29=";
 	private static String mgpSeqUrl = "http://useast.ensembl.org/Mus_musculus_<strain>/Gene/Summary?db=core;g=<id>";
+	private static String ensemblRegUrl = "http://useast.ensembl.org/Mus_musculus/Regulation/Summary?rf=";
+	private static String vistaUrl = "https://enhancer.lbl.gov/cgi-bin/imagedb3.pl?form=presentation&show=1&organism_id=2&experiment_id=";
 
     /*-------------------------*/
     /* public instance methods */
@@ -99,7 +99,8 @@ public class ProviderLinker
         else if (seqProvider.equals(DBConstants.PROVIDER_REFSEQ)) {
 
 			links.append("<a href='" + refSeqUrl + seqID + "'>RefSeq</a>");
-		} else if (seqProvider.equals(DBConstants.PROVIDER_MGP)) {
+		}
+        else if (seqProvider.equals(DBConstants.PROVIDER_MGP)) {
 			
 			// need to pull the strain out of the ID, then insert it into the URL, and insert the ID into the URL
 			String[] pieces = seqID.split("_");
@@ -111,9 +112,18 @@ public class ProviderLinker
 				links.append("Mouse Genomes Project");
 			}
 
-		} else if (seqProvider.equals(DBConstants.PROVIDER_MGI_SGM)) {
+		}
+        else if (seqProvider.equals(DBConstants.PROVIDER_MGI_SGM)) {
 			
 			// no extra link for MGI C57BL/6J Strain Gene Model; just use the standard sequence detail link
+		}
+        else if (seqProvider.equals(DBConstants.PROVIDER_ENSEMBLREG)) {
+			links.append("<a href='" + ensemblRegUrl + seqID + "'>Ensembl</a>");
+		}
+
+        else if (seqProvider.equals(DBConstants.PROVIDER_VISTA)) {
+                        String numericPart = seqID.replaceAll("^[^0-9]*","");
+			links.append("<a href='" + vistaUrl + numericPart + "'>VISTA</a>");
 		}
 
         return links.toString();
