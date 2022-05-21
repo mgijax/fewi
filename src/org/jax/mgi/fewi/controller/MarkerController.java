@@ -660,7 +660,9 @@ public class MarkerController {
 				Long tssStart = Long.parseLong(startCoordinate) - 500;
 				Long tssEnd = Long.parseLong(endCoordinate) + 500;
 				jbrowseUrl = externalUrls.getProperty("JBrowseTSS_Highlight").replaceAll("<chromosome>", chromosome).replace("<startHighlight>", startCoordinate).replace("<endHighlight>", endCoordinate).replace("<start>", "" + tssStart).replace("<end>", "" + tssEnd);
-			}
+			} else if ("Ensembl Reg".equals(coords.getProvider()) || "VISTA".equals(coords.getProvider()) ) {
+                                jbrowseUrl = externalUrls.getProperty("JBrowseReg").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
+                        }
 
 			gbrowseThumbnailUrl = externalUrls.getProperty("GBrowse_Thumbnail").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
 
