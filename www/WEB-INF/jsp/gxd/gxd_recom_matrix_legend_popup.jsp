@@ -85,7 +85,9 @@
 
 	<div class='legendSection legendFilterSection'>
 	    <h4>Note</h4>
-		<div>Not all recombinase-carrying alleles are displayed in this matrix.  Alleles whose tissue activity data has not yet been recorded and those using non-mouse drivers are omitted.</div>
+		<div>
+                Cre activity comparison is to endogenous gene expression in mouse structures. Not all recombinase-carrying alleles are displayed in this matrix. Alleles and transgenes whose tissue activity data is not yet recorded are omitted.
+                </div>
 	</div>
 	
  	</div>
