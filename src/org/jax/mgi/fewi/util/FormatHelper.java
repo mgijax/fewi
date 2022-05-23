@@ -368,7 +368,9 @@ public class FormatHelper {
 		}else if (seqProvider.equals(DBConstants.PROVIDER_ENSEMBLTRANSCRIPT)) {
 			providerForward = "ensembl_mus_cdna";
 		}else if (seqProvider.equals(DBConstants.PROVIDER_NCBI) ||
-				seqProvider.equals(DBConstants.PROVIDER_ENSEMBL)) {
+				seqProvider.equals(DBConstants.PROVIDER_ENSEMBL) ||
+                                seqProvider.equals(DBConstants.PROVIDER_ENSEMBLREG) ||
+                                seqProvider.equals(DBConstants.PROVIDER_VISTA)) {
 			providerForward = "mousegenome";
 		}else if (seqProvider.endsWith("(MGP) Strain Gene Model") ||
 				(seqProvider.startsWith("MGI") && seqProvider.endsWith("Gene Model")) ) {

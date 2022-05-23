@@ -21,6 +21,13 @@
 		}
 	
 		window.formatForwardArgs = function() {
+                        // make sure the user has selected a sequence
+                        const radios = Array.from(document.sequenceForm.querySelectorAll('input[type="radio"][name="seq1"]'))
+                        const someoneChecked = radios.reduce((a,v) => a || v.checked, false)
+                        if (!someoneChecked) {
+                            alert("Please select a sequence and try again.");
+                            return false;
+                        }
 			document.sequenceForm.action = document.sequenceFormPullDown.seqPullDown.options[document.sequenceFormPullDown.seqPullDown.selectedIndex].value;
 			if (document.sequenceForm.action.indexOf("blast") >= 0) {
 			    document.sequenceForm.target = "_blank";
