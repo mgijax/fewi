@@ -1743,6 +1743,9 @@ function handleAddStructure() {
   makeStructureAC("profileStructure" + rowCount, "profileStructureContainer" + rowCount);
 
   rowCount++;
+
+  // ensure the added buttons are compatible with "nowhere else"
+  handleNowhereElse();
 };
 
 
