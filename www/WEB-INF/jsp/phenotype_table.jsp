@@ -212,10 +212,10 @@ td.padTop { padding-top:4px }
         <div style="text-align:left; cursor: pointer;">
          <!-- Add the toggle arrows -->
           <span class="arrowRight ${phenoTableSystem.cssClass}">
-          	<img src="http://www.informatics.jax.org/webshare/images/rightArrow.gif"/>
+          	<img src="/webshare/images/rightArrow.gif"/>
           </span>
           <span style="display:none;" class="arrowDown ${phenoTableSystem.cssClass}">
-          	<img src="http://www.informatics.jax.org/webshare/images/downArrow.gif"/>
+          	<img src="/webshare/images/downArrow.gif"/>
           </span>
           ${phenoTableSystem.system} 
           <!-- (systemSeq= ${phenoTableSystem.systemSeq}) -->

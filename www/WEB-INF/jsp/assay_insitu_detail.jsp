@@ -78,7 +78,7 @@ function toggleSpecimenInfo(idToHide, idToShow) {
         </span> 
         ${assaySpecimen.age}<%=allCompNoBR%> 
         <span class="specimenOpen" onClick='toggleSpecimenInfo(defaultSpecInfo${specCount.index}, hiddenSpecInfo${specCount.index} );'>
-          (more <img src='http://www.informatics.jax.org/webshare/images/rightArrow.gif' />)
+          (more <img src='/webshare/images/rightArrow.gif' />)
         </span>          
 
         <c:if test="${not empty assaySpecimen.specimenNote}">
@@ -100,7 +100,7 @@ function toggleSpecimenInfo(idToHide, idToShow) {
         </span> 
         <span class="specimenClose" style='padding-left:10px;'
           onClick='toggleSpecimenInfo(hiddenSpecInfo${specCount.index}, defaultSpecInfo${specCount.index} );'>
-          (close <img src='http://www.informatics.jax.org/webshare/images/downArrow.gif' />)
+          (close <img src="/webshare/images/downArrow.gif" />)
         </span>          
 
         </div>
