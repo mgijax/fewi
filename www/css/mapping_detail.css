@@ -128,11 +128,11 @@
 	}
 
 	.hdExpand {
-		background: url("../images/rightArrow.gif") no-repeat;
+		background: url("/webshare/images/rightArrow.gif") no-repeat;
 	}
 
 	.hdCollapse {
-		background: url("../images/downArrow.gif") no-repeat;
+		background: url("/webshare/images/downArrow.gif") no-repeat;
 	}
 
 	td.padded { padding:4px; }
@@ -422,11 +422,11 @@ border-bottom: 1px solid gray;
 	}
 
 	#body .hdExpand {
-		background: url("http://www.informatics.jax.org/webshare/images/rightArrow.gif") no-repeat 42px 3px;
+		background: url("/webshare/images/rightArrow.gif") no-repeat 42px 3px;
 	}
 
 	#body .hdCollapse {
-		background: url("http://www.informatics.jax.org/webshare/images/downArrow.gif") no-repeat 42px 3px; 
+		background: url("/webshare/images/downArrow.gif") no-repeat 42px 3px; 
 	}
 
 	#body .toggleImage {

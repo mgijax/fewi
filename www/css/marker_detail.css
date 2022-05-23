@@ -145,11 +145,11 @@
 	}
 
 	.hdExpand {
-		background: url("../images/rightArrow.gif") no-repeat;
+		background: url("/webshare/images/rightArrow.gif") no-repeat;
 	}
 
 	.hdCollapse {
-		background: url("../images/downArrow.gif") no-repeat;
+		background: url("/webshare/images/downArrow.gif") no-repeat;
 	}
 
 	td.padded { padding:4px; }
