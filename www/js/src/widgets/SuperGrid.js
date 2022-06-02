@@ -422,7 +422,7 @@ function SGData(config)
     	_self.rows[cell.ri]._d=true;
 
         // make sure column is unique
-        cell.ci = _self.addColumn({cid:cell.cid, colDisplay: cell.colDisplay, highlightColumn: cell.highlightColumn});
+        cell.ci = _self.addColumn({cid:cell.cid, colDisplay: cell.colDisplay, mgiId: cell.mgiId, highlightColumn: cell.highlightColumn});
 
         // set master lookup with row/col indices
         _self.registerCell(cell);
@@ -1351,6 +1351,7 @@ function SuperGrid(config)
     {
     	var width = (_self.getInitialColumnNum()*_self.cellSize) + _self.rowHeaderWidth;
     	if(_self.verticalColumnLabels) width += _self.cellSize*3;
+        width += 50 // just because
         return width;
     }
 

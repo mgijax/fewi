@@ -251,12 +251,16 @@ window.GeneRecomMatrixRender = new function()
 		d3Target.append("text")
 	    	.attr("x", 0)
 	    	.attr("y",cellSize-labelPaddingBottom)
-	    	.text(function(d){ 
+	    	.html(function(d){ 
+                        console.log("column data object:", d)
 	    		var displayValue = d.colDisplay.trim();
 	    		if (displayValue.length > 33){
 	    			displayValue = displayValue.substring(0,32) + "...";
 	    		}
-	    		return displayValue;})	    	
+                        displayValue = displayValue.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+                        var linkUrl = d.mgiId ? '/accession/' + d.mgiId : ''
+                        var html = linkUrl ? `<a href="${linkUrl}">${displayValue}</a>` : displayValue
+	    		return html;})	    	
 	    	.style("fill",function(d){ 
 	    		if (d.highlightColumn) {
 	    			return "#000000";
