@@ -116,8 +116,7 @@ var formTabs = new YAHOO.widget.TabView('expressionSearch');
 
 formTabs.addListener("activeTabChange", function(e){
 	if(formTabs.get('activeIndex')==0) currentQF = "standard";
-	else if(formTabs.get('activeIndex')==3) currentQF = "batch";
-	else if(formTabs.get('activeIndex')==2) currentQF = "profile";
+	else if(formTabs.get('activeIndex')==2) currentQF = "batch";
 	else currentQF = "differential";
 });
 //basic functions to manage the form tabs
@@ -131,15 +130,10 @@ var showDifferentialForm = function()
 	currentQF = "differential";
 	formTabs.selectTab(1);
 };
-var showProfileSearchForm = function()
-{
-	currentQF = "profile";
-	formTabs.selectTab(2);
-};
 var showBatchSearchForm = function()
 {
 	currentQF = "batch";
-	formTabs.selectTab(3);
+	formTabs.selectTab(2);
 };
 
 function getCurrentQF()
@@ -870,7 +864,8 @@ var interceptSubmit = function(e) {
 
 YAHOO.util.Event.addListener("gxdQueryForm", "submit", interceptSubmit);
 YAHOO.util.Event.addListener("gxdBatchQueryForm1", "submit", interceptSubmit);
-3
+YAHOO.util.Event.addListener("gxdDifferentialQueryForm3","submit", interceptSubmit);
+
 /*
  * The following functions handle form validation/restriction
  */
@@ -1338,9 +1333,6 @@ function makeStructureAC(inputID,containerID){
 makeStructureAC("structure","structureContainer");
 makeStructureAC("difStructure3","difStructureContainer3");
 makeStructureAC("difStructure4","difStructureContainer4");
-makeStructureAC("profileStructure1","profileStructureContainer1");
-makeStructureAC("profileStructure2","profileStructureContainer2");
-makeStructureAC("profileStructure3","profileStructureContainer3");
 
 //
 // Wire up the functionality to reset the query form
@@ -1686,72 +1678,3 @@ function checkBatchInput(){
 	
 	return true;
 };
-
-// ensure input compatibility; disable "NoWhere Else" checkbox if needed
-function structureRadioChange() {
-
-   	var checkBox = document.getElementById("nowhereElseCheckbox");
-   	var nowhereElseText = document.getElementById("nowhereElseText");
-	var notDetectedNodes = YAHOO.util.Dom.getElementsByClassName('notDetected', 'input');
-	var hasNotDetected = false;
-	for (let i = 0; i < notDetectedNodes.length; i++) {
-		if (notDetectedNodes[i].checked == true){
-			hasNotDetected = true;
-		}
-	}
-	if (hasNotDetected) {
-		checkBox.disabled = true;
-		nowhereElseText.classList.add("disabledText");
-	} else {
-		checkBox.disabled = false;
-		nowhereElseText.classList.remove("disabledText");
-	}
-};
-
-// ensure input compatibility; disable 'Not Detected' radio buttons if needed
-function handleNowhereElse() {
-
-	var checkBox = document.getElementById("nowhereElseCheckbox");
-	var notDetectedNodes = YAHOO.util.Dom.getElementsByClassName('notDetected', 'input');
-	for (let i = 0; i < notDetectedNodes.length; i++) {
-		if (checkBox.checked == true){
-			notDetectedNodes[i].disabled = true;
-		} else {
-			notDetectedNodes[i].disabled = false;
-		}
-	}
-};
-
-// adding rows to gxd profile query form
-var rowCount = 4;
-function handleAddStructure() {
-
-  var tableRef = document.getElementById('profileStructureTable').getElementsByTagName('tbody')[0];
-
-  // Insert a row in the table 
-  var newRow   = tableRef.insertRow(tableRef.rows.length);
-
-  // Create the row cells and setup user inputs
-  var cellOne  = newRow.insertCell(0);
-  var cellTwo  = newRow.insertCell(1);
-  var cellThree  = newRow.insertCell(2);
-  cellOne.innerHTML = '<input style="width: 320px; position: relative;" id="profileStructure' + rowCount + '" name="structure" placeholder="anatomical structure"><input type="hidden" id="profileStructure' + rowCount + 'ID" name="structureID" value=""/><div id="profileStructureContainer' + rowCount + '"></div>';
-  cellTwo.innerHTML = '<input type="radio" name="detected_' + rowCount + '" value="true" checked onChange="structureRadioChange()"/>';
-  cellThree.innerHTML = '<input type="radio" name="detected_' + rowCount + '" value="false" class="notDetected" onChange="structureRadioChange()"/>';
-
-  // attach autocomplete to the newly created input
-  makeStructureAC("profileStructure" + rowCount, "profileStructureContainer" + rowCount);
-
-  rowCount++;
-
-  // ensure the added buttons are compatible with "nowhere else"
-  handleNowhereElse();
-};
-
-
-
-
-
-
-
-
