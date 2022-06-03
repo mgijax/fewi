@@ -134,12 +134,15 @@ public class RecombinaseSummary {
 	public String getGridLink() {
 		String gridLink = "";
 		Marker driver = this.allele.getDriverMarker();
-		if (driver != null 
-				&& "mouse".equalsIgnoreCase(driver.getOrganism())
-				&& (driver.getCountOfGxdResults() > 0)
-				&& (driver.getCountOfRecombinaseAllelesWithExpressionData() > 0)) {
-
-			String link = fewiUrl + "gxd/recombinasegrid/" + driver.getPrimaryID() + "?alleleID=" + this.allele.getPrimaryID();
+                String driverId = driver.getPrimaryID();
+                if (!"mouse".equals(driver.getOrganism())) {
+                    driverId = driver.getMouseMarkerId();
+                    if (driverId == null) {
+                        return "";
+                    }
+                }
+		if (this.allele.getCountOfRecombinaseResults() > 0 ) {
+			String link = fewiUrl + "gxd/recombinasegrid/" + driverId + "?alleleID=" + this.allele.getPrimaryID();
 			String image = fewiUrl + "assets/images/gxd_matrix_icon.png";
 			gridLink = "<a href='" + link + "' target='_blank'><img src='" + image
 				+ "' class='matrixIcon' title='See a matrix showing expression data for mouse "

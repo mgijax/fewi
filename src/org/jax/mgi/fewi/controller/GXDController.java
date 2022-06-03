@@ -2172,7 +2172,7 @@ public class GXDController {
 			return new GxdStageGridJsonResponse<GxdRecombinaseMatrixCell>();
 		}
 
-		// pull in phenotype cells for the marker/childrenOf pair
+		// pull in recombinase cells for the marker/childrenOf pair
 		List<SolrRecombinaseMatrixCell> recombinaseCells = null;
 		if ((query.getMarkerMgiId() != null) && !"".equals(query.getMarkerMgiId().trim())) {
 			recombinaseCells = this.getRecombinaseCells(query.getMarkerMgiId(), childrenOf);

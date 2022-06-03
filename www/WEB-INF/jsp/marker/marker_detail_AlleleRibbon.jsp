@@ -129,10 +129,10 @@
 							</li>
 						</c:if>
 
-						<c:if test="${marker.hasWildTypeExpressionData and (marker.countOfRecombinaseAllelesWithExpressionData > 0)}">
+						<c:if test="${marker.hasWildTypeExpressionData and (marker.countOfRecombinaseAllelesWithActivityData > 0)}">
 							<li>
 								<div class="label">Recombinase Activity</div>
-								<div class="value"><a href="${configBean.FEWI_URL}gxd/recombinasegrid/${marker.primaryID}" target="_new">${marker.countOfRecombinaseAllelesWithExpressionData}</a></div>
+								<div class="value" title="${marker.symbol} is the driver for ${marker.countOfRecombinaseAllelesWithActivityData} recombinase alleles with activity data."><a href="${configBean.FEWI_URL}gxd/recombinasegrid/${marker.primaryID}" target="_new">Comparison Matrix  Gene Expression + Recombinase Activity</a></div>
 							</li>
 						</c:if>
 					</c:if>
