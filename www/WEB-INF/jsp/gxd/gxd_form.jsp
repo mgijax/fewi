@@ -125,7 +125,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 <!--[if IE]> -->
 #ageStageDiv {width:21em;}
 #theilerStage {margin-left:0px;margin-right:12px;height:9.5em}
-#age {margin-left:7px;margin-right:7px;height:9.5em}w
+#age {margin-left:7px;margin-right:7px;height:9.5em}
 #ageStageTd {height:12em;}
 <![endif]-->
 
@@ -135,7 +135,6 @@ span.smallGrey { font-size: 75%; color: #999999; }
 <ul class="yui-nav">
     <li class="selected"><a href="#standard-gxd-expression-search"><em>Standard Search</em></a></li>
     <li><a href="#differential-gxd-expression-search"><em>Differential Expression Search</em></a></li>
-    <li><a href="#profile-search"><em>Expression Profile Search</em></a></li>
     <li><a href="#batch-search"><em>Batch Search</em></a></li>
 </ul>
 <div class="yui-content">
@@ -484,14 +483,8 @@ span.smallGrey { font-size: 75%; color: #999999; }
    	$('#inCheckbox')[0].checked = false;
 </script>
 </div>
-
-<div id="profile-qf">
-<%@ include file="gxd_form_profile.jsp" %>
-</div><!-- profile-qf -->
-
 <div id="batch-qf">
 <%@ include file="gxd_form_batch.jsp" %>
 </div><!-- batch-qf -->
-
 </div><!-- yui-content -->
 </div><!-- expressionSearch -->
