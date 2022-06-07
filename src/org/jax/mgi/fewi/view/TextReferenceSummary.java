@@ -25,6 +25,7 @@ public class TextReferenceSummary extends AbstractTextView {
 		String pubmedId = "";
 		
 		for (Reference ref : references) {
+                        pubmedId = "";
 			if (ref.getPubMedID() != null){
 				pubmedId = ref.getPubMedID();
 			}
