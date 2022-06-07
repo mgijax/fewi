@@ -580,24 +580,28 @@ function formatFastaArgs() {
 	</tr>
 
 	<tr>
+            <c:set var="driverMarker" value="${allele.driverMarker}"/>
+            <c:set var="driverID" value="${driverMarker.primaryID}"/>
+            <c:set var="driverOrg" value="${fn:toLowerCase(driverMarker.organism)}"/>
+            <c:if test="${driverOrg == 'not specified'}">
+                <c:set var="driverOrg" value="species not specified"/>
+            </c:if>
+            <c:if test="${not empty driverMarker.mouseMarkerId}">
+                <c:set var="driverID" value="${driverMarker.mouseMarkerId}"/>
+            </c:if>
+
 	  <td style='vertical-align:top;' class='rightBorderThinGray padLR padTop' align='right' width='1%' nowrap='nowrap'>
 	    <font class='label'>Driver: </font>
 	  </td>
 	  <td class='padLR padTop'>
-	    <span style='padding-left:14px;'>${allele.driverNote}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+	    <span style='padding-left:14px;'>${allele.driverNote}</span>
+            <span class="small">(${driverOrg})</span>
 	    <span class='small'>Summary of all recombinase alleles
 	      <a class='MP' href='${configBean.FEWI_URL}recombinase/summary?driver=${allele.driverNote}'>driven by ${allele.driverNote}</a>.
 	    </span>
-		<c:set var="driverMarker" value="${allele.driverMarker}"/>
-		<c:set var="driverID" value="${driverMarker.primaryID}"/>
-                <c:if test="${not empty driverMarker.mouseMarkerId}">
-                    <c:set var="driverID" value="${driverMarker.mouseMarkerId}"/>
-                </c:if>
-
 		<c:if test="${(not empty driverID) and (allele.countOfRecombinaseResults > 0)}">
 		  <span class='small' style='padding-left: 20px'>
-			<a class='MP' href="${configBean.FEWI_URL}gxd/recombinasegrid/${driverID}?alleleID=${allele.primaryID}">Comparative matrix view
-				of recombinase activities</a>
+			<a class='MP' href="${configBean.FEWI_URL}gxd/recombinasegrid/${driverID}?alleleID=${allele.primaryID}">Comparative matrix view of recombinase activities</a>
 		  </span>
 		</c:if>
 	  </td>
