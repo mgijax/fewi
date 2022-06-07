@@ -54,7 +54,7 @@
   *
   *     columnData: list of column names (strings). Number of elements
   *         should be equal to the number of cellData elements in a row
-  *         plus one (for the label column).
+  *         plus one for the label column. Column headers may contain HTML.
   *
   *     cellRenderer (function) function that takes a cell's data object and returns
   *             a class name. See pgg.css for defined class names
@@ -322,7 +322,11 @@
              <div><button name="showLegend">Legend</button></div>
              ` : ''
          thead.innerHTML = '<tr>' + columnData.map((c,i) => {
-             return `<th><div>${c}</div>${i === 0 ? openCloseButtons+legendButton : ''}</th>`
+             return `
+               <th class="${i === 0 ? 'row-header' : 'cell-header' }">
+                  <div>${c}</div>
+                  ${i === 0 ? openCloseButtons+legendButton : ''}
+               </th>`
          }).join('') + '</tr>'
 
          if (legendFcns) {
@@ -506,7 +510,7 @@
              pbody.innerHTML = contentFcn.apply(null, arguments)
              if (near) {
                  const nbb = near.getBoundingClientRect()
-                 moveToFunction(nbb.right + 30, nbb.top - 10)
+                 moveToFunction(nbb.right + 35, nbb.top + 25)
              }
          }
 

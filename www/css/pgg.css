@@ -16,13 +16,14 @@
     padding: 10px;
     text-align: center;
     vertical-align: middle;
-    transform: translate(-4px, 40px) rotate(315deg);
+    transform: translate(-4px, 40px) rotate(320deg);
     transform-origin: 0% 0%;
     max-width: var(--cell-size);
 }
 
 .pgg-table th:first-child {
     transform: rotate(0deg);
+    min-width: 120px;
 }
 
 /* Fix for Firefox rendering issue. Without it, cell borders disappear.
