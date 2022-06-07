@@ -20,7 +20,7 @@ NotesTagConverter ntc = new NotesTagConverter();
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/pgg.js"></script>
 
 <!-- A place to draw the table -->
-<div id="recombinaseTableWrapper"></div>
+<div id="recombinaseTableWrapper" style="padding-top: 40px;"></div>
 
 <!-- Legend contents.
      Define as a template, then instantiate during popup initialization. -->
@@ -238,15 +238,15 @@ NotesTagConverter ntc = new NotesTagConverter();
  // -------------------------------------------------------------------
  // Define the column labels
  var columnData = [
-     'Activity in Systems/Structures',
-     'E 0-8.9',
-     'E 9-13.9',
-     'E 14-21',
-     'P 0-3.9',
-     'P 4-21.9',
-     'P 22-42.9',
-     'P >43',
-     'Postnatal'
+     '<span>Activity in Systems/Structures</span>',
+     '<span>Embryonic</span><span> (E0-8.9)</span>',
+     '<span>Embryonic</span><span> (E9-13.9)</span>',
+     '<span>Embryonic</span><span> (E14-21)</span>',
+     '<span>Newborn</span><span> (P0-3.9)</span>',
+     '<span>Pre-weaning</span><span> (P4-21.9)</span>',
+     '<span>Post-weaning</span><span> (P22-42.9)</span>',
+     '<span>Adult</span><span> (P>43)</span>',
+     '<span>Postnatal</span><span> (age unspecified)</span>'
  ]
 
  // -------------------------------------------------------------------
