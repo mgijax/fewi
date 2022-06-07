@@ -258,7 +258,7 @@ window.GeneRecomMatrixRender = new function()
 	    			displayValue = displayValue.substring(0,32) + "...";
 	    		}
                         displayValue = displayValue.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
-                        var linkUrl = d.mgiId ? '/accession/' + d.mgiId : ''
+                        var linkUrl = d.mgiId ? ('/allele/' + d.mgiId + '?recomRibbon=open') : ''
                         var html = linkUrl ? `<a href="${linkUrl}">${displayValue}</a>` : displayValue
 	    		return html;})	    	
 	    	.style("fill",function(d){ 
@@ -322,7 +322,7 @@ var geneRecomSuperGrid = function()
 			cellSize: 24,
 			columnRenderer: GeneRecomMatrixRender.StructureGeneRecomColumnHeaderRenderer,
 			cellRenderer: GeneRecomMatrixRender.StructureGeneRecomCellRenderer,
-			columnSort: function(a,b){ return FewiUtil.SortSmartAlpha(a.cid,b.cid);},
+			columnSort: function(a,b){ return parseInt(a.cid) - parseInt(b.cid) },
 			verticalColumnLabels: true,
 	        openCloseStateKey: "geneRecomGrid_"+querystring,
 	        legendClickHandler: function(e){ YAHOO.recomGridNS.container.legendPanel.show(); },
