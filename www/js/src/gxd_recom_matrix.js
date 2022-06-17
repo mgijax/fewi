@@ -244,7 +244,7 @@ window.GeneRecomMatrixRender = new function()
 		.attr("fill",function(d){ 
    		var isHighlightCol = d.highlightColumn;
     		if (isHighlightCol) {
-    			return "#E2ac00";
+                        return d.colOffset === 0 ? "#E2ac00" : "#D6C6E8";
     			}
     		return "transparent"})
 		
