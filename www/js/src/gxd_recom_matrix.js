@@ -258,7 +258,7 @@ window.GeneRecomMatrixRender = new function()
 	    			displayValue = displayValue.substring(0,32) + "...";
 	    		}
                         displayValue = displayValue.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
-                        var linkUrl = d.mgiId ? ('/allele/' + d.mgiId + '?recomRibbon=open') : ''
+                        var linkUrl = (d.colOffset > 0 && d.mgiId) ? ('/allele/' + d.mgiId + '?recomRibbon=open') : ''
                         var html = linkUrl ? `<a href="${linkUrl}">${displayValue}</a>` : displayValue
 	    		return html;})	    	
 	    	.style("fill",function(d){ 
