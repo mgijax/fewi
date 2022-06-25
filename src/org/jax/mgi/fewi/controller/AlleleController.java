@@ -836,6 +836,12 @@ public class AlleleController {
 		mav.addObject("seoKeywords", keywords.toString());
 		mav.addObject("seoDescription", seoDescription.toString());
 
+                if (allele.getIsWildType() == 0 && !"Cell Line".equals(allele.getTransmissionType()) && !"QTL".equals(allele.getAlleleType())) {
+                    mav.addObject("linkToAlliance", "yes");
+                } else {
+                    mav.addObject("linkToAlliance", null);
+                }
+
 		// add the allele's marker(s) to the mav
 
 		// If more than one associated marker, need code changes here.
@@ -845,6 +851,10 @@ public class AlleleController {
 		Marker marker = allele.getMarker();
 		if (marker != null) {
 			mav.addObject("marker", marker);
+
+                        if ("Cytogenetic Marker".equals(marker.getMarkerType())) {
+                            mav.addObject("linkToAlliance", null);
+                        }
 
 			// adjust the marker label for transgene markers, regardless of
 			// the allele type.  Also, we do not want to link to the marker

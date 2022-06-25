@@ -129,7 +129,7 @@ function formatFastaArgs() {
     <td colspan="2" class="<%= rightTdStyles.getNext() %>">
       <div style="min-width:850px; max-width:1120px; font-size: 0.9em; padding-left:10px; text-align:center;" ID="TOC">
       <c:if test="${alleleDetail.hasNomenclature}">
-        <a href="#nomenclature" class='MP'>Nomenclature</a>
+        <a href="#summary" class='MP'>Summary</a>
       </c:if>
       <c:if test="${alleleDetail.hasMutationOrigin}">
         | <a href="#${typeCategory}Origin" class='MP'>${typeCategory}&nbsp;origin</a>
@@ -162,10 +162,10 @@ function formatFastaArgs() {
     </td>
   </tr>
 
-  <!-- ROW1 : nomenclature -->
+  <!-- ROW1 : summary -->
   <tr>
-    <td id="nomenclatureHeader" class="<%=leftTdStyles.getNext() %>">
-      <a name="nomenclature"></a>Nomenclature</td>
+    <td id="summaryHeader" class="<%=leftTdStyles.getNext() %>">
+      <a name="summary"></a>Summary</td>
     <td class="<%=rightTdStyles.getNext() %>">
       ${fixedDivOpen}
       <c:if test="${hasPrimaryPhenoImage}">
@@ -202,6 +202,16 @@ function formatFastaArgs() {
 	    </td>
 	  </tr>
 	</c:if>
+
+	<c:if test="${not empty linkToAlliance}">
+	  <tr>
+	    <td class="rightBorderThinGray label padded right"><font class="label">Alliance:</font></td>
+	    <td class="padded">
+                <a class="MP" href="${fn:replace(externalUrls.AGR_Allele, '@@@@', allele.primaryID)}">${symbolSup}</a> page
+	    </td>
+	  </tr>
+        </c:if>
+
 	<c:if test="${not empty qtlNote}">
 	  <tr>
 	    <td class="rightBorderThinGray label padded right"><font class="label">QTL Note:</font></td>
@@ -589,21 +599,35 @@ function formatFastaArgs() {
             <c:if test="${not empty driverMarker.mouseMarkerId}">
                 <c:set var="driverID" value="${driverMarker.mouseMarkerId}"/>
             </c:if>
+            <c:set var="driverAllianceID" value="${driverMarker.getAllianceLinkID()}"/>
 
 	  <td style='vertical-align:top;' class='rightBorderThinGray padLR padTop' align='right' width='1%' nowrap='nowrap'>
 	    <font class='label'>Driver: </font>
 	  </td>
 	  <td class='padLR padTop'>
-	    <span style='padding-left:14px;'>${allele.driverNote}</span>
+	    <span style='padding-left:14px;'>${driverMarker.symbol}</span>
             <span class="small">(${driverOrg})</span>
-	    <span class='small'>Summary of all recombinase alleles
-	      <a class='MP' href='${configBean.FEWI_URL}recombinase/summary?driver=${allele.driverNote}'>driven by ${allele.driverNote}</a>.
-	    </span>
-		<c:if test="${(not empty driverID) and (allele.countOfRecombinaseResults > 0)}">
-		  <span class='small' style='padding-left: 20px'>
-			<a class='MP' href="${configBean.FEWI_URL}gxd/recombinasegrid/${driverID}?alleleID=${allele.primaryID}">Comparative matrix view of recombinase activities</a>
-		  </span>
-		</c:if>
+            <div>
+                <span class='small' style="padding-left: 20px;">Summary of all recombinase alleles
+                  <a class='MP' href='${configBean.FEWI_URL}recombinase/summary?driver=${driverMarker.symbol}'>driven by ${driverMarker.symbol}</a>.
+                </span>
+            </div>
+            <c:if test="${(not empty driverID) and (allele.countOfRecombinaseResults > 0)}">
+              <div>
+              <span class='small' style='padding-left: 20px'>
+                    <a class='MP' href="${configBean.FEWI_URL}gxd/recombinasegrid/${driverID}?alleleID=${allele.primaryID}">
+                        Comparative matrix view of recombinase activities
+                    </a>
+              </span>
+              </div>
+            </c:if>
+            <c:if test="${not empty driverAllianceID}">
+            <div>
+            <span class="small" style="padding-left: 20px;">
+                <a class="MP" href="${fn:replace(externalUrls.AGR_Gene, '@@@@', driverAllianceID)}">Alliance ${driverOrg} ${driverMarker.symbol} gene page</a>
+            </span>
+            </div>
+            </c:if>
 	  </td>
 	</tr>
 
