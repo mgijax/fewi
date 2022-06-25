@@ -284,7 +284,19 @@ function formatFastaArgs() {
 	<c:if test="${not empty allele.collection}">
 	  <tr>
 	    <td class="rightBorderThinGray label padded right"><font class="label">Project Collection:</font></td>
-	    <td class="padded">${allele.collection}</td>
+	    <td class="padded">
+                ${allele.collection}
+                <c:if test="${
+                    allele.collection == 'EUCOMM' ||
+                    allele.collection == 'EUCOMMTOOLS' ||
+                    allele.collection == 'IMPC' ||
+                    allele.collection == 'KOMP-CSD' ||
+                    allele.collection == 'KOMP-Regeneron' ||
+                    allele.collection == 'NorCOMM'
+                    }">
+                    data for <a href="${fn:replace(externalUrls.KnockoutMouse, '@@@@', marker.primaryID)}">${markerSymbolSup}</a>
+                </c:if>
+            </td>
 	  </tr>
 	</c:if>
 
