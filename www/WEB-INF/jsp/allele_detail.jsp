@@ -149,6 +149,9 @@ function formatFastaArgs() {
       <c:if test="${alleleDetail.hasDiseaseModel}">
         | <a href="#diseaseModels" class='MP'>Disease&nbsp;models</a>
       </c:if>
+      <c:if test="${alleleDetail.hasTumorData}">
+        | <a href="#tumor" class='MP'>Tumor data</a>
+      </c:if>
       <c:if test="${alleleDetail.hasIMSR}">
         | <a href="#imsr" class='MP'>Find&nbsp;Mice&nbsp;(IMSR)</a>
       </c:if>
@@ -732,7 +735,27 @@ function formatFastaArgs() {
   </tr>
   </c:if>
 
-  <!-- ROW8 : IMSR -->
+  <!-- ROW8 : Tumor (MMHCdb) -->
+  <c:if test="${alleleDetail.hasTumorData}">
+  <tr>
+    <td id="tumorHeader" class="<%=leftTdStyles.getNext() %>">
+      <a name="tumor"></a>Tumor Data</td>
+    <td class="<%=rightTdStyles.getNext() %>">
+      ${fixedDivOpen}
+      <table id="tumorTable">
+      <tr>
+        <td>
+          List all tumor models in MMHCdb carrying
+          <a class="MP" href="${fn:replace(externalUrls.MMHCdb, '@@@@', allele.primaryID)}">${symbolSup}</a>
+        </td>
+      </tr>
+      </table>
+      ${fixedDivClose}
+    </td>
+  </tr>
+  </c:if>
+
+  <!-- ROW9 : IMSR -->
   <c:if test="${alleleDetail.hasIMSR}">
   <tr>
     <td id="imsrHeader" class="<%=leftTdStyles.getNext() %>">
@@ -763,7 +786,7 @@ function formatFastaArgs() {
   </tr>
   </c:if>
 
-  <!-- ROW9 : notes -->
+  <!-- ROW10 : notes -->
   <c:if test="${alleleDetail.hasNotes}">
   <tr>
     <td id="notesHeader" class="<%=leftTdStyles.getNext() %>">
@@ -817,7 +840,7 @@ function formatFastaArgs() {
   </tr>
   </c:if>
 
-  <!-- ROW10 : reference -->
+  <!-- ROW11 : reference -->
   <c:if test="${alleleDetail.hasReferences}">
   <tr>
     <td id="referencesHeader" class="<%=leftTdStyles.getNext() %>">

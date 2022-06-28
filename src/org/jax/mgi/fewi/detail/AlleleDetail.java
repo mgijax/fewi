@@ -24,14 +24,14 @@ public class AlleleDetail {
 	 * Ribbon appearance logic sections
 	 */
 	public boolean getHasNomenclature()
-    {
-    	return true;
-    }
+        {
+            return true;
+        }
 	public boolean getHasMutationOrigin()
-    {
-    	return getHasTransmission() || getHasStrain() 
+        {
+            return getHasTransmission() || getHasStrain() 
     			|| getHasMutantCellLines() || getHasParentCellLine();
-    }
+        }
 	public boolean getHasMutationDescription()
 	{
 		return true;
@@ -51,6 +51,10 @@ public class AlleleDetail {
 	public boolean getHasDiseaseModel()
 	{
 		return allele.getHasDiseaseModel();
+	}
+	public boolean getHasTumorData()
+	{
+		return allele.getIsWildType() == 0 && allele.getHasTumorData() == 1;
 	}
 	public boolean getHasPhenotypes()
 	{
