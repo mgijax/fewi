@@ -272,7 +272,10 @@ window.GeneRecomMatrixRender = new function()
 	    			}
 	    		return "500"})
 	    	.style("font-size","12px")
-			.append("svg:title").text(function(d) { return d.colDisplay; });	
+			.append("svg:title").text(function(d) {
+                            const driverLine = d.colOffset > 0 ? "\n" + d.driverSpecies.toLowerCase() + " driver species" : ""
+                            return d.colDisplay + driverLine
+                        });	
 		
 		return  d3Target
 	};

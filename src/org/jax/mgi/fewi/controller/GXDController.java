@@ -2249,6 +2249,7 @@ public class GXDController {
 				gpm.setSymbol(cell.getSymbol());
 				gpm.setChildren(cell.getChildren());
 				gpm.setMgiId(cell.getColumnID());		// set allele ID
+                                gpm.setDriverSpecies(cell.getOrganism());
 				if ( (alleleID != null) && (alleleID.equals(cell.getColumnID())) ) {
 					gpm.setHighlightColumn(true);
 				}
