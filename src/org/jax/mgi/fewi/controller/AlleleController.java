@@ -852,7 +852,8 @@ public class AlleleController {
 		if (marker != null) {
 			mav.addObject("marker", marker);
 
-                        if ("Cytogenetic Marker".equals(marker.getMarkerType())) {
+                        if ("Cytogenetic Marker".equals(marker.getMarkerType()) ||
+                            "Complex/Cluster/Region".equals(marker.getMarkerType())) {
                             mav.addObject("linkToAlliance", null);
                         }
 
