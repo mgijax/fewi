@@ -78,6 +78,9 @@ a { text-decoration: none; }
   	  	    <c:if test="${not empty showOrganism}"><th>Organism</th></c:if>
   	  	    <th>Age</th>
   	  	    <th>Structure</th>
+                    <c:if test="${not empty showCellTypes}">
+  	  	        <th>Cell Type</th>
+                    </c:if>
   	  	    <th>Genetic Background</th>
   	  	    <th>Mutant Allele(s)</th>
   	  	    <th>Sex</th>
@@ -94,6 +97,9 @@ a { text-decoration: none; }
   	  	      <c:if test="${sample.relevancy == 'Yes'}">
   	          	<td>${sample.age}</td>
   	          	<td><c:if test="${not empty sample.theilerStage}">TS${sample.theilerStage}:</c:if> ${sample.structureTerm}</td>
+                        <c:if test="${not empty showCellTypes}">
+                            <td>${sample.celltypeTerm}</td>
+                        </c:if>
   	          	<td><fewi:super value="${sample.geneticBackground}" /></td>
   	          	<td><fewi:allelePairs value="${sample.mutantAlleles}" noLink="true" /></td>
   	          	<td>${sample.sex}</td>

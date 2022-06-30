@@ -170,6 +170,7 @@ public class GXDHTController {
 		GxdHtExperiment experiment = null;
 		List<GxdHtSample> samples = null;
 		boolean anyNonMouse = false;
+                boolean anyCellTypes = false;
 		
 		if (experimentList == null) {
 			error = "Cannot find experiment for ID " + experimentID;
@@ -195,8 +196,10 @@ public class GXDHTController {
 				String organism = sample.getOrganism();
 				if ((organism == null) || !organism.contains("mouse")) {
 					anyNonMouse = true;
-					break;
 				}
+                                if (sample.getCelltypeTerm() != null) {
+                                        anyCellTypes = true;
+                                }
 			}
 		}
 
@@ -236,6 +239,7 @@ public class GXDHTController {
 		if (experiment != null) { mav.addObject("experiment", experiment); }
 		if (samples != null) { mav.addObject("samples", samples); }
 		if (anyNonMouse) { mav.addObject("showOrganism", true); }
+                if (anyCellTypes) { mav.addObject("showCellTypes", true); }
 		mav.addObject("highlightSamples", highlightSamples);
 
 		return mav;

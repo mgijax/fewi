@@ -104,6 +104,8 @@ public class SolrGxdHtSampleHunter extends SolrHunter<GxdHtSample> {
 			sample.setStructureID((String) doc.getFieldValue(GxdHtFields.STRUCTURE_ID));
 			sample.setStructureTerm((String) doc.getFieldValue(GxdHtFields.STRUCTURE_TERM));
 			sample.setTheilerStage((Integer) doc.getFieldValue(GxdHtFields.THEILER_STAGE));
+			sample.setCelltypeID((String) doc.getFieldValue(GxdHtFields.CELLTYPE_ID));
+			sample.setCelltypeTerm((String) doc.getFieldValue(GxdHtFields.CELLTYPE_TERM));
 			sample.setRelevancy((String) doc.getFieldValue(GxdHtFields.RELEVANCY));
 			sr.addResultObjects(sample);
 		}

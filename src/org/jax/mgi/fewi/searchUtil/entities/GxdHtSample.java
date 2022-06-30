@@ -12,6 +12,8 @@ public class GxdHtSample
 	private Integer sampleKey;
 	private String structureTerm;
 	private String structureID;
+	private String celltypeTerm;
+	private String celltypeID;
 	private String age;
 	private Integer theilerStage;
 	private String sex;
@@ -55,6 +57,21 @@ public class GxdHtSample
 	public void setStructureID(String structureID) {
 		this.structureID = structureID;
 	}
+        //
+	public String getCelltypeID() {
+		return celltypeID;
+	}
+	public void setCelltypeID(String celltypeID) {
+		this.celltypeID = celltypeID;
+	}
+        //
+	public String getCelltypeTerm() {
+		return celltypeTerm;
+	}
+	public void setCelltypeTerm(String celltypeTerm) {
+		this.celltypeTerm = celltypeTerm;
+	}
+        //
 	public String getAge() {
 		return age;
 	}
