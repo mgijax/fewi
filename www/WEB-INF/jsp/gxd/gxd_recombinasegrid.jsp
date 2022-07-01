@@ -48,7 +48,9 @@
 
 <!-- Gene/Recom grid injected into this element -->
 <div id="geneRecomGridWrapper">
-  <div id="geneRecomGridTarget" class="matrixContainer"></div>
+  <div id="geneRecomGridTarget" class="matrixContainer">
+        <img src="/webshare/images/loading.gif"/>
+  </div>
 </div>
 
 <!-- Gene/Recom grid cell popup injected into this element -->
