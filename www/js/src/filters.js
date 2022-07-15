@@ -1202,7 +1202,7 @@ filters.parseResponseShared = function(oRequest, oResponse, oPayload, widgetType
 
 	options[x] = '<label><input type="' + widgetType + '" name="'
 	    + fieldname + '" value="'
-	    + res[x].replace(/,/g, '(') + '"'
+	    + res[x] + '"'
 	    + checked + '> '
 	    + res[x] + '</label>';
 
