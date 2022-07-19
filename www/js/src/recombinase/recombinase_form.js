@@ -198,9 +198,14 @@ $(function(){
                             url: driverUrl+request.term,
                             dataType: "json",
                             success: function( data ) {
+                                    const seen = new Set()
+                                    data.resultObjects = data.resultObjects.filter( item => {
+                                        const rval = !seen.has(item.driverDisplay)
+                                        seen.add(item.driverDisplay)
+                                        return rval
+                                    })
                                     response($.map(data["resultObjects"], function( item ) {
-                                            //return {label: item.driverDisplay, driver: item.driver};
-                                            return {label: item.driverDisplay, value: item.driver};
+                                            return {label: item.driverDisplay, value: item.driverDisplay};
                                     }));
                             }
                     });

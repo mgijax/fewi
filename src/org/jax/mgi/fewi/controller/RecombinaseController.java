@@ -558,14 +558,13 @@ public class RecombinaseController {
         // build driver query filter
         String driver = query.getDriver();
         if ((driver != null) && (!"".equals(driver))) {
-
-			// remove starting comma - may be submitted with driver filter
-			driver = driver.startsWith(",") ? driver.substring(1) : driver;
-
 			List<String> drivers = new ArrayList<String>();
 			for (String driverToken : driver.split(",")) {
-	        	logger.debug("---->" + driverToken);
-				drivers.add(driverToken);
+                                String trimmedToken = driverToken.trim();
+                                if (trimmedToken.length() > 0) {
+                                    logger.debug("---->" + trimmedToken);
+                                    drivers.add(trimmedToken);
+                                }
 			}
 			filterList.add(new Filter(SearchConstants.ALL_DRIVER,
 					drivers, Filter.Operator.OP_IN));

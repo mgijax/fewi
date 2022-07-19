@@ -43,7 +43,7 @@ public class SolrCreAssayResultSummaryHunter extends SolrHunter<RecombinaseEntit
          * filter list to the corresponding field names in the Solr implementation.
          *
          */
-        propertyMap.put(SearchConstants.ALL_DRIVER, new SolrPropertyMapper(CreFields.DRIVER));
+        propertyMap.put(SearchConstants.ALL_DRIVER, new SolrPropertyMapper(CreFields.DRIVER_SEARCH));
         propertyMap.put(SearchConstants.ALL_SYSTEM, new SolrPropertyMapper(CreFields.SYSTEM));
 
 
