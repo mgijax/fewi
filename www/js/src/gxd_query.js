@@ -29,6 +29,13 @@ YAHOO.gxd.container.panelStructure = new YAHOO.widget.Panel("gxdStructureHelp", 
 YAHOO.gxd.container.panelStructure.render();
 YAHOO.util.Event.addListener("gxdStructureHelpImage", "mouseover", YAHOO.gxd.container.panelStructure.show, YAHOO.gxd.container.panelStructure, true);
 
+
+YAHOO.gxd.container.panelProfile = new YAHOO.widget.Panel("gxdProfileHelp", { width:"320px", draggable:false, visible:false, constraintoviewport:true,close:false } );
+YAHOO.gxd.container.panelProfile.render();
+YAHOO.util.Event.addListener("gxdProfileHelpImage", "mouseover", YAHOO.gxd.container.panelProfile.show, YAHOO.gxd.container.panelProfile, true);
+YAHOO.util.Event.addListener("gxdProfileHelpImage", "mouseout", YAHOO.gxd.container.panelProfile.hide, YAHOO.gxd.container.panelProfile, true);
+
+
 YAHOO.gxd.container.panelDifStruct1 = new YAHOO.widget.Panel("gxdDifStruct1Help", { width:"320px", draggable:false, visible:false, constraintoviewport:true,close:false } );
 YAHOO.gxd.container.panelDifStruct1.render();
 YAHOO.util.Event.addListener("gxdDifStruct1HelpImage", "mouseover", YAHOO.gxd.container.panelDifStruct1.show, YAHOO.gxd.container.panelDifStruct1, true);

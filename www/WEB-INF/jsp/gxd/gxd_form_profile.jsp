@@ -27,7 +27,16 @@
 			<tr>
 				<th class="" style="border:none;"></th>
 				<th class="" style="border:none;">Detected</th>
-				<th class="" style="border:none;">Not </br>Detected </th>
+				<th class="" style="border:none;">Not </br>Detected 
+					<img id="gxdProfileHelpImage" src="${configBean.WEBSHARE_URL}images/help_icon.png" />
+					<div id="gxdProfileHelp">
+						<div class="hd"><b>NOT</b> detected or analyzed in...</div>
+						<div class="bd">
+							<p>The search will return genes whose expression was absent (not detected),
+							as well as genes whose expression has not been analyzed or recorded in the database for the specified structure.</p>
+						</div>
+					</div>
+				</th>
 			</tr>
 		</thead>
 		<tbody id="profileStructureTableBody">
