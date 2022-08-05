@@ -13,6 +13,13 @@
 	visibility: hidden;
 }
 
+.removeButton {
+    font-weight: bold;
+    padding-left: 1px;
+    padding-right: 1px;
+    cursor: pointer;
+}
+
 .disabledText {
 	color: gray;
 }
