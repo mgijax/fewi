@@ -392,8 +392,9 @@ function retrieveChunk() {
 		[ start, end ] = chunks.pop();
 		chunksInProgress = chunksInProgress + 1;
 		
-		var url = fewiurl + '/gxd/rnaSeqHeatMap/recordSlice?' + queryString + '&start=' + start + '&end=' + end;
-		$.get(url, function(cellList) {
+                var queryStringChunk = queryString + '&start=' + start + '&end=' + end
+		var url = fewiurl + '/gxd/rnaSeqHeatMap/recordSlice'
+                $.post(url, queryStringChunk, function(cellList) {
 			try {
 				log('Got ' + cellList.length + ' cells from ' + start + ' to ' + end);
 				processChunk(cellList, start, end);
@@ -466,8 +467,8 @@ function main() {
 
 	// get total count of records to be processed
 	
-	var url = fewiurl + '/gxd/rnaSeqHeatMap/totalCount?' + queryString;
-	$.get(url, function(data) {
+	var url = fewiurl + '/gxd/rnaSeqHeatMap/totalCount'
+	$.post(url, queryString, function(data) {
 		try {
 			// Once we get the count, start fetching cells.
 			totalCount = parseInt(data);

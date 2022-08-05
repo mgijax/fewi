@@ -226,8 +226,9 @@ var getMarkerIds = function() {
 //a global variable to helpthe tab change handler know when to fire off a new query
 var newQueryState = false;
 
-// do a form submission based on one of the Export buttons
-var buildAndSubmit = function(formID, formAction) {
+// Builds the specified form using the current queryString and formAction
+// Returns the form elt.
+var buildForm = function(formID, formAction) {
 	// find the specified form
 	var gxdForm = $("#" + formID);
 	if (gxdForm === null) {
@@ -251,9 +252,13 @@ var buildAndSubmit = function(formID, formAction) {
 		var el = jQuery('<input name="' + tokens[0] + '" value="' + tokens[1] + '" type="hidden">');
 		gxdForm.append(el);
 	}
+        return gxdForm[0];
+};
 
-	// submit the form
-	gxdForm.submit();
+// do a form submission based on one of the Export buttons
+var buildAndSubmit = function(formID, formAction) {
+    var form = buildForm(formID, formAction)
+    form.submit()
 };
 
 // parses request parameters and resets and values found with their matching form input element
@@ -911,7 +916,7 @@ function refreshTabCounts()
 		
 				// If there are any RNA-Seq results, we need to show the heat map button.  Determine this by
 				// seeing if RNA-Seq appears in the assay type filter values.
-				$.get(fewiurl + 'gxd/facet/assayType?' + getQueryStringWithFilters(),
+				$.post(fewiurl + 'gxd/facet/assayType' , getQueryStringWithFilters(),
 					function(x) {
 						try {
 							if (x.resultFacets.indexOf('RNA-Seq') >= 0) {
@@ -1846,8 +1851,24 @@ $('#maxCount').html(numberWithCommas(maxResults));
 
 // handle the button for popping up an RNA-Seq heat map window
 var popupHeatMap = function() {
-	var page = fewiurl + 'gxd/rnaSeqHeatMap?';
+        var windowSpecs = 'width=1200,height=800,resizable=yes,scrollbars=yes,alwaysRaised=yes'
+	var url = fewiurl + 'gxd/rnaSeqHeatMap?';
 	var parameters = getQueryStringWithFilters();
+        var form = buildForm('resultsExportForm', url)
+
+        var _popup  = function () {
+            // see: https://stackoverflow.com/questions/5684303/javascript-window-open-pass-values-using-post
+            var wname = "HeatMap." + Date.now()
+            var win = window.open(".", wname, windowSpecs)
+            if (win) {
+                var oldTarget = form.target
+                form.target = wname
+                form.submit()
+                form.target = oldTarget
+            } else {
+                alert("You must allow popups to use the heatmap.")
+            }
+        }
 	
 	// We support the heat map display only if the number of RNA-Seq results is below a certain threshold.  If the
 	// number of all results is below it, then we can just go ahead.  If the number of all results is above it, then
@@ -1857,14 +1878,14 @@ var popupHeatMap = function() {
 	if (resultsCount > maxResultsForHeatMap) {
 		var rnaSeqOnly = parameters.replace(/assayType[^&]+&/g, '').replace(/&$/, '') + '&assayTypeFilter=RNA-Seq';
 		
-		$.get(fewiurl + 'gxd/results/totalCount?' + rnaSeqOnly, function(resultCount) {
+		$.post(fewiurl + 'gxd/results/totalCount', rnaSeqOnly, function(resultCount) {
 			if (resultCount <= maxResultsForHeatMap){
-				window.open(page + parameters, '_blank', 'width=1200,height=800,resizable=yes,scrollbars=yes,alwaysRaised=yes');
+                                _popup()
 			} else {
 				$('#heatMapLimit').dialog();
 			}
 		});
 	} else {
-		window.open(page + parameters, '_blank', 'width=1200,height=800,resizable=yes,scrollbars=yes,alwaysRaised=yes');
+            _popup()
 	}
 };

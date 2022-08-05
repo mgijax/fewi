@@ -10,11 +10,14 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.owasp.encoder.Encode;
+import java.net.URLEncoder;
+import java.io.UnsupportedEncodingException;
 
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.Genotype;
@@ -1126,11 +1129,11 @@ public class GXDController {
 			HttpSession session,
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query
-			) throws CloneNotSupportedException {
+			) throws CloneNotSupportedException, UnsupportedEncodingException {
 		logger.info("gxdRnaSeqHeatMap() started");
 		
 		ModelAndView mav = new ModelAndView("gxd/gxd_rnaseq_heatmap");
-		mav.addObject("queryString", FormatHelper.cleanJavaScript(request.getQueryString()));
+		mav.addObject("queryString", FormatHelper.cleanJavaScript(getQueryString(request)));
 		mav.addObject("ysf", getRnaSeqHeatMapYSF(query));
 		
 		return mav;
@@ -4510,6 +4513,30 @@ public class GXDController {
 		return facetGeneric(query, result, FacetConstants.GXD_TMP_LEVEL);
 	}
 	
+        /*
+         * Helper that returns request parameters as a string. Hides the difference between GET and POST requests.
+         * (The native HttpServletRequest.getQueryString() returns "" for POST requests.)
+         */
+        private String getQueryString (HttpServletRequest request) throws UnsupportedEncodingException {
+            if ("GET".equals(request.getMethod())) {
+                return request.getQueryString();
+            } else if ("POST".equals(request.getMethod())) {
+                String qString = "";
+                Enumeration<String> pnames = request.getParameterNames();
+                while (pnames.hasMoreElements()) {
+                   String pname = pnames.nextElement();
+                   String value = request.getParameter(pname);
+                   if (qString.length() > 0) {
+                       qString += "&";
+                   }
+                   qString += pname + "=" + URLEncoder.encode(value, "UTF-8");
+                }
+                return qString;
+            } else {
+                return "";
+            }
+        }
+
 	/* generic facet handling
 	 */
 	private Map<String, List<String>> facetGeneric (GxdQueryForm query,
