@@ -33,7 +33,8 @@
 		<tbody id="profileStructureTableBody">
 			<tr>
 				<td style="border:none;">
-					<input style="width: 320px; position: relative;" id="profileStructure1" name="structure" placeholder="anatomical structure"></input>
+					<button type="button" onClick="removeStructureRow(this)" class="removeButton" title="Remove this structure.">X</button>
+					<input style="width: 320px; position: relative;" id="profileStructure1" name="profileStructure" placeholder="anatomical structure"></input>
 					<input type="hidden" id="profileStructure1ID" name="structureID" value=""/>
 					<div id="profileStructureContainer1"></div>
 				</td>
@@ -42,7 +43,8 @@
 			</tr>
 			<tr>
 				<td style="border:none;">
-					<input style="width: 320px; position: relative;" id="profileStructure2" name="structure" placeholder="anatomical structure"></input>
+					<button type="button" onClick="removeStructureRow(this)" class="removeButton" title="Remove this structure.">X</button>
+					<input style="width: 320px; position: relative;" id="profileStructure2" name="profileStructure" placeholder="anatomical structure"></input>
 					<input type="hidden" id="profileStructure2ID" name="structureID" value=""/>
 					<div id="profileStructureContainer2"></div>				</td>
 				<td style="border:none;"><input type="radio" name="detected_2" value="true" checked onChange="structureRadioChange()"/></td>
@@ -50,7 +52,8 @@
 			</tr>
 			<tr>
 				<td style="border:none;">
-					<input style="width: 320px; position: relative;" id="profileStructure3" name="structure" placeholder="anatomical structure"></input>
+					<button type="button" onClick="removeStructureRow(this)" class="removeButton" title="Remove this structure.">X</button>
+					<input style="width: 320px; position: relative;" id="profileStructure3" name="profileStructure" placeholder="anatomical structure"></input>
 					<input type="hidden" id="profileStructure3ID" name="structureID" value=""/>
 					<div id="profileStructureContainer3"></div>				</td>
 				<td style="border:none;"><input type="radio" name="detected_3" value="true" checked onChange="structureRadioChange()" /></td>

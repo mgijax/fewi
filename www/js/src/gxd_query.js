@@ -272,6 +272,7 @@ var updateQuerySummary = function() {
 	el.appendTo(searchParams);
 
 	// handle the differential stuff first
+	//console.log(currentQF);
 	if(currentQF == 'differential') {
 		var el = new YAHOO.util.Element(document.createElement('span'));
 		// parse the structures input
@@ -1690,6 +1691,11 @@ function checkBatchInput(){
 	return true;
 };
 
+
+/*
+ * Profile Search special handling 
+ */
+
 // ensure input compatibility; disable "NoWhere Else" checkbox if needed
 function structureRadioChange() {
 
@@ -1704,7 +1710,7 @@ function structureRadioChange() {
 	}
 	if (hasNotDetected) {
 		checkBox.disabled = true;
-		nowhereElseText.classList.add("disabledText");
+		nowhereElseText.classList.add("disabledText"); // add class to text
 	} else {
 		checkBox.disabled = false;
 		nowhereElseText.classList.remove("disabledText");
@@ -1725,34 +1731,67 @@ function handleNowhereElse() {
 	}
 };
 
+// profile search; if there is only 1 structure row, don't show remove button
+function handleProfileRemoveButtonVisibility() {
+
+	var checkBox = document.getElementById("nowhereElseCheckbox");
+	var profileRemoveButtons = YAHOO.util.Dom.getElementsByClassName('removeButton', 'button');
+	console.log(profileRemoveButtons.length);
+	if (profileRemoveButtons.length == 1) {
+		profileRemoveButtons[0].style.display = 'none';
+	} else {
+		profileRemoveButtons[0].style.display = '';
+	}
+
+}; 
+
 // adding rows to gxd profile query form
 var rowCount = 4;
 function handleAddStructure() {
 
-  var tableRef = document.getElementById('profileStructureTable').getElementsByTagName('tbody')[0];
+	var tableRef = document.getElementById('profileStructureTable').getElementsByTagName('tbody')[0];
 
-  // Insert a row in the table 
-  var newRow   = tableRef.insertRow(tableRef.rows.length);
+	// Insert a row in the table 
+	var newRow   = tableRef.insertRow(tableRef.rows.length);
 
-  // Create the row cells and setup user inputs
-  var cellOne  = newRow.insertCell(0);
-  var cellTwo  = newRow.insertCell(1);
-  var cellThree  = newRow.insertCell(2);
-  cellOne.innerHTML = '<input style="width: 320px; position: relative;" id="profileStructure' + rowCount + '" name="structure" placeholder="anatomical structure"><input type="hidden" id="profileStructure' + rowCount + 'ID" name="structureID" value=""/><div id="profileStructureContainer' + rowCount + '"></div>';
-  cellTwo.innerHTML = '<input type="radio" name="detected_' + rowCount + '" value="true" checked onChange="structureRadioChange()"/>';
-  cellThree.innerHTML = '<input type="radio" name="detected_' + rowCount + '" value="false" class="notDetected" onChange="structureRadioChange()"/>';
+	// Create the row cells and setup user inputs
+	var cellOne  = newRow.insertCell(0);
+	var cellTwo  = newRow.insertCell(1);
+	var cellThree  = newRow.insertCell(2);
+	cellOne.innerHTML = '<button type="button" onClick="removeStructureRow(this)" class="removeButton" title="Remove this structure.">X</button> <input style="width: 320px; position: relative;" id="profileStructure' + rowCount + '" name="structure" placeholder="anatomical structure"><input type="hidden" id="profileStructure' + rowCount + 'ID" name="structureID" value=""/><div id="profileStructureContainer' + rowCount + '"></div>';
+	cellTwo.innerHTML = '<input type="radio" name="detected_' + rowCount + '" value="true" checked onChange="structureRadioChange()"/>';
+	cellThree.innerHTML = '<input type="radio" name="detected_' + rowCount + '" value="false" class="notDetected" onChange="structureRadioChange()"/>';
 
-  // attach autocomplete to the newly created input
-  makeStructureAC("profileStructure" + rowCount, "profileStructureContainer" + rowCount);
+	// attach autocomplete to the newly created input
+	makeStructureAC("profileStructure" + rowCount, "profileStructureContainer" + rowCount);
 
-  rowCount++;
+	rowCount++;
 
-  // ensure the added buttons are compatible with "nowhere else"
-  handleNowhereElse();
+	// ensure status of form inputs
+	ensureProfileFormStatus();
 };
 
+// functionality for user to remove a structure row from the profile search 
+function removeStructureRow(removeButton) {
 
+	// this removes (from the DOM) the closest row to the clicked button
+	$(removeButton).closest("tr").remove();
 
+	// ensure status of form inputs
+	ensureProfileFormStatus();
+
+};
+
+// ensure profile query form elements are not in conflict
+function ensureProfileFormStatus() {
+
+	// ensure the removed button is compatible with "nowhere else"
+	handleNowhereElse();
+
+	// ensure proper visibility of structure removal buttons
+	handleProfileRemoveButtonVisibility();
+
+};
 
 
 
