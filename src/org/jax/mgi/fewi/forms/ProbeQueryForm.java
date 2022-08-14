@@ -1,4 +1,5 @@
 package org.jax.mgi.fewi.forms;
+import org.owasp.encoder.Encode;
 
 
 /*-------*/
@@ -51,17 +52,17 @@ public class ProbeQueryForm
 		StringBuffer sb = new StringBuffer();
 		if (markerID != null) {
 			sb.append("markerID=");
-			sb.append(markerID);
+			sb.append(Encode.forHtml(markerID));
 		}
 		if (referenceID != null) {
 			if (sb.length() > 0) { sb.append("&"); }
 			sb.append("referenceID=");
-			sb.append(referenceID);
+			sb.append(Encode.forHtml(referenceID));
 		}
 		if (segmentType != null) {
 			if (sb.length() > 0) { sb.append("&"); }
 			sb.append("segmentType=");
-			sb.append(segmentType);
+			sb.append(Encode.forHtml(segmentType));
 		}
 		return sb.toString();
 	}

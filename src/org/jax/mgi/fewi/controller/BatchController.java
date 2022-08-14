@@ -156,7 +156,7 @@ public class BatchController {
 		// logger.info(queryForm.toString());
 
 		session.removeAttribute("idSet");        
-		logger.debug("sessionId: " + session.getId());
+		logger.debug("processSummary:sessionId: " + session.getId());
 
 		List<String> idList = getIDList(queryForm);
 
@@ -231,7 +231,7 @@ public class BatchController {
 	public @ResponseBody String batchSummaryIdList(HttpSession session, HttpServletRequest request, @ModelAttribute BatchQueryForm queryForm, @ModelAttribute Paginator page) {
 		
 		
-		logger.debug("sessionId: " + session.getId());
+		logger.debug("batchSummaryIdList:sessionId: " + session.getId());
 
 		SearchParams params = new SearchParams();
 
@@ -307,7 +307,7 @@ public class BatchController {
 	}
 
 	private SearchResults<BatchMarkerId> getSummaryResults(HttpSession session, HttpServletRequest request, BatchQueryForm query, Paginator page){
-		logger.debug("sessionId: " + session.getId());
+		logger.debug("getSummaryResults:sessionId: " + session.getId());
 
 		SearchParams params = new SearchParams();
 

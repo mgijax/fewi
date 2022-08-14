@@ -106,7 +106,7 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 
 <script type="text/javascript">
 	var markerID = "${marker.primaryID}";
-	var querystring = "${e:forHtml(queryString)}";
+	var querystring = "${queryString}";
 	fewiurl = "${configBean.FEWI_URL}";
 	ps_search();
 </script>
