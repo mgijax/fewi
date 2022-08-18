@@ -147,8 +147,7 @@
 	<span class='noResultsIndicator' >N</span>
 	</div>
 	</div>
-	<span class='legendExampleRange'> no abnormalities detected, </span> <br/>
-	<span class='legendExampleRange'> contrary to expectations</span>
+	<span class='legendExampleRange'> no abnormalities detected </span> <br/>
   </div>
 
   <div class='legendSection'>
