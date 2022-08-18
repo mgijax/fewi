@@ -32,7 +32,7 @@
 					<div id="gxdProfileHelp">
 						<div class="hd"><b>NOT</b> detected or analyzed in...</div>
 						<div class="bd">
-							<p>The search will return genes whose expression was absent (not detected),
+							<p style="font-weight: normal;">The search will return genes whose expression was absent (not detected),
 							as well as genes whose expression has not been analyzed or recorded in the database for the specified structure.</p>
 						</div>
 					</div>
