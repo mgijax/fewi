@@ -56,11 +56,11 @@
 
 			<section id="summaryRight" class="summarySec1 ">
 				<ul>
-					<c:if test="${not empty strain.mpdData}">
+					<c:if test="${not empty strain.mpdID}">
 						<li title="Mouse Phenome Database">
 							<div class="label">Phenomic Data</div>
 							<div class="value">
-								<a href="${fn:replace(externalUrls.MPD, '@@@@', strain.firstMpdData.mpdID)}" target="_blank" id="mpdLink">Mouse Phenome Database (MPD)</a>
+								<a href="${fn:replace(externalUrls.MPD, '@@@@', strain.mpdID)}" target="_blank" id="mpdLink">Mouse Phenome Database (MPD)</a>
 							</div>
 						</li>
 					</c:if>
