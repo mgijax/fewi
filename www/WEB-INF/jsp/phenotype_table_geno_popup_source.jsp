@@ -15,7 +15,6 @@
 
 <c:set var="showDataSources" value=""/>
 <c:set var="hasImpcData" value=""/>
-<c:set var="hasDmddData" value=""/>
 
 <c:forEach var="mpSystem" items="${mpSystems}">
 	<c:forEach var="term" items="${mpSystem.terms}">
@@ -26,9 +25,6 @@
 				</c:if>
 				<c:if test="${(ref.phenotypingCenter.abbreviation == 'IMPC') || (ref.interpretationCenter.abbreviation == 'IMPC')}">
 					<c:set var="hasImpcData" value="1"/>
-				</c:if>
-				<c:if test="${(ref.phenotypingCenter.abbreviation == 'DMDD') || (ref.interpretationCenter.abbreviation == 'DMDD')}">
-					<c:set var="hasDmddData" value="1"/>
 				</c:if>
 			</c:forEach>
 		</c:forEach>
@@ -45,10 +41,5 @@
 <c:if test="${(not empty hasImpcData) && (not empty singleMarker)}">
 	<div style="text-align: center">
 		<a href="http://www.mousephenotype.org/data/genes/${singleMarker}" target="_blank">IMPC Data for ${singleMarkerSymbol}</a>
-	</div>
-</c:if>
-<c:if test="${(not empty hasDmddData) && (not empty singleMarker)}">
-	<div style="text-align: center">
-		<a href="https://dmdd.org.uk/mutants/${singleMarkerSymbol}" target="_blank">DMDD Data for ${singleMarkerSymbol}</a>
 	</div>
 </c:if>
