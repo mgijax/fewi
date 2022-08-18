@@ -10,23 +10,26 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import mgi.frontend.datamodel.AccessionID;
-import mgi.frontend.datamodel.ActualDatabase;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerID;
 
 import org.jax.mgi.fewi.config.ContextLoader;
-import org.jax.mgi.fewi.finder.ActualDatabaseFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /** An IDLinker is an object devoted to making links for accession IDs, using
- * a properties file (and hibernate actual_database table) to map from a logical 
+ * a properties file (externalurls.properties) to map from a logical 
  * database to its various actual databases.
  * 
- * NOTE: externalurls.properties file is intended to override any actual_database values in fe.
- * 	Please do not change this.
+ * Previously, the properties file was augmented with entries from the actual_database tables
+ * (which came from ACC_ActualDB in production).
+ * As of 13 August 2022, the externalUrls.properties 
+ * is the fewi's _sole_ source of truth concerning linking to external resources.
+ *
+ * NOTICE: Going forward, if it should happen the something is added to ACC_ActualDB that 
+ * should be reflected in the front end, the same change must be made to externalUrls.properties.
  */
 @Repository
 public class IDLinker {
@@ -44,9 +47,6 @@ public class IDLinker {
 
 	@Autowired
 	private ContextLoader contextLoader;
-
-	@Autowired
-	private ActualDatabaseFinder actualDatabaseFinder;
 
 	private Map<String,List<ActualDB>> logicalDbMap = null;
 
@@ -184,72 +184,14 @@ public class IDLinker {
 			}
 		}
 
-		// Now go through those from the database.  If the actual db
-		// wasn't in the file, add an entry for it.  
-
-		// get the logical/actual database info from the database
-		Map<String,List<ActualDatabase>> fromDb = getActualDbsFromDatabase();
-
-		for (String ldb : fromDb.keySet()) 
-		{	
-			ActualDB adb=null;	// the ActualDB object for given 'name'
-			List<ActualDatabase> adbs1 = fromDb.get(ldb);
-
-			for (ActualDatabase adb1: adbs1) 
-			{
-				String adbName = adb1.getActualDb().replaceAll(" ", "_");
-				String ldbName = adb1.getLogicalDb();
-
-				// skip updating MGI from the database, as
-				// those entries are set for production
-				if (adbName.equals("MGI"))  continue; // skip it
-				if (ldbName.startsWith("MGI")) continue; // skip it
-
-				if (allAdbs.containsKey(adbName)) 
-				{
-					continue;
-					// As of 2014/02/05 we use the properties file as the definitive resource for external urls in the fewi. - kstone+pf
-					// update URL for an actual database that was in the properties file
-					//adb = allAdbs.get(adbName);
-					//adb.setUrl(adb1.getUrl());
-				} 
-				else 
-				{
-					// add an actual database that was not in the properties file
-					adb = new ActualDB(adbName);
-					adb.setUrl (adb1.getUrl());
-					adb.setDisplayName (adbName);
-					adb.setOrderVal (
-							adb1.getSequenceNum());
-
-					if (ldbToAdb.containsKey(ldbName)) 
-					{
-						adbs = ldbToAdb.get(ldbName);
-					} 
-					else 
-					{
-						adbs = new ArrayList<ActualDB>();
-						ldbToAdb.put(ldbName, adbs);
-					}
-					boolean seenIt = false;
-					for (ActualDB a: adbs) 
-					{
-						if (a.getName().equals(adbName))
-						{
-							seenIt = true;
-						}
-					}
-					if (!seenIt) 
-					{
-						adbs.add(adb);
-					}
-				}
-			}
-		}
-
+                // Here we used to get the actual_database entries from the fe database and add any that
+                // are not already included in the file.
+                // The following piece is a holdover from the previous practice. 
+                // I don't know if anyone downstream is depending on having lowercased options,
+                // so I left it in.
+                //
 		// Now go through and duplicate each logical database's entry with a
 		// lowercase version of itself to make this more resilient to db changes
-
 		HashMap<String,List<ActualDB>> lowerMap = new HashMap<String,List<ActualDB>> ();
 
 		for (String ldb : ldbToAdb.keySet()) 
@@ -314,49 +256,6 @@ public class IDLinker {
 		sb.append(linkText);
 		sb.append("</a>");
 		return sb.toString();
-	}
-
-	/** get a mapping from the database where:
-	 * 	{ logical db : [ ActualDatabase objects ] }
-	 */
-	private Map<String,List<ActualDatabase>> getActualDbsFromDatabase() {
-		// get all the ActualDatabase objects from the database
-
-		if (this.actualDatabaseFinder == null) {
-			this.actualDatabaseFinder = new ActualDatabaseFinder();
-		}
-
-		List<ActualDatabase> results = actualDatabaseFinder.getAll();
-
-		String ldbName = null;
-		HashMap<String,List<ActualDatabase>> byLdb = new HashMap<String,List<ActualDatabase>>();
-		List<ActualDatabase> adbs = null;
-
-		// bring them into a HashMap
-
-		for (ActualDatabase adb: results) {
-			ldbName = adb.getLogicalDb();
-
-			if (!byLdb.containsKey(ldbName)) {
-				adbs = new ArrayList<ActualDatabase>();
-				adbs.add (adb);
-				byLdb.put (ldbName, adbs);
-			} else {
-				adbs = byLdb.get(ldbName);
-
-				boolean seenIt = false;
-				for (ActualDatabase a: adbs) {
-					if (a.getActualDb().equals(adb.getActualDb() )) {
-						seenIt = true;
-					}
-				}
-				if (!seenIt) {
-					adbs.add(adb);
-				}
-			}
-		}
-		//logger.debug ("Got info for " + byLdb.size() + " ldbs");
-		return byLdb;
 	}
 
 	//-- Specific object related link methods
