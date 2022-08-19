@@ -26,7 +26,7 @@ public class TextQSStrainSummary extends AbstractTextView {
 		@SuppressWarnings("unchecked")
 		List<QSStrainResultWrapper> strains = (List<QSStrainResultWrapper>) model.get("strains");
 		
-		writer.write("Primary ID\tName\tReferences\tBest Match Type\tBest Match\r\n");
+		writer.write("Primary ID\tName\tReferences\tBest Match Type\tBest Match\tMatch Score\r\n");
 		
 		Pattern nonZero = Pattern.compile("[1-9]");
 		for (QSStrainResultWrapper strain : strains) {
@@ -46,7 +46,8 @@ public class TextQSStrainSummary extends AbstractTextView {
 			writer.write(references + "\t");
 
 			writer.write(strain.getBestMatchType() + "\t");
-			writer.write(strain.getBestMatchText() + "\r\n");
+			writer.write(strain.getBestMatchText() + "\t");
+			writer.write(strain.getStars().length() + "\r\n");
 		}
 	}
 }

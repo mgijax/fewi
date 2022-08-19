@@ -57,10 +57,11 @@ public class ExcelQSFeatureSummary  extends AbstractBigExcelView
 			"Strand",			// 8
 			"Best Match Type",
 			"Best Match",		// 10
+			"Match Score",		// 11
 		};
 
-		int[] columnWidths = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-		int[] maxColumnWidths = { 50, 20, 50, 60, 50, 10, 15, 10, 10, 20, 50 };
+		int[] columnWidths = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		int[] maxColumnWidths = { 50, 20, 50, 60, 50, 10, 15, 10, 10, 20, 50, 10 };
 
 		try {
 			addHeaderRow(sheet, columnWidths, styles, headerTitles);
@@ -92,6 +93,7 @@ public class ExcelQSFeatureSummary  extends AbstractBigExcelView
 			row.add(feature.getStrand());
 			row.add(feature.getBestMatchType());
 			row.add(feature.getBestMatchText());
+                        row.add(""+feature.getStars().length());
 
 			addDataRow(sheet, columnWidths, styles, row);
 		}

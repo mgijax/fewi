@@ -53,11 +53,12 @@ public class ExcelQSOtherIDSummary  extends AbstractBigExcelView
 			"Primary ID",		// 2
 			"Name/Description",	
 			"Best Match Type",	// 4
-			"Best Match"	
+			"Best Match",
+                        "Match Score",
 		};
 
-		int[] columnWidths = { 0, 0, 0, 0, 0, 0 };
-		int[] maxColumnWidths = { 30, 30, 20, 50, 30, 40 };
+		int[] columnWidths = { 0, 0, 0, 0, 0, 0, 0 };
+		int[] maxColumnWidths = { 30, 30, 20, 50, 30, 40, 10 };
 
 		try {
 			addHeaderRow(sheet, columnWidths, styles, headerTitles);
@@ -80,6 +81,7 @@ public class ExcelQSOtherIDSummary  extends AbstractBigExcelView
 			row.add(otherID.getName());
 			row.add(otherID.getBestMatchType());
 			row.add(otherID.getBestMatchText());
+			row.add(""+otherID.getStars().length());
 
 			addDataRow(sheet, columnWidths, styles, row);
 		}

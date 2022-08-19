@@ -54,10 +54,11 @@ public class ExcelQSVocabSummary  extends AbstractBigExcelView
 			"Associated Data",
 			"Best Match Type",	// 4
 			"Best Match",
+			"Match Score",  // 6
 		};
 
-		int[] columnWidths = { 0, 0, 0, 0, 0, 0 };
-		int[] maxColumnWidths = { 30, 20, 50, 50, 30, 40 };
+		int[] columnWidths = { 0, 0, 0, 0, 0, 0, 0 };
+		int[] maxColumnWidths = { 30, 20, 50, 50, 30, 40, 10 };
 
 		try {
 			addHeaderRow(sheet, columnWidths, styles, headerTitles);
@@ -88,6 +89,7 @@ public class ExcelQSVocabSummary  extends AbstractBigExcelView
 
 			row.add(term.getBestMatchType());
 			row.add(term.getBestMatchText());
+			row.add(""+term.getStars().length());
 
 			addDataRow(sheet, columnWidths, styles, row);
 		}
