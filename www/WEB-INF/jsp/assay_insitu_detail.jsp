@@ -245,9 +245,12 @@ function toggleSpecimenInfo(idToHide, idToShow) {
 
 			<c:set var="structureLink" value="${configBean.FEWI_URL}vocab/gxd/anatomy/${specimenResult.structureTerm.primaryId}"/>
 			
-            <c:if test="${not assaySpecimen.hasCellTypeData}">				<!-- no cell-type data, so omit column -->
+            <c:if test="${empty specimenResult.cellTypes}">				<!-- no cell-type data, so omit column -->
               <tr>
               <td style=''><a href="${structureLink}">${specimenResult.structure}</a></td>
+              <c:if test="${assaySpecimen.hasCellTypeData}">
+                  <td style=''></td>
+              </c:if>
               <td style=''>${specimenResult.level}</td>
               <td style=''>${specimenResult.pattern}</td>
               <td style=''>
@@ -274,7 +277,7 @@ function toggleSpecimenInfo(idToHide, idToShow) {
               </tr>
             </c:if>
 
-            <c:if test="${assaySpecimen.hasCellTypeData}">				<!-- has cell-type data, so include column -->
+            <c:if test="${not empty specimenResult.cellTypes}">				<!-- has cell-type data, so include column -->
               <c:forEach var="cellType" items="${specimenResult.cellTypes}">
                 <tr>
                 <td style=''><a href="${structureLink}">${specimenResult.structure}</a></td>
