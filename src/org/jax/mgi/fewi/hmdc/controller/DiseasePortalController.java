@@ -233,7 +233,7 @@ public class DiseasePortalController {
             return errorMav("No GenoCluster Found");
         }
         HdpGenoCluster genoCluster = genoClusters.get(0);
-        String plainPairs = stripAlleleMarkup(genoCluster.getGenotype().getCombination1()).replaceAll("\n", " ");
+        String plainPairs = stripAlleleMarkup(genoCluster.getGenotype().getCombination3()).replaceAll("\n", " ");
         String superscriptPairs = FormatHelper.superscript(plainPairs);
         
         List<String> strainList = new ArrayList<String>();

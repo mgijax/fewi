@@ -1938,7 +1938,7 @@ public class GXDController {
 			if (genoclusters.size() > 0) {
 				Genotype genotype = genoclusters.get(0).getGenotype();
 				if (genotype != null) {
-					phenoMatrixPopup.setAlleles(FormatHelper.formatUnlinkedAlleles(genotype.getCombination1()));
+					phenoMatrixPopup.setAlleles(FormatHelper.formatUnlinkedAlleles(genotype.getCombination3()));
 				}
 				phenoMatrixPopup.setGenoclusterLink(fewiURL + "diseasePortal/genoCluster/view/" + genoclusterKey + "?structureID=" + rowId);
 			} else {

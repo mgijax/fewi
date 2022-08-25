@@ -65,7 +65,7 @@ jsData = {
 		Genotype genotype = (Genotype)request.getAttribute("genotype"); 
 		String allComp = "N/A";
   		try {
-		    allComp = genotype.getCombination1().trim();
+		    allComp = genotype.getCombination3().trim();
 		    allComp = ntc.convertNotes(allComp, '|');
 		    allComp = FormatHelper.newline2HTMLBR(allComp.replace("\"", "'"));
 		} catch (Exception e) {};

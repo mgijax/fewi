@@ -8,8 +8,8 @@
 	newWindow = newWindow!=null && newWindow;
 	
 	NotesTagConverter ntc = new NotesTagConverter();
-	String combo1 = value.getCombination1();
-	String conversion = ntc.convertNotes(value.getCombination1(), '|',noLink);
+	String combo = value.getCombination3();
+	String conversion = ntc.convertNotes(combo, '|',noLink);
 	if(newWindow) conversion = ntc.useNewWindows(conversion);
 %>
 <%=FormatHelper.newline2HTMLBR(conversion)%>

@@ -89,8 +89,8 @@
 			    // unhappily resorting to scriptlet for building genotype string
 			    String allCompNoBR = new String();
 				Genotype genotype = (Genotype)request.getAttribute("genotype"); 
-			    if ( (genotype != null) && (genotype.getCombination1() != null) ) {
-		          String allComp = genotype.getCombination1().trim();
+			    if ( (genotype != null) && (genotype.getCombination3() != null) ) {
+		          String allComp = genotype.getCombination3().trim();
 		          allComp = ntc.convertNotes(allComp, '|');
 		          allCompNoBR = FormatHelper.replaceNewline(allComp.replace("\"", "'"),", ");
 		        }

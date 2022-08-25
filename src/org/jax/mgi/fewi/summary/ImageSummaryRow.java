@@ -123,7 +123,7 @@ public class ImageSummaryRow {
 
   // alleleic composition
   public String getAllelicComp(Genotype thisGenotype) {
-    String cleanAllelicComp = thisGenotype.getCombination1();
+    String cleanAllelicComp = thisGenotype.getCombination3();
     if (cleanAllelicComp==null) {return "";}
     return FormatHelper.newline2HTMLBR(ntc.convertNotes(cleanAllelicComp, '|'));
   }
