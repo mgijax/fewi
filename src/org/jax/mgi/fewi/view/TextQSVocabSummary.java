@@ -25,7 +25,7 @@ public class TextQSVocabSummary extends AbstractTextView {
 		@SuppressWarnings("unchecked")
 		List<QSVocabResultWrapper> terms = (List<QSVocabResultWrapper>) model.get("terms");
 		
-		writer.write("Vocabulary\tTerm ID\tTerm\tAssociated Data\tBest Match Type\tBest Match\r\n");
+		writer.write("Vocabulary\tTerm ID\tTerm\tAssociated Data\tBest Match Type\tBest Match\tMatch Score\r\n");
 		
 		Pattern nonZero = Pattern.compile("[1-9]");
 		for (QSVocabResultWrapper term : terms) {
@@ -48,7 +48,8 @@ public class TextQSVocabSummary extends AbstractTextView {
 			writer.write(annotText + "\t");
 
 			writer.write(term.getBestMatchType() + "\t");
-			writer.write(term.getBestMatchText() + "\r\n");
+			writer.write(term.getBestMatchText() + "\t");
+			writer.write(term.getStars().length() + "\r\n");
 		}
 	}
 }

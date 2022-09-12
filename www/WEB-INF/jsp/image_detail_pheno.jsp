@@ -153,7 +153,7 @@
 
             <tr class="stripe1">
               <td class="">
-                <%=FormatHelper.newline2HTMLBR(ntc.convertNotes(genotype.getCombination1(), '|'))%>
+                <%=FormatHelper.newline2HTMLBR(ntc.convertNotes(genotype.getCombination3(), '|'))%>
               </td>
               <td class="">
                 <%=FormatHelper.superscript(genotype.getBackgroundStrain())%>

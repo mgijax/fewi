@@ -23,7 +23,7 @@ public class TextQSFeatureSummary extends AbstractTextView {
 		@SuppressWarnings("unchecked")
 		List<QSFeatureResultWrapper> features = (List<QSFeatureResultWrapper>) model.get("features");
 		
-		writer.write("Type\tMGI ID\tSymbol\tName\tChr\tStart\tEnd\tBuild\tStrand\tBest Match Type\tBest Match\r\n");
+		writer.write("Type\tMGI ID\tSymbol\tName\tChr\tStart\tEnd\tBuild\tStrand\tBest Match Type\tBest Match\tMatch Score\r\n");
 		
 		for (QSFeatureResultWrapper feature : features) {
 			ParsedLocation location = new ParsedLocation(feature.getLocation());
@@ -48,7 +48,8 @@ public class TextQSFeatureSummary extends AbstractTextView {
 
 			writer.write(feature.getStrand() + "\t");
 			writer.write(feature.getBestMatchType() + "\t");
-			writer.write(feature.getBestMatchText() + "\r\n");
+			writer.write(feature.getBestMatchText() + "\t");
+                        writer.write(feature.getStars().length() + "\r\n");
 		}
 	}
 }

@@ -1534,7 +1534,7 @@ public class AlleleController {
 		// Setup SEO
 
 		NotesTagConverter ntc = new NotesTagConverter();
-		String alleleSymbolConv = ntc.convertNotes(genotype.getCombination1(), '|', true, true).trim();
+		String alleleSymbolConv = ntc.convertNotes(genotype.getCombination3(), '|', true, true).trim();
 		
 		String description = "View ";
 		String keywords = "";

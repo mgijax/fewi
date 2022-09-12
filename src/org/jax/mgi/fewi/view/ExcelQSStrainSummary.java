@@ -54,10 +54,11 @@ public class ExcelQSStrainSummary  extends AbstractBigExcelView
 			"References",		// 2
 			"Best Match Type",
 			"Best Match",		// 4
+			"Match Score",		// 5
 		};
 
-		int[] columnWidths = { 0, 0, 0, 0, 0 };
-		int[] maxColumnWidths = { 20, 40, 20, 30, 50 };
+		int[] columnWidths = { 0, 0, 0, 0, 0, 0 };
+		int[] maxColumnWidths = { 20, 40, 20, 30, 50, 10 };
 
 		try {
 			addHeaderRow(sheet, columnWidths, styles, headerTitles);
@@ -85,6 +86,7 @@ public class ExcelQSStrainSummary  extends AbstractBigExcelView
 
 			row.add(strain.getBestMatchType());
 			row.add(strain.getBestMatchText());
+			row.add(""+strain.getStars().length());
 
 			addDataRow(sheet, columnWidths, styles, row);
 		}

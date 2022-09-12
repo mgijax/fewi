@@ -704,7 +704,7 @@ function SGData(config)
  		}
      	if(!this.uc.hasOwnProperty(col.cid))
      	{
-     		// we have a new row
+     		// we have a new column
      		this.uc[col.cid] = this.cols.length;
      		this.cols.push(col);
      	}
@@ -1734,6 +1734,7 @@ function SuperGrid(config)
 	    	// Query datasource to populate rows to be opened
     		var ri = _self.data.ur[row.rid];
     		_self.updateRowsFound=0;
+                var numColsBefore = _self.data.cols.length
     		_self.dataSource.fireQuery({
     			args: {mapChildrenOf: row.oid || row.rid,
     				markerSymbolFilter: markerSymbols},
@@ -1756,7 +1757,20 @@ function SuperGrid(config)
     				row.oc="close";
 
     		    	_self.expandRow(row);
-    		    	_self.refreshMatrixData();
+                        if (_self.data.cols.length !== numColsBefore) {
+                            /*
+                             * Handle edge case where opening a row returns additional columns.
+                             * Example: query for "expressed in embryo and nowhere else".
+                             * The tissue by stage matrix shows one row for embryo with the last stage == 26.
+                             * Open that row. The new data includes negative results for stages 
+                             * 27 and 28. Incrementally adding columns to the Supergrid would be really hard.
+                             * Instead, here we'll just rebuild the whole thing from scratch.
+                             */
+                            _self.buildAll();
+                        } else {
+                            /* The normal case. No change in the number of columns. Just refresh. */
+                            _self.refreshMatrixData();
+                        }
     		    	_self.locked=false;
 
     		    	// Change the icon back to be the appropriate arrow.

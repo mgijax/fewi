@@ -34,7 +34,7 @@ public class StrainPhenoRow {
 			NotesTagConverter ntc = new NotesTagConverter("MP");
 			return ntc.convertNotes(this.genotype.getCombination2(), '|', true);
 		} catch (IOException e) {
-			return this.genotype.getCombination1();
+			return this.genotype.getCombination3();
 		}
 	}
 	

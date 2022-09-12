@@ -25,7 +25,7 @@ public class TextQSOtherIDSummary extends AbstractTextView {
 		@SuppressWarnings("unchecked")
 		List<QSOtherResultWrapper> otherIDs = (List<QSOtherResultWrapper>) model.get("otherIDs");
 		
-		writer.write("Type\tSubtype\tPrimary ID\tName/Description\tBest Match Type\tBest Match\r\n");
+		writer.write("Type\tSubtype\tPrimary ID\tName/Description\tBest Match Type\tBest Match\tMatch Score\r\n");
 		
 		Pattern nonZero = Pattern.compile("[1-9]");
 		for (QSOtherResultWrapper otherID : otherIDs) {
@@ -44,7 +44,8 @@ public class TextQSOtherIDSummary extends AbstractTextView {
 
 			writer.write(otherID.getName() + "\t");
 			writer.write(otherID.getBestMatchType() + "\t");
-			writer.write(otherID.getBestMatchText() + "\r\n");
+			writer.write(otherID.getBestMatchText() + "\t");
+			writer.write(otherID.getStars().length() + "\r\n");
 		}
 	}
 }
