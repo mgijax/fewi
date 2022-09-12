@@ -151,6 +151,7 @@ var getCurrentForm = function() {
 // GXD batch search -- if submit multiple values, one of the buttons has a string of IDs rather
 // than the name of the value itself.  Need to make sure that our values are unique when parsing the request.
 var parseRequest = function(request) {
+	console.log("in parseRequest");
 	var req = mgiParseRequest(request);
 	
 	if ('structureIDFilter' in req) {
@@ -229,6 +230,8 @@ var newQueryState = false;
 // Builds the specified form using the current queryString and formAction
 // Returns the form elt.
 var buildForm = function(formID, formAction) {
+	console.log("in buildForm");
+
 	// find the specified form
 	var gxdForm = $("#" + formID);
 	if (gxdForm === null) {
@@ -257,6 +260,7 @@ var buildForm = function(formID, formAction) {
 
 // do a form submission based on one of the Export buttons
 var buildAndSubmit = function(formID, formAction) {
+	console.log("in buildAndSubmit");
     var form = buildForm(formID, formAction)
     form.submit()
 };
@@ -266,15 +270,20 @@ var buildAndSubmit = function(formID, formAction) {
 // responsible for repopulating the form during history manager changes
 function reverseEngineerFormInput(request)
 {
+	console.log("in reverseEngineerFormInput");
 	var params = parseRequest(request);
 	var formID = "#gxdQueryForm";
 	var foundDifStruct=false;
 	var foundDifStage=false;
+	var foundProfile=false;
 	var foundBatch=false;
 	var filters = {};	// filters[filter name] = [ values ]
 
+	// review input parameters to determine which QF sent the request
 	for(var key in params)
 	{
+		console.log(key);
+		console.log(key.slice(0,18));
 		if(key == "detected")
 		{
 			// HACK for the radio buttons
@@ -284,7 +293,13 @@ function reverseEngineerFormInput(request)
 		else if(key == "difStructure") foundDifStruct=true;
 		else if(key == "difTheilerStage" || key=="difAge") foundDifStage=true;
 		else if(key == 'idType') foundBatch=true;
+		else if(key.slice(0,18) == 'profileStructureID') foundProfile=true;
 	}
+	console.log("in reverseEngineerFormInput: foundDifStruct=" + foundDifStruct);
+	console.log("in reverseEngineerFormInput: foundDifStage=" + foundDifStage);
+	console.log("in reverseEngineerFormInput: foundProfile=" + foundProfile);
+	console.log("in reverseEngineerFormInput: foundBatch=" + foundBatch);
+
 	// make sure correct form is visible
 	// this code allows for flexibility to add third ribbon
 	if(foundDifStruct || foundDifStage)
@@ -295,12 +310,18 @@ function reverseEngineerFormInput(request)
 	{
 		formID = "#gxdBatchQueryForm1";
 		showBatchSearchForm();
+	} else if (foundProfile)
+	{
+		formID = "#gxdProfileQueryForm";
+		showProfileSearchForm();
 	}
+	console.log("in reverseEngineerFormInput: formID=" + formID);
 
 	var foundParams = false;
 	if (typeof resetQF == 'function') { resetQF(); }
 	for(var key in params)
 	{
+		console.log("in reverseEngineerFormInput: key=" + key);
 		// need special handling for idFile field (do not set this to
 		// an empty string!)
 		if (key == 'idFile') {
@@ -309,12 +330,14 @@ function reverseEngineerFormInput(request)
 		}
 		else if(key!=undefined && key!="" && key!="detected" && params[key].length>0)
 		{
+console.log("in reverseEngineerFormInput: input parsing1");
 			//var input = YAHOO.util.Dom.get(key);
 			// jQuery is better suited to resolving form name parameters
 			var input = $(formID+" [name='"+key+"']");
 			if(input.length < 1) input = $(formID+" #"+key);
 			if(input!=undefined && input!=null && input.length > 0)
 			{
+console.log("in reverseEngineerFormInput: input parsing2");
 
 				input = input[0];
 				if(input.tagName=="TEXTAREA")
@@ -326,6 +349,7 @@ function reverseEngineerFormInput(request)
 				}
 				else if(input.tagName=="INPUT")
 				{
+console.log("in reverseEngineerFormInput: input parsing3");
 					foundParams = true;
 					// do radio boxes
 					if(input.type == "radio")
@@ -489,6 +513,7 @@ var previousFilterString = "none";
 var previousGAState = "";
 //Called by Browser History Manager to trigger a new state
 handleNavigation = function (request, calledLocally) {
+	console.log("in handleNavigation");
 
 	// Always show a spinner and message when changing tabs (so old results aren't still there to
 	// confuse the user.
@@ -508,7 +533,8 @@ handleNavigation = function (request, calledLocally) {
 	if (messageDiv != null) {
 		$('#' + messageDiv).html(LOADING_IMG + ' Searching...');
 	}
-	
+	console.log("in handleNavigation: currentTab=" + currentTab);
+
 	// ensure any popups get hidden
 	stagePopupPanel.hide();
 	genePopupPanel.hide();
@@ -517,8 +543,10 @@ handleNavigation = function (request, calledLocally) {
 
 	if (calledLocally==undefined)
 		calledLocally = false;
+	console.log("in handleNavigation: calledLocally=" + calledLocally);
 
 	var values = parseRequest(request);
+	console.log("in handleNavigation: values from parseRequest=" + values);
 
 	// collect any filters and ensure that we use them
 	var filters = {};
@@ -533,37 +561,48 @@ handleNavigation = function (request, calledLocally) {
 		log("request: " + request);
 		foundParams = reverseEngineerFormInput(request);
 	}
+	console.log("in handleNavigation: foundParams=" + foundParams);
 
 	//Set the global querystring parameter for later navigation
 	// if there is no getQueryString function, we assume that window.querystring is already set
+	console.log("in handleNavigation: window.querystring=" + window.querystring);
 	if (typeof getQueryString == 'function')
+		console.log("in handleNavigation: ---calling getQueryString()");
 		window.querystring = getQueryString().replace('&idFile=&', '&');
 		//window.querystring = getQueryString();
+	console.log("in handleNavigation: window.querystring=" + window.querystring);
 
 	// we need the tab state of the request
 	var currentTab = getCurrentTab();
 	var tabState = values['tab'];
+	console.log("in handleNavigation: currentTab=" + currentTab);
+	console.log("in handleNavigation: tabState=" + tabState);
+
 	// Handle proper behavior for back and forward navigation
 	// if we have no tab state in the request, then we won't try to switch tabs.
 	if(tabState && (currentTab != tabState)) {
 		resultsTabs.selectTab(mgiTab.tabs[tabState]);
+		console.log("in handleNavigation: no tab state; exiting");
 		return;
 	}
 
 	var doNewQuery = querystring != previousQueryString;
 	previousQueryString = querystring;
+	console.log("in handleNavigation: previousQueryString=" + previousQueryString);
 
 	if((!foundParams) && (typeof resetQF == 'function'))
 	{
+		console.log("in handleNavigation: handling enpty request foundParams=" + foundParams);
 		log("found empty request");
 		// this is how we handle an empty request.
 		if(typeof closeSummaryControl == 'function')
 			closeSummaryControl();
-
 		refreshTabCounts();
 	}
 	else
 	{
+		console.log("in handleNavigation: request not empty; " + foundParams);
+
 		// Update the "you searched for" text
 		if (typeof updateQuerySummary == 'function')
 			updateQuerySummary();
@@ -575,6 +614,8 @@ handleNavigation = function (request, calledLocally) {
 		var querystringWithFilters = getQueryStringWithFilters();
 		if (querystringWithFilters != previousFilterString)
 		{
+			console.log("in handleNavigation: updating buttons.");
+
 			previousFilterString = querystringWithFilters;
 
 			if(currentStageGrid) currentStageGrid.cancelDataSource();
@@ -643,6 +684,8 @@ handleNavigation = function (request, calledLocally) {
 
 function buildSummary(request,tabState)
 {
+	console.log("in buildSummary");
+
 	var doStageGrid=false;
 	var doGeneGrid=false;
 
@@ -761,6 +804,8 @@ function showNowhereElseMessage(request, matrixType) {
 
 function loadDatatable(dataTableInitFunction,request)
 {
+	console.log("in loadDatatable");
+
 	// show page controls
 	showPaginators();
 
@@ -867,6 +912,8 @@ function clearOtherTabs() {
 
 function refreshTabCounts()
 {
+	console.log("in refreshTabCounts");
+
 	var querystringWithFilters = getQueryStringWithFilters();
 	if(querystringWithFilters==window.previousTabQuery)
 	{
@@ -888,7 +935,7 @@ function refreshTabCounts()
 			}
 
 			resultsCount = parseInt(o.responseText);
-
+			console.log("resultsCount=" + resultsCount);
 			// if number of results exceeds max to be handled, disable some controls;
 			// otherwise go ahead and ask for the other counts
 			if (resultsCount > maxResults) {
@@ -959,6 +1006,9 @@ function refreshTabCounts()
 			{	success:handleCountRequest,
 		failure:function(o){}
 			}, querystringWithFilters);
+
+	console.log("out of refreshTabCounts");
+
 }
 
 window.previousGxdLitQuery=""

@@ -67,6 +67,18 @@ public class GxdQueryForm implements Cloneable {
 	private String difStructure = "";
 	private String difStructureID = "";
 
+	// profile specific fields
+	private String profileStructureID1 = "";
+	private String profileStructureID2 = "";
+	private String profileStructureID3 = "";
+	private String profileStructureID4 = "";
+	private String profileStructureID5 = "";
+	private String profileStructureID6 = "";
+	private String profileStructureID7 = "";
+	private String profileStructureID8 = "";
+	private String profileStructureID9 = "";
+	private String profileStructureID10 = "";
+
 	private Map<Integer, String> theilerStagesRibbon2 = new LinkedHashMap<Integer, String>();
 	private Map<Integer, String> difTheilerStages = new LinkedHashMap<Integer, String>();
 	private List<Integer> difTheilerStage = new ArrayList<Integer>();
@@ -759,8 +771,84 @@ public class GxdQueryForm implements Cloneable {
 	public void setMatrixMarkerTotal(String matrixMarkerTotal) {
 		this.matrixMarkerTotal = matrixMarkerTotal;
 	}
-	
-	
+
+
+	//---------------------------------------------//
+	//--- fields related to profile submissions ---//
+	//---------------------------------------------//
+
+
+	public String getProfileStructureID1() {
+		return profileStructureID1;
+	}
+	public void setProfileStructureID1(String profileStructureID1) {
+		this.profileStructureID1 = profileStructureID1;
+	}
+
+	public String getProfileStructureID2() {
+		return profileStructureID2;
+	}
+	public void setProfileStructureID2(String profileStructureID2) {
+		this.profileStructureID2 = profileStructureID2;
+	}
+
+	public String getProfileStructureID3() {
+		return profileStructureID3;
+	}
+	public void setProfileStructureID3(String profileStructureID3) {
+		this.profileStructureID3 = profileStructureID3;
+	}
+
+	public String getProfileStructureID4() {
+		return profileStructureID4;
+	}
+	public void setProfileStructureID4(String profileStructureID4) {
+		this.profileStructureID4 = profileStructureID4;
+	}
+
+	public String getProfileStructureID5() {
+		return profileStructureID5;
+	}
+	public void setProfileStructureID5(String profileStructureID5) {
+		this.profileStructureID5 = profileStructureID5;
+	}
+
+	public String getProfileStructureID6() {
+		return profileStructureID6;
+	}
+	public void setProfileStructureID6(String profileStructureID6) {
+		this.profileStructureID6 = profileStructureID6;
+	}
+
+	public String getProfileStructureID7() {
+		return profileStructureID7;
+	}
+	public void setProfileStructureID7(String profileStructureID7) {
+		this.profileStructureID7 = profileStructureID7;
+	}
+
+	public String getProfileStructureID8() {
+		return profileStructureID8;
+	}
+	public void setProfileStructureID8(String profileStructureID8) {
+		this.profileStructureID8 = profileStructureID8;
+	}
+
+	public String getProfileStructureID9() {
+		return profileStructureID9;
+	}
+	public void setProfileStructureID9(String profileStructureID9) {
+		this.profileStructureID9 = profileStructureID9;
+	}
+
+	public String getProfileStructureID10() {
+		return profileStructureID10;
+	}
+	public void setProfileStructureID10(String profileStructureID10) {
+		this.profileStructureID10 = profileStructureID1;
+	}
+
+
 	//-------------------------------------------//
 	//--- fields related to batch submissions ---//
 	//-------------------------------------------//
@@ -885,6 +973,16 @@ public class GxdQueryForm implements Cloneable {
 				+ ", theilerStageFilter=" + theilerStageFilter
 				+ ", structureIDFilter=" + structureIDFilter
 				+ ", wildtypeFilter=" + wildtypeFilter 
+				+ ", profileStructureID1=" + profileStructureID1 
+				+ ", profileStructureID2=" + profileStructureID2 
+				+ ", profileStructureID3=" + profileStructureID3 
+				+ ", profileStructureID4=" + profileStructureID4 
+				+ ", profileStructureID5=" + profileStructureID5 
+				+ ", profileStructureID6=" + profileStructureID6 
+				+ ", profileStructureID7=" + profileStructureID7 
+				+ ", profileStructureID8=" + profileStructureID8 
+				+ ", profileStructureID9=" + profileStructureID9 
+				+ ", profileStructureID10=" + profileStructureID10 
 				+ ", mpFilter=" + mpFilter 
 				+ ", doFilter=" + doFilter 
 				+ ", len(IDs)=" + (ids == null ? "0" : ids.length() )

@@ -946,7 +946,7 @@ public class GXDController {
 			@ModelAttribute Paginator page,
 			BindingResult result) throws BindException {
 
-		logger.debug("gxdMarkerSummaryJson() started");
+		logger.info("gxdMarkerSummaryJson() started");
 		populateMarkerIDs(session, query);
 
 		SearchResults<SolrGxdMarker> searchResults = getGxdMarkerResults(request, query, page, result);
@@ -3731,6 +3731,28 @@ public class GXDController {
 			// NOTE: THIS WAS A DIFFERENTIAL QUERY, THE BELOW CODE ONLY APPLIES TO STANDARD QUERY FORM
 		}
 
+
+		// Process PROFILE QUERY FORM params
+		String profileStructureID1 = query.getProfileStructureID1();
+		String profileStructureID2 = query.getProfileStructureID2();
+		String profileStructureID3 = query.getProfileStructureID3();
+		String profileStructureID4 = query.getProfileStructureID4();
+		String profileStructureID5 = query.getProfileStructureID5();
+		String profileStructureID6 = query.getProfileStructureID6();
+		String profileStructureID7 = query.getProfileStructureID7();
+		String profileStructureID8 = query.getProfileStructureID8();
+		String profileStructureID9 = query.getProfileStructureID9();
+		String profileStructureID10 = query.getProfileStructureID10();
+
+		if(profileStructureID1 !=null && !profileStructureID1.equals("")) {
+			Filter profileIdFilter1 = new Filter (SearchConstants.STRUCTURE_ID, profileStructureID1);
+			queryFilters.add(profileIdFilter1);
+		}
+		if(profileStructureID2 !=null && !profileStructureID2.equals("")) {
+			Filter profileIdFilter2 = new Filter (SearchConstants.STRUCTURE_ID, profileStructureID2);
+			queryFilters.add(profileIdFilter2);
+		}
+
 		// Process STANDARD QUERY FORM params
 
 		// prep form parameter variables
@@ -4228,7 +4250,7 @@ public class GXDController {
 			BindingResult result) throws BindException{
 
 		logger.debug("getGxdMarkerResults() started " );
-		logger.debug("query =  " + query.toString());
+		logger.debug("getGxdMarkerResults() query =  " + query.toString());
 
 		// parse the various query parameter to generate SearchParams object
 		SearchParams params = new SearchParams();
@@ -4260,7 +4282,7 @@ public class GXDController {
 			BindingResult result) throws BindException{
 
 		logger.debug("getGxdAssays() started " );
-		logger.debug("query =  " + query.toString());
+		logger.debug("getGxdAssays() query =  " + query.toString());
 
 		// parse the various query parameter to generate SearchParams object
 		SearchParams params = new SearchParams();
@@ -4292,7 +4314,7 @@ public class GXDController {
 			BindingResult result) throws BindException{
 
 		logger.debug("getGxdAssayResults() started ");
-		logger.debug("query =  " + query.toString());
+		logger.debug("getGxdAssayResults() query =  " + query.toString());
 
 		// parse the various query parameter to generate SearchParams object
 		SearchParams params = new SearchParams();
@@ -4322,7 +4344,7 @@ public class GXDController {
 			BindingResult result) throws BindException{
 
 		logger.debug("getGxdImages() started " );
-		logger.debug("query =  " + query.toString());
+		logger.debug("getGxdImages() query =  " + query.toString());
 
 		// parse the various query parameter to generate SearchParams object
 		SearchParams params = new SearchParams();

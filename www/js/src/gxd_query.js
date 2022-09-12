@@ -155,6 +155,8 @@ function getCurrentQF()
 		return YAHOO.util.Dom.get("gxdDifferentialQueryForm3");
 	} else if (currentQF == 'batch') {
 		return YAHOO.util.Dom.get("gxdBatchQueryForm1");
+	} else if (currentQF == 'profile') {
+		return YAHOO.util.Dom.get("gxdProfileQueryForm");
 	}
 
 	return YAHOO.util.Dom.get("gxdQueryForm");
@@ -714,6 +716,9 @@ var updateQuerySummary = function() {
 // Handle the animation for the queryform
 //
 var toggleQF = function(oCallback,noAnimate) {
+
+	console.log("in toggleQF");
+
 	if(noAnimate==undefined) noAnimate=false;
 
 	// ensure popups are hidden
@@ -728,9 +733,12 @@ var toggleQF = function(oCallback,noAnimate) {
     var toggleImg = YAHOO.util.Dom.get('toggleImg');
     attributes =  { height: { to: 0 }};
 
+	console.log("in toggleQF - currentQF:" + currentQF);
     var toHeight = QFHeight;
     if (currentQF == "differential") { toHeight = DifQFHeight; }
     else if (currentQF == "batch") { toHeight = BatchQFHeight; }
+    else if (currentQF == "profile") { toHeight = BatchQFHeight; }
+	console.log("in toggleQF - toHeight:" + toHeight);
 
     if (!YAHOO.lang.isNull(toggleLink) && !YAHOO.lang.isNull(toggleImg)
     		) {
@@ -1352,6 +1360,13 @@ makeStructureAC("difStructure4","difStructureContainer4");
 makeStructureAC("profileStructure1","profileStructureContainer1");
 makeStructureAC("profileStructure2","profileStructureContainer2");
 makeStructureAC("profileStructure3","profileStructureContainer3");
+makeStructureAC("profileStructure4","profileStructureContainer4");
+makeStructureAC("profileStructure5","profileStructureContainer5");
+makeStructureAC("profileStructure6","profileStructureContainer6");
+makeStructureAC("profileStructure7","profileStructureContainer7");
+makeStructureAC("profileStructure8","profileStructureContainer8");
+makeStructureAC("profileStructure9","profileStructureContainer9");
+makeStructureAC("profileStructure10","profileStructureContainer10");
 
 //
 // Wire up the functionality to reset the query form
@@ -1438,7 +1453,9 @@ YAHOO.util.Event.addListener("gxdDifferentialQueryForm3", "reset", fullResetQF);
 // Return the passed in form argument values in key/value URL format
 //
 var getQueryString = function(form) {
+	console.log("getQueryString");
 	if(form==undefined) form = getCurrentQF();
+	console.log("getQueryString - form:" + form.name);
 	var _qs = [];
 	for(var i=0; i<form.elements.length; i++)
 	{
