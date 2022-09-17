@@ -48,7 +48,7 @@
 							</c:if>
 
 							<c:if test="${(empty marker.preferredCoordinates and empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty gbrowseUrl and empty jbrowseUrl)}">
-								<span style="font-style: italic;font-size: smaller;">Genome coordinates not available</span>
+								<span style="font-style: italic;font-size: smaller;">Genome coordinates not available from the current reference assembly.</span>
 							</c:if>
 						</div>
 					</li>
