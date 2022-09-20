@@ -3165,8 +3165,26 @@ public class GXDController {
 	private boolean isDifferentialQuery(GxdQueryForm query)
 	{
 		return (query.getDifStructureID()!=null && !query.getDifStructureID().equals(""))
-				|| (query.getDifTheilerStage().size() > 0)
-				|| (query.getAnywhereElse() != "" && query.getAnywhereElse().trim().length() > 0);
+			|| (query.getDifTheilerStage().size() > 0)
+			|| (query.getAnywhereElse() != "" && query.getAnywhereElse().trim().length() > 0);
+	}
+
+	/*
+	 * Returns whether or not this query form has profile query params; web-side checking
+	 * will check for an empty submission 
+	 */
+	private boolean isProfileQuery(GxdQueryForm query)
+	{
+		return (query.getProfileStructureID1()!=null && !query.getProfileStructureID1().equals(""))
+			|| (query.getProfileStructureID2()!=null && !query.getProfileStructureID2().equals(""))
+			|| (query.getProfileStructureID3()!=null && !query.getProfileStructureID3().equals(""))
+			|| (query.getProfileStructureID4()!=null && !query.getProfileStructureID4().equals(""))
+			|| (query.getProfileStructureID5()!=null && !query.getProfileStructureID5().equals(""))
+			|| (query.getProfileStructureID6()!=null && !query.getProfileStructureID6().equals(""))
+			|| (query.getProfileStructureID7()!=null && !query.getProfileStructureID7().equals(""))
+			|| (query.getProfileStructureID8()!=null && !query.getProfileStructureID8().equals(""))
+			|| (query.getProfileStructureID9()!=null && !query.getProfileStructureID9().equals(""))
+			|| (query.getProfileStructureID10()!=null && !query.getProfileStructureID10().equals(""));
 	}
 
 	/* This method creates the differential part 1 filters (used by resolveDifferentialMarkers() below)

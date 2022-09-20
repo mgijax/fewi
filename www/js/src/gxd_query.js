@@ -1758,48 +1758,118 @@ function handleNowhereElse() {
 // profile search; if there is only 1 structure row, don't show remove button
 function handleProfileRemoveButtonVisibility() {
 
-	var checkBox = document.getElementById("nowhereElseCheckbox");
-	var profileRemoveButtons = YAHOO.util.Dom.getElementsByClassName('removeButton', 'button');
-	console.log(profileRemoveButtons.length);
-	if (profileRemoveButtons.length == 1) {
-		profileRemoveButtons[0].style.display = 'none';
+	if (rowCount==1){
+		document.getElementById("removeStructureRowButton").style.display = "none";
 	} else {
-		profileRemoveButtons[0].style.display = '';
+		document.getElementById("removeStructureRowButton").style.display = "";
 	}
 
 }; 
 
 // adding rows to gxd profile query form
-var rowCount = 4;
+var rowCount = 3;
 function handleAddStructure() {
 
-	var tableRef = document.getElementById('profileStructureTable').getElementsByTagName('tbody')[0];
-
-	// Insert a row in the table 
-	var newRow   = tableRef.insertRow(tableRef.rows.length);
-
-	// Create the row cells and setup user inputs
-	var cellOne  = newRow.insertCell(0);
-	var cellTwo  = newRow.insertCell(1);
-	var cellThree  = newRow.insertCell(2);
-	cellOne.innerHTML = '<button type="button" onClick="removeStructureRow(this)" class="removeButton" title="Remove this structure.">X</button> <input style="width: 320px; position: relative;" id="profileStructure' + rowCount + '" name="structure" placeholder="anatomical structure"><input type="hidden" id="profileStructure' + rowCount + 'ID" name="structureID" value=""/><div id="profileStructureContainer' + rowCount + '"></div>';
-	cellTwo.innerHTML = '<input type="radio" name="detected_' + rowCount + '" value="true" checked onChange="structureRadioChange()"/>';
-	cellThree.innerHTML = '<input type="radio" name="detected_' + rowCount + '" value="false" class="notDetected" onChange="structureRadioChange()"/>';
-
-	// attach autocomplete to the newly created input
-	makeStructureAC("profileStructure" + rowCount, "profileStructureContainer" + rowCount);
+	// ensure we don't have more structures than allowed
+	if (rowCount == 10) {
+		alert("Please limit this form to ten anatomical structure rows.")
+		exit();
+	}
 
 	rowCount++;
+	var idToShow = "profileStructureRow" + rowCount;
+	document.getElementById(idToShow).style.display = "";
 
 	// ensure status of form inputs
 	ensureProfileFormStatus();
 };
 
-// functionality for user to remove a structure row from the profile search 
-function removeStructureRow(removeButton) {
+// functionality for user to remove a structure row from the profile search; as each
+// row is removed, rows from below are copied upward 
+function removeStructureRow(rowNum) {
 
-	// this removes (from the DOM) the closest row to the clicked button
-	$(removeButton).closest("tr").remove();
+	if (rowNum<=1){
+		document.getElementById("profileStructure1").value = document.getElementById("profileStructure2").value;
+		document.getElementById("profileStructure1ID").value = document.getElementById("profileStructure2ID").value;
+		document.getElementById("profileStructure2").value = "";
+		document.getElementById("profileStructure2ID").value = "";
+		if (document.getElementById("profileDetected2").checked == true) {document.getElementById("profileDetected1").checked = true;}
+		if (document.getElementById("profileNotDetected2").checked == true) {document.getElementById("profileNotDetected1").checked = true;}
+	}
+	if (rowNum<=2){
+		document.getElementById("profileStructure2").value = document.getElementById("profileStructure3").value;
+		document.getElementById("profileStructure2ID").value = document.getElementById("profileStructure3ID").value;
+		document.getElementById("profileStructure3").value = "";
+		document.getElementById("profileStructure3ID").value = "";
+		if (document.getElementById("profileDetected3").checked == true) {document.getElementById("profileDetected2").checked = true;}
+		if (document.getElementById("profileNotDetected3").checked == true) {document.getElementById("profileNotDetected2").checked = true;}
+	}
+	if (rowNum<=3){
+		document.getElementById("profileStructure3").value = document.getElementById("profileStructure4").value;
+		document.getElementById("profileStructure3ID").value = document.getElementById("profileStructure4ID").value;
+		document.getElementById("profileStructure4").value = "";
+		document.getElementById("profileStructure4ID").value = "";
+		if (document.getElementById("profileDetected4").checked == true) {document.getElementById("profileDetected3").checked = true;}
+		if (document.getElementById("profileNotDetected4").checked == true) {document.getElementById("profileNotDetected3").checked = true;}
+	}
+	if (rowNum<=4){
+		document.getElementById("profileStructure4").value = document.getElementById("profileStructure5").value;
+		document.getElementById("profileStructure4ID").value = document.getElementById("profileStructure5ID").value;
+		document.getElementById("profileStructure5").value = "";
+		document.getElementById("profileStructure5ID").value = "";
+		if (document.getElementById("profileDetected5").checked == true) {document.getElementById("profileDetected4").checked = true;}
+		if (document.getElementById("profileNotDetected5").checked == true) {document.getElementById("profileNotDetected4").checked = true;}
+	}
+	if (rowNum<=5){
+		document.getElementById("profileStructure5").value = document.getElementById("profileStructure6").value;
+		document.getElementById("profileStructure5ID").value = document.getElementById("profileStructure6ID").value;
+		document.getElementById("profileStructure6").value = "";
+		document.getElementById("profileStructure6ID").value = "";
+		if (document.getElementById("profileDetected6").checked == true) {document.getElementById("profileDetected5").checked = true;}
+		if (document.getElementById("profileNotDetected6").checked == true) {document.getElementById("profileNotDetected5").checked = true;}
+	}
+	if (rowNum<=6){
+		document.getElementById("profileStructure6").value = document.getElementById("profileStructure7").value;
+		document.getElementById("profileStructure6ID").value = document.getElementById("profileStructure7ID").value;
+		document.getElementById("profileStructure7").value = "";
+		document.getElementById("profileStructure7ID").value = "";
+		if (document.getElementById("profileDetected7").checked == true) {document.getElementById("profileDetected6").checked = true;}
+		if (document.getElementById("profileNotDetected7").checked == true) {document.getElementById("profileNotDetected6").checked = true;}
+	}
+	if (rowNum<=7){
+		document.getElementById("profileStructure7").value = document.getElementById("profileStructure8").value;
+		document.getElementById("profileStructure7ID").value = document.getElementById("profileStructure8ID").value;
+		document.getElementById("profileStructure8").value = "";
+		document.getElementById("profileStructure8ID").value = "";
+		if (document.getElementById("profileDetected8").checked == true) {document.getElementById("profileDetected7").checked = true;}
+		if (document.getElementById("profileNotDetected8").checked == true) {document.getElementById("profileNotDetected7").checked = true;}
+	}
+	if (rowNum<=8){
+		document.getElementById("profileStructure8").value = document.getElementById("profileStructure9").value;
+		document.getElementById("profileStructure8ID").value = document.getElementById("profileStructure9ID").value;
+		document.getElementById("profileStructure9").value = "";
+		document.getElementById("profileStructure9ID").value = "";
+		if (document.getElementById("profileDetected9").checked == true) {document.getElementById("profileDetected8").checked = true;}
+		if (document.getElementById("profileNotDetected9").checked == true) {document.getElementById("profileNotDetected8").checked = true;}
+	}
+	if (rowNum<=9){
+		document.getElementById("profileStructure9").value = document.getElementById("profileStructure10").value;
+		document.getElementById("profileStructure9ID").value = document.getElementById("profileStructure10ID").value;
+		document.getElementById("profileStructure10").value = "";
+		document.getElementById("profileStructure10ID").value = "";
+		if (document.getElementById("profileDetected10").checked == true) {document.getElementById("profileDetected9").checked = true;}
+		if (document.getElementById("profileNotDetected10").checked == true) {document.getElementById("profileNotDetected9").checked = true;}
+	}
+	if (rowNum==10){
+		document.getElementById("profileStructure10").value = "";
+		document.getElementById("profileStructure10ID").value = "";
+	}
+
+	// hide lowest structure row
+	var idToHide = "profileStructureRow" + rowCount;
+	document.getElementById(idToHide).style.display = "none";
+//	document.getElementById("detected_10").value = true;
+	rowCount--;
 
 	// ensure status of form inputs
 	ensureProfileFormStatus();
@@ -1814,6 +1884,8 @@ function ensureProfileFormStatus() {
 
 	// ensure proper visibility of structure removal buttons
 	handleProfileRemoveButtonVisibility();
+
+	structureRadioChange();
 
 };
 

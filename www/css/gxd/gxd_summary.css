@@ -33,6 +33,15 @@
 	font-weight:bold;
 }
 
+/* Styles for profile search */
+
+#profileStructureTable td{
+	border:none;
+}
+#profileStructureTable th{
+	border:none;
+}
+
 /* Styles for image summary tab */
 #imagesdata table
 {
@@ -61,8 +70,6 @@ border-collapse: collapse;
 	font-weight:bold;
 	padding-left:4px;
 }
-
-
 
 #matrixPopupButtonWrapper
 {
@@ -412,9 +419,6 @@ border-collapse: collapse;
 }
 
 
-
-
-
 .legendExampleCell.phenoBlue4 {
 	background-color: #002255;
 	margin-left: 10px;
@@ -431,12 +435,6 @@ border-collapse: collapse;
 	background-color: #C6D6E8;
 	margin-left: 70px;
 }
-
-
-
-
-
-
 
 
 /* adjust some cell positions in legend */
