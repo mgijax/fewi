@@ -3719,9 +3719,7 @@ public class GXDController {
 			queryFilters.add(new Filter(SearchConstants.PRIMARY_KEY, "[-10 TO -10]", Filter.Operator.OP_HAS_WORD));
 		}
 		
-		// process normal query form parameter.  the resulting filter objects
-		// are added to queryList.
-		// the first this we need to check is if we have differential params
+		// differential handling; this method will end further processing
 		if(isDifferentialQuery(query))
 		{
 			logger.info("In differential form processing");
@@ -3746,8 +3744,12 @@ public class GXDController {
 			}
 
 			return Filter.and(queryFilters);
-			// NOTE: THIS WAS A DIFFERENTIAL QUERY, THE BELOW CODE ONLY APPLIES TO STANDARD QUERY FORM
+			// NOTE: THIS WAS A DIFFERENTIAL QUERY, STANDARD QUERY FORM LOGIC IS NOT EXECUTED
 		}
+
+		/*
+		* Standard QF Parameter handling
+		*/
 
 
 		// Process PROFILE QUERY FORM params

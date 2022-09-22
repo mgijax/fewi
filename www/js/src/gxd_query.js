@@ -1759,9 +1759,9 @@ function handleNowhereElse() {
 function handleProfileRemoveButtonVisibility() {
 
 	if (rowCount==1){
-		document.getElementById("removeStructureRowButton").style.display = "none";
+		document.getElementById("removeStructureRowButton1").style.display = "none";
 	} else {
-		document.getElementById("removeStructureRowButton").style.display = "";
+		document.getElementById("removeStructureRowButton1").style.display = "";
 	}
 
 }; 
@@ -1772,7 +1772,7 @@ function handleAddStructure() {
 
 	// ensure we don't have more structures than allowed
 	if (rowCount == 10) {
-		alert("Please limit this form to ten anatomical structure rows.")
+		alert("Maximum of ten anatomical structures allowed.")
 		exit();
 	}
 
