@@ -255,6 +255,7 @@ function parseStageOptions(id,anyValue)
 
 // Updates the "You searched for" section
 var updateQuerySummary = function() {
+
 	var summaryDiv = new YAHOO.util.Element('searchSummary');
 	summaryDiv.innerHTML = "";
 	var searchParams = summaryDiv.getElementsByTagName('div');
@@ -366,6 +367,112 @@ var updateQuerySummary = function() {
 		}
 		
 		el.appendTo(searchParams);
+	}
+	else if (currentQF == 'profile') {
+
+
+		// parse the structure inputs
+		var profileStructure1 = YAHOO.util.Dom.get('profileStructure1').value;
+		var profileStructure2 = YAHOO.util.Dom.get('profileStructure2').value;
+		var profileStructure3 = YAHOO.util.Dom.get('profileStructure3').value;
+		var profileStructure4 = YAHOO.util.Dom.get('profileStructure4').value;
+		var profileStructure5 = YAHOO.util.Dom.get('profileStructure5').value;
+		var profileStructure6 = YAHOO.util.Dom.get('profileStructure6').value;
+		var profileStructure7 = YAHOO.util.Dom.get('profileStructure7').value;
+		var profileStructure8 = YAHOO.util.Dom.get('profileStructure8').value;
+		var profileStructure9 = YAHOO.util.Dom.get('profileStructure9').value;
+		var profileStructure10 = YAHOO.util.Dom.get('profileStructure10').value;
+
+		// collect list of detected structures and not detected structured
+		var posStructures = [];
+		var negStructures = [];
+		if (profileStructure1 != "") {
+			if(YAHOO.util.Dom.get("profileDetected1").checked) {
+				posStructures.push("<b>" + profileStructure1 + "</b>")
+			} else {
+				negStructures.push("<b>" + profileStructure1 + "</b>")
+			};
+		}
+		if (profileStructure2 != "") {
+			if(YAHOO.util.Dom.get("profileDetected2").checked) {
+				posStructures.push("<b>" + profileStructure2 + "</b>")
+			} else {
+				negStructures.push("<b>" + profileStructure2 + "</b>")
+			};
+		}
+		if (profileStructure3 != "") {
+			if(YAHOO.util.Dom.get("profileDetected3").checked) {
+				posStructures.push("<b>" + profileStructure3 + "</b>")
+			} else {
+				negStructures.push("<b>" + profileStructure3 + "</b>")
+			};
+		}
+		if (profileStructure4 != "") {
+			if(YAHOO.util.Dom.get("profileDetected4").checked) {
+				posStructures.push("<b>" + profileStructure4 + "</b>")
+			} else {
+				negStructures.push("<b>" + profileStructure4 + "</b>")
+			};
+		}
+		if (profileStructure5 != "") {
+			if(YAHOO.util.Dom.get("profileDetected5").checked) {
+				posStructures.push("<b>" + profileStructure5 + "</b>")
+			} else {
+				negStructures.push("<b>" + profileStructure5 + "</b>")
+			};
+		}
+		if (profileStructure6 != "") {
+			if(YAHOO.util.Dom.get("profileDetected6").checked) {
+				posStructures.push("<b>" + profileStructure6 + "</b>")
+			} else {
+				negStructures.push("<b>" + profileStructure6 + "</b>")
+			};
+		}
+		if (profileStructure7 != "") {
+			if(YAHOO.util.Dom.get("profileDetected7").checked) {
+				posStructures.push("<b>" + profileStructure7 + "</b>")
+			} else {
+				negStructures.push("<b>" + profileStructure7 + "</b>")
+			};
+		}
+		if (profileStructure8 != "") {
+			if(YAHOO.util.Dom.get("profileDetected8").checked) {
+				posStructures.push("<b>" + profileStructure8 + "</b>")
+			} else {
+				negStructures.push("<b>" + profileStructure8 + "</b>")
+			};
+		}
+		if (profileStructure9 != "") {
+			if(YAHOO.util.Dom.get("profileDetected9").checked) {
+				posStructures.push("<b>" + profileStructure9 + "</b>")
+			} else {
+				negStructures.push("<b>" + profileStructure9 + "</b>")
+			};
+		}
+		if (profileStructure10 != "") {
+			if(YAHOO.util.Dom.get("profileDetected10").checked) {
+				posStructures.push("<b>" + profileStructure10 + "</b>")
+			} else {
+				negStructures.push("<b>" + profileStructure10 + "</b>")
+			};
+		}
+
+		// create You Searched For... strings
+		var newInnerHTML = '';		
+		if (posStructures.length > 0) {
+			newInnerHTML = "Detected in " + posStructures.join(", ");
+			if (negStructures.length > 0) {
+				newInnerHTML = newInnerHTML + " and not detected in " + negStructures.join(", ");
+			}
+		} else {
+				newInnerHTML = "Not detected in " + negStructures.join(", ");
+		}
+
+		// create span element, and add our crafted display
+		var el = new YAHOO.util.Element(document.createElement('span'));
+		el.set('innerHTML',newInnerHTML);
+		el.appendTo(searchParams);
+
 	}
 	else if (currentQF == 'batch') {
 		// only two fields matter for batch searches:  the count of IDs
