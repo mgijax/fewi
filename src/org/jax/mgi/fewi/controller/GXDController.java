@@ -3159,6 +3159,11 @@ public class GXDController {
 		return null;
 	}
 
+	//
+	// DIFFERENTIAL AND PROFILE HANDLING
+	//
+
+
 	/*
 	 * Returns whether or not this query form has differential query params
 	 */
@@ -3358,7 +3363,7 @@ public class GXDController {
 
 		return gxdFinder.searchDifferential(difSP);
 	}
-	
+
 	/* For differential searches where the 'AND NOT anywhere else' checkbox was checked...  Creates the
 	 * differential part 2 filters that goes against the gxdResult index.  Split out into a separate method
 	 * to make more maintainable in the future.
@@ -3581,6 +3586,257 @@ public class GXDController {
 	}
 
 	/*
+	 * Creates the profile part 1 filters,
+	 * 	performs the query against gxdDifferentialMarker index
+	 * 	and returns the unique marker keys 
+	 */
+	private List<String> resolveProfileMarkers(GxdQueryForm query)
+	{
+		logger.debug("--Starting resolveProfileMarkers()");
+
+		// start filter list for query filters
+		List<Filter> queryFilters = new ArrayList<Filter>();
+
+		String profileStructureID1 = query.getProfileStructureID1();
+		String profileStructureID2 = query.getProfileStructureID2();
+		String profileStructureID3 = query.getProfileStructureID3();
+		String profileStructureID4 = query.getProfileStructureID4();
+		String profileStructureID5 = query.getProfileStructureID5();
+		String profileStructureID6 = query.getProfileStructureID6();
+		String profileStructureID7 = query.getProfileStructureID7();
+		String profileStructureID8 = query.getProfileStructureID8();
+		String profileStructureID9 = query.getProfileStructureID9();
+		String profileStructureID10 = query.getProfileStructureID10();
+		String detected1 = query.getDetected_1();
+		String detected2 = query.getDetected_2();
+		String detected3 = query.getDetected_3();
+		String detected4 = query.getDetected_4();
+		String detected5 = query.getDetected_5();
+		String detected6 = query.getDetected_6();
+		String detected7 = query.getDetected_7();
+		String detected8 = query.getDetected_8();
+		String detected9 = query.getDetected_9();
+		String detected10 = query.getDetected_10();
+
+		if (profileStructureID1!=null && !profileStructureID1.equals("")) {
+			logger.debug("-- resolveProfileMarkers() 1 = " + profileStructureID1);
+			Filter filter1 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID1);
+			if (detected1.equals("false")) {filter1.negate();}
+			queryFilters.add(filter1);
+		}
+		if (profileStructureID2!=null && !profileStructureID2.equals("")) {
+			logger.debug("-- resolveProfileMarkers() 2 = " + profileStructureID2);
+			Filter filter2 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID2);
+			if (detected2.equals("false")) {filter2.negate();}
+			queryFilters.add(filter2);
+		}
+		if (profileStructureID3!=null && !profileStructureID3.equals("")) {
+			logger.debug("-- resolveProfileMarkers() 3 = " + profileStructureID3);
+			Filter filter3 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID3);
+			if (detected3.equals("false")) {filter3.negate();}
+			queryFilters.add(filter3);
+		}
+		if (profileStructureID4!=null && !profileStructureID4.equals("")) {
+			logger.debug("-- resolveProfileMarkers() 4 = " + profileStructureID4);
+			Filter filter4 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID4);
+			if (detected4.equals("false")) {filter4.negate();}
+			queryFilters.add(filter4);
+		}
+		if (profileStructureID5!=null && !profileStructureID5.equals("")) {
+			logger.debug("-- resolveProfileMarkers() 5 = " + profileStructureID5);
+			Filter filter5 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID5);
+			if (detected5.equals("false")) {filter5.negate();}
+			queryFilters.add(filter5);
+		}
+		if (profileStructureID6!=null && !profileStructureID6.equals("")) {
+			logger.debug("-- resolveProfileMarkers() 6 = " + profileStructureID6);
+			Filter filter6 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID6);
+			if (detected6.equals("false")) {filter6.negate();}
+			queryFilters.add(filter6);
+		}
+		if (profileStructureID7!=null && !profileStructureID7.equals("")) {
+			logger.debug("-- resolveProfileMarkers() 7 = " + profileStructureID7);
+			Filter filter7 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID7);
+			if (detected7.equals("false")) {filter7.negate();}
+			queryFilters.add(filter7);
+		}
+		if (profileStructureID8!=null && !profileStructureID8.equals("")) {
+			logger.debug("-- resolveProfileMarkers() 8 = " + profileStructureID8);
+			Filter filter8 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID8);
+			if (detected8.equals("false")) {filter8.negate();}
+			queryFilters.add(filter8);
+		}
+		if (profileStructureID9!=null && !profileStructureID9.equals("")) {
+			logger.debug("-- resolveProfileMarkers() 9 = " + profileStructureID9);
+			Filter filter9 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID9);
+			if (detected9.equals("false")) {filter9.negate();}
+			queryFilters.add(filter9);
+		}
+		if (profileStructureID10!=null && !profileStructureID10.equals("")) {
+			logger.debug("-- resolveProfileMarkers() 10 = " + profileStructureID10);
+			Filter filter10 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID10);
+			if (detected10.equals("false")) {filter10.negate();}
+			queryFilters.add(filter10);
+		}
+
+		Filter profileFilter = new Filter();
+		if(queryFilters.size() > 0)
+		{
+			profileFilter.setNestedFilters(queryFilters,Filter.JoinClause.FC_AND);
+		}		
+		else return null;
+
+		SearchParams profileSP = new SearchParams();
+		profileSP.setFilter(profileFilter);
+
+		return gxdFinder.searchDifferential(profileSP);
+	}
+
+	/*
+	 * Creates the profile part 2 filter that goes against the gxdResult index
+	 */
+	public Filter makeProfileResultFilters(GxdQueryForm query)
+	{
+
+		// start filter list for query filters
+		List<Filter> structureFilters = new ArrayList<Filter>();
+
+		String profileStructureID1 = query.getProfileStructureID1();
+		String profileStructureID2 = query.getProfileStructureID2();
+		String profileStructureID3 = query.getProfileStructureID3();
+		String profileStructureID4 = query.getProfileStructureID4();
+		String profileStructureID5 = query.getProfileStructureID5();
+		String profileStructureID6 = query.getProfileStructureID6();
+		String profileStructureID7 = query.getProfileStructureID7();
+		String profileStructureID8 = query.getProfileStructureID8();
+		String profileStructureID9 = query.getProfileStructureID9();
+		String profileStructureID10 = query.getProfileStructureID10();
+		String detected1 = query.getDetected_1();
+		String detected2 = query.getDetected_2();
+		String detected3 = query.getDetected_3();
+		String detected4 = query.getDetected_4();
+		String detected5 = query.getDetected_5();
+		String detected6 = query.getDetected_6();
+		String detected7 = query.getDetected_7();
+		String detected8 = query.getDetected_8();
+		String detected9 = query.getDetected_9();
+		String detected10 = query.getDetected_10();
+
+		if (profileStructureID1!=null && !profileStructureID1.equals("")) {
+			List<Filter> structureFilter1 = new ArrayList<Filter>();
+			if (detected1.equals("false")) {
+				structureFilter1.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID1))	;
+				structureFilter1.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
+			} else {
+				structureFilter1.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID1));
+				structureFilter1.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
+			}
+			structureFilters.add(Filter.and(structureFilter1));
+		}
+		if (profileStructureID2!=null && !profileStructureID2.equals("")) {
+			List<Filter> structureFilter2 = new ArrayList<Filter>();
+			if (detected2.equals("false")) {
+				structureFilter2.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID2))	;
+				structureFilter2.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
+			} else {
+				structureFilter2.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID2));
+				structureFilter2.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
+			}
+			structureFilters.add(Filter.and(structureFilter2));
+		}
+		if (profileStructureID3!=null && !profileStructureID3.equals("")) {
+			List<Filter> structureFilter3 = new ArrayList<Filter>();
+			if (detected3.equals("false")) {
+				structureFilter3.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID3))	;
+				structureFilter3.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
+			} else {
+				structureFilter3.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID3));
+				structureFilter3.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
+			}
+			structureFilters.add(Filter.and(structureFilter3));
+		}
+		if (profileStructureID4!=null && !profileStructureID4.equals("")) {
+			List<Filter> structureFilter4 = new ArrayList<Filter>();
+			if (detected4.equals("false")) {
+				structureFilter4.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID4))	;
+				structureFilter4.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
+			} else {
+				structureFilter4.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID4));
+				structureFilter4.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
+			}
+			structureFilters.add(Filter.and(structureFilter4));
+		}
+		if (profileStructureID5!=null && !profileStructureID5.equals("")) {
+			List<Filter> structureFilter5 = new ArrayList<Filter>();
+			if (detected5.equals("false")) {
+				structureFilter5.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID5))	;
+				structureFilter5.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
+			} else {
+				structureFilter5.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID5));
+				structureFilter5.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
+			}
+			structureFilters.add(Filter.and(structureFilter5));
+		}		
+		if (profileStructureID6!=null && !profileStructureID6.equals("")) {
+			List<Filter> structureFilter6 = new ArrayList<Filter>();
+			if (detected6.equals("false")) {
+				structureFilter6.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID6))	;
+				structureFilter6.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
+			} else {
+				structureFilter6.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID6));
+				structureFilter6.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
+			}
+			structureFilters.add(Filter.and(structureFilter6));
+		}
+		if (profileStructureID7!=null && !profileStructureID7.equals("")) {
+			List<Filter> structureFilter7 = new ArrayList<Filter>();
+			if (detected7.equals("false")) {
+				structureFilter7.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID7))	;
+				structureFilter7.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
+			} else {
+				structureFilter7.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID7));
+				structureFilter7.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
+			}
+			structureFilters.add(Filter.and(structureFilter7));
+		}
+		if (profileStructureID8!=null && !profileStructureID8.equals("")) {
+			List<Filter> structureFilter8 = new ArrayList<Filter>();
+			if (detected8.equals("false")) {
+				structureFilter8.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID8))	;
+				structureFilter8.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
+			} else {
+				structureFilter8.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID8));
+				structureFilter8.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
+			}
+			structureFilters.add(Filter.and(structureFilter8));
+		}
+		if (profileStructureID9!=null && !profileStructureID9.equals("")) {
+			List<Filter> structureFilter9 = new ArrayList<Filter>();
+			if (detected9.equals("false")) {
+				structureFilter9.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID9))	;
+				structureFilter9.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
+			} else {
+				structureFilter9.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID9));
+				structureFilter9.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
+			}
+			structureFilters.add(Filter.and(structureFilter9));
+		}
+		if (profileStructureID10!=null && !profileStructureID10.equals("")) {
+			List<Filter> structureFilter10 = new ArrayList<Filter>();
+			if (detected10.equals("false")) {
+				structureFilter10.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID10))	;
+				structureFilter10.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
+			} else {
+				structureFilter10.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID10));
+				structureFilter10.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
+			}
+			structureFilters.add(Filter.and(structureFilter10));
+		}
+
+		return Filter.or(structureFilters);
+	}
+
+	/*
 	 * This method parses the GxdQueryForm bean and constructs a Filter
 	 * object to represent the query.
 	 */
@@ -3718,11 +3974,46 @@ public class GXDController {
 			// we get all results)
 			queryFilters.add(new Filter(SearchConstants.PRIMARY_KEY, "[-10 TO -10]", Filter.Operator.OP_HAS_WORD));
 		}
+
+		// profile handling; this method will end further processing of query parameters
+		if(isProfileQuery(query))
+		{
+			logger.info("In profile form processing");
+
+			// default filters for profile search
+			queryFilters.add(new Filter(SearchConstants.GXD_ASSAY_TYPE, "RNA-Seq", Filter.Operator.OP_NOT_EQUAL));
+			queryFilters.add(new Filter(SearchConstants.GXD_IS_WILD_TYPE, WILD_TYPE));
+
+			// Process PROFILE QUERY FORM params
+			// Do part 1 of the profile search (I.e. find out what markers to bring back)
+			List<String> markerKeys = resolveProfileMarkers(query);
+
+			logger.info("Found " + markerKeys.size() + " marker keys");
+			if(markerKeys !=null && markerKeys.size()>0)
+			{
+				queryFilters.add( new Filter(SearchConstants.MRK_KEY,markerKeys,Filter.Operator.OP_IN));
+			}else{
+				// need a way to prevent the standard query from returning results when the differential fails to find markers
+				queryFilters.add( new Filter(SearchConstants.MRK_KEY,"NO_MARKERS_FOUND",Filter.Operator.OP_EQUAL));
+			}
+
+			// add the 2nd part of the profile query (I.e. what results to display for the given markers)
+			queryFilters.add(makeProfileResultFilters(query));
+
+			if (facetList.size() > 0) {
+				queryFilters.addAll(facetList);
+			}
+
+			return Filter.and(queryFilters);
+			// NOTE: THIS WAS A PROFILE QUERY, STANDARD QUERY FORM LOGIC IS NOT EXECUTED
+		}
+
 		
-		// differential handling; this method will end further processing
+		// differential handling; this method will end further processing of query parameters
 		if(isDifferentialQuery(query))
 		{
 			logger.info("In differential form processing");
+
 			// Process DIFFERENTIAL QUERY FORM params
 			// Do part 1 of the differential (I.e. find out what markers to bring back)
 			List<String> markerKeys = resolveDifferentialMarkers(query);
@@ -3750,30 +4041,6 @@ public class GXDController {
 		/*
 		* Standard QF Parameter handling
 		*/
-
-
-		// Process PROFILE QUERY FORM params
-		String profileStructureID1 = query.getProfileStructureID1();
-		String profileStructureID2 = query.getProfileStructureID2();
-		String profileStructureID3 = query.getProfileStructureID3();
-		String profileStructureID4 = query.getProfileStructureID4();
-		String profileStructureID5 = query.getProfileStructureID5();
-		String profileStructureID6 = query.getProfileStructureID6();
-		String profileStructureID7 = query.getProfileStructureID7();
-		String profileStructureID8 = query.getProfileStructureID8();
-		String profileStructureID9 = query.getProfileStructureID9();
-		String profileStructureID10 = query.getProfileStructureID10();
-
-		if(profileStructureID1 !=null && !profileStructureID1.equals("")) {
-			Filter profileIdFilter1 = new Filter (SearchConstants.STRUCTURE_ID, profileStructureID1);
-			queryFilters.add(profileIdFilter1);
-		}
-		if(profileStructureID2 !=null && !profileStructureID2.equals("")) {
-			Filter profileIdFilter2 = new Filter (SearchConstants.STRUCTURE_ID, profileStructureID2);
-			queryFilters.add(profileIdFilter2);
-		}
-
-		// Process STANDARD QUERY FORM params
 
 		// prep form parameter variables
 		String markerMgiId = query.getMarkerMgiId();

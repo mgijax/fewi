@@ -78,6 +78,16 @@ public class GxdQueryForm implements Cloneable {
 	private String profileStructureID8 = "";
 	private String profileStructureID9 = "";
 	private String profileStructureID10 = "";
+	private String detected_1 = "";
+	private String detected_2 = "";
+	private String detected_3 = "";
+	private String detected_4 = "";
+	private String detected_5 = "";
+	private String detected_6 = "";
+	private String detected_7 = "";
+	private String detected_8 = "";
+	private String detected_9= "";
+	private String detected_10 = "";
 
 	private Map<Integer, String> theilerStagesRibbon2 = new LinkedHashMap<Integer, String>();
 	private Map<Integer, String> difTheilerStages = new LinkedHashMap<Integer, String>();
@@ -845,8 +855,69 @@ public class GxdQueryForm implements Cloneable {
 		return profileStructureID10;
 	}
 	public void setProfileStructureID10(String profileStructureID10) {
-		this.profileStructureID10 = profileStructureID1;
+		this.profileStructureID10 = profileStructureID10;
 	}
+
+	public String getDetected_1() {
+		return detected_1;
+	}
+	public void setDetected_1(String detected_1) {
+		this.detected_1 = detected_1;
+	}
+	public String getDetected_2() {
+		return detected_2;
+	}
+	public void setDetected_2(String detected_2) {
+		this.detected_2 = detected_2;
+	}
+	public String getDetected_3() {
+		return detected_3;
+	}
+	public void setDetected_3(String detected_3) {
+		this.detected_3 = detected_3;
+	}
+	public String getDetected_4() {
+		return detected_4;
+	}
+	public void setDetected_4(String detected_4) {
+		this.detected_4 = detected_4;
+	}
+	public String getDetected_5() {
+		return detected_5;
+	}
+	public void setDetected_5(String detected_5) {
+		this.detected_5 = detected_5;
+	}
+	public String getDetected_6() {
+		return detected_6;
+	}
+	public void setDetected_6(String detected_6) {
+		this.detected_6 = detected_6;
+	}
+	public String getDetected_7() {
+		return detected_7;
+	}
+	public void setDetected_7(String detected_7) {
+		this.detected_7 = detected_7;
+	}
+	public String getDetected_8() {
+		return detected_8;
+	}
+	public void setDetected_8(String detected_8) {
+		this.detected_8 = detected_8;
+	}
+	public String getDetected_9() {
+		return detected_9;
+	}
+	public void setDetected_9(String detected_9) {
+		this.detected_9 = detected_9;
+	}
+	public String getDetected_10() {
+		return detected_10;
+	}
+	public void setDetected_10(String detected_10) {
+		this.detected_10 = detected_10;
+	}	
 
 
 	//-------------------------------------------//
@@ -983,6 +1054,16 @@ public class GxdQueryForm implements Cloneable {
 				+ ", profileStructureID8=" + profileStructureID8 
 				+ ", profileStructureID9=" + profileStructureID9 
 				+ ", profileStructureID10=" + profileStructureID10 
+				+ ", detected_1=" + detected_1 
+				+ ", detected_2=" + detected_2 
+				+ ", detected_3=" + detected_3 
+				+ ", detected_4=" + detected_4 
+				+ ", detected_5=" + detected_5 
+				+ ", detected_6=" + detected_6 
+				+ ", detected_7=" + detected_7 
+				+ ", detected_8=" + detected_8 
+				+ ", detected_9=" + detected_9 
+				+ ", detected_10=" + detected_10 
 				+ ", mpFilter=" + mpFilter 
 				+ ", doFilter=" + doFilter 
 				+ ", len(IDs)=" + (ids == null ? "0" : ids.length() )
