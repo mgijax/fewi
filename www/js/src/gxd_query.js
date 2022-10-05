@@ -1034,6 +1034,73 @@ var geneRestriction  = function() {
 	return setVisible;
 };
 
+var profileFormCheck  = function() {
+
+	var hasErrors = false;
+	var hasValidParam = false;
+
+	var profileForm = YAHOO.util.Dom.get("gxdProfileQueryForm");
+
+	// ensure we have a valid positive structure parameter
+	if(profileForm.profileStructure1.value!='' && profileForm.profileDetected1.checked==true) {
+		hasValidParam = true;
+	}
+	if(profileForm.profileStructure2.value!='' && profileForm.profileDetected2.checked==true) {
+		hasValidParam = true;
+	}
+	if(profileForm.profileStructure3.value!='' && profileForm.profileDetected3.checked==true) {
+		hasValidParam = true;
+	}
+	if(profileForm.profileStructure4.value!='' && profileForm.profileDetected4.checked==true) {
+		hasValidParam = true;
+	}
+	if(profileForm.profileStructure5.value!='' && profileForm.profileDetected5.checked==true) {
+		hasValidParam = true;
+	}
+	if(profileForm.profileStructure6.value!='' && profileForm.profileDetected6.checked==true) {
+		hasValidParam = true;
+	}
+	if(profileForm.profileStructure7.value!='' && profileForm.profileDetected7.checked==true) {
+		hasValidParam = true;
+	}
+	if(profileForm.profileStructure8.value!='' && profileForm.profileDetected8.checked==true) {
+		hasValidParam = true;
+	}
+	if(profileForm.profileStructure9.value!='' && profileForm.profileDetected9.checked==true) {
+		hasValidParam = true;
+	}
+	if(profileForm.profileStructure10.value!='' && profileForm.profileDetected10.checked==true) {
+		hasValidParam = true;
+	}
+	if (!hasValidParam) {
+		alert("Please specify Detected expression for at least one anatomical structure.");
+		hasErrors=true;
+	}
+
+	// check for duplicate structures
+	var submittedStructures = [];
+	if(profileForm.profileStructure1.value!=''){submittedStructures.push(profileForm.profileStructure1.value)}
+	if(profileForm.profileStructure2.value!=''){submittedStructures.push(profileForm.profileStructure2.value)}
+	if(profileForm.profileStructure3.value!=''){submittedStructures.push(profileForm.profileStructure3.value)}
+	if(profileForm.profileStructure4.value!=''){submittedStructures.push(profileForm.profileStructure4.value)}
+	if(profileForm.profileStructure5.value!=''){submittedStructures.push(profileForm.profileStructure5.value)}
+	if(profileForm.profileStructure6.value!=''){submittedStructures.push(profileForm.profileStructure6.value)}
+	if(profileForm.profileStructure7.value!=''){submittedStructures.push(profileForm.profileStructure7.value)}
+	if(profileForm.profileStructure8.value!=''){submittedStructures.push(profileForm.profileStructure8.value)}
+	if(profileForm.profileStructure9.value!=''){submittedStructures.push(profileForm.profileStructure9.value)}
+	if(profileForm.profileStructure10.value!=''){submittedStructures.push(profileForm.profileStructure10.value)}
+	if(submittedStructures.length>1) {
+		if (submittedStructures.length !== new Set(submittedStructures).size) {
+			alert("Please specify distinct anatomical structures.");
+			hasErrors=true;
+		}
+	}
+
+
+
+	return hasErrors;
+};
+
 var mutationRestriction  = function() {
 
 	var form = YAHOO.util.Dom.get("gxdQueryForm");
@@ -1153,6 +1220,9 @@ var runValidation  = function(){
 	{
 		result = geneRestriction() || mutationRestriction();
 		setSubmitDisabled(result);
+	}
+	else if (currentQF == 'profile') {
+		result = profileFormCheck();
 	}
 	else if (currentQF == 'batch') {
 		result = false;			// no current validations
@@ -1479,7 +1549,11 @@ makeStructureAC("profileStructure10","profileStructureContainer10");
 // Wire up the functionality to reset the query form
 //
 var resetQF = function (e) {
+
+	// prevent default reset action
 	if (e) YAHOO.util.Event.preventDefault(e);
+
+	// standard QF
 	var form = YAHOO.util.Dom.get("gxdQueryForm");
 	form.nomenclature.value = "";
 	form.vocabTerm.value = "";
@@ -1500,6 +1574,7 @@ var resetQF = function (e) {
 	form.allSpecimen.checked=true;
 	form.mutatedIn.value = "";
 
+	// differential
 	var difForm3 = YAHOO.util.Dom.get("gxdDifferentialQueryForm3");
 	if(difForm3)
 	{
@@ -1513,6 +1588,67 @@ var resetQF = function (e) {
 		difForm3.anywhereElse.checked = false;
 		setVisibility('differentialError', false);
 	}
+
+	// profile
+	var profileForm = YAHOO.util.Dom.get("gxdProfileQueryForm");
+	if(profileForm)
+	{
+		// clear displayed structure
+		profileForm.profileStructure1.value="";
+		profileForm.profileStructure2.value="";
+		profileForm.profileStructure3.value="";
+		profileForm.profileStructure4.value="";
+		profileForm.profileStructure5.value="";
+		profileForm.profileStructure6.value="";
+		profileForm.profileStructure7.value="";
+		profileForm.profileStructure8.value="";
+		profileForm.profileStructure9.value="";
+		profileForm.profileStructure10.value="";
+
+		// clear hidden structure ID
+		profileForm.profileStructure1ID.value="";
+		profileForm.profileStructure2ID.value="";
+		profileForm.profileStructure3ID.value="";
+		profileForm.profileStructure4ID.value="";
+		profileForm.profileStructure5ID.value="";
+		profileForm.profileStructure6ID.value="";
+		profileForm.profileStructure7ID.value="";
+		profileForm.profileStructure8ID.value="";
+		profileForm.profileStructure9ID.value="";
+		profileForm.profileStructure10ID.value="";
+
+		// reset radio buttons
+		profileForm.profileDetected1.checked=true;
+		profileForm.profileDetected2.checked=true;
+		profileForm.profileDetected3.checked=true;
+		profileForm.profileDetected4.checked=true;
+		profileForm.profileDetected5.checked=true;
+		profileForm.profileDetected6.checked=true;
+		profileForm.profileDetected7.checked=true;
+		profileForm.profileDetected8.checked=true;
+		profileForm.profileDetected9.checked=true;
+		profileForm.profileDetected10.checked=true;
+
+		// reset the No Where Else... check box
+		profileForm.nowhereElseCheckbox.checked = false;
+
+		// ensure only the first three rows are displayed
+		document.getElementById("profileStructureRow1").style.display = "";
+		document.getElementById("profileStructureRow2").style.display = "";
+		document.getElementById("profileStructureRow3").style.display = "";
+		document.getElementById("profileStructureRow4").style.display = "none";
+		document.getElementById("profileStructureRow5").style.display = "none";
+		document.getElementById("profileStructureRow6").style.display = "none";
+		document.getElementById("profileStructureRow7").style.display = "none";
+		document.getElementById("profileStructureRow8").style.display = "none";
+		document.getElementById("profileStructureRow9").style.display = "none";
+		document.getElementById("profileStructureRow10").style.display = "none";
+
+		// ensure qf state regarding not-in & nowhere-else 
+		ensureProfileFormStatus();
+	}
+
+	// batch
 	var batchForm = YAHOO.util.Dom.get("gxdBatchQueryForm1");
 	if (batchForm) {
 		batchForm.idType.selectedIndex=0;
@@ -1555,6 +1691,7 @@ YAHOO.util.Event.addListener("gxdBatchQueryForm1", "reset", fullResetQF);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm1", "reset", fullResetQF);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm2", "reset", fullResetQF);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm3", "reset", fullResetQF);
+YAHOO.util.Event.addListener("gxdProfileQueryForm", "reset", fullResetQF);
 
 //
 // Return the passed in form argument values in key/value URL format
