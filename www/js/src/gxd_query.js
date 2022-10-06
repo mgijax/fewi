@@ -1096,8 +1096,6 @@ var profileFormCheck  = function() {
 		}
 	}
 
-
-
 	return hasErrors;
 };
 
@@ -1550,6 +1548,8 @@ makeStructureAC("profileStructure10","profileStructureContainer10");
 //
 var resetQF = function (e) {
 
+	console.log("resetQF started")
+
 	// prevent default reset action
 	if (e) YAHOO.util.Event.preventDefault(e);
 
@@ -1591,6 +1591,7 @@ var resetQF = function (e) {
 
 	// profile
 	var profileForm = YAHOO.util.Dom.get("gxdProfileQueryForm");
+
 	if(profileForm)
 	{
 		// clear displayed structure
@@ -1699,11 +1700,11 @@ YAHOO.util.Event.addListener("gxdProfileQueryForm", "reset", fullResetQF);
 var getQueryString = function(form) {
 	console.log("getQueryString");
 	if(form==undefined) form = getCurrentQF();
-	console.log("getQueryString - form:" + form.name);
 	var _qs = [];
 	for(var i=0; i<form.elements.length; i++)
 	{
 		var element = form.elements[i];
+		console.log("getQueryString - element:" + element.name);
 		if(element.name != ""
 			&& element.name !="_theilerStage" && element.name !="_age"
 			&& element.name !="_difTheilerStage" && element.name !="_difAge")
