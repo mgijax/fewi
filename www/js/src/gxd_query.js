@@ -2121,6 +2121,33 @@ function removeStructureRow(rowNum) {
 
 };
 
+// ensure profile query form elements hidden post-refresh & reverse engineered form params
+function checkProfileVisibility() {
+	
+	var highestRowToShow = 3;
+
+	// find the highest structure row that contains data
+	if (document.getElementById("profileStructure4ID").value != '') {highestRowToShow = 4;}
+	if (document.getElementById("profileStructure5ID").value != '') {highestRowToShow = 5;}
+	if (document.getElementById("profileStructure6ID").value != '') {highestRowToShow = 6;}
+	if (document.getElementById("profileStructure7ID").value != '') {highestRowToShow = 7;}
+	if (document.getElementById("profileStructure8ID").value != '') {highestRowToShow = 8;}
+	if (document.getElementById("profileStructure9ID").value != '') {highestRowToShow = 9;}
+	if (document.getElementById("profileStructure10ID").value != '') {highestRowToShow = 10;}
+
+	// display all rows befow highest structure parameter sent
+	if (highestRowToShow >= 4){document.getElementById("profileStructureRow4").style.display = "";}
+	if (highestRowToShow >= 5){document.getElementById("profileStructureRow5").style.display = "";}
+	if (highestRowToShow >= 6){document.getElementById("profileStructureRow6").style.display = "";}
+	if (highestRowToShow >= 7){document.getElementById("profileStructureRow7").style.display = "";}
+	if (highestRowToShow >= 8){document.getElementById("profileStructureRow8").style.display = "";}
+	if (highestRowToShow >= 9){document.getElementById("profileStructureRow9").style.display = "";}
+	if (highestRowToShow >= 10){document.getElementById("profileStructureRow10").style.display = "";}
+
+	// reset rowCount used by other functions
+	rowCount = highestRowToShow;
+}
+
 // ensure profile query form elements are not in conflict
 function ensureProfileFormStatus() {
 

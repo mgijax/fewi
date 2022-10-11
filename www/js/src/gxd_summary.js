@@ -354,8 +354,8 @@ function reverseEngineerFormInput(request)
 						{
 							input.checked=false;
 
-							// Special handling for profile search.  Inputs checked are 'Detected'.
-							// If this param is 'false', set the 'Not Detected' to checked
+							// Special handling for profile search.  Only 'Detected' has passed into this code.
+							// If this "Detected" param is 'false', set the 'Not Detected' to checked
 							if (foundProfile) {
 								if (key=='detected_1') {
 									YAHOO.util.Dom.get("profileNotDetected1").checked = true;
@@ -387,6 +387,7 @@ function reverseEngineerFormInput(request)
 								if (key=='detected_10') {
 									YAHOO.util.Dom.get("profileNotDetected10").checked = true;
 								}
+								checkProfileVisibility();
 							}
 						} 
 					}
@@ -478,6 +479,12 @@ function reverseEngineerFormInput(request)
 			    filters[key] = [].concat(params[key]);
 			}
 		}
+	}
+
+	// special handling for profile display; this ensures params reinserted after reset
+	// are displayed rather than hidden
+	if (foundProfile) {
+		checkProfileVisibility();
 	}
 
 	if(typeof resetFacets != 'undefined')
