@@ -387,7 +387,6 @@ function reverseEngineerFormInput(request)
 								if (key=='detected_10') {
 									YAHOO.util.Dom.get("profileNotDetected10").checked = true;
 								}
-								checkProfileVisibility();
 							}
 						} 
 					}
@@ -567,7 +566,7 @@ handleNavigation = function (request, calledLocally) {
 	if (messageDiv != null) {
 		$('#' + messageDiv).html(LOADING_IMG + ' Searching...');
 	}
-	console.log("in handleNavigation: currentTab=" + currentTab);
+	//console.log("in handleNavigation: currentTab=" + currentTab);
 
 	// ensure any popups get hidden
 	stagePopupPanel.hide();
@@ -577,10 +576,9 @@ handleNavigation = function (request, calledLocally) {
 
 	if (calledLocally==undefined)
 		calledLocally = false;
-	console.log("in handleNavigation: calledLocally=" + calledLocally);
 
 	var values = parseRequest(request);
-	console.log("in handleNavigation: values from parseRequest=" + values);
+	//console.log("in handleNavigation: values from parseRequest=" + values);
 
 	// collect any filters and ensure that we use them
 	var filters = {};
@@ -595,22 +593,19 @@ handleNavigation = function (request, calledLocally) {
 		log("request: " + request);
 		foundParams = reverseEngineerFormInput(request);
 	}
-	console.log("in handleNavigation: foundParams=" + foundParams);
+	//console.log("in handleNavigation: foundParams=" + foundParams);
 
 	//Set the global querystring parameter for later navigation
 	// if there is no getQueryString function, we assume that window.querystring is already set
-	console.log("in handleNavigation: window.querystring=" + window.querystring);
+	//console.log("in handleNavigation: window.querystring=" + window.querystring);
 	if (typeof getQueryString == 'function')
-		console.log("in handleNavigation: ---calling getQueryString()");
 		window.querystring = getQueryString().replace('&idFile=&', '&');
 		//window.querystring = getQueryString();
-	console.log("in handleNavigation: window.querystring=" + window.querystring);
+	//console.log("in handleNavigation: window.querystring=" + window.querystring);
 
 	// we need the tab state of the request
 	var currentTab = getCurrentTab();
 	var tabState = values['tab'];
-	console.log("in handleNavigation: currentTab=" + currentTab);
-	console.log("in handleNavigation: tabState=" + tabState);
 
 	// Handle proper behavior for back and forward navigation
 	// if we have no tab state in the request, then we won't try to switch tabs.

@@ -3196,13 +3196,13 @@ public class GXDController {
 	 * for cases where the "NOT anywhere else" checkbox has been checked.  It seemed simpler and more
 	 * maintainable than trying to work it into the existing complex code.
 	 */
-	private void buildNowhereElseFilters(List<Filter> queryFilters, String structureID, List<Integer> stages) {
+	private void buildDifferentialNowhereElseFilters(List<Filter> queryFilters, String structureID, List<Integer> stages) {
 		/* If we got here, we have one of three cases:
 		 * 1. user specified a single structure and checked "AND NOT anywhere else"
 		 * 2. user specified 1+ Theiler stages and checked "AND NOT anywhere else"
 		 * 3. user specified both a structure and 1+ Theiler stages and checked "AND NOT anywhere else"
 		 */
-		logger.info("entering buildNowhereElseFilters() with " + queryFilters.size() + " filters");
+		logger.info("entering buildDifferentialNowhereElseFilters() with " + queryFilters.size() + " filters");
 		boolean hasStructure = (structureID != null) && (structureID.trim().length() > 0);
 		boolean hasStages = (stages != null) && (stages.size() > 0);
 		
@@ -3289,7 +3289,7 @@ public class GXDController {
 		// handle the case on the differential form where the "AND NOT anywhere else" checkbox is checked
 		if (nowhereElse) {
 			logger.info("building nowhereElse filters");
-			buildNowhereElseFilters(queryFilters, structure, stages);
+			buildDifferentialNowhereElseFilters(queryFilters, structure, stages);
 			logger.info("returned from building nowhereElse filters");
 		}
 		// perform structure diff
@@ -3406,7 +3406,7 @@ public class GXDController {
 
 		if ((structureID != null) && (structureID.trim().length() > 0)) {
 			// Structure ID field also has ancestor IDs, so this should ensure that we avoid the specified
-			// structure and its descendants.
+			// structure and its descendants.  This filter will be negate()-ed later in the code.
 			negFilters.add(new Filter(SearchConstants.STRUCTURE_ID, structureID, Filter.Operator.OP_EQUAL));
 		}
 			
@@ -3942,7 +3942,8 @@ public class GXDController {
 		}
 
 		// matrix only query fields
-		// absolute filter on structure ID (used by popups to restrict query to only this structure, but still keep the other structure queries and filters
+		// absolute filter on structure ID (used by popups to restrict query to only this structure, 
+		// but still keep the other structure queries and filters
 		if(query.getMatrixStructureId() !=null && query.getMatrixStructureId().size() > 0) {
 			List<Filter> matrixStructureFilters = new ArrayList<Filter>();
 			for(String matrixStructureId : query.getMatrixStructureId())
