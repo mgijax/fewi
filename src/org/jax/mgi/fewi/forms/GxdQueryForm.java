@@ -88,6 +88,7 @@ public class GxdQueryForm implements Cloneable {
 	private String detected_8 = "";
 	private String detected_9= "";
 	private String detected_10 = "";
+	private String profileNowhereElseCheckbox = "";		// profile form:  AND NOT anywhere else
 
 	private Map<Integer, String> theilerStagesRibbon2 = new LinkedHashMap<Integer, String>();
 	private Map<Integer, String> difTheilerStages = new LinkedHashMap<Integer, String>();
@@ -918,6 +919,12 @@ public class GxdQueryForm implements Cloneable {
 	public void setDetected_10(String detected_10) {
 		this.detected_10 = detected_10;
 	}	
+	public String getProfileNowhereElseCheckbox() {
+		return profileNowhereElseCheckbox;
+	}
+	public void setProfileNowhereElseCheckbox(String profileNowhereElseCheckbox) {
+		this.profileNowhereElseCheckbox = profileNowhereElseCheckbox;
+	}
 
 
 	//-------------------------------------------//
@@ -1057,13 +1064,14 @@ public class GxdQueryForm implements Cloneable {
 				+ ", detected_1=" + detected_1 
 				+ ", detected_2=" + detected_2 
 				+ ", detected_3=" + detected_3 
-				+ ", detected_4=" + detected_4 
+				+ ", detected_4=" + detected_4  
 				+ ", detected_5=" + detected_5 
 				+ ", detected_6=" + detected_6 
 				+ ", detected_7=" + detected_7 
 				+ ", detected_8=" + detected_8 
 				+ ", detected_9=" + detected_9 
 				+ ", detected_10=" + detected_10 
+				+ ", profileNowhereElseCheckbox=" + profileNowhereElseCheckbox 
 				+ ", mpFilter=" + mpFilter 
 				+ ", doFilter=" + doFilter 
 				+ ", len(IDs)=" + (ids == null ? "0" : ids.length() )

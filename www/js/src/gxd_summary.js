@@ -282,26 +282,14 @@ function reverseEngineerFormInput(request)
 	// review input parameters to determine which QF sent the request
 	for(var key in params)
 	{
-		console.log(key);
-		console.log(key.slice(0,18));
-		if(key == "detected")
-		{
-			// HACK for the radio buttons
-			params["detected1"] = params[key];
-			params["detected2"] = params[key];
-		}
-		else if(key == "difStructure") foundDifStruct=true;
+		if(key == "difStructure") foundDifStruct=true;
 		else if(key == "difTheilerStage" || key=="difAge") foundDifStage=true;
 		else if(key == 'idType') foundBatch=true;
 		else if(key.slice(0,18) == 'profileStructureID') foundProfile=true;
 	}
-	console.log("in reverseEngineerFormInput: foundDifStruct=" + foundDifStruct);
-	console.log("in reverseEngineerFormInput: foundDifStage=" + foundDifStage);
-	console.log("in reverseEngineerFormInput: foundProfile=" + foundProfile);
-	console.log("in reverseEngineerFormInput: foundBatch=" + foundBatch);
 
 	// make sure correct form is visible
-	// this code allows for flexibility to add third ribbon
+	// this code allows for flexibility to add another ribbon
 	if(foundDifStruct || foundDifStage)
 	{
 		formID = "#gxdDifferentialQueryForm3";
@@ -317,8 +305,10 @@ function reverseEngineerFormInput(request)
 	}
 	console.log("in reverseEngineerFormInput: formID=" + formID);
 
-	var foundParams = false;
+	// resetting query form to default values
 	if (typeof resetQF == 'function') { resetQF(); }
+
+	var foundParams = false;
 	for(var key in params)
 	{
 		console.log("in reverseEngineerFormInput: key=" + key);
@@ -330,14 +320,12 @@ function reverseEngineerFormInput(request)
 		}
 		else if(key!=undefined && key!="" && key!="detected" && params[key].length>0)
 		{
-console.log("in reverseEngineerFormInput: input parsing1");
 			//var input = YAHOO.util.Dom.get(key);
 			// jQuery is better suited to resolving form name parameters
 			var input = $(formID+" [name='"+key+"']");
 			if(input.length < 1) input = $(formID+" #"+key);
 			if(input!=undefined && input!=null && input.length > 0)
 			{
-console.log("in reverseEngineerFormInput: input parsing2");
 
 				input = input[0];
 				if(input.tagName=="TEXTAREA")
@@ -349,11 +337,11 @@ console.log("in reverseEngineerFormInput: input parsing2");
 				}
 				else if(input.tagName=="INPUT")
 				{
-console.log("in reverseEngineerFormInput: input parsing3");
 					foundParams = true;
 					// do radio boxes
 					if(input.type == "radio")
 					{
+						//console.log("---in reverseEngineerFormInput: key=" + key);
 						if(key=="isWildType")
 						{
 							YAHOO.util.Dom.get("isWildType").checked = true;
@@ -362,6 +350,45 @@ console.log("in reverseEngineerFormInput: input parsing3");
 						{
 							input.checked=true;
 						}
+						else if(params[key] == "false")
+						{
+							input.checked=false;
+
+							// Special handling for profile search.  Only 'Detected' has passed into this code.
+							// If this "Detected" param is 'false', set the 'Not Detected' to checked
+							if (foundProfile) {
+								if (key=='detected_1') {
+									YAHOO.util.Dom.get("profileNotDetected1").checked = true;
+								}
+								if (key=='detected_2') {
+									YAHOO.util.Dom.get("profileNotDetected2").checked = true;
+								}
+								if (key=='detected_3') {
+									YAHOO.util.Dom.get("profileNotDetected3").checked = true;
+								}
+								if (key=='detected_4') {
+									YAHOO.util.Dom.get("profileNotDetected4").checked = true;
+								}
+								if (key=='detected_5') {
+									YAHOO.util.Dom.get("profileNotDetected5").checked = true;
+								}
+								if (key=='detected_6') {
+									YAHOO.util.Dom.get("profileNotDetected6").checked = true;
+								}
+								if (key=='detected_7') {
+									YAHOO.util.Dom.get("profileNotDetected7").checked = true;
+								}
+								if (key=='detected_8') {
+									YAHOO.util.Dom.get("profileNotDetected8").checked = true;
+								}
+								if (key=='detected_9') {
+									YAHOO.util.Dom.get("profileNotDetected9").checked = true;
+								}
+								if (key=='detected_10') {
+									YAHOO.util.Dom.get("profileNotDetected10").checked = true;
+								}
+							}
+						} 
 					}
 					// do check boxes
 					else if(input.type=="checkbox")
@@ -453,6 +480,12 @@ console.log("in reverseEngineerFormInput: input parsing3");
 		}
 	}
 
+	// special handling for profile display; this ensures params reinserted after reset
+	// are displayed rather than hidden
+	if (foundProfile) {
+		checkProfileVisibility();
+	}
+
 	if(typeof resetFacets != 'undefined')
 	{
 		resetFacets(filters);
@@ -533,7 +566,7 @@ handleNavigation = function (request, calledLocally) {
 	if (messageDiv != null) {
 		$('#' + messageDiv).html(LOADING_IMG + ' Searching...');
 	}
-	console.log("in handleNavigation: currentTab=" + currentTab);
+	//console.log("in handleNavigation: currentTab=" + currentTab);
 
 	// ensure any popups get hidden
 	stagePopupPanel.hide();
@@ -543,10 +576,10 @@ handleNavigation = function (request, calledLocally) {
 
 	if (calledLocally==undefined)
 		calledLocally = false;
-	console.log("in handleNavigation: calledLocally=" + calledLocally);
 
+	console.log("in handleNavigation: values before parseRequest=" + values);
 	var values = parseRequest(request);
-	console.log("in handleNavigation: values from parseRequest=" + values);
+	console.log("in handleNavigation: values after parseRequest=" + values);
 
 	// collect any filters and ensure that we use them
 	var filters = {};
@@ -558,25 +591,22 @@ handleNavigation = function (request, calledLocally) {
 	var foundParams = true;
 	// test if there is a form that needs to be populated
 	if (typeof reverseEngineerFormInput == 'function') {
-		log("request: " + request);
+		console.log("request: " + request);
 		foundParams = reverseEngineerFormInput(request);
 	}
-	console.log("in handleNavigation: foundParams=" + foundParams);
+	//console.log("in handleNavigation: foundParams=" + foundParams);
 
 	//Set the global querystring parameter for later navigation
 	// if there is no getQueryString function, we assume that window.querystring is already set
-	console.log("in handleNavigation: window.querystring=" + window.querystring);
+	console.log("in handleNavigation: window.querystring before getQueryString=" + window.querystring);
 	if (typeof getQueryString == 'function')
-		console.log("in handleNavigation: ---calling getQueryString()");
 		window.querystring = getQueryString().replace('&idFile=&', '&');
 		//window.querystring = getQueryString();
-	console.log("in handleNavigation: window.querystring=" + window.querystring);
+	console.log("in handleNavigation: window.querystring after getQueryString=" + window.querystring);
 
 	// we need the tab state of the request
 	var currentTab = getCurrentTab();
 	var tabState = values['tab'];
-	console.log("in handleNavigation: currentTab=" + currentTab);
-	console.log("in handleNavigation: tabState=" + tabState);
 
 	// Handle proper behavior for back and forward navigation
 	// if we have no tab state in the request, then we won't try to switch tabs.
