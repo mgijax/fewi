@@ -577,8 +577,9 @@ handleNavigation = function (request, calledLocally) {
 	if (calledLocally==undefined)
 		calledLocally = false;
 
+	console.log("in handleNavigation: values before parseRequest=" + values);
 	var values = parseRequest(request);
-	//console.log("in handleNavigation: values from parseRequest=" + values);
+	console.log("in handleNavigation: values after parseRequest=" + values);
 
 	// collect any filters and ensure that we use them
 	var filters = {};
@@ -590,18 +591,18 @@ handleNavigation = function (request, calledLocally) {
 	var foundParams = true;
 	// test if there is a form that needs to be populated
 	if (typeof reverseEngineerFormInput == 'function') {
-		log("request: " + request);
+		console.log("request: " + request);
 		foundParams = reverseEngineerFormInput(request);
 	}
 	//console.log("in handleNavigation: foundParams=" + foundParams);
 
 	//Set the global querystring parameter for later navigation
 	// if there is no getQueryString function, we assume that window.querystring is already set
-	//console.log("in handleNavigation: window.querystring=" + window.querystring);
+	console.log("in handleNavigation: window.querystring before getQueryString=" + window.querystring);
 	if (typeof getQueryString == 'function')
 		window.querystring = getQueryString().replace('&idFile=&', '&');
 		//window.querystring = getQueryString();
-	//console.log("in handleNavigation: window.querystring=" + window.querystring);
+	console.log("in handleNavigation: window.querystring after getQueryString=" + window.querystring);
 
 	// we need the tab state of the request
 	var currentTab = getCurrentTab();

@@ -382,6 +382,7 @@ var updateQuerySummary = function() {
 		var profileStructure8 = YAHOO.util.Dom.get('profileStructure8').value;
 		var profileStructure9 = YAHOO.util.Dom.get('profileStructure9').value;
 		var profileStructure10 = YAHOO.util.Dom.get('profileStructure10').value;
+		var profileNowhereElseCheckbox = YAHOO.util.Dom.get('profileNowhereElseCheckbox').checked;
 
 		// collect list of detected structures and not detected structured
 		var posStructures = [];
@@ -463,6 +464,9 @@ var updateQuerySummary = function() {
 			newInnerHTML = "Detected in " + posStructures.join(", ");
 			if (negStructures.length > 0) {
 				newInnerHTML = newInnerHTML + " and not detected in " + negStructures.join(", ");
+			}
+			if (profileNowhereElseCheckbox) {
+				newInnerHTML = newInnerHTML + " and not detected anywhere else. ";
 			}
 		} else {
 				newInnerHTML = "Not detected in " + negStructures.join(", ");
@@ -1631,7 +1635,7 @@ var resetQF = function (e) {
 		profileForm.profileDetected10.checked=true;
 
 		// reset the No Where Else... check box
-		profileForm.nowhereElseCheckbox.checked = false;
+//		profileForm.profileNowhereElseCheckbox.checked = false;
 
 		// ensure only the first three rows are displayed
 		document.getElementById("profileStructureRow1").style.display = "";
@@ -1698,7 +1702,7 @@ YAHOO.util.Event.addListener("gxdProfileQueryForm", "reset", fullResetQF);
 // Return the passed in form argument values in key/value URL format
 //
 var getQueryString = function(form) {
-	console.log("getQueryString");
+	console.log("---into getQueryString");
 	if(form==undefined) form = getCurrentQF();
 	var _qs = [];
 	for(var i=0; i<form.elements.length; i++)
@@ -1968,7 +1972,7 @@ function checkBatchInput(){
 // ensure input compatibility; disable "NoWhere Else" checkbox if needed
 function structureRadioChange() {
 
-   	var checkBox = document.getElementById("nowhereElseCheckbox");
+   	var checkBox = document.getElementById("profileNowhereElseCheckbox");
    	var nowhereElseText = document.getElementById("nowhereElseText");
 	var notDetectedNodes = YAHOO.util.Dom.getElementsByClassName('notDetected', 'input');
 	var hasNotDetected = false;
@@ -1989,7 +1993,7 @@ function structureRadioChange() {
 // ensure input compatibility; disable 'Not Detected' radio buttons if needed
 function handleNowhereElse() {
 
-	var checkBox = document.getElementById("nowhereElseCheckbox");
+	var checkBox = document.getElementById("profileNowhereElseCheckbox");
 	var notDetectedNodes = YAHOO.util.Dom.getElementsByClassName('notDetected', 'input');
 	for (let i = 0; i < notDetectedNodes.length; i++) {
 		if (checkBox.checked == true){
