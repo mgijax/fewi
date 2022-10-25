@@ -54,7 +54,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-
+/* FIXME: move to its own hunter */
+import org.hibernate.SQLQuery;
+import org.hibernate.SessionFactory;
+import org.hibernate.Session;
 
 /*-------*/
 /* class */
@@ -81,6 +84,10 @@ public class RecombinaseController {
 
     @Autowired
     private AlleleFinder alleleFinder;
+
+    /* FIXME: move to own hunter */
+    @Autowired
+    private SessionFactory sessionFactory;
 
     /*-------------------------*/
     /* public instance methods */
@@ -545,6 +552,76 @@ public class RecombinaseController {
         return sorts;
     }
 
+    /* FIXME: move to its own hunter */
+    private List<Map<String,String>> andNowhereElse (List<String> structures) {
+        logger.info("Getting ANE data...");
+        Session session = sessionFactory.getCurrentSession();
+
+        String strs = "'" + String.join("', '", structures) + "'";
+
+        // Do a test query
+        SQLQuery query = session.createSQLQuery(
+              " WITH "
+            + "  subjectNodes as ( "
+            + "    SELECT term_key, term, 'S' as nodeType "
+            + "    FROM term  "
+            + "    WHERE vocab_name = 'EMAPA' AND term in (" + strs + ") "
+            + "  ), "
+            + "  descendentNodes as ( "
+            + "    SELECT distinct "
+            + "      descendent_term_key as term_key, "
+            + "      descendent_term as term, "
+            + "      'D' as nodeType  "
+            + "    FROM term_descendent "
+            + "    WHERE term_key in (SELECT term_key FROM subjectNodes) "
+            + "       UNION "
+            + "    SELECT term_key, term, 'D' as nodeType "
+            + "    FROM term "
+            + "    WHERE term_key in (SELECT term_key FROM subjectNodes) "
+            + "  ), "
+            + "  ancestorNodes as ( "
+            + "    SELECT distinct  "
+            + "      ancestor_term_key as term_key,  "
+            + "      ancestor_term as term,  "
+            + "      'A' as nodeType "
+            + "    FROM term_ancestor  "
+            + "    WHERE term_key in (SELECT term_key FROM descendentNodes) "
+            + "    AND ancestor_term_key not in (SELECT term_key FROM descendentNodes) "
+            + "       UNION "
+            + "    SELECT term_key, term, 'A' as nodeType "
+            + "    FROM term "
+            + "    WHERE term_key in (SELECT term_key FROM subjectNodes) "
+            + "  ),  "
+            + "  fringeNodes as ( "
+            + "    SELECT distinct  "
+            + "      sibling_term_key as term_key,  "
+            + "      sibling_term as term,  "
+            + "      'F' as nodeType "
+            + "    FROM term_sibling "
+            + "    WHERE term_key in (SELECT term_key FROM ancestorNodes) "
+            + "    AND sibling_term_key not in (select term_key from ancestorNodes) "
+            + "    AND sibling_term_key not in (select term_key from descendentNodes)     "
+            + "  ) "
+            + "SELECT term_key, term, nodeType FROM subjectNodes "
+            + "UNION "
+            + "SELECT term_key, term, nodeType FROM fringeNodes "
+            + "UNION "
+            + "SELECT term_key, term, nodeType FROM ancestorNodes "
+            + "  WHERE term_key NOT IN (SELECT term_key FROM subjectNodes) "
+            + "ORDER BY nodeType,term "
+            );
+        List<Object[]> rows = query.list();
+        List<Map<String,String>> retVal = new ArrayList<Map<String,String>>();
+        for(Object[] row : rows){
+            Map<String,String> m = new HashMap<String,String>();
+            m.put("term_key", row[0].toString());
+            m.put("term", row[1].toString());
+            m.put("type", row[2].toString());
+            retVal.add(m);
+        }
+        logger.info("Done getting ANE data.");
+        return retVal;
+    }
 
     // method to parse query parameters into filters
     public Filter parseRecombinaseQueryForm(RecombinaseQueryForm query){
@@ -598,13 +675,15 @@ public class RecombinaseController {
         //      -allStructures:liver AND 
         //      (structureSearch:heart OR structureSearch:lung)
         //
-        String structures = query.getStructures();
-        if ((structures != null) && (!"".equals(structures))) {
-                /* The structures parameter is a pipe-separated list of structures.
+        String structureString = query.getStructures();
+        List<String> structures = new ArrayList<String>();
+        boolean hasNegatedStructure = false;
+        if ((structureString != null) && (!"".equals(structureString))) {
+                /* The structureString parameter is a pipe-separated list of structure names.
                  * Each structure may optionally begin with a "-", indicating "NOT"
                  */
-                logger.info("structures query= " + structures);
-                String[] structures2 = structures.trim().toLowerCase().split("[|]");
+                logger.info("structures query= " + structureString);
+                String[] structures2 = structureString.trim().toLowerCase().split("[|]");
                 Collection<String> structureTokens = new ArrayList<String>(Arrays.asList(structures2));
                 for(String structureToken : structureTokens) {
                         // every struct begins with either + (detected) or - (not-detected)
@@ -619,15 +698,12 @@ public class RecombinaseController {
                                 if (notDetected) {
                                         f.negate();
                                         filterList.add(f);
+                                        hasNegatedStructure = true;
                                 } else {
+                                        structures.add(structureToken);
                                         filterList.add(f);
                                         Filter f2 = new Filter(SearchConstants.CRE_STRUCTURE, sToken, Filter.Operator.OP_HAS_WORD);
                                         resultStructureFilterList.add(f2);
-				        // nowhere else operator -- search exclusiveStructures field to see if the specified 
-                                        // structure is one that contains ALL the 'detected' results for the particular allele
-				        if (nowhereElse) {
-					        filterList.add(new Filter(SearchConstants.CRE_EXCLUSIVE_STRUCTURES,sToken,Filter.Operator.OP_HAS_WORD));
-				        }
                                 }
 				
 
@@ -637,65 +713,24 @@ public class RecombinaseController {
                 qualResultsFilter.setFilterJoinClause(Filter.JoinClause.FC_OR);
                 qualResultsFilter.setNestedFilters(resultStructureFilterList);
                 filterList.add(qualResultsFilter);
+
+                if (nowhereElse) {
+                    List<Map<String,String>> extraTerms = andNowhereElse(structures);
+                    for (Map<String,String> m : extraTerms) {
+                        if (m.get("type").equals("F")) {
+                            String s = "\""+m.get("term")+"\"";
+                            Filter f = new Filter(SearchConstants.CRE_ALL_STRUCTURES, s, Filter.Operator.OP_HAS_WORD);
+                            f.negate();
+                            filterList.add(f);
+                        } else if (m.get("type").equals("A")) {
+                        }
+                    }
+                }
                 //
                 // only return detected results 
                 filterList.add(new Filter(SearchConstants.CRE_DETECTED, "true", Filter.Operator.OP_HAS_WORD));
 
         };
-
-/*
-        // Structure queries
-        String structure = query.getStructure();
-        if ((structure != null) && (!"".equals(structure))) {
-        	logger.debug("splitting structure query into tokens");
-			Collection<String> structureTokens = QueryParser.parseNomenclatureSearch(structure);
-
-			String phraseSearch = "";
-			for(String structureToken : structureTokens)
-			{
-				logger.debug("token="+structureToken);
-				phraseSearch += structureToken+" ";
-			}
-			if(!phraseSearch.trim().equals(""))
-			{
-				// surround with double quotes to make a solr phrase. added a slop of 100 (longest name is 62 chars)
-				String sToken = "\""+phraseSearch+"\"~100";
-				filterList.add(new Filter(SearchConstants.CRE_STRUCTURE ,sToken,Filter.Operator.OP_HAS_WORD));
-				
-				// nowhere else operator -- search exclusiveStructures field to see if the specified structure is one
-				// that contains ALL the 'detected' results for the particular allele
-				if (nowhereElse) {
-					filterList.add(new Filter(SearchConstants.CRE_EXCLUSIVE_STRUCTURES,sToken,Filter.Operator.OP_HAS_WORD));
-				}
-
-				// structure operator is 'detected', so ensure that we're seeking 'detected' resulst in the
-				// specified structures
-				if (detectedOperator) {
-					filterList.add(new Filter(SearchConstants.CRE_DETECTED, "true", Filter.Operator.OP_HAS_WORD));
-				} 
-			}
-        }
-
-        // detected / not detected
-        String detected = query.getDetected();
-        String notDetected = query.getNotDetected();
-        // detected and notDetected must be different to create a valid filter
-        // if both are null, or both are true, then we do not filter results
-        if( "true".equalsIgnoreCase(detected) && !detected.equalsIgnoreCase(notDetected) ) {
-        	// detected only
-        	filterList.add(new Filter(SearchConstants.CRE_DETECTED, "true", Filter.Operator.OP_HAS_WORD));
-        }
-        else if( "true".equalsIgnoreCase(notDetected) && !notDetected.equalsIgnoreCase(detected) ) {
-        	// absent only
-
-        	// Combine "no presents query" with "must have one absent query"
-        	Filter notPresentFilter = new Filter(SearchConstants.CRE_DETECTED, "true", Filter.Operator.OP_HAS_WORD);
-        	notPresentFilter.negate();
-        	Filter absentFilter = new Filter(SearchConstants.CRE_DETECTED, "false", Filter.Operator.OP_HAS_WORD);
-
-        	filterList.add(Filter.and(Arrays.asList(notPresentFilter, absentFilter)));
-        }
-*/
 
         // inducer
 		if (query.getInducer().size() > 0){
