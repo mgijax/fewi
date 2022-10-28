@@ -24,6 +24,7 @@ import mgi.frontend.datamodel.group.RecombinaseEntity;
 
 import org.jax.mgi.fewi.finder.AlleleFinder;
 import org.jax.mgi.fewi.finder.RecombinaseFinder;
+import org.jax.mgi.fewi.finder.EmapaHelperFinder;
 import org.jax.mgi.fewi.forms.RecombinaseQueryForm;
 import org.jax.mgi.fewi.highlight.RecombinaseHighlightInfo;
 import org.jax.mgi.fewi.searchUtil.Filter;
@@ -54,11 +55,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-/* FIXME: move to its own hunter */
-import org.hibernate.SQLQuery;
-import org.hibernate.SessionFactory;
-import org.hibernate.Session;
-
 /*-------*/
 /* class */
 /*-------*/
@@ -85,9 +81,8 @@ public class RecombinaseController {
     @Autowired
     private AlleleFinder alleleFinder;
 
-    /* FIXME: move to own hunter */
     @Autowired
-    private SessionFactory sessionFactory;
+    private EmapaHelperFinder emapaHelper;
 
     /*-------------------------*/
     /* public instance methods */
@@ -552,77 +547,6 @@ public class RecombinaseController {
         return sorts;
     }
 
-    /* FIXME: move to its own hunter */
-    private List<Map<String,String>> andNowhereElse (List<String> structures) {
-        logger.info("Getting ANE data...");
-        Session session = sessionFactory.getCurrentSession();
-
-        String strs = "'" + String.join("', '", structures) + "'";
-
-        // Do a test query
-        SQLQuery query = session.createSQLQuery(
-              " WITH "
-            + "  subjectNodes as ( "
-            + "    SELECT term_key, term, 'S' as nodeType "
-            + "    FROM term  "
-            + "    WHERE vocab_name = 'EMAPA' AND term in (" + strs + ") "
-            + "  ), "
-            + "  descendentNodes as ( "
-            + "    SELECT distinct "
-            + "      descendent_term_key as term_key, "
-            + "      descendent_term as term, "
-            + "      'D' as nodeType  "
-            + "    FROM term_descendent "
-            + "    WHERE term_key in (SELECT term_key FROM subjectNodes) "
-            + "       UNION "
-            + "    SELECT term_key, term, 'D' as nodeType "
-            + "    FROM term "
-            + "    WHERE term_key in (SELECT term_key FROM subjectNodes) "
-            + "  ), "
-            + "  ancestorNodes as ( "
-            + "    SELECT distinct  "
-            + "      ancestor_term_key as term_key,  "
-            + "      ancestor_term as term,  "
-            + "      'A' as nodeType "
-            + "    FROM term_ancestor  "
-            + "    WHERE term_key in (SELECT term_key FROM descendentNodes) "
-            + "    AND ancestor_term_key not in (SELECT term_key FROM descendentNodes) "
-            + "       UNION "
-            + "    SELECT term_key, term, 'A' as nodeType "
-            + "    FROM term "
-            + "    WHERE term_key in (SELECT term_key FROM subjectNodes) "
-            + "  ),  "
-            + "  fringeNodes as ( "
-            + "    SELECT distinct  "
-            + "      sibling_term_key as term_key,  "
-            + "      sibling_term as term,  "
-            + "      'F' as nodeType "
-            + "    FROM term_sibling "
-            + "    WHERE term_key in (SELECT term_key FROM ancestorNodes) "
-            + "    AND sibling_term_key not in (select term_key from ancestorNodes) "
-            + "    AND sibling_term_key not in (select term_key from descendentNodes)     "
-            + "  ) "
-            + "SELECT term_key, term, nodeType FROM subjectNodes "
-            + "UNION "
-            + "SELECT term_key, term, nodeType FROM fringeNodes "
-            + "UNION "
-            + "SELECT term_key, term, nodeType FROM ancestorNodes "
-            + "  WHERE term_key NOT IN (SELECT term_key FROM subjectNodes) "
-            + "ORDER BY nodeType,term "
-            );
-        List<Object[]> rows = query.list();
-        List<Map<String,String>> retVal = new ArrayList<Map<String,String>>();
-        for(Object[] row : rows){
-            Map<String,String> m = new HashMap<String,String>();
-            m.put("term_key", row[0].toString());
-            m.put("term", row[1].toString());
-            m.put("type", row[2].toString());
-            retVal.add(m);
-        }
-        logger.info("Done getting ANE data.");
-        return retVal;
-    }
-
     // method to parse query parameters into filters
     public Filter parseRecombinaseQueryForm(RecombinaseQueryForm query){
 
@@ -674,16 +598,17 @@ public class RecombinaseController {
         //      allStructures:lung AND
         //      -allStructures:liver AND 
         //      (structureSearch:heart OR structureSearch:lung)
+        // BUT - we're using keys for the allStructures field now
         //
         String structureString = query.getStructures();
-        List<String> structures = new ArrayList<String>();
+        List<String> structureKeys = new ArrayList<String>();
         boolean hasNegatedStructure = false;
         if ((structureString != null) && (!"".equals(structureString))) {
                 /* The structureString parameter is a pipe-separated list of structure names.
                  * Each structure may optionally begin with a "-", indicating "NOT"
                  */
                 logger.info("structures query= " + structureString);
-                String[] structures2 = structureString.trim().toLowerCase().split("[|]");
+                String[] structures2 = structureString.trim().split("[|]");
                 Collection<String> structureTokens = new ArrayList<String>(Arrays.asList(structures2));
                 for(String structureToken : structureTokens) {
                         // every struct begins with either + (detected) or - (not-detected)
@@ -693,14 +618,16 @@ public class RecombinaseController {
 			if(!structureToken.equals(""))
 			{
                                 logger.info("token= "+ (notDetected ? "NOT " : "") + structureToken);
-				String sToken = "\""+structureToken+"\"";
-                                Filter f = new Filter(SearchConstants.CRE_ALL_STRUCTURES, sToken, Filter.Operator.OP_HAS_WORD);
+				String sToken = "\"" + structureToken + "\"";
+                                String sKey = emapaHelper.termToKey(structureToken);
+                                logger.info("Term=" + structureToken + "; key=" + sToken);
+                                Filter f = new Filter(SearchConstants.CRE_ALL_STRUCTURES, sKey, Filter.Operator.OP_HAS_WORD);
                                 if (notDetected) {
                                         f.negate();
                                         filterList.add(f);
                                         hasNegatedStructure = true;
                                 } else {
-                                        structures.add(structureToken);
+                                        structureKeys.add(sKey);
                                         filterList.add(f);
                                         Filter f2 = new Filter(SearchConstants.CRE_STRUCTURE, sToken, Filter.Operator.OP_HAS_WORD);
                                         resultStructureFilterList.add(f2);
@@ -715,14 +642,24 @@ public class RecombinaseController {
                 filterList.add(qualResultsFilter);
 
                 if (nowhereElse) {
-                    List<Map<String,String>> extraTerms = andNowhereElse(structures);
+                    /* The query is of the form "A and B and... and nowhere else".
+                     * So far, the filter constraint implements the "A and B and ..." part.
+                     * To implement the "nowhere else" part, add (usually many) constraints that ensure that
+                     * expression is not detected "somewhere else".  For details, see finder/EmapaHelperFinder.java
+                     */
+                    List<Map<String,String>> extraTerms = emapaHelper.getAncestorsAndFringeNodes(structureKeys);
                     for (Map<String,String> m : extraTerms) {
+                        Filter f = null;
                         if (m.get("type").equals("F")) {
-                            String s = "\""+m.get("term")+"\"";
-                            Filter f = new Filter(SearchConstants.CRE_ALL_STRUCTURES, s, Filter.Operator.OP_HAS_WORD);
+                            String s = "\""+m.get("term_key")+"\"";
+                            f = new Filter(SearchConstants.CRE_ALL_STRUCTURES, s, Filter.Operator.OP_HAS_WORD);
                             f.negate();
                             filterList.add(f);
                         } else if (m.get("type").equals("A")) {
+                            String s = "\""+m.get("term_key")+"\"";
+                            f = new Filter(SearchConstants.CRE_ALL_STRUCTURES_DIRECT, s, Filter.Operator.OP_HAS_WORD);
+                            f.negate();
+                            filterList.add(f);
                         }
                     }
                 }
