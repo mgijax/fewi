@@ -118,6 +118,15 @@ $(function(){
 </script>
 </c:if>
 
+<c:if test="${showProfileQueryForm}">
+<script>
+$(function(){
+	// open the differential query form
+	showProfileSearchForm();
+});
+</script>
+</c:if>
+
 <c:if test="${showBatchSearchForm}">
 <script>
 $(function(){
