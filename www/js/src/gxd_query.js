@@ -463,7 +463,7 @@ var updateQuerySummary = function() {
 		if (posStructures.length > 0) {
 			newInnerHTML = "Detected in " + posStructures.join(", ");
 			if (negStructures.length > 0) {
-				newInnerHTML = newInnerHTML + " and not detected in " + negStructures.join(", ");
+				newInnerHTML = newInnerHTML + " and not detected or assayed in " + negStructures.join(", ");
 			}
 			if (profileNowhereElseCheckbox) {
 				newInnerHTML = newInnerHTML + " and not detected anywhere else. ";
@@ -1651,6 +1651,15 @@ var resetQF = function (e) {
 
 		// ensure qf state regarding not-in & nowhere-else 
 		ensureProfileFormStatus();
+
+		// ensure all row removals are visible
+		document.getElementById("removeStructureRowButton1").style.display = "";
+
+		// reset row count
+		rowCount = 3;
+
+
+
 	}
 
 	// batch

@@ -33,7 +33,10 @@
 		</table>
 
 
-		<label class="nowhereElseLabel" for="nowhereElse">
+                <!-- Disappearing this button until we can properly implement the semantics when there are multiple structures 
+                     See CRM-241, CRM-467
+                     -->
+		<label class="nowhereElseLabel" for="nowhereElse" style="display:none;">
 			<input type="checkbox" name="nowhereElse" id="nowhereElse" value="true" />
                         and nowhere else
 		</label>

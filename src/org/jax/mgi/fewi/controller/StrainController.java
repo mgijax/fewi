@@ -84,13 +84,13 @@ public class StrainController {
 		chromosomeSize.put("5", "152000000");
 		chromosomeSize.put("6", "150000000");
 		chromosomeSize.put("7", "146000000");
-		chromosomeSize.put("8", "130000000");
+		chromosomeSize.put("8", "131000000");
 		chromosomeSize.put("9", "125000000");
 		chromosomeSize.put("10", "131000000");
 		chromosomeSize.put("11", "123000000");
 		chromosomeSize.put("12", "121000000");
 		chromosomeSize.put("13", "121000000");
-		chromosomeSize.put("14", "125000000");
+		chromosomeSize.put("14", "126000000");
 		chromosomeSize.put("15", "105000000");
 		chromosomeSize.put("16", "99000000");
 		chromosomeSize.put("17", "96000000");

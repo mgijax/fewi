@@ -145,7 +145,7 @@
 		<div>
 			<button type="button" class="addButton" onClick="handleAddStructure()" style="margin-left:220px;">Add structure</button>
 		</div>
-			<label id="allInSituLabel" style="margin-left:400px;">
+			<label id="" style="margin-left:400px; display:none;">
 				<input type="checkbox" id="profileNowhereElseCheckbox" name="profileNowhereElseCheckbox" 
 					onChange="handleNowhereElse()" class="" value="true" />
 				<span id="nowhereElseText" class=""> Expression not detected anywhere else </span>

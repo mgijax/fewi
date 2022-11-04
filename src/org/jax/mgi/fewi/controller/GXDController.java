@@ -237,7 +237,7 @@ public class GXDController {
 		return mav;
 	}
 
-	// "expanded" query form
+	// "expanded" differential query form
 	@RequestMapping("differential")
 	public ModelAndView getDifferentialQueryForm(HttpServletRequest request) {
 		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
@@ -252,6 +252,25 @@ public class GXDController {
 		mav.addObject("gxdBatchQueryForm", new GxdQueryForm());
 		mav.addObject("gxdDifferentialQueryForm", new GxdQueryForm());
 		mav.addObject("showDifferentialQueryForm",true);
+
+		return mav;
+	}
+
+	// "expanded" profile query form
+	@RequestMapping("profile")
+	public ModelAndView getProfileQueryForm(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
+		logger.debug("->getDifferentialQueryForm started");
+
+		ModelAndView mav = new ModelAndView("gxd/gxd_query");
+		mav.addObject("sort", new Paginator());
+		mav.addObject("gxdQueryForm", new GxdQueryForm());
+		mav.addObject("gxdBatchQueryForm", new GxdQueryForm());
+		mav.addObject("gxdDifferentialQueryForm", new GxdQueryForm());
+		mav.addObject("showProfileQueryForm",true);
 
 		return mav;
 	}
