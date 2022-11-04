@@ -715,7 +715,7 @@ public class SnpController {
 				filters = new ArrayList<Filter>();
 				filters.add(andFilter);
 
-				filters.add(new Filter(SearchConstants.MARKERID, m.getPrimaryID(), Operator.OP_EQUAL));
+                                //filters.add(new Filter(SearchConstants.MARKERID, m.getPrimaryID(), Operator.OP_EQUAL));
 
 				return Filter.or(filters);
 			} else {
@@ -1273,6 +1273,7 @@ public class SnpController {
 			}
 		}
 
+		logger.debug("->snpSummaryTable getting search results.");
 		SearchResults<ConsensusSNPSummaryRow> searchResults = snpFinder.getSummarySnps(params, matchedMarkerIds);
 
 		mav.addObject("snps", searchResults.getResultObjects());
@@ -1420,6 +1421,9 @@ public class SnpController {
 		// must remove "Contig-Reference", since display of this is
 		// suppressed on the summary page (see summary object)
 		facets.remove("Contig-Reference");
+
+                // remove this facet because it does not work properly in a filter
+		facets.remove("within distance of");
 
 		SearchResults<String> results = new SearchResults<String>();
 		results.setResultFacets(facets);
