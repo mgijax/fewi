@@ -318,6 +318,14 @@ function reverseEngineerFormInput(request)
 			// no op - skip it
 			// $(formID+" [name='idFile']").value = null;
 		}
+		else if(key=="detected") // handling for dynamic detected values
+		{
+			if (params[key] == 'Yes') {
+				YAHOO.util.Dom.get("detected1").checked = true;
+			} else if (params[key] == 'No') {
+				YAHOO.util.Dom.get("detected2").checked = true;
+			}
+		}
 		else if(key!=undefined && key!="" && key!="detected" && params[key].length>0)
 		{
 			//var input = YAHOO.util.Dom.get(key);
