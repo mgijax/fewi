@@ -165,6 +165,7 @@
 				vm.tabs.diseaseTab.active = false;
 			}, 500);
 			vm.hideQueryForm = true;
+			$rootScope.jsonQuery = angular.toJson(vm.queryModel);
 			$rootScope.jsonEncodedQuery = encodeURIComponent(angular.toJson(vm.queryModel));
 			showYouSearchedFor(vm.model);
 		}

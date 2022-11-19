@@ -311,3 +311,13 @@ div.filters { display: inline-block }
 /* column header classes for grid */
 span.hgHeader { background-color: #FBDBB4; font-weight: bold; white-space: nowrap }
 span.mgHeader { background-color: #C6D6E8; font-weight: bold; white-space: nowrap }
+
+.download-button {
+    background-color: white;
+    border: none;
+    color: #3399F3;
+}
+
+.download-button:hover {
+    text-decoration: underline;
+}

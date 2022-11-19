@@ -1,12 +1,18 @@
 <script>
-function downloadGeneFile(obj) {
-	window.location = obj.getAttribute("href");
-	return false;
+function quote(s) {
+    return s.replace(/"/g, '&quot;')
 }
 </script>
 <div ng-controller="GeneController">
 	<div ng-show="vm.filteredResults.length > 0">
-	Export: <a href="{{FEWI_URL}}diseasePortal/marker/report.txt?jsonEncodedInput={{ jsonEncodedQuery }}" onClick="downloadGeneFile(this);"><img src="{{WEBSHARE_URL}}images/text.png" width="12" height="12">Text File</a> 
+        <form 
+            action="{{HMDC_REPORT_URL}}"
+            method="POST"
+            >
+        <textarea name="jsonEncodedInput" style="display:none;">{{jsonQuery}}</textarea>
+	Export:
+        <button class="download-button" type="submit"><img src="{{WEBSHARE_URL}}images/text.png" width="12" height="12">Text File</button>
+        </form>
 	</div>
 	<div ng-hide="vm.filteredResults.length > 0">
 		No Matching Genes
