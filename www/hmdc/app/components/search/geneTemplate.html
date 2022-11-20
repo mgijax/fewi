@@ -36,9 +36,8 @@ function quote(s) {
 			<tr ng-repeat="row in displayedCollection">
 				<td>{{ row.organism }}</td>
 				<td><nobr>
-					<a ng-if="row.organism == 'mouse'" target="_blank" href="{{FEWI_URL}}marker/{{ row.mgiId }}"><div ng-bind-html="row.symbol | handleSubscript "></div></a>
-					<a ng-if="row.organism == 'human' && row.homologyClusterKey != null" target="_blank" href="{{FEWI_URL}}homology/alliance/gene?clusterKey={{ row.homologyClusterKey }}&organism=human&symbol={{ row.symbol }}"><div ng-bind-html="row.symbol | handleSubscript "></div></a>
-					<div ng-if="row.organism == 'human' && row.homologyClusterKey == null" ng-bind-html="row.symbol | handleSubscript "></div>
+                                        <a ng-if="row.organism == 'mouse'" target="_blank" href="{{FEWI_URL}}marker/{{ row.mgiId }}"><div ng-bind-html="row.symbol | handleSubscript "></div></a>
+					<a ng-if="row.organism == 'human'" target="_blank" href="https://www.alliancegenome.org/gene/{{row.mgiId}}"><div ng-bind-html="row.symbol | handleSubscript "></div></a>
 				</nobr></td>
 				<td><nobr>{{ row.location }}</nobr></td>
 				<td><nobr><div ng-bind-html="row.coordinate"></div></nobr></td>
