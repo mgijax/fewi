@@ -506,21 +506,32 @@
 			}
 	];
 
-    if (($location.search().termID !== undefined) && ($location.search().termID !== null)) {
-    	var data = {
-			operator: 'AND',
-			queries: [
-				{
-					field: 'tsDid',
-					condition: {
-						parameters: [],
-						input: $location.search().termID
-					}
-				}
-			]
-		};
-		vm.model = data;
-		onSubmit();
+        if (($location.search().termID !== undefined) && ($location.search().termID !== null)) {
+            var data = {
+                operator: 'AND',
+                queries: [{
+                    field: 'tsDid',
+                    condition: {
+                        parameters: [],
+                        input: $location.search().termID
+                    }
+                }]
+            };
+            vm.model = data;
+            onSubmit();
+	} else if (($location.search().geneID !== undefined) && ($location.search().geneID !== null)) {
+            var data = {
+                operator: 'AND',
+                queries: [{
+                    field: 'miS',
+                    condition: {
+                        parameters: [],
+                        input: $location.search().geneID
+                    }
+                }]
+            };
+            vm.model = data;
+            onSubmit();
 	}
 	}
 })();
