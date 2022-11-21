@@ -5,6 +5,7 @@
 	function DiseaseController($rootScope, $scope, $log, Search, ngDialog, FEWI_URL, WEBSHARE_URL) {
 		var vm = $scope.vm = {};
 		$scope.FEWI_URL = FEWI_URL;
+                $scope.HMDC_REPORT_URL = FEWI_URL + "diseasePortal/marker/report.txt"
 		$scope.WEBSHARE_URL = WEBSHARE_URL;
 
 		vm.resetDiseaseTable = false;
