@@ -412,7 +412,7 @@
 					var h = key.gridCluster.humanSymbols[human];
 					var temp = "";
 					if(key.gridCluster.homologyClusterKey) {
-						temp = "<a target=\"_blank\" href=\"https://www.alliancegenome.org/gene/" + h.primaryID + "\" title=\"Name: " + h.name + "\">";
+						temp = "<a target=\"_blank\" href=\"https://www.alliancegenome.org/gene/" + h.primaryID + "\" title=\"" + h.title + "\">";
 						temp += h.symbol.replace(/<([^>]*)>/g, "<sup>$1</sup>");
 						temp += "</a>";
 					} else {
@@ -427,7 +427,7 @@
 				var markerSymbolString = [];
 				for(var marker in key.gridCluster.mouseSymbols) {
 					var m = key.gridCluster.mouseSymbols[marker];
-					var temp = "<a target=\"_blank\" href=\"/marker/" + m.primaryID + "\" title=\"Name: " + m.name + "\nFeature Type: " + m.featureType + "\">";
+                                        var temp = `<a target="_blank" href="/marker/${m.primaryID}" title="${m.title}">`
 					temp += m.symbol.replace(/<([^>]*)>/g, "<sup>$1</sup>");
 					temp += "</a>";
 					markerSymbolString.push(temp);
