@@ -102,6 +102,10 @@ public class EmapaHelperFinder {
         String q = "SELECT term_key, term FROM term WHERE vocab_name = 'EMAPA' AND term ilike '" + term + "' ";
         List<List<String>> res = sqlHunter.sql(q);
         if (res.size() == 0) {
+            q = "SELECT term_key, term FROM term WHERE vocab_name = 'EMAPA' AND term_key in ( SELECT term_key from term_synonym WHERE synonym ilike '" + term + "' AND synonym_type='exact') ";
+            res = sqlHunter.sql(q);
+        }
+        if (res.size() == 0) {
             return null;
         } else {
             return res.get(0).get(0);
