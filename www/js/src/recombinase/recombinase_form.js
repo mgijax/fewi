@@ -2,7 +2,7 @@
  * Javascript wiring for the recombianse form
  */
 
-var structureUrl = fewiurl+"autocomplete/structure?query=";
+var structureUrl = fewiurl+"autocomplete/gxdEmapa?query=";
 var driverUrl = fewiurl+"autocomplete/driver?query=";
 var disableColor = "#CCC";
 
@@ -24,12 +24,31 @@ $(function(){
                                 dataType: "json",
                                 success: function( data ) {
                                         response($.map(data["resultObjects"], function( item ) {
-                                                return {label: item.synonym, hasCre: item.hasCre,
+                                                return {label: item.synonym || item.structure,
+                                                        hasCre: item.hasCre,
                                                         isStrictSynonym: item.isStrictSynonym,
-                                                        original: item.structure};
+                                                        original: item.structure,
+                                                        accID: item.accID };
                                         }));
                                 }
                         });
+                },
+                response: function (ev, ui) {
+                    ev.target.removeAttribute("accid")
+                    ui.content.forEach(item => {
+                        if (item.label === ev.target.value) {
+                            ev.target.setAttribute("accid", item.accID)
+                        }
+                    })
+
+                },
+                select: function (ev, ui) {
+                    ev.target.setAttribute("accid", ui.item.accID)
+                },
+                change: function (ev, ui) {
+                    if (!ev.target.hasAttribute("accid")) {
+                        ev.target.value = ""
+                    }
                 },
                 minLength: 1
             }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
@@ -227,24 +246,31 @@ $(function(){
          */
         var validate_form_inputs = function () {
             const creForm = document.getElementById('creForm')
+            // hidden input that encodes the structure(s)
             const hinput = creForm.querySelector('input[name="structures"]')
+            // individual structure inputs
             const sinputs = creForm.querySelectorAll('input.structure-input')
+            // detected-in radios
             const dRadios = creForm.querySelectorAll('input[type="radio"][value="true"]')
+            // not-detected-in radios
             const ndRadios = creForm.querySelectorAll('input[type="radio"][value="false"]')
-            const snames = new Set()
+            //
+            const acc2sname = {}
             let retVal = true
             let structs = []
             sinputs.forEach((si,i) => {
                 const sname = si.value.trim()
+                const accid = si.getAttribute("accid")
                 const nd = ndRadios[i].checked
-                if (sname) {
-                    if (snames.has(sname) && retVal /* avoids multiple alerts */) {
-                        const msg = "Query error: Duplicate structure name detected: " +
-                                    sname + ". Please modify your query and try again."
+                if (accid) {
+                    if (acc2sname[accid] && retVal /* avoids multiple alerts */) {
+                        const msg = "Query error: Duplicate structures detected: " +
+                                    `${accid} ${acc2sname[accid]} ${sname}` +
+                                    ". Please modify your query and try again."
                         alert(msg)
                         retVal = false // cancel form submission
                     }
-                    snames.add(sname)
+                    acc2sname[accid] = sname
                     structs.push((nd?"-":"+") + sname)
                 }
             })
@@ -255,4 +281,11 @@ $(function(){
 
         // attach the validation routing as the onsubmit handler
         $creForm.submit(validate_form_inputs)
+        // prevent form submission when user hits ENTER
+        $creForm.keypress(e => {
+            const key = e.charCode || e.keyCode || 0;     
+            if (key == 13) {
+                e.preventDefault();
+            }
+        })
 });
