@@ -311,19 +311,24 @@ function reverseEngineerFormInput(request)
 	var foundParams = false;
 	for(var key in params)
 	{
-		console.log("in reverseEngineerFormInput: key=" + key);
-		// need special handling for idFile field (do not set this to
-		// an empty string!)
+		console.log("--in reverseEngineerFormInput: key=" + key);
+		console.log("in reverseEngineerFormInput: params[key]=" + params[key]);
+
+		// Special handling for idFile field.
+		// Do not set this to an empty string!
 		if (key == 'idFile') {
 			// no op - skip it
-			// $(formID+" [name='idFile']").value = null;
 		}
 		else if(key=="detected") // handling for dynamic detected values
 		{
 			if (params[key] == 'Yes') {
-				YAHOO.util.Dom.get("detected1").checked = true;
+				if (YAHOO.util.Dom.get("detected1") != null) {
+					YAHOO.util.Dom.get("detected1").checked = true;
+				}
 			} else if (params[key] == 'No') {
-				YAHOO.util.Dom.get("detected2").checked = true;
+				if (YAHOO.util.Dom.get("detected2") != null) {
+					YAHOO.util.Dom.get("detected2").checked = true;
+				}
 			}
 		}
 		else if(key!=undefined && key!="" && key!="detected" && params[key].length>0)
@@ -487,6 +492,7 @@ function reverseEngineerFormInput(request)
 			}
 		}
 	}
+	console.log("in reverseEngineerFormInput: after for loop of inputs");
 
 	// special handling for profile display; this ensures params reinserted after reset
 	// are displayed rather than hidden
@@ -501,6 +507,8 @@ function reverseEngineerFormInput(request)
 	}
 	if (typeof assayTypesCheck == 'function') { assayTypesCheck(); }
 	return foundParams;
+
+	console.log("out reverseEngineerFormInput");
 }
 
 // reset the checkbox identified by the 'superClass' to be checked if all instances of 'subClass' are also

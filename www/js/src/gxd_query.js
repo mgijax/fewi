@@ -1083,16 +1083,16 @@ var profileFormCheck  = function() {
 
 	// check for duplicate structures
 	var submittedStructures = [];
-	if(profileForm.profileStructure1.value!=''){submittedStructures.push(profileForm.profileStructure1.value)}
-	if(profileForm.profileStructure2.value!=''){submittedStructures.push(profileForm.profileStructure2.value)}
-	if(profileForm.profileStructure3.value!=''){submittedStructures.push(profileForm.profileStructure3.value)}
-	if(profileForm.profileStructure4.value!=''){submittedStructures.push(profileForm.profileStructure4.value)}
-	if(profileForm.profileStructure5.value!=''){submittedStructures.push(profileForm.profileStructure5.value)}
-	if(profileForm.profileStructure6.value!=''){submittedStructures.push(profileForm.profileStructure6.value)}
-	if(profileForm.profileStructure7.value!=''){submittedStructures.push(profileForm.profileStructure7.value)}
-	if(profileForm.profileStructure8.value!=''){submittedStructures.push(profileForm.profileStructure8.value)}
-	if(profileForm.profileStructure9.value!=''){submittedStructures.push(profileForm.profileStructure9.value)}
-	if(profileForm.profileStructure10.value!=''){submittedStructures.push(profileForm.profileStructure10.value)}
+	if(profileForm.profileStructure1ID.value!=''){submittedStructures.push(profileForm.profileStructure1ID.value)}
+	if(profileForm.profileStructure2ID.value!=''){submittedStructures.push(profileForm.profileStructure2ID.value)}
+	if(profileForm.profileStructure3ID.value!=''){submittedStructures.push(profileForm.profileStructure3ID.value)}
+	if(profileForm.profileStructure4ID.value!=''){submittedStructures.push(profileForm.profileStructure4ID.value)}
+	if(profileForm.profileStructure5ID.value!=''){submittedStructures.push(profileForm.profileStructure5ID.value)}
+	if(profileForm.profileStructure6ID.value!=''){submittedStructures.push(profileForm.profileStructure6ID.value)}
+	if(profileForm.profileStructure7ID.value!=''){submittedStructures.push(profileForm.profileStructure7ID.value)}
+	if(profileForm.profileStructure8ID.value!=''){submittedStructures.push(profileForm.profileStructure8ID.value)}
+	if(profileForm.profileStructure9ID.value!=''){submittedStructures.push(profileForm.profileStructure9ID.value)}
+	if(profileForm.profileStructure10ID.value!=''){submittedStructures.push(profileForm.profileStructure10ID.value)}
 	if(submittedStructures.length>1) {
 		if (submittedStructures.length !== new Set(submittedStructures).size) {
 			alert("Please specify distinct anatomical structures.");
