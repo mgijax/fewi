@@ -264,9 +264,9 @@ $(function(){
                 const nd = ndRadios[i].checked
                 if (accid) {
                     if (acc2sname[accid] && retVal /* avoids multiple alerts */) {
-                        const msg = "Query error: Duplicate structures detected: " +
-                                    `${accid} ${acc2sname[accid]} ${sname}` +
-                                    ". Please modify your query and try again."
+                        const msg = "Query error: Duplicate structures detected, id=" +
+                                    `${accid}\n  ${acc2sname[accid]}\n  ${sname}\n` +
+                                    "Please modify your query and try again."
                         alert(msg)
                         retVal = false // cancel form submission
                     }
