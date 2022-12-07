@@ -24,7 +24,7 @@ import mgi.frontend.datamodel.group.RecombinaseEntity;
 
 import org.jax.mgi.fewi.finder.AlleleFinder;
 import org.jax.mgi.fewi.finder.RecombinaseFinder;
-import org.jax.mgi.fewi.finder.EmapaHelperFinder;
+import org.jax.mgi.fewi.finder.ExpressionHelperFinder;
 import org.jax.mgi.fewi.forms.RecombinaseQueryForm;
 import org.jax.mgi.fewi.highlight.RecombinaseHighlightInfo;
 import org.jax.mgi.fewi.searchUtil.Filter;
@@ -82,7 +82,7 @@ public class RecombinaseController {
     private AlleleFinder alleleFinder;
 
     @Autowired
-    private EmapaHelperFinder emapaHelper;
+    private ExpressionHelperFinder expressionHelper;
 
     /*-------------------------*/
     /* public instance methods */
@@ -382,8 +382,6 @@ public class RecombinaseController {
 	@RequestMapping("/facet/driver")
 	public @ResponseBody Map<String, List<String>> facetDriver (@ModelAttribute RecombinaseQueryForm qf, HttpServletResponse response) {
 
-		logger.debug(qf.toString());
-
 		AjaxUtils.prepareAjaxHeaders(response);
 
 		// setup SearchParams & SearchResults
@@ -408,7 +406,6 @@ public class RecombinaseController {
 	@RequestMapping("/facet/inducer")
 	public @ResponseBody Map<String, List<String>> facetInducer (@ModelAttribute RecombinaseQueryForm qf, HttpServletResponse response) {
 
-		logger.debug(qf.toString());
 
 		AjaxUtils.prepareAjaxHeaders(response);
 
@@ -434,8 +431,6 @@ public class RecombinaseController {
 	@RequestMapping("/facet/systemDetected")
 	public @ResponseBody Map<String, List<String>> facetSystemDetected (@ModelAttribute RecombinaseQueryForm qf, HttpServletResponse response) {
 
-		logger.debug(qf.toString());
-
 		AjaxUtils.prepareAjaxHeaders(response);
 
 		// setup SearchParams & SearchResults
@@ -460,7 +455,6 @@ public class RecombinaseController {
 	@RequestMapping("/facet/systemNotDetected")
 	public @ResponseBody Map<String, List<String>> facetSystemNotDetected (@ModelAttribute RecombinaseQueryForm qf, HttpServletResponse response) {
 
-		logger.debug(qf.toString());
 
 		AjaxUtils.prepareAjaxHeaders(response);
 
@@ -553,7 +547,7 @@ public class RecombinaseController {
         // start filter list to add filters to
         List<Filter> filterList = new ArrayList<Filter>();
 
-        // List of OR-ed structures getting qulifying results
+        // List of OR-ed structures getting qualifying results
         List<Filter> resultStructureFilterList = new ArrayList<Filter>();
 
         // build driver query filter
@@ -602,7 +596,6 @@ public class RecombinaseController {
         //
         String structureString = query.getStructures();
         List<String> structureKeys = new ArrayList<String>();
-        boolean hasNegatedStructure = false;
         if ((structureString != null) && (!"".equals(structureString))) {
                 /* The structureString parameter is a pipe-separated list of structure names.
                  * Each structure may optionally begin with a "-", indicating "NOT"
@@ -619,13 +612,12 @@ public class RecombinaseController {
 			{
                                 logger.info("token= "+ (notDetected ? "NOT " : "") + structureToken);
 				String sToken = "\"" + structureToken + "\"";
-                                String sKey = emapaHelper.termToKey(structureToken);
+                                String sKey = expressionHelper.termToKey(structureToken);
                                 logger.info("Term=" + structureToken + "; key=" + sToken);
                                 Filter f = new Filter(SearchConstants.CRE_ALL_STRUCTURES, sKey, Filter.Operator.OP_HAS_WORD);
                                 if (notDetected) {
                                         f.negate();
                                         filterList.add(f);
-                                        hasNegatedStructure = true;
                                 } else {
                                         structureKeys.add(sKey);
                                         filterList.add(f);
@@ -641,27 +633,22 @@ public class RecombinaseController {
                 qualResultsFilter.setNestedFilters(resultStructureFilterList);
                 filterList.add(qualResultsFilter);
 
+
                 if (nowhereElse) {
-                    /* The query is of the form "A and B and... and nowhere else".
-                     * So far, the filter constraint implements the "A and B and ..." part.
-                     * To implement the "nowhere else" part, add (usually many) constraints that ensure that
-                     * expression is not detected "somewhere else".  For details, see finder/EmapaHelperFinder.java
+                    /*
+                     * To handle "and nowhere else", actually go out and find the keys of
+                     * qualifying recombinases and add a filter to test for one of these
+                     * (i.e. "...and (alleleKey:123456 or alleleKey:234567 or ...)"
+                     * If there are no qualifying alleles, add a filter condition sure to
+                     * return false ("alleleKey:-999")
                      */
-                    List<Map<String,String>> extraTerms = emapaHelper.getAncestorsAndFringeNodes(structureKeys);
-                    for (Map<String,String> m : extraTerms) {
-                        Filter f = null;
-                        if (m.get("type").equals("F")) {
-                            String s = "\""+m.get("term_key")+"\"";
-                            f = new Filter(SearchConstants.CRE_ALL_STRUCTURES, s, Filter.Operator.OP_HAS_WORD);
-                            f.negate();
-                            filterList.add(f);
-                        } else if (m.get("type").equals("A")) {
-                            String s = "\""+m.get("term_key")+"\"";
-                            f = new Filter(SearchConstants.CRE_ALL_STRUCTURES_DIRECT, s, Filter.Operator.OP_HAS_WORD);
-                            f.negate();
-                            filterList.add(f);
-                        }
+                    List<String> gkeys = expressionHelper.expressedIn(structureKeys, "gene");
+                    logger.info("In case you were wondering, #genes=" + gkeys.size());
+                    List<String> keys = expressionHelper.expressedIn(structureKeys, "recombinase");
+                    if (keys.size() == 0) {
+                        keys.add("0");
                     }
+                    filterList.add(new Filter("alleleKey", keys, Filter.Operator.OP_IN));
                 }
                 //
                 // only return detected results 

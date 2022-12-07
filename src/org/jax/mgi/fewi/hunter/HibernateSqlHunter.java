@@ -30,8 +30,8 @@ public class HibernateSqlHunter {
         logger.info("Doing SQL query: " + query);
         Session session = sessionFactory.getCurrentSession();
         SQLQuery squery = session.createSQLQuery(query);
-        List<Object[]> rows = squery.list();
         List<List<String>> retVal = new ArrayList<List<String>>();
+        List<Object[]> rows = squery.list();
         for(Object[] row : rows){
             List<String> r = new ArrayList<String>();
             for (int i=0; i < row.length; i++) {
