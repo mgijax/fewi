@@ -642,8 +642,6 @@ public class RecombinaseController {
                      * If there are no qualifying alleles, add a filter condition sure to
                      * return false ("alleleKey:-999")
                      */
-                    List<String> gkeys = expressionHelper.expressedIn(structureKeys, "gene");
-                    logger.info("In case you were wondering, #genes=" + gkeys.size());
                     List<String> keys = expressionHelper.expressedIn(structureKeys, "recombinase");
                     if (keys.size() == 0) {
                         keys.add("0");
