@@ -60,29 +60,9 @@ public class ExpressionHelperFinder {
           + "AND rar.level != 'Absent' "
           + "), ";
 
-        String xallGxd = 
-          "allExpression AS ("
-          + "SELECT distinct "
-          + "  sm.marker_key as subject_key, "
-          + "  te.term_key as structure_key "
-          + "FROM expression_ht_consolidated_sample_measurement sm, "
-          + "  expression_ht_consolidated_sample s, "
-          + "  term_emap te "
-          + "WHERE sm.level != 'Below Cutoff' "
-          + "AND sm.consolidated_sample_key = s.consolidated_sample_key "
-          + "AND s.emapa_key = te.emapa_term_key "
-          + "AND cast(s.theiler_stage as int) = te.stage "
-          + "UNION "
-          + "SELECT distinct  "
-          + "marker_key as subject_key, "
-          + "structure_key "
-          + "FROM expression_result_summary "
-          + "WHERE is_expressed = 'Yes' "
-          + "), ";
-
         String allGxd = 
           "allExpression AS ("
-          + "SELECT * "
+          + "SELECT marker_key as subject_key, structure_key "
           + "FROM uni_all_genes_tissues "
           + "), ";
 
