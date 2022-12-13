@@ -105,6 +105,24 @@
 							</div>
 						</li>
 					</c:if>
+
+					<c:if test="${nCandidateFor > 0}">
+						<li>
+							<div class="label">Candidate for QTL</div>
+							<div class="value">
+								<span id="showCandidateFor" class="link">${nCandidateFor} QTL</span>
+							</div>
+						</li>
+					</c:if>
+
+					<c:if test="${nCandidates > 0}">
+						<li>
+							<div class="label">Candidate Genes</div>
+							<div class="value">
+								<span id="showCandidates" class="link">${nCandidates} Gene${nCandidates == 1 ? "" : "s"}</span>
+							</div>
+						</li>
+					</c:if>
 				</ul>
 			</section>
 

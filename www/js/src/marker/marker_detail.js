@@ -50,8 +50,8 @@
 			document.markerCoordForm.submit();
 		}
 	
-		function initializeClusterMembersPopup () {
-			var elem = document.getElementById("clusterMemberTable");
+		function initializePopup (divEltName, tableEltName, clickEltName, panelName) {
+			var elem = document.getElementById(tableEltName);
 
 			if (elem != null) {
 				var rows = elem.getElementsByTagName("tr").length;
@@ -60,7 +60,7 @@
 				var props = { 
 					visible:false, 
 					constraintoviewport:true,
-					context:['showClusterMembers', 'tl', 'br', [ 'beforeShow', 'windowResize' ] ] 
+					context:[clickEltName, 'tl', 'br', [ 'beforeShow', 'windowResize' ] ] 
 				};
 		
 				if (rows > 12) {
@@ -72,73 +72,35 @@
 				elem.style.display = '';
 		
 				/* Wire up cluster members popup show link */
-				YAHOO.markerDetail.container.clusterMemberPanel = new YAHOO.widget.Panel(
-					"clusterMemberDiv", 
+				const panel = YAHOO.markerDetail.container[panelName] = new YAHOO.widget.Panel(
+					divEltName,
 					props
 				);
-				YAHOO.markerDetail.container.clusterMemberPanel.render();
-				YAHOO.util.Event.addListener ("showClusterMembers", "click",
-					YAHOO.markerDetail.container.clusterMemberPanel.show,
-					YAHOO.markerDetail.container.clusterMemberPanel, 
+				panel.render();
+				YAHOO.util.Event.addListener (clickEltName, "click",
+					panel.show,
+					panel,
 					true
 				);
 				YAHOO.util.Event.addListener (
-					"YAHOO.markerDetail.container.clusterMemberPanel", "move",
-					YAHOO.markerDetail.container.clusterMemberPanel.forceContainerRedraw
+					"YAHOO.markerDetail.container."+panelName, "move",
+					panel.forceContainerRedraw
 				);
 				YAHOO.util.Event.addListener (
-					"YAHOO.markerDetail.container.clusterMemberPanel", "mouseover",
-					YAHOO.markerDetail.container.clusterMemberPanel.forceContainerRedraw
+					"YAHOO.markerDetail.container."+panelName, "mouseover",
+					panel.forceContainerRedraw
 				);
 			}
 		}
-		initializeClusterMembersPopup();
+                initializePopup('clusterMemberDiv','clusterMemberTable','showClusterMembers','clusterMemberPanel')
+                initializePopup('tssDiv','tssTable','showTss','tssPanel')
+                initializePopup('candidatesDiv','candidatesTbl','showCandidates','candidatesPanel')
+                initializePopup('candidateForDiv','candidateForTbl','showCandidateFor','candidateForPanel')
 
 		/* Wire up batch submit in cluster members popup */
 		$("#clusterBatchLink").click(function(){
 			$("#batchWebForm").submit();
 		});
-	
-		function initializeTssPopup () {
-			var elem = document.getElementById("tssTable");
-
-			if (elem != null) {
-				var rows = elem.getElementsByTagName("tr").length;
-				YAHOO.namespace("markerDetail.container");
-		
-				var props = { 
-					visible:false, 
-					constraintoviewport:true,
-					context:['showTss', 'tl', 'br', [ 'beforeShow', 'windowResize' ] ] 
-				};
-		
-				if (rows > 12) {
-					props.height = "300px";
-					props.width = (elem.offsetWidth + 40) + "px";
-				}
-				
-				// make the div visible
-				elem.style.display = '';
-		
-				/* Wire up TSS popup show link */
-				YAHOO.markerDetail.container.tssPanel = new YAHOO.widget.Panel("tssDiv", props);
-				YAHOO.markerDetail.container.tssPanel.render();
-				YAHOO.util.Event.addListener ("showTss", "click",
-					YAHOO.markerDetail.container.tssPanel.show,
-					YAHOO.markerDetail.container.tssPanel, 
-					true
-				);
-				YAHOO.util.Event.addListener (
-					"YAHOO.markerDetail.container.tssPanel", "move",
-					YAHOO.markerDetail.container.tssPanel.forceContainerRedraw
-				);
-				YAHOO.util.Event.addListener (
-					"YAHOO.markerDetail.container.tssPanel", "mouseover",
-					YAHOO.markerDetail.container.tssPanel.forceContainerRedraw
-				);
-			}
-		}
-		initializeTssPopup();
 	
 		window.log = function(msg) {
 			// log a message to the browser console

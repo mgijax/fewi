@@ -118,6 +118,62 @@
 			</div>
 		</div>
 	</c:if>
+
+        <!-- QTL candidate genes -->
+        <c:if test="${nCandidates > 0}">
+		<div id="candidatesDiv" class="" style="visibility:hidden;max-width:900px;">
+			<div class="hd">Candidate Genes for ${marker.symbol}:</div>
+			<div class="bd" style="overflow:auto">
+				<table id="candidatesTbl">
+					<tr>
+						<td class="bold leftAlign allBorders">Gene</td>
+						<td class="bold leftAlign allBorders">Genome Location (${buildNumber})</td>
+						<td class="bold leftAlign allBorders">Reference</td>
+						<td class="bold leftAlign allBorders">QTL Note</td>
+                                        </tr>
+					<c:forEach var="cand" items="${candidates}" varStatus="loop">
+                                            <tr>
+                                                <td class="leftAlign allBorders">
+                                                    <a href="${configBean.FEWI_URL}marker/${cand.relatedMarkerID}">${cand.relatedMarkerSymbol}</a></td>
+                                                <td class="leftAlign allBorders">${cand.relatedMarkerLocation}</td>    
+                                                <td class="leftAlign allBorders">
+                                                    <a href="${configBean.FEWI_URL}reference/${cand.jnumID}">${cand.jnumID}</a></td>    
+                                                <td class="leftAlign allBorders">${candidateNotes.get(loop.index)}</td>    
+                                            </tr>
+					</c:forEach>
+				</table>
+			</div>
+		</div>
+        </c:if>
+        <!-- QTL this gene is a candidate for -->
+        <c:if test="${nCandidateFor > 0}">
+		<div id="candidateForDiv" class="" style="visibility:hidden;max-width:900px;">
+			<div class="hd">${marker.symbol} is Candidate Gene for:</div>
+			<div class="bd" style="overflow:auto">
+				<table id="candidateForTbl">
+					<tr>
+						<td class="bold leftAlign allBorders">QTL</td>
+						<td class="bold leftAlign allBorders">Genetic Location*</td>
+						<td class="bold leftAlign allBorders">Genome Location (${buildNumber})</td>
+						<td class="bold leftAlign allBorders">Reference</td>
+						<td class="bold leftAlign allBorders">QTL Note</td>
+                                        </tr>
+					<c:forEach var="qtl" items="${candidateFor}" varStatus="loop">
+                                            <tr>
+                                                <td class="leftAlign allBorders">
+                                                    <a href="${configBean.FEWI_URL}marker/${qtl.relatedMarkerID}">${qtl.relatedMarkerSymbol}</a></td>
+                                                <td class="leftAlign allBorders">${qtl.relatedMarkerGeneticLocation}</td>    
+                                                <td class="leftAlign allBorders">${qtl.relatedMarkerGenomicLocation}</td>    
+                                                <td class="leftAlign allBorders">
+                                                    <a href="${configBean.FEWI_URL}reference/${qtl.jnumID}">${qtl.jnumID}</a></td>    
+                                                <td class="leftAlign allBorders">${candidateForNotes.get(loop.index)}</td>    
+                                            </tr>
+					</c:forEach>
+				</table>
+                                <span style="font-size:12px;">*cM position of peak correlated region/marker</span>
+			</div>
+		</div>
+        </c:if>
 </div>
 
 <script language="Javascript">

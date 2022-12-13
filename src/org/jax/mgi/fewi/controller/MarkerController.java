@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +29,7 @@ import mgi.frontend.datamodel.MarkerID;
 import mgi.frontend.datamodel.MarkerIDOtherMarker;
 import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.MarkerProbeset;
+import mgi.frontend.datamodel.MarkerQtlExperiment;
 import mgi.frontend.datamodel.MarkerSynonym;
 import mgi.frontend.datamodel.OrganismOrtholog;
 import mgi.frontend.datamodel.QueryFormOption;
@@ -521,6 +524,49 @@ public class MarkerController {
 			Collections.sort(tssMarkers, tssMarkers.get(0).getComparator());
 			mav.addObject("tssMarkers", tssMarkers);
 		}
+
+                // 
+                mav.addObject("buildNumber", ContextLoader.getConfigBean().getProperty("ASSEMBLY_VERSION"));
+
+                // Set up candidate genes data. Empty unless the current marker is a QTL with
+                // candidate genes. Each "candidate" in the following is actually
+                // the candidate gene + other info (like reference), and the same gene can occur
+                // more than once, with difference references.
+                List<RelatedMarker> candidates = marker.getCandidates();
+                Set<String> uniqueCandidates = new HashSet<String>();
+                List<String> candNotes = new ArrayList<String>();
+                for (RelatedMarker cand : candidates) {
+                    uniqueCandidates.add(cand.getRelatedMarkerID());
+                    Marker m = cand.getRelatedMarker();
+                    for (MarkerQtlExperiment qe : m.getQtlCandidateGeneNotes()) {
+                        if (qe.getJnumID().equals(cand.getJnumID())) {
+                            candNotes.add(qe.getNote());
+                        }
+                    }
+                }
+                mav.addObject("nCandidates", uniqueCandidates.size());
+                mav.addObject("candidates", candidates);
+                mav.addObject("candidateNotes", candNotes);
+
+                // Set up candidateFor data. Empty unless the current marker is a
+                // candidate gene for some QTL. Each "candidateFor" in the following is 
+                // a QTL + other info (like reference), and the same QTL can occur
+                // more than once, with difference references.
+                List<RelatedMarker> candidateFor = marker.getCandidateFor();
+                Set<String> uniqueCandidateFor = new HashSet<String>();
+                List<String> candForNotes = new ArrayList<String>();
+                for (RelatedMarker qtl : candidateFor) {
+                    uniqueCandidateFor.add(qtl.getRelatedMarkerID());
+                    Marker q = qtl.getRelatedMarker();
+                    for (MarkerQtlExperiment qe : q.getQtlCandidateGeneNotes()) {
+                        if (qe.getJnumID().equals(qtl.getJnumID())) {
+                            candForNotes.add(qe.getNote());
+                        }
+                    }
+                }
+                mav.addObject("nCandidateFor", uniqueCandidateFor.size());
+                mav.addObject("candidateFor", candidateFor);
+                mav.addObject("candidateForNotes", candForNotes);
 	}
 
 	private void setupRibbon1(ModelAndView mav, Marker marker) {
