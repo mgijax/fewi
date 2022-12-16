@@ -96,6 +96,7 @@
                 initializePopup('tssDiv','tssTable','showTss','tssPanel')
                 initializePopup('candidatesDiv','candidatesTbl','showCandidates','candidatesPanel')
                 initializePopup('candidateForDiv','candidateForTbl','showCandidateFor','candidateForPanel')
+                initializePopup('interactingQTLDiv','interactingQTLTbl','showInteractingQTL','interactingQTLPanel')
 
 		/* Wire up batch submit in cluster members popup */
 		$("#clusterBatchLink").click(function(){

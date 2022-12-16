@@ -493,9 +493,13 @@ public class MarkerController {
 		return mav;
 	}
 
+        private class RelatedMarkerComparator extends SmartAlphaComparator<RelatedMarker> {
+            public int compare(RelatedMarker m1, RelatedMarker m2) {
+                return super.compare(m1.getRelatedMarkerSymbol(), m2.getRelatedMarkerSymbol());
+            }    
+        }    
 
 	private void setupPageVariables(ModelAndView mav, Marker marker) {
-
 		// Sets up variables from the queryform database
 		initQueryForm();
 
@@ -533,6 +537,7 @@ public class MarkerController {
                 // the candidate gene + other info (like reference), and the same gene can occur
                 // more than once, with difference references.
                 List<RelatedMarker> candidates = marker.getCandidates();
+                Collections.sort(candidates, new RelatedMarkerComparator());
                 Set<String> uniqueCandidates = new HashSet<String>();
                 List<String> candNotes = new ArrayList<String>();
                 for (RelatedMarker cand : candidates) {
@@ -553,6 +558,7 @@ public class MarkerController {
                 // a QTL + other info (like reference), and the same QTL can occur
                 // more than once, with difference references.
                 List<RelatedMarker> candidateFor = marker.getCandidateFor();
+                Collections.sort(candidateFor, new RelatedMarkerComparator());
                 Set<String> uniqueCandidateFor = new HashSet<String>();
                 List<String> candForNotes = new ArrayList<String>();
                 for (RelatedMarker qtl : candidateFor) {
@@ -567,6 +573,13 @@ public class MarkerController {
                 mav.addObject("nCandidateFor", uniqueCandidateFor.size());
                 mav.addObject("candidateFor", candidateFor);
                 mav.addObject("candidateForNotes", candForNotes);
+
+                // Set up interactingQTL data. Empty unless current marker is a
+                // QTL that has interaction relationships with other QTL.
+                List<RelatedMarker> interactingQTL = marker.getInteractingQTL();
+                Collections.sort(interactingQTL, new RelatedMarkerComparator());
+                mav.addObject("nInteractingQTL", interactingQTL.size());
+                mav.addObject("interactingQTL", interactingQTL);
 	}
 
 	private void setupRibbon1(ModelAndView mav, Marker marker) {

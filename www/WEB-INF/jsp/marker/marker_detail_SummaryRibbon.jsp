@@ -123,6 +123,15 @@
 							</div>
 						</li>
 					</c:if>
+
+					<c:if test="${nInteractingQTL > 0}">
+						<li>
+							<div class="label">QTL Interactions</div>
+							<div class="value">
+								<span id="showInteractingQTL" class="link">${nInteractingQTL} QTL</span>
+							</div>
+						</li>
+					</c:if>
 				</ul>
 			</section>
 

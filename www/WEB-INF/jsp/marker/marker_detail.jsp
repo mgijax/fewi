@@ -145,6 +145,7 @@
 			</div>
 		</div>
         </c:if>
+
         <!-- QTL this gene is a candidate for -->
         <c:if test="${nCandidateFor > 0}">
 		<div id="candidateForDiv" class="" style="visibility:hidden;max-width:900px;">
@@ -167,6 +168,39 @@
                                                 <td class="leftAlign allBorders">
                                                     <a href="${configBean.FEWI_URL}reference/${qtl.jnumID}">${qtl.jnumID}</a></td>    
                                                 <td class="leftAlign allBorders">${candidateForNotes.get(loop.index)}</td>    
+                                            </tr>
+					</c:forEach>
+				</table>
+                                <span style="font-size:12px;">*cM position of peak correlated region/marker</span>
+			</div>
+		</div>
+        </c:if>
+
+        <!-- QTL-QTL interactions -->
+        <c:if test="${nInteractingQTL > 0}">
+		<div id="interactingQTLDiv" class="" style="visibility:hidden;max-width:900px;">
+			<div class="hd">QTL interacting with ${marker.symbol}:</div>
+			<div class="bd" style="overflow:auto">
+				<table id="interactingQTLTbl">
+					<tr>
+						<td class="bold leftAlign allBorders">QTL</td>
+						<td class="bold leftAlign allBorders">Genetic Location*</td>
+						<td class="bold leftAlign allBorders">Genome Location (${buildNumber})</td>
+						<td class="bold leftAlign allBorders">Interaction Type</td>
+						<td class="bold leftAlign allBorders">Reference</td>
+                                        </tr>
+					<c:forEach var="qtl" items="${interactingQTL}" varStatus="loop">
+                                            <tr>
+                                                <td class="leftAlign allBorders">
+                                                    <a href="${configBean.FEWI_URL}marker/${qtl.relatedMarkerID}"
+                                                      >${qtl.relatedMarkerSymbol}</a>
+                                                </td>
+                                                <td class="leftAlign allBorders">${qtl.relatedMarkerGeneticLocation}</td>    
+                                                <td class="leftAlign allBorders">${qtl.relatedMarkerGenomicLocation}</td>    
+                                                <td class="leftAlign allBorders" title="${qtl.relationshipTermObj.definition}">${qtl.relationshipTerm}</td>    
+                                                <td class="leftAlign allBorders">
+                                                    <a href="${configBean.FEWI_URL}reference/${qtl.jnumID}">${qtl.jnumID}</a>
+                                                </td>    
                                             </tr>
 					</c:forEach>
 				</table>
