@@ -62,8 +62,11 @@ public class ExpressionHelperFinder {
 
         String allGxd = 
           "allExpression AS ("
-          + "SELECT marker_key as subject_key, structure_key "
-          + "FROM uni_all_genes_tissues "
+          + "SELECT distinct " 
+          + "marker_key as subject_key, "
+          + "structure_key "
+          + "FROM expression_result_summary "
+          + "WHERE is_expressed = 'Yes' "
           + "), ";
 
         query.append("gene".equals(geneOrRecombinase) ? allGxd : allCre );

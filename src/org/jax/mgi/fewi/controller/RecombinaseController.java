@@ -640,7 +640,7 @@ public class RecombinaseController {
                      * qualifying recombinases and add a filter to test for one of these
                      * (i.e. "...and (alleleKey:123456 or alleleKey:234567 or ...)"
                      * If there are no qualifying alleles, add a filter condition sure to
-                     * return false ("alleleKey:-999")
+                     * return false ("alleleKey:0")
                      */
                     List<String> keys = expressionHelper.expressedIn(structureKeys, "recombinase");
                     if (keys.size() == 0) {
