@@ -39,6 +39,7 @@ public class ExpressionHelperFinder {
         return expressedIn(structureKeys, geneOrRecombinase, "all", true);
     }
 
+
     public List<String> expressedIn (
         List<String> structureKeys,
         String geneOrRecombinase, // do you want expressed "gene"s or detected "recombinase"s
@@ -50,6 +51,11 @@ public class ExpressionHelperFinder {
 
         query.append("WITH ");
 
+        /*
+         * Defines allExpression as distinct allele_key/structure_key combinations
+         * from all positive recombinase results. allele_key is renamed as subject_key
+         * so downstream parts can be "generic".
+         */
         String allCre = 
           "allExpression AS ("
           + "SELECT distinct  "
@@ -60,6 +66,11 @@ public class ExpressionHelperFinder {
           + "AND rar.level != 'Absent' "
           + "), ";
 
+        /*
+         * Defines allExpression as distinct marker_key/structure_key combinations
+         * from all positive GXD results (not including RNAseq data). marker_key is
+         * renamed as subject_key so downstream parts can be "generic".
+         */
         String allGxd = 
           "allExpression AS ("
           + "SELECT distinct " 
@@ -69,9 +80,15 @@ public class ExpressionHelperFinder {
           + "WHERE is_expressed = 'Yes' "
           + "), ";
 
+        /*
+         * Append allExpression, depending on argument
+         */
         query.append("gene".equals(geneOrRecombinase) ? allGxd : allCre );
         
-        /* EMAPS structure keys corresponding to one EMAPA key */
+        /* EMAPS structure keys corresponding to one EMAPA key. Instantiate 
+         * for easch EMAPA key passed by caller. In the final query, these will be named
+         * "structure0", "structure1", ...
+         */
         String structureA = 
           "structure%s AS ( "
           + "SELECT tc.emaps_child_term_key as term_key "
@@ -81,6 +98,10 @@ public class ExpressionHelperFinder {
           + "AND t.term_key = %s "
           + "), " ;
 
+        /* Region of interest (ROI) for one EMAPA key. Equals all the 
+         * of the EMAPS structures for that EMAPA key and all their descendants. 
+         * In the final query, these will be named "roi0", "roi1", ...
+         */
         String roiA = 
           "roi%s AS ( "
           + "SELECT distinct td.descendent_term_key as term_key "
@@ -90,6 +111,9 @@ public class ExpressionHelperFinder {
           + "SELECT term_key from structure%s "
           + "), ";
         
+        /* Keys of things (alleles or genes) expressed in the ROI for one EMAPA key.
+         * In the final query, these will be named "expressedInRoi0", "expressedInRoi1", ...
+         */
         String expressedInRoiA = 
           "expressedInRoi%s AS ( "
           + "SELECT distinct subject_key "
@@ -97,6 +121,9 @@ public class ExpressionHelperFinder {
           + "WHERE structure_key in (SELECT term_key FROM roi%s) "
           + "), ";
 
+        /* Instantiate each of the above three queries for each EMAPA key,
+         * and append to the final query.
+         */
         int n = 0;
         for (String skey : structureKeys) {
             String A = "" + n++;
@@ -105,6 +132,10 @@ public class ExpressionHelperFinder {
             query.append(String.format(expressedInRoiA, A, A));
         }
  
+        /* Compute the things (allele or genes) expressed in any or all (depending on allOrSome argument)
+         * regions of interest. For the current profile queries, we want "all", so we compute the intesection
+         * of all the individual expressedInRoi sets.
+         */
         query.append("expressedInRoi as ( ");
         for(int i = 0; i < n; i++) {
             if (i > 0) query.append(allOrSome.equals("all") ? " INTERSECT " : " UNION ");
@@ -112,7 +143,14 @@ public class ExpressionHelperFinder {
         }
         query.append("),");
 
+        /* if caller specifies "and nowhere else", the following will add code to
+         * find things expressed "somewhere else" (i.e., not in the ROI), and subtract
+         * them from the answer set.
+         */
         if (nowhereElse) {
+            /* Compute the complete ROI set as the union of EMAPS keys from
+             * all the individual roi sets.
+             */
             query.append("roi as ( ");
             for(int i = 0; i < n; i++) {
                 if (i > 0) query.append(" UNION ");
@@ -120,6 +158,8 @@ public class ExpressionHelperFinder {
             }
             query.append("),");
 
+            /* Compute non-ROI terms, i.e., all EMAPS terms not in the ROI.
+             */
             String nonRoi =
               "nonRoi as ("
               + "SELECT term_key "
@@ -129,6 +169,8 @@ public class ExpressionHelperFinder {
               + "), ";
             query.append(nonRoi);
 
+            /* Compute the set of things expressed in a non-ROI structure.
+             */
             String expressedInNonRoi = 
                   "expressedInNonRoi as ( "
                 + "SELECT distinct subject_key "
@@ -137,6 +179,9 @@ public class ExpressionHelperFinder {
                 + "), ";
             query.append(expressedInNonRoi);
 
+            /* Final result is the set of things in the expressedInRoi set
+             * and not in the expressedInNonRoi set.
+             */
             String result = 
                 "result as ("
               + "select distinct subject_key "
@@ -147,8 +192,13 @@ public class ExpressionHelperFinder {
               ;
             query.append(result);
         } else {
+            /* User did not specify "and nowhere else", so the final result are the
+             * things expressed in the ROI.
+             */
             query.append("SELECT distinct subject_key, ' '  FROM expressedInRoi ");
         }
+        /* Finally, run the query and return the list of allele or gene keys 
+         */
         List<String> resultKeys = new ArrayList<String>();
         for(List<String> row : sqlHunter.sql(query.toString())){
             resultKeys.add(row.get(0));
