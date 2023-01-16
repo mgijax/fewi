@@ -74,11 +74,16 @@ public class ExpressionHelperFinder {
         String allGxd = 
           "allExpression AS ("
           + "SELECT distinct " 
-          + "marker_key as subject_key, "
-          + "structure_key "
-          + "FROM expression_result_summary "
-          + "WHERE is_expressed = 'Yes' "
-          + "), ";
+          + "s.marker_key as subject_key, "
+          + "s.structure_key "
+          + "FROM expression_result_summary s, genotype g "
+          + "WHERE s.is_expressed = 'Yes' "
+          + "AND s.genotype_key = g.genotype_key "
+          + "AND ( "
+          + "    g.combination_1 is null "
+          + "    OR "
+          + "    (s.assay_type = 'In situ reporter (knock in)' AND g.genotype_type = 'ht') "
+          + ")), ";
 
         /*
          * Append allExpression, depending on argument
