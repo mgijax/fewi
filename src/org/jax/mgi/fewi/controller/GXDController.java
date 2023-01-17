@@ -3825,7 +3825,7 @@ public class GXDController {
 		List<Filter> negFilters = new ArrayList<Filter>();
 		negFilters.add(new Filter(SearchConstants.STRUCTURE_ID, profileStructureID, Filter.Operator.OP_EQUAL));
 		Filter negPoolFilter = Filter.and(negFilters);
-		negPoolFilter.negate();
+		negPoolFilter.negate(); //negate the filter before adding to the filter list
 		List<Filter> combinedNegFilters = new ArrayList<Filter>();
 		combinedNegFilters.add(new Filter(SearchConstants.GXD_DETECTED, "No", Filter.Operator.OP_EQUAL));
 		combinedNegFilters.add(negPoolFilter);
@@ -3834,8 +3834,6 @@ public class GXDController {
 
 		return Filter.or(outerFilters);
 	}
-
-
 
 	/*
 	 * Creates the profile part 2 filter that goes against the gxdResult index

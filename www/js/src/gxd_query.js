@@ -1040,63 +1040,77 @@ var geneRestriction  = function() {
 
 var profileFormCheck  = function() {
 
-	var hasErrors = false;
-	var hasValidParam = false;
+	var hasErrors = false; // return value
 
+	// gather parameters from form; add to {rowNum:value} dictionary for 
+	// downstream checking
 	var profileForm = YAHOO.util.Dom.get("gxdProfileQueryForm");
+	var submittedStructureIDs = {};
+	var submittedStructureNames = {};
+	if(profileForm.profileStructure1ID.value!=''){
+		submittedStructureIDs[1] = profileForm.profileStructure1ID.value;
+		submittedStructureNames[1] = profileForm.profileStructure1.value;
+	}
+	if(profileForm.profileStructure2ID.value!=''){
+		submittedStructureIDs[2] = profileForm.profileStructure2ID.value;
+		submittedStructureNames[2] = profileForm.profileStructure2.value;
+	}
+	if(profileForm.profileStructure3ID.value!=''){
+		submittedStructureIDs[3] = profileForm.profileStructure3ID.value;
+		submittedStructureNames[3] = profileForm.profileStructure3.value;
+	}
+	if(profileForm.profileStructure4ID.value!=''){
+		submittedStructureIDs[4] = profileForm.profileStructure4ID.value;
+		submittedStructureNames[4] = profileForm.profileStructure4.value;
+	}
+	if(profileForm.profileStructure5ID.value!=''){
+		submittedStructureIDs[5] = profileForm.profileStructure5ID.value;
+		submittedStructureNames[5] = profileForm.profileStructure5.value;
+	}
+	if(profileForm.profileStructure6ID.value!=''){
+		submittedStructureIDs[6] = profileForm.profileStructure6ID.value;
+		submittedStructureNames[6] = profileForm.profileStructure6.value;
+	}
+	if(profileForm.profileStructure7ID.value!=''){
+		submittedStructureIDs[7] = profileForm.profileStructure7ID.value;
+		submittedStructureNames[7] = profileForm.profileStructure7.value;
+	}
+	if(profileForm.profileStructure8ID.value!=''){
+		submittedStructureIDs[8] = profileForm.profileStructure8ID.value;
+		submittedStructureNames[8] = profileForm.profileStructure8.value;
+	}	
+	if(profileForm.profileStructure9ID.value!=''){
+		submittedStructureIDs[9] = profileForm.profileStructure9ID.value;
+		submittedStructureNames[9] = profileForm.profileStructure9.value;
+	}
+	if(profileForm.profileStructure10ID.value!=''){
+		submittedStructureIDs[10] = profileForm.profileStructure10ID.value;
+		submittedStructureNames[10] = profileForm.profileStructure10.value;
+	}
 
-	// ensure we have a valid positive structure parameter
-	if(profileForm.profileStructure1.value!='' && profileForm.profileDetected1.checked==true) {
-		hasValidParam = true;
-	}
-	if(profileForm.profileStructure2.value!='' && profileForm.profileDetected2.checked==true) {
-		hasValidParam = true;
-	}
-	if(profileForm.profileStructure3.value!='' && profileForm.profileDetected3.checked==true) {
-		hasValidParam = true;
-	}
-	if(profileForm.profileStructure4.value!='' && profileForm.profileDetected4.checked==true) {
-		hasValidParam = true;
-	}
-	if(profileForm.profileStructure5.value!='' && profileForm.profileDetected5.checked==true) {
-		hasValidParam = true;
-	}
-	if(profileForm.profileStructure6.value!='' && profileForm.profileDetected6.checked==true) {
-		hasValidParam = true;
-	}
-	if(profileForm.profileStructure7.value!='' && profileForm.profileDetected7.checked==true) {
-		hasValidParam = true;
-	}
-	if(profileForm.profileStructure8.value!='' && profileForm.profileDetected8.checked==true) {
-		hasValidParam = true;
-	}
-	if(profileForm.profileStructure9.value!='' && profileForm.profileDetected9.checked==true) {
-		hasValidParam = true;
-	}
-	if(profileForm.profileStructure10.value!='' && profileForm.profileDetected10.checked==true) {
-		hasValidParam = true;
-	}
-	if (!hasValidParam) {
+	// check for empty submission
+	if (Object.keys(submittedStructureIDs).length == 0) {
 		alert("Please specify Detected expression for at least one anatomical structure.");
 		hasErrors=true;
-	}
-
-	// check for duplicate structures
-	var submittedStructures = [];
-	if(profileForm.profileStructure1ID.value!=''){submittedStructures.push(profileForm.profileStructure1ID.value)}
-	if(profileForm.profileStructure2ID.value!=''){submittedStructures.push(profileForm.profileStructure2ID.value)}
-	if(profileForm.profileStructure3ID.value!=''){submittedStructures.push(profileForm.profileStructure3ID.value)}
-	if(profileForm.profileStructure4ID.value!=''){submittedStructures.push(profileForm.profileStructure4ID.value)}
-	if(profileForm.profileStructure5ID.value!=''){submittedStructures.push(profileForm.profileStructure5ID.value)}
-	if(profileForm.profileStructure6ID.value!=''){submittedStructures.push(profileForm.profileStructure6ID.value)}
-	if(profileForm.profileStructure7ID.value!=''){submittedStructures.push(profileForm.profileStructure7ID.value)}
-	if(profileForm.profileStructure8ID.value!=''){submittedStructures.push(profileForm.profileStructure8ID.value)}
-	if(profileForm.profileStructure9ID.value!=''){submittedStructures.push(profileForm.profileStructure9ID.value)}
-	if(profileForm.profileStructure10ID.value!=''){submittedStructures.push(profileForm.profileStructure10ID.value)}
-	if(submittedStructures.length>1) {
-		if (submittedStructures.length !== new Set(submittedStructures).size) {
-			alert("Please specify distinct anatomical structures.");
-			hasErrors=true;
+	} else {
+	// check for duplicate IDs (a structure and it's synonym may be submitted)	
+		var handledIDs = {};
+		var hasDupe = false;
+		for (let i = 1; i <= 10; i++) {
+			if (submittedStructureIDs[i] && hasErrors == false) {
+				if (submittedStructureIDs[i] in handledIDs) {
+					hasErrors=true;
+					const msg = "Query error: Duplicate structures detected, id=" +
+						submittedStructureIDs[i] + "\n" +
+						submittedStructureNames[i] + "\n" +
+						handledIDs[submittedStructureIDs[i]] + "\n" +
+						"Please modify your query and try again."
+					alert(msg)
+				} else {
+					// we haven't encountered this ID; save off
+					handledIDs[submittedStructureIDs[i]] = submittedStructureNames[i];
+				}
+			}
 		}
 	}
 
