@@ -1513,7 +1513,8 @@ function makeStructureAC(inputID,containerID){
 
     oAC.formatResult = function(oResultData, sQuery, sResultMatch) {
 
-	    var userInputField = YAHOO.util.Dom.get("structure");
+//	    var userInputField = YAHOO.util.Dom.get("structure");
+	    var userInputField = YAHOO.util.Dom.get(inputID);
 	    var userInput = userInputField.value.toLowerCase();
 
 		// some other piece of data defined by schema
@@ -1649,7 +1650,7 @@ var resetQF = function (e) {
 		profileForm.profileDetected10.checked=true;
 
 		// reset the No Where Else... check box
-//		profileForm.profileNowhereElseCheckbox.checked = false;
+		profileForm.profileNowhereElseCheckbox.checked = false;
 
 		// ensure only the first three rows are displayed
 		document.getElementById("profileStructureRow1").style.display = "";
@@ -2018,13 +2019,20 @@ function handleNowhereElse() {
 
 	var checkBox = document.getElementById("profileNowhereElseCheckbox");
 	var notDetectedNodes = YAHOO.util.Dom.getElementsByClassName('notDetected', 'input');
-	for (let i = 0; i < notDetectedNodes.length; i++) {
-		if (checkBox.checked == true){
+   	var notDetectedHeaderText = document.getElementById("notDetectedHeaderText");
+
+	if (checkBox.checked == true){
+		for (let i = 0; i < notDetectedNodes.length; i++) {
 			notDetectedNodes[i].disabled = true;
-		} else {
+		}
+		notDetectedHeaderText.classList.add("disabledText");
+	} else {
+		for (let i = 0; i < notDetectedNodes.length; i++) {
 			notDetectedNodes[i].disabled = false;
 		}
+		notDetectedHeaderText.classList.remove("disabledText");
 	}
+
 };
 
 // profile search; if there is only 1 structure row, don't show remove button

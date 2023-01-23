@@ -27,7 +27,7 @@
 			<tr>
 				<th class="" style=""></th>
 				<th class="" style="">Detected</th>
-				<th class="" style="">Not </br>Detected 
+				<th class="" style=""><span id="notDetectedHeaderText" style="">Not </br>Detected</span> 
 					<img id="gxdProfileHelpImage" src="${configBean.WEBSHARE_URL}images/help_icon.png" />
 					<div id="gxdProfileHelp">
 						<div class="hd"><b>NOT</b> detected or analyzed in...</div>
