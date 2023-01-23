@@ -339,7 +339,6 @@ function reverseEngineerFormInput(request)
 			if(input.length < 1) input = $(formID+" #"+key);
 			if(input!=undefined && input!=null && input.length > 0)
 			{
-
 				input = input[0];
 				if(input.tagName=="TEXTAREA")
 				{
@@ -406,6 +405,12 @@ function reverseEngineerFormInput(request)
 					// do check boxes
 					else if(input.type=="checkbox")
 					{
+						if (foundProfile) {
+							if (key=='profileNowhereElseCheckbox') {
+								YAHOO.util.Dom.get("profileNowhereElseCheckbox").checked = true;
+							}
+						}
+
 						var options = [];
 						var rawParams = [].concat(params[key]);
 						for(var i=0;i<rawParams.length;i++)
@@ -839,12 +844,13 @@ function showNowhereElseMessage(request, matrixType) {
 	// turn the message off by default, and only display it if appropriate
 	$('#nowhereElseMessage').css('display', 'none');
 
-	if (('anywhereElse' in params) && ( (!resultCount || (parseInt(resultCount) > 0)) ) ) {
-		var message = "View the <a class='autofilter' onClick='addNotDetectedFilter(); return false;'>Not Detected data</a> for this gene set";
-		if ('detectedFilter' in params) {
-			message = "View the <a class='autofilter' onClick='removeNotDetectedFilter(); return false;'>Detected data</a> for this gene set";
-		} 
-		showGridMessage(message, request);
+	if (('anywhereElse' in params || 'profileNowhereElseCheckbox' in params) 
+		&& ( (!resultCount || (parseInt(resultCount) > 0)) ) ) {
+			var message = "View the <a class='autofilter' onClick='addNotDetectedFilter(); return false;'>Not Detected data</a> for this gene set";
+			if ('detectedFilter' in params) {
+				message = "View the <a class='autofilter' onClick='removeNotDetectedFilter(); return false;'>Detected data</a> for this gene set";
+			} 
+			showGridMessage(message, request);
 	}
 }
 
