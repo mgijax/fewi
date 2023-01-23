@@ -502,7 +502,8 @@ function reverseEngineerFormInput(request)
 	// special handling for profile display; this ensures params reinserted after reset
 	// are displayed rather than hidden
 	if (foundProfile) {
-		checkProfileVisibility();
+//		checkProfileVisibility();
+		ensureProfileFormStatus();
 	}
 
 	if(typeof resetFacets != 'undefined')
