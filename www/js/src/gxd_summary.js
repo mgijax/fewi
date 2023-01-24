@@ -837,7 +837,10 @@ function showGridMessage(message, request) {
 	);
 }
 
-// if the 'request' includes the 'anywhereElse' checkbox, show the corresponding message div
+// if the 'request' includes any of the following, show the corresponding message div
+// -if the differential submits it's anywhere else input
+// -if the profile submits it's nowhere-else input
+// -if the profile submits a structure with "Not Detected" selected
 function showNowhereElseMessage(request, matrixType) {
 	var params = parseRequest(request);
 	var resultCount = YAHOO.util.Dom.get("totalResultsCount").innerHTML;
@@ -845,7 +848,40 @@ function showNowhereElseMessage(request, matrixType) {
 	// turn the message off by default, and only display it if appropriate
 	$('#nowhereElseMessage').css('display', 'none');
 
-	if (('anywhereElse' in params || 'profileNowhereElseCheckbox' in params) 
+	// parse request for a valid profile structure combined with "Not Detected"
+	var hasNegStructure = false;
+	if ('profileStructureID1' in params && params['profileStructureID1'] != '' && params['detected_1'] != true) {
+		hasNegStructure = true;
+	}
+	if ('profileStructureID2' in params && params['profileStructureID2'] != '' && params['detected_2'] != true) {
+		hasNegStructure = true;
+	}
+	if ('profileStructureID3' in params && params['profileStructureID3'] != '' && params['detected_3'] != true) {
+		hasNegStructure = true;
+	}
+	if ('profileStructureID4' in params && params['profileStructureID4'] != '' && params['detected_4'] != true) {
+		hasNegStructure = true;
+	}
+	if ('profileStructureID5' in params && params['profileStructureID5'] != '' && params['detected_5'] != true) {
+		hasNegStructure = true;
+	}
+	if ('profileStructureID6' in params && params['profileStructureID6'] != '' && params['detected_6'] != true) {
+		hasNegStructure = true;
+	}
+	if ('profileStructureID7' in params && params['profileStructureID7'] != '' && params['detected_7'] != true) {
+		hasNegStructure = true;
+	}
+	if ('profileStructureID8' in params && params['profileStructureID8'] != '' && params['detected_8'] != true) {
+		hasNegStructure = true;
+	}
+	if ('profileStructureID9' in params && params['profileStructureID9'] != '' && params['detected_9'] != true) {
+		hasNegStructure = true;
+	}
+	if ('profileStructureID10' in params && params['profileStructureID10'] != '' && params['detected_10'] != true) {
+		hasNegStructure = true;
+	}
+
+	if (('anywhereElse' in params || 'profileNowhereElseCheckbox' in params || hasNegStructure) 
 		&& ( (!resultCount || (parseInt(resultCount) > 0)) ) ) {
 			var message = "View the <a class='autofilter' onClick='addNotDetectedFilter(); return false;'>Not Detected data</a> for this gene set";
 			if ('detectedFilter' in params) {
