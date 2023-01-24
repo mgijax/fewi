@@ -1047,49 +1047,60 @@ var profileFormCheck  = function() {
 	var profileForm = YAHOO.util.Dom.get("gxdProfileQueryForm");
 	var submittedStructureIDs = {};
 	var submittedStructureNames = {};
+	var hasPosStructure = false;
 	if(profileForm.profileStructure1ID.value!=''){
 		submittedStructureIDs[1] = profileForm.profileStructure1ID.value;
 		submittedStructureNames[1] = profileForm.profileStructure1.value;
+		if(profileForm.profileDetected1.checked==true) {hasPosStructure = true};
 	}
 	if(profileForm.profileStructure2ID.value!=''){
 		submittedStructureIDs[2] = profileForm.profileStructure2ID.value;
 		submittedStructureNames[2] = profileForm.profileStructure2.value;
+		if(profileForm.profileDetected2.checked==true) {hasPosStructure = true};
 	}
 	if(profileForm.profileStructure3ID.value!=''){
 		submittedStructureIDs[3] = profileForm.profileStructure3ID.value;
 		submittedStructureNames[3] = profileForm.profileStructure3.value;
+		if(profileForm.profileDetected3.checked==true) {hasPosStructure = true};
 	}
 	if(profileForm.profileStructure4ID.value!=''){
 		submittedStructureIDs[4] = profileForm.profileStructure4ID.value;
 		submittedStructureNames[4] = profileForm.profileStructure4.value;
+		if(profileForm.profileDetected4.checked==true) {hasPosStructure = true};
 	}
 	if(profileForm.profileStructure5ID.value!=''){
 		submittedStructureIDs[5] = profileForm.profileStructure5ID.value;
 		submittedStructureNames[5] = profileForm.profileStructure5.value;
+		if(profileForm.profileDetected5.checked==true) {hasPosStructure = true};
 	}
 	if(profileForm.profileStructure6ID.value!=''){
 		submittedStructureIDs[6] = profileForm.profileStructure6ID.value;
 		submittedStructureNames[6] = profileForm.profileStructure6.value;
+		if(profileForm.profileDetected6.checked==true) {hasPosStructure = true};
 	}
 	if(profileForm.profileStructure7ID.value!=''){
 		submittedStructureIDs[7] = profileForm.profileStructure7ID.value;
 		submittedStructureNames[7] = profileForm.profileStructure7.value;
+		if(profileForm.profileDetected7.checked==true) {hasPosStructure = true};
 	}
 	if(profileForm.profileStructure8ID.value!=''){
 		submittedStructureIDs[8] = profileForm.profileStructure8ID.value;
 		submittedStructureNames[8] = profileForm.profileStructure8.value;
+		if(profileForm.profileDetected8.checked==true) {hasPosStructure = true};
 	}	
 	if(profileForm.profileStructure9ID.value!=''){
 		submittedStructureIDs[9] = profileForm.profileStructure9ID.value;
 		submittedStructureNames[9] = profileForm.profileStructure9.value;
+		if(profileForm.profileDetected9.checked==true) {hasPosStructure = true};
 	}
 	if(profileForm.profileStructure10ID.value!=''){
 		submittedStructureIDs[10] = profileForm.profileStructure10ID.value;
 		submittedStructureNames[10] = profileForm.profileStructure10.value;
+		if(profileForm.profileDetected10.checked==true) {hasPosStructure = true};
 	}
 
 	// check for empty submission
-	if (Object.keys(submittedStructureIDs).length == 0) {
+	if (Object.keys(submittedStructureIDs).length == 0 || !hasPosStructure) {
 		alert("Please specify Detected expression for at least one anatomical structure.");
 		hasErrors=true;
 	} else {
