@@ -885,7 +885,7 @@ function showNowhereElseMessage(request, matrixType) {
 		&& ( (!resultCount || (parseInt(resultCount) > 0)) ) ) {
 			var message = "View the <a class='autofilter' onClick='addNotDetectedFilter(); return false;'>Not Detected data</a> for this gene set";
 			if ('detectedFilter' in params) {
-				message = "View the <a class='autofilter' onClick='removeNotDetectedFilter(); return false;'>Detected data</a> for this gene set";
+				message = "View <a class='autofilter' onClick='removeNotDetectedFilter(); return false;'>All data</a> for this gene set";
 			} 
 			showGridMessage(message, request);
 	}
