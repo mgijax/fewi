@@ -83,7 +83,7 @@
     <img src="${configBean.WEBSHARE_URL}images/blue_info_icon.gif" border="0">
   </span>
 </div>
-<form method="get" action="http://www.google.com/search">
+<form method="get" action="https://www.google.com/search">
   <input type="text" name="q" size="25" maxlength="255" value="${query}">
   <input type="submit" value="Search" class="buttonLabelKLF">
   <input type="hidden" name="sitesearch" value="informatics.jax.org">
