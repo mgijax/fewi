@@ -404,9 +404,14 @@ function formatFastaArgs() {
 					<td class="cm">${ecMarker.relatedMarker.symbol} ${ecLink}</td>
 					<c:if test="${showOrthologColumn}">
 					    <td class="cm">
+					       <table style="text-align:left;">
 					       <c:forEach var="eco" items ="${ecOrthologs[ecStatus.index]}" varStatus="ecoStatus">
-					           ${eco.symbol} (<a href='${configBean.FEWI_URL}marker/${eco.primaryID}' target='_blank'>${eco.primaryID}</a>)
+						   <tr>
+					           <td>${eco.symbol}</td>
+						   <td>&nbsp;(<a href='${configBean.FEWI_URL}marker/${eco.primaryID}' target='_blank'>${eco.primaryID}</a>)</td>
+						   </tr>
 					       </c:forEach>
+					       </table>
 					    </td>
 					</c:if>
 					<td class="lm"><font class="small">${ecMarker.note}</font></td>

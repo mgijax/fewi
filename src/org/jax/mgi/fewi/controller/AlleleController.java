@@ -692,6 +692,13 @@ public class AlleleController {
             }    
         }    
 
+	//
+        private class MarkerSymbolComparator extends SmartAlphaComparator<Marker> {
+            public int compare(Marker m1, Marker m2) {
+                return super.compare(m1.getSymbol(), m2.getSymbol());
+            }    
+        }    
+
 	//----------------------------//
 	// Allele Detail (shared code)
 	//----------------------------//
@@ -727,8 +734,8 @@ public class AlleleController {
 			for (AlleleRelatedMarker arm : expressesComponent) {
 				List<Marker> mouseOrths = new ArrayList<Marker>();
 				if (! arm.getRelatedMarker().getOrganism().equals("mouse")) {
-					mouseOrths = arm.getRelatedMarker().getAllianceDirectOrthologs("mouse");
-					logger.debug("Found " + mouseOrths.size() + " mouse orthologs.");
+					mouseOrths = arm.getRelatedMarker().getAllianceDirectMouseOrthologs();
+					Collections.sort(mouseOrths, new MarkerSymbolComparator());
 					if (mouseOrths.size() > 0) {
 						showOrthologColumn = true;
 					}
