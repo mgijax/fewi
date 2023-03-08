@@ -14,7 +14,8 @@ compile.dir=www/WEB-INF/classes
 testoutput.dir=testoutput
 
 <!--local server directories -->
-fedatamodel.dir=/usr/local/mgi/live/fedatamodel/dist
+#fedatamodel.dir=/usr/local/mgi/live/fedatamodel/dist
+fedatamodel.dir=/home/pf/fe/fedatamodel/dist
 snpdatamodel.dir=/usr/local/mgi/live/snpdatamodel/dist
 #lib_java_fe.dir=/usr/local/mgi/live/lib/java
 lib_java_fe.dir=/home/pf/fe/lib
