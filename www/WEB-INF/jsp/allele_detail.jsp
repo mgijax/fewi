@@ -60,6 +60,11 @@ function toggleExpressesComponent() {
     toggle("downArrowExpressesComponent");
     toggle("expressesComponentTable");
 }
+function toggleDrivenBy() {
+    toggle("rightArrowDrivenBy");
+    toggle("downArrowDrivenBy");
+    toggle("drivenByTable");
+}
 function formatForwardArgs() {
       // fill and submit either seqfetchForm or blastForm
 
@@ -382,32 +387,91 @@ function formatFastaArgs() {
 				<tr>
 				    <td class="detailCat3 cm">Organism</td>
 				    <td class="detailCat3 cm">Expressed&nbsp;Gene</td>
-				    <c:if test="${not empty nonMouseExpressesComponent}"><td class="detailCat3 cm">Homolog&nbsp;in&nbsp;Mouse</td></c:if>
+				    <c:if test="${showOrthologColumn}"><td class="detailCat3 cm">Homolog&nbsp;in&nbsp;Mouse</td></c:if>
 				    <td class="detailCat3 cm">Note</td>
 				</tr>
 				<c:forEach var="ecMarker" items="${expressesComponent}" varStatus="ecStatus">
-				    <c:set var="ecOrganism" value="Mouse"/>
-				    <c:set var="ecGene" value="${ecMarker.relatedMarkerSymbol}"/>
-				    <c:set var="ecLink1" value="<a href='${configBean.FEWI_URL}marker/${ecMarker.relatedMarkerID}'>${ecGene}</a>"/>
-				    <c:set var="ecHomolog" value=""/>
-				    <c:set var="ecLink2" value=""/>
-				    <c:set var="ecNote" value="${ecMarker.note}"/>
-				    <c:if test="${ecMarker.relationshipTerm != 'expresses'}">
-					<c:set var="ecOrganism" value="${ecMarker.ecOrganism}"/>
-					<c:set var="ecHomolog" value="${ecGene}"/>
-					<c:set var="ecLink2" value="${ecLink1}"/>
-					<c:set var="ecGene" value="${ecMarker.ecSymbol}"/>
-					<c:set var="ecLink1" value="${ecGene}"/>
-					<c:if test="${not empty ecMarker.ecGeneID}">
-					<c:set var="ecLink1" value="${ecGene} (<a href='${fn:replace(urls.Entrez_Gene, '@@@@', ecMarker.ecGeneID)}' target='_blank'>${ecMarker.ecGeneID}</a>)"/>
-					</c:if>
+				    <c:set var="ecId" value="${ecMarker.relatedMarkerID}" />
+				    <c:set var="ecLink" value="(<a href='${configBean.FEWI_URL}marker/${ecId}' target='_blank'>${ecId}</a>)"/>
+			            <c:if test="${ecMarker.relatedMarker.organism != 'mouse'}">
+				        <c:set var="ecLink" value="(<a href='${fn:replace(urls.Entrez_Gene, '@@@@', ecId)}' target='_blank'>${ecId}</a>)"/>
+			            </c:if>
+				    <c:if test="${empty ecId}">
+				        <c:set var="ecLink" value="" />
 				    </c:if>
-
 				    <tr>
-					<td class="cm">${ecOrganism}</td>
-					<td class="cm">${ecLink1}</td>
-					<c:if test="${not empty nonMouseExpressesComponent}"><td class="cm">${ecLink2}</td></c:if>
-					<td class="lm"><font class="small">${ecNote}</font></td>
+					<td class="cm">${ecMarker.relatedMarker.organism}</td>
+					<td class="cm">${ecMarker.relatedMarker.symbol} ${ecLink}</td>
+					<c:if test="${showOrthologColumn}">
+					    <td class="cm">
+					       <table style="text-align:left;">
+					       <c:forEach var="eco" items ="${ecOrthologs[ecStatus.index]}" varStatus="ecoStatus">
+						   <tr>
+					           <td>${eco.symbol}</td>
+						   <td>&nbsp;(<a href='${configBean.FEWI_URL}marker/${eco.primaryID}' target='_blank'>${eco.primaryID}</a>)</td>
+						   </tr>
+					       </c:forEach>
+					       </table>
+					    </td>
+					</c:if>
+					<td class="lm"><font class="small">${ecMarker.note}</font></td>
+				    </tr>
+				</c:forEach> 
+			    </table>
+			</div>
+
+		    </td>
+		</tr>
+		</c:if>
+
+		<c:if test="${not empty drivenBy}">
+		<tr>
+		    <td class="rightBorderThinGray" align="right" width="1%" nowrap="nowrap" valign="top">&nbsp;</td>
+		    <td class="padded" style="vertical-align: top;">
+		      <div id="rightArrowDrivenBy" onClick="toggleDrivenBy();" style="float: right; cursor: pointer; position: relative; z-index: 1;"><img src="${configBean.WEBSHARE_URL}images/rightArrow.gif" border="0"></div>
+		      <div id="downArrowDrivenBy" onClick="toggleDrivenBy();" style="cursor: pointer; position: relative; z-index: 1; display: none;"><img src="${configBean.WEBSHARE_URL}images/downArrow.gif" border="0"></div>
+		    </td>
+		    <td>
+			<font style="font-weight: bold">${symbolSup}</font> expression driven by
+			${fn:length(drivenBy)} gene<c:if test="${fn:length(drivenBy) > 1}">s</c:if>
+			<div id="drivenByTable" style="display: none; margin-top: 2px">
+			    <c:set var="dbTitle" value="Knock-in expression driven by:"/>
+			    <c:if test="${allele.alleleType == 'Transgenic'}">
+			        <c:set var="dbTitle" value="Transgene expression driven by:"/>
+			    </c:if>
+			    <font class="label">${dbTitle}</font><br/>
+			    <table class="detail">
+				<tr>
+				    <td class="detailCat3 cm">Organism</td>
+				    <td class="detailCat3 cm">Driver&nbsp;Gene</td>
+				    <c:if test="${showDbOrthologColumn}"><td class="detailCat3 cm">Homolog&nbsp;in&nbsp;Mouse</td></c:if>
+				    <td class="detailCat3 cm">Note</td>
+				</tr>
+				<c:forEach var="dbMarker" items="${drivenBy}" varStatus="dbStatus">
+				    <c:set var="dbId" value="${dbMarker.relatedMarkerID}" />
+				    <c:set var="dbLink" value="(<a href='${configBean.FEWI_URL}marker/${dbId}' target='_blank'>${dbId}</a>)"/>
+			            <c:if test="${dbMarker.relatedMarker.organism != 'mouse'}">
+				        <c:set var="dbLink" value="(<a href='${fn:replace(urls.Entrez_Gene, '@@@@', dbId)}' target='_blank'>${dbId}</a>)"/>
+			            </c:if>
+				    <c:if test="${empty dbId}">
+				        <c:set var="dbLink" value="" />
+				    </c:if>
+				    <tr>
+					<td class="cm">${dbMarker.relatedMarker.organism}</td>
+					<td class="cm">${dbMarker.relatedMarker.symbol} ${dbLink}</td>
+					<c:if test="${showDbOrthologColumn}">
+					    <td class="cm">
+					       <table style="text-align:left;">
+					       <c:forEach var="dbo" items ="${dbOrthologs[dbStatus.index]}" varStatus="dboStatus">
+						   <tr>
+					           <td>${dbo.symbol}</td>
+						   <td>&nbsp;(<a href='${configBean.FEWI_URL}marker/${dbo.primaryID}' target='_blank'>${dbo.primaryID}</a>)</td>
+						   </tr>
+					       </c:forEach>
+					       </table>
+					    </td>
+					</c:if>
+					<td class="lm"><font class="small">${dbMarker.note}</font></td>
 				    </tr>
 				</c:forEach> 
 			    </table>

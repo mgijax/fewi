@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Collections;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +26,7 @@ import mgi.frontend.datamodel.phenotype.DiseaseTableDisease;
 import mgi.frontend.datamodel.phenotype.PhenoTableGenotype;
 import mgi.frontend.datamodel.phenotype.PhenoTableProvider;
 import mgi.frontend.datamodel.phenotype.PhenoTableSystem;
+import mgi.frontend.datamodel.sort.SmartAlphaComparator;
 
 import org.antlr.runtime.RecognitionException;
 import org.apache.commons.lang.StringUtils;
@@ -683,6 +685,20 @@ public class AlleleController {
 		return sorts;
 	}
 
+	//
+        private class AlleleRelatedMarkerComparator extends SmartAlphaComparator<AlleleRelatedMarker> {
+            public int compare(AlleleRelatedMarker m1, AlleleRelatedMarker m2) {
+                return super.compare(m1.getRelatedMarkerSymbol(), m2.getRelatedMarkerSymbol());
+            }    
+        }    
+
+	//
+        private class MarkerSymbolComparator extends SmartAlphaComparator<Marker> {
+            public int compare(Marker m1, Marker m2) {
+                return super.compare(m1.getSymbol(), m2.getSymbol());
+            }    
+        }    
+
 	//----------------------------//
 	// Allele Detail (shared code)
 	//----------------------------//
@@ -691,6 +707,7 @@ public class AlleleController {
 	 * either by key or by ID
 	 */
 	private ModelAndView prepareAllele(HttpServletRequest request,Allele allele) {
+		logger.debug("prepareAllele: started ....");
 		if (allele == null) {
 			return errorMav("Cannot find allele");
 		}
@@ -711,12 +728,51 @@ public class AlleleController {
 		sessionFactory.getCurrentSession().enableFilter("expressesComponentMarkers");
 		List<AlleleRelatedMarker> expressesComponent = allele.getExpressesComponentMarkers();
 		if (expressesComponent.size() > 0) {
-			mav.addObject("expressesComponent", expressesComponent);
+			Collections.sort(expressesComponent, new AlleleRelatedMarkerComparator());
+			List<List<Marker>> ecOrthologs = new ArrayList<List<Marker>>();
+			boolean showOrthologColumn = false;
 			for (AlleleRelatedMarker arm : expressesComponent) {
-				String otherOrganism = arm.getEcOrganism();
-				if (otherOrganism != null) {
-					mav.addObject("nonMouseExpressesComponent", "1");
+				List<Marker> mouseOrths = new ArrayList<Marker>();
+				if (! arm.getRelatedMarker().getOrganism().equals("mouse")) {
+					mouseOrths = arm.getRelatedMarker().getAllianceDirectMouseOrthologs();
+					Collections.sort(mouseOrths, new MarkerSymbolComparator());
+					if (mouseOrths.size() > 0) {
+						showOrthologColumn = true;
+					}
 				}
+				ecOrthologs.add(mouseOrths);
+			}
+			mav.addObject("expressesComponent", expressesComponent);
+			if (showOrthologColumn) {
+				mav.addObject("showOrthologColumn", showOrthologColumn);
+				mav.addObject("ecOrthologs", ecOrthologs);
+			}
+		}
+
+		// allele_to_driver_gene
+		// "drivenBy"
+		//
+		sessionFactory.getCurrentSession().enableFilter("drivenByMarkers");
+		List<AlleleRelatedMarker> drivenBy = allele.getDrivenByMarkers();
+		if (drivenBy.size() > 0) {
+			Collections.sort(drivenBy, new AlleleRelatedMarkerComparator());
+			List<List<Marker>> dbOrthologs = new ArrayList<List<Marker>>();
+			boolean showOrthologColumn = false;
+			for (AlleleRelatedMarker arm : drivenBy) {
+				List<Marker> mouseOrths = new ArrayList<Marker>();
+				if (! arm.getRelatedMarker().getOrganism().equals("mouse")) {
+					mouseOrths = arm.getRelatedMarker().getAllianceDirectMouseOrthologs();
+					Collections.sort(mouseOrths, new MarkerSymbolComparator());
+					if (mouseOrths.size() > 0) {
+						showOrthologColumn = true;
+					}
+				}
+				dbOrthologs.add(mouseOrths);
+			}
+			mav.addObject("drivenBy", drivenBy);
+			if (showOrthologColumn) {
+				mav.addObject("showDbOrthologColumn", showOrthologColumn);
+				mav.addObject("dbOrthologs", dbOrthologs);
 			}
 		}
 
