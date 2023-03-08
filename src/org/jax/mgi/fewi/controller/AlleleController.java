@@ -756,7 +756,24 @@ public class AlleleController {
 		List<AlleleRelatedMarker> drivenBy = allele.getDrivenByMarkers();
 		if (drivenBy.size() > 0) {
 			Collections.sort(drivenBy, new AlleleRelatedMarkerComparator());
+			List<List<Marker>> dbOrthologs = new ArrayList<List<Marker>>();
+			boolean showOrthologColumn = false;
+			for (AlleleRelatedMarker arm : drivenBy) {
+				List<Marker> mouseOrths = new ArrayList<Marker>();
+				if (! arm.getRelatedMarker().getOrganism().equals("mouse")) {
+					mouseOrths = arm.getRelatedMarker().getAllianceDirectMouseOrthologs();
+					Collections.sort(mouseOrths, new MarkerSymbolComparator());
+					if (mouseOrths.size() > 0) {
+						showOrthologColumn = true;
+					}
+				}
+				dbOrthologs.add(mouseOrths);
+			}
 			mav.addObject("drivenBy", drivenBy);
+			if (showOrthologColumn) {
+				mav.addObject("showDbOrthologColumn", showOrthologColumn);
+				mav.addObject("dbOrthologs", dbOrthologs);
+			}
 		}
 
 		// When retrieving 'mutation involves' markers for the teaser,

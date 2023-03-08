@@ -444,6 +444,7 @@ function formatFastaArgs() {
 				<tr>
 				    <td class="detailCat3 cm">Organism</td>
 				    <td class="detailCat3 cm">Driver&nbsp;Gene</td>
+				    <c:if test="${showDbOrthologColumn}"><td class="detailCat3 cm">Homolog&nbsp;in&nbsp;Mouse</td></c:if>
 				    <td class="detailCat3 cm">Note</td>
 				</tr>
 				<c:forEach var="dbMarker" items="${drivenBy}" varStatus="dbStatus">
@@ -458,6 +459,18 @@ function formatFastaArgs() {
 				    <tr>
 					<td class="cm">${dbMarker.relatedMarker.organism}</td>
 					<td class="cm">${dbMarker.relatedMarker.symbol} ${dbLink}</td>
+					<c:if test="${showDbOrthologColumn}">
+					    <td class="cm">
+					       <table style="text-align:left;">
+					       <c:forEach var="dbo" items ="${dbOrthologs[dbStatus.index]}" varStatus="dboStatus">
+						   <tr>
+					           <td>${dbo.symbol}</td>
+						   <td>&nbsp;(<a href='${configBean.FEWI_URL}marker/${dbo.primaryID}' target='_blank'>${dbo.primaryID}</a>)</td>
+						   </tr>
+					       </c:forEach>
+					       </table>
+					    </td>
+					</c:if>
 					<td class="lm"><font class="small">${dbMarker.note}</font></td>
 				    </tr>
 				</c:forEach> 
