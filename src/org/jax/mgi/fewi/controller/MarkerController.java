@@ -580,6 +580,13 @@ public class MarkerController {
                 Collections.sort(interactingQTL, new RelatedMarkerComparator());
                 mav.addObject("nInteractingQTL", interactingQTL.size());
                 mav.addObject("interactingQTL", interactingQTL);
+
+                // Set PARtner gene data. Empty unless current marker has a 
+                // PARtner gene
+                List<RelatedMarker> parGenes = marker.getParGenes();
+                Collections.sort(parGenes, new RelatedMarkerComparator());
+                mav.addObject("hasParGene", parGenes.size() > 0);
+                mav.addObject("parGene", parGenes.get(0));
 	}
 
 	private void setupRibbon1(ModelAndView mav, Marker marker) {

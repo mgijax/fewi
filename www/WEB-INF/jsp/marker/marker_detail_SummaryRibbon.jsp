@@ -132,6 +132,15 @@
 							</div>
 						</li>
 					</c:if>
+					<c:if test="${hasParGene}">
+						<li>
+							<div class="label">Homologous PAR Feature</div>
+							<div class="value">
+							<a href="${configBean.FEWI_URL}marker/${parGene.relatedMarkerID}">${parGene.relatedMarkerSymbol}</a>
+							</div>
+						</li>
+					</c:if>
+
 				</ul>
 			</section>
 
