@@ -586,7 +586,9 @@ public class MarkerController {
                 List<RelatedMarker> parGenes = marker.getParGenes();
                 Collections.sort(parGenes, new RelatedMarkerComparator());
                 mav.addObject("hasParGene", parGenes.size() > 0);
-                mav.addObject("parGene", parGenes.get(0));
+                if (parGenes.size() > 0) {
+                    mav.addObject("parGene", parGenes.get(0));
+                }
 	}
 
 	private void setupRibbon1(ModelAndView mav, Marker marker) {
