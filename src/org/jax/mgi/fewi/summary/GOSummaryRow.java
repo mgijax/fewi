@@ -15,6 +15,8 @@ import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.NotesTagConverter;
 import org.jax.mgi.fewi.util.link.IDLinker;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * wrapper around an Annotation;  represents on row in summary
  */
@@ -29,6 +31,7 @@ public class GOSummaryRow {
 
 	private final IDLinker  linker = IDLinker.getInstance();
 	private final NotesTagConverter ntc = new NotesTagConverter();
+	private final Logger logger = LoggerFactory.getLogger(GOSummaryRow.class);
 
 	// config values
 	String wiUrl = ContextLoader.getConfigBean().getProperty("WI_URL");
@@ -144,7 +147,6 @@ public class GOSummaryRow {
 			    for (String myID : aifi.getAccID().split(",")) {
 				String link = linker.getLink(aifi.getLogicalDB(), myID);
 				String tooltip = aifi.getTooltip();
-
 				if (tooltip != null) {
 					int length = 1;
 					for (String s : tooltip.split("\n")) {
@@ -156,6 +158,7 @@ public class GOSummaryRow {
 					if (length > 10) {
 						pixels = (int) Math.round(6.5 * length);
 					}
+					tooltip = tooltip.replace("'", "&apos;"); // properly display apostrophe
 					link = tooltipTemplate
 							.replace("<LINK>", link)
 							.replace("<WIDTH>", "" + pixels)
@@ -165,7 +168,7 @@ public class GOSummaryRow {
 									.replace("&&&&&", "<sup>")
 									.replace("\n", "<br/>"));
 				}
-
+ 
 				if (first) {
 					first = Boolean.FALSE;
 					inferredString = link;
