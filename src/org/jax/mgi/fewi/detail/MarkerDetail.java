@@ -29,7 +29,7 @@ public class MarkerDetail {
 		boolean hasCytoband = marker.getPreferredCytoband() != null;
 		
 		// Change UN to Unknown
-		String chromosome = marker.getChromosome();
+		String chromosome = marker.getGeneticChromosome();
 		if (chromosome.equals("UN")) {
 			chromosome = "Unknown";
 		}
