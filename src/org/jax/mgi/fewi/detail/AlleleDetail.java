@@ -63,8 +63,6 @@ public class AlleleDetail {
 	}
 	public boolean getHasRecombinaseData()
 	{
-//		return allele.getDriverNote() != null &&
-//				!allele.getDriverNote().equals("");
 		return allele.getDriver() != null && !allele.getDriver().trim().equals("");
 	}
 	public boolean getHasNotes()

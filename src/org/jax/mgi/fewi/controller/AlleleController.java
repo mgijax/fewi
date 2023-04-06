@@ -1238,11 +1238,9 @@ public class AlleleController {
 
 		// add various notes for convenience
 
-		String driverNote = allele.getDriverNote();
 		String generalNote = allele.getGeneralNote();
 		String derivationNote = allele.getDerivationNote();
 
-		mav.addObject("driverNote", driverNote);
 		mav.addObject("generalNote", generalNote);
 		mav.addObject("derivationNote", derivationNote);
 
