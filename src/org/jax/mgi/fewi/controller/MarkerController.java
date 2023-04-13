@@ -1771,16 +1771,21 @@ public class MarkerController {
 		Filter mcvFilter = makeListFilter(query.getMcv(),SearchConstants.FEATURE_TYPE_KEY);
 		if(mcvFilter!=null) queryFilters.add(mcvFilter);
 
-		// Chromosome
+		// Chromosome & coordinate
 		List<String> chr = query.getChromosome();
-		if(notEmpty(chr) && !chr.contains(AlleleQueryForm.COORDINATE_ANY)) {
-			Filter chrFilter = makeListFilter(chr,SearchConstants.CHROMOSOME);
-			if(chrFilter!=null) queryFilters.add(chrFilter);
-		}
-
-		// Coordinate Search
 		String coord = query.getCoordinate();
 		String coordUnit = query.getCoordUnit();
+		if(notEmpty(chr) && !chr.contains(AlleleQueryForm.COORDINATE_ANY)) { // vaid chromosome value
+			if(notEmpty(coord)) { // we have coordinates; search only genomic chromosome
+				Filter coordChrFilter = makeListFilter(chr,SearchConstants.GENOMIC_CHROMOSOME);
+				if(coordChrFilter!=null) queryFilters.add(coordChrFilter);
+			} else { //search both genomic and genetic chromosomes (they can be different)
+				List<Filter> coordFilters = new ArrayList<Filter>();
+				coordFilters.add(makeListFilter(chr,SearchConstants.GENOMIC_CHROMOSOME));
+				coordFilters.add(makeListFilter(chr,SearchConstants.GENETIC_CHROMOSOME));
+				queryFilters.add(Filter.or(coordFilters));
+			}
+		}
 		if(notEmpty(coord)) {
 			Filter coordFilter = FilterUtil.genCoordFilter(coord,coordUnit);
 			if(coordFilter==null) coordFilter = nullFilter();
