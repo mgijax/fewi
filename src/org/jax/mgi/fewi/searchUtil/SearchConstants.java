@@ -231,6 +231,8 @@ public class SearchConstants {
     public static final String START_COORD = "startCoord";
     public static final String END_COORD = "endCoord";
     public static final String CHROMOSOME = "chromosome";
+    public static final String GENETIC_CHROMOSOME = "genetic_chromosome";
+    public static final String GENOMIC_CHROMOSOME = "genomic_chromosome";
     public static final String CM_OFFSET = "cmOffset";
     public static final String CYTOGENETIC_OFFSET = "cytogeneticOffset";
     public static final String STRAND = "strand";

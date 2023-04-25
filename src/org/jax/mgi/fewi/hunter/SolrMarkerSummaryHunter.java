@@ -30,7 +30,7 @@ public class SolrMarkerSummaryHunter extends SolrHunter<SolrSummaryMarker> {
 
     /***
      * The constructor sets up this hunter so that it is specific to finding
-     * a sequence key given any possible sequence id.
+     * marker summary information given any possible sequence id.
      */
     public SolrMarkerSummaryHunter() {
 
@@ -48,7 +48,7 @@ public class SolrMarkerSummaryHunter extends SolrHunter<SolrSummaryMarker> {
         propertyMap.put(SearchConstants.START_COORD, new SolrPropertyMapper(IndexConstants.START_COORD));
         propertyMap.put(SearchConstants.END_COORD, new SolrPropertyMapper(IndexConstants.END_COORD));
         propertyMap.put(SearchConstants.CM_OFFSET, new SolrPropertyMapper(IndexConstants.CM_OFFSET));
-        propertyMap.put(SearchConstants.STRAND, new SolrPropertyMapper(IndexConstants.CHROMOSOME));
+//        propertyMap.put(SearchConstants.STRAND, new SolrPropertyMapper(IndexConstants.CHROMOSOME));
 
         propertyMap.put(SearchConstants.MRK_SYMBOL, new SolrPropertyMapper(IndexConstants.MRK_SYMBOL));
         propertyMap.put(SearchConstants.MRK_CURRENT_SYMBOL, new SolrPropertyMapper(IndexConstants.MRK_CURRENT_SYMBOL));
