@@ -1112,10 +1112,6 @@ public class MarkerController {
 			if ("Ensembl Gene Model".equals(logicaldb)) {
 				myLink = myLink + " (" + FormatHelper.setNewWindow(idLinker.getLink("Ensembl Gene Model Evidence", myID.getAccID(), "Evidence")) + ")";
 				isGeneModelID = true;
-			} else if ("Entrez Gene".equals(logicaldb) && (ncbiEvidenceID != null)) {
-				logger.info(ncbiEvidenceID.getAccID());
-				myLink = myLink + " (" + FormatHelper.setNewWindow(idLinker.getLink("NCBI Gene Model Evidence", myID.getAccID(), "Evidence").replace ("contig=", "contig=" + ncbiEvidenceID.getAccID())) + ")";
-				isGeneModelID = true;
 			}
 
 			// special note about gene model IDs which overlap other markers, if needed

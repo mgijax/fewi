@@ -1,5 +1,5 @@
 	<c:set var="suppressedLogicalDatabases" value="MGI"/>
-	<c:set var="oldLogicalDatabases" value="ATCC, ATCC home page, WashU, BROAD, NIA, NIA 15K, NIA 7.4K, RIKEN"/>
+	<c:set var="oldLogicalDatabases" value="ATCC, ATCC home page, WashU, BROAD, NIA, NIA 15K, NIA 7.4K, RIKEN, IMAGE, MGC"/>
 	<div class="row">
 		<div class="header <%=leftTdStyles.getNext() %>">
 			<c:choose>
