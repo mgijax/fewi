@@ -194,7 +194,7 @@ public class MarkerController {
 		// flag any errors for improper chromosome combo
 		List<String> queryChromosome = queryForm.getChromosome();
 		String queryCoordinate = queryForm.getCoordinate();
-		if(queryChromosome.contains("XY") && notEmpty(queryCoordinate)){
+		if(notEmpty(queryChromosome) && queryChromosome.contains("XY") && notEmpty(queryCoordinate)){
 			return errorMav("Genome coordinates were entered for chromosome XY.  " +
 				"To search the pseudoautosomal region (PAR) by coordinates, select the " +
 				"chromosome (X or Y) that the input coordinates correspond to.");
