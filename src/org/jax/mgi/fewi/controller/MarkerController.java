@@ -191,6 +191,15 @@ public class MarkerController {
 		logger.debug("->markerSummary started");
 		logger.debug("queryString: " + request.getQueryString());
 
+		// flag any errors for improper chromosome combo
+		List<String> queryChromosome = queryForm.getChromosome();
+		String queryCoordinate = queryForm.getCoordinate();
+		if(queryChromosome.contains("XY") && notEmpty(queryCoordinate)){
+			return errorMav("Genome coordinates were entered for chromosome XY.  " +
+				"To search the pseudoautosomal region (PAR) by coordinates, select the " +
+				"chromosome (X or Y) that the input coordinates correspond to.");
+		}
+
 		// flag any errors for start and end marker, if specified
 		String startMarker = queryForm.getStartMarker();
 		String endMarker = queryForm.getEndMarker();

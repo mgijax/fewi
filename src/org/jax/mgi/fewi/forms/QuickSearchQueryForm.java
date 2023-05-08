@@ -76,6 +76,12 @@ public class QuickSearchQueryForm {
     }
 
     public String getQueryType() {
+
+    	boolean queryIsQuoted = false;
+    	if (this.query.startsWith("\"") && this.query.endsWith("\"")) {
+    		queryIsQuoted = true;
+    	}
+
    		// If missing or unrecognized, default to standard text search mechanism.
     	if ((queryType == null) || !QUERY_TYPE_OPTION_MAP.containsKey(queryType)) {
     		// If this appears to be a coordinate, assume it's a mouse coordinate.
@@ -88,14 +94,15 @@ public class QuickSearchQueryForm {
     				return IndexConstants.QS_SEARCHTYPE_MOUSE_COORD;
     			}
     		}
-    		if ((this.query.indexOf("*") >= 0) || (this.query.indexOf(",") >= 0)){
-    			return IndexConstants.QS_SEARCHTYPE_KEYWORDS;	// fall back on keywords for wildcard and comma
-    		}
+			if (((this.query.indexOf("*") >= 0) || (this.query.indexOf(",") >= 0)) && !queryIsQuoted ){
+				return IndexConstants.QS_SEARCHTYPE_KEYWORDS;		// fall back on keywords for wildcard and comma
+			}
+
     		return QUERY_TYPE_DEFAULT;
     	}
-   		if ((this.query.indexOf("*") >= 0) || (this.query.indexOf(",") >= 0)){
-   			return IndexConstants.QS_SEARCHTYPE_KEYWORDS;		// fall back on keywords for wildcard and comma
-   		}
+		if (((this.query.indexOf("*") >= 0) || (this.query.indexOf(",") >= 0)) && !queryIsQuoted ){
+			return IndexConstants.QS_SEARCHTYPE_KEYWORDS;		// fall back on keywords for wildcard and comma
+		}
 		return queryType;
 	}
 	public void setQueryType(String queryType) {
