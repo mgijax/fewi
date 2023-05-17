@@ -601,15 +601,24 @@ public class AlleleController {
 			}
 		}
 
-		// Chromosome
+		// Chromosome & coordinate search
 		List<String> chr = query.getChromosome();
-		if(notEmpty(chr) && !chr.contains(AlleleQueryForm.COORDINATE_ANY)) {
-			Filter chrFilter = makeListFilter(chr,SearchConstants.CHROMOSOME, false);
-			if(chrFilter!=null) filters.add(chrFilter);
-		}
-		// Coordinate Search
 		String coord = query.getCoordinate();
 		String coordUnit = query.getCoordUnit();
+		if(notEmpty(chr) && !chr.contains(AlleleQueryForm.COORDINATE_ANY)) {
+//			Filter chrFilter = makeListFilter(chr,SearchConstants.CHROMOSOME, false);
+//			if(chrFilter!=null) filters.add(chrFilter);
+
+			if(notEmpty(coord)) { // we have coordinates; search only genomic chromosome
+				Filter coordChrFilter = makeListFilter(chr,SearchConstants.GENOMIC_CHROMOSOME, false);
+				if(coordChrFilter!=null) filters.add(coordChrFilter);
+			} else { //search both genomic and genetic chromosomes (they can be different)
+				List<Filter> coordFilters = new ArrayList<Filter>();
+				coordFilters.add(makeListFilter(chr,SearchConstants.GENOMIC_CHROMOSOME, false));
+				coordFilters.add(makeListFilter(chr,SearchConstants.GENETIC_CHROMOSOME, false));
+				filters.add(Filter.or(coordFilters));
+			}
+		}
 		if(notEmpty(coord)) {
 			Filter coordFilter = FilterUtil.genCoordFilter(coord,coordUnit);
 			if(coordFilter==null) coordFilter = nullFilter();
