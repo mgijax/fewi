@@ -7,9 +7,9 @@
 			<c:set var="showJBrowser" value="${not empty marker.preferredCoordinates or not empty jbrowseUrl}" />
 			<c:set var="showGenomeBrowserLinks" value="${not (empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty ncbiMapViewerUrl)}" />
 
-			<c:set var="showGeneticMap" value="${(not empty marker.preferredCentimorgans) or (not empty marker.preferredCytoband) or (marker.countOfMappingExperiments > 0) or (not empty qtlIDs) or (not empty marker.aliases)}" />
+			<c:set var="showGeneticMap" value="${(not empty marker.preferredCentimorgans) or (not empty marker.preferredCytoband) or (marker.countOfMappingExperiments > 0) or (not empty qtlIDs)}" />
 			
-			<c:set var="geneticMapExtra" value="${not empty qtlIDs or marker.countOfMappingExperiments > 0 or not empty marker.aliases}" />
+			<c:set var="geneticMapExtra" value="${not empty qtlIDs or marker.countOfMappingExperiments > 0}" />
 			<c:set var="showLocationNote" value="${not empty marker.locationNote}" />
 
 			<c:set var="arrowstate" value="hdExpand" />
