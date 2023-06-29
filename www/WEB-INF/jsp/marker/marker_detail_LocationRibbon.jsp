@@ -142,22 +142,6 @@
 								</div>
 							</li>
 						</c:if>
-
-
-						<c:if test="${not empty marker.aliases}">
-							<li class="extra closed">
-								<div class="label">
-									<c:if test="${marker.markerType == 'Gene'}">Sequence Tag<c:if test="${fn:length(marker.aliases) > 1}">s</c:if></c:if>
-									<c:if test="${marker.markerType != 'Gene'}">Sequence Tag for</c:if>
-								</div>
-								<div class="value">
-									<c:forEach var="alias" items="${marker.aliases}" varStatus="status">
-										<a href="${configBean.FEWI_URL}marker/${alias.aliasID}">${alias.aliasSymbol}</a><c:if test="${!status.last}">, </c:if>
-									</c:forEach>
-								</div>
-							</li>
-						</c:if>
-
 					</ul>
 				</section>
 			</c:if>

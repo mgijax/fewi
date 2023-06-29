@@ -818,7 +818,6 @@ public class MarkerController {
 					for(Marker hh : humanOO.getMarkers()) {
 						// preload these associations for better hibernate query planning
 						hh.getLocations().size();
-						hh.getAliases().size();
 						hh.getSynonyms().size();
 						hh.getBiotypeConflicts().size();
 						hh.getIds().size();
