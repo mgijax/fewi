@@ -673,13 +673,9 @@ function formatFastaArgs() {
 
 	<tr>
             <c:set var="driverMarker" value="${allele.driverMarker}"/>
-            <c:set var="driverID" value="${driverMarker.primaryID}"/>
             <c:set var="driverOrg" value="${fn:toLowerCase(driverMarker.organism)}"/>
             <c:if test="${driverOrg == 'not specified'}">
                 <c:set var="driverOrg" value="species not specified"/>
-            </c:if>
-            <c:if test="${not empty driverMarker.mouseMarkerId}">
-                <c:set var="driverID" value="${driverMarker.mouseMarkerId}"/>
             </c:if>
             <c:set var="driverAllianceID" value="${driverMarker.getAllianceLinkID()}"/>
 
@@ -694,10 +690,10 @@ function formatFastaArgs() {
                   <a class='MP' href='${configBean.FEWI_URL}recombinase/summary?driver=${driverMarker.symbol}'>driven by ${driverMarker.symbol}</a>.
                 </span>
             </div>
-            <c:if test="${(not empty driverID) and (allele.countOfRecombinaseResults > 0)}">
+            <c:if test="${(not empty driverMarker.mouseMarkerId) and (allele.countOfRecombinaseResults > 0)}">
               <div>
               <span class='small' style='padding-left: 20px'>
-                    <a class='MP' href="${configBean.FEWI_URL}gxd/recombinasegrid/${driverID}?alleleID=${allele.primaryID}">
+                    <a class='MP' href="${configBean.FEWI_URL}gxd/recombinasegrid/${driverMarker.mouseMarkerId}?alleleID=${allele.primaryID}">
                         Comparative matrix view of recombinase activities
                     </a>
               </span>
