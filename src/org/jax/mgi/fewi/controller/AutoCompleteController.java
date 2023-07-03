@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -424,13 +425,30 @@ public class AutoCompleteController {
 			emapaHelper.setEmapaACResults(results.getResultObjects());
 			logger.info("Processed docs in emapaHelper");
 		}
-		List<EmapaACResult> resultList = emapaHelper.asEmapaACResults(emapaHelper.search(query, 200));
+		List<EmapaACResult> resultList = removeDuplicates(emapaHelper.asEmapaACResults(emapaHelper.search(query, 200)));
 		SearchResults<EmapaACResult> searchResults = new SearchResults<EmapaACResult>();
 		searchResults.setResultObjects(resultList);
 		searchResults.setTotalCount(resultList.size());
 
 		return searchResults;
 	}
+
+        /* Since I cannot seem to untangle what's going on with ACHelper, I'm just going to take a sledgehammer to
+         * the duplicates issue and remove them after the fact. 
+         * (see WTS2-942 and WTS2-1101).
+         */
+        private List<EmapaACResult> removeDuplicates (List<EmapaACResult> resultList) {
+                Set<String> seen = new HashSet<String>();
+                List<EmapaACResult> newList = new ArrayList<EmapaACResult>();
+                for (int i = 0; i < resultList.size(); i++) {
+                    EmapaACResult r = resultList.get(i);
+                    if (!seen.contains(r.getAccID())) {
+                        seen.add(r.getAccID());
+                        newList.add(r);
+                    }
+                }
+                return newList;
+        }
 
 	/* wrapper for CRE EMAPA autocomplete search
 	 */
