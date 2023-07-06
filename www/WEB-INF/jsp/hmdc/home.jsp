@@ -28,16 +28,9 @@
 
 		<div class="container searchViewBox">
 			<div class="row">
-				<div class="col-sm-8">
-					<div class="mycontent-left">
-						<%@ include file="/WEB-INF/jsp/static/home/hmdc/resource_links.jsp" %>
-					</div>
-				</div>
-				<div class="col-sm-4">
-					<div class="mycontent-right">
-						<%@ include file="/WEB-INF/jsp/static/home/hmdc/research_news.jsp" %>
-					</div>
-				</div>
+                            <div style="padding: 16px;">
+                                <%@ include file="/WEB-INF/jsp/static/home/hmdc/resource_links.jsp" %>
+                            </div>
 			</div>
 		</div>
 
