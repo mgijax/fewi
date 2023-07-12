@@ -125,12 +125,12 @@
     <table>
 	<tr>
 	<td class="rightBorderThinGray padded" width="1%" nowrap="nowrap" align="right"><span class="label">Name:</span></td>
-	<td class="padded">${antibody.name}</td>
+	<td class="padded"> <fewi:super value="${antibody.name}"/> </td>
 	</tr>
 	<c:if test="${not empty antibody.synonyms}">
 	<tr>
 	  <td class="rightBorderThinGray padded" width="1%" nowrap="nowrap" align="right"><span class="label">Synonym<c:if test="${fn:contains(antibody.synonyms, ',')}">s</c:if>:</span></td>
-	  <td class="padded">${antibody.synonyms}</td>
+	  <td class="padded"> <fewi:super value="${antibody.synonyms}"/> </td>
 	</tr>
 	</c:if>
 	<tr>
@@ -172,7 +172,7 @@
     <table>
 	<tr>
 	<td class="rightBorderThinGray padded" width="1%" nowrap="nowrap" align="right"><span class="label">Name:</span></td>
-	<td class="padded">${antigen.name}</td>
+	<td class="padded"> <fewi:super value="${antigen.name}"/> </td>
 	</tr>
 	<tr>
 	  <td class="rightBorderThinGray padded" width="1%" nowrap="nowrap" align="right"><span class="label">Species:</span></td>

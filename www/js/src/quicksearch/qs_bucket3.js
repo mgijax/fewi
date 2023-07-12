@@ -24,7 +24,7 @@ var b3Show = function(data) {
 			} else {
 				tbl = tbl + '<TD style="padding-right: 30px"><a target="_blank" href="' + item.detailUri + '">' + item.objectType + '</a>, ' + item.objectSubtype + '</TD>';
 			}
-			tbl = tbl + '<TD style="padding-right: 30px">' + item.name + '</TD>';
+			tbl = tbl + '<TD style="padding-right: 30px">' + qsSuperscript(item.name) + '</TD>';
 			tbl = tbl + '<TD><SPAN CLASS="termType">' + item.bestMatchType + '</SPAN>: <SPAN CLASS="small">' + item.bestMatchText + '</SPAN></TD></TR>';
 		}
 		$('#b3Results').html(tbl);

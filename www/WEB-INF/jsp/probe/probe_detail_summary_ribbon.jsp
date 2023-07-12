@@ -46,7 +46,9 @@
 					<c:if test="${not empty probe.regionCovered}">
 						<li>
 							<div class="label">Region Covered</div>
-							<div class="value">${probe.regionCovered}</div>
+							<div class="value"> 
+                                                        <fewi:super value="${probe.regionCovered}"/>
+                                                        </div>
 						</li>
 					</c:if>
 					
