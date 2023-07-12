@@ -180,7 +180,12 @@ public class RecomSpecificitySummaryRow {
 
     // assay type
     public String getAssayType() {
-        return "<span class='summaryDataCell'>" + alleleSystemAssayResult.getAssayType() + "</span>";
+        // see WTS2-1160: Suppress Assay Type "(transgenic)" and "(knock in)" from the Recombinase Activity table display
+        String atype = alleleSystemAssayResult.getAssayType();
+        if (atype.startsWith("In situ reporter")) {
+            atype = atype.replace("(transgenic)", "").replace("(knock in)", "");
+        }
+        return "<span class='summaryDataCell'>" + atype + "</span>";
     }
 
 
