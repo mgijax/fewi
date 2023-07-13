@@ -1288,10 +1288,16 @@ var clearVocabTerm = function(e) {
 	// don't do anything if vocabACState is not set, or if enter key (or TAB) is pressed
 	var keyCode = e.keyCode;
 	if(e.charCode) keyCode = e.charCode;
+        var termIdInput = YAHOO.util.Dom.get("annotationId");
+        var vocabInput = YAHOO.util.Dom.get("vocabTerm");
+        // Sigh. I have no clue what the rest of this code is supposed to be doing, so I'm
+        // just going insert my little special case here and hope for the best.
+        if (vocabInput.value === "") {
+            termIdInput.value = ""
+            return
+        }
 	// ignore keycodes between 9 and 40 (ctrl, shift, enter, tab, arrows, etc)
 	if (vocabACState != "" && (keyCode <9 || keyCode >40)){
-		var termIdInput = YAHOO.util.Dom.get("annotationId");
-		var vocabInput = YAHOO.util.Dom.get("vocabTerm");
 		if (vocabInput.value!="" && vocabInput.value == window.vocabACState) {
 			// clear the state, the visual input, and the hidden term field input
 			window.vocabACState = "";
@@ -1301,7 +1307,7 @@ var clearVocabTerm = function(e) {
 	}
 };
 
-YAHOO.util.Event.addListener(YAHOO.util.Dom.get("vocabTerm"), "keypress", clearVocabTerm);
+YAHOO.util.Event.addListener(YAHOO.util.Dom.get("vocabTerm"), "keydown", clearVocabTerm);
 
 
 /*
