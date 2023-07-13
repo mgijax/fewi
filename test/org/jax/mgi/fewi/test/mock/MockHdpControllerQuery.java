@@ -47,7 +47,7 @@ public class MockHdpControllerQuery extends AbstractMockHdpQuery {
 		MockHttpSession session = new MockHttpSession();
 		
 		HttpServletRequest request = this.generateGridPopupRequest(session, geneSymbol, systemCol);
-		ModelAndView mav = hdpController.popup(request, session, true, request.getParameter("queryToken"));
+		ModelAndView mav = hdpController.popup(request, session, "true", request.getParameter("queryToken"));
 		
 		if (mav.getModel().get("mpGroup")==null) {
 			throw new Exception("Could not find popup cell for "+geneSymbol+" x "+systemCol);
@@ -62,7 +62,7 @@ public class MockHdpControllerQuery extends AbstractMockHdpQuery {
 		MockHttpSession session = new MockHttpSession();
 		
 		HttpServletRequest request = this.generateGridPopupRequest(session, geneSymbol, diseaseCol);
-		ModelAndView mav = hdpController.popup(request, session, false, request.getParameter("queryToken"));
+		ModelAndView mav = hdpController.popup(request, session, "false", request.getParameter("queryToken"));
 		
 		if (mav.getModel().get("omimGroup")==null) {
 			throw new Exception("Could not find popup cell for "+geneSymbol+" x "+diseaseCol);

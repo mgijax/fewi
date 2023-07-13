@@ -54,7 +54,7 @@ public class MatrixTissueByStageTest extends BaseConcordionTest {
 		return this.getExpandedStageGrid(mq);
 	}
 
-	public String getCellByTerm(GxdStageGridJsonResponse response, String term,String colId) throws Exception
+	public String getCellByTerm(GxdStageGridJsonResponse<GxdMatrixCell> response, String term,String colId) throws Exception
 	{
 		// map the term to a rowId for comparison
 		String rowId = getTermId(term,response);
@@ -120,7 +120,7 @@ public class MatrixTissueByStageTest extends BaseConcordionTest {
 	{
 		MockGxdControllerQuery mq = this.getMockQuery().gxdController(controller);
 		mq.setStructure(structureId);
-		GxdStageGridJsonResponse response = mq.getStageGrid();
+		GxdStageGridJsonResponse<GxdMatrixCell> response = mq.getStageGrid();
 		// add up all the cells
 		Integer count = 0;
 		for(GxdMatrixCell cell : response.getData())
@@ -148,9 +148,9 @@ public class MatrixTissueByStageTest extends BaseConcordionTest {
 		return "";
 	}
 	
-	private GxdStageGridJsonResponse getExpandedStageGrid(MockGxdControllerQuery mq) throws Exception
+	private GxdStageGridJsonResponse<GxdMatrixRow> getExpandedStageGrid(MockGxdControllerQuery mq) throws Exception
 	{
-		GxdStageGridJsonResponse response = mq.getStageGrid();
+		GxdStageGridJsonResponse<GxdMatrixRow> response = mq.getStageGrid();
 		for(GxdMatrixRow row : response.getRows())
 		{
 			getExpandedStageGrid(mq,row, response);
@@ -162,7 +162,7 @@ public class MatrixTissueByStageTest extends BaseConcordionTest {
 		if(row.getEx())
 		{
 			// expand row and add the new rows and data from it
-			GxdStageGridJsonResponse expandResponse = mq.getStageGrid(row.getRid());
+			GxdStageGridJsonResponse<GxdMatrixRow> expandResponse = mq.getStageGrid(row.getRid());
 			for(GxdMatrixRow child : expandResponse.getRows())
 			{
 				row.addChild(child);
