@@ -2,11 +2,11 @@ package allele;
 
 import java.util.List;
 
-import mgi.frontend.datamodel.AlleleSystem;
-import mgi.frontend.datamodel.RecombinaseSystemStructure;
-
 import org.jax.mgi.fewi.test.base.BaseConcordionTest;
 import org.jax.mgi.fewi.test.mock.MockRequest;
+
+import mgi.frontend.datamodel.AlleleSystem;
+import mgi.frontend.datamodel.RecombinaseSystemStructure;
 
 
 public class RecombinaseRibbonTest extends BaseConcordionTest 
@@ -41,23 +41,23 @@ public class RecombinaseRibbonTest extends BaseConcordionTest
     }
     private Boolean getExpressedForSystem(AlleleSystem as,String translatedAge)
     {
-    	if(translatedAge.equals("E1")) return intToBool(as.getAgeE1());
-    	if(translatedAge.equals("E2")) return intToBool(as.getAgeE2());
-    	if(translatedAge.equals("E3")) return intToBool(as.getAgeE3());
-    	if(translatedAge.equals("P1")) return intToBool(as.getAgeP1());
-    	if(translatedAge.equals("P2")) return intToBool(as.getAgeP2());
-    	if(translatedAge.equals("P3")) return intToBool(as.getAgeP3());
+    	//if(translatedAge.equals("E1")) return intToBool(as.getAgeE1());
+    	//if(translatedAge.equals("E2")) return intToBool(as.getAgeE2());
+    	//if(translatedAge.equals("E3")) return intToBool(as.getAgeE3());
+    	//if(translatedAge.equals("P1")) return intToBool(as.getAgeP1());
+    	//if(translatedAge.equals("P2")) return intToBool(as.getAgeP2());
+    	//if(translatedAge.equals("P3")) return intToBool(as.getAgeP3());
     			
     	return null;
     }
     private Boolean getExpressedForStructure(RecombinaseSystemStructure ss,String translatedAge)
     {
-    	if(translatedAge.equals("E1")) return intToBool(ss.getAgeE1());
-    	if(translatedAge.equals("E2")) return intToBool(ss.getAgeE2());
-    	if(translatedAge.equals("E3")) return intToBool(ss.getAgeE3());
-    	if(translatedAge.equals("P1")) return intToBool(ss.getAgeP1());
-    	if(translatedAge.equals("P2")) return intToBool(ss.getAgeP2());
-    	if(translatedAge.equals("P3")) return intToBool(ss.getAgeP3());
+    	//if(translatedAge.equals("E1")) return intToBool(ss.getAgeE1());
+    	//if(translatedAge.equals("E2")) return intToBool(ss.getAgeE2());
+    	//if(translatedAge.equals("E3")) return intToBool(ss.getAgeE3());
+    	//if(translatedAge.equals("P1")) return intToBool(ss.getAgeP1());
+    	//if(translatedAge.equals("P2")) return intToBool(ss.getAgeP2());
+    	//if(translatedAge.equals("P3")) return intToBool(ss.getAgeP3());
     	
     	return null;
     }
