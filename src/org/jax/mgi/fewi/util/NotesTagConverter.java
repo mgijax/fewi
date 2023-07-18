@@ -1,3 +1,19 @@
+/*
+ * NotesTagConverter.java
+ *
+ * An implementation of a service to translate "note tags" into links and such.
+ * Also converts allele superscript notation into HTML.
+ *
+ * Note tag conversion is needed in both the PWI and the FEWI.
+ * This is the Java implementation used in the FEWI.
+ *
+ * See also the Javascript implementation used in the PWI:
+ * (https://github.com/mgijax/pwi/blob/master/pwi/static/app/services/NoteTagConverterService.js)
+ *
+ * THE JAVA AND JAVASCRIPT IMPLEMENTATIONS SHOULD BE KEPT IN SYNC!
+ * (We're sorry. Truly we are. But that's the way it is.)
+ */
+
 package org.jax.mgi.fewi.util;
 
 // standard java
