@@ -1418,10 +1418,10 @@ public class GXDController {
 		
 		if (structureOut != null) {
 			sb = new StringBuffer();
-			sb.append(FormatHelper.bold(detectedText));
+			sb.append(detectedText);
 			sb.append(" in ");
 			if ((structureOut != null) && !"".equals(structureOut)) {
-				sb.append(FormatHelper.bold(FormatHelper.cleanHtml(structureOut)));
+				sb.append(FormatHelper.bold(structureOut));
 				sb.append(FormatHelper.smallGrey(" includes substructures"));
 			} else {
 				sb.append(FormatHelper.bold("any structures"));
