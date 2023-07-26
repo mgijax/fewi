@@ -1,3 +1,7 @@
+ <script language="JavaScript">
+
+</script>
+
 		<div ng-controller="SearchController">
 			<div class="searchView container">
 				<div class="queryBuilder">
@@ -17,7 +21,7 @@
 
 					<div class="row" ng-hide="vm.hideQueryForm">
 						<div class="col-xs-12">
-							<form ng-submit="vm.onSubmit()" novalidate>
+							<form ng-submit="vm.onSubmit()" novalidate id="hmdcSearchForm">
 								<formly-form
 									model="vm.model"
 									fields="vm.fields"
@@ -43,6 +47,7 @@
 
 					<div class="row" ng-hide="vm.hideQueryForm">
 						<div class="col-xs-12">
+
 							<div class="button-row pull-left">
 								<button
 								    id="searchButton"
@@ -57,9 +62,16 @@
 									Ensure all fields are specified to submit your search.
 								</span>
 							</div>
+
 							<div class="pull-right">
 								<a onClick="location.reload()" class="btn btn-sm btn-primary reset-button">Reset</a>
 							</div>
+
+							<div class="text-center">
+                                <a href="javascript:childWindow=window.open('http://frost.informatics.jax.org/diseasePortal/searchPopup', 'mywindow', 'status,width=800,height=400'); childWindow.focus()"
+                                   class="btn btn-sm btn-primary">Add related phenotype terms by ID</a>
+                     </div>
+
 						</div>
 					</div>
 				</div>

@@ -4,6 +4,8 @@
 
 	function SearchController($rootScope, $scope, $log, $http, AutoComplete, $sce, FEWI_URL, $location) {
 		var vm = $scope.vm = {};
+console.log(vm);
+		$scope.FEWI_URL = FEWI_URL;
 
 		vm.onSubmit = onSubmit;
 		vm.hideQueryForm = false;
@@ -168,6 +170,10 @@
 			$rootScope.jsonQuery = angular.toJson(vm.queryModel);
 			$rootScope.jsonEncodedQuery = encodeURIComponent(angular.toJson(vm.queryModel));
 			showYouSearchedFor(vm.model);
+		}
+
+		vm.logVM = function() {
+			alert("foo");
 		}
 
 		$rootScope.parseUploadFile = function(scope) {
@@ -519,7 +525,7 @@
             };
             vm.model = data;
             onSubmit();
-	} else if (($location.search().geneID !== undefined) && ($location.search().geneID !== null)) {
+        } else if (($location.search().geneID !== undefined) && ($location.search().geneID !== null)) {
             var data = {
                 operator: 'AND',
                 queries: [{
@@ -533,5 +539,8 @@
             vm.model = data;
             onSubmit();
 	}
+console.log(vm);
 	}
+
+
 })();

@@ -19,8 +19,12 @@ import mgi.frontend.datamodel.VocabTerm;
 import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 
 import org.codehaus.jackson.map.ObjectMapper;
+
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.VocabularyFinder;
+import org.jax.mgi.fewi.forms.AccessionQueryForm;
+import org.jax.mgi.fewi.summary.MpHpPopupRow;
+import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.hmdc.forms.DiseasePortalConditionGroup;
 import org.jax.mgi.fewi.hmdc.forms.DiseasePortalConditionQuery;
@@ -40,12 +44,14 @@ import org.jax.mgi.fewi.util.HmdcAnnotationGroup;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 import org.jax.mgi.shr.jsonmodel.GridGenocluster;
 import org.jax.mgi.shr.jsonmodel.GridMarker;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -362,6 +368,35 @@ public class DiseasePortalController {
 		}
 		return null;
 	}
+
+	@RequestMapping(value="/searchPopup")
+	public ModelAndView searchPopup () {
+
+		logger.debug("->searchPopup started");
+
+		ModelAndView mav = new ModelAndView("hmdc/popup_mphp_search");
+
+		return mav;
+	}
+
+	@RequestMapping("/searchPopupJson")
+	public @ResponseBody JsonSummaryResponse<MpHpPopupRow>
+	searchPopupJson(HttpServletRequest request, @ModelAttribute AccessionQueryForm query) {
+
+		logger.debug("->searchPopupJson() started");
+		logger.debug("queryForm: " + query.toString());
+
+
+
+		List<MpHpPopupRow> summaryRows = new ArrayList<MpHpPopupRow>();
+		summaryRows.add(new MpHpPopupRow("MP:0000438", "abnormal tibia morphology", "MatchType", "MatchMethod", "HP:0002992", "Abnormality of tibia morphology", "MatchTermSyn", "MatchTermDef"));
+		JsonSummaryResponse<MpHpPopupRow> jsonResponse = new JsonSummaryResponse<MpHpPopupRow>();
+
+		jsonResponse.setSummaryRows(summaryRows);
+		return jsonResponse;
+	}
+
+
 
 
 	/* Serve up a phenotype or disease popup, from clicking a cell on the HMDC grid.
