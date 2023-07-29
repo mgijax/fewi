@@ -225,10 +225,10 @@ var getMarkerIds = function() {
 };
 
 var forwardToMousemine = function () {
-    var inputElt = document.getElementById('mousemineids');
-    var ids = inputElt.value.split(",");
-    if (ids.length > 20000) {
-        alert("There is an upper limit of 20000 ids that may be forwarded to Mousemine.");
+    var countSpan = document.getElementById('totalGenesCount');
+    var count = parseInt(countSpan.innerText.replace(',',''))
+    if (count > 20000) {
+        alert("There is an upper limit of 20,000 ids that may be forwarded to Mousemine.");
     } else {
         var form = document.querySelector('form[name="mousemine"]')
         form.submit()
