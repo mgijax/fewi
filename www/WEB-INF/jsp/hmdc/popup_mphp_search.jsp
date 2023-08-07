@@ -91,7 +91,8 @@
     {
 
 
-      $.get("http://frost.informatics.jax.org/diseasePortal/searchPopupJson?id=123", function(data) {
+//      $.get("http://frost.informatics.jax.org/diseasePortal/searchPopupJson?id=123", function(data) {
+      $.get("${configBean.FEWI_URL}diseasePortal/searchPopupJson?id=123", function(data) {
         try {
             console.log('Got ' + data.summaryRows.length);
 
@@ -119,7 +120,6 @@
                         '<td></td>' +
                         '<td></td>' +
                         '</TR>';
-
             }
 
             tbl = tbl + '</table>' +

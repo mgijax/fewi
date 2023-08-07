@@ -47,7 +47,9 @@ console.log(vm);
 		vm.applyFilters = function() {
 			$rootScope.$emit("FilterChanged");
 		}
-
+		vm.openMpHpPopup = function() {
+			window.open(FEWI_URL+"diseasePortal/searchPopup","Ratting","width=800,height=500,left=150,top=200,toolbar=0,status=0,");
+		}
 		vm.removeFilters = function() {
 			$rootScope.selectedPhenoTypesAndDiseasesModel = [];
 			$rootScope.selectedGenesModel = [];
@@ -170,10 +172,6 @@ console.log(vm);
 			$rootScope.jsonQuery = angular.toJson(vm.queryModel);
 			$rootScope.jsonEncodedQuery = encodeURIComponent(angular.toJson(vm.queryModel));
 			showYouSearchedFor(vm.model);
-		}
-
-		vm.logVM = function() {
-			alert("foo");
 		}
 
 		$rootScope.parseUploadFile = function(scope) {
