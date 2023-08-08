@@ -22,6 +22,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.VocabularyFinder;
+import org.jax.mgi.fewi.finder.MpHpPopupFinder;
 import org.jax.mgi.fewi.forms.AccessionQueryForm;
 import org.jax.mgi.fewi.summary.MpHpPopupRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
@@ -38,6 +39,7 @@ import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.searchUtil.entities.SolrMpHpPopupResult;
 import org.jax.mgi.fewi.util.FewiUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.HmdcAnnotationGroup;
@@ -75,6 +77,9 @@ public class DiseasePortalController {
 	@Autowired
 	private MarkerFinder markerFinder;
 	
+	@Autowired
+	private MpHpPopupFinder mpHpPopupFinder;
+
 	@RequestMapping(method=RequestMethod.GET)
 	public String getQueryForm() {
 		return "hmdc/home";
@@ -386,12 +391,29 @@ public class DiseasePortalController {
 		logger.debug("->searchPopupJson() started");
 		logger.debug("queryForm: " + query.toString());
 
-// TODO
+		// create query and gather results via finder
+        SearchParams params = new SearchParams();
+//        Filter idFilter = new Filter("searchTermID", "MP:0000438");
+        Filter idFilter = new Filter("searchTermID", query.getId());
+        params.setFilter(idFilter);
+		SearchResults<SolrMpHpPopupResult> results = mpHpPopupFinder.getMpHpPopupResult(params);
+        List<SolrMpHpPopupResult> resultList = results.getResultObjects();
+		logger.debug("Number of results: " + resultList.size());
 
 		List<MpHpPopupRow> summaryRows = new ArrayList<MpHpPopupRow>();
-		summaryRows.add(new MpHpPopupRow("MP:0000438", "abnormal tibia morphology", "MatchType", "MatchMethod", "HP:0002992", "Abnormality of tibia morphology", "MatchTermSyn", "MatchTermDef"));
-		JsonSummaryResponse<MpHpPopupRow> jsonResponse = new JsonSummaryResponse<MpHpPopupRow>();
+		for(SolrMpHpPopupResult result: resultList) {
 
+			summaryRows.add(new MpHpPopupRow(result.getSearchTermID(), 
+				result.getSearchTerm(), 
+				result.getMatchType(), 
+				result.getMatchMethod(), 
+				result.getMatchTermID(), 
+				result.getMatchTerm(), 
+				"MatchTermSyn", 
+				"MatchTermDef"));
+		}
+
+		JsonSummaryResponse<MpHpPopupRow> jsonResponse = new JsonSummaryResponse<MpHpPopupRow>();
 		jsonResponse.setSummaryRows(summaryRows);
 		return jsonResponse;
 	}

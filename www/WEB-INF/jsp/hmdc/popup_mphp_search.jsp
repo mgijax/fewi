@@ -84,15 +84,14 @@
   var preselectedIDs = new Array();
   function populateTermTable()
   {
-    var selectedIds = "";
+    var selectedIds = $('#hpmpInput').val();
 
     // ensure parent window exists
     if (window.opener && !window.opener.closed)
     {
 
-
 //      $.get("http://frost.informatics.jax.org/diseasePortal/searchPopupJson?id=123", function(data) {
-      $.get("${configBean.FEWI_URL}diseasePortal/searchPopupJson?id=123", function(data) {
+      $.get("${configBean.FEWI_URL}diseasePortal/searchPopupJson?id=" + selectedIds, function(data) {
         try {
             console.log('Got ' + data.summaryRows.length);
 
