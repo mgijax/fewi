@@ -2,6 +2,7 @@ package org.jax.mgi.fewi.hmdc.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -9,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -389,13 +389,17 @@ public class DiseasePortalController {
 	searchPopupJson(HttpServletRequest request, @ModelAttribute AccessionQueryForm query) {
 
 		logger.debug("->searchPopupJson() started");
-		logger.debug("queryForm: " + query.toString());
+		logger.debug("queryForm: " + query.toString().trim());
+
+		List<String> items = Arrays.asList(query.getId().trim().split("[\\s,]+"));
+        List <Filter> filterList = new ArrayList<Filter>();
+        for (String item: items) {
+            filterList.add(new Filter ("searchTermID" , item, Filter.Operator.OP_EQUAL));
+        }
 
 		// create query and gather results via finder
         SearchParams params = new SearchParams();
-//        Filter idFilter = new Filter("searchTermID", "MP:0000438");
-        Filter idFilter = new Filter("searchTermID", query.getId());
-        params.setFilter(idFilter);
+        params.setFilter(Filter.or(filterList));
 		SearchResults<SolrMpHpPopupResult> results = mpHpPopupFinder.getMpHpPopupResult(params);
         List<SolrMpHpPopupResult> resultList = results.getResultObjects();
 		logger.debug("Number of results: " + resultList.size());

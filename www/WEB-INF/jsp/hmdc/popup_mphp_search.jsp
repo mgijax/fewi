@@ -13,7 +13,7 @@
   <style>
 
     #hmdcTermSearchTable {
-      width:  100%;
+      width:  95%;
       margin: 4px;
     }  
 
@@ -54,19 +54,30 @@
 
   </form>
 
-
-  <!-- generated table will be inserted here -->
+  <!-- generated table inserted here -->
   <div id="mpHpSummaryTable"></div>
-
-
 
 
   <script language="JavaScript">
 
+  // gathers all checkboxes 
+  function jqCheckboxes()
+  {
+    return $("[name='matchTermCheck']");
+  }
+
   function populateParentWindow()
   {
 
-    window.opener.document.getElementById("formly_3_input_input_0").value = "MP:0000438";
+    var inputIDs = '';
+    jqCheckboxes().each(function(idx,checkbox){
+      var chk = $(checkbox);
+      if(chk.prop("checked")){
+        inputIDs = inputIDs + ' ' + chk.val();
+      }
+    });
+
+    window.opener.document.getElementById("formly_3_input_input_0").value = window.opener.document.getElementById("formly_3_input_input_0").value + inputIDs;
     window.opener.document.getElementById("formly_3_input_input_0").dispatchEvent(new Event('change'));
 
     // cleanup and exit
@@ -74,24 +85,20 @@
   }
 
   
-  function jqCheckboxes()
-  {
-    return $("[name='phenoSystem']");
-  }
 
 
-  // 
-  var preselectedIDs = new Array();
+
+  // create the summary table to be inserted
   function populateTermTable()
   {
-    var selectedIds = $('#hpmpInput').val();
+    var inputIds = $('#hpmpInput').val();
 
     // ensure parent window exists
     if (window.opener && !window.opener.closed)
     {
 
 //      $.get("http://frost.informatics.jax.org/diseasePortal/searchPopupJson?id=123", function(data) {
-      $.get("${configBean.FEWI_URL}diseasePortal/searchPopupJson?id=" + selectedIds, function(data) {
+      $.get("${configBean.FEWI_URL}diseasePortal/searchPopupJson?id=" + inputIds, function(data) {
         try {
             console.log('Got ' + data.summaryRows.length);
 
@@ -111,13 +118,13 @@
               thisRow = data.summaryRows[i];
               console.log(thisRow);
               tbl = tbl + '<TR>' +
-                        '<td>(' + thisRow.searchId + ')</br>' + thisRow.matchTermName + '</td>' +
+                        '<td>(' + thisRow.searchId + ')</br>' + thisRow.searchTerm + '</td>' +
                         '<td>' + thisRow.matchMethod + '</td>' +
                         '<td>' + thisRow.matchType + '</td>' +
-                        '<td>' + thisRow.matchTermName + '</br>(' + thisRow.matchTermID + ')</td>' +
+                        '<td>(' + thisRow.matchTermID + ')</br>' + thisRow.matchTermName + '</td>' +
                         '<td></td>' +
                         '<td></td>' +
-                        '<td></td>' +
+                        '<td> <input name="matchTermCheck" type="checkbox" value="' + thisRow.matchTermID + '"> </td>' +
                         '</TR>';
             }
 
