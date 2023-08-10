@@ -49,7 +49,7 @@
     <div style='padding-left:20px; padding:4px; width:400px;'>
       <input type="button" value="Search for related terms" onClick="populateTermTable()">
       <input type="button" value="Cancel" onClick="window.close()">
-      <input type="button" value="Set Parent Window" onClick="populateParentWindow()">
+      <input type="button" value="Add IDs to HMDC search" onClick="populateParentWindow()">
     </div>
 
   </form>
@@ -77,16 +77,13 @@
       }
     });
 
-    window.opener.document.getElementById("formly_3_input_input_0").value = window.opener.document.getElementById("formly_3_input_input_0").value + inputIDs;
+    window.opener.document.getElementById("formly_3_input_input_0").value = 
+      window.opener.document.getElementById("formly_3_input_input_0").value + ' ' + $('#hpmpInput').val() + ' ' + inputIDs;
     window.opener.document.getElementById("formly_3_input_input_0").dispatchEvent(new Event('change'));
 
     // cleanup and exit
     window.close();
   }
-
-  
-
-
 
   // create the summary table to be inserted
   function populateTermTable()

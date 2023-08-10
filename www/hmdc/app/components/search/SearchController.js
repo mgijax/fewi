@@ -4,11 +4,11 @@
 
 	function SearchController($rootScope, $scope, $log, $http, AutoComplete, $sce, FEWI_URL, $location) {
 		var vm = $scope.vm = {};
-console.log(vm);
 		$scope.FEWI_URL = FEWI_URL;
 
 		vm.onSubmit = onSubmit;
 		vm.hideQueryForm = false;
+		vm.showMpHpPopup = false;
 
 		$rootScope.selectedPhenoTypesAndDiseasesModel = [];
 		$rootScope.selectedGenesModel = [];
@@ -47,9 +47,11 @@ console.log(vm);
 		vm.applyFilters = function() {
 			$rootScope.$emit("FilterChanged");
 		}
+
 		vm.openMpHpPopup = function() {
 			window.open(FEWI_URL+"diseasePortal/searchPopup","Ratting","width=800,height=500,left=150,top=200,toolbar=0,status=0,");
 		}
+
 		vm.removeFilters = function() {
 			$rootScope.selectedPhenoTypesAndDiseasesModel = [];
 			$rootScope.selectedGenesModel = [];
@@ -309,6 +311,11 @@ console.log(vm);
 									//{ value: 'vcd_upload', name: 'VCF file (v4.0 or later)' }
 								],
 								onChange: function(value, options, scope) {
+									if (value=='tsDid') {
+										vm.showMpHpPopup = true;
+									} else {
+										vm.showMpHpPopup = false;
+									}
 									scope.model.condition = {
 										name: undefined,
 										parameters: []
@@ -537,7 +544,6 @@ console.log(vm);
             vm.model = data;
             onSubmit();
 	}
-console.log(vm);
 	}
 
 
