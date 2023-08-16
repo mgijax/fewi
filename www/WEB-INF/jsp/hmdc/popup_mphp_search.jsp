@@ -13,7 +13,7 @@
   <style>
 
     #hmdcTermSearchTable {
-      width:  95%;
+      width:  98%;
       margin: 4px;
     }  
 
@@ -51,6 +51,9 @@
       <input type="button" value="Cancel" onClick="window.close()">
       <input type="button" value="Add IDs to HMDC search" onClick="populateParentWindow()">
     </div>
+
+    <!-- generated "You Searched for..." inserted here -->
+    <div id="ysf"></div>
 
   </form>
 
@@ -113,14 +116,16 @@
 
             for (var i = 0; i < data.summaryRows.length; i++) {
               thisRow = data.summaryRows[i];
-              console.log(thisRow);
+              //console.log(thisRow);
+              
+              // create table rows
               tbl = tbl + '<TR>' +
                         '<td>(' + thisRow.searchId + ')</br>' + thisRow.searchTerm + '</td>' +
                         '<td>' + thisRow.matchMethod + '</td>' +
                         '<td>' + thisRow.matchType + '</td>' +
                         '<td>(' + thisRow.matchTermID + ')</br>' + thisRow.matchTermName + '</td>' +
-                        '<td></td>' +
-                        '<td></td>' +
+                        '<td>' + thisRow.matchTermSynonym + '</td>' +
+                        '<td>' + thisRow.matchTermDefinition + '</td>' +
                         '<td> <input name="matchTermCheck" type="checkbox" value="' + thisRow.matchTermID + '"> </td>' +
                         '</TR>';
             }

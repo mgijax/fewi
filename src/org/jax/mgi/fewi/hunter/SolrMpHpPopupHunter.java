@@ -56,6 +56,8 @@ public class SolrMpHpPopupHunter extends SolrHunter<SolrMpHpPopupResult> {
 			resultObject.setMatchTerm((String) doc.getFieldValue("matchTerm"));
 			resultObject.setMatchMethod((String) doc.getFieldValue("matchMethod"));
 			resultObject.setMatchType((String) doc.getFieldValue("matchType"));
+			resultObject.setMatchTermDefinition((String) doc.getFieldValue("matchTermDefinition"));
+			resultObject.setMatchTermSynonym((String) doc.getFieldValue("matchTermSynonym"));
 			sr.addResultObjects(resultObject);
 		}
 	}

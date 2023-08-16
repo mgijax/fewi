@@ -413,8 +413,8 @@ public class DiseasePortalController {
 				result.getMatchMethod(), 
 				result.getMatchTermID(), 
 				result.getMatchTerm(), 
-				"MatchTermSyn", 
-				"MatchTermDef"));
+				result.getMatchTermSynonym(), 
+				result.getMatchTermDefinition()));
 		}
 
 		JsonSummaryResponse<MpHpPopupRow> jsonResponse = new JsonSummaryResponse<MpHpPopupRow>();

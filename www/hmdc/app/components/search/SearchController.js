@@ -49,7 +49,7 @@
 		}
 
 		vm.openMpHpPopup = function() {
-			window.open(FEWI_URL+"diseasePortal/searchPopup","Ratting","width=800,height=500,left=150,top=200,toolbar=0,status=0,");
+			window.open(FEWI_URL+"diseasePortal/searchPopup","Ratting","width=1500,height=500,left=150,top=200,toolbar=0,status=0,");
 		}
 
 		vm.removeFilters = function() {
@@ -543,7 +543,7 @@
             };
             vm.model = data;
             onSubmit();
-	}
+        }
 	}
 
 
