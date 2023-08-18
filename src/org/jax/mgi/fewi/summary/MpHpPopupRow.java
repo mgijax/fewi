@@ -6,6 +6,7 @@ import java.util.Date;
 public class MpHpPopupRow {
 	String searchId = null;
 	String searchTerm = null;
+	String searchTermDefinition = null;
 	String matchType = null;
 	String matchMethod = null;
 	String matchTermID = null;
@@ -13,9 +14,10 @@ public class MpHpPopupRow {
 	String matchTermSynonym = null;		
 	String matchTermDefinition = null;		
 	
-	public MpHpPopupRow(String searchId, String searchTerm, String matchType, String matchMethod, String matchTermID, String matchTermName, String matchTermSynonym, String matchTermDefinition) {
+	public MpHpPopupRow(String searchId, String searchTerm, String searchTermDefinition, String matchType, String matchMethod, String matchTermID, String matchTermName, String matchTermSynonym, String matchTermDefinition) {
 		this.searchId = searchId;
 		this.searchTerm = searchTerm;
+		this.searchTermDefinition = searchTermDefinition;
 		this.matchType = matchType;
 		this.matchMethod = matchMethod;
 		this.matchTermID = matchTermID;
@@ -29,6 +31,10 @@ public class MpHpPopupRow {
 	}
 
 	public String getSearchTerm() {
+		return searchTerm;
+	}
+
+	public String getSearchTermDefinition() {
 		return searchTerm;
 	}
 

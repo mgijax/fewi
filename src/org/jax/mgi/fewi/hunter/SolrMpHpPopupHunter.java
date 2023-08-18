@@ -52,6 +52,7 @@ public class SolrMpHpPopupHunter extends SolrHunter<SolrMpHpPopupResult> {
 			SolrMpHpPopupResult resultObject = new SolrMpHpPopupResult();
 			resultObject.setSearchTermID((String) doc.getFieldValue("searchTermID"));
 			resultObject.setSearchTerm((String) doc.getFieldValue("searchTerm"));
+			resultObject.setSearchTermDefinition((String) doc.getFieldValue("searchTermDefinition"));
 			resultObject.setMatchTermID((String) doc.getFieldValue("matchTermID"));
 			resultObject.setMatchTerm((String) doc.getFieldValue("matchTerm"));
 			resultObject.setMatchMethod((String) doc.getFieldValue("matchMethod"));

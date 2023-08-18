@@ -7,6 +7,7 @@ public class SolrMpHpPopupResult
 	String uniqueKey;
 	String searchTermID;
 	String searchTerm;
+	String searchTermDefinition;
 	String matchTermID;
 	String matchTerm;
 	String matchMethod;
@@ -35,6 +36,14 @@ public class SolrMpHpPopupResult
 	}
 	public void setSearchTerm(String searchTerm) {
 		this.searchTerm = searchTerm;
+	}
+
+	// searchTermDefinition
+	public String getSearchTermDefinition() {
+		return searchTermDefinition;
+	}
+	public void setSearchTermDefinition(String searchTermDefinition) {
+		this.searchTermDefinition = searchTermDefinition;
 	}
 
 	// matchTermID

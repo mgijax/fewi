@@ -106,6 +106,7 @@
             tbl = '<table id="hmdcTermSearchTable">';
             tbl = tbl + '<TR>' +
                         '<TH>Search Term (ID)</TH>' +
+                        '<TH>Search Term Definition</TH>' +
                         '<TH>Match Method</TH>' +
                         '<TH>Match Type</TH>' +
                         '<TH>Matched Term</TH>' +
@@ -121,6 +122,7 @@
               // create table rows
               tbl = tbl + '<TR>' +
                         '<td>(' + thisRow.searchId + ')</br>' + thisRow.searchTerm + '</td>' +
+                        '<td>' + thisRow.searchTermDefinition + '</td>' +
                         '<td>' + thisRow.matchMethod + '</td>' +
                         '<td>' + thisRow.matchType + '</td>' +
                         '<td>(' + thisRow.matchTermID + ')</br>' + thisRow.matchTermName + '</td>' +

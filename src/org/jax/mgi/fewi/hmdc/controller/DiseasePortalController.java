@@ -409,6 +409,7 @@ public class DiseasePortalController {
 
 			summaryRows.add(new MpHpPopupRow(result.getSearchTermID(), 
 				result.getSearchTerm(), 
+				result.getSearchTermDefinition(), 
 				result.getMatchType(), 
 				result.getMatchMethod(), 
 				result.getMatchTermID(), 
