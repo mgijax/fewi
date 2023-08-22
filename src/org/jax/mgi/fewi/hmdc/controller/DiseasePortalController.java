@@ -124,12 +124,15 @@ public class DiseasePortalController {
 		SearchResults<SolrHdpGridEntry> results = hdpFinder.getGridResults(params);
 		
 		List<String> gridKeys = new ArrayList<String>();
+                Set<String> gridClusterKeySet = new HashSet<String>();
 		
 		for(SolrHdpGridEntry res: results.getResultObjects()) {
 			gridKeys.add(res.getGridKey().toString());
+                        gridClusterKeySet.add(res.getGridClusterKey().toString());
 		}
+		List<String> gridClusterKeys = new ArrayList<String>(gridClusterKeySet);
 		
-		Filter gridFilter = new Filter(DiseasePortalFields.GRID_KEY, gridKeys, Operator.OP_IN);
+		Filter gridFilter = new Filter(DiseasePortalFields.GRID_CLUSTER_KEY, gridClusterKeys, Operator.OP_IN);
 		params.setFilter(gridFilter);
 		params.setPageSize(1000000);
 		
@@ -141,7 +144,7 @@ public class DiseasePortalController {
 		if (highlightFilter.hasNestedFilters()) {
 			List<Filter> gridKeyAwareHighlights = new ArrayList<Filter>();
 			gridKeyAwareHighlights.add(highlightFilter);
-			gridKeyAwareHighlights.add(new Filter(DiseasePortalFields.GRID_KEY, gridKeys, Operator.OP_IN));
+			gridKeyAwareHighlights.add(new Filter(DiseasePortalFields.GRID_CLUSTER_KEY, gridClusterKeys, Operator.OP_IN));
 			params.setFilter(Filter.and(gridKeyAwareHighlights));
 			highLights = hdpFinder.getGridHighlights(params);
 		}
