@@ -52,12 +52,12 @@ span.smallGrey { font-size: 75%; color: #999999; }
 {
 	border: 1px solid #A3A3A3;
 	border-bottom-color: black;
-	background: #D8D8D8 url(http://yui.yahooapis.com/2.8.2r1/build/assets/skins/sam/sprite.png) repeat-x;
+	background: linear-gradient(white, white 35%, #d8d8d8 65%, #d8d8d8) ;
 	margin-top: 4px;
 }
 .inactive-tab:hover
 {
-	background:#bfdaff url(http://yui.yahooapis.com/2.8.2r1/build/assets/skins/sam/sprite.png) repeat-x left -1300px;
+	background:#bfdaff ;
 	outline:0;
 }
 .active-tab, .active-tab a:hover
