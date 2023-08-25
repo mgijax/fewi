@@ -69,9 +69,10 @@
     return $("[name='matchTermCheck']");
   }
 
+  // bound to button on popup
   function populateParentWindow()
   {
-
+    // gather ID list
     var inputIDs = '';
     jqCheckboxes().each(function(idx,checkbox){
       var chk = $(checkbox);
@@ -80,8 +81,9 @@
       }
     });
 
+    // TODO; reimplement somehow...  
     window.opener.document.getElementById("formly_3_input_input_0").value = 
-      window.opener.document.getElementById("formly_3_input_input_0").value + ' ' + $('#hpmpInput').val() + ' ' + inputIDs;
+    window.opener.document.getElementById("formly_3_input_input_0").value + ' ' + $('#hpmpInput').val() + ' ' + inputIDs;
     window.opener.document.getElementById("formly_3_input_input_0").dispatchEvent(new Event('change'));
 
     // cleanup and exit
@@ -96,11 +98,9 @@
     // ensure parent window exists
     if (window.opener && !window.opener.closed)
     {
-
-//      $.get("http://frost.informatics.jax.org/diseasePortal/searchPopupJson?id=123", function(data) {
       $.get("${configBean.FEWI_URL}diseasePortal/searchPopupJson?id=" + inputIds, function(data) {
         try {
-            console.log('Got ' + data.summaryRows.length);
+            console.log('--Number of rows for popup: ' + data.summaryRows.length);
 
             // initial setup
             tbl = '<table id="hmdcTermSearchTable">';
