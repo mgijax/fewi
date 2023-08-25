@@ -386,7 +386,21 @@
 									focus: true,
 									placeholder: 'Examples: HP:0001744, OMIM:222100, MP:0008762, DOID:114'
 								}
-							}
+							},
+                                                        {
+                                                                key: 'myBtn',
+                                                                type: 'button',
+                                                                templateOptions: {
+                                                                    class: 'btn btn-sm btn-primary btn-mybtn',
+                                                                    label: 'Add related phenotype terms by ID',
+                                                                    method: function(evt) {
+                                                                        const tgt = evt.target
+                                                                        const ngf = tgt.closest('ng-form')
+                                                                        const input = ngf.querySelector('input')
+                                                                        vm.openMpHpPopup()
+                                                                    }
+                                                          }
+}
 						],
 						location: [
 							{

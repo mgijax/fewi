@@ -9,6 +9,13 @@
      * BASIC FIELD TYPES
      * Two versions of each basic field type, one with a help column and one without
      */
+    // button
+    // see: https://stackoverflow.com/questions/36906916/angular-formly-button-custom-type
+    formlyConfigProvider.setType({
+      name: 'button',
+      template: '<button type="button" class="{{to.class}}" ng-click="to.method($event, $index)">{{to.label}}</button>'
+    });
+
     // input
     formlyConfigProvider.setType({
       name: 'horizontalInput',
