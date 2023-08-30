@@ -39,6 +39,8 @@ import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.searchUtil.Sort;
+import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.SolrMpHpPopupResult;
 import org.jax.mgi.fewi.util.FewiUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
@@ -394,15 +396,23 @@ public class DiseasePortalController {
 		logger.debug("->searchPopupJson() started");
 		logger.debug("queryForm: " + query.toString().trim());
 
+		// create search filter
 		List<String> items = Arrays.asList(query.getId().trim().split("[\\s,]+"));
         List <Filter> filterList = new ArrayList<Filter>();
         for (String item: items) {
             filterList.add(new Filter ("searchTermID" , item, Filter.Operator.OP_EQUAL));
         }
 
+       // create sorts
+       List<Sort> sorts = new ArrayList<Sort>();
+       sorts.add(new Sort("searchTermID", false));
+       //sorts.add(new Sort("searchTerm", true));
+       //sorts.add(new Sort("matchMethod", true));
+
 		// create query and gather results via finder
         SearchParams params = new SearchParams();
         params.setFilter(Filter.or(filterList));
+        params.setSorts(sorts);
 		SearchResults<SolrMpHpPopupResult> results = mpHpPopupFinder.getMpHpPopupResult(params);
         List<SolrMpHpPopupResult> resultList = results.getResultObjects();
 		logger.debug("Number of results: " + resultList.size());
