@@ -12,10 +12,8 @@
 
   <style>
 
-    #youSearchedForTable td {
-      border: 0px;
-      font-size: smaller;
-      padding: 0px;
+    #ysf {
+      padding: 4px;
     }
 
     #hmdcTermSearchTable {
@@ -49,7 +47,7 @@
     <br><br>
     <div style='padding:4px; padding-left:10px;'>
       <label>Enter MP and/or HPO Term ID(s):</label>
-      <input type="text" id="hpmpInput" name="hpmpInput" size="50">
+      <input type="text" id="hpmpInput" name="hpmpInput" size="60">
     </div>
 
     <div style='padding-left:20px; padding:4px; width:400px;'>
@@ -114,7 +112,6 @@
 
             if (data.summaryRows.length > 0) {
               // initial setup
-              ysf = '<table id="youSearchedForTable">';
               tbl = '<table id="hmdcTermSearchTable">';
               tbl = tbl + '<TR bgcolor="#ddd">' +
                           '<TH>Search Term (ID)</TH>' +
@@ -131,6 +128,7 @@
               var stripeRowCount=0;
               var lastSearchId='';
               var rowBgColor='';
+              var ysfList=[];
               for (var i = 0; i < data.summaryRows.length; i++) {
                 thisRow = data.summaryRows[i];
                 //console.log(thisRow);
@@ -139,8 +137,7 @@
                 if (lastSearchId != thisRow.searchId) { 
 
                   // ysf
-                  ysf = ysf + '<tr><td>' + thisRow.searchId + '</td></tr>';
-
+                  ysfList.push(thisRow.searchId);
                   
                   // row color
                   if(stripeRowCount % 2 != 0) {
@@ -165,12 +162,10 @@
               }
 
               tbl = tbl + '</table>';
-              ysf = ysf + '</table>';
 
-
-              // insert the generated table into the DOM
+              // insert the generated elements into the DOM
               $('#mpHpSummaryTable').html(tbl);
-              $('#ysf').html(ysf);
+              $('#ysf').html(" You searched for... <br> " + ysfList.join(", "));
             }
             else {
               $('#errorText').html("No matching terms were found for your query.");
