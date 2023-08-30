@@ -4,15 +4,15 @@ import java.util.Date;
 
 // Wrapper over a monitored result object.
 public class MpHpPopupRow {
-	String searchId = null;
-	String searchTerm = null;
-	String searchTermDefinition = null;
-	String matchType = null;
-	String matchMethod = null;
-	String matchTermID = null;
-	String matchTermName = null;
-	String matchTermSynonym = null;		
-	String matchTermDefinition = null;		
+	String searchId;
+	String searchTerm;
+	String searchTermDefinition;
+	String matchType;
+	String matchMethod;
+	String matchTermID;
+	String matchTermName;
+	String matchTermSynonym;		
+	String matchTermDefinition;		
 	
 	public MpHpPopupRow(String searchId, String searchTerm, String searchTermDefinition, String matchType, String matchMethod, String matchTermID, String matchTermName, String matchTermSynonym, String matchTermDefinition) {
 		this.searchId = searchId;
@@ -35,14 +35,44 @@ public class MpHpPopupRow {
 	}
 
 	public String getSearchTermDefinition() {
-		return searchTerm;
+		return searchTermDefinition;
 	}
 
 	public String getMatchMethod() {
+		if (matchMethod.equals("ManualMappingCuration")) {
+			return "manual";
+		}
+		if (matchMethod.equals("LogicalReasoning")) {
+			return "logical";
+		}
+		if (matchMethod.equals("LexicalMatching")) {
+			return "lexical";
+		}
+		if (matchMethod.equals("mgiSynonymLexicalMatching")) {
+			return "lexical";
+		}
+		if (matchMethod.equals("mgiTermLexicalMatching")) {
+			return "lexical";
+		}
 		return matchMethod;
 	}
 
 	public String getMatchType() {
+		if (matchType.equals("relatedMatch")) {
+			return "related";
+		}
+		if (matchType.equals("broadMatch")) {
+			return "broad";
+		}
+		if (matchType.equals("narrowMatch")) {
+			return "narrow";
+		}
+		if (matchType.equals("closeMatch")) {
+			return "close";
+		}
+		if (matchType.equals("exactMatch")) {
+			return "exact";
+		}
 		return matchType;
 	}
 

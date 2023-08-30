@@ -12,6 +12,12 @@
 
   <style>
 
+    #youSearchedForTable td {
+      border: 0px;
+      font-size: smaller;
+      padding: 0px;
+    }
+
     #hmdcTermSearchTable {
       width:  98%;
       margin: 4px;
@@ -42,8 +48,8 @@
     </div>
     <br><br>
     <div style='padding:4px; padding-left:10px;'>
-      <label>Enter Term ID:</label>
-      <input type="text" id="hpmpInput" name="hpmpInput">
+      <label>Enter MP and/or HPO Term ID(s):</label>
+      <input type="text" id="hpmpInput" name="hpmpInput" size="50">
     </div>
 
     <div style='padding-left:20px; padding:4px; width:400px;'>
@@ -52,10 +58,13 @@
       <input type="button" value="Add IDs to HMDC search" onClick="populateParentWindow()">
     </div>
 
-    <!-- generated "You Searched for..." inserted here -->
-    <div id="ysf"></div>
-
   </form>
+
+  <!-- generated "You Searched for..." inserted here -->
+  <div id="errorText"></div>
+
+  <!-- generated "You Searched for..." inserted here -->
+  <div id="ysf"></div>
 
   <!-- generated table inserted here -->
   <div id="mpHpSummaryTable"></div>
@@ -81,7 +90,7 @@
     });
 
     window.opener.document.getElementById("formly_3_input_input_0").value = 
-      window.opener.document.getElementById("formly_3_input_input_0").value + ' ' + $('#hpmpInput').val() + ' ' + inputIDs;
+    window.opener.document.getElementById("formly_3_input_input_0").value + ' ' + $('#hpmpInput').val() + ' ' + inputIDs;
     window.opener.document.getElementById("formly_3_input_input_0").dispatchEvent(new Event('change'));
 
     // cleanup and exit
@@ -101,42 +110,71 @@
       $.get("${configBean.FEWI_URL}diseasePortal/searchPopupJson?id=" + inputIds, function(data) {
         try {
             console.log('Got ' + data.summaryRows.length);
+            $('#errorText').html("");
 
-            // initial setup
-            tbl = '<table id="hmdcTermSearchTable">';
-            tbl = tbl + '<TR>' +
-                        '<TH>Search Term (ID)</TH>' +
-                        '<TH>Search Term Definition</TH>' +
-                        '<TH>Match Method</TH>' +
-                        '<TH>Match Type</TH>' +
-                        '<TH>Matched Term</TH>' +
-                        '<TH>Match Term Synonym</TH>' +
-                        '<TH>Match Term Definition</TH>' +
-                        '<TH>Add to Search</TH>' +
-                        '</TR>';
+            if (data.summaryRows.length > 0) {
+              // initial setup
+              ysf = '<table id="youSearchedForTable">';
+              tbl = '<table id="hmdcTermSearchTable">';
+              tbl = tbl + '<TR bgcolor="#ddd">' +
+                          '<TH>Search Term (ID)</TH>' +
+                          '<TH>Search Term Definition</TH>' +
+                          '<TH>Match Method</TH>' +
+                          '<TH>Match Type</TH>' +
+                          '<TH>Matched Term</TH>' +
+                          '<TH>Match Term Synonym</TH>' +
+                          '<TH>Match Term Definition</TH>' +
+                          '<TH>Add to Search</TH>' +
+                          '</TR>';
 
-            for (var i = 0; i < data.summaryRows.length; i++) {
-              thisRow = data.summaryRows[i];
-              //console.log(thisRow);
-              
-              // create table rows
-              tbl = tbl + '<TR>' +
-                        '<td>(' + thisRow.searchId + ')</br>' + thisRow.searchTerm + '</td>' +
-                        '<td>' + thisRow.searchTermDefinition + '</td>' +
-                        '<td>' + thisRow.matchMethod + '</td>' +
-                        '<td>' + thisRow.matchType + '</td>' +
-                        '<td>(' + thisRow.matchTermID + ')</br>' + thisRow.matchTermName + '</td>' +
-                        '<td>' + thisRow.matchTermSynonym + '</td>' +
-                        '<td>' + thisRow.matchTermDefinition + '</td>' +
-                        '<td> <input name="matchTermCheck" type="checkbox" value="' + thisRow.matchTermID + '"> </td>' +
-                        '</TR>';
+
+              var stripeRowCount=0;
+              var lastSearchId='';
+              var rowBgColor='';
+              for (var i = 0; i < data.summaryRows.length; i++) {
+                thisRow = data.summaryRows[i];
+                //console.log(thisRow);
+
+                // determine backgroup color and "You searched for..."
+                if (lastSearchId != thisRow.searchId) { 
+
+                  // ysf
+                  ysf = ysf + '<tr><td>' + thisRow.searchId + '</td></tr>';
+
+                  
+                  // row color
+                  if(stripeRowCount % 2 != 0) {
+                    rowBgColor='#F0F8FF';
+                  }
+                  else {rowBgColor='';}
+                  stripeRowCount++;
+                }
+                lastSearchId = thisRow.searchId;
+                
+                // create table rows
+                tbl = tbl + '<TR bgcolor="' + rowBgColor + '">' +
+                          '<td>(' + thisRow.searchId + ')</br>' + thisRow.searchTerm + '</td>' +
+                          '<td>' + thisRow.searchTermDefinition + '</td>' +
+                          '<td>' + thisRow.matchMethod + '</td>' +
+                          '<td>' + thisRow.matchType + '</td>' +
+                          '<td>(' + thisRow.matchTermID + ')</br>' + thisRow.matchTermName + '</td>' +
+                          '<td>' + thisRow.matchTermSynonym + '</td>' +
+                          '<td>' + thisRow.matchTermDefinition + '</td>' +
+                          '<td> <input name="matchTermCheck" type="checkbox" value="' + thisRow.matchTermID + '"> </td>' +
+                          '</TR>';
+              }
+
+              tbl = tbl + '</table>';
+              ysf = ysf + '</table>';
+
+
+              // insert the generated table into the DOM
+              $('#mpHpSummaryTable').html(tbl);
+              $('#ysf').html(ysf);
             }
-
-            tbl = tbl + '</table>' +
-
-
-            // insert the generated table into the DOM
-            $('#mpHpSummaryTable').html(tbl);
+            else {
+              $('#errorText').html("No matching terms were found for your query.");
+            }
 
 
         } catch (e) {
