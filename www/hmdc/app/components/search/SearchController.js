@@ -49,7 +49,10 @@
 		}
 
 		vm.openMpHpPopup = function() {
-			window.open(FEWI_URL+"diseasePortal/searchPopup","Ratting","width=1500,height=500,left=150,top=200,toolbar=0,status=0,");
+			var popup = window.open(FEWI_URL+"diseasePortal/searchPopup","Ratting","width=1500,height=500,left=150,top=200,toolbar=0,status=0,");
+			var childInput = popup.document.getElementById("hpmpInput");
+			childInput.value = "foooo";
+			console.log("childInput.value:" + childInput.value);
 		}
 
 		vm.removeFilters = function() {
@@ -387,20 +390,21 @@
 									placeholder: 'Examples: HP:0001744, OMIM:222100, MP:0008762, DOID:114'
 								}
 							},
-                                                        {
-                                                                key: 'myBtn',
-                                                                type: 'button',
-                                                                templateOptions: {
-                                                                    class: 'btn btn-sm btn-primary btn-mybtn',
-                                                                    label: 'Add related phenotype terms by ID',
-                                                                    method: function(evt) {
-                                                                        const tgt = evt.target
-                                                                        const ngf = tgt.closest('ng-form')
-                                                                        const input = ngf.querySelector('input')
-                                                                        vm.openMpHpPopup()
-                                                                    }
-                                                          }
-}
+							{
+								key: 'myBtn',
+								type: 'button',
+								templateOptions: {
+									class: 'btn btn-sm btn-primary btn-mybtn',
+									label: 'Add related phenotype terms by ID',
+									method: function(evt) {
+										const tgt = evt.target
+										const ngf = tgt.closest('ng-form')
+										const input = ngf.querySelector('input')
+										//alert(input.id);
+										vm.openMpHpPopup()
+									}
+								}
+							}
 						],
 						location: [
 							{

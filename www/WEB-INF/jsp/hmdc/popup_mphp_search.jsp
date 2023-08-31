@@ -50,10 +50,11 @@
       <input type="text" id="hpmpInput" name="hpmpInput" size="60">
     </div>
 
-    <div style='padding-left:20px; padding:4px; width:400px;'>
+    <div style='padding-left:20px; padding:4px; width:600px;'>
       <input type="button" value="Search for related terms" onClick="populateTermTable()">
-      <input type="button" value="Cancel" onClick="window.close()">
       <input type="button" value="Add IDs to HMDC search" onClick="populateParentWindow()">
+      <input type="button" value="Clear Search" onClick="clearPopupForm()">
+      <input type="button" value="Cancel" onClick="window.close()">
     </div>
 
   </form>
@@ -76,6 +77,14 @@
     return $("[name='matchTermCheck']");
   }
 
+  function clearPopupForm()
+  {
+    document.getElementById("hpmpInput").value = ""; 
+    // clear the generated elements into the DOM
+    $('#mpHpSummaryTable').html(" ");
+    $('#ysf').html(" ");       }
+
+  // updates parent window with ID list
   function populateParentWindow()
   {
 
@@ -85,10 +94,10 @@
       if(chk.prop("checked")){
         inputIDs = inputIDs + ' ' + chk.val();
       }
-    });
+    }); 
 
     window.opener.document.getElementById("formly_3_input_input_0").value = 
-    window.opener.document.getElementById("formly_3_input_input_0").value + ' ' + $('#hpmpInput').val() + ' ' + inputIDs;
+      window.opener.document.getElementById("formly_3_input_input_0").value + ' ' + $('#hpmpInput').val() + ' ' + inputIDs;
     window.opener.document.getElementById("formly_3_input_input_0").dispatchEvent(new Event('change'));
 
     // cleanup and exit
@@ -99,15 +108,16 @@
   function populateTermTable()
   {
     var inputIds = $('#hpmpInput').val();
-
+    var inputIdsSplit = inputIds.split(/[ ,]+/);
+    console.log(inputIdsSplit);
+console.log(['joe', 'jane', 'mary'].includes('jane')); // true
     // ensure parent window exists
     if (window.opener && !window.opener.closed)
     {
-
-//      $.get("http://frost.informatics.jax.org/diseasePortal/searchPopupJson?id=123", function(data) {
+      // call end-point and handle JSON retrieved
       $.get("${configBean.FEWI_URL}diseasePortal/searchPopupJson?id=" + inputIds, function(data) {
         try {
-            console.log('Got ' + data.summaryRows.length);
+            console.log('JSON rows retrieved:' + data.summaryRows.length);
             $('#errorText').html("");
 
             if (data.summaryRows.length > 0) {
@@ -169,8 +179,10 @@
             }
             else {
               $('#errorText').html("No matching terms were found for your query.");
-            }
 
+              // clear the generated elements into the DOM
+              $('#mpHpSummaryTable').html(" ");
+              $('#ysf').html(" ");            }
 
         } catch (e) {
           console.log('E3: Failed to get IDs to forward.');
