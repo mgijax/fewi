@@ -489,7 +489,7 @@ var updateQuerySummary = function() {
 			// Create a span
 			var el = new YAHOO.util.Element(document.createElement('span'));
 			//add the text node to the newly created span
-			el.appendChild(document.createTextNode("Number of lines entered: "));
+			el.appendChild(document.createTextNode("Number of IDs/Symbols entered: "));
 
 			// Create a bold
 			var b = new YAHOO.util.Element(document.createElement('b'));
