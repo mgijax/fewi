@@ -71,6 +71,11 @@
 
   <script language="JavaScript">
 
+  window.onload = function () {
+      const inp = document.getElementById("hpmpInput")
+      inp.value = window.opener.popupOpenerInput.value
+  }
+
   // gathers all checkboxes 
   function jqCheckboxes()
   {
@@ -96,9 +101,9 @@
       }
     }); 
 
-    window.opener.document.getElementById("formly_3_input_input_0").value = 
-      window.opener.document.getElementById("formly_3_input_input_0").value + ' ' + $('#hpmpInput').val() + ' ' + inputIDs;
-    window.opener.document.getElementById("formly_3_input_input_0").dispatchEvent(new Event('change'));
+    const input = window.opener.popupOpenerInput
+    input.value = input.value + ' ' + $('#hpmpInput').val() + ' ' + inputIDs;
+    input.dispatchEvent(new Event('change'));
 
     // cleanup and exit
     window.close();
