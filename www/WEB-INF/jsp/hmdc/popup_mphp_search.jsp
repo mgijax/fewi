@@ -138,7 +138,7 @@ console.log(['joe', 'jane', 'mary'].includes('jane')); // true
               var stripeRowCount=0;
               var lastSearchId='';
               var rowBgColor='';
-              var ysfList=[];
+              var resultIDs=[];
               for (var i = 0; i < data.summaryRows.length; i++) {
                 thisRow = data.summaryRows[i];
                 //console.log(thisRow);
@@ -147,7 +147,7 @@ console.log(['joe', 'jane', 'mary'].includes('jane')); // true
                 if (lastSearchId != thisRow.searchId) { 
 
                   // ysf
-                  ysfList.push(thisRow.searchId);
+                  resultIDs.push(thisRow.searchId);
                   
                   // row color
                   if(stripeRowCount % 2 != 0) {
@@ -173,9 +173,23 @@ console.log(['joe', 'jane', 'mary'].includes('jane')); // true
 
               tbl = tbl + '</table>';
 
+              // generate ysf string
+              var inputIdsNotFound=[];
+              for (var i = 0; i < inputIdsSplit.length; i++) {
+                thisInputID = inputIdsSplit[i];
+                if (!resultIDs.includes(thisInputID)){
+                  inputIdsNotFound.push(thisInputID);
+                }
+              }
+              var ysfString = " You searched for... <br> ";
+              if (inputIdsNotFound.length > 0) {
+                ysfString = ysfString + inputIdsNotFound.join(", ") + "; No matching terms were found for these term IDs <br><br>";
+              }
+              ysfString = ysfString + resultIDs.join(", ");
+
               // insert the generated elements into the DOM
+              $('#ysf').html(ysfString);
               $('#mpHpSummaryTable').html(tbl);
-              $('#ysf').html(" You searched for... <br> " + ysfList.join(", "));
             }
             else {
               $('#errorText').html("No matching terms were found for your query.");

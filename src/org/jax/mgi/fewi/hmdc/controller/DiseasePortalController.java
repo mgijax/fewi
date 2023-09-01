@@ -405,9 +405,10 @@ public class DiseasePortalController {
 
        // create sorts
        List<Sort> sorts = new ArrayList<Sort>();
-       sorts.add(new Sort("searchTermID", false));
-       //sorts.add(new Sort("searchTerm", true));
-       //sorts.add(new Sort("matchMethod", true));
+       sorts.add(new Sort("vocabSort", false));
+       sorts.add(new Sort("searchTerm", false)); 
+       sorts.add(new Sort("matchMethodSort", false));
+       sorts.add(new Sort("matchTypeSort", false));
 
 		// create query and gather results via finder
         SearchParams params = new SearchParams();
