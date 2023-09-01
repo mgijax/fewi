@@ -114,8 +114,6 @@
     var distinctIDs = [];
     var fullIdString = input.value.trim() + ' ' + $('#hpmpInput').val().trim() + ' ' + inputIDs;
     var nonDistinctIDs = fullIdString.trim().split(/[ ,]+/);
-    alert(nonDistinctIDs + " " + nonDistinctIDs.length);
-
     for (var i = 0; i < nonDistinctIDs.length; i++) {
       thisInputID = nonDistinctIDs[i].trim();
       if (!distinctIDs.includes(thisInputID)){
