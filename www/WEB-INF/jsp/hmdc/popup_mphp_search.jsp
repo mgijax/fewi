@@ -12,7 +12,11 @@
 
   <style>
 
-    #ysf {
+    #betaNotice {
+      padding: 4px;
+      color: darkred;
+    }
+        #ysf {
       padding: 4px;
     }
 
@@ -41,6 +45,9 @@
 
   <form name="PhenoPopup">
 
+    <div style='padding:4px; padding-left:10px;'>
+      <span id='betaNotice'>--(BETA Version)--</span>
+    </div>
     <div style='padding:4px; padding-left:10px;'>
       <strong>Add Related Mammalian (MP) and Human (HPO) Phenotype Terms byID</strong>
     </div>
