@@ -48,11 +48,10 @@
 			$rootScope.$emit("FilterChanged");
 		}
 
-		vm.openMpHpPopup = function() {
+                window.popupOpenerInput = null
+		vm.openMpHpPopup = function(input) {
+                        window.popupOpenerInput = input
 			var popup = window.open(FEWI_URL+"diseasePortal/searchPopup","Ratting","width=1500,height=500,left=150,top=200,toolbar=0,status=0,");
-			var childInput = popup.document.getElementById("hpmpInput");
-			childInput.value = "foooo";
-			console.log("childInput.value:" + childInput.value);
 		}
 
 		vm.removeFilters = function() {
@@ -400,8 +399,7 @@
 										const tgt = evt.target
 										const ngf = tgt.closest('ng-form')
 										const input = ngf.querySelector('input')
-										//alert(input.id);
-										vm.openMpHpPopup()
+										vm.openMpHpPopup(input)
 									}
 								}
 							}
