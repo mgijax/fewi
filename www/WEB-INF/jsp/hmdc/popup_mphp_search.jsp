@@ -49,7 +49,7 @@
       <span id='betaNotice'>--(BETA Version)--</span>
     </div>
     <div style='padding:4px; padding-left:10px;'>
-      <strong>Add Related Mammalian (MP) and Human (HPO) Phenotype Terms byID</strong>
+      <strong>Add Related Mammalian (MP) and Human (HPO) Phenotype Terms by ID</strong>
     </div>
     <br><br>
     <div style='padding:4px; padding-left:10px;'>
