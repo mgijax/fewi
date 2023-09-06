@@ -1,10 +1,8 @@
 package org.jax.mgi.fewi.controller;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -14,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.SessionFactory;
 import org.jax.mgi.fe.datamodel.BatchMarkerId;
@@ -455,7 +452,7 @@ public class BatchController {
 			String s = "";
 			while(tok.nextToken() != StreamTokenizer.TT_EOF){
 				if (tok.ttype == StreamTokenizer.TT_NUMBER){
-					s = new Double(tok.nval).toString();
+					s = String.valueOf(tok.nval);
 				} else if (tok.ttype == StreamTokenizer.TT_WORD) {
 					s = tok.sval;
 				} else {

@@ -1,7 +1,5 @@
 package org.jax.mgi.fewi.searchUtil;
 
-import java.util.Comparator;
-
 import org.jax.mgi.shr.fe.sort.SmartAlphaComparator;
 
 public class AutocompleteResult {

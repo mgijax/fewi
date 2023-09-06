@@ -14,7 +14,7 @@ public class BatchQueryForm {
 	private String ids;
 	private MultipartFile idFile = null;
 	private String fileType = "tab";
-	private Integer idColumn = new Integer(1);
+	private Integer idColumn = 1;
 	private List<String> attributes = new ArrayList<String>();
 	private String association = "None";
 

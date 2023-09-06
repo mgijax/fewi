@@ -11,9 +11,9 @@ public class PhenoMatrixPopup {
 	private String markerId = null;
 	private String symbol = new String("");
 	private boolean hasImage = true;
-	private Integer countPosResults = new Integer(0);
-	private Integer countNegResults = new Integer(0);
-	private Integer countAmbResults = new Integer(0);
+	private Integer countPosResults = 0;
+	private Integer countNegResults = 0;
+	private Integer countAmbResults = 0;
 	private String cellType = null;						// GXD or Pheno
 	private String alleles = null;						// for Pheno cells: allele combinations
 	private String genoclusterLink = null;				// for Pheno cells: parameter string to link to genocluster page
@@ -129,9 +129,9 @@ public class PhenoMatrixPopup {
 		}
 
 		// set fields
-		countPosResults = new Integer(posCount);
-		countNegResults = new Integer(negCount);
-		countAmbResults = new Integer(ambCount);
+		countPosResults = posCount;
+		countNegResults = negCount;
+		countAmbResults = ambCount;
 	}
 
 	public void setCellType(String cellType) {

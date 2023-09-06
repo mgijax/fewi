@@ -7,10 +7,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.jax.mgi.fe.datamodel.VocabTerm;
 import org.jax.mgi.fewi.searchUtil.entities.EmapaACResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /* Is: a helper class for making an autocomplete work against a list of vocabulary terms

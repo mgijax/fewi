@@ -1,14 +1,15 @@
 // $ANTLR 3.5.2 /Users/olinblodgett/git/fewi/src/org/jax/mgi/fewi/antlr/BooleanSearch/SolrBooleanSearch.g 2023-08-14 14:06:38
 
 package org.jax.mgi.fewi.antlr.BooleanSearch;
+import org.antlr.runtime.BitSet;
+import org.antlr.runtime.MismatchedSetException;
+import org.antlr.runtime.NoViableAltException;
+import org.antlr.runtime.Parser;
+import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.RecognizerSharedState;
+import org.antlr.runtime.Token;
+import org.antlr.runtime.TokenStream;
 import org.jax.mgi.fewi.searchUtil.Filter;
-import org.apache.solr.client.solrj.util.ClientUtils;
-
-
-import org.antlr.runtime.*;
-import java.util.Stack;
-import java.util.List;
-import java.util.ArrayList;
 
 @SuppressWarnings("all")
 public class SolrBooleanSearchParser extends Parser {

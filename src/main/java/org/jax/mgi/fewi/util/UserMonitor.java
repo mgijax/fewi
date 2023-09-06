@@ -1,13 +1,14 @@
 package org.jax.mgi.fewi.util;
 
-import org.springframework.web.servlet.ModelAndView;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap; 
+import org.springframework.web.servlet.ModelAndView; 
 
 /* Is: a monitor to keep an eye on user traffic and return a true/false flag for whether
  * 	he/she is behaving nicely or has exceeded a (generous) reasonable amount of traffic.

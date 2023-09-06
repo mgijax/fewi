@@ -4,16 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jax.mgi.fe.datamodel.Probe;
 import org.jax.mgi.fe.datamodel.Strain;
 import org.jax.mgi.fewi.hunter.HibernateStrainSnpCellHunter;
-import org.jax.mgi.fewi.hunter.SolrProbeHunter;
-import org.jax.mgi.fewi.hunter.SolrStrainHunter;
 import org.jax.mgi.fewi.hunter.SolrStrainAttributeFacetHunter;
+import org.jax.mgi.fewi.hunter.SolrStrainHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.shr.jsonmodel.MolecularProbe;
 import org.jax.mgi.shr.jsonmodel.SimpleStrain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

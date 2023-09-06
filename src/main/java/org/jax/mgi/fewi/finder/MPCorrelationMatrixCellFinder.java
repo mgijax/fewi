@@ -1,11 +1,8 @@
 package org.jax.mgi.fewi.finder;
 
-import org.jax.mgi.fewi.hunter.SolrMPAnnotationHunter;
 import org.jax.mgi.fewi.hunter.SolrMPCorrelationMatrixCellHunter;
-import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.entities.SolrMPAnnotation;
 import org.jax.mgi.fewi.searchUtil.entities.SolrMPCorrelationMatrixCell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

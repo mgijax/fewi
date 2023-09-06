@@ -55,6 +55,6 @@ public class ResultSetMetaData {
 		if (counts.containsKey(countName)) {
 			return counts.get(countName);
 		}
-		else return new Integer(0);
+		else return 0;
 	}
 }

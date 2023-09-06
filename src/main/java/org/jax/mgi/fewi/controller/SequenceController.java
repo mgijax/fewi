@@ -652,7 +652,7 @@ public class SequenceController {
 		} else {
 		    seq = new BlastableSequence();
 		    seqs.put(index, seq);
-		    integerKeys.add(new Integer(index));
+		    integerKeys.add(Integer.parseInt(index));
 		}
 
 		if ("flank".equals(prefix)) {
@@ -702,7 +702,7 @@ public class SequenceController {
 		if (seq == null) {
 		    seq = new BlastableSequence();
 		    seqs.put("1", seq);
-		    integerKeys.add(new Integer(1));
+		    integerKeys.add(1);
 		}
 		seq.setSnpID(value);
 
@@ -713,7 +713,7 @@ public class SequenceController {
 		if (seq == null) {
 		    seq = new BlastableSequence();
 		    seqs.put("1", seq);
-		    integerKeys.add(new Integer(1));
+		    integerKeys.add(1);
 		}
 		seq.setSnpFlank(value);
 
@@ -752,7 +752,7 @@ public class SequenceController {
 			i++;
 			index = i + "";
 			seqs.put(index, seq);
-		        integerKeys.add(new Integer(index));
+		        integerKeys.add(Integer.parseInt(index));
 		    }
 		}
 
@@ -771,7 +771,7 @@ public class SequenceController {
 	    BlastableSequence seq1 = seqs.get("1");
 	    if ((seq1.getSeqID() == null) && (seq1.getSnpFlank() == null)) {
 		seqs.remove("1");
-		integerKeys.remove(integerKeys.indexOf(new Integer(1)));
+		integerKeys.remove(integerKeys.indexOf(1));
 	    }
 	}
 

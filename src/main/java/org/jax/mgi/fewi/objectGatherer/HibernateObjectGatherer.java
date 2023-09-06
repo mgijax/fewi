@@ -32,7 +32,7 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 
         logger.debug("gathering object for keys - " + keyStr);
 
-        Integer key = new Integer(keyStr);
+        Integer key = Integer.parseInt(keyStr);
 		if (sessionFactory != null && modelObj != null){
 			Session s = sessionFactory.getCurrentSession();
 			return (T)s.get(modelObj, key);
@@ -191,7 +191,7 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 			{
 				// convert keys to Integers
 				for (String key : keys) {
-					keyObjs.add(new Integer(key));
+					keyObjs.add(Integer.parseInt(key));
 				}
 				return keyObjs;
 			}

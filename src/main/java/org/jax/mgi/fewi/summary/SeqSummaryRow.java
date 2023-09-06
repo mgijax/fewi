@@ -1,10 +1,5 @@
 package org.jax.mgi.fewi.summary;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.List;
-
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.DBConstants;
 import org.jax.mgi.fewi.util.FormatHelper;

@@ -8,8 +8,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.jax.mgi.fewi.summary.Accession;
-
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.AccessionFinder;
 import org.jax.mgi.fewi.forms.AccessionQueryForm;
@@ -21,6 +19,7 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.summary.Accession;
 import org.jax.mgi.fewi.summary.AccessionSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.UserMonitor;

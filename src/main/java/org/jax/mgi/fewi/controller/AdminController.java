@@ -19,133 +19,123 @@ import org.springframework.web.servlet.ModelAndView;
  * This controller maps all /foo/ uri's
  */
 @Controller
-@RequestMapping(value="/admin")
+@RequestMapping(value = "/admin")
 public class AdminController {
 
+	// --------------------//
+	// static variables
+	// --------------------//
 
-    //--------------------//
-    // static variables
-    //--------------------//
+	// time (in ms) at which we last suggested a garbage collection
+	private static long lastGarbageCollection = 0;
 
-    // time (in ms) at which we last suggested a garbage collection
-    private static long lastGarbageCollection = 0;
+	// --------------------//
+	// instance variables
+	// --------------------//
 
-    //--------------------//
-    // instance variables
-    //--------------------//
+	private Logger logger = LoggerFactory.getLogger(AdminController.class);
 
-    private Logger logger
-      = LoggerFactory.getLogger(AdminController.class);
+	// --------------------------------------------------------------------//
+	// public methods
+	// --------------------------------------------------------------------//
 
-    //--------------------------------------------------------------------//
-    // public methods
-    //--------------------------------------------------------------------//
+	// --------------------//
+	// Admin Page
+	// --------------------//
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView getAdminPage() {
 
+		logger.debug("->getAdminPage started");
 
-    //--------------------//
-    // Admin Page
-    //--------------------//
-    @RequestMapping(method=RequestMethod.GET)
-    public ModelAndView getAdminPage() {
+		ModelAndView mav = new ModelAndView("admin");
+		mav = populateMav(mav);
 
-        logger.debug("->getAdminPage started");
-
-        ModelAndView mav = new ModelAndView("admin");
-	mav = populateMav(mav);
-
-        return mav;
-    }
-
-
-    //-------------------------//
-    // Admin Page with Garbage Collection
-    //-------------------------//
-    @RequestMapping("/gc")
-    public ModelAndView getAdminPageWithGC(HttpServletRequest request) {
-
-        logger.debug("->getAdminPageWithGC started");
-
-        ModelAndView mav = new ModelAndView("admin");
-	mav = populateMav(mav);
-
-        mav.addObject("gc", "gc");
-
-	long startTime = System.currentTimeMillis();
-
-	// don't process a garbage collection within 30 seconds of the last
-	// one, just to keep us from getting flooded and tying up the
-	// processors maliciously
-
-	if ((startTime - lastGarbageCollection) < 30000) {
-	   mav = new ModelAndView("error");
-	   mav.addObject ("errorMsg",
-		"Too soon after last garbage collection"); 
-	   return mav;
+		return mav;
 	}
 
-	lastGarbageCollection = startTime;
-	
-	System.gc();
-	long elapsed = System.currentTimeMillis() - startTime;
- 
-	mav.addObject ("elapsed", String.format("%8.3f",
-	    new Float(elapsed / 1000.0)));
-	mav.addObject ("finalFreeMemory", String.format("%,d",
-	    new Long(Runtime.getRuntime().freeMemory())));
+	// -------------------------//
+	// Admin Page with Garbage Collection
+	// -------------------------//
+	@RequestMapping("/gc")
+	public ModelAndView getAdminPageWithGC(HttpServletRequest request) {
 
-        return mav;
-    }
+		logger.debug("->getAdminPageWithGC started");
 
-    //-------------------------//
-    // Admin Page with Caches cleared
-    //-------------------------//
-    @RequestMapping("/clear")
-    public ModelAndView getAdminPageCleared(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView("admin");
+		mav = populateMav(mav);
 
-        logger.debug("->getAdminPageCleared started");
+		mav.addObject("gc", "gc");
 
-        ModelAndView mav = new ModelAndView("admin");
-	mav = populateMav(mav);
-        mav.addObject("clear", "clear");
+		long startTime = System.currentTimeMillis();
 
-        return mav;
-    }
+		// don't process a garbage collection within 30 seconds of the last
+		// one, just to keep us from getting flooded and tying up the
+		// processors maliciously
 
-    @RequestMapping("/traffic")
-    public ModelAndView geTrafficReport(HttpServletRequest request) {
+		if ((startTime - lastGarbageCollection) < 30000) {
+			mav = new ModelAndView("error");
+			mav.addObject("errorMsg", "Too soon after last garbage collection");
+			return mav;
+		}
 
-        logger.debug("->getTrafficReport started");
- 
-        ModelAndView mav = new ModelAndView("traffic_report");
-        mav.addObject("monitor", UserMonitor.getSharedInstance());
+		lastGarbageCollection = startTime;
 
-        return mav;
-    }
+		System.gc();
+		long elapsed = System.currentTimeMillis() - startTime;
 
-    @RequestMapping("/slowEventLog")
-    public ModelAndView getSlowEventLog(HttpServletRequest request) {
+		mav.addObject("elapsed", String.format("%8.3f", elapsed / 1000.0));
+		mav.addObject("finalFreeMemory", String.format("%,d", Runtime.getRuntime().freeMemory()));
 
-        logger.debug("->getSlowEventLog started");
- 
-        ModelAndView mav = new ModelAndView("slow_event_log");
-        mav.addObject("monitor", SlowEventMonitor.getSharedMonitor());
-        return mav;
-    }
+		return mav;
+	}
 
-    //-------------------------//
-    // populate mav with standard items
-    //-------------------------//
-    private ModelAndView populateMav (ModelAndView mav) {
-	Runtime rt = Runtime.getRuntime();
+	// -------------------------//
+	// Admin Page with Caches cleared
+	// -------------------------//
+	@RequestMapping("/clear")
+	public ModelAndView getAdminPageCleared(HttpServletRequest request) {
 
-	mav.addObject ("maxMemory", String.format("%,d",
-		new Long(rt.maxMemory())));
-	mav.addObject ("totalMemory", String.format("%,d",
-		new Long(rt.totalMemory())));
-	mav.addObject ("initialFreeMemory", String.format("%,d",
-		new Long(rt.freeMemory())));
-	mav.addObject ("processors", new Integer(rt.availableProcessors()));
+		logger.debug("->getAdminPageCleared started");
 
-	return mav;
-    }
+		ModelAndView mav = new ModelAndView("admin");
+		mav = populateMav(mav);
+		mav.addObject("clear", "clear");
+
+		return mav;
+	}
+
+	@RequestMapping("/traffic")
+	public ModelAndView geTrafficReport(HttpServletRequest request) {
+
+		logger.debug("->getTrafficReport started");
+
+		ModelAndView mav = new ModelAndView("traffic_report");
+		mav.addObject("monitor", UserMonitor.getSharedInstance());
+
+		return mav;
+	}
+
+	@RequestMapping("/slowEventLog")
+	public ModelAndView getSlowEventLog(HttpServletRequest request) {
+
+		logger.debug("->getSlowEventLog started");
+
+		ModelAndView mav = new ModelAndView("slow_event_log");
+		mav.addObject("monitor", SlowEventMonitor.getSharedMonitor());
+		return mav;
+	}
+
+	// -------------------------//
+	// populate mav with standard items
+	// -------------------------//
+	private ModelAndView populateMav(ModelAndView mav) {
+		Runtime rt = Runtime.getRuntime();
+
+		mav.addObject("maxMemory", String.format("%,d", rt.maxMemory()));
+		mav.addObject("totalMemory", String.format("%,d", rt.totalMemory()));
+		mav.addObject("initialFreeMemory", String.format("%,d", rt.freeMemory()));
+		mav.addObject("processors", rt.availableProcessors());
+
+		return mav;
+	}
 }

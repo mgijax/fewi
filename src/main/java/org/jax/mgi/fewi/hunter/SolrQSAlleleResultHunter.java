@@ -12,10 +12,10 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
+import org.jax.mgi.fewi.summary.QSAlleleResult;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
-import org.jax.mgi.fewi.summary.QSAlleleResult;
 
 @Repository
 public class SolrQSAlleleResultHunter extends SolrHunter<QSAlleleResult> {

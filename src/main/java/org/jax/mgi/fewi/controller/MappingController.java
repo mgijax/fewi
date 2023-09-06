@@ -1,29 +1,22 @@
 package org.jax.mgi.fewi.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fe.datamodel.MappingExperiment;
 import org.jax.mgi.fe.datamodel.Marker;
 import org.jax.mgi.fe.datamodel.Reference;
 import org.jax.mgi.fewi.finder.MappingFinder;
+import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.searchUtil.Filter;
-import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
-import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.shr.jsonmodel.MappingExperimentSummary;
@@ -32,12 +25,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.bind.annotation.PathVariable;
 
 /*
  * This controller maps all /mapping/ uri's

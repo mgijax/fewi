@@ -1,18 +1,18 @@
 package org.jax.mgi.fewi.view;
 
 import java.io.BufferedWriter;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.HashMap;
-import java.lang.StringBuffer;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jax.mgi.fe.datamodel.*;
-import org.jax.mgi.fewi.util.DiseaseModelFilter;
-import org.jax.mgi.fewi.util.NotesTagConverter;
+import org.jax.mgi.fe.datamodel.Disease;
+import org.jax.mgi.fe.datamodel.DiseaseGroupRow;
+import org.jax.mgi.fe.datamodel.DiseaseRow;
+import org.jax.mgi.fe.datamodel.DiseaseRowToMarker;
 
 public class TextDiseaseGeneTab extends AbstractTextView {
 

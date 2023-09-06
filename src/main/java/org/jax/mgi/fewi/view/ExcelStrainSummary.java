@@ -12,7 +12,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.shr.jsonmodel.AccessionID;
 import org.jax.mgi.shr.jsonmodel.SimpleStrain;
 import org.slf4j.Logger;

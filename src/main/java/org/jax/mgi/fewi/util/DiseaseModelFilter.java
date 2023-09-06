@@ -1,11 +1,10 @@
 package org.jax.mgi.fewi.util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.jax.mgi.fe.datamodel.DiseaseModel;
-
-import java.util.HashSet;
 
 /* Is: a filter to ensure that we only display a given disease model once
  * 	on the 'all models' page for a disease

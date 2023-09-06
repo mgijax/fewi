@@ -5,10 +5,10 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
+import org.jax.mgi.fewi.matrix.DetectionConverter;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.NotesTagConverter;
-import org.jax.mgi.fewi.matrix.DetectionConverter;
 
 /**
  * wrapper around a marker; represents on row in summary

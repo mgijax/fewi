@@ -1,8 +1,8 @@
 package org.jax.mgi.fewi.finder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ArrayList;
 
 import org.jax.mgi.fe.datamodel.Disease;
 import org.jax.mgi.fe.datamodel.DiseaseRow;

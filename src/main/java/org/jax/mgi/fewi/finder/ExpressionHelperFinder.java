@@ -1,11 +1,7 @@
 package org.jax.mgi.fewi.finder;
 
-import java.lang.String;
-import java.lang.StringBuffer;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.List;
 
 import org.jax.mgi.fewi.hunter.HibernateSqlHunter;
 import org.slf4j.Logger;

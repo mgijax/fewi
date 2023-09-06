@@ -357,7 +357,7 @@ public class ImageController {
         SearchParams imageSearchParams = new SearchParams();
         imageSearchParams.setPageSize(10000);
         imageSearchParams.setSorts(genDefaultSorts());
-        Integer alleleKey = new Integer(allele.getAlleleKey());
+        Integer alleleKey = allele.getAlleleKey();
         Filter alleleKeyFilter
           = new Filter(SearchConstants.ALL_KEY, alleleKey.toString());
         imageSearchParams.setFilter(alleleKeyFilter);
@@ -424,7 +424,7 @@ public class ImageController {
         // setup search parameters to get the image objects
         SearchParams imageSearchParams = new SearchParams();
         imageSearchParams.setSorts(genDefaultSorts());
-        Integer alleleKey = new Integer(allele.getAlleleKey());
+        Integer alleleKey = allele.getAlleleKey();
         Filter alleleKeyFilter
           = new Filter(SearchConstants.ALL_KEY, alleleKey.toString());
         imageSearchParams.setFilter(alleleKeyFilter);
@@ -500,7 +500,7 @@ public class ImageController {
         imageSearchParams.setSorts(genDefaultSorts());
         page.setResultsDefault(10);
         imageSearchParams.setPaginator(page);
-        Integer markerKey = new Integer(marker.getMarkerKey());
+        Integer markerKey = marker.getMarkerKey();
         Filter markerKeyFilter
           = new Filter(SearchConstants.MRK_KEY, markerKey.toString());
         imageSearchParams.setFilter(markerKeyFilter);
@@ -579,7 +579,7 @@ public class ImageController {
         imageSearchParams.setSorts(genDefaultSorts());
         page.setResultsDefault(10);
         imageSearchParams.setPaginator(page);
-        Integer markerKey = new Integer(marker.getMarkerKey());
+        Integer markerKey = marker.getMarkerKey();
         Filter markerKeyFilter
           = new Filter(SearchConstants.MRK_KEY, markerKey.toString());
         imageSearchParams.setFilter(markerKeyFilter);

@@ -1,7 +1,6 @@
 package org.jax.mgi.fewi.view;
 
 import java.io.BufferedWriter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -11,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jax.mgi.fewi.summary.QSVocabResultWrapper;
-import org.jax.mgi.fewi.util.ParsedLocation;
 
 public class TextQSVocabSummary extends AbstractTextView {
     

@@ -1,9 +1,6 @@
 package org.jax.mgi.fewi.controller;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -17,20 +14,15 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jax.mgi.fewi.searchUtil.Filter;
-import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fe.datamodel.Allele;
-import org.jax.mgi.fe.datamodel.AlleleSequenceAssociation;
 import org.jax.mgi.fe.datamodel.Marker;
-import org.jax.mgi.fe.datamodel.MarkerLocation;
-import org.jax.mgi.fe.datamodel.Sequence;
-import org.jax.mgi.fe.datamodel.SequenceLocation;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.AlleleFinder;
-import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.QuickSearchFinder;
 import org.jax.mgi.fewi.forms.QuickSearchQueryForm;
+import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
@@ -41,15 +33,15 @@ import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.QSAlleleResult;
 import org.jax.mgi.fewi.summary.QSAlleleResultWrapper;
 import org.jax.mgi.fewi.summary.QSFeaturePart;
-import org.jax.mgi.fewi.summary.QSVocabResult;
 import org.jax.mgi.fewi.summary.QSFeatureResult;
 import org.jax.mgi.fewi.summary.QSFeatureResultWrapper;
-import org.jax.mgi.fewi.summary.QSResult;
 import org.jax.mgi.fewi.summary.QSOtherResult;
 import org.jax.mgi.fewi.summary.QSOtherResultWrapper;
+import org.jax.mgi.fewi.summary.QSResult;
 import org.jax.mgi.fewi.summary.QSStrainResult;
 import org.jax.mgi.fewi.summary.QSStrainResultWrapper;
 import org.jax.mgi.fewi.summary.QSTinyResult;
+import org.jax.mgi.fewi.summary.QSVocabResult;
 import org.jax.mgi.fewi.summary.QSVocabResultWrapper;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.FewiUtil;
@@ -60,7 +52,6 @@ import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.sort.SmartAlphaComparator;
 import org.jax.mgi.shr.fe.util.EasyStemmer;
 import org.jax.mgi.shr.fe.util.StopwordRemover;
-import org.jax.mgi.shr.jsonmodel.BrowserTerm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,8 +59,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -1723,7 +1714,7 @@ public class QuickSearchController {
         			if (resultCount > 1) {
         				s = "s";
         			}
-        			r.setAnnotationCount(new Long(resultCount));
+        			r.setAnnotationCount(resultCount.longValue());
         			r.setAnnotationText(resultCount + " gene expression result" + s);
         		} else {
         			r.setAnnotationCount(0L);

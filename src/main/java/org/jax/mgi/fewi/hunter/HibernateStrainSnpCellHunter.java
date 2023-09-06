@@ -2,11 +2,7 @@ package org.jax.mgi.fewi.hunter;
 
 import java.util.List;
 
-import org.hibernate.Query;
 import org.hibernate.SessionFactory;
-import org.jax.mgi.fe.datamodel.StrainSnpCell;
-import org.jax.mgi.fewi.searchUtil.SearchParams;
-import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

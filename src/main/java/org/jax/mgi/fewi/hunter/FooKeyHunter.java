@@ -35,6 +35,6 @@ public class FooKeyHunter {
         List<String> keyList = new ArrayList<String>();
         keyList.add("33429"); // key of gene 'bcan'
         searchResults.setResultKeys(keyList);
-        searchResults.setTotalCount(new Integer(1));
+        searchResults.setTotalCount(1);
     }
 }

@@ -3,13 +3,10 @@ package org.jax.mgi.fewi.hmdc.forms;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.Operator;
-import org.jax.mgi.fewi.searchUtil.SearchConstants;
-import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
-import org.jax.mgi.shr.fe.query.SolrLocationTranslator;
-import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

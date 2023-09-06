@@ -14,7 +14,6 @@ import org.jax.mgi.fe.datamodel.Marker;
 import org.jax.mgi.fe.datamodel.MarkerID;
 import org.jax.mgi.fe.datamodel.MarkerLocation;
 import org.jax.mgi.fe.datamodel.MarkerTissueCount;
-import org.jax.mgi.fewi.config.ContextLoader;
 
 /* wrapper class over a BatchMarkerId object, hiding some of the complexity
  */

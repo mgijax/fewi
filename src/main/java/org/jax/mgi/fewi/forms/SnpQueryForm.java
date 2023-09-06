@@ -2,6 +2,7 @@ package org.jax.mgi.fewi.forms;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.jax.mgi.fewi.util.FormatHelper;
 
 public class SnpQueryForm implements Cloneable {

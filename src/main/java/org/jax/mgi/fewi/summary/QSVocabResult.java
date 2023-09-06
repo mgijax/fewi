@@ -1,7 +1,5 @@
 package org.jax.mgi.fewi.summary;
 
-import java.util.List;
-
 /**
  * Is: one result for the quick search's vocab/strain bucket
  */

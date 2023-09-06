@@ -1,9 +1,5 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 /* Is: a sample for a high-throughput expression experiment
  * Notes: is populated using data from the gxdHtSample Solr index
  */

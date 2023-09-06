@@ -1,9 +1,9 @@
 package org.jax.mgi.fewi.finder;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.LinkedHashMap;
 
 import org.jax.mgi.fe.datamodel.QueryFormOption;
 import org.jax.mgi.fewi.hunter.HibernateQueryFormOptionHunter;

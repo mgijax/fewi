@@ -1,7 +1,7 @@
 package org.jax.mgi.fewi.matrix;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Arrays;
 
 /*
  * shared converter that identifies whether a String value should be

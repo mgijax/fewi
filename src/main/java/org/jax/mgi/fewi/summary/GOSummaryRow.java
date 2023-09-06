@@ -13,7 +13,6 @@ import org.jax.mgi.fe.datamodel.Reference;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.NotesTagConverter;
 import org.jax.mgi.fewi.util.link.IDLinker;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 /**
