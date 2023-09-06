@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache>
+
+	<!-- EHCACHE MONITOR 
+	<cacheManagerPeerListenerFactory 
+ 		class="org.terracotta.ehcachedx.monitor.probe.ProbePeerListenerFactory"
+		properties="monitorAddress=cardolan.informatics.jax.org, monitorPort=9889" />
+        -->
+
+	<!-- DEFAULT CACHE -->
+	<defaultCache 
+		eternal="false" 
+		overflowToDisk="false" 
+		maxElementsInMemory="100" 
+		memoryStoreEvictionPolicy="LRU"
+		statistics="true" />
+
+	<!-- MARKERS -->
+	<cache
+		name="mgi.frontend.datamodel.Marker"
+		maxElementsInMemory="100"
+		eternal="true"
+		overflowToDisk="false"
+		statistics="true" />
+
+	<!-- REFERENCE -->
+	<cache
+		name="mgi.frontend.datamodel.Reference"
+		maxElementsInMemory="100"
+		eternal="true"
+		overflowToDisk="false"
+		statistics="true" />
+
+</ehcache>

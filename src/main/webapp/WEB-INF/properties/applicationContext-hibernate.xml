@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:util="http://www.springframework.org/schema/util"
+		xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+		xsi:schemaLocation="
+			http://www.springframework.org/schema/beans	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.5.xsd
+			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+			http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+	<!-- ===================== RESOURCE DEFINITIONS ===================== -->
+
+	<!-- Configurer that replaces ${...} placeholders with values from a properties file -->
+	<!-- (in this case, JDBC-related settings for the dataSource definition below) -->
+    <context:property-placeholder 
+    	location="WEB-INF/properties/fewi.properties,
+    		WEB-INF/properties/common.solr.properties,
+    		WEB-INF/properties/common.fewi.properties,
+    		WEB-INF/properties/common.es.properties"
+    />
+
+	<!-- JNDI DataSource for JEE environments -->
+	<jee:jndi-lookup id="dataSource" jndi-name="${jndi.datasource}"/>
+	<!-- <jee:jndi-lookup id="dataSourceSnp" jndi-name="${jndi.datasource.snp}"/> -->
+	
+	<!-- Hibernate SessionFactory -->
+	<bean id="sessionFactory" 
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
+		p:dataSource-ref="dataSource">
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+				<prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+				<prop key="hibernate.use_sql_comments">${hibernate.use_sql_comments}</prop>
+				<prop key="hibernate.type">${hibernate.type}</prop>
+				<prop key="hibernate.generate_statistics">${hibernate.generate_statistics}</prop>
+				<prop key="hibernate.cache.use_query_cache">true</prop>
+				<prop key="hibernate.cache.use_second_level_cache">true</prop>
+				<prop key="hibernate.cache.region.factory_class">
+                	org.hibernate.cache.ehcache.EhCacheRegionFactory
+                </prop>
+				<!-- <prop key="hibernate.cache.region.provider_class">
+					net.sf.ehcache.hibernate.SingletonEhCacheRegionFactory
+				</prop>	
+				<prop key="hibernate.cache.provider_class">
+					org.hibernate.cache.EhCacheProvider
+				</prop> -->		
+				<prop key="hibernate.default_batch_fetch_size">50</prop>   
+				<prop key="hibernate.default_schema">fe</prop>
+				<prop key="hibernate.jdbc.fetch_size">50</prop>   
+				
+			</props>
+		</property>
+		<property name="packagesToScan">
+			<list>
+				<value>mgi.frontend.datamodel</value>
+			</list>
+		</property>
+	</bean>
+	<!-- <bean id="sessionFactorySnp" 
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
+		p:dataSource-ref="dataSourceSnp">
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+				<prop key="hibernate.generate_statistics">
+					${hibernate.generate_statistics}
+				</prop>
+				<prop key="hibernate.cache.use_query_cache">true</prop>
+				<prop key="hibernate.cache.use_second_level_cache">true</prop>
+				<prop key="hibernate.cache.region.factory_class">
+                	org.hibernate.cache.ehcache.EhCacheRegionFactory
+                </prop>
+				<prop key="hibernate.cache.region.provider_class">
+					net.sf.ehcache.hibernate.SingletonEhCacheRegionFactory
+				</prop>	
+				<prop key="hibernate.cache.provider_class">
+					org.hibernate.cache.EhCacheProvider
+				</prop>		
+				<prop key="hibernate.default_batch_fetch_size">50</prop>   
+				<prop key="hibernate.jdbc.fetch_size">50</prop>   
+				
+			</props>
+		</property>
+		<property name="packagesToScan">
+			<list>
+				<value>mgi.frontend.datamodel.snp</value>
+			</list>
+		</property>
+	</bean> -->
+
+	<bean id="transactionManager" 
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager"
+		p:sessionFactory-ref="sessionFactory">
+		<qualifier value="transactionManager"/>
+	</bean>
+	<!-- <bean id="transactionManagerSnp" 
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager"
+		p:sessionFactory-ref="sessionFactorySnp">
+		<qualifier value="transactionManagerSnp"/>
+	</bean> -->
+			
+	<tx:annotation-driven/>
+	
+	<!--
+	Activates various annotations to be detected in bean classes:
+	Spring's @Required and @Autowired, as well as JSR 250's @Resource.
+	-->
+	<context:annotation-config/>
+</beans>
