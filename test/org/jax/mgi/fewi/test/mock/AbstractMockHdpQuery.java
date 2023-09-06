@@ -1,18 +1,20 @@
 package org.jax.mgi.fewi.test.mock;
 
-import java.util.List;
 import java.io.IOException;
 import java.util.ArrayList;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
+import java.util.List;
+
 import org.jax.mgi.fewi.hmdc.controller.DiseasePortalController;
 import org.jax.mgi.fewi.hmdc.forms.DiseasePortalCondition;
 import org.jax.mgi.fewi.hmdc.forms.DiseasePortalConditionGroup;
 import org.jax.mgi.fewi.hmdc.forms.DiseasePortalConditionQuery;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 @Scope("prototype") 

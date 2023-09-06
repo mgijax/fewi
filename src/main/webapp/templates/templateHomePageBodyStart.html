@@ -1,0 +1,388 @@
+<!--===================== Body Start ===========================-->
+
+</head>
+<body id="body" class="yui-skin-sam">
+
+<div id="headerContainer">
+<div id="topBannerContainer" style="position:relative;">
+
+  <div id="homePageTitle" style="position:absolute; bottom:0px; left:150px;">
+    Mouse Genome Informatics
+  </div>
+  <div id="AGRLogo" style="float:right; padding-top: 5px; padding-right: 5px">
+    <a href="http://www.alliancegenome.org/" target="_blank"><img src="https://www.informatics.jax.org/webshare/images/agr_logo_smallest.png" style="height:70px"></a>
+  </div>
+
+  <div id="logoContainer" style="position:absolute; left:0; top:0;">
+    <div>
+      
+<a href="https://www.informatics.jax.org/" style="background-color: transparent">
+ <img src="https://www.informatics.jax.org/webshare/images/mgi_logo.gif" border=0>
+</a>
+
+    </div>
+    <span class="logoFooterContainer">
+      
+&nbsp;&nbsp;<a class="logoFooterAnchor" href="https://www.informatics.jax.org/mgihome/projects/aboutmgi.shtml">About</a>
+&nbsp;&nbsp;<a class="logoFooterAnchor" href="https://www.informatics.jax.org/mgihome/homepages/help.shtml">Help</a>
+&nbsp;&nbsp;<a class="logoFooterAnchor" href="https://www.informatics.jax.org/faq/FAQ.shtml">FAQ</a>
+
+    </span>
+  </div>
+  
+
+  <div style="position:absolute; top:4px; left:150px;">
+    <div class="notice">
+    <!--<div class="tour">
+      <div class="bl"><div class="br"><div class="tl"><div class="tr">
+        <a href='https://www.informatics.jax.org/mgihome/other/mgi_jobs.shtml'>MGI Job Opening</a>
+      </div></div></div></div>
+    </div>
+    <span class="small"></span>-->
+</div>
+
+  </div>
+
+</div>
+
+<!-- Menu Bar Start -->
+<div id="navBarMenu" class="yuimenubar">
+<div class="bd">
+<ul class="first-of-type">
+
+  <!-- Searches Start -->
+  <li class="yuimenubaritem first-of-type"><a class="yuimenubaritemlabel" href="https://www.informatics.jax.org/allsearch.shtml">Search</a>
+
+  <div id="navBarSearch" class="yuimenu">
+  <div class="bd">
+
+    <ul class="first-of-type">
+      <li class="yuimenuitem first-of-type"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/allsearch.shtml" title="">All Search Tools</a></li>
+
+
+      <!-- Marker Submenu -->
+      <li class="yuimenuitem"><a class="yuimenuitemlabel">Genes</a>
+      <div id="navBarGenes" class="yuimenu">
+      <div class="bd">
+        <ul class="first-of-type">
+          <li class="yuimenuitem first-of-type"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/marker/"
+            onMouseOver="return overlib('Search for genes and genome features by symbol, name, location, gene ontology classification or phenotype.',ANCHOR, 'navBarGenes', ANCHORALIGN, 'UR', 'UL');" onMouseOut="nd();">
+            Genes &amp; Markers Query</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/batch"
+            onMouseOver="return overlib('Input a list of gene IDs or symbols  and retrieve other database IDs and gene attributes (e.g. phenotypes, GO).',ANCHOR, 'navBarGenes', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            Batch Query</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="http://jbrowse.informatics.jax.org/?data=data/GRCm39"
+            onMouseOver="return overlib('Create a graphical display of genome features from regions of the mouse genome.',ANCHOR, 'navBarGenes', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            JBrowse Genome Browser</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/mgv/"
+            onMouseOver="return overlib('Compare genome features of de novo sequenced mouse strains.',ANCHOR, 'navBarGenes', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            Multiple Genome Viewer (MGV)</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/genes.shtml">More</a></li>
+        </ul>
+      </div>
+      </div>
+      </li>
+
+
+      <!-- Pheno Submenu -->
+      <li class="yuimenuitem"><a class="yuimenuitemlabel">Phenotypes</a>
+      <div id="navBarPhenotypes" class="yuimenu">
+      <div class="bd">
+        <ul class="first-of-type">
+          <li class="yuimenuitem first-of-type"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/allele/"
+            onMouseOver="return overlib('Search for mutations or QTL based on phenotype, human disease, mutation type, gene, or genome location.',ANCHOR, 'navBarPhenotypes', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            Phenotypes, Alleles &amp; Diseases Query</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/vocab/mp_ontology"
+            onMouseOver="return overlib('Search for a phenotype term to find relevant mutant genotypes.',ANCHOR, 'navBarPhenotypes', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            Mammalian Phenotype (MP) Browser</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/disease"
+            onMouseOver="return overlib('Browse for a human disease or condition term to find mouse models.',ANCHOR, 'navBarPhenotypes', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            Human Disease (DO) Browser</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/vocab/hp_ontology"
+            onMouseOver="return overlib('Search for a human phenotype ontology term to find relevant human diseases.',ANCHOR, 'navBarPhenotypes', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            Human Phenotype (HPO) Browser</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/phenotypes.shtml">More</a></li>
+        </ul>
+      </div>
+      </div>
+      </li>
+
+
+      <!-- Human Mouse Disease Connection -->
+      <li class="yuimenuitem"><a id="navBarHMDC" class="yuimenuitemlabel" href="https://www.informatics.jax.org/diseasePortal"
+        onMouseOver="return overlib('Human-Mouse: Disease Connection', ANCHOR, 'navBarHMDC', ANCHORALIGN, 1.0,0.5,0,0.5);"  onMouseOut="nd();">
+        Human Disease</a>
+      </li>
+
+
+      <!-- Expression Submenu -->
+      <li class="yuimenuitem"><a class="yuimenuitemlabel">Expression</a>
+      <div id="navBarExpression" class="yuimenu">
+      <div class="bd">
+        <ul class="first-of-type">
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/gxd/"
+            onMouseOver="return overlib('Search for detailed gene expression assay results.',ANCHOR, 'navBarExpression', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            Gene Expression Data Search</a></li>
+          <li class="yuimenuitem first-of-type"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/gxdlit"
+            onMouseOver="return overlib('Search for references on gene expression during development.',ANCHOR, 'navBarExpression', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            Gene Expression Literature Search</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/vocab/gxd/anatomy/EMAPA:16039"
+            onMouseOver="return overlib('Search or browse for anatomical structures; includes links to associated expression results.',ANCHOR, 'navBarExpression', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            Mouse Developmental Anatomy Browser</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/gxd/htexp_index"
+            onMouseOver="return overlib('Search for experiments using sample metadata annotations.',ANCHOR, 'navBarExpression', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            RNA-Seq and Microarray Experiment Search</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/expression.shtml">More</a></li>
+        </ul>
+      </div>
+      </div>
+      </li>
+
+      
+      <!-- Recombinase -->
+      <li class="yuimenuitem"><a id="navBarCre" class="yuimenuitemlabel" href="https://www.informatics.jax.org/home/recombinase"
+          onMouseOver="return overlib('Get recombinase (cre) activity data for knock-in and transgene alleles.',ANCHOR, 'navBarCre', ANCHORALIGN, 1.0,0.5,0,0.5);"  onMouseOut="nd();">
+          Recombinase (cre)</a></li>
+
+
+      <!-- GO Functional Annotations Submenu -->
+      <li class="yuimenuitem"><a class="yuimenuitemlabel">Function</a>
+      <div id="navBarFunction" class="yuimenu">
+      <div class="bd">
+        <ul class="first-of-type">
+          <li class="yuimenuitem first-of-type"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/vocab/gene_ontology"
+            onMouseOver="return overlib('Browse the Gene Ontology and mouse annotations in MGI.',ANCHOR, 'navBarFunction', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            GO Browser</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/marker/"
+            onMouseOver="return overlib('Search for genes and genome features by symbol, name, location, gene ontology classification or phenotype.',ANCHOR, 'navBarFunction', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            Genes &amp; Markers Query</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/batch"
+            onMouseOver="return overlib('Obtain sets of MGI IDs for use in GO tools.',ANCHOR, 'navBarFunction', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            Batch Query</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/function.shtml">More</a></li>
+        </ul>
+      </div>
+      </div>
+      </li>
+
+
+      <!-- Strains Submenu -->
+      <li class="yuimenuitem"><a class="yuimenuitemlabel">Strains / SNPs</a>
+      <div id="navBarStrains" class="yuimenu">
+      <div class="bd">
+        <ul class="first-of-type">
+          <li class="yuimenuitem first-of-type"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/home/strain"
+          	onMouseOver="return overlib('Search for strains by name, synonyms, or attributes.',ANCHOR, 'navBarStrains', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">Strain Query</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/snp"
+            onMouseOver="return overlib('Search for SNPs by strain(s), SNP attributes, genomic position, or associated genes.',ANCHOR, 'navBarStrains', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            SNP Query</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/mgv/"
+            onMouseOver="return overlib('Compare genome features of de novo sequenced mouse strains.',ANCHOR, 'navBarStrains', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            Multiple Genome Viewer (MGV)</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/home/strain">More</a></li>
+        </ul>
+      </div>
+      </div>
+      </li>
+
+
+      <!-- Homology Submenu -->
+      <li class="yuimenuitem"><a id="navBarHomology" class="yuimenuitemlabel" href="https://www.informatics.jax.org/homology.shtml"
+        onMouseOver="return overlib('Find out more about Homology relationships in MGI.',ANCHOR, 'navBarHomology', ANCHORALIGN, 1.0,0.5,0,0.5);"  onMouseOut="nd();">
+        Homology</a></li>
+
+      <!-- MTB -->
+      <li class="yuimenuitem"><a id="navBarMTB" class="yuimenuitemlabel" href="http://tumor.informatics.jax.org/mtbwi/index.do"
+        onMouseOver="return overlib('MTB provides information on the frequency, pathology, and genetics of spontaneous and induced tumors in mice.',ANCHOR, 'navBarMTB', ANCHORALIGN, 1.0,0.5,0,0.5);"  onMouseOut="nd();">
+        Tumors</a></li>
+
+      <!-- Sequence Submenu -->
+      <li class="yuimenuitem"><a class="yuimenuitemlabel">Sequence Searches</a>
+      <div id="navBarSequences" class="yuimenu">
+      <div class="bd">
+        <ul class="first-of-type">
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://blast.ncbi.nlm.nih.gov/Blast.cgi"
+            onMouseOver="return overlib('Search for sequence similarity using BLAST at NCBI.',ANCHOR, 'navBarSequences', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            BLAST at NCBI</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="http://jbrowse.informatics.jax.org/?data=data/GRCm39"
+            onMouseOver="return overlib('Create a graphical display of genome features from regions of the mouse genome.',ANCHOR, 'navBarSequences', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            JBrowse Genome Browser</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/batch"
+            onMouseOver="return overlib('Input a list of gene IDs or symbols  and retrieve other database IDs and gene attributes (e.g. phenotypes, GO).',ANCHOR, 'navBarSequences', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            Batch Query</a></li>
+        </ul>
+      </div>
+      </div>
+      </li>
+
+      <!-- References Submenu -->
+      <li class="yuimenuitem"><a class="yuimenuitemlabel">References</a>
+      <div id="navBarReferences" class="yuimenu">
+      <div class="bd">
+        <ul class="first-of-type">
+          <li class="yuimenuitem first-of-type"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/reference"
+            onMouseOver="return overlib('Search for references (with abstracts) by title, author, journal, year, or abstract.',ANCHOR, 'navBarReferences', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            Reference Query</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/gxdlit"
+            onMouseOver="return overlib('Search for references on gene expression during development.',ANCHOR, 'navBarReferences', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            Gene Expression Literature Query</a></li>
+        </ul>
+      </div>
+      </div>
+      </li>
+
+      <!-- Vocabularies Submenu -->
+      <li class="yuimenuitem"><a class="yuimenuitemlabel">Vocabularies</a>
+      <div id="navBarVocabularies" class="yuimenu">
+      <div class="bd">
+        <ul class="first-of-type">
+          <li class="yuimenuitem first-of-type"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/vocab/gene_ontology"
+            onMouseOver="return overlib('Browse the Gene Ontology and mouse annotations in MGI.',ANCHOR, 'navBarVocabularies', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            GO Browser</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/disease"
+            onMouseOver="return overlib('Browse for a human disease or condition term to find mouse models.',ANCHOR, 'navBarVocabularies', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            Human Disease (DO) Browser</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/vocab/mp_ontology"
+            onMouseOver="return overlib('Search for a phenotype term to find relevant mutant genotypes.',ANCHOR, 'navBarVocabularies', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            Mammalian Phenotype (MP) Browser</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/vocab/gxd/anatomy/EMAPA:16039"
+            onMouseOver="return overlib('Search or browse for anatomical structures; includes links to associated expression results.',ANCHOR, 'navBarVocabularies', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            Mouse Developmental Anatomy Browser</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/vocab/gxd/ma_ontology"
+            onMouseOver="return overlib('An extensive ontology of anatomical structures for the postnatal mouse.',ANCHOR, 'navBarVocabularies', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            Adult Mouse Anatomy Browser</a></li>
+          <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/vocab/hp_ontology"
+            onMouseOver="return overlib('Search for a human phenotype ontology term to find relevant human diseases.',ANCHOR, 'navBarVocabularies', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+            Human Phenotype (HPO) Browser</a></li>
+        </ul>
+      </div>
+      </div>
+      </li>
+
+      <!-- Non-Drop-Downs -->
+      <li class="yuimenuitem"><a id="navBarBatch" class="yuimenuitemlabel" href="https://www.informatics.jax.org/batch"
+        onMouseOver="return overlib('Input a list of gene IDs or symbols  and retrieve other database IDs and gene attributes (e.g. phenotypes, GO).',ANCHOR, 'navBarBatch', ANCHORALIGN, 1.0,0.5,0,0.5);"  onMouseOut="nd();">
+        Batch Query</a></li>
+
+      <li class="yuimenuitem"><a id="navBarMine" class="yuimenuitemlabel" href="http://www.mousemine.org"
+        onMouseOver="return overlib('Access MGI data via InterMine.',ANCHOR, 'navBarMine', ANCHORALIGN, 1.0,0.5,0,0.5);"  onMouseOut="nd();">
+        MouseMine</a></li>
+
+      <!-- Vocabularies Submenu -->
+      <li class="yuimenuitem"><a class="yuimenuitemlabel">Mouse Genome Browsers</a>
+      <div id="navBarGenomeBrowsers" class="yuimenu">
+      <div class="bd">
+        <ul class="first-of-type">
+			<li class="yuimenuitem"><a id="navBarJBrowse" class="yuimenuitemlabel" href="http://jbrowse.informatics.jax.org/?data=data/GRCm39"
+				onMouseOver="return overlib('Create a graphical display of genome features from regions of the mouse genome.',ANCHOR, 'navBarJBrowse', ANCHORALIGN, 1.0,0.5,0,0.5);"  onMouseOut="nd();">
+				JBrowse Genome Browser</a></li>
+			<li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/mgv/"
+				onMouseOver="return overlib('Compare genome features of de novo sequenced mouse strains.',ANCHOR, 'navBarJBrowse', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">
+				Multiple Genome Viewer (MGV)</a></li>
+        </ul>
+      </div>
+      </div>
+      </li>
+    </ul>
+  </div>
+  </div>
+  </li>
+
+  <!-- Searches Dropmenu End -->
+
+
+  <!-- Download Dropmenu Start -->
+  <li class="yuimenubaritem"><a class="yuimenubaritemlabel" href="https://www.informatics.jax.org/downloads/reports/index.html">Download</a>
+  <div id="navBarDownload" class="yuimenu">
+  <div class="bd">
+    <ul class="first-of-type">
+      <li class="yuimenuitem first-of-type"> <a class="yuimenuitemlabel" href="https://www.informatics.jax.org/downloads/reports/index.html">All MGI Reports</a> </li>
+      <li class="yuimenuitem"> <a class="yuimenuitemlabel" href="https://www.informatics.jax.org/batch">Batch Query</a> </li>
+      <li class="yuimenuitem"> <a class="yuimenuitemlabel" href="https://www.informatics.jax.org/downloads/reports/index.html#marker">Genes &amp; Markers</a> </li>
+      <li class="yuimenuitem"> <a class="yuimenuitemlabel" href="https://www.informatics.jax.org/downloads/reports/index.html#seq">Sequence Data</a> </li>
+      <li class="yuimenuitem"> <a class="yuimenuitemlabel" href="https://www.informatics.jax.org/downloads/reports/index.html#homology">Vertebrate Homology</a> </li>
+      <li class="yuimenuitem"> <a class="yuimenuitemlabel" href="https://www.informatics.jax.org/downloads/reports/index.html#go">Gene Ontology Data</a> </li>
+      <li class="yuimenuitem"> <a class="yuimenuitemlabel" href="https://www.informatics.jax.org/downloads/reports/index.html#strain">Strains &amp; Polymorphisms</a> </li>
+      <li class="yuimenuitem"> <a class="yuimenuitemlabel" href="https://www.informatics.jax.org/downloads/reports/index.html#expression">Gene Expression</a> </li>
+      <li class="yuimenuitem"> <a class="yuimenuitemlabel" href="https://www.informatics.jax.org/downloads/reports/index.html#pheno">Phenotypic Data</a> </li>
+                    <li class="yuimenuitem"> <a class="yuimenuitemlabel" href="https://www.informatics.jax.org/downloads/reports/index.html#cre">Recombinase (cre)</a> </li>              
+      <li class="yuimenuitem"> <a class="yuimenuitemlabel" href="https://www.informatics.jax.org/downloads/reports/index.html#nomen">Nomenclature</a> </li>
+      <li class="yuimenuitem"> <a class="yuimenuitemlabel" href="https://www.informatics.jax.org/downloads/reports/index.html#refs">References</a> </li>
+      <li class="yuimenuitem"> <a class="yuimenuitemlabel" href="https://www.informatics.jax.org/downloads/reports/index.html#clonecoll">Clone Collections</a> </li>
+      <li class="yuimenuitem"> <a class="yuimenuitemlabel" href="https://www.informatics.jax.org/downloads/reports/index.html#dnamap">DNA Mapping Panels</a> </li>
+    </ul>
+  </div>
+  </div>
+  </li>
+  <!-- Download Dropmenu End -->
+  
+  
+  <!-- Resources Dropmenu Start -->
+  <li class="yuimenubaritem"><a class="yuimenubaritemlabel" href="https://www.informatics.jax.org/resources.shtml">More Resources</a>
+  <div id="navBarResources" class="yuimenu">
+  <div class="bd">
+    <ul class="first-of-type">
+      <li class="yuimenuitem first-of-type"> <a class="yuimenuitemlabel" href="https://www.informatics.jax.org/resources.shtml">More Resources Index</a></li>
+      <li class="yuimenuitem"> <a class="yuimenuitemlabel" href="https://www.informatics.jax.org/mgihome/lists/lists.shtml">Research Community E-mail Lists</a></li>
+      <li class="yuimenuitem"> <a class="yuimenuitemlabel" href="https://www.informatics.jax.org/resources.shtml#res_books">Online Books</a></li>
+      <li class="yuimenuitem"> <a class="yuimenuitemlabel" href="https://www.informatics.jax.org/mgihome/nomen/index.shtml">Nomenclature Home Page</a></li>
+      <li class="yuimenuitem"> <a class="yuimenuitemlabel" href="https://www.informatics.jax.org/glossary">MGI Glossary</a></li>        
+      <li class="yuimenuitem"> <a class="yuimenuitemlabel" href="http://proto.informatics.jax.org/"> Prototype Tools</a> </li>
+      <li class="yuimenuitem"> <a class="yuimenuitemlabel" href="http://phenome.jax.org">Mouse Phenome Database (MPD)</a></li>
+      <li class="yuimenuitem"> <a class="yuimenuitemlabel" href="http://www.informatics.jax.org/knockout_mice/">Deltagen and Lexicon Knockout Mice</a></li>
+      <li class="yuimenuitem"> <a class="yuimenuitemlabel" href="https://www.mousephenotype.org/" 
+          id="navBarKomp" onMouseOver="return overlib('Producing and phenotyping knockout mice from the IKMC mutant ES cell line resource.',ANCHOR, 'navBarKomp', ANCHORALIGN, 'UR', 'UL');"  onMouseOut="nd();">International Mouse Phenotyping Consortium (IMPC)</a></li>
+      <li class="yuimenuitem"> <a class="yuimenuitemlabel" href="https://www.informatics.jax.org/downloads/datasets/index.html">Contributed Data Sets</a></li>
+      <li class="yuimenuitem"> <a class="yuimenuitemlabel">Community Links</a>
+        <div id="navBarLinks" class="yuimenu">
+          <div class="bd">
+            <ul class="first-of-type">
+              <li class="yuimenuitem first-of-type"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/mgihome/other/mouse_facts4.shtml">Mouse Resources & Model Organism Links</a></li>
+              <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/mgihome/other/phenoallele_commun_resource.shtml">Phenotypes &amp; Mutants Community Resources</a></li>
+              <li class="yuimenuitem"><a class="yuimenuitemlabel" href="http://www.oxfordjournals.org/nar/database/a/" id="navBarNAR" onMouseOver="return overlib('An index of over 1500 biological databases compiled by the journal of Nucleic Acids Research. Includes links for other model organisms and species, diseases, DNA, RNA, and protein resources.',ANCHOR, 'navBarNAR', ANCHORALIGN, 'UR', 'UL');" onMouseOut="nd();">Nucleic Acids Research (Journal) Database Summary</a></li>
+              <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/mgihome/other/mouse_facts1.shtml">Mouse Facts</a></li>
+            </ul>
+          </div>
+        </div>
+      </li>
+      <li class="yuimenuitem"> <a class="yuimenuitemlabel" href="#">Software Developer Tools</a>
+        <div id="navBarSoftware" class="yuimenu">
+          <div class="bd">
+            <ul class="first-of-type">
+              <li class="yuimenuitem first-of-type"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/mgihome/other/link_instructions.shtml">Creating Web Links to MGI</a></li>
+              <li class="yuimenuitem"><a class="yuimenuitemlabel" href="http://www.mousemine.org">MouseMine</a></li>
+              <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/software.shtml#sql">Direct SQL Account</a></li>
+              <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/schema_pg/">Database Schema Browser</a></li>
+              <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/downloads/reports/index.html">All MGI Reports</a></li>
+              <li class="yuimenuitem"><a class="yuimenuitemlabel" href="https://www.informatics.jax.org/software.shtml">More</a></li>
+            </ul>
+          </div>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+  </div>
+  </li>
+  <!-- Resources Dropmenu End -->
+
+  <!-- Direct Links  -->
+  <li class="yuimenubaritem"><a class="yuimenubaritemlabel" href="https://www.informatics.jax.org/submit.shtml">Submit Data</a></li>
+  <li class="yuimenubaritem"><a class="yuimenubaritemlabel" href="http://www.findmice.org/index.jsp" title="International Mouse Strain Resource (IMSR)">Find Mice (IMSR)</a></li>
+  <li class="yuimenubaritem"><a class="yuimenubaritemlabel" href="https://www.informatics.jax.org/tools.shtml" title="Analysis Tools"><img src="https://www.informatics.jax.org/webshare/images/tools.gif" alt="Analysis Tools"> Analysis Tools</a></li>      
+  <li class="yuimenubaritem"><a class="yuimenubaritemlabel" href="https://www.informatics.jax.org/mgihome/support/mgi_inbox.shtml" title="Contact user support">Contact&nbsp;Us</a></li>
+  <li class="yuimenubaritem"><a class="yuimenubaritemlabel" href="https://www.informatics.jax.org/mgihome/homepages/browser_compatibility.shtml" title="Browser compatibility">Browsers</a></li>
+
+</ul>
+</div>
+</div>
+
+<!-- Menu Bar End -->
+
+</div>
+
+<div id="templateBodyInsert"> <!-- wrapper around inserted page body -->
+
+
+
+

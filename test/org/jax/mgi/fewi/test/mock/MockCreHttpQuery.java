@@ -1,12 +1,13 @@
 package org.jax.mgi.fewi.test.mock;
 
-import org.codehaus.jackson.map.DeserializationConfig.Feature;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
 import org.jax.mgi.fewi.forms.RecombinaseQueryForm;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * A utility class for mocking GXD queries either through http requests
@@ -48,7 +49,7 @@ public class MockCreHttpQuery implements MockQuery
 
     	ObjectMapper mapper = new ObjectMapper();
     	// tell the mapper to ignore unknown fields in the json response
-    	mapper.configure(Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     	
     	JsonSummaryResponse<MockRecombinaseSummary> results = null; 
     	results = mapper.readValue(response.getContentAsString(), 

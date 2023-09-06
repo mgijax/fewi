@@ -1,0 +1,13 @@
+AND=4
+LPAREN=5
+NOT=6
+OR=7
+QUOTED=8
+RPAREN=9
+WORD=10
+WS=11
+'('=5
+')'=9
+'AND'=4
+'NOT'=6
+'OR'=7

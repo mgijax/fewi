@@ -7,8 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
 import org.jax.mgi.fewi.controller.AutoCompleteController;
 import org.jax.mgi.fewi.controller.GXDController;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
@@ -22,6 +20,9 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AnatomySearchTest extends BaseConcordionTest {
 

@@ -2,12 +2,13 @@ package org.jax.mgi.fewi.test.mock;
 
 import java.util.List;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
 import org.jax.mgi.fewi.forms.GxdQueryForm;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * A utility class for mocking GXD queries either through http requests

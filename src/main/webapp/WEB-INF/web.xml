@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<display-name>fewi</display-name>
+
+	<!-- SERVLETS & SERVLET MAPPINGS -->
+	<servlet>
+		<servlet-name>fewi</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>fewi</servlet-name>
+		<url-pattern>/mgi/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- JSP config -->
+	<jsp-config>
+		<jsp-property-group>
+			<url-pattern>*.[jsp|html]</url-pattern>
+			<trim-directive-whitespaces>true</trim-directive-whitespaces>
+		</jsp-property-group>
+	</jsp-config>
+
+
+	<!-- FILTERS & FILTER MAPPINGS -->
+	<filter>
+		<filter-name>hibernateFilter</filter-name>
+		<filter-class>org.springframework.orm.hibernate4.support.OpenSessionInViewFilter</filter-class>
+		<init-param>
+			<param-name>sessionFactoryBeanName</param-name>
+			<param-value>sessionFactory</param-value>
+		</init-param>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>hibernateFilter</filter-name>
+		<url-pattern>/mgi/*</url-pattern>
+	</filter-mapping>
+
+
+	<!-- CONTEXT PARAMS & LISTENERS -->
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/properties/applicationContext-hibernate.xml</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- WELCOME -->
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+	<error-page>
+		<error-code>404</error-code>
+		<location>/404.jsp</location>
+	</error-page>
+
+	<!-- Configure browser caching using cachefilter.jar -->
+	<filter>
+		<filter-name>imagesCache</filter-name>
+		<filter-class>com.samaxes.filter.CacheFilter</filter-class>
+		<init-param>
+			<param-name>static</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>expirationTime</param-name>
+			<param-value>600</param-value>
+		</init-param>
+	</filter>
+	<filter>
+		<filter-name>cssCache</filter-name>
+		<filter-class>com.samaxes.filter.CacheFilter</filter-class>
+		<init-param>
+			<param-name>expirationTime</param-name>
+			<param-value>0</param-value>
+		</init-param>
+	</filter>
+	<filter>
+		<filter-name>jsCache</filter-name>
+		<filter-class>com.samaxes.filter.CacheFilter</filter-class>
+		<init-param>
+			<param-name>private</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>expirationTime</param-name>
+			<param-value>0</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>cssCache</filter-name>
+		<url-pattern>*.css</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>jsCache</filter-name>
+		<url-pattern>*.js</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>imagesCache</filter-name>
+		<url-pattern>*.png</url-pattern>
+		<url-pattern>*.gif</url-pattern>
+		<url-pattern>*.jpg</url-pattern>
+	</filter-mapping>
+</web-app>
