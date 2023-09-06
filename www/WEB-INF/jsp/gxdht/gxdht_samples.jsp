@@ -101,7 +101,7 @@ a { text-decoration: none; }
                             <td>${sample.celltypeTerm}</td>
                         </c:if>
   	          	<td><fewi:super value="${sample.geneticBackground}" /></td>
-  	          	<td><fewi:allelePairs value="${sample.mutantAlleles}" noLink="true" /></td>
+  	          	<td><fewi:allelePairs value="${sample.mutantAlleles}" newWindow="true" /></td>
   	          	<td>${sample.sex}</td>
   	          </c:if>
   	  	      <c:if test="${sample.relevancy != 'Yes'}">
