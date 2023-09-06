@@ -1,14 +1,11 @@
 package org.jax.mgi.fewi.util;
 
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.HashMap;
-import java.lang.StringBuffer;
+import java.util.List;
+import java.util.Map;
 
-import org.jax.mgi.fe.datamodel.VocabChild;
 import org.jax.mgi.fewi.config.ContextLoader;
-import org.jax.mgi.fewi.controller.DiseaseController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

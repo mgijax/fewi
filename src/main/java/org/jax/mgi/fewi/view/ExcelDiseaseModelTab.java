@@ -1,14 +1,9 @@
 package org.jax.mgi.fewi.view;
 
-import java.io.BufferedWriter;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.HashMap;
-
-import org.jax.mgi.fe.datamodel.*;
-import org.jax.mgi.fewi.util.DiseaseModelFilter;
-import org.jax.mgi.fewi.util.NotesTagConverter;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.jax.mgi.fe.datamodel.Disease;
+import org.jax.mgi.fe.datamodel.DiseaseModel;
+import org.jax.mgi.fe.datamodel.Reference;
+import org.jax.mgi.fewi.util.DiseaseModelFilter;
+import org.jax.mgi.fewi.util.NotesTagConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

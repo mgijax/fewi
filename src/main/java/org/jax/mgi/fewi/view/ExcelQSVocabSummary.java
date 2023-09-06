@@ -14,7 +14,6 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.jax.mgi.fewi.summary.QSVocabResultWrapper;
-import org.jax.mgi.fewi.util.ParsedLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

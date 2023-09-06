@@ -1,13 +1,11 @@
 package org.jax.mgi.fewi.util;
 
-import java.util.ArrayList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.jax.mgi.fe.datamodel.VocabTerm;
-import org.jax.mgi.fewi.config.ContextLoader;
+
 import org.jax.mgi.shr.jsonmodel.BrowserChild;
 import org.jax.mgi.shr.jsonmodel.BrowserTerm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /* Is: one node in a jsTree for the shared vocabulary browser
  */

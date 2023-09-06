@@ -1,10 +1,13 @@
 // $ANTLR 3.5.2 /Users/olinblodgett/git/fewi/src/org/jax/mgi/fewi/antlr/BooleanSearch/SolrBooleanSearch.g 2023-08-14 14:06:38
 package org.jax.mgi.fewi.antlr.BooleanSearch;
 
-import org.antlr.runtime.*;
-import java.util.Stack;
-import java.util.List;
-import java.util.ArrayList;
+import org.antlr.runtime.CharStream;
+import org.antlr.runtime.EarlyExitException;
+import org.antlr.runtime.Lexer;
+import org.antlr.runtime.MismatchedSetException;
+import org.antlr.runtime.NoViableAltException;
+import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.RecognizerSharedState;
 
 @SuppressWarnings("all")
 public class SolrBooleanSearchLexer extends Lexer {

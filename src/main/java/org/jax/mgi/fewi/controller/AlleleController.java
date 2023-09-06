@@ -1,10 +1,10 @@
 package org.jax.mgi.fewi.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.Collections;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -93,7 +93,7 @@ public class AlleleController {
 	//
 	private static String assemblyVersion = null;
 
-	private static Integer DOWNLOAD_ROW_CAP = new Integer(250000);
+	private static Integer DOWNLOAD_ROW_CAP = 250000;
 
 	//--------------------//
 	// instance variables

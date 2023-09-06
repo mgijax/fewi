@@ -1,11 +1,9 @@
 package org.jax.mgi.fewi.controller;
 
 import java.util.ArrayList;
-import org.owasp.encoder.Encode;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.jax.mgi.shr.jsonmodel.AccessionID;
 import org.jax.mgi.fe.datamodel.Reference;
 import org.jax.mgi.fe.datamodel.Strain;
 import org.jax.mgi.fe.datamodel.StrainAttribute;
@@ -22,11 +19,9 @@ import org.jax.mgi.fe.datamodel.StrainGridPopupCell;
 import org.jax.mgi.fe.datamodel.StrainGridPopupRow;
 import org.jax.mgi.fe.datamodel.StrainSnpRow;
 import org.jax.mgi.fe.datamodel.StrainSynonym;
-import org.jax.mgi.fe.datamodel.VocabTerm;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.StrainFinder;
-import org.jax.mgi.fewi.finder.VocabularyFinder;
 import org.jax.mgi.fewi.forms.StrainQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
@@ -41,7 +36,9 @@ import org.jax.mgi.fewi.util.StrainPhenoGroup;
 import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.shr.fe.sort.SmartAlphaComparator;
+import org.jax.mgi.shr.jsonmodel.AccessionID;
 import org.jax.mgi.shr.jsonmodel.SimpleStrain;
+import org.owasp.encoder.Encode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

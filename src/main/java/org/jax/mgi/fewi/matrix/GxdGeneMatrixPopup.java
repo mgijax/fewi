@@ -1,18 +1,14 @@
 package org.jax.mgi.fewi.matrix;
 
-import java.util.List;
-
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMatrixResult;
-
 public class GxdGeneMatrixPopup {
 
 	private String term = new String("");
 	private String termId = new String("");
 	private String symbol = new String("");
 	private boolean hasImage = false;
-	private Integer countPosResults = new Integer(0);
-	private Integer countNegResults = new Integer(0);
-	private Integer countAmbResults = new Integer(0);
+	private Integer countPosResults = 0;
+	private Integer countNegResults = 0;
+	private Integer countAmbResults = 0;
 
 	public GxdGeneMatrixPopup(){}
 

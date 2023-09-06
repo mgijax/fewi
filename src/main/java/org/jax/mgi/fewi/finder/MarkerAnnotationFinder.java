@@ -7,7 +7,6 @@ import org.jax.mgi.fewi.hunter.SolrMarkerAnnotationSummaryHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.entities.SolrInteraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

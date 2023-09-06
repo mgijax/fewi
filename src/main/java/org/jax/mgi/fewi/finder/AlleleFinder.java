@@ -3,11 +3,11 @@ package org.jax.mgi.fewi.finder;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jax.mgi.fewi.hunter.SolrAlleleCollectionFacetHunter;
 import org.jax.mgi.fe.datamodel.Allele;
 import org.jax.mgi.fe.datamodel.AllelePhenoSummary;
 import org.jax.mgi.fe.datamodel.AlleleRelatedMarker;
 import org.jax.mgi.fewi.hunter.HibernateAlleleMutationInvolvesHunter;
+import org.jax.mgi.fewi.hunter.SolrAlleleCollectionFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrAlleleKeyHunter;
 import org.jax.mgi.fewi.hunter.SolrAlleleMutationFacetHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;

@@ -1,22 +1,16 @@
 package org.jax.mgi.fewi.matrix;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMatrixResult;
-
 public class GxdStageMatrixPopup {
 
 	private String term = new String("");
 	private String termId = new String("");
 	private boolean hasImage = false;
-	private Integer countPosGenes = new Integer(0);
-	private Integer countNegGenes = new Integer(0);
-	private Integer countAmbGenes = new Integer(0);
-	private Integer countPosResults = new Integer(0);
-	private Integer countNegResults = new Integer(0);
-	private Integer countAmbResults = new Integer(0);
+	private Integer countPosGenes = 0;
+	private Integer countNegGenes = 0;
+	private Integer countAmbGenes = 0;
+	private Integer countPosResults = 0;
+	private Integer countNegResults = 0;
+	private Integer countAmbResults = 0;
 
 	public GxdStageMatrixPopup(){}
 

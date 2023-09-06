@@ -1,7 +1,5 @@
 package org.jax.mgi.fewi.summary;
 
-import org.jax.mgi.fewi.summary.Accession;
-
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.ObjectTypes;
 import org.jax.mgi.fewi.util.FormatHelper;

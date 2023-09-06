@@ -22,18 +22,18 @@ import org.jax.mgi.fewi.hmdc.solr.SolrHdpGridAnnotationEntry;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpGridEntry;
 import org.jax.mgi.fewi.hmdc.solr.SolrHdpMarker;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
+import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.Filter.Operator;
+import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
-import org.jax.mgi.fewi.searchUtil.Filter;
-import org.jax.mgi.fewi.searchUtil.Filter.Operator;
-import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class DiseasePortalFinder {

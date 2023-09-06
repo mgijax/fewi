@@ -1,7 +1,5 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
-import java.util.List;
-
 // Is: a single MP cell in a correlation matrix (linked from marker detail; has anatomy x (expression + phenotype data) )
 public class SolrMPCorrelationMatrixCell
 {

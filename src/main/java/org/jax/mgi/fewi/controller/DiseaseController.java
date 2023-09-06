@@ -2,26 +2,24 @@ package org.jax.mgi.fewi.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.jax.mgi.fe.datamodel.Disease;
 import org.jax.mgi.fe.datamodel.DiseaseRow;
 import org.jax.mgi.fe.datamodel.VocabChild;
 import org.jax.mgi.fe.datamodel.VocabTerm;
 import org.jax.mgi.fewi.finder.DiseaseFinder;
 import org.jax.mgi.fewi.hmdc.finder.DiseasePortalFinder;
-import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.fewi.util.DotInputStrFactory;
 import org.jax.mgi.fewi.util.UserMonitor;
-
 import mgi.frontend.datamodel.Reference; 
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.util.NotesTagConverter;
-
 import javax.servlet.http.HttpServletRequest;
-
+import org.jax.mgi.fewi.util.link.IDLinker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

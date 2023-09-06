@@ -1,12 +1,5 @@
 package org.jax.mgi.fewi.util;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.jax.mgi.fe.datamodel.Genotype;
-
 /* Is: a collection of data for a strain/pheno-header popup (linked from the MP slimgrid
  * 		on the strain detail page)
  * Has: column header strings, data rows (each with genotype data plus data cells)

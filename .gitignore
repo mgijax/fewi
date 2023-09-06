@@ -8,6 +8,7 @@ build/
 cruise-output/
 mgiconfig
 sharelib/
+target/
 config/fewi.properties.tmp
 src/org/jax/mgi/fewi/antlr/BooleanSearch/SolrBooleanSearch.tokens
 src/org/jax/mgi/fewi/antlr/BooleanSearch/SolrBooleanSearchLexer.java
@@ -26,3 +27,5 @@ www/hmdc/assets/
 *.swp
 server.log
 *~
+.project
+.classpath

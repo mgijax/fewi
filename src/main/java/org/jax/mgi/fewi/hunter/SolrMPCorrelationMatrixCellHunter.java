@@ -11,7 +11,6 @@ import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
-import org.jax.mgi.fewi.searchUtil.entities.SolrMPAnnotation;
 import org.jax.mgi.fewi.searchUtil.entities.SolrMPCorrelationMatrixCell;
 import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
 import org.jax.mgi.shr.fe.IndexConstants;

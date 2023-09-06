@@ -1,13 +1,11 @@
 package org.jax.mgi.fewi.finder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ArrayList;
 
 import org.jax.mgi.fe.datamodel.Antibody;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
-import org.jax.mgi.fewi.searchUtil.SearchParams;
-import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

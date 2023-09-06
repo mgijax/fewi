@@ -72,7 +72,8 @@ public class SolrVocabACHunter extends SolrHunter<VocabACResult> {
 				resultObject.setDerivedTerms((List<String>)rsp.getHighlighting().get(doc.getFieldValue(IndexConstants.UNIQUE_KEY)).get(IndexConstants.VOCABAC_DERIVED_TERMS));
 				resultObject.getDerivedTerms().add((String)doc.getFieldValue(IndexConstants.VOCABAC_TERM));
 			} else {
-				resultObject.setDerivedTerms((List<String>)doc.getFieldValue(IndexConstants.VOCABAC_DERIVED_TERMS));
+				List<String> list = (List<String>)doc.getFieldValue(IndexConstants.VOCABAC_DERIVED_TERMS);
+				resultObject.setDerivedTerms(list);
 			}
 			
 			// Either an entry in the GXD Lit Index or in full-coded classical data or in RNA-Seq data is good enough

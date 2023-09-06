@@ -16,11 +16,6 @@ import org.jax.mgi.fewi.util.Highlighter;
  */
 public class GxdLitGeneSummaryRow {
 
-	//-------------------
-	// instance variables
-	//-------------------
-
-	// encapsulated row object
 	private GxdLitIndexRecord record;
 
 	private List<GxdLitReferenceSummaryRow> referenceRecords = new ArrayList<GxdLitReferenceSummaryRow> ();
@@ -33,16 +28,12 @@ public class GxdLitGeneSummaryRow {
 
     Highlighter textHL = null;
 
-	//-------------
-	// constructors
-	//-------------
-
     public GxdLitGeneSummaryRow (GxdLitIndexRecord record, GxdLitQueryForm queryForm, Highlighter textHL) {
     	this.record = record;
     	this.textHL = textHL;
     	this.queryForm = queryForm;
     	GxdLitReferenceSummaryRow refRecord = new GxdLitReferenceSummaryRow(record, queryForm, textHL);
-    	if (new Integer(refRecord.getCount()) > 0) {
+    	if (Integer.parseInt(refRecord.getCount()) > 0) {
     		referenceRecords.add(refRecord); 
     	}
     	
@@ -53,14 +44,10 @@ public class GxdLitGeneSummaryRow {
     public void addRecord(GxdLitIndexRecord record) {
     	GxdLitReferenceSummaryRow refRecord = new GxdLitReferenceSummaryRow(record, queryForm, textHL);
     	
-    	if (new Integer(refRecord.getCount()) > 0) {
+    	if (Integer.parseInt(refRecord.getCount()) > 0) {
     		referenceRecords.add(refRecord); 
     	}
     }
-    
-    //------------------------------------------------------------------------
-    // public instance methods;  JSON serializer will call all public methods
-    //------------------------------------------------------------------------
 
     public String getName() {
     	return record.getMarkerName();

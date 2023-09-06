@@ -1,8 +1,5 @@
 package org.jax.mgi.fewi.summary;
 
-import org.jax.mgi.fe.datamodel.Marker;
-import org.jax.mgi.fewi.searchUtil.ObjectTypes;
-
 /* Is: a representation of an accessionable object
  * Does: collects fields for use through the AccessionController
  */

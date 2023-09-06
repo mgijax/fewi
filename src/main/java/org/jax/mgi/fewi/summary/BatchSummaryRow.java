@@ -9,7 +9,6 @@ import org.jax.mgi.fe.datamodel.BatchMarkerAllele;
 import org.jax.mgi.fe.datamodel.BatchMarkerGoAnnotation;
 import org.jax.mgi.fe.datamodel.BatchMarkerId;
 import org.jax.mgi.fe.datamodel.BatchMarkerMpAnnotation;
-import org.jax.mgi.fe.datamodel.MarkerID;
 import org.jax.mgi.fe.datamodel.MarkerTissueCount;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.forms.BatchQueryForm;

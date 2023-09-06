@@ -115,7 +115,7 @@ public class InteractionFinder
 		}
 
 		try {
-			Float fScoreObj = new Float(score);
+			Float fScoreObj = Float.parseFloat(score);
 			float fScore = fScoreObj.floatValue();
 			return fmt.format(fScore);
 

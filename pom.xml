@@ -2,6 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<parent>
+		<groupId>org.jax</groupId>
+		<artifactId>mgi</artifactId>
+		<version>${revision}</version>
+		<relativePath>../mgi_java/pom.xml</relativePath>
+	</parent>
+
 	<artifactId>fewi</artifactId>
 	<groupId>org.jax.mgi.fewi</groupId>
 	<packaging>war</packaging>
@@ -10,6 +17,7 @@
 	<name>Front End Web Interface (fewi)</name>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>4.0.3.RELEASE</spring.version>
 		<solr.version>4.10.4</solr.version>
 		<log4j.version>2.20.0</log4j.version>
@@ -192,12 +200,6 @@
 			<artifactId>log4j-slf4j-impl</artifactId>
 			<version>${log4j.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-to-slf4j</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
-
 
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-mock -->
 		<dependency>
@@ -270,7 +272,6 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
-			<scope>test</scope>
 		</dependency>
 
 
@@ -282,24 +283,21 @@
 
 
 		<dependency>
-			<groupId>org.jax.mgi.shr</groupId>
-			<artifactId>fe</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/fe.jar</systemPath>
+			<groupId>org.jax.mgi</groupId>
+			<artifactId>lib_java_fe</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jax.mgi</groupId>
 			<artifactId>fedatamodel</artifactId>
-			<version>0.0.1</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jax.mgi</groupId>
 			<artifactId>snpdatamodel</artifactId>
-			<version>0.0.1</version>
+			<version>${project.version}</version>
 		</dependency>
-		
-		
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>org.springframework.web.servlet</artifactId>
@@ -317,13 +315,6 @@
 
 	</dependencies>
 
-	<repositories>
-		<repository>
-			<id>localrepository</id>
-			<url>file://${project.basedir}/lib</url>
-		</repository>
-	</repositories>
-
 	<build>
 		<finalName>${project.artifactId}</finalName>
 		<plugins>
@@ -339,6 +330,11 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.4.0</version>
 			</plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>3.3.1</version>
+         </plugin>
 		</plugins>
 	</build>
 </project>

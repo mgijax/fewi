@@ -141,12 +141,12 @@ public class SolrPropertyMapper {
 			}
 		}
 		else if (operand == Filter.Operator.OP_GREATER_THAN) {
-			Integer newValue = new Integer(value);
+			Integer newValue = Integer.parseInt(value);
 			newValue++;
 			val =  field + ":[" + newValue + " TO *]";
 		}
 		else if (operand == Filter.Operator.OP_LESS_THAN) {
-			Integer newValue = new Integer(value);
+			Integer newValue = Integer.parseInt(value);
 			newValue--;
 			val =  field + ":[* TO "+newValue+"]";
 		}

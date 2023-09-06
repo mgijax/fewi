@@ -599,7 +599,7 @@ public class GXDLitController {
     				// Has a result count
     				Boolean hasACount = Boolean.FALSE;
     				for (GxdLitReferenceSummaryRow refRow: row.getReferenceRecords()) {
-    					if (new Integer(refRow.getCount()) > 0) {
+    					if (Integer.parseInt(refRow.getCount()) > 0) {
     						hasACount = Boolean.TRUE;
     					}
     				}
@@ -627,7 +627,7 @@ public class GXDLitController {
 	    if (row != null) {
 			Boolean hasACount = Boolean.FALSE;
 			for (GxdLitReferenceSummaryRow refRow: row.getReferenceRecords()) {
-				if (new Integer(refRow.getCount()) > 0) {
+				if (Integer.parseInt(refRow.getCount()) > 0) {
 					hasACount = Boolean.TRUE;
 				}
 			}
@@ -1035,8 +1035,8 @@ public class GXDLitController {
 
 				if (years.size() == 2){
 					logger.debug("year range: " + years.get(0) + "-" + years.get(1));
-					Integer one = new Integer(years.get(0));
-					Integer two = new Integer(years.get(1));
+					Integer one = Integer.parseInt(years.get(0));
+					Integer two = Integer.parseInt(years.get(1));
 
 					if (one > two){
 						years.set(0, two.toString());

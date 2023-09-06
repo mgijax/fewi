@@ -7,13 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.jax.mgi.fe.datamodel.HomologyCluster;
 import org.jax.mgi.fe.datamodel.Marker;
-import org.jax.mgi.fe.datamodel.MarkerID;
 import org.jax.mgi.fe.datamodel.MarkerLocation;
 import org.jax.mgi.fe.datamodel.OrganismOrtholog;
 import org.jax.mgi.fewi.config.ContextLoader;
-import org.jax.mgi.fewi.forms.HomologyQueryForm;
 import org.jax.mgi.fewi.finder.HomologyFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
+import org.jax.mgi.fewi.forms.HomologyQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
@@ -226,7 +225,7 @@ public class HomologyController {
 			if (mouseCoords != null) {
 				try {
 					// take 200% of the marker size and add to each end for flank (so gene is 20% of the display)
-					long flank = (new Double((mouseCoords.getEndCoordinate() - mouseCoords.getStartCoordinate()) * 2)).longValue();
+					long flank = (Double.valueOf((mouseCoords.getEndCoordinate() - mouseCoords.getStartCoordinate()) * 2)).longValue();
 					
 					String chromosome = mouseCoords.getChromosome();
 					String startCoord = String.format("%.0f", mouseCoords.getStartCoordinate() - flank);

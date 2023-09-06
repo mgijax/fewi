@@ -37,6 +37,6 @@ public class FooSummaryHunter {
         keyList.add("12184");
         keyList.add("12866");
         searchResults.setResultKeys(keyList);
-        searchResults.setTotalCount(new Integer(3));
+        searchResults.setTotalCount(3);
     }
 }

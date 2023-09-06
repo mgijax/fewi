@@ -1,9 +1,5 @@
 package org.jax.mgi.fewi.matrix;
 
-import java.util.List;
-
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMatrixResult;
-
 public class RecombinaseMatrixPopup {
 
 	private String term = new String("");
@@ -11,9 +7,9 @@ public class RecombinaseMatrixPopup {
 	private String markerId = null;
 	private String symbol = new String("");
 	private boolean hasImage = true;
-	private Integer countPosResults = new Integer(0);
-	private Integer countNegResults = new Integer(0);
-	private Integer countAmbResults = new Integer(0);
+	private Integer countPosResults = 0;
+	private Integer countNegResults = 0;
+	private Integer countAmbResults = 0;
 	private String cellType = null;						// GXD or Recombinase
 	private String allele = null;						// for Recombinase cells: allele symbol
 	private String alleleLink = null;					// for Recombinase cells: parameter string to link to allele detail page

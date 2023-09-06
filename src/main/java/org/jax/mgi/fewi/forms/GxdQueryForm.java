@@ -129,7 +129,7 @@ public class GxdQueryForm implements Cloneable {
 	private String ids;
 	private MultipartFile idFile = null;
 	private String fileType = "tab";
-	private Integer idColumn = new Integer(1);
+	private Integer idColumn = 1;
 	private List<String> markerIDs = null;
 	private boolean batchSubmission = false;
 

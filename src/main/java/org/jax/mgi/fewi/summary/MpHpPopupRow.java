@@ -1,7 +1,5 @@
 package org.jax.mgi.fewi.summary;
 
-import java.util.Date;
-
 // Wrapper over a monitored result object.
 public class MpHpPopupRow {
 	String searchId;

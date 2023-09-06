@@ -1,7 +1,6 @@
 package org.jax.mgi.fewi.util.link;
 
 import org.jax.mgi.fe.datamodel.Sequence;
-import org.jax.mgi.fe.datamodel.SequenceID;
 import org.jax.mgi.fewi.util.DBConstants;
 import org.jax.mgi.shr.jsonmodel.SimpleSequence;
 

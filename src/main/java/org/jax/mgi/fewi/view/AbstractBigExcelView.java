@@ -1,27 +1,24 @@
 package org.jax.mgi.fewi.view;
 
 import java.io.IOException;
-import java.util.Locale;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.Iterator;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.jax.mgi.fewi.util.FormatHelper;
 import org.springframework.core.io.Resource;
 import org.springframework.web.servlet.support.RequestContextUtils;
-
-import org.jax.mgi.fewi.util.FormatHelper;
 
 /**
  * We need to use a special POI implementation that can handle files with more than 65536 rows

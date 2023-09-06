@@ -1,7 +1,6 @@
 package org.jax.mgi.fewi.controller;
 
 import java.text.SimpleDateFormat;
-import org.jax.mgi.fewi.util.UserMonitor;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +15,7 @@ import org.jax.mgi.fewi.forms.DiseasePortalQueryForm;
 import org.jax.mgi.fewi.forms.RecombinaseQueryForm;
 import org.jax.mgi.fewi.forms.StrainQueryForm;
 import org.jax.mgi.fewi.util.AjaxUtils;
-import org.jax.mgi.fewi.util.FewiUtil;
+import org.jax.mgi.fewi.util.UserMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

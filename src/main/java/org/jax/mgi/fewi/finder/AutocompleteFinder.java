@@ -1,16 +1,16 @@
 package org.jax.mgi.fewi.finder;
 
 import org.jax.mgi.fewi.hunter.SolrAuthorsACHunter;
+import org.jax.mgi.fewi.hunter.SolrDriverACHunter;
 import org.jax.mgi.fewi.hunter.SolrEmapaACHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdEmapaACHunter;
 import org.jax.mgi.fewi.hunter.SolrJournalsACHunter;
 import org.jax.mgi.fewi.hunter.SolrVocabACHunter;
-import org.jax.mgi.fewi.hunter.SolrDriverACHunter;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.entities.EmapaACResult;
-import org.jax.mgi.fewi.searchUtil.entities.VocabACResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDriverACResult;
+import org.jax.mgi.fewi.searchUtil.entities.VocabACResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
