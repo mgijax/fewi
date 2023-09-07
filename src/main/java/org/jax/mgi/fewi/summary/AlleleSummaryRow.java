@@ -29,7 +29,6 @@ public class AlleleSummaryRow {
 	private IDLinker idLinker;
 
 	String fewiUrl   = ContextLoader.getConfigBean().getProperty("FEWI_URL");
-	String webshareUrl = ContextLoader.getConfigBean().getProperty("WEBSHARE_URL");
 
 	public AlleleSummaryRow (Allele allele, IDLinker idLinker) {
 		this.allele = allele;
@@ -47,7 +46,7 @@ public class AlleleSummaryRow {
 		if(allele.hasPrimaryImage()) {
 			sb.append("<br><a href=\"").append(fewiUrl).append("image/phenoSummary/allele/");
 			sb.append(allele.getPrimaryID()).append("\">");
-			sb.append("<img height=\"11\" width=\"15\" src=\"").append(webshareUrl).append("images/mgi_camera.gif\" />");
+			sb.append("<img height=\"11\" width=\"15\" src=\"/assets/images/mgi_camera.gif\" />");
 			sb.append("</a>");
 		}
 		return sb.toString();

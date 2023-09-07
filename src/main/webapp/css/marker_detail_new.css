@@ -1,0 +1,341 @@
+	
+	/* Styles for testing design concepts */
+	#body {
+		font-size: 16px;
+		box-sizing: border-box;
+	}
+	#body .container * {
+		font-size: 1em;
+	}
+
+	#body .container .row:not(:nth-of-type(1)) .detail
+	{
+		border-top-color: #aaa;
+	}
+
+
+	#body .container .row:not(:nth-of-type(1)) .header {
+		border-top-color: #aaa;
+
+	}
+
+	#body .container .header {
+		border-right-color: #aaa;
+	}
+
+	#body .container ul,
+	#body .container li {
+		list-style-type: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	#body .label {
+		width: 16.219em;
+		text-align: right;
+		font-size: 1em;
+		white-space: nowrap;
+		margin-right: .406em;
+		float: left;
+	}
+
+	#body .wider {
+		width: 20em;
+	}
+
+	#body .value {
+		margin-left: 16.813em;
+	}
+
+	#body .value.emphasis {
+		font-weight: bold;
+	}
+
+	#body section {
+		display: inline-block;
+		vertical-align: top;
+		width: 49%;
+	}
+
+	#body .summarySec1 {
+		min-width: 565px;
+	}
+
+	#body  .container li {
+		margin-bottom: .615em;
+	}
+
+	#body .summaryRibbon .summarySec1 li:first-of-type {
+		margin-top: -.219em;
+	}
+
+	#body .summaryRibbon .summarySec2 li:first-of-type {
+		margin-top: -.054em;
+	}
+
+	#body .summaryRibbon .summarySec1 li:first-of-type .label {
+		font-size: 1.406em;
+		width: 11.519em;
+	}
+
+	#body .summaryRibbon .summarySec1 li:first-of-type .value {
+		font-size: 1.406em;
+		margin-left: 0em;
+	}
+
+	#body .summarySec1.wide {
+		width: 99%;
+	}
+
+
+	/* pheno ribbon */
+
+	#body .phenoRibbon .summarySec2 {
+		width: 49%;
+		min-width: 28.813em;
+	}
+
+	#body .phenoRibbon #openedAlleleRibbon .summarySec1 {
+		padding-left: 2em;
+	}
+	#body .goRibbon .goGrids .summarySec1 {
+		padding-left: 2em;
+	}
+	#body .gxdRibbon #gxd .summarySec1 #anatomySlimgridWrapper {
+		padding-left: 2em;
+	}
+
+
+	#body .summarySec2 .unbold {
+		font-weight:normal;
+		color: #585858;
+	}
+
+	#body .locationRibbon .summarySec1 .second {
+		margin-left: 4em;
+	}
+
+	#body .locationRibbon .summarySec2 .second {
+		margin-left: 7em;
+	}
+
+	#body .diseaseRibbon .summarySec1 .second {
+		margin-left: 5.406em;
+	}
+
+	#body .homologyExtra hr {
+		width: 90%;
+		margin-top: 1em;
+		margin-bottom: 1em;
+	}
+
+	#body .goRibbon .goGrids .sgWrapper:nth-of-type(3) {
+		margin-bottom: 0em;
+		padding-bottom: 0em;
+	}
+
+	#body .gxdRibbon .summarySec2 {
+		width: 47%;
+		min-width: 28.813em;
+	}
+
+	#body .gxdRibbon .summarySec2 .value {
+		margin-left: 16.625em;
+		margin-bottom: .406em;
+	}
+
+	#body .gxdRibbon .summarySec2 li {
+		margin-bottom: 1.219em;
+	}
+
+	#body .gxdRibbon .item:not(:last-of-type) {
+		float: left;
+		vertical-align: top;
+		margin-right: 10px;
+	}
+
+	#body .gxdRibbon section:last-of-type {
+		margin-top: .625em;
+		margin-bottom: 1em;
+	}
+
+	#body .otherLinksRibbon .label {
+		width: 13em;
+	}
+
+	#body .otherLinksRibbon .value {
+		margin-left: 13.406em;
+	}
+
+	#body .proteinRibbon #openedProteinRibbon td{
+		padding-right: 1em;
+		padding-top: .219em;
+		padding-bottom: 0em;
+	}
+
+	#body .proteinRibbon  #openedProteinRibbon tr{
+		/*border-bottom: 1px solid #ccc;*/
+	}
+
+	#body .container {
+		font-size: .813em;
+	}
+
+	#body .titleBarMainTitle {
+		font-size: 1.625em;
+		padding-left: 2%;
+	}
+
+	#body .titleBar_sub {
+		
+    	padding-left: .813em;
+    	font-size: 1em;
+	}
+
+	#body .searchToolButton {
+	}
+
+	#body .searchToolButton:hover {
+		cursor: pointer;
+	}
+
+
+	#body .header {
+		font-size: 1em;
+		width: 9em;
+		padding-top: .625em;
+		padding-right: .625em;
+		font-weight: bold;
+	}
+
+	#body .row .header header {
+		padding-bottom: 1em;
+	}
+
+	#body .detail {
+		margin-left: 9.406em;
+		padding-left: .406em;
+		padding-right: .406em;
+		padding-top: 1em;
+	}
+
+	#body .row {
+		min-height: 45px;
+	}
+
+	#body #mpSlimgridWrapper .label {
+		padding-top: 1.625em;
+		padding-bottom: 2em;
+	}
+
+	#body #mpMarkerClip {
+		padding-top: .8215em;
+		padding-bottom: 1em;
+		margin-left: 2em;
+	}
+
+	#body #goSlimgridWrapper .sgWrapperHeight {
+		height: 16em;
+	}
+	#body #goSlimgridWrapper .label {
+		padding-bottom: 5em;
+	}
+
+	#body #anatomySlimgridWrapper .label {
+		padding-bottom: 2.813em;
+	}
+
+	#body .rightBorderThinGray {
+		border: none;
+	}
+
+	#body td.padded {
+		padding: 4px;
+	}
+
+	#body .hdExpand {
+		background: url("/assets/images/rightArrow.gif") no-repeat 42px 3px;
+	}
+
+	#body .hdCollapse {
+		background: url("/assets/images/downArrow.gif") no-repeat 42px 3px; 
+	}
+
+	#body .toggleImage {
+		margin: 0px 0px 0px 10px;
+		padding: 0px 0px 1px 5px;
+		border-color: rgb(187, 220, 239);
+		color: #54709B;
+		width: 50px;
+		border: 1px;
+		border-style: solid;
+		vertical-align: top;
+		position: absolute;
+	}
+
+	#body table.2col1 {
+		width: 448px;
+	}
+
+	#body table .adjustRight {
+		padding-left: 1em;
+	}
+	#body table .synonyms {
+		padding-right: 2.625em;
+	}
+
+	#body table .col2 {
+		width: 8em;
+	}
+
+	#body table .col2_2 {
+		width: 28em;
+	}
+
+	#body table .col2_3 {
+		width: 12em;
+	}
+
+
+	#body h3 {
+		font-weight: bold;
+	}
+
+	#body .container #mpSlimgridWrapper {
+		padding-top: 1.406em;
+		margin-bottom: 1em;
+		margin-left: 2em;
+	}
+
+	#body .container #mpSlimgridWrapper h3 {
+		padding-bottom: 2em;
+	}
+
+	#body .container #goSlimgridWrapper .sgWrapper {
+		padding-top: 2em;
+		margin-bottom: 0em;
+	}
+
+	#body .container #goSlimgridWrapper .sgWrapper h3 {
+		padding-bottom: 4em;
+	}
+
+	#body .container #anatomySlimgridWrapper h3{
+		padding-bottom: 2.625em;
+	}
+
+	#body #sequenceForm td {
+		padding-left: 1.625em;
+	}
+
+	#body #sequenceForm tr  {
+		border-bottom: 1px solid #ccc;
+	}
+
+	#body .sgWrapperTitle {
+		font-weight: bold;
+	}
+
+	#body .closed {
+		display: none;
+	}

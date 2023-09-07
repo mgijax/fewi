@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>fewi</artifactId>
-	<groupId>org.jax.mgi.fewi</groupId>
+	<groupId>org.jax.mgi</groupId>
 	<packaging>war</packaging>
 	<version>0.0.1</version>
 
@@ -183,6 +183,11 @@
 			<artifactId>spring-context-support</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
 
 
 		<dependency>
@@ -198,6 +203,11 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-to-slf4j</artifactId>
 			<version>${log4j.version}</version>
 		</dependency>
 
@@ -273,7 +283,17 @@
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
 		</dependency>
-
+		
+		<dependency>
+			<groupId>org.owasp.encoder</groupId>
+			<artifactId>encoder</artifactId>
+			<version>1.2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.owasp.encoder</groupId>
+			<artifactId>encoder-jsp</artifactId>
+			<version>1.2.3</version>
+		</dependency>
 
 		<dependency>
 			<groupId>io.netty</groupId>
@@ -281,36 +301,17 @@
 			<version>4.1.29.Final</version>
 		</dependency>
 
-
 		<dependency>
 			<groupId>org.jax.mgi</groupId>
 			<artifactId>lib_java_fe</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jax.mgi</groupId>
 			<artifactId>fedatamodel</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jax.mgi</groupId>
 			<artifactId>snpdatamodel</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>org.springframework.web.servlet</artifactId>
-			<version>${spring.version}</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/spring-web-servlet-3.1.2.RELEASE.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.objectplanet.image</groupId>
-			<artifactId>pngencoder</artifactId>
-			<version>1</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/pngencoder.jar</systemPath>
 		</dependency>
 
 	</dependencies>
@@ -330,11 +331,11 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.4.0</version>
 			</plugin>
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-resources-plugin</artifactId>
-            <version>3.3.1</version>
-         </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.3.1</version>
+			</plugin>
 		</plugins>
 	</build>
 </project>

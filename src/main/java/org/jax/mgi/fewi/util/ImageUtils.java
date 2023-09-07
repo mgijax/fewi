@@ -11,11 +11,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 
+import javax.imageio.ImageIO;
+
 import org.jax.mgi.fe.datamodel.ImagePane;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
-
-import com.objectplanet.image.PngEncoder;
 
 /**
  * 
@@ -115,7 +115,6 @@ public class ImageUtils
 		
 		// set up any urls
 		String pixelDBURL = ContextLoader.getConfigBean().getProperty("PIXELDB_URL");
-		//pixelDBURL = "http://www.informatics.jax.org/webshare/fetch_pixels.cgi?id=";
 		//String fewiURL    = ContextLoader.getConfigBean().getProperty("FEWI_URL");
 		
 		// calculate the styles for the outer div and the image tags
@@ -279,9 +278,9 @@ public class ImageUtils
     	// convert to indexed format for performance
     	ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		
-        //ImageIO.write( image, "png", baos );
-        PngEncoder pe = new PngEncoder(PngEncoder.COLOR_TRUECOLOR_ALPHA);
-        pe.encode(image, baos);
+        ImageIO.write( image, "png", baos );
+        //PngEncoder pe = new PngEncoder(PngEncoder.COLOR_TRUECOLOR_ALPHA);
+        //pe.encode(image, baos);
         baos.flush();
         byte[] imageInByte = baos.toByteArray();
         return imageInByte;

@@ -1,4 +1,4 @@
-<%@ attribute name="value" required="true" type="mgi.frontend.datamodel.Genotype" description="Genotype object" %>
+<%@ attribute name="value" required="true" type="org.jax.mgi.fe.datamodel.Genotype" description="Genotype object" %>
 <%@ attribute name="noLink" required="false" type="java.lang.Boolean" description="Whether linking should be omitted" %>
 <%@ attribute name="newWindow" required="false" type="java.lang.Boolean" description="Whether links open in new windows" %>
 <%@ tag import = "org.jax.mgi.fewi.util.*" %>

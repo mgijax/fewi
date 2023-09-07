@@ -8,7 +8,6 @@
 <%
 	Properties configBean = ContextLoader.getConfigBean();
 	String image = "creSortableArrow.png";
-	String webshareUrl = configBean.getProperty("WEBSHARE_URL");
 
 	if ((column != null) && (column.equals(sortBy))) {
 		if ("asc".equals(dir)) {
@@ -18,4 +17,4 @@
 		}
 	}
 %>
-<img class="sortArrow" src="<%= webshareUrl %>images/cre/<%= image %>"/>
+<img class="sortArrow" src="/assets/images/cre/<%= image %>"/>

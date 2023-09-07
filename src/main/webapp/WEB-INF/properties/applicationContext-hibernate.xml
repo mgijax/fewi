@@ -57,7 +57,7 @@
 		</property>
 		<property name="packagesToScan">
 			<list>
-				<value>mgi.frontend.datamodel</value>
+				<value>org.jax.mgi.fe.datamodel</value>
 			</list>
 		</property>
 	</bean>
@@ -89,7 +89,7 @@
 		</property>
 		<property name="packagesToScan">
 			<list>
-				<value>mgi.frontend.datamodel.snp</value>
+				<value>org.jax.mgi.fe.datamodel.snp</value>
 			</list>
 		</property>
 	</bean> -->
