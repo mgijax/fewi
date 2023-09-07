@@ -1,0 +1,202 @@
+	.bioMismatch td { text-align: center; border-style: solid; border-width: 1px; }
+	.bioMismatch .header { font-weight: bold; color:#002255; background-color:#aaaaaa; }
+
+	.link {
+		color:#000099;
+		cursor: pointer;
+		text-decoration: none;
+	}
+
+	.bold { font-weight: bold; }
+
+	.leftAlign { text-align: left; }
+
+	.allBorders {
+		border-top: thin solid gray;
+		border-bottom: thin solid gray;
+		border-left: thin solid gray;
+		border-right: thin solid gray;
+		padding:3px;
+	}
+
+	.bottomBorder {
+		border-bottom-color: #000000;
+		border-bottom-style:solid;
+		border-bottom-width:1px;
+	}
+
+	.topBorder {
+		border-top-color: #000000;
+		border-top-style:solid;
+		border-top-width:1px;
+	}
+
+	.leftBorder {
+		border-left-color :#000000; 
+		border-left-style:solid;
+		border-left-width:1px;
+	}
+
+	.rightBorder {
+		border-right-color :#000000; 
+		border-right-style:solid;
+		border-right-width:1px;
+	}
+
+	.bottomBorderDark {
+		border-bottom-color: #000000;
+		border-bottom-style:solid;
+		border-bottom-width:2px;
+	}
+
+	.stripe1 { background-color: #FFFFFF; }
+	.stripe2 { background-color: #DDDDDD; }
+	.headerStripe { background-color: #D0E0F0; }	
+	
+	/* Turning divs into table layout */
+	.container {
+		border-bottom: 1px solid black;
+	}
+	.container .row {
+		overflow: hidden;
+	}
+	.container .row > div {
+		padding-bottom: 10003px;
+		margin-bottom: -10000px;
+	}
+
+	.container .header {
+		float: left;
+		width: 130px;
+		border: 1px solid black;
+		text-align: right;
+		font-weight: bold;
+		font-size: 12px;
+		font-family: Verdana,Arial,Helvetica;
+		color: #000001;
+	}
+	.container .detail {
+		margin-left: 138px;
+		border: 1px solid black;
+		border-left: none;
+		font-size: 12px;
+		font-family: Verdana,Arial,Helvetica;
+		color: #000001;
+		padding: 3px;
+	}
+
+	.container .detailCat1 {
+		background-color: #DFEFFF;
+	}
+	.container .detailCat2 {
+		background-color: #D0E0F0;
+	}
+
+	.container .detailData2 {
+		background-color: #F0F0F0;
+	}
+
+	.td_disease_tbl_hdr {
+		text-align:center;
+		vertical-align:bottom;
+		padding: 0px 10px 4px 10px;
+		border-left:thin solid grey;border-right:thin solid grey;border-top:thin solid grey;border-bottom:thin solid grey;
+	}
+	.td_disease_tbl {
+		text-align:left;
+		vertical-align:center;
+		padding: 0px 10px 4px 10px;
+		border-left:thin solid grey;border-right:thin solid grey;border-top:thin solid grey;border-bottom:thin solid grey;
+	}
+	.td_disease_tbl_center {
+		text-align:center;
+		vertical-align:center;
+		padding: 0px 10px 4px 10px;
+		height: 12px;
+		border-left:thin solid grey;border-right:thin solid grey;border-top:thin solid grey;border-bottom:thin solid grey;
+	}
+	.superscript {
+		vertical-align: super;
+		font-size: 90%;
+	}
+
+	.toggleImage {
+		float: right;
+		padding: 8px;
+		margin: 5px 8px;
+		cursor: pointer;
+	}
+
+	#table_strainMarkers {
+		margin-left: 15px;
+		margin-bottom: 5px;
+	}
+	#table_strainMarkers th {
+		text-align:left;
+		vertical-align:center;
+		padding: 4px 10px 4px 10px;
+		border-left:thin solid grey;border-right:thin solid grey;border-top:thin solid grey;border-bottom:thin solid grey;
+	}
+	#table_strainMarkers td {
+		text-align:left;
+		vertical-align:center;
+		padding: 4px 10px 4px 10px;
+		border-left:thin solid grey;border-right:thin solid grey;border-top:thin solid grey;border-bottom:thin solid grey;
+	}
+
+	.hdExpand {
+		background: url("/assets/images/rightArrow.gif") no-repeat;
+	}
+
+	.hdCollapse {
+		background: url("/assets/images/downArrow.gif") no-repeat;
+	}
+
+	td.padded { padding:4px; }
+	td.top { vertical-align: top; }
+	a:link{text-decoration: none}
+	a:hover{color:#c00; background-color: #c7e3fe; text-decoration: none}
+	div.centered { text-align: center; }
+	td.rightPadded { padding-right: 4px; }
+
+#showTss:hover{color:#c00; background-color: #c7e3fe; text-decoration: none}
+
+.sgHeaderDiv {
+color: black;
+font-weight: 10;
+font-size: 90%;
+text-indent: 2px;
+transform: rotate(-45deg);
+-webkit-transform: rotate(-45deg);
+width: 20px;
+}
+.sgHeader {
+height: 100px;
+padding-bottom: 0;
+text-align: left;
+vertical-align: bottom;
+white-space: nowrap;
+font-weight: normal;
+}
+.box { border: 1px solid gray; height: 16px; background-color: white; }
+.blue {
+    background-color: #0000FF;
+    width: 20px;
+    height: 16px;
+}
+.dogear { 
+    border-color: transparent #cccccc transparent transparent;
+    border-style: solid;
+    border-width: 0 20px 16px 0;
+    height: 0;
+    left: 0;
+    width: 0;
+}
+.cup {
+height: 8px;
+border-left: 1px solid gray;
+border-right: 1px solid gray;
+border-bottom: 1px solid gray;
+}
+.sgWidth { width: 20px; }
+

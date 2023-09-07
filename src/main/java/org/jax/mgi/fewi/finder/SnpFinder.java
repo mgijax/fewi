@@ -15,8 +15,9 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.summary.ConsensusSNPSummaryRow;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.snpdatamodel.ConsensusCoordinateSNP;
-import org.jax.mgi.snpdatamodel.document.BaseESDocument;
+import org.jax.mgi.snpdatamodel.document.AlleleSNPDocument;
 import org.jax.mgi.snpdatamodel.document.ConsensusSNPDocument;
+import org.jax.mgi.snpdatamodel.document.SearchSNPDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -65,7 +66,8 @@ public class SnpFinder {
 	}
 
 	public SearchResults<ConsensusSNPSummaryRow> getSummarySnps(SearchParams searchParams, List<String> matchedMarkerIds) {
-		SearchResults<BaseESDocument> searchResults1 = new SearchResults<BaseESDocument>();
+		
+		SearchResults<ConsensusSNPSummaryRow> ret = new SearchResults<ConsensusSNPSummaryRow>();
 
 		Filter sameFilter = null;
 		Filter diffFilter = null;
@@ -75,12 +77,24 @@ public class SnpFinder {
 			diffFilter = searchParams.getFilter().getFirstFilterFor(SearchConstants.DIFF_STRAINS);
 		}
 		
+		List<String> keyList;
+		
 		if(sameFilter != null || diffFilter != null) {
 			snpAlleleSearchHunter.setFacetString(IndexConstants.SNP_STRAINS);
+			SearchResults<AlleleSNPDocument> searchResults1 = new SearchResults<AlleleSNPDocument>();
 			snpAlleleSearchHunter.hunt(searchParams, searchResults1);
+			keyList = searchResults1.getResultKeys();
+			ret.setResultKeys(searchResults1.getResultKeys());
+			ret.setTotalCount(searchResults1.getTotalCount());
+			ret.setResultFacets(searchResults1.getResultFacets());
 		} else {
 			snpSearchHunter.setFacetString(IndexConstants.SNP_STRAINS);
+			SearchResults<SearchSNPDocument> searchResults1 = new SearchResults<SearchSNPDocument>();
 			snpSearchHunter.hunt(searchParams, searchResults1);
+			keyList = searchResults1.getResultKeys();
+			ret.setResultKeys(searchResults1.getResultKeys());
+			ret.setTotalCount(searchResults1.getTotalCount());
+			ret.setResultFacets(searchResults1.getResultFacets());
 		}
 		
 		HashMap<String, String> ml = new HashMap<String, String>();
@@ -89,7 +103,7 @@ public class SnpFinder {
 		}
 
 		SearchParams dataSearchParams = new SearchParams();
-		Filter snpIdFilter = new Filter(SearchConstants.SNPID, searchResults1.getResultKeys(), Filter.Operator.OP_IN);
+		Filter snpIdFilter = new Filter(SearchConstants.SNPID, keyList, Filter.Operator.OP_IN);
 		dataSearchParams.setFilter(snpIdFilter);
 		dataSearchParams.setPageSize(searchParams.getPageSize());
 		
@@ -150,18 +164,14 @@ public class SnpFinder {
 		}
 		// </End Sorting>
 		
-		
-		SearchResults<ConsensusSNPSummaryRow> ret = new SearchResults<ConsensusSNPSummaryRow>();
-		ret.setResultKeys(searchResults1.getResultKeys());
-		ret.setTotalCount(searchResults1.getTotalCount());
-		ret.setResultFacets(searchResults1.getResultFacets());
 		ret.setResultObjects(summaryRows);
 		return ret;
 	}
 
 	public SearchResults<ConsensusSNPSummaryRow> getMatchingSnpCount(SearchParams searchParams, List<String> matchedMarkerIds) {
-		SearchResults<ConsensusSNPDocument> searchResults1 = new SearchResults<ConsensusSNPDocument>();
-
+		
+		SearchResults<ConsensusSNPSummaryRow> ret = new SearchResults<ConsensusSNPSummaryRow>();
+		
 		Filter sameFilter = null;
 		Filter diffFilter = null;
 		
@@ -172,10 +182,14 @@ public class SnpFinder {
 		
 		if(sameFilter != null || diffFilter != null) {
 			snpAlleleSearchHunter.setFacetString(IndexConstants.SNP_STRAINS);
+			SearchResults<AlleleSNPDocument> searchResults1 = new SearchResults<AlleleSNPDocument>();
 			snpAlleleSearchHunter.hunt(searchParams, searchResults1);
+			ret.setTotalCount(searchResults1.getTotalCount());
 		} else {
 			snpSearchHunter.setFacetString(IndexConstants.SNP_STRAINS);
+			SearchResults<SearchSNPDocument> searchResults1 = new SearchResults<SearchSNPDocument>();
 			snpSearchHunter.hunt(searchParams, searchResults1);
+			ret.setTotalCount(searchResults1.getTotalCount());
 		}
 		
 		HashMap<String, String> ml = new HashMap<String, String>();
@@ -193,9 +207,9 @@ public class SnpFinder {
 		
 		List<ConsensusSNPSummaryRow> summaryRows = new ArrayList<ConsensusSNPSummaryRow>();
 */		
-		SearchResults<ConsensusSNPSummaryRow> ret = new SearchResults<ConsensusSNPSummaryRow>();
+		
 //		ret.setResultKeys(searchResults1.getResultKeys());
-		ret.setTotalCount(searchResults1.getTotalCount());
+		
 //		ret.setResultFacets(searchResults1.getResultFacets());
 //		ret.setResultObjects(summaryRows);
 		return ret;
@@ -205,8 +219,7 @@ public class SnpFinder {
 	 * matching the current query
 	 */
 	public List<String> getFunctionClassFacets(SearchParams searchParams) {
-		SearchResults<ConsensusSNPDocument> results = new SearchResults<ConsensusSNPDocument>();
-		
+
 		Filter sameFilter = null;
 		Filter diffFilter = null;
 		
@@ -217,13 +230,15 @@ public class SnpFinder {
 		
 		if(sameFilter != null || diffFilter != null) {
 			snpAlleleSearchHunter.setFacetString(IndexConstants.SNP_FUNCTIONCLASS);
-			snpAlleleSearchHunter.hunt(searchParams, results);
+			SearchResults<AlleleSNPDocument> searchResults1 = new SearchResults<AlleleSNPDocument>();
+			snpAlleleSearchHunter.hunt(searchParams, searchResults1);
+			return searchResults1.getResultFacets();
 		} else {
 			snpSearchHunter.setFacetString(IndexConstants.SNP_FUNCTIONCLASS);
-			snpSearchHunter.hunt(searchParams, results);
+			SearchResults<SearchSNPDocument> searchResults1 = new SearchResults<SearchSNPDocument>();
+			snpSearchHunter.hunt(searchParams, searchResults1);
+			return searchResults1.getResultFacets();
 		}
-
-		return results.getResultFacets();
 	}
 
 	public String debugFilter(Filter f) {

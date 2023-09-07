@@ -15,7 +15,6 @@ public class GxdAssaySummaryRow {
 	// config values
 	String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
 	String pywiUrl = ContextLoader.getConfigBean().getProperty("WI_URL");
-	String webshareUrl = ContextLoader.getConfigBean().getProperty("WEBSHARE_URL");
 
 	private String score;
 
@@ -49,7 +48,7 @@ public class GxdAssaySummaryRow {
 		// RNA-Seq data have no images, and the data link should add
 		// a special filter for this experiment ID.
 		if (assay.getAssayType().startsWith("RNA-Seq")) {
-			return "<a href='#" + assay.getJNum() + "' onClick='filterByExperiment(\"" + assay.getJNum() + "\"); return false;' onContextMenu='return false;' class='rsFilterLink'><img src='" + webshareUrl + "images/filter.png' width='10' height='10' title='Click to Filter Results by Experiment' class='rsFilterIcon'/></a> data set <span>(" + assay.getJNum() + ")</span>";
+			return "<a href='#" + assay.getJNum() + "' onClick='filterByExperiment(\"" + assay.getJNum() + "\"); return false;' onContextMenu='return false;' class='rsFilterLink'><img src='/assets/images/filter.png' width='10' height='10' title='Click to Filter Results by Experiment' class='rsFilterIcon'/></a> data set <span>(" + assay.getJNum() + ")</span>";
 		}
 
 		// classical assays

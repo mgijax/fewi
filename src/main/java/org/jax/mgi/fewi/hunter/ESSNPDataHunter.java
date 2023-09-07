@@ -1,44 +1,33 @@
 package org.jax.mgi.fewi.hunter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.SolrDocument;
-import org.apache.solr.common.SolrDocumentList;
-import org.jax.mgi.fewi.searchUtil.SearchParams;
-import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.propertyMapper.ESPropertyMapper;
+import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.shr.fe.IndexConstants;
-import org.jax.mgi.snpdatamodel.ConsensusSNP;
+import org.jax.mgi.snpdatamodel.document.ConsensusSNPDocument;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ESSNPDataHunter extends ESSNPBaseHunter {
+public class ESSNPDataHunter extends ESHunter<ConsensusSNPDocument> {
 
 
 	public ESSNPDataHunter() {
+		super(ConsensusSNPDocument.class);
+		propertyMap.put(SearchConstants.SNPID, new ESPropertyMapper(IndexConstants.SNP_CONSENSUSSNPID));
+		propertyMap.put(SearchConstants.FUNCTIONCLASS, new ESPropertyMapper(IndexConstants.SNP_FUNCTIONCLASS));
+		propertyMap.put(SearchConstants.MARKERID, new ESPropertyMapper(IndexConstants.SNP_MARKERID));
+		propertyMap.put(SearchConstants.STARTCOORDINATE, new ESPropertyMapper(IndexConstants.SNP_STARTCOORDINATE));
+		
+		propertyMap.put(SearchConstants.STRAINS, new ESPropertyMapper(IndexConstants.SNP_STRAINS));
+		propertyMap.put(SearchConstants.DIFF_STRAINS, new ESPropertyMapper(IndexConstants.SNP_DIFF_STRAINS));
+		propertyMap.put(SearchConstants.SAME_STRAINS, new ESPropertyMapper(IndexConstants.SNP_SAME_STRAINS));
+		
+		propertyMap.put(SearchConstants.VARIATIONCLASS, new ESPropertyMapper(IndexConstants.SNP_VARIATIONCLASS));
 
-	}
+		keyString = IndexConstants.SNP_CONSENSUSSNPID;
+		otherString = IndexConstants.SNP_JSONSTRING;
 
-	//@Override
-	protected void packInformation (QueryResponse rsp, SearchResults<ConsensusSNP> sr, SearchParams sp) {
-
-		SolrDocumentList sdl = rsp.getResults();
-
-		List<String> resultKeys = new ArrayList<String>();
-
-		for (SolrDocument doc : sdl) {
-			String key = (String) doc.getFieldValue(IndexConstants.SNP_CONSENSUSSNPID);
-
-			// TODO Fix this to be what is coming back from ES
-			ConsensusSNP snp = new ConsensusSNP();
-			sr.addResultObjects(snp);
-
-			resultKeys.add(key);
-		}
-		sr.setResultKeys(resultKeys);
-
+		highlightRequireFieldMatch = false;
 	}
 
 	@Value("${es.consensussnp.index}")

@@ -21,24 +21,28 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.sortMapper.ESSortMapper;
 import org.jax.mgi.snpdatamodel.document.BaseESDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.ElasticsearchTransport;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.log4j.Log4j2;
 
 /**
  * This is the Solr specific hunter.  It is responsible for translating
  * higher-level generic webapp requests to Solr's specific API
  */
-@Log4j2
-public class ESHunter<T> {
 
+public class ESHunter<T extends BaseESDocument> {
+
+	public Logger log = LoggerFactory.getLogger(getClass());
+	
 	// Which field is the document key?
 	protected String keyString;
 	// Which other field do we want to use as a key? (This could be collapsed)
@@ -115,31 +119,31 @@ public class ESHunter<T> {
 	}
 
 
-	public <D extends BaseESDocument> void hunt(SearchParams searchParams, SearchResults<D> searchResults) {
+	public void hunt(SearchParams searchParams, SearchResults<T> searchResults) {
 		hunt(searchParams, searchResults, null, null);
 	}
 
-	public <D extends BaseESDocument> void hunt(SearchParams searchParams,SearchResults<D> searchResults, String groupField) {
+	public void hunt(SearchParams searchParams,SearchResults<T> searchResults, String groupField) {
 		hunt(searchParams, searchResults, groupField, null);
 	}
 
-	public <D extends BaseESDocument> void joinHunt(SearchParams searchParams,SearchResults<D> searchResults, String joinField) {
+	public void joinHunt(SearchParams searchParams,SearchResults<T> searchResults, String joinField) {
 		hunt(searchParams, searchResults, null, null);
 	}
 
-	public <D extends BaseESDocument> void joinHunt(SearchParams searchParams, SearchResults<D> searchResults, String joinField, String extraJoinClause) {
+	public void joinHunt(SearchParams searchParams, SearchResults<T> searchResults, String joinField, String extraJoinClause) {
 		hunt(searchParams, searchResults, null, extraJoinClause);
 	}
 
-	public <D extends BaseESDocument> void joinGroupHunt(SearchParams searchParams, SearchResults<D> searchResults, String groupField, String joinField) {
+	public void joinGroupHunt(SearchParams searchParams, SearchResults<T> searchResults, String groupField, String joinField) {
 		hunt(searchParams, searchResults, groupField, null);
 	}
 
-	public <D extends BaseESDocument> void joinGroupHunt(SearchParams searchParams, SearchResults<D> searchResults, String groupField, String joinField, String extraJoinClause) {
+	public void joinGroupHunt(SearchParams searchParams, SearchResults<T> searchResults, String groupField, String joinField, String extraJoinClause) {
 		hunt(searchParams, searchResults, groupField, extraJoinClause);
 	}
 
-	public <D extends BaseESDocument> void hunt(SearchParams searchParams, SearchResults<D> searchResults, String groupField, String extraJoinClause) {
+	public void hunt(SearchParams searchParams, SearchResults<T> searchResults, String groupField, String extraJoinClause) {
 
 		// Invoke the hook, editing the search params as needed.
 
@@ -187,28 +191,19 @@ public class ESHunter<T> {
 		addFacets(query);
 		if(!searchParams.getSuppressLogs()) log.info("ESQuery:" + query);
 
-
-
-
-		SearchResponse<BaseESDocument> resp = null;
+		SearchResponse<T> resp = null;
 		try {
 			log.info("Running query & packaging searchResults: " + esIndex);
 
 
-			resp = esClient.search(s -> s.index(esIndex).q(queryString), BaseESDocument.class);
-			
-//			QueryStringQueryBuilder builder = QueryBuilders.queryString(queryString);
-//
-//			SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-//			sourceBuilder.query(builder);
-//
-//			SearchRequest searchRequest = new SearchRequest(sourceBuilder);
-//			searchRequest.
-//			//searchRequest.indices(esIndex);
-//			searchRequest.source(sourceBuilder);
-//
-//			resp = esClient.search(searchRequest, RequestOptions.DEFAULT);
-			
+			resp = esClient.search(s -> s.index(esIndex).q(queryString), clazz);
+
+			searchResults.setFilterQuery(queryString);
+		
+			for(Hit<T> hit: resp.hits().hits()) {
+				searchResults.getResultKeys().add(hit.source().getConsensussnp_accid());
+				searchResults.getResultObjects().add(hit.source());
+			}
 
 			searchResults.setTotalCount((int)resp.hits().total().value());
 
@@ -244,7 +239,6 @@ public class ESHunter<T> {
 		}
 
 		if (filter.isBasicFilter()) {
-			log.info("This is the basic filter");
 			// Check to see if the property is null or an empty string,
 			// if it is, return an empty string
 			if (filterProperty == null || filterProperty.equals("")) {
@@ -282,7 +276,6 @@ public class ESHunter<T> {
 				}
 			}
 		} else {
-			log.info("This is the recursive filter");
 			List<Filter> filters = filter.getNestedFilters();
 
 			List<String> resultsString = new ArrayList<String>();

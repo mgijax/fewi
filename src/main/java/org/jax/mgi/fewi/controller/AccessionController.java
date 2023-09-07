@@ -70,12 +70,12 @@ public class AccessionController {
 			return UserMonitor.getSharedInstance().getLimitedMessage();
 		}
 
-
-		logger.debug("->getQueryForm started");
+		logger.info("->getQueryForm started");
 
 		ModelAndView mav = new ModelAndView("accession_query");
 		mav.addObject("sort", new Paginator());
 		mav.addObject(new AccessionQueryForm());
+		logger.info("Returning: " + mav);
 		return mav;
 	}
 

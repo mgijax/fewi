@@ -92,7 +92,7 @@
 		</property>
 		<property name="packagesToScan">
 			<list>
-				<value>mgi.frontend.datamodel</value>
+				<value>org.jax.mgi.fe.datamodel</value>
 			</list>
 		</property>
 	</bean>

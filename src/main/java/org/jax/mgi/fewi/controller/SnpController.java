@@ -129,7 +129,7 @@ public class SnpController {
 	// instance variables
 	//--------------------//
 
-	private Logger logger = LoggerFactory.getLogger(SnpController.class);
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private StrainController strainController;
@@ -1153,7 +1153,7 @@ public class SnpController {
 	@RequestMapping("/table")
 	public ModelAndView snpSummaryTable(HttpServletRequest request, HttpServletResponse response, @ModelAttribute SnpQueryForm query, @ModelAttribute Paginator page, BindingResult result) {
 
-		logger.debug("->snpSummaryTable started");
+		logger.info("->snpSummaryTable started");
 
 		// add headers to allow Ajax access
 		AjaxUtils.prepareAjaxHeaders(response);

@@ -17,7 +17,7 @@
 
 	<!-- MARKERS -->
 	<cache
-		name="mgi.frontend.datamodel.Marker"
+		name="org.jax.mgi.fe.datamodel.Marker"
 		maxElementsInMemory="100"
 		eternal="true"
 		overflowToDisk="false"
@@ -25,7 +25,7 @@
 
 	<!-- REFERENCE -->
 	<cache
-		name="mgi.frontend.datamodel.Reference"
+		name="org.jax.mgi.fe.datamodel.Reference"
 		maxElementsInMemory="100"
 		eternal="true"
 		overflowToDisk="false"
