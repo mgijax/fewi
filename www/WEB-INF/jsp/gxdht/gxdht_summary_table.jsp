@@ -56,7 +56,7 @@
 
 		<tr id="detailDataRow${status.index}" class="detailDataRow">
 			<td id="sampleData${status.index}">
-		  	  	<a id="row${status.index}sampleCount" onClick="gs_samplePopup('${exp.arrayExpressID}')">${exp.sampleCount}</a> samples&nbsp;&nbsp;
+		  	  	<a id="row${status.index}sampleCount" onClick="gs_samplePopup('${expID}')">${exp.sampleCount}</a> samples&nbsp;&nbsp;
 		  	  	<a id="row${status.index}button" class="filterButton" onClick="gs_samplePopup('${expID}')">View</a>
 		  	  	<c:if test="${highlightSamples}"><br/>
 		  	  		${exp.matchingSampleCount} match the search criteria
