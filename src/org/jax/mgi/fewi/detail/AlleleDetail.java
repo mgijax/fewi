@@ -42,7 +42,7 @@ public class AlleleDetail {
 	}
 	public boolean getHasExpression()
 	{
-		return (allele.getCountOfExpressionAssayResults() > 0) || this.hasAnatomyTerms;
+		return (allele.getCountOfExpressionAssayResults() > 0) || (allele.getCountOfHtExperiments() > 0) || this.hasAnatomyTerms;
 	}
 	public boolean getHasReferences()
 	{

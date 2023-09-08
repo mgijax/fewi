@@ -784,18 +784,29 @@ function formatFastaArgs() {
     <td class="<%=rightTdStyles.getNext() %>">
       ${fixedDivOpen}
       <table id="expressionTable">
-	  <c:if test="${allele.countOfExpressionAssayResults > 0}">
-      	<tr><td class="rightBorderThinGray padded" align="right" width="1%" nowrap="nowrap"><font class="label">In Mice Carrying this Mutation: </font></td>
-      	<td class='padded'><a href="${configBean.FEWI_URL}gxd/allele/${allele.primaryID}" class="MP">${allele.countOfExpressionAssayResults} assay results</a></td></tr>
-	  </c:if>
-	  <c:if test="${allele.countOfHtExperiments > 0}">
-      	<tr><td class="rightBorderThinGray padded" align="right" width="1%" nowrap="nowrap">&nbsp;</td>
-      	<td class='padded'><a href="${configBean.FEWI_URL}gxd/htexp_index/summary?mutantAlleleId=${allele.primaryID}" class="MP">${allele.countOfHtExperiments} high-throughput experiments</a></td></tr>
-	  </c:if>
+        <c:set var="hasResults" value="${allele.countOfExpressionAssayResults > 0}" />
+        <c:set var="hasHT" value="${allele.countOfHtExperiments > 0}" />
+	<c:if test="${hasResults || hasHT}">
+      	  <tr><td class="rightBorderThinGray padded" align="right" width="1%" nowrap="nowrap"><font class="label">In Mice Carrying this Mutation: </font></td>
+      	  <td class='padded'>
+            <c:if test="${hasResults}">
+                <a href="${configBean.FEWI_URL}gxd/allele/${allele.primaryID}" class="MP">${allele.countOfExpressionAssayResults} assay results</a>
+            </c:if>
+            <c:if test="${hasResults && hasHT}">
+                <br/>
+            </c:if>
+            <c:if test="${hasHT}">
+                <a href="${configBean.FEWI_URL}gxd/htexp_index/summary?mutantAlleleId=${allele.primaryID}" class="MP">${allele.countOfHtExperiments} RNA-Seq or microarray experiment(s)</a>
+            </c:if>
+          </td>
+          </tr>
+	</c:if>
+
 	  <c:if test="${anatomyTermCount > 0}">
       	<tr><td class="rightBorderThinGray padded" align="right" width="1%" nowrap="nowrap"><font class="label">In Structures Affected by this Mutation: </font></td>
       	<td class='padded'><a href="${configBean.FEWI_URL}vocab/gxd/anatomy/by_allele/${allele.primaryID}" class="MP">${anatomyTermCount} anatomical structures</a></td></tr>
 	  </c:if>
+
 	  </table>
       ${fixedDivClose}
     </td>

@@ -252,6 +252,7 @@ public class AlleleDetailTest {
 		Allele allele = new Allele();
 		allele.setAlleleCellLines(new ArrayList<AlleleCellLine>());
 		allele.setNotes(new ArrayList<AlleleNote>());
+                allele.setCountOfHtExperiments(0);
 		
 		Marker marker = new Marker();
 		marker.setQtlExperiments(new ArrayList<MarkerQtlExperiment>());
