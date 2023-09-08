@@ -210,6 +210,7 @@ public class SearchConstants {
 	public static final String GXDHT_STRUCTURE_SEARCH = "structureSearch";
 	public static final String GXDHT_SEX = "sex";
 	public static final String GXDHT_MUTATED_GENE = "mutatedGene";
+	public static final String GXDHT_MUTANT_ALLELE_IDS = "mutantAlleleIds";
 	public static final String GXDHT_METHOD = "method";
 	public static final String GXDHT_STRAIN = "strainSearch";
 	public static final String GXDHT_TITLE = "title";

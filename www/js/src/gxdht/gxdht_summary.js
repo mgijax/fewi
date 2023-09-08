@@ -61,6 +61,9 @@ var updateYouSearchedFor = function() {
 		ysf = ysf + 'Samples <b>mutated in ' + decode(params['mutatedIn'][0]) + '</b> ';
 		ysf = ysf + ' <span class="smallGrey">current symbol, synonyms, gene id</span><br/>';
 	}
+	if (params.hasOwnProperty('mutantAlleleId')) {
+		ysf = ysf + 'Samples <b>carrying mutant allele ' + decode(params['mutantAlleleId'][0]) + '</b> ';
+	}
 	if (params.hasOwnProperty('method')) {
 		ysf = ysf + 'Assayed by <b>(' + decode(params['method'][0]) + ')</b><br/>';
 	}

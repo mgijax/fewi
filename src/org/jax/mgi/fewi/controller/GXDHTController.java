@@ -495,6 +495,13 @@ public class GXDHTController {
 		if ((mutatedIn != null) && (mutatedIn.length() > 0)) {
 			filterList.add(new Filter(SearchConstants.GXDHT_MUTATED_GENE, mutatedIn, Filter.Operator.OP_EQUAL));
 		}
+
+		// search by mutant allele ID
+		String mutantAlleleId = query.getMutantAlleleId();
+		if ((mutantAlleleId != null) && (mutantAlleleId.length() > 0)) {
+			filterList.add(new Filter(SearchConstants.GXDHT_MUTANT_ALLELE_IDS, mutantAlleleId, Filter.Operator.OP_EQUAL));
+		}
+
 		
 		// search by string
 		String strain = query.getStrain();

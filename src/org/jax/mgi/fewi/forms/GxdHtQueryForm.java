@@ -21,6 +21,7 @@ public class GxdHtQueryForm {
 	private List<String> studyTypeFilter = new ArrayList<String>();
 	private String method = "";
 	private String mutatedIn = "";
+	private String mutantAlleleId = "";
     private String relevancy = "";
     private String sex = "";
     private String structure = "";
@@ -170,6 +171,13 @@ public class GxdHtQueryForm {
 		this.mutatedIn = mutatedIn;
 	}
 
+    public String getMutantAlleleId() {
+		return mutantAlleleId;
+	}
+	public void setMutantAlleleId(String mutantAlleleId) {
+		this.mutantAlleleId = mutantAlleleId;
+	}
+
     public String getMethod() {
         return method;
     }
@@ -251,7 +259,7 @@ public class GxdHtQueryForm {
 	@Override
 	public String toString() {
 		return "GxdHtQueryForm [age=" + age + ", theilerStage=" + theilerStage + ", method=" + method + ", mutatedIn="
-				+ mutatedIn + ", sex=" + sex + ", structure=" + structure + ", structureID=" + structureID + ", text="
+				+ mutatedIn + ", mutantAlleleId=" + mutantAlleleId + ", sex=" + sex + ", structure=" + structure + ", structureID=" + structureID + ", text="
 				+ text + ", textScope=" + textScope + "]";
 	}
 
