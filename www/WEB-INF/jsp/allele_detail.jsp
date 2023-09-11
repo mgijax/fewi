@@ -804,7 +804,7 @@ function formatFastaArgs() {
 
 	  <c:if test="${anatomyTermCount > 0}">
       	<tr><td class="rightBorderThinGray padded" align="right" width="1%" nowrap="nowrap"><font class="label">In Structures Affected by this Mutation: </font></td>
-      	<td class='padded'><a href="${configBean.FEWI_URL}vocab/gxd/anatomy/by_allele/${allele.primaryID}" class="MP">${anatomyTermCount} anatomical structures</a></td></tr>
+      	<td class='padded'><a href="${configBean.FEWI_URL}vocab/gxd/anatomy/by_allele/${allele.primaryID}" class="MP">${anatomyTermCount} anatomical structure(s)</a></td></tr>
 	  </c:if>
 
 	  </table>
