@@ -128,6 +128,8 @@ public class GXDHTController {
 		}
 		if ((queryForm.getMutatedIn() != null) && (queryForm.getMutatedIn().length() > 0)) {
 			return true;
+		} else if ((queryForm.getMutantAlleleId() != null) && (queryForm.getMutantAlleleId().length() > 0)) {
+			return true;
 		} else if ((queryForm.getSex() != null) && (queryForm.getSex().length() > 0)) {
 			return true;
 		} else if ((queryForm.getStrain() != null) && (queryForm.getStrain().length() > 0)) {
