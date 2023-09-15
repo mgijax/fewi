@@ -953,6 +953,12 @@ public class ReferenceController {
 		// build text query filter
 		String textField = query.getText().trim();
 		if(textField != null && !"".equals(textField)){
+                        //
+                        // Index fields have all punctuation removed, so if user includes any punctuation in query
+                        // they won't match on anything, EXCEPT that they are allows to use double quotes for exact match and
+                        // asterisk for wildcard. Therefore... remove punctuation except for " and *.
+                        textField = textField.replaceAll("[^a-zA-Z0-9\"*]", " ");
+
 			Filter tf = new Filter();
 			List<Filter> textFilters = new ArrayList<Filter>();
 
