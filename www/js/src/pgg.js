@@ -10,7 +10,7 @@
   * It has no outside dependencies.
   * 
   * PGG knows how to take data in a defined format (see below) and draw a table with rows and cells
-  * in the style of the SuperGrid. It knowis that cells have data but it doesn't know/care what that
+  * in the style of the SuperGrid. It knows that cells have data but it doesn't know/care what that
   * data is. It knows about openy/closey behavior of rows, but it doesn't know anything about fetching data.
   * It knows how to create (movable, closable) popups, but it doesn't know what goes in them.
   * (You get the idea. Lightweight means you do more of the work!)

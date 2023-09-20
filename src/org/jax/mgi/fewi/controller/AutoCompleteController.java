@@ -780,7 +780,7 @@ public class AutoCompleteController {
 
 	private SearchResults<VocabBrowserACResult> getSharedVocabBrowserAutocomplete (String query, String vocabName) {
 
-		List<VocabBrowserSearchResult> results = vocabController.getSharedBrowserSearchResults(query, vocabName, 50);
+		List<VocabBrowserSearchResult> results = vocabController.getSharedBrowserSearchResults(query, vocabName, 2000);
 		List<VocabBrowserACResult> acResults = new ArrayList<VocabBrowserACResult>();
 		for (VocabBrowserSearchResult result : results) {
 			Map<String,String> matches = result.getAllMatches();
@@ -792,9 +792,12 @@ public class AutoCompleteController {
 		ACResultComparator<VocabBrowserACResult> comparator = new ACResultComparator<VocabBrowserACResult>(query);
 		Collections.sort(acResults, comparator);
 
+                int imax = Math.min(250, acResults.size());
+                List<VocabBrowserACResult> acResults2 = new ArrayList<VocabBrowserACResult>(acResults.subList(0,imax));
+
 		SearchResults<VocabBrowserACResult> sr = new SearchResults<VocabBrowserACResult>();
-		sr.setResultObjects(acResults);
-		sr.setTotalCount(acResults.size());
+		sr.setResultObjects(acResults2);
+		sr.setTotalCount(acResults2.size());
 		return sr;
 	}
 	
