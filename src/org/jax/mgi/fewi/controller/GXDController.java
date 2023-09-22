@@ -4513,7 +4513,7 @@ public class GXDController {
 		populateMarkerIDs(session, query);
 		SearchParams params = new SearchParams();
 		params.setFilter(parseGxdQueryForm(query));
-		params.setPageSize(20000);
+		params.setPageSize(200000);
 
 		SearchResults<SolrGxdMarker> searchResults = gxdFinder.searchMarkers(params);
 		List<SolrGxdMarker> list = searchResults.getResultObjects();

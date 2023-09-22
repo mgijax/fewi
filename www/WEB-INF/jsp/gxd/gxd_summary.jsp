@@ -109,7 +109,7 @@
                    <span class="label canHide">Export:</span>
                    <a id="markersTextDownload" class="canHide filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
                    <a id="markersBatchForward" class="canHide filterButton"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> MGI Batch Query</a>
-						<a id="mouseMineLink" target="_blank" class="canHide filterButton" onClick="forwardToMousemine()"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> MouseMine</a>
+						<a id="mouseMineLink" target="_blank" class="canHide filterButton" onClick="javascript: mousemine.submit();"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> MouseMine</a>
 			</form><!-- markerExportForm -->
                 </div>
              </div>

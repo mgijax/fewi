@@ -224,18 +224,6 @@ var getMarkerIds = function() {
 	YAHOO.util.Connect.asyncRequest('POST', url, callback, getQueryStringWithFilters());
 };
 
-var forwardToMousemine = function () {
-    var countSpan = document.getElementById('totalGenesCount');
-    var count = parseInt(countSpan.innerText.replace(',',''))
-    if (count > 20000) {
-        alert("There is an upper limit of 20,000 ids that may be forwarded to Mousemine.");
-    } else {
-        var form = document.querySelector('form[name="mousemine"]')
-        form.submit()
-    }
-
-};
-
 //a global variable to helpthe tab change handler know when to fire off a new query
 var newQueryState = false;
 
