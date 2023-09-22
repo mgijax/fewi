@@ -248,13 +248,13 @@
 
     <!-- allele subtypes -->
     <div class='relativePos categoryDiv' style='margin-right: 10px;'>
-      <div class='categoryHeader' style="width:385px; " >
+      <div class='categoryHeader' style="width:400px; " >
       <a class='userhelpLink'
 	href="${configBean.USERHELP_URL}ALLELE_phenotypic_categories_help.shtml#attributes"
 	onclick="javascript:openUserhelpWindow('ALLELE_phenotypic_categories_help.shtml#attributes'); return false;"
 	      >Allele Attributes</a>
       </div>
-      <div class='categorySelection' style="width:385px; overflow: auto; " >
+      <div class='categorySelection' style="width:400px; overflow: auto; " >
       	<div style="float: left; margin-right: 20px;">
       		<fewi:checkboxOptions items="${alleleQueryForm.subTypeGroup1}" name="alleleSubType" values="${alleleQueryForm.alleleSubType}" />
       		<br/>

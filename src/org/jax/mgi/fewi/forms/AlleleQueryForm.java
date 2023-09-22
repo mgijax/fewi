@@ -105,6 +105,8 @@ public class AlleleQueryForm
     	subTypeGroup1.put("Recombinase","Recombinase");
     	subTypeGroup1.put("RMCE-ready","RMCE-ready");
 
+    	subTypeGroup2.put("Endonuclease","Endonuclease");
+    	subTypeGroup2.put("Epitope tag","Epitope tag");
     	subTypeGroup2.put("Inserted expressed sequence","Inserted expressed sequence");
     	subTypeGroup2.put("Humanized sequence","Humanized sequence");
     	subTypeGroup2.put("Reporter","Reporter");
@@ -118,6 +120,7 @@ public class AlleleQueryForm
     	subTypeGroup3.put("Inducible","Inducible");
     	subTypeGroup3.put("Knockdown","Knockdown");
     	subTypeGroup3.put("Modified isoform(s)","Modified isoform(s)");
+    	subTypeGroup3.put("Modified regulatory region","Modified regulatory region");
     	subTypeGroup3.put("Null/knockout","Null/knockout");
     	subTypeGroup3.put("No functional change","No functional change");
     }
