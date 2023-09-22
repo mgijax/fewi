@@ -133,6 +133,7 @@
   function populateTermTable()
   {
     var inputIds = $('#hpmpInput').val().trim();
+    inputIds = inputIds.replace(/,*$/, ''); // remove trailing comma
     var inputIdsSplit = inputIds.split(/[ ,]+/);
 
     // ensure parent window exists
