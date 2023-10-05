@@ -134,6 +134,7 @@
   {
     var inputIds = $('#hpmpInput').val().trim();
     inputIds = inputIds.replace(/,*$/, ''); // remove trailing comma
+    inputIds = inputIds.trim();
     var inputIdsSplit = inputIds.split(/[ ,]+/);
 
     // ensure parent window exists
