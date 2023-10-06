@@ -1,4 +1,5 @@
 <%@ attribute name="items" required="true" type="java.lang.Object" description="key,value map or simply a list of values" %>
+<%@ attribute name="helpText" required="false" type="java.lang.Object" description="key,value map or simply a list of values" %>
 <%@ attribute name="name" required="true" type="java.lang.String" description="name of the input field for comparison strains" %>
 <%@ attribute name="values" required="false" type="java.util.List" description="User selected values for comparison strains" %>
 <%@ attribute name="width" required="true" type="java.lang.Integer" description="The number of columns for the checkbox grid" %>
@@ -22,6 +23,8 @@
 	}
 	else itemMap = (Map) items;
 	
+        Map helpTextMap = (Map) helpText;
+
 	if(values==null) values = new ArrayList();
 	if(refValues==null) refValues = new ArrayList();
 	
@@ -29,6 +32,10 @@
 	int columnSize = (int)Math.ceil((double)itemMap.keySet().size() / (double)width);
 	for(Object key : itemMap.keySet()) {
 		Object value = itemMap.get(key);
+                Object help = "";
+                if (helpTextMap != null && helpTextMap.containsKey(key)) {
+                    help = helpTextMap.get(key);
+                }
 		Object checked = values.contains(key) ? "checked=\"checked\"" : "";
 		Object refChecked = refValues.contains(key) ? "checked=\"checked\"" : "";
 		if(count % columnSize == 0) {
@@ -48,7 +55,8 @@
  			<span class="refCheckmark"></span>
 		</label>
 		<label class="cmpContainer">
-			<input name="${name}" type="checkbox" value="<%=cleanKey %>" <%=checked %> /> <%=value %>
+                        <span title="<%=help %>"><%=value %></span>
+			<input name="${name}" type="checkbox" value="<%=cleanKey %>" <%=checked %> /> 
  			<span class="cmpCheckmark"></span>
 		</label>
 	</div>

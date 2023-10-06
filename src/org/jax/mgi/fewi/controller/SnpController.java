@@ -84,6 +84,9 @@ public class SnpController {
 	// map for 'selectedStrains' options for the SNP QF
 	private static Map<String, String> selectableStrains = null;
 
+	// map for title tags for strains in the SNP QF
+	private static Map<String, String> strainHelpText = null;
+
 	// map for 'selectedStrains' options for the SNP QF
 	private static Map<String, String> referenceStrains = null;
 
@@ -239,10 +242,14 @@ public class SnpController {
 		}
 
 		if (selectableStrains == null) {
-			selectableStrains = queryFormOptionFinder.getOptionMap("snp", "strain");
-			for(String key: selectableStrains.keySet()) {
-				selectableStrains.put(key, FormatHelper.superscript(selectableStrains.get(key)));
-			}
+                        selectableStrains = new LinkedHashMap<String, String>();
+                        strainHelpText = new LinkedHashMap<String, String>();
+
+                        SearchResults<QueryFormOption> qfOptions = queryFormOptionFinder.getQueryFormOptions("snp", "strain");
+                        for (QueryFormOption qfo : qfOptions.getResultObjects()) {
+                            selectableStrains.put(qfo.getSubmitValue(), FormatHelper.superscript(qfo.getDisplayValue()));
+                            strainHelpText.put(qfo.getSubmitValue(), qfo.getHelpText());
+                        }
 			logger.debug("Cached " + selectableStrains.size() + " selectable strains");
 		}
 
@@ -263,6 +270,7 @@ public class SnpController {
 		mav.addObject("chromosomes", chromosomes);
 		mav.addObject("withinRanges", withinRanges);
 		mav.addObject("selectableStrains", selectableStrains);
+		mav.addObject("strainHelpText", strainHelpText);
 		mav.addObject("referenceStrains", referenceStrains);
 		mav.addObject("coordinateUnits", coordinateUnits);
 

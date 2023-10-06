@@ -52,10 +52,10 @@
 				</div>
 				<div style="clear:both;">
 					<c:if test="${empty snpQueryForm.selectedStrains}">
-						<fewi:checkboxStrainsGrid name="selectedStrains" refName="referenceStrains" width="4" items="${selectableStrains}" values="${selectedStrains}" />
+						<fewi:checkboxStrainsGrid name="selectedStrains" refName="referenceStrains" width="4" items="${selectableStrains}" helpText="${strainHelpText}" values="${selectedStrains}" />
 					</c:if>
 					<c:if test="${not empty snpQueryForm.selectedStrains}">
-						<fewi:checkboxStrainsGrid name="selectedStrains" refName="referenceStrains" width="4" items="${selectableStrains}" values="${snpQueryForm.selectedStrains}" refValues="${snpQueryForm.referenceStrains}"/>
+						<fewi:checkboxStrainsGrid name="selectedStrains" refName="referenceStrains" width="4" items="${selectableStrains}" helpText="${strainHelpText}" values="${snpQueryForm.selectedStrains}" refValues="${snpQueryForm.referenceStrains}"/>
 					</c:if>
 				</div>
 			</div>
