@@ -1,5 +1,5 @@
 
-	<c:if test="${(marker.countOfGOTerms > 0) or (not empty marker.funcBaseID)}">
+	<c:if test="${(marker.countOfGOTerms > 0) or (not empty marker.funcBaseID) or (marker.goNdRecords.size() > 0)}">
 		<div class="row goRibbon" id="goRibbon">
 			<div class="header <%=leftTdStyles.getNext() %>">
 				Gene&nbsp;Ontology<br/>(GO)<br/>Classifications
@@ -63,7 +63,7 @@
 												.sgSpacer { display: inline-block; width: 25px }
 											</style>
 
-											<c:if test="${not (empty marker.slimgridCellsFunction and empty marker.slimgridCellsProcess and empty marker.slimgridCellsComponent)}">
+                                                                                        <c:if test='${marker.isGoNd("F")!=null || marker.isGoNd("P")!=null || marker.isGoNd("C")!=null}'>
 												<div id="goSlimgridWrapper">
 													<div id="mfSlimgridWrapper" class="sgWrapper sgWrapperHeight">
 														<div class="label sgWrapperTitle" style="width: 100%; text-align: center;">Molecular Function</div><br/>
@@ -72,7 +72,15 @@
 														<c:set var="sgShowAbbrev" value="true"/>
 														<c:set var="sgTooltipTemplate" value="<count> annotation(s)"/>
 														<c:set var="sgUrl" value="${configBean.FEWI_URL}go/marker/<markerID>?header=<abbrev>"/>
-														<%@ include file="../shared_slimgrid.jsp" %>
+                                                                                                                <c:if test='${marker.isGoNd("F")}'>
+                                                                                                                    <div style="max-width: 200px;">
+                                                                                                                    No experimental evidence to support Molecular Function
+                                                                                                                    annotation, following literature review.
+                                                                                                                    See <a href="/reference/J:73796">J:73796</a>.
+                                                                                                                    </div>
+                                                                                                                </c:if>
+														<c:if test='${!marker.isGoNd("F")}'>
+                                                                                                                    <%@ include file="../shared_slimgrid.jsp" %></c:if>
 													</div>
 													<div class="sgSpacer"></div>
 													<div id="bpSlimgridWrapper" class="sgWrapper sgWrapperHeight">
@@ -81,7 +89,15 @@
 														<c:set var="sgCells" value="${marker.slimgridCellsProcess}"/>
 														<c:set var="sgShowAbbrev" value="true"/>
 														<c:set var="sgTooltipTemplate" value="<count> annotation(s)"/>
-														<%@ include file="../shared_slimgrid.jsp" %>
+                                                                                                                <c:if test='${marker.isGoNd("P")}'>
+                                                                                                                    <div style="max-width: 200px;">
+                                                                                                                    No experimental evidence to support Biological Process
+                                                                                                                    annotation, following literature review.
+                                                                                                                    See <a href="/reference/J:73796">J:73796</a>.
+                                                                                                                    </div>
+                                                                                                                </c:if>
+                                                                                                                <c:if test='${!marker.isGoNd("P")}'>
+                                                                                                                    <%@ include file="../shared_slimgrid.jsp" %></c:if>
 													</div>
 													<div class="sgSpacer"></div>
 													<div id="ccSlimgridWrapper" class="sgWrapper sgWrapperHeight">
@@ -90,9 +106,19 @@
 														<c:set var="sgCells" value="${marker.slimgridCellsComponent}"/>
 														<c:set var="sgShowAbbrev" value="true"/>
 														<c:set var="sgTooltipTemplate" value="<count> annotation(s)"/>
-														<%@ include file="../shared_slimgrid.jsp" %>
+                                                                                                                <c:if test='${marker.isGoNd("C")}'>
+                                                                                                                    <div style="max-width: 200px;">
+                                                                                                                    No experimental evidence to support Cellular Component
+                                                                                                                    annotation, following literature review.
+                                                                                                                    See <a href="/reference/J:73796">J:73796</a>.
+                                                                                                                    </div>
+                                                                                                                </c:if>
+                                                                                                                <c:if test='${!marker.isGoNd("C")}'>
+                                                                                                                    <%@ include file="../shared_slimgrid.jsp" %></c:if>
 													</div>
+                                                                                                        <c:if test='${marker.isGoNd("F")==false || marker.isGoNd("P")==false || marker.isGoNd("C")==false}'>
 													<div style="font-size: 90%">Click cells to view annotations.</div>
+                                                                                                        </c:if>
 												</div>
 											</c:if>
 										</div>
