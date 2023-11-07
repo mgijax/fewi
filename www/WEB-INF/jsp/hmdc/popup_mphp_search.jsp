@@ -12,11 +12,7 @@
 
   <style>
 
-    #betaNotice {
-      padding: 4px;
-      color: darkred;
-    }
-        #ysf {
+    #ysf {
       padding: 4px;
     }
 
@@ -46,10 +42,7 @@
   <form name="PhenoPopup">
 
     <div style='padding:4px; padding-left:10px;'>
-      <span id='betaNotice'>--(BETA Version)--</span>
-    </div>
-    <div style='padding:4px; padding-left:10px;'>
-      <strong>Add Related Mammalian (MP) and Human (HPO) Phenotype Terms by ID</strong>
+      <strong>Add Related Mammalian (MP) and Human (HPO) Phenotype Terms byID</strong>
     </div>
     <br><br>
     <div style='padding:4px; padding-left:10px;'>
@@ -92,14 +85,14 @@
   function clearPopupForm()
   {
     document.getElementById("hpmpInput").value = ""; 
-    // clear the generated elements of the DOM
+    // clear the generated elements into the DOM
     $('#mpHpSummaryTable').html(" ");
     $('#ysf').html(" ");       }
 
   // updates parent window with ID list
   function populateParentWindow()
   {
-    // gather IDs of checkboxes
+
     var inputIDs = '';
     jqCheckboxes().each(function(idx,checkbox){
       var chk = $(checkbox);
@@ -108,21 +101,8 @@
       }
     }); 
 
-    // parent window's input value
     const input = window.opener.popupOpenerInput
-
-    var distinctIDs = [];
-    var fullIdString = input.value.trim() + ' ' + $('#hpmpInput').val().trim() + ' ' + inputIDs;
-    var nonDistinctIDs = fullIdString.trim().split(/[ ,]+/);
-    for (var i = 0; i < nonDistinctIDs.length; i++) {
-      thisInputID = nonDistinctIDs[i].trim();
-      if (!distinctIDs.includes(thisInputID)){
-        distinctIDs.push(thisInputID);
-      }
-    }
-
-    //input.value = input.value + ' ' + $('#hpmpInput').val() + ' ' + inputIDs;
-    input.value = distinctIDs.join(", ");
+    input.value = input.value + ' ' + $('#hpmpInput').val() + ' ' + inputIDs;
     input.dispatchEvent(new Event('change'));
 
     // cleanup and exit
@@ -132,11 +112,10 @@
   // create the summary table to be inserted
   function populateTermTable()
   {
-    var inputIds = $('#hpmpInput').val().trim();
-    inputIds = inputIds.replace(/,*$/, ''); // remove trailing comma
-    inputIds = inputIds.trim();
+    var inputIds = $('#hpmpInput').val();
     var inputIdsSplit = inputIds.split(/[ ,]+/);
-
+    console.log(inputIdsSplit);
+console.log(['joe', 'jane', 'mary'].includes('jane')); // true
     // ensure parent window exists
     if (window.opener && !window.opener.closed)
     {
@@ -183,24 +162,16 @@
                   stripeRowCount++;
                 }
                 lastSearchId = thisRow.searchId;
-
-                // checking for nulls
-                displaySearchTermDefinition = thisRow.searchTermDefinition;
-                if (displaySearchTermDefinition==null) {displaySearchTermDefinition=" ";}
-                displayMatchTermSynonym = thisRow.matchTermSynonym;
-                if (displayMatchTermSynonym==null) {displayMatchTermSynonym=" ";}
-                displayMatchTermDefinition = thisRow.matchTermDefinition;
-                if (displayMatchTermDefinition==null) {displayMatchTermDefinition=" ";}                
-
+                
                 // create table rows
                 tbl = tbl + '<TR bgcolor="' + rowBgColor + '">' +
                           '<td>(' + thisRow.searchId + ')</br>' + thisRow.searchTerm + '</td>' +
-                          '<td>' + displaySearchTermDefinition + '</td>' +
+                          '<td>' + thisRow.searchTermDefinition + '</td>' +
                           '<td>' + thisRow.matchMethod + '</td>' +
                           '<td>' + thisRow.matchType + '</td>' +
                           '<td>(' + thisRow.matchTermID + ')</br>' + thisRow.matchTermName + '</td>' +
-                          '<td>' + displayMatchTermSynonym + '</td>' +
-                          '<td>' + displayMatchTermDefinition + '</td>' +
+                          '<td>' + thisRow.matchTermSynonym + '</td>' +
+                          '<td>' + thisRow.matchTermDefinition + '</td>' +
                           '<td> <input name="matchTermCheck" type="checkbox" value="' + thisRow.matchTermID + '"> </td>' +
                           '</TR>';
               }
@@ -210,7 +181,7 @@
               // generate ysf string
               var inputIdsNotFound=[];
               for (var i = 0; i < inputIdsSplit.length; i++) {
-                thisInputID = inputIdsSplit[i].trim();
+                thisInputID = inputIdsSplit[i];
                 if (!resultIDs.includes(thisInputID)){
                   inputIdsNotFound.push(thisInputID);
                 }
@@ -225,12 +196,12 @@
               $('#ysf').html(ysfString);
               $('#mpHpSummaryTable').html(tbl);
             }
-            else { // no results
+            else {
+              $('#errorText').html("No matching terms were found for your query.");
 
-              // update the generated elements and inject into the DOM
+              // clear the generated elements into the DOM
               $('#mpHpSummaryTable').html(" ");
-              $('#ysf').html(" You searched for... <br> " + inputIdsSplit.join(", ") + "; No matching terms were found for these term IDs <br><br>");            
-            }
+              $('#ysf').html(" ");            }
 
         } catch (e) {
           console.log('E3: Failed to get IDs to forward.');

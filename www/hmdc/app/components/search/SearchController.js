@@ -394,7 +394,7 @@
 								type: 'button',
 								templateOptions: {
 									class: 'btn btn-sm btn-primary btn-mybtn',
-									label: 'Add related phenotype terms by ID (BETA)',
+									label: 'Add related phenotype terms by ID',
 									method: function(evt) {
 										const tgt = evt.target
 										const ngf = tgt.closest('ng-form')

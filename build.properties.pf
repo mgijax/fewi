@@ -27,4 +27,5 @@ web_xml.file=web.xml.public
 #web_xml.file=web.xml.dev
 
 <!-- JS minification -->
+# comment out to turn off minification
 #js.minify=true
