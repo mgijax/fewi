@@ -6,7 +6,7 @@
 		<groupId>org.jax</groupId>
 		<artifactId>mgi</artifactId>
 		<version>${revision}</version>
-		<relativePath>../mgi_java/pom.xml</relativePath>
+		<relativePath>../mgi_java_builder/pom.xml</relativePath>
 	</parent>
 
 	<artifactId>fewi</artifactId>
