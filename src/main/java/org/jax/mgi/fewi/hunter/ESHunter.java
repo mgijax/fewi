@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
@@ -150,54 +151,66 @@ public class ESHunter<T extends BaseESDocument> {
 		createESConnection();
 
 		// Create the query string by invoking the translate filter method.
-		SolrQuery query = new SolrQuery();
+		//SolrQuery query = new SolrQuery();
 
 		String queryString = translateFilter(searchParams.getFilter(), propertyMap);
 
 		if(!searchParams.getSuppressLogs()) log.debug("TranslatedFilters: " + queryString);
 		if(searchParams.getReturnFilterQuery()) searchResults.setFilterQuery(queryString);
 
-		query.setQuery(queryString);
+		//query.setQuery(queryString);
 
 
 		// configure which document fields to return
 		// also make sure the score comes back
-		if(this.returnedFields.size() > 0) {
-			List<String> docFields = new ArrayList<String>(returnedFields);
-			docFields.add("score");
-			// I know the typecasting looks kludgy, but it's simpler than declaring array sizes and looping.
-			query.setFields(docFields.toArray(new String[0]));
-		} else  query.setFields("*","score"); // if none specified do *
+		//if(this.returnedFields.size() > 0) {
+		//	List<String> docFields = new ArrayList<String>(returnedFields);
+		//	docFields.add("score");
+		//	// I know the typecasting looks kludgy, but it's simpler than declaring array sizes and looping.
+		//	query.setFields(docFields.toArray(new String[0]));
+		//} else  query.setFields("*","score"); // if none specified do *
 
 
 		// Add in the Sorts from the search parameters.
-		addSorts(searchParams, query);
+		//addSorts(searchParams, query);
 
 		// Perform highlighting, assuming its needed.  This method will take
 		// care of determining that.
-		if(searchParams.includeMetaHighlight() || searchParams.includeHighlightMarkup()) {
-			addHighlightingFields(searchParams, query);
-		}
+		//if(searchParams.includeMetaHighlight() || searchParams.includeHighlightMarkup()) {
+		//	addHighlightingFields(searchParams, query);
+		//}
 
 		// Set the pagination parameters.
-		query.setRows(searchParams.getPageSize());
-		if (searchParams.getStartIndex() != -1) {
-			query.setStart(searchParams.getStartIndex());
-		}else {
-			query.setStart(resultsDefault);
-		}
+		//query.setRows(searchParams.getPageSize());
+		//if (searchParams.getStartIndex() != -1) {
+		//	query.setStart(searchParams.getStartIndex());
+		//}else {
+		//	query.setStart(resultsDefault);
+		//}
 
 		// Add the facets, can be overwritten.
-		addFacets(query);
-		if(!searchParams.getSuppressLogs()) log.info("ESQuery:" + query);
+		//addFacets(query);
+		if(!searchParams.getSuppressLogs()) log.info("ESQuery:" + queryString);
 
 		SearchResponse<T> resp = null;
 		try {
-			log.info("Running query & packaging searchResults: " + esIndex);
+			//log.info("Running query & packaging searchResults: " + esIndex);
 
+			resp = esClient.search(s -> {
+				SearchRequest.Builder srb = s.index(esIndex)
+					.q(queryString)
+					.from(searchParams.getStartIndex())
+					.size(searchParams.getPageSize());
+				if(groupField != null) {
+					srb.aggregations(groupField, t -> t.terms(f -> f.field(groupField)));
+				}
+				return srb;
+			}, clazz);
 
-			resp = esClient.search(s -> s.index(esIndex).q(queryString), clazz);
-
+			if (resp.aggregations().size() > 0) {
+				log.info("Aggs: " + resp.aggregations());
+			}
+			
 			searchResults.setFilterQuery(queryString);
 		
 			for(Hit<T> hit: resp.hits().hits()) {
@@ -207,7 +220,7 @@ public class ESHunter<T extends BaseESDocument> {
 
 			searchResults.setTotalCount((int)resp.hits().total().value());
 
-			log.info(resp + "");
+			//log.info(resp + "");
 
 		} catch (Exception e) {
 			e.printStackTrace();

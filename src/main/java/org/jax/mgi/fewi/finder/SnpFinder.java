@@ -168,7 +168,7 @@ public class SnpFinder {
 		return ret;
 	}
 
-	public SearchResults<ConsensusSNPSummaryRow> getMatchingSnpCount(SearchParams searchParams, List<String> matchedMarkerIds) {
+	public SearchResults<ConsensusSNPSummaryRow> getMatchingSnpCount(SearchParams searchParams) {
 		
 		SearchResults<ConsensusSNPSummaryRow> ret = new SearchResults<ConsensusSNPSummaryRow>();
 		
@@ -191,27 +191,7 @@ public class SnpFinder {
 			snpSearchHunter.hunt(searchParams, searchResults1);
 			ret.setTotalCount(searchResults1.getTotalCount());
 		}
-		
-		HashMap<String, String> ml = new HashMap<String, String>();
-		for(String markerId: matchedMarkerIds) {
-			ml.put(markerId, markerId);
-		}
 
-/*		SearchParams dataSearchParams = new SearchParams();
-		Filter snpIdFilter = new Filter(SearchConstants.SNPID, searchResults1.getResultKeys(), Filter.Operator.OP_IN);
-		dataSearchParams.setFilter(snpIdFilter);
-		dataSearchParams.setPageSize(searchParams.getPageSize());
-		
-		SearchResults<ConsensusSNP> searchResults2 = new SearchResults<ConsensusSNP>();
-		snpDataHunter.hunt(dataSearchParams, searchResults2);
-		
-		List<ConsensusSNPSummaryRow> summaryRows = new ArrayList<ConsensusSNPSummaryRow>();
-*/		
-		
-//		ret.setResultKeys(searchResults1.getResultKeys());
-		
-//		ret.setResultFacets(searchResults1.getResultFacets());
-//		ret.setResultObjects(summaryRows);
 		return ret;
 	}
 	

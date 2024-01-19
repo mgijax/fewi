@@ -17,9 +17,6 @@
 	
 	<path id="tests.path">
 		<fileset includes="*.jar" dir="${lib.dir}" excludes="javaee-api-5.jar"/>
-		<fileset includes="*.jar" dir="${jboss.dir}/bin/client" />
-		<fileset includes="*.jar" dir="${jboss.dir}/modules/javax/persistence/api/main" />
-		<fileset includes="*.jar" dir="${jboss.dir}/bundles/javax/servlet/api/v25" />
 		<fileset includes="fedatamodel.jar" dir="${fedatamodel.dir}" />
 		<fileset includes="snpdatamodel.jar" dir="${snpdatamodel.dir}" />
 		<fileset includes="fe.jar" dir="${lib_java_fe.dir}" />
@@ -96,6 +93,7 @@
 		<copy file="./www/WEB-INF/properties/applicationContext-ci.xml" todir="./www/WEB-INF/classes" overwrite="true" />
 		<copy file="./www/WEB-INF/properties/common.fewi.properties" todir="./www/WEB-INF/classes" overwrite="true" />
 		<copy file="./www/WEB-INF/properties/common.solr.properties" todir="./www/WEB-INF/classes" overwrite="true" />
+		<copy file="./www/WEB-INF/properties/common.es.properties" todir="./www/WEB-INF/classes" overwrite="true" />
 		<copy file="./www/WEB-INF/properties/fewi.properties" todir="./www/WEB-INF/classes" overwrite="true" />
 		<copy file="./www/WEB-INF/properties/GlobalConfig.properties" todir="./www/WEB-INF/classes" overwrite="true" />
 		<copy file="./www/WEB-INF/properties/externalUrls.properties" todir="./www/WEB-INF/classes" overwrite="true" />
@@ -274,17 +272,12 @@
 		<!-- Remove existing war (which could be file or directory) -->
 		<delete dir="${deploy.dir}/${war.file}" />
 		
-		<move file="${war.file}" todir="${deploy.dir}" overwrite="true" />
+		<move file="${war.file}" todir="/Users/olinblodgett/git/wildfly-25.0.1.Final/standalone/deployments" overwrite="true" />
 	</target>
 	
 	<!-- For development ONLY -->
 	<property name="war.file" value="${project.name}.war" />
 	<property name="war.file.temp" value="${project.name}_temp.war" />
-	
-	<!-- Enable WatchTask -->
-	<taskdef name="watch"
-	           classname="org.apache.tools.ant.taskdefs.optional.watch.WatchTask"
-	           classpath="${lib.dir}/watch-task-1.0.jar" />
 	
 	<!--deploy-exploded -->
 	<target name="deploy-exploded" depends="war">
@@ -299,42 +292,6 @@
 			<fileset dir="${war.file}"/>
 		</copy>
 		<touch file="${deploy.dir}/${war.file}.dodeploy"/>
-	</target>
-	
-	<!-- Watch task for file changes -->
-	<target name="watch" depends="deploy-exploded">
-		<watch>
-          <when>
-              <target>
-                <echo>Detected file change: ${watched.file}</echo>
-              	<antcall target="dev-copy-css"/>
-              </target>
-              <fileset dir="www/css" includes="**/*"/>
-          </when>
-		 <when>
-              <target>
-                <echo>Detected file change: ${watched.file}</echo>
-              	<antcall target="dev-copy-images"/>
-              </target>
-          	  <fileset dir="www/images" includes="**/*"/>
-          </when>
-		  <when>
-              <target>
-                <echo>Detected file change: ${watched.file}</echo>
-              	<antcall target="dev-copy-js"/>
-              </target>
-          	  <fileset dir="www/js/src" includes="**/*"/>
-		  	<fileset dir="www/hmdc" includes="**/*"/>
-          </when>
-		  <when>
-              <target>
-                <echo>Detected file change: ${watched.file}</echo>
-              	<antcall target="dev-copy-jsp"/>
-              </target>
-          	  <fileset dir="www/WEB-INF/jsp" includes="**/*"/>
-          	  <fileset dir="www/WEB-INF/tags" includes="**/*"/>
-          </when>
-      </watch>
 	</target>
 	
 	<!-- copy over the www files for development to deployment directory -->
