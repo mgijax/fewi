@@ -251,9 +251,7 @@ public class AccessionFinder {
     	if (snpResults.getTotalCount() > 0) {
     		searchResults.setTotalCount(searchResults.getTotalCount() + snpResults.getTotalCount());
     		for (ConsensusSNPDocument snp : snpResults.getResultObjects()) {
-    			searchResults.addResultObjects(
-    				new Accession(ObjectTypes.SNP, "SNP", snp.getObjectJSONData().getAccid(), "MGI",
-    					snp.getObjectJSONData().getConsensusKey(), getSNPDescription(snp)) );
+    			searchResults.addResultObjects(new Accession(ObjectTypes.SNP, "SNP", snp.getObjectJSONData().getAccid(), "MGI", Integer.parseInt(snp.getObjectJSONData().getConsensusKey()), getSNPDescription(snp)) );
     		}
     	}
     	return searchResults;

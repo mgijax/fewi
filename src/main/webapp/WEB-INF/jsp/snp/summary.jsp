@@ -83,8 +83,8 @@ width: 1250px;
     <div id="contentcolumn">
 	<div id="filterDiv">
 		<span id="filterLabel" class="label">Filter SNPs by:</span>
-		<a id="functionClassFilter" class="filterButton">Function&nbsp;Class<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
-		<a id="alleleAgreementFilter" class="filterButton">Allele&nbsp;Agreement<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
+		<a id="functionClassFilter" class="filterButton">Function&nbsp;Class<img src="/assets/images/filter.png" width="8" height="8" /></a>
+		<a id="alleleAgreementFilter" class="filterButton">Allele&nbsp;Agreement<img src="/assets/images/filter.png" width="8" height="8" /></a>
 	</div>
 	<div style="max-width:700px; margin-top: 10px;">
 	    <div id="filterSummary" class="filters" style="display: none">
@@ -127,7 +127,7 @@ width: 1250px;
 		<div class="bd">
 			<form:form method="GET"
 				action="${configBean.FEWI_URL}snp/summary">
-				<img src="/fewi/mgi/assets/images/loading.gif">
+				<img src="/assets/images/loading.gif">
 			</form:form>
 		</div>
 	</div>
