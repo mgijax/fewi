@@ -17,7 +17,7 @@
 					<a target="_blank" href="${configBean.FEWI_URL}">MGI Home</a>
 				</div>
 				<div class="floatright">
-					<a target="_blank" href="${configBean.FEWI_URL}"><img style="height: 40px;" src="${configBean.WEBSHARE_URL}images/mgi_logo.gif"></a>
+					<a target="_blank" href="${configBean.FEWI_URL}"><img style="height: 40px;" src="${configBean.FEWI_URL}assets/images/mgi_logo.gif"></a>
 				</div>
 			</div>
 		</div>

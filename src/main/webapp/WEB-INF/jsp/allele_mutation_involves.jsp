@@ -7,14 +7,14 @@
 
 <HTML><HEAD>
 
-<script type='text/javascript' src='${configBean.WEBSHARE_URL}js/yui-2.8.custom.min.js'></script>
-<script type='text/javascript' src='${configBean.WEBSHARE_URL}js/hideshow.js'></script>
+<script type='text/javascript' src='${configBean.FEWI_URL}assets/js/yui-2.8.custom.min.js'></script>
+<script type='text/javascript' src='${configBean.FEWI_URL}assets/js/hideshow.js'></script>
 <!-- CSS -->
 <!-- YUI Reset -->
-<link rel="stylesheet" type="text/css" href="${configBean.WEBSHARE_URL}css/yui-reset.css">
+<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/yui-reset.css">
 
 <!-- Combo-handled YUI CSS files: -->
-<link rel="stylesheet" type="text/css" href="${configBean.WEBSHARE_URL}css/yui-2.8-combo.css">
+<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/yui-2.8-combo.css">
 
 <!-- MGI CSS files: -->
 <link href="${configBean.WEBSHARE_URL}css/mgi_template01.css" rel="stylesheet" type="text/css"/>
@@ -69,7 +69,7 @@ a.noUnderline { text-decoration: none }
     <table style='' cellpadding='0' cellspacing='0'>
     <TR STYLE="">
       <TD>
-      <a href="javascript:newWindow('${configBean.HOMEPAGES_URL}')" style='margin-left:2px; margin-right:10px;'><img src="${configBean.WEBSHARE_URL}images/mgi_logo.gif" 
+      <a href="javascript:newWindow('${configBean.HOMEPAGES_URL}')" style='margin-left:2px; margin-right:10px;'><img src="${configBean.FEWI_URL}assets/images/mgi_logo.gif" 
           alt="Mouse Genome Informatics" border="0" width="100"></a>  
       </TD>
 

@@ -28,7 +28,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>4.0.3.RELEASE</spring.version>
 		<solr.version>8.5.2</solr.version>
-		<log4j.version>2.20.0</log4j.version>
+		<log4j.version>2.22.1</log4j.version>
 		<elasticsearch.version>8.9.0</elasticsearch.version>
 	</properties>
 
@@ -191,27 +191,6 @@
 			<version>${spring.version}</version>
 		</dependency>
 
-
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-api</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-slf4j-impl</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-to-slf4j</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-mock -->
 		<dependency>
