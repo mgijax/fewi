@@ -51,7 +51,6 @@
 	<%@ include file="marker_detail_AlleleRibbon.jsp" %>
 	<%@ include file="marker_detail_GORibbon.jsp" %>
 	<%@ include file="marker_detail_ExpressionRibbon.jsp" %>
-	<%@ include file="marker_detail_InteractionRibbon.jsp" %>
 	<%@ include file="marker_detail_SequenceRibbon.jsp" %>
 	<%@ include file="marker_detail_ProteinRibbon.jsp" %>
 	<%@ include file="marker_detail_MolecularReagentRibbon.jsp" %>
