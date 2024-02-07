@@ -32,7 +32,7 @@
 							Sequence Map
 						</div>
 						<div class="value">
-							<c:if test="${not (empty marker.preferredCoordinates and empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty gbrowseUrl and empty jbrowseUrl)}">
+							<c:if test="${not (empty marker.preferredCoordinates and empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty jbrowseUrl)}">
 								<fmt:formatNumber value="${marker.preferredCoordinates.startCoordinate}" pattern="#0" var="startCoord"/>
 								<fmt:formatNumber value="${marker.preferredCoordinates.endCoordinate}" pattern="#0" var="endCoord"/>
 								<c:set var="chromosome" value="${marker.preferredCoordinates.chromosome}"/>
@@ -47,7 +47,7 @@
 								</c:if>
 							</c:if>
 
-							<c:if test="${(empty marker.preferredCoordinates and empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty gbrowseUrl and empty jbrowseUrl)}">
+							<c:if test="${(empty marker.preferredCoordinates and empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty jbrowseUrl)}">
 								<span style="font-style: italic;font-size: smaller;">Genome coordinates not available from the current reference assembly.</span>
 							</c:if>
 						</div>
@@ -63,9 +63,6 @@
 											<tr>
 												<td align="center">
 													View this region in <a href="${jbrowseUrl}">JBrowse</a><br />
-													<c:if test="${not empty gbrowseThumbnailUrl}">
-														<a href="${jbrowseUrl}"><img border="0" src="${gbrowseThumbnailUrl}" style="padding-top: 4px"/></a> <br/>
-													</c:if>
 												</td>
 											</tr>
 										</tbody>

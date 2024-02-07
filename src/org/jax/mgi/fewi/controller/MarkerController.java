@@ -723,12 +723,8 @@ public class MarkerController {
 			mav.addObject ("ucscGenomeBrowserUrl", ucscGenomeBrowserUrl);
 		}
 
-		String gbrowseUrl = null;
 		String jbrowseUrl = null;
-		String gbrowseThumbnailUrl = null;
 		if (coords != null) {
-
-			gbrowseUrl = externalUrls.getProperty("GBrowse").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
 
 			jbrowseUrl = externalUrls.getProperty("JBrowse").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
 
@@ -741,23 +737,13 @@ public class MarkerController {
                                 jbrowseUrl = externalUrls.getProperty("JBrowseReg").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
                         }
 
-			gbrowseThumbnailUrl = externalUrls.getProperty("GBrowse_Thumbnail").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
-
 			// add tracks for special marker "types"
 			if(marker.getIsSTS()) {
 				jbrowseUrl = jbrowseUrl + ",STS";
-				gbrowseUrl = gbrowseUrl.replace("label=","label=STS-");
-				gbrowseThumbnailUrl = gbrowseThumbnailUrl.replace("t=","t=STS;t=");
 			}
-		}
-		if (gbrowseUrl != null) {
-			mav.addObject ("gbrowseUrl", gbrowseUrl);
 		}
 		if (jbrowseUrl != null) {
 			mav.addObject ("jbrowseUrl", jbrowseUrl);
-		}
-		if (gbrowseThumbnailUrl != null) {
-			mav.addObject ("gbrowseThumbnailUrl", gbrowseThumbnailUrl);
 		}
 
 		boolean isDnaSegment = "DNA Segment".equals(marker.getMarkerType());
@@ -781,7 +767,7 @@ public class MarkerController {
 
 		// new simpler rules as of C4AM (coordinates for any marker) project:
 		// 1. Any marker with coordinates gets links to all five genome
-		//    browsers (Ensembl, NCBI, UCSC, GBrowse).  No more
+		//    browsers (Ensembl, NCBI, UCSC ).  No more
 		//    restrictions by marker type.
 		// 2. If a marker has multiple IDs, use the first one returned to make
 		//    the link.
@@ -792,9 +778,7 @@ public class MarkerController {
 		//    where:
 		//	a. there are coordinates and marker is not a dna segment, or
 		//	b. there are coordinates and marker is a dna segment.
-		// 6. If a marker has coordinates, both link to GBrowse and show a
-		//    thumbnail image from GBrowse.
-		// 7. The UCSC genome browser (when the marker has coordinates)
+		// 6. The UCSC genome browser (when the marker has coordinates)
 
 
 		// add human homologs to model if present
