@@ -69,7 +69,7 @@
 						<c:set var="wider" value="wider" />
 						<section class="summarySec1 wide">
 							<div class="label ${wider}" style="height: 3em;">Vertebrate Orthology Source</div>
-							<div class="value">MGI Vertebrate Homology</div>
+							<div class="value">Alliance of Genome Resources</div>
 						</section>
 					</c:if>
 
@@ -174,7 +174,7 @@
 							<c:forEach var="homologyClass" items="${homologyClasses}">
 								<c:if test="${not empty homologyClass.clusterKey}">
 									<li>
-										<div class="label ${wider}">Alliance of Genome Resources</div>
+										<div class="label ${wider}">MGI Vertebrate Homology</div>
 										<div class="value">
 											<a href="${configBean.FEWI_URL}homology/cluster/key/${homologyClass.clusterKey}">${marker.symbol} stringent orthology</a><br/>
 											<c:forEach var="organismOrthology" items="${homologyClass.orthologs}" varStatus="status">${organismOrthology.markerCount} ${organismOrthology.organism}<c:if test="${!status.last}">;</c:if></c:forEach><br/>
