@@ -69,7 +69,7 @@
 						<c:set var="wider" value="wider" />
 						<section class="summarySec1 wide">
 							<div class="label ${wider}" style="height: 3em;">Vertebrate Orthology Source</div>
-							<div class="value">Alliance of Genome Resources</div>
+							<div class="value">MGI Vertebrate Homology</div>
 						</section>
 					</c:if>
 
@@ -87,7 +87,7 @@
 										<fmt:formatNumber value="${humanCoords.endCoordinate}" pattern="#0" var="humanEndCoord"/>
 										<c:set var="allianceLink" value=""/>
 										<c:forEach var="link" items="${humanHomolog.homologyLinks}">
-											<c:if test="${link.displayText == 'Alliance of Genome Resources' }">
+											<c:if test="${link.displayText == 'MGI Vertebrate Homology' }">
 												<c:set var="allianceLink" value="${link.url}"/>
 											</c:if>
 										</c:forEach>
