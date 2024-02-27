@@ -47,6 +47,14 @@
 							</c:forEach>
 						</li>
 					</c:if>
+					<c:if test='${not empty marker.glyGenAnnotations}'>
+						<li>
+							<div class="label">GlyGen</div>
+							<c:forEach var="item" items="${marker.glyGenAnnotations}">
+								<div class="value"><a href="${fn:replace(urls.GlyGen, '@@@@', item.termID)}" target="_blank">${item.termID}</a> ${item.term}</div>
+							</c:forEach>
+						</li>
+					</c:if>
 				</ul>
 			</section>
 		</div><!-- proteinInfo -->
