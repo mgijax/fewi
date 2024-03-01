@@ -80,8 +80,8 @@
 					</c:if>
 
                                         <c:if test="${not empty probe.ampPrimer}">
-						<li>
-							<div class="label">Amplification Primers</div>
+						<li style="margin-bottom: 20px;">
+							<div class="label">Amplification<br/>Primers</div>
 							<div class="value">
                                                             <a href="${configBean.FEWI_URL}probe/${probe.ampPrimer.primaryID}">${probe.ampPrimer.primaryID}</a>
                                                         </div>
