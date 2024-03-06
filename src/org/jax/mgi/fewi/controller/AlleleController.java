@@ -210,7 +210,7 @@ public class AlleleController {
 
 
 	//------------------------------------//
-	// Allele Summary (By Refernce) Shell
+	// Allele Summary (By Reference) Shell
 	//------------------------------------//
 	@RequestMapping(value="/reference/{refID}")
 	public ModelAndView alleleSummeryByRefId(HttpServletRequest request, @PathVariable("refID") String refID) {

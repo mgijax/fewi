@@ -14,6 +14,13 @@ import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.fewi.util.DotInputStrFactory;
 import org.jax.mgi.fewi.util.UserMonitor;
 
+import mgi.frontend.datamodel.Reference; 
+import org.jax.mgi.fewi.finder.ReferenceFinder;
+import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.SearchParams;
+import org.jax.mgi.fewi.searchUtil.SearchConstants;
+import org.jax.mgi.fewi.util.NotesTagConverter;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -38,6 +45,9 @@ public class DiseaseController {
 	@Autowired
 	private DiseaseFinder diseaseFinder;
 
+	@Autowired
+	private ReferenceFinder referenceFinder;
+
 	@Autowired 
 	DiseasePortalFinder diseasePortalFinder;
 
@@ -59,6 +69,52 @@ public class DiseaseController {
 		return prepareDisease("DOID:7", "disease_browser", "");
 	}
 	
+	//------------------------------------//
+	// Disease Model Summary (By Reference) Shell
+	//------------------------------------//
+	@RequestMapping(value="/reference/{refID}")
+	public ModelAndView diseaseModelSummaryByRefId(HttpServletRequest request, @PathVariable("refID") String refID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
+		logger.debug("->diseaseModelSummaryByRefId started");
+
+		// setup view object
+		ModelAndView mav = new ModelAndView("disease_model_summary_by_reference");
+
+		// setup search parameters object to gather the reference
+		SearchParams referenceSearchParams = new SearchParams();
+		Filter refIdFilter = new Filter(SearchConstants.REF_ID, refID);
+		referenceSearchParams.setFilter(refIdFilter);
+
+		// find the reference
+		SearchResults<Reference> referenceSearchResults = referenceFinder.searchReferences(referenceSearchParams);
+		List<Reference> referenceList = referenceSearchResults.getResultObjects();
+
+		// there can be only one...
+		if (referenceList.size() < 1) {
+			// forward to error page
+			mav = new ModelAndView("error");
+			mav.addObject("errorMsg", "No reference found for " + refID);
+			return mav;
+		}
+		if (referenceList.size() > 1) {
+			// forward to error page
+			mav = new ModelAndView("error");
+			mav.addObject("errorMsg", "Dupe reference found for " + refID);
+			return mav;
+		}
+		Reference reference = referenceList.get(0);
+
+		// package data, and send to view layer
+		mav.addObject("reference", reference);
+                mav.addObject("ntc", new NotesTagConverter());
+
+		logger.debug("diseaseModelSummaryByRefId routing to view ");
+		return mav;
+	}
+
 	
 	// mapping for disease browser via ID
 	@RequestMapping(value="/{diseaseID:.+}", method = RequestMethod.GET)
