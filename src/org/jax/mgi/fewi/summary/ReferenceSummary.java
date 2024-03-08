@@ -129,7 +129,7 @@ public class ReferenceSummary {
         sb.append("<ul class=\"curatedData\">");
 
         if(reference.getCountOfDiseaseModels() >0){
-        	sb.append(String.format("<li>DiseaseModels: <a href=\"%sdisease/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfDiseaseModels()));
+        	sb.append(String.format("<li>Disease models: <a href=\"%sdisease/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfDiseaseModels()));
         }
         if (reference.getCountOfGXDResults() > 0){
         	sb.append(String.format("<li>Expression results: <a href=\"%sgxd/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfGXDResults()));
