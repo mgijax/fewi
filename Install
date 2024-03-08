@@ -12,18 +12,6 @@
 
 cd `dirname $0`
 
-#
-#  If the MGICONFIG environment variable does not have a local override,
-#  use the default "live" settings.
-#
-if [ "${MGICONFIG}" = "" ]
-then
-    MGICONFIG=/usr/local/mgi/live/mgiconfig
-    export MGICONFIG
-fi
+. ./Configuration
 
-. ${MGICONFIG}/master.config.sh
-
-cp build.properties.default build.properties
-
-$ANT
+mvn -Dmaven.repo.local=${MAVEN_REPO_LOCAL} clean package
