@@ -304,7 +304,7 @@ var qsScoreHelp = function() {
 		+ qsFormatStars('***') + ' all words in the search string appear (even if out of order)<br/>'
 		+ qsFormatStars('**') + ' at least one word from the search string appears</div>\', '
 		+ 'STICKY, CAPTION, \'Score\', HAUTO, BELOW, WIDTH, 375, DELAY, 600, CLOSECLICK, CLOSETEXT, \'Close X\')" '
-		+ 'onmouseout="nd();"> <img src="/assets/images/blue_info_icon.gif" style="height:11px" border="0"> </span>';
+		+ 'onmouseout="nd();"> <img src="/webshare/images/blue_info_icon.gif" style="height:11px" border="0"> </span>';
 	return s;
 }
 
