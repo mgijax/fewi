@@ -12,6 +12,41 @@
 
 cd `dirname $0`
 
+
+if [ ! -e ./Configuration ]; then
+  echo "Could not find Configuration file."
+  exit 1
+fi
 . ./Configuration
 
+# Prepare
+if [ ! -e ./config/fewi.properties.${HOSTNAME} ]; then
+  echo "Could not find ./config/fewi.properties.${HOSTNAME} "
+  exit 1
+fi
+echo "Copying fewi.properties."
+cp ./config/fewi.properties.${HOSTNAME} ./src/main/webapp/WEB-INF/properties/fewi.properties
+
+if [ ! -e ${MGI_LIVE}/mgiconfig/web/GlobalConfig.properties ]; then
+  echo "Could not find ${MGI_LIVE}/mgiconfig/web/GlobalConfig.properties "
+  exit 1
+fi
+echo "Copying GlobalConfig.properties"
+cp ${MGI_LIVE}/mgiconfig/web/GlobalConfig.properties ./src/main/webapp/WEB-INF/properties/
+echo "Copying templates"
+cp ${MGI_LIVE}/mgiconfig/web/*.html ./src/main/webapp/WEB-INF/jsp/templates/
+
+# build
+if [ ! -e "${MAVEN_REPO_LOCAL}" ] ; then
+  echo "MAVEN_REPO_LOCAL is not defined or does not exist."
+  exit 1
+fi
+echo "Building fewi.war"
 mvn -Dmaven.repo.local=${MAVEN_REPO_LOCAL} clean package
+
+# deploy
+if [ $? -eq 0 ] ; then
+    echo "Deploying fewi.war"
+    cp ./target/fewi.war  ${WILDFLY}/bluebob/deployments
+    cp ./target/fewi.war  ${WILDFLY}/bluebob_batch/deployments
+fi

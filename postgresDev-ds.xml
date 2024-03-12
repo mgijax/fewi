@@ -15,7 +15,7 @@
 <datasources>
    <datasource jndi-name="java:jboss/datasources/fe" pool-name="fe">
       <connection-url>jdbc:postgresql://mgi-someserver.jax.org:5432/fe</connection-url>
-         <driver>postgresql-9.0-801.jdbc4.jar</driver>
+         <driver>postgresql-42.6.0.jar</driver>
       <transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation>
       <pool>
         <min-pool-size>40</min-pool-size>
@@ -32,7 +32,6 @@
       <validation>
           <check-valid-connection-sql>SELECT 1</check-valid-connection-sql>
           <background-validation>true</background-validation>
-          <useFastFail>true</useFastFail>
       </validation>
 
     </datasource>
