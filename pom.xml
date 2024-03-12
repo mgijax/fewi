@@ -303,65 +303,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>3.3.1</version>
-<executions>
-        <execution>
-            <!-- Copy GlobalConfig.properties from mgiconfig/web into fewi -->
-            <id>copy-resource-one</id>
-            <phase>process-resources</phase>
-            <goals>
-                <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-                <outputDirectory>${basedir}/src/main/webapp/WEB-INF/properties/</outputDirectory>
-                <resources>
-                    <resource>
-                        <directory>${env.MGI_LIVE}/mgiconfig/web</directory>
-                        <includes>
-                            <include>GlobalConfig.properties</include>
-                        </includes>
-                    </resource>
-                </resources>
-            </configuration>
-        </execution>
-        <execution>
-            <!-- Copy web template files from mgiconfig/web into fewi -->
-            <id>copy-resource-two</id>
-            <phase>process-resources</phase>
-            <goals>
-                <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-                <outputDirectory>${basedir}/src/main/webapp/WEB-INF/jsp/templates/</outputDirectory>
-                <resources>
-                    <resource>
-                        <directory>${env.MGI_LIVE}/mgiconfig/web</directory>
-                        <includes>
-                            <include>*.html</include>
-                        </includes>
-                    </resource>
-                </resources>
-            </configuration>
-        </execution>
-        <execution>
-            <!-- Copy fewi.war into deployment directry -->
-            <id>copy-resource-three</id>
-            <phase>package</phase>
-            <goals>
-                <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-                <outputDirectory>${env.WILDFLY}/standalone/deployments</outputDirectory>
-                <resources>
-                    <resource>
-                        <directory>${basedir}/target/</directory>
-                        <includes>
-                            <include>fewi.war</include>
-                        </includes>
-                    </resource>
-                </resources>
-            </configuration>
-        </execution>
-</executions>
 			</plugin>
 		</plugins>
 	</build>
