@@ -12,3 +12,5 @@ fi
 
 . ${MGICONFIG}/master.config.sh
 
+# change as needed for your build. See build.config.default for details.
+. ./build.config.default

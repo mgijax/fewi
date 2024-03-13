@@ -1,0 +1,15 @@
+
+# which fe.properties file to use (has index connection setting for the fewi)
+FEWI_PROPERTIES=./config/fewi.properties.pf
+
+# where to find web templates and GlobalConfig.properties
+WEB_RESOURCES=/home/pf/fe/mgiconfig/web
+
+# which web xml file to use
+WEB_XML=./config/web.xml.public
+
+# where to deploy the war file
+DEPLOY_DIR=/data/jboss/fewi_pf/deployments
+
+# if you want a second deployment (for a batch instance) define the path
+DEPLOY_BATCH_DIR=
