@@ -34,6 +34,7 @@ fi
 echo "Copying GlobalConfig.properties"
 cp ${WEB_RESOURCES}/GlobalConfig.properties ./src/main/webapp/WEB-INF/properties/
 echo "Copying templates"
+mkdir -p ./src/main/webapp/WEB-INF/jsp/templates/
 cp ${WEB_RESOURCES}/*.html ./src/main/webapp/WEB-INF/jsp/templates/
 
 # build
