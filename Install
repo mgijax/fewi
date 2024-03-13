@@ -20,21 +20,21 @@ fi
 . ./Configuration
 
 # Prepare
-if [ ! -e ./config/fewi.properties.${HOSTNAME} ]; then
-  echo "Could not find ./config/fewi.properties.${HOSTNAME} "
+if [ ! -e ${FEWI_PROPERTIES} ]; then
+  echo "Could not find ${FEWI_PROPERTIES} "
   exit 1
 fi
 echo "Copying fewi.properties."
-cp ./config/fewi.properties.${HOSTNAME} ./src/main/webapp/WEB-INF/properties/fewi.properties
+cp ${FEWI_PROPERTIES} ./src/main/webapp/WEB-INF/properties/fewi.properties
 
-if [ ! -e ${MGI_LIVE}/mgiconfig/web/GlobalConfig.properties ]; then
-  echo "Could not find ${MGI_LIVE}/mgiconfig/web/GlobalConfig.properties "
+if [ ! -e ${WEB_RESOURCES}/GlobalConfig.properties ]; then
+  echo "Could not find ${WEB_RESOURCES}/GlobalConfig.properties "
   exit 1
 fi
 echo "Copying GlobalConfig.properties"
-cp ${MGI_LIVE}/mgiconfig/web/GlobalConfig.properties ./src/main/webapp/WEB-INF/properties/
+cp ${WEB_RESOURCES}/GlobalConfig.properties ./src/main/webapp/WEB-INF/properties/
 echo "Copying templates"
-cp ${MGI_LIVE}/mgiconfig/web/*.html ./src/main/webapp/WEB-INF/jsp/templates/
+cp ${WEB_RESOURCES}/*.html ./src/main/webapp/WEB-INF/jsp/templates/
 
 # build
 if [ ! -e "${MAVEN_REPO_LOCAL}" ] ; then
@@ -46,7 +46,11 @@ mvn -Dmaven.repo.local=${MAVEN_REPO_LOCAL} clean package
 
 # deploy
 if [ $? -eq 0 ] ; then
-    echo "Deploying fewi.war"
-    cp ./target/fewi.war  ${WILDFLY}/bluebob/deployments
-    cp ./target/fewi.war  ${WILDFLY}/bluebob_batch/deployments
+    echo "Deploying fewi.war to ${DEPLOY_DIR}"
+    cp ./target/fewi.war  ${DEPLOY_DIR}
+
+    if [ ${DEPLOY_BATCH_DIR} != "" ] ; then
+        echo "Deploying fewi.war to ${DEPLOY_BATCH_DIR}"
+        cp ./target/fewi.war  ${DEPLOY_BATCH_DIR}
+    fi
 fi
