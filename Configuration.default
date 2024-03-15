@@ -22,7 +22,7 @@ BUILD_CONFIG="./build.config.${BTYPE}"
 FEWI_PROPERTIES="./config/fewi.properties.${BTYPE}"
 if [ ! -e ${FEWI_PROPERTIES} ]; then
     SERVER=`uname -n`
-    FEWI_PROPERTIES="./config/fewi.properties.${SERVER}
+    FEWI_PROPERTIES="./config/fewi.properties.${SERVER%%.*}"
 fi
 
 . ${BUILD_CONFIG}
