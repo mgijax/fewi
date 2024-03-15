@@ -19,6 +19,9 @@ if [ ! -e ./Configuration ]; then
 fi
 . ./Configuration
 
+echo "Build config file: ${BUILD_CONFIG}"
+echo "fewi properties file: ${FEWI_PROPERTIES}"
+
 # Prepare
 if [ ! -e ${FEWI_PROPERTIES} ]; then
   echo "Could not find ${FEWI_PROPERTIES} "
