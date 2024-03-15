@@ -19,6 +19,12 @@ solr.server2.url=http://bhmgisnpdb01lt.jax.org:18983/solr
 #gxd
 solr.server3.url=http://bhmgigxdsolr02ld.jax.org:9995/solr
 
+
+#----- elastic search -----#
+
+es.server.host=bhmgisnp01lt.jax.org
+es.server.post=9200
+
 #-------------------------------------------------------------------------------
 #----- INSTALL VALUES
 #-------------------------------------------------------------------------------

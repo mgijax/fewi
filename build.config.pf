@@ -1,7 +1,3 @@
-
-# which fe.properties file to use (has index connection setting for the fewi)
-FEWI_PROPERTIES=./config/fewi.properties.pf
-
 # where to find web templates and GlobalConfig.properties
 WEB_RESOURCES=/home/pf/fe/mgiconfig/web
 

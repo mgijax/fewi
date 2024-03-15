@@ -12,5 +12,17 @@ fi
 
 . ${MGICONFIG}/master.config.sh
 
-# change as needed for your build. See build.config.default for details.
-. ./build.config.default
+# Build type. Used to construct names of the build config and fewi properties files.
+BTYPE=default 
+
+BUILD_CONFIG="./build.config.${BTYPE}"
+
+# If there is a fewi.properties.${BTYPE}, use that, otherwise,
+# use fewi.properties.${SERVER}.
+FEWI_PROPERTIES="./config/fewi.properties.${BTYPE}"
+if [ ! -e ${FEWI_PROPERTIES} ]; then
+    SERVER=`uname -n`
+    FEWI_PROPERTIES="./config/fewi.properties.${SERVER}
+fi
+
+. ${BUILD_CONFIG}
