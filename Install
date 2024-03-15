@@ -53,7 +53,7 @@ if [ $? -eq 0 ] ; then
     echo "Deploying fewi.war to ${DEPLOY_DIR}"
     cp ./target/fewi.war  ${DEPLOY_DIR}
 
-    if [ ${DEPLOY_BATCH_DIR} != "" ] ; then
+    if [ "${DEPLOY_BATCH_DIR}" != "" ] ; then
         echo "Deploying fewi.war to ${DEPLOY_BATCH_DIR}"
         cp ./target/fewi.war  ${DEPLOY_BATCH_DIR}
     fi
