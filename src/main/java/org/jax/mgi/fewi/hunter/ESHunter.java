@@ -58,7 +58,7 @@ public class ESHunter<T extends BaseESDocument> {
 
 	@Value("${es.server.host}")
 	protected String esHost;
-	@Value("${es.server.post}")
+	@Value("${es.server.port}")
 	protected String esPort;
 
 	protected String esIndex;
