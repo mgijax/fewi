@@ -12,5 +12,5 @@ solr.server3.url=http://bhmgigxdsolr01ld.jax.org:9885/solr
 #----- elastic search -----#
 
 es.server.host=bhmgisnp01lt.jax.org
-es.server.post=9200
+es.server.port=9200
 
