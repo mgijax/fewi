@@ -35,7 +35,7 @@
 				<td><fewi:suppressNA value="${clone.cellLine}"/></td>
 				<td><c:forEach var="marker" items="${clone.markers}" varStatus="mStatus">
 					<a href="${configBean.FEWI_URL}marker/${marker.primaryID}" target="_blank">${marker.symbol}</a><c:if
-						test="${marker.isPutative}"> (PUTATIVE)</c:if><c:if test="${!mStatus.last}">, </c:if>
+						test="${marker.putative}"> (PUTATIVE)</c:if><c:if test="${!mStatus.last}">, </c:if>
 					</c:forEach>
 				</td>
 			</tr>

@@ -32,7 +32,7 @@
 				<td>${probe.segmentType}</td>
 				<td><c:forEach var="marker" items="${probe.markers}" varStatus="mStatus">
 					<a href="${configBean.FEWI_URL}marker/${marker.primaryID}" target="_blank">${marker.symbol}</a><c:if
-						test="${marker.isPutative}"> (PUTATIVE)</c:if><c:if test="${!mStatus.last}"><br/></c:if>
+						test="${marker.putative}"> (PUTATIVE)</c:if><c:if test="${!mStatus.last}"><br/></c:if>
 					</c:forEach>
 				</td>
 				<td><c:forEach var="marker" items="${probe.markers}" varStatus="mStatus">${marker.location}<br/>
