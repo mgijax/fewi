@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.hunter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -204,9 +205,13 @@ public class SolrHunter<T> implements Hunter<T> {
 
 	public void hunt(SearchParams searchParams, SearchResults<T> searchResults, String groupField, String joinField, String extraJoinClause) {
 
-		// Invoke the hook, editing the search params as needed.
+		// Invoke the hook, editing the search params as needed
 		searchParams = preProcessSearchParams(searchParams);
-
+		logger.info("searchParams: " + searchParams);
+		logger.info("groupField: " + groupField);
+		logger.info("joinField: " + joinField);
+		logger.info("extraJoinClause: " + extraJoinClause);
+		
 		HttpSolrClient qServer;
 		// Setup our interface into solr.
 		boolean doJoin = false;
@@ -229,7 +234,7 @@ public class SolrHunter<T> implements Hunter<T> {
 		String queryString = translateFilter(searchParams.getFilter(), propertyMap);
 
 		if (!searchParams.getSuppressLogs())
-			logger.debug("TranslatedFilters: " + queryString);
+			logger.info("TranslatedFilters: " + queryString);
 		if (searchParams.getReturnFilterQuery())
 			searchResults.setFilterQuery(queryString);
 
@@ -287,8 +292,10 @@ public class SolrHunter<T> implements Hunter<T> {
 		// Add the facets, can be overwritten.
 		addFacets(query);
 		if (!searchParams.getSuppressLogs())
-			logger.info("SolrQuery:" + query);
+			logger.info("SolrQuery Started:" + query);
 
+		Date start = new Date();
+		
 		/**
 		 * Run the query & package results & result count
 		 */
@@ -297,9 +304,10 @@ public class SolrHunter<T> implements Hunter<T> {
 			logger.debug("Running query & packaging searchResults");
 
 			rsp = qServer.query(query, METHOD.POST);
-			logger.info("After query.");
+			Date end = new Date();
+			logger.info("SolrQuery finish:" + (end.getTime() - start.getTime()));
+			
 			SolrDocumentList sdl = rsp.getResults();
-			logger.info("After getResults");
 			if (doGrouping) {
 				// Package the results into the searchResults object by traversing GroupResponse
 				// object.
