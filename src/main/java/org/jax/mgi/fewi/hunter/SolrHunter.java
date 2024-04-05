@@ -297,7 +297,9 @@ public class SolrHunter<T> implements Hunter<T> {
 			logger.debug("Running query & packaging searchResults");
 
 			rsp = qServer.query(query, METHOD.POST);
+			logger.info("After query.");
 			SolrDocumentList sdl = rsp.getResults();
+			logger.info("After getResults");
 			if (doGrouping) {
 				// Package the results into the searchResults object by traversing GroupResponse
 				// object.
@@ -315,6 +317,7 @@ public class SolrHunter<T> implements Hunter<T> {
 				// Set the total number found.
 				searchResults.setTotalCount((int) sdl.getNumFound());
 			}
+			logger.info("After packaging");
 
 			// logger.debug("metaMapping: "
 			// + searchResults.getResultSetMeta().toString());
