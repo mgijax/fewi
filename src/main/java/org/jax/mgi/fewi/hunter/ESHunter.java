@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
@@ -204,13 +205,21 @@ public class ESHunter<T extends BaseESDocument> {
 				if(groupField != null) {
 					srb.aggregations(groupField, t -> t.terms(f -> f.field(groupField)));
 				}
+				if(facetString != null) {
+					srb.aggregations(facetString, t -> t.terms(f -> f.field(facetString+".keyword").size(150)));
+				}
+                                log.info("ESQuery srb:" + srb);
 				return srb;
 			}, clazz);
 
 			if (resp.aggregations().size() > 0) {
-				log.info("Aggs: " + resp.aggregations());
+				// log.info("Aggs: " + resp.aggregations());
+                                for(StringTermsBucket bucket: resp.aggregations().get(facetString).sterms().buckets().array()) {
+                                        searchResults.getResultFacets().add(bucket.key().stringValue());
+                                }
+                                log.info("Agg results:" + searchResults.getResultFacets());
 			}
-			
+
 			searchResults.setFilterQuery(queryString);
 		
 			for(Hit<T> hit: resp.hits().hits()) {
