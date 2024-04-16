@@ -33,6 +33,7 @@ import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.ElasticsearchTransport;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
+import co.elastic.clients.elasticsearch.core.search.TrackHits;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -197,11 +198,15 @@ public class ESHunter<T extends BaseESDocument> {
 		try {
 			//log.info("Running query & packaging searchResults: " + esIndex);
 
+                        TrackHits.Builder th = new TrackHits.Builder();
+                        th.enabled(true);
 			resp = esClient.search(s -> {
 				SearchRequest.Builder srb = s.index(esIndex)
 					.q(queryString)
 					.from(searchParams.getStartIndex())
-					.size(searchParams.getPageSize());
+					.size(searchParams.getPageSize())
+                                        .trackTotalHits(th.build())
+                                        ;
 				if(groupField != null) {
 					srb.aggregations(groupField, t -> t.terms(f -> f.field(groupField)));
 				}
