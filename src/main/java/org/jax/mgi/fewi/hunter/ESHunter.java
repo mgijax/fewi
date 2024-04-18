@@ -211,8 +211,8 @@ public class ESHunter<T extends BaseESDocument> {
 					srb.aggregations(groupField, t -> t.terms(f -> f.field(groupField)));
 				}
 				if(facetString != null) {
-                                        log.info("Adding facet field: " + facetString);
-					srb.aggregations(facetString, t -> t.terms(f -> f.field(facetString).size(150)));
+                                        log.info("Adding facet field: " + facetString + ".keyword");
+					srb.aggregations(facetString, t -> t.terms(f -> f.field(facetString + ".keyword").size(150)));
 				}
                                 log.info("ESQuery srb:" + srb);
 				return srb;
