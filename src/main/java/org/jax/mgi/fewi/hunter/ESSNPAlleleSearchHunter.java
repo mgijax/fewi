@@ -32,7 +32,7 @@ public class ESSNPAlleleSearchHunter extends ESHunter<AlleleSNPDocument> {
 		facetString = IndexConstants.SNP_STRAINS;
 	}
 
-	@Value("${es.consensussnp.index}")
+	@Value("${es.allelesnp.index}")
 	public void setESIndex(String esIndex) {
 		super.esIndex = esIndex;
 	}

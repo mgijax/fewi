@@ -200,24 +200,27 @@ public class ESHunter<T extends BaseESDocument> {
 
                         TrackHits.Builder th = new TrackHits.Builder();
                         th.enabled(true);
-			resp = esClient.search(s -> {
-				SearchRequest.Builder srb = s.index(esIndex)
-					.q(queryString)
-					.from(searchParams.getStartIndex())
-					.size(searchParams.getPageSize())
-                                        .trackTotalHits(th.build())
-                                        ;
-				if(groupField != null) {
-					srb.aggregations(groupField, t -> t.terms(f -> f.field(groupField)));
-				}
-				if(facetString != null) {
-                                        log.info("Adding facet field: " + facetString + ".keyword");
-					srb.aggregations(facetString, t -> t.terms(f -> f.field(facetString + ".keyword").size(150)));
-				}
-                                log.info("ESQuery srb:" + srb);
-				return srb;
-			}, clazz);
 
+                        SearchRequest.Builder srb = new SearchRequest.Builder();
+                                
+                        srb.index(esIndex)
+                                .q(queryString)
+                                .from(searchParams.getStartIndex())
+                                .trackTotalHits(th.build())
+                                .size(searchParams.getPageSize());
+                        if(groupField != null) {
+                                srb.aggregations(groupField, t -> t.terms(f -> f.field(groupField)));
+                        }
+                        if(facetString != null) {
+                                srb.aggregations(facetString, t -> t.terms(f -> f.field(facetString + ".keyword").size(150)));
+                        }
+                        
+                        SearchRequest searchRequest = srb.build();
+
+                        log.info("Sending search request: " + searchRequest);
+                        
+                        resp = esClient.search(searchRequest, clazz);
+                        log.info("Total hits: " + resp.hits().total().value());
 			if (resp.aggregations().size() > 0) {
 				// log.info("Aggs: " + resp.aggregations());
                                 for(StringTermsBucket bucket: resp.aggregations().get(facetString).sterms().buckets().array()) {
