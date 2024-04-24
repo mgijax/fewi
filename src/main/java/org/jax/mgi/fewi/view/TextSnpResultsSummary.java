@@ -146,7 +146,7 @@ public class TextSnpResultsSummary extends AbstractTextView {
 		List<String> strains = getStrains(request.getParameter("displayStrains"), finder);
 
 		// set the batchSize to a reasonable amount
-		finder.setBatchSize(5000);
+		finder.setBatchSize(1000);
 
 		writer.write(buildHeaderLine(strains, (String) model.get("buildNumber"), (String) model.get("assemblyVersion"), request.getParameter("referenceStrain")));
 

@@ -1073,11 +1073,51 @@ public class SnpController {
 
 		long sliceStart = startCoordinate;
 		double sliceSize = ((double) (endCoordinate - startCoordinate)) / (numberOfBins * (double) 1.0);
+                long sliceSizeL = Math.round(sliceSize);
 
 		List<Integer> sliceCounts = new ArrayList<Integer>();
 		Map<Integer, String> sliceColors = new HashMap<Integer, String>();
 		Map<Integer, String> sliceStartCoord = new HashMap<Integer, String>();
 		Map<Integer, String> sliceEndCoord = new HashMap<Integer, String>();
+
+                /*
+                //--------------------
+                {
+
+			sliceQF.setCoordinateUnit("bp");
+			sliceQF.setCoordinate(startCoordinate + "-" + endCoordinate);
+
+			Filter sliceFilter = genFilters(sliceQF, matchedMarkerIds, result);
+			if (result.hasErrors()) {
+				for (ObjectError e : result.getAllErrors()) {
+					logger.info("Error: " + e.getDefaultMessage());
+				}
+			}
+
+                        SearchParams params = new SearchParams();
+                        params.setPaginator(page);
+
+			Filter sameDiffFilter = genSameDiffFilter(sliceQF);
+			if (sliceFilter != null) {
+				if (sameDiffFilter != null) {
+					ArrayList<Filter> list = new ArrayList<Filter>();
+					list.add(sliceFilter);
+					list.add(sameDiffFilter);
+					params.setFilter(Filter.and(list));
+				} else {
+					params.setFilter(sliceFilter);
+				}
+			}
+
+                        logger.info("Calling snp finder heatmap method. " + sliceSizeL + " " + startCoordinate + " " + endCoordinate);
+                        SearchResults<ConsensusSNPSummaryRow> heatmapResult = snpFinder.getHeatmapByCoordinate(params, sliceSizeL, startCoordinate, endCoordinate);
+
+                        Map<Long,Long> hmap = heatmapResult.getHistogram();
+
+                }
+                //--------------------
+                */
+
 
 		for (int i = 0; i < numberOfBins; i++) {
 			long sliceEnd = Math.round(startCoordinate + ((i + 1) * sliceSize));

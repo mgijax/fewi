@@ -168,6 +168,34 @@ public class SnpFinder {
 		return ret;
 	}
 
+	public SearchResults<ConsensusSNPSummaryRow> getHeatmapByCoordinate(SearchParams searchParams, long interval, long min, long max) {
+                SearchResults<ConsensusSNPSummaryRow> ret = new SearchResults<ConsensusSNPSummaryRow>();
+
+		Filter sameFilter = null;
+		Filter diffFilter = null;
+		
+		if(searchParams.getFilter() != null) {
+			sameFilter = searchParams.getFilter().getFirstFilterFor(SearchConstants.SAME_STRAINS);
+			diffFilter = searchParams.getFilter().getFirstFilterFor(SearchConstants.DIFF_STRAINS);
+		}
+		
+		if(sameFilter != null || diffFilter != null) {
+			snpAlleleSearchHunter.setHistogramSpecification("heatmap", IndexConstants.SNP_STARTCOORDINATE, interval, min, max);
+			SearchResults<AlleleSNPDocument> searchResults1 = new SearchResults<AlleleSNPDocument>();
+			snpAlleleSearchHunter.hunt(searchParams, searchResults1);
+			ret.setTotalCount(searchResults1.getTotalCount());
+			snpAlleleSearchHunter.clearHistogramSpecification();
+		} else {
+			snpSearchHunter.setHistogramSpecification("heatmap", IndexConstants.SNP_STARTCOORDINATE, interval, min, max);
+			SearchResults<SearchSNPDocument> searchResults1 = new SearchResults<SearchSNPDocument>();
+			snpSearchHunter.hunt(searchParams, searchResults1);
+			ret.setTotalCount(searchResults1.getTotalCount());
+                        snpSearchHunter.clearHistogramSpecification();
+		}
+
+                return ret;
+        }
+
 	public SearchResults<ConsensusSNPSummaryRow> getMatchingSnpCount(SearchParams searchParams) {
 		
 		SearchResults<ConsensusSNPSummaryRow> ret = new SearchResults<ConsensusSNPSummaryRow>();

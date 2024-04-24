@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,8 @@ public class SearchResults<T> {
 
 	// Database keys identified as the results from a search
 	protected List<String> resultFacets = new ArrayList<String>();
+        //
+        protected Map<Long, Long> histogram = new TreeMap<Long,Long>();
 	// MetaData mapping
 	protected Map<String, MetaData> metaMapping = new HashMap <String, MetaData>();
 	// Database keys identified as the results from a search
