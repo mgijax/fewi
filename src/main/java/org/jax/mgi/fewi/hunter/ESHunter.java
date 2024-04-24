@@ -26,7 +26,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.query_dsl.QueryStringQuery;
 import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
+import co.elastic.clients.elasticsearch._types.aggregations.HistogramBucket;
+import co.elastic.clients.elasticsearch._types.aggregations.HistogramAggregation;
+import co.elastic.clients.elasticsearch._types.aggregations.ExtendedBounds;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
@@ -50,10 +54,13 @@ public class ESHunter<T extends BaseESDocument> {
 	protected String keyString;
 	// Which other field do we want to use as a key? (This could be collapsed)
 	protected String otherString;
-	// What is the name of the facet that we want to pull out
 
+	// What is the name of the facet that we want to pull out
 	@Getter @Setter
 	protected String facetString = null;
+
+        // Specs for histogram we cant to compute
+        protected HistogramSpecification hist = null;
 
 	//protected JacksonJsonpMapper jom = new JacksonJsonpMapper();
 	protected ElasticsearchClient esClient = null;
@@ -121,6 +128,14 @@ public class ESHunter<T extends BaseESDocument> {
 		filterClauseMap.put(Filter.JoinClause.FC_OR, " OR ");
 	}
 
+        //-----
+        public void setHistogramSpecification(String name, String field, long interval, long min, long max) {
+                hist = new HistogramSpecification(name, field, interval, min, max);
+        }
+        public void clearHistogramSpecification() {
+                hist = null;
+        }
+        //-----
 
 	public void hunt(SearchParams searchParams, SearchResults<T> searchResults) {
 		hunt(searchParams, searchResults, null, null);
@@ -157,42 +172,9 @@ public class ESHunter<T extends BaseESDocument> {
 
 		String queryString = translateFilter(searchParams.getFilter(), propertyMap);
 
-		if(!searchParams.getSuppressLogs()) log.debug("TranslatedFilters: " + queryString);
+		//if(!searchParams.getSuppressLogs()) log.debug("TranslatedFilters: " + queryString);
 		if(searchParams.getReturnFilterQuery()) searchResults.setFilterQuery(queryString);
-
-		//query.setQuery(queryString);
-
-
-		// configure which document fields to return
-		// also make sure the score comes back
-		//if(this.returnedFields.size() > 0) {
-		//	List<String> docFields = new ArrayList<String>(returnedFields);
-		//	docFields.add("score");
-		//	// I know the typecasting looks kludgy, but it's simpler than declaring array sizes and looping.
-		//	query.setFields(docFields.toArray(new String[0]));
-		//} else  query.setFields("*","score"); // if none specified do *
-
-
-		// Add in the Sorts from the search parameters.
-		//addSorts(searchParams, query);
-
-		// Perform highlighting, assuming its needed.  This method will take
-		// care of determining that.
-		//if(searchParams.includeMetaHighlight() || searchParams.includeHighlightMarkup()) {
-		//	addHighlightingFields(searchParams, query);
-		//}
-
-		// Set the pagination parameters.
-		//query.setRows(searchParams.getPageSize());
-		//if (searchParams.getStartIndex() != -1) {
-		//	query.setStart(searchParams.getStartIndex());
-		//}else {
-		//	query.setStart(resultsDefault);
-		//}
-
-		// Add the facets, can be overwritten.
-		//addFacets(query);
-		if(!searchParams.getSuppressLogs()) log.info("ESQuery:" + queryString);
+		//if(!searchParams.getSuppressLogs()) log.info("ESQuery:" + queryString);
 
 		SearchResponse<T> resp = null;
 		try {
@@ -202,31 +184,48 @@ public class ESHunter<T extends BaseESDocument> {
                         th.enabled(true);
 
                         SearchRequest.Builder srb = new SearchRequest.Builder();
-                                
+                        
+                        QueryStringQuery.Builder qsb = new QueryStringQuery.Builder();
+                        qsb.query(queryString);
                         srb.index(esIndex)
-                                .q(queryString)
+                                .query(qsb.build()._toQuery())
                                 .from(searchParams.getStartIndex())
                                 .trackTotalHits(th.build())
                                 .size(searchParams.getPageSize());
-                        if(groupField != null) {
+                        if (groupField != null) {
                                 srb.aggregations(groupField, t -> t.terms(f -> f.field(groupField)));
                         }
-                        if(facetString != null) {
-                                srb.aggregations(facetString, t -> t.terms(f -> f.field(facetString + ".keyword").size(150)));
+                        if (facetString != null) {
+                                srb.aggregations(facetString, t -> t.terms(f -> f.field(facetString).size(150)));
+                        }
+                        if (hist != null) {
+                                ExtendedBounds.Builder ebb = (new ExtendedBounds.Builder()).min(hist.getMin()).max(hist.getMax());
+                                srb.aggregations("heatmap", t -> t.histogram(f -> 
+                                    f.field(hist.getField())
+                                     .interval((double)hist.getInterval())
+                                     .extendedBounds(ebb.build())
+                                     ));
                         }
                         
                         SearchRequest searchRequest = srb.build();
-
                         log.info("Sending search request: " + searchRequest);
                         
                         resp = esClient.search(searchRequest, clazz);
                         log.info("Total hits: " + resp.hits().total().value());
 			if (resp.aggregations().size() > 0) {
-				// log.info("Aggs: " + resp.aggregations());
-                                for(StringTermsBucket bucket: resp.aggregations().get(facetString).sterms().buckets().array()) {
-                                        searchResults.getResultFacets().add(bucket.key().stringValue());
+				log.info("Aggs: " + resp.aggregations());
+                                if (facetString != null) {
+                                        for(StringTermsBucket bucket: resp.aggregations().get(facetString).sterms().buckets().array()) {
+                                                searchResults.getResultFacets().add(bucket.key().stringValue());
+                                        }
+                                        log.info("Facet results:" + searchResults.getResultFacets());
                                 }
-                                log.info("Agg results:" + searchResults.getResultFacets());
+                                if (hist != null) {
+                                        for(HistogramBucket bucket: resp.aggregations().get(hist.getName()).histogram().buckets().array()) {
+                                                searchResults.getHistogram().put((long)bucket.key(), (long)bucket.docCount());
+                                        }
+                                        log.info("Histogram results:" + searchResults.getHistogram());
+                                }
 			}
 
 			searchResults.setFilterQuery(queryString);
@@ -374,15 +373,6 @@ public class ESHunter<T extends BaseESDocument> {
 		}
 	}
 
-	protected void addFacets(SolrQuery query) {
-		if (facetString != null) {
-			query.addFacetField(facetString);
-			query.setFacetMinCount(1);
-			query.setFacetSort("index");
-			query.setFacetLimit(factetNumberDefault);
-		}
-	}
-
 	protected void addSorts(SearchParams searchParams, SolrQuery query) {
 
 		ORDER currentSort = null;
@@ -420,5 +410,29 @@ public class ESHunter<T extends BaseESDocument> {
 		}
 	}
 
+        private class HistogramSpecification {
 
+                @Getter @Setter
+                protected String name;
+
+                @Getter @Setter
+                protected String field;
+
+                @Getter @Setter
+                protected long interval;
+
+                @Getter @Setter
+                protected long min;
+
+                @Getter @Setter
+                protected long max;
+
+                public HistogramSpecification(String n, String f, long i, long mn, long mx) {
+                    name = n;
+                    field = f;
+                    interval = i;
+                    min = mn;
+                    max = mx;
+                }
+        }
 }
