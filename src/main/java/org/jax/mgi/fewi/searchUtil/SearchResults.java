@@ -24,7 +24,8 @@ public class SearchResults<T> {
 	// Database keys identified as the results from a search
 	protected List<String> resultFacets = new ArrayList<String>();
         //
-        protected Map<Long, Long> histogram = new TreeMap<Long,Long>();
+        protected List<long[]> histogram = new ArrayList<long[]>(); // each entry is [startCoord, endCoord, count]
+        //
 	// MetaData mapping
 	protected Map<String, MetaData> metaMapping = new HashMap <String, MetaData>();
 	// Database keys identified as the results from a search

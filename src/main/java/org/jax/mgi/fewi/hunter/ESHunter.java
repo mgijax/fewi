@@ -24,13 +24,14 @@ import org.jax.mgi.snpdatamodel.document.BaseESDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryStringQuery;
 import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
-import co.elastic.clients.elasticsearch._types.aggregations.HistogramBucket;
-import co.elastic.clients.elasticsearch._types.aggregations.HistogramAggregation;
-import co.elastic.clients.elasticsearch._types.aggregations.ExtendedBounds;
+
+import co.elastic.clients.elasticsearch._types.aggregations.RangeAggregation;
+import co.elastic.clients.elasticsearch._types.aggregations.AggregationRange;
+import co.elastic.clients.elasticsearch._types.aggregations.RangeBucket;
+
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
@@ -59,8 +60,7 @@ public class ESHunter<T extends BaseESDocument> {
 	@Getter @Setter
 	protected String facetString = null;
 
-        // Specs for histogram we cant to compute
-        protected HistogramSpecification hist = null;
+        protected RangeAggSpecification rangeSpec = null;
 
 	//protected JacksonJsonpMapper jom = new JacksonJsonpMapper();
 	protected ElasticsearchClient esClient = null;
@@ -129,11 +129,11 @@ public class ESHunter<T extends BaseESDocument> {
 	}
 
         //-----
-        public void setHistogramSpecification(String name, String field, long interval, long min, long max) {
-                hist = new HistogramSpecification(name, field, interval, min, max);
+        public void setRangeAggSpecification(String name, String field, long[][] ranges) {
+                rangeSpec = new RangeAggSpecification(name, field, ranges);
         }
-        public void clearHistogramSpecification() {
-                hist = null;
+        public void clearRangeAggSpecification() {
+                rangeSpec = null;
         }
         //-----
 
@@ -163,18 +163,12 @@ public class ESHunter<T extends BaseESDocument> {
 
 	public void hunt(SearchParams searchParams, SearchResults<T> searchResults, String groupField, String extraJoinClause) {
 
-		// Invoke the hook, editing the search params as needed.
-
 		createESConnection();
 
-		// Create the query string by invoking the translate filter method.
-		//SolrQuery query = new SolrQuery();
-
 		String queryString = translateFilter(searchParams.getFilter(), propertyMap);
-
 		//if(!searchParams.getSuppressLogs()) log.debug("TranslatedFilters: " + queryString);
+
 		if(searchParams.getReturnFilterQuery()) searchResults.setFilterQuery(queryString);
-		//if(!searchParams.getSuppressLogs()) log.info("ESQuery:" + queryString);
 
 		SearchResponse<T> resp = null;
 		try {
@@ -198,12 +192,15 @@ public class ESHunter<T extends BaseESDocument> {
                         if (facetString != null) {
                                 srb.aggregations(facetString, t -> t.terms(f -> f.field(facetString).size(150)));
                         }
-                        if (hist != null) {
-                                ExtendedBounds.Builder ebb = (new ExtendedBounds.Builder()).min(hist.getMin()).max(hist.getMax());
-                                srb.aggregations("heatmap", t -> t.histogram(f -> 
-                                    f.field(hist.getField())
-                                     .interval((double)hist.getInterval())
-                                     .extendedBounds(ebb.build())
+                        if (rangeSpec != null) {
+                                List<AggregationRange> aggRanges = new ArrayList<AggregationRange>();
+                                for (long[] r : rangeSpec.getRanges()) {
+                                    AggregationRange.Builder arb = new AggregationRange.Builder();
+                                    aggRanges.add(arb.from(""+r[0]).to(""+r[1]).build());
+                                }
+                                srb.aggregations(rangeSpec.getName(), t -> t.range(f -> 
+                                    f.field(rangeSpec.getField())
+                                     .ranges(aggRanges)
                                      ));
                         }
                         
@@ -212,19 +209,19 @@ public class ESHunter<T extends BaseESDocument> {
                         
                         resp = esClient.search(searchRequest, clazz);
                         log.info("Total hits: " + resp.hits().total().value());
+
 			if (resp.aggregations().size() > 0) {
-				log.info("Aggs: " + resp.aggregations());
+				//log.info("Aggs: " + resp.aggregations());
                                 if (facetString != null) {
                                         for(StringTermsBucket bucket: resp.aggregations().get(facetString).sterms().buckets().array()) {
                                                 searchResults.getResultFacets().add(bucket.key().stringValue());
                                         }
-                                        log.info("Facet results:" + searchResults.getResultFacets());
                                 }
-                                if (hist != null) {
-                                        for(HistogramBucket bucket: resp.aggregations().get(hist.getName()).histogram().buckets().array()) {
-                                                searchResults.getHistogram().put((long)bucket.key(), (long)bucket.docCount());
+                                if (rangeSpec != null) {
+                                        for(RangeBucket bucket: resp.aggregations().get(rangeSpec.getName()).range().buckets().array()) {
+                                                long[] b = { bucket.from().longValue(), bucket.to().longValue(), bucket.docCount() };
+                                                searchResults.getHistogram().add(b);
                                         }
-                                        log.info("Histogram results:" + searchResults.getHistogram());
                                 }
 			}
 
@@ -236,8 +233,6 @@ public class ESHunter<T extends BaseESDocument> {
 			}
 
 			searchResults.setTotalCount((int)resp.hits().total().value());
-
-			//log.info(resp + "");
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -410,8 +405,7 @@ public class ESHunter<T extends BaseESDocument> {
 		}
 	}
 
-        private class HistogramSpecification {
-
+        private class RangeAggSpecification {
                 @Getter @Setter
                 protected String name;
 
@@ -419,20 +413,12 @@ public class ESHunter<T extends BaseESDocument> {
                 protected String field;
 
                 @Getter @Setter
-                protected long interval;
+                protected long[][] ranges;
 
-                @Getter @Setter
-                protected long min;
-
-                @Getter @Setter
-                protected long max;
-
-                public HistogramSpecification(String n, String f, long i, long mn, long mx) {
+                public RangeAggSpecification(String n, String f, long[][] r) {
                     name = n;
                     field = f;
-                    interval = i;
-                    min = mn;
-                    max = mx;
+                    ranges = r;
                 }
         }
 }

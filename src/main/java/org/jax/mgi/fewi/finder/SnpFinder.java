@@ -168,8 +168,7 @@ public class SnpFinder {
 		return ret;
 	}
 
-	public SearchResults<ConsensusSNPSummaryRow> getHeatmapByCoordinate(SearchParams searchParams, long interval, long min, long max) {
-                SearchResults<ConsensusSNPSummaryRow> ret = new SearchResults<ConsensusSNPSummaryRow>();
+	public List<long[]> getHeatmapByCoordinates(SearchParams searchParams, long[][] ranges) {
 
 		Filter sameFilter = null;
 		Filter diffFilter = null;
@@ -180,49 +179,20 @@ public class SnpFinder {
 		}
 		
 		if(sameFilter != null || diffFilter != null) {
-			snpAlleleSearchHunter.setHistogramSpecification("heatmap", IndexConstants.SNP_STARTCOORDINATE, interval, min, max);
+			snpAlleleSearchHunter.setRangeAggSpecification("heatmap", IndexConstants.SNP_STARTCOORDINATE, ranges);
 			SearchResults<AlleleSNPDocument> searchResults1 = new SearchResults<AlleleSNPDocument>();
 			snpAlleleSearchHunter.hunt(searchParams, searchResults1);
-			ret.setTotalCount(searchResults1.getTotalCount());
-			snpAlleleSearchHunter.clearHistogramSpecification();
+			snpAlleleSearchHunter.clearRangeAggSpecification();
+			return searchResults1.getHistogram();
 		} else {
-			snpSearchHunter.setHistogramSpecification("heatmap", IndexConstants.SNP_STARTCOORDINATE, interval, min, max);
+			snpSearchHunter.setRangeAggSpecification("heatmap", IndexConstants.SNP_STARTCOORDINATE, ranges);
 			SearchResults<SearchSNPDocument> searchResults1 = new SearchResults<SearchSNPDocument>();
 			snpSearchHunter.hunt(searchParams, searchResults1);
-			ret.setTotalCount(searchResults1.getTotalCount());
-                        snpSearchHunter.clearHistogramSpecification();
+                        snpSearchHunter.clearRangeAggSpecification();
+			return searchResults1.getHistogram();
 		}
-
-                return ret;
         }
 
-	public SearchResults<ConsensusSNPSummaryRow> getMatchingSnpCount(SearchParams searchParams) {
-		
-		SearchResults<ConsensusSNPSummaryRow> ret = new SearchResults<ConsensusSNPSummaryRow>();
-		
-		Filter sameFilter = null;
-		Filter diffFilter = null;
-		
-		if(searchParams.getFilter() != null) {
-			sameFilter = searchParams.getFilter().getFirstFilterFor(SearchConstants.SAME_STRAINS);
-			diffFilter = searchParams.getFilter().getFirstFilterFor(SearchConstants.DIFF_STRAINS);
-		}
-		
-		if(sameFilter != null || diffFilter != null) {
-			snpAlleleSearchHunter.setFacetString(IndexConstants.SNP_STRAINS);
-			SearchResults<AlleleSNPDocument> searchResults1 = new SearchResults<AlleleSNPDocument>();
-			snpAlleleSearchHunter.hunt(searchParams, searchResults1);
-			ret.setTotalCount(searchResults1.getTotalCount());
-		} else {
-			snpSearchHunter.setFacetString(IndexConstants.SNP_STRAINS);
-			SearchResults<SearchSNPDocument> searchResults1 = new SearchResults<SearchSNPDocument>();
-			snpSearchHunter.hunt(searchParams, searchResults1);
-			ret.setTotalCount(searchResults1.getTotalCount());
-		}
-
-		return ret;
-	}
-	
 	/* get the function classes (as facets) for the consensus SNPs
 	 * matching the current query
 	 */
