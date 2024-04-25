@@ -1043,7 +1043,7 @@ public class SnpController {
 		}
 
 		long rangeSize = endCoordinate - startCoordinate;
-		long numberOfBins = Math.max(1, Math.min(rangeSize, 20)); // at least 1 bin, no more than 20
+		int numberOfBins = Math.max(1, Math.min((int)rangeSize, 20)); // at least 1 bin, no more than 20
 
 		mav.addObject("chromosome", chromosome);
 		mav.addObject("startCoordinate", startCoordinate);
@@ -1052,14 +1052,15 @@ public class SnpController {
 
 		Paginator page = new Paginator(0);
 
-		// find counts for the slices of the query range
-
 		SnpQueryForm sliceQF = query.clone();
 		sliceQF.setSelectedChromosome(chromosome);
 		sliceQF.setSliceStartCoord(startCoordinate);
 		sliceQF.setSliceEndCoord(endCoordinate);
 		sliceQF.setStartMarker(null);
 		sliceQF.setEndMarker(null);
+                sliceQF.setCoordinateUnit("bp");
+                sliceQF.setCoordinate(startCoordinate + "-" + endCoordinate);
+
 
 		// Our maximum count (for determining the shading of the heatmap cells) is based
 		// on either:
@@ -1071,92 +1072,57 @@ public class SnpController {
 			maxCount = query.getSliceMaxCount();
 		}
 
-		long sliceStart = startCoordinate;
+                long[][] slices = new long[numberOfBins][2];
 		double sliceSize = ((double) (endCoordinate - startCoordinate)) / (numberOfBins * (double) 1.0);
-                long sliceSizeL = Math.round(sliceSize);
+		long sliceStart = startCoordinate;
+		for (int i = 0; i < numberOfBins; i++) {
+			long sliceEnd = Math.round(startCoordinate + ((i + 1) * sliceSize));
+                        slices[i][0] = sliceStart;
+                        slices[i][1] = sliceEnd;
+                        sliceStart = sliceEnd; // ranges are half-open, so no "+1" 
+                }
 
 		List<Integer> sliceCounts = new ArrayList<Integer>();
 		Map<Integer, String> sliceColors = new HashMap<Integer, String>();
 		Map<Integer, String> sliceStartCoord = new HashMap<Integer, String>();
 		Map<Integer, String> sliceEndCoord = new HashMap<Integer, String>();
 
-                /*
                 //--------------------
-                {
 
-			sliceQF.setCoordinateUnit("bp");
-			sliceQF.setCoordinate(startCoordinate + "-" + endCoordinate);
-
-			Filter sliceFilter = genFilters(sliceQF, matchedMarkerIds, result);
-			if (result.hasErrors()) {
-				for (ObjectError e : result.getAllErrors()) {
-					logger.info("Error: " + e.getDefaultMessage());
-				}
-			}
-
-                        SearchParams params = new SearchParams();
-                        params.setPaginator(page);
-
-			Filter sameDiffFilter = genSameDiffFilter(sliceQF);
-			if (sliceFilter != null) {
-				if (sameDiffFilter != null) {
-					ArrayList<Filter> list = new ArrayList<Filter>();
-					list.add(sliceFilter);
-					list.add(sameDiffFilter);
-					params.setFilter(Filter.and(list));
-				} else {
-					params.setFilter(sliceFilter);
-				}
-			}
-
-                        logger.info("Calling snp finder heatmap method. " + sliceSizeL + " " + startCoordinate + " " + endCoordinate);
-                        SearchResults<ConsensusSNPSummaryRow> heatmapResult = snpFinder.getHeatmapByCoordinate(params, sliceSizeL, startCoordinate, endCoordinate);
-
-                        Map<Long,Long> hmap = heatmapResult.getHistogram();
-
+                Filter sliceFilter = genFilters(sliceQF, matchedMarkerIds, result);
+                if (result.hasErrors()) {
+                        for (ObjectError e : result.getAllErrors()) {
+                                logger.info("Error: " + e.getDefaultMessage());
+                        }
                 }
-                //--------------------
-                */
 
+                SearchParams params = new SearchParams();
+                params.setPaginator(page);
 
-		for (int i = 0; i < numberOfBins; i++) {
-			long sliceEnd = Math.round(startCoordinate + ((i + 1) * sliceSize));
+                Filter sameDiffFilter = genSameDiffFilter(sliceQF);
+                if (sliceFilter != null) {
+                        if (sameDiffFilter != null) {
+                                ArrayList<Filter> list = new ArrayList<Filter>();
+                                list.add(sliceFilter);
+                                list.add(sameDiffFilter);
+                                params.setFilter(Filter.and(list));
+                        } else {
+                                params.setFilter(sliceFilter);
+                        }
+                }
 
-			sliceQF.setCoordinateUnit("bp");
-			sliceQF.setCoordinate(sliceStart + "-" + sliceEnd);
+                //-------------
+                List<long[]> heatmap = snpFinder.getHeatmapByCoordinates(params, slices);
+                logger.info("Got heatmap. Size=" + heatmap.size());
+                //-------------
 
-			Filter sliceFilter = genFilters(sliceQF, matchedMarkerIds, result);
-			if (result.hasErrors()) {
-				for (ObjectError e : result.getAllErrors()) {
-					logger.info("Error: " + e.getDefaultMessage());
-				}
-			}
-
-			SearchParams params = new SearchParams();
-			params.setPaginator(page);
-
-			Filter sameDiffFilter = genSameDiffFilter(sliceQF);
-			if (sliceFilter != null) {
-				if (sameDiffFilter != null) {
-					ArrayList<Filter> list = new ArrayList<Filter>();
-					list.add(sliceFilter);
-					list.add(sameDiffFilter);
-					params.setFilter(Filter.and(list));
-				} else {
-					params.setFilter(sliceFilter);
-				}
-			}
-
-			SearchResults<ConsensusSNPSummaryRow> searchResults = snpFinder.getMatchingSnpCount(params);
-			int sliceCount = searchResults.getTotalCount();
-
-			sliceCounts.add(sliceCount);
-			maxCount = Math.max(maxCount, sliceCount);
-			sliceStartCoord.put(i, "" + sliceStart);
-			sliceEndCoord.put(i, "" + sliceEnd);
-
-			sliceStart = sliceEnd + 1;
-		}
+                for (int i = 0; i < numberOfBins; i++) {
+                        long[] slice = heatmap.get(i);
+			sliceStartCoord.put(i, "" + slice[0]);
+			sliceEndCoord.put(i, "" + slice[1]);
+                        sliceCounts.add((int)slice[2]);       
+			maxCount = Math.max(maxCount, (int)slice[2]);
+                }
 
 		// Now that we have computed the maximum bin count, we can also assign cell
 		// colors.
