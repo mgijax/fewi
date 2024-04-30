@@ -8,6 +8,39 @@ var maxResults = 21000000;	// max number of results allowed for full functionali
 var controlsDisabled = false;	// all controls enabled (false) or disabled (true)
 var resultsCount = -1;		// count of results for current query
 
+//-------------------------
+// Hopefully temporary measure because of Solr 8 performance problems with GXD indexes.
+// If the query is "complex" (a differential or profile query), and the number of genes
+// is greater than the limit, do not try to show the matrices.
+// Give the user a warning message instead.
+var safeGeneLimit = 1300;        // empirically determined
+var safeForMatrix = false;       // is the current query safe for showing the matrix views?
+var matrixTabs = ['stagegridtab','genegridtab']
+function disableMatrixTabs () {
+    matrixTabs.forEach(tabid => {
+        document.getElementById(tabid).closest("li").classList.add("disabled")
+    })
+    resultsTabs.set("activeIndex",mgiTab.tabs["resultstab"])
+}
+function enableMatrixTabs () {
+    matrixTabs.forEach(tabid => {
+        document.getElementById(tabid).closest("li").classList.remove("disabled")
+    })
+}
+function checkSafeForMatrix (genesCount) {
+        safeForMatrix = !((currentQF === "differential" || currentQF === "profile") && genesCount > safeGeneLimit)
+        console.log("safeForMatrix:", currentQF, genesCount, safeForMatrix);
+        (safeForMatrix ? enableMatrixTabs : disableMatrixTabs)();
+        if (safeForMatrix) {
+            $('#tooManyGenes').css('display', 'none');
+            $('#tooManyGenesWrapper').css('display', 'none');
+        } else if (genesCount !== -1) {
+            $('#tooManyGenes').css('display', 'inline');
+            $('#tooManyGenesWrapper').css('display', 'block');
+        }
+}
+//-------------------------
+
 //default page size for each summary
 var GENES_PAGE_SIZE = 100;
 var ASSAYS_PAGE_SIZE = 100;
@@ -1079,6 +1112,10 @@ function refreshTabCounts()
 				log('updated .countHere');
 			} // end - updated YSF
 			log('updatedYSF: ' + updatedYSF);
+
+                        // -------
+                        checkSafeForMatrix(parseInt(o.responseText))
+                        // -------
 		}
 		else if(o.tId==imagesRq.tId) YAHOO.util.Dom.get("totalImagesCount").innerHTML = commaDelimit(o.responseText);
 	}
@@ -1091,6 +1128,7 @@ function refreshTabCounts()
 
 	// do results request first, then we can skip the others if too many results
 	resultsCount = -1;	// reset before request
+        safeForMatrix = false   // assume the worst until proven safe when we get the genes count
 	resultsRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/results/totalCount",
 			{	success:handleCountRequest,
 		failure:function(o){}
@@ -1640,6 +1678,8 @@ window.prevStageGridQuery="";
 
 var structureStageGrid = function()
 {
+        if (!safeForMatrix) return;
+
 	// hide page controls
 	hidePaginators();
 
@@ -1831,6 +1871,8 @@ var handleStructGeneTab = function() {
 // after the hidden YUI datatable is loaded
 var structureGeneGrid = function()
 {
+        if (!safeForMatrix) return;
+
 	var querystringWithFilters = getQueryStringWithFilters();
 	window.prevGeneGridQuery=querystringWithFilters;
 	

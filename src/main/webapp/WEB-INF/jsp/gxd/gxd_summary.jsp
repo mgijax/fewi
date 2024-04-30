@@ -24,10 +24,12 @@
   no-repeat right;
 }
 .yui-skin-sam .yui-pg-last { display: none; }
-#tooManyResultsWrapper {
+#tooManyResultsWrapper,
+#tooManyGenesWrapper {
   padding-bottom: 10px;
 }
-#tooManyResults {
+#tooManyResults,
+#tooManyGenes {
   border: 1px solid red;
   color: red;
   font-weight: bold;
@@ -85,6 +87,10 @@
     </div>
     <div id="tooManyResultsWrapper">
     	<div id="tooManyResults">Large search returns make our pages slow to load. Therefore, some functionality has been disabled until you refine your search to bring the number of returned assay results under <span id="maxCount">TBD</span>.
+    	</div>
+    </div>
+    <div id="tooManyGenesWrapper">
+    	<div id="tooManyGenes">When a Differential Expression or Profile Search returns &gt;1,300 genes, the matrix displays are disabled.  To view them, use the filters to reduce the gene return to &lt;1,300 genes.
     	</div>
     </div>
 <div id="resultSummary" class="yui-navset">
