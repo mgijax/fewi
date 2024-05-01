@@ -35,7 +35,7 @@ public class SnpQueryForm implements Cloneable {
 	private Long sliceStartCoord;
 	private Long sliceEndCoord;
 
-	private static int allStrainsCount = 88;
+	private static int allStrainsCount = 101;
 
 	public SnpQueryForm clone() {
 		// implementing this custom to ensure deep copy of Lists
