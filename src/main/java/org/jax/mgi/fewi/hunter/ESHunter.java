@@ -39,12 +39,16 @@ import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.ElasticsearchTransport;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
 import co.elastic.clients.elasticsearch.core.search.TrackHits;
+import co.elastic.clients.elasticsearch._types.SortOptions;
+import co.elastic.clients.elasticsearch._types.FieldSort;
+import co.elastic.clients.elasticsearch._types.SortOrder;
+
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * This is the Solr specific hunter.  It is responsible for translating
- * higher-level generic webapp requests to Solr's specific API
+ * This is the Elastic specific hunter.  It is responsible for translating
+ * higher-level generic webapp requests to Elastic's specific API
  */
 
 public class ESHunter<T extends BaseESDocument> {
@@ -90,13 +94,13 @@ public class ESHunter<T extends BaseESDocument> {
 	// Front end fields -> PropertyMappers
 	protected HashMap <String, ESPropertyMapper> propertyMap = new HashMap<String, ESPropertyMapper>();
 
-	// Solr Fields -> Front end field mappings
+	// Elastic Fields -> Front end field mappings
 	protected HashMap <String, String> fieldToParamMap = new HashMap<String, String>();
 
 	// Front end sorts -> backend fields
 	protected HashMap <String, ESSortMapper> sortMap = new HashMap<String, ESSortMapper>();
 
-	// FEWI's filter comparison -> Solr's comparison operator
+	// FEWI's filter comparison -> Elastic's comparison operator
 	protected HashMap<JoinClause, String> filterClauseMap = new HashMap<JoinClause, String>();
 
 	protected List<String> returnedFields = new ArrayList<String>();
@@ -186,6 +190,9 @@ public class ESHunter<T extends BaseESDocument> {
                                 .from(searchParams.getStartIndex())
                                 .trackTotalHits(th.build())
                                 .size(searchParams.getPageSize());
+
+                        addSorts(searchParams, srb);
+
                         if (groupField != null) {
                                 srb.aggregations(groupField, t -> t.terms(f -> f.field(groupField)));
                         }
@@ -346,6 +353,7 @@ public class ESHunter<T extends BaseESDocument> {
 		}
 	}
 
+        // Not yet converted to Elastic!!
 	protected void addHighlightingFields(SearchParams searchParams, SolrQuery query) {
 		if (! highlightFields.isEmpty() && searchParams.includeMetaHighlight()) {
 			for (String field: highlightFields) {
@@ -368,19 +376,23 @@ public class ESHunter<T extends BaseESDocument> {
 		}
 	}
 
-	protected void addSorts(SearchParams searchParams, SolrQuery query) {
+	protected void addSorts(SearchParams searchParams, SearchRequest.Builder srb) {
 
-		ORDER currentSort = null;
+		SortOrder currentSort = null;
+                FieldSort.Builder fsb = null;
+                FieldSort fs = null;
+                SortOptions so = null;
+                SortOptions.Builder sob = null;
 
 		for (Sort sort: searchParams.getSorts()) {
 
 			// Determine the direction of the sort.
 
 			if (sort.isDesc()) {
-				currentSort = SolrQuery.ORDER.desc;
+				currentSort = SortOrder.Desc;
 			}
 			else {
-				currentSort = SolrQuery.ORDER.asc;
+				currentSort = SortOrder.Asc;
 			}
 
 			/**
@@ -389,9 +401,15 @@ public class ESHunter<T extends BaseESDocument> {
 			 */
 
 			if (sortMap.containsKey(sort.getSort())) {
+                                List<SortOptions> sol = new ArrayList<SortOptions>();
 				for (String ssm: sortMap.get(sort.getSort()).getSortList()) {
-					query.addSort(ssm,currentSort);
+                                        fsb = new FieldSort.Builder();
+                                        fs = fsb.field(ssm).order(currentSort).build();
+                                        sob = new SortOptions.Builder();
+                                        so = sob.field(fs).build();
+                                        sol.add(so);
 				}
+                                srb.sort(sol);
 			}
 
 			/**
@@ -400,7 +418,11 @@ public class ESHunter<T extends BaseESDocument> {
 			 */
 
 			else {
-				query.addSort(sort.getSort(), currentSort);
+                                fsb = new FieldSort.Builder();
+                                fs = fsb.field(sort.getSort()).order(currentSort).build();
+                                sob = new SortOptions.Builder();
+                                so = sob.field(fs).build();
+                                srb.sort(so);
 			}
 		}
 	}
