@@ -2075,12 +2075,39 @@ public class GXDController {
 		SearchParams params = new SearchParams();
 		params.setPaginator(page);
 		params.setFilter(parseGxdQueryForm(query));
-		SearchResults<SolrGxdStageMatrixResult> searchResults = gxdFinder.searchStageMatrixResults(params);
-		logger.debug("got matrix results");
-		List<SolrGxdStageMatrixResult> resultList = searchResults.getResultObjects();
+
+                Filter mkFilter = params.getFilter().getFirstFilterFor("marker_key");
+                int totCount = 0;
+                List<SolrGxdStageMatrixResult> resultList = null;
+
+                /* The following is a terrible hack to try to ease a problem when differential/profile queries
+                 * generate queries containing 1000s of marker IDs in a gigantic OR expression. The following breaks up the
+                 * IDs into chunks and then loops, one query per chunck. The results are combined.
+                 *
+                 * There is a similar hack in the handler for gxd/genegrid/json.
+                 */
+                if (mkFilter != null) {
+                        List<String> mkeys = mkFilter.getValues();
+                        logger.info("Marker keys = " + mkeys.toString());
+                        int chunkSize = 500;
+                        resultList = new ArrayList<SolrGxdStageMatrixResult>();
+                        for(int i = 0; i < mkeys.size(); i += chunkSize) {
+                                int j = Math.min(i+chunkSize,mkeys.size());
+                                logger.info("Marker key chunk: " + i + " to " + (j-1));
+                                mkFilter.setValues(mkeys.subList(i,j));
+                                SearchResults<SolrGxdStageMatrixResult> searchResults = gxdFinder.searchStageMatrixResults(params);
+                                totCount += searchResults.getTotalCount();
+                                resultList.addAll(searchResults.getResultObjects());
+                        }
+                } else {
+                        SearchResults<SolrGxdStageMatrixResult> searchResults = gxdFinder.searchStageMatrixResults(params);
+                        totCount = searchResults.getTotalCount();
+                        resultList = searchResults.getResultObjects();
+                }
+		logger.info("got " + resultList.size() + " matrix results");
 
 		// cache total count of assay results
-		session.setAttribute(totalCountSessionId,searchResults.getTotalCount());
+		session.setAttribute(totalCountSessionId,totCount);
 
 		// get the parent rows to be displayed
 		List<GxdMatrixRow> parentTerms = gxdMatrixHandler.getParentTermsToDisplay(query,childrenOf,pathsToOpen);
@@ -2703,12 +2730,34 @@ public class GXDController {
 		geneMatrixResultPaginator.setResults(matrixPage.getResultsMatrix());
 		params.setPaginator(geneMatrixResultPaginator);
 		params.setFilter(parseGxdQueryForm(query));
-		SearchResults<SolrGxdGeneMatrixResult> searchResults = gxdFinder.searchGeneMatrixResults(params);
-		logger.debug("got matrix results");
-		List<SolrGxdGeneMatrixResult> resultList = searchResults.getResultObjects();
+
+                Filter mkFilter = params.getFilter().getFirstFilterFor("marker_key");
+                int totCount = 0;
+                List<SolrGxdGeneMatrixResult> resultList = null;
+
+                /* Thie following is a hack. See notes in handler for gxd/stagegrid/json */
+                if (mkFilter != null) {
+                        List<String> mkeys = mkFilter.getValues();
+                        logger.info("Marker keys = " + mkeys.toString());
+                        int chunkSize = 500;
+                        resultList = new ArrayList<SolrGxdGeneMatrixResult>();
+                        for(int i = 0; i < mkeys.size(); i += chunkSize) {
+                                int j = Math.min(i+chunkSize,mkeys.size());
+                                logger.info("Marker key chunk: " + i + " to " + (j-1));
+                                mkFilter.setValues(mkeys.subList(i,j));
+                                SearchResults<SolrGxdGeneMatrixResult> searchResults = gxdFinder.searchGeneMatrixResults(params);
+                                totCount += searchResults.getTotalCount();
+                                resultList.addAll(searchResults.getResultObjects());
+                        }
+                } else {
+                        SearchResults<SolrGxdGeneMatrixResult> searchResults = gxdFinder.searchGeneMatrixResults(params);
+                        totCount = searchResults.getTotalCount();
+                        resultList = searchResults.getResultObjects();
+                }
+		logger.info("got " + resultList.size() + " matrix results");
 
 		// cache total count of assay results
-		session.setAttribute(totalCountSessionId,searchResults.getTotalCount());
+		session.setAttribute(totalCountSessionId,totCount);
 
 		// get the parent rows to be displayed
 		List<GxdMatrixRow> parentTerms = gxdMatrixHandler.getParentTermsToDisplay(query,childrenOf,pathsToOpen);

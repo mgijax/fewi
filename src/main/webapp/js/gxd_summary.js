@@ -13,7 +13,7 @@ var resultsCount = -1;		// count of results for current query
 // If the query is "complex" (a differential or profile query), and the number of genes
 // is greater than the limit, do not try to show the matrices.
 // Give the user a warning message instead.
-var safeGeneLimit = 1300;        // empirically determined
+var safeGeneLimit = 2000;        // empirically determined
 var safeForMatrix = false;       // is the current query safe for showing the matrix views?
 var matrixTabs = ['stagegridtab','genegridtab']
 function disableMatrixTabs () {
