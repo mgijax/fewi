@@ -1110,11 +1110,11 @@ function refreshTabCounts()
 				ysfGeneCount = o.responseText;
 				$('.countHere').text(o.responseText + $('.countHere').text());
 				log('updated .countHere');
-                                //
-                                checkSafeForMatrix(parseInt(ysfGeneCount))
-                                //
 			} // end - updated YSF
 			log('updatedYSF: ' + updatedYSF);
+                        //
+                        checkSafeForMatrix(parseInt(o.responseText))
+                        //
 		}
 		else if(o.tId==imagesRq.tId) YAHOO.util.Dom.get("totalImagesCount").innerHTML = commaDelimit(o.responseText);
 	}
