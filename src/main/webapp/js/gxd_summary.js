@@ -28,8 +28,9 @@ function enableMatrixTabs () {
     })
 }
 function checkSafeForMatrix (genesCount) {
-        safeForMatrix = !((currentQF === "differential" || currentQF === "profile") && genesCount > safeGeneLimit)
-        console.log("safeForMatrix:", currentQF, genesCount, safeForMatrix);
+        const cf = getCurrentForm()
+        safeForMatrix = !((cf === "differential" || cf === "profile") && genesCount > safeGeneLimit)
+        console.log("safeForMatrix:", cf, genesCount, safeForMatrix);
         (safeForMatrix ? enableMatrixTabs : disableMatrixTabs)();
         if (safeForMatrix) {
             $('#tooManyGenes').css('display', 'none');
