@@ -378,6 +378,12 @@ public class IDLinker {
 		if(dbName.equals("OMIM") || dbName.equals("OMIM:PS")) {
 			id = id.replaceAll("OMIM:", "");
 		}
+		/* Prepare for DOID to apply proper prefixes for OMIM Phenotype series terms
+		 * See: https://github.com/DiseaseOntology/HumanDiseaseOntology/pull/968
+		 */
+		if(dbName.equals("OMIMPS")) {
+			id = id.replaceAll("OMIMPS:", "");
+		}
 		if(dbName.equals("NCI")) {
 			id = id.replaceAll("NCI:", "");
 		}
