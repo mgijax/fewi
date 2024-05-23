@@ -10,10 +10,8 @@ var resultsCount = -1;		// count of results for current query
 
 //-------------------------
 // Hopefully temporary measure because of Solr 8 performance problems with GXD indexes.
-// If the query is "complex" (a differential or profile query), and the number of genes
-// is greater than the limit, do not try to show the matrices.
+// If the query is "complex" (a differential or profile query)
 // Give the user a warning message instead.
-var safeGeneLimit = 1500;        // empirically determined
 var safeForMatrix = false;       // is the current query safe for showing the matrix views?
 var matrixTabs = ['stagegridtab','genegridtab']
 function disableMatrixTabs () {
@@ -29,8 +27,7 @@ function enableMatrixTabs () {
 }
 function checkSafeForMatrix (genesCount) {
         const cf = getCurrentForm()
-        safeForMatrix = !((cf === "differential" || cf === "profile") && genesCount > safeGeneLimit)
-        console.log("safeForMatrix:", cf, genesCount, safeForMatrix);
+        safeForMatrix = !(cf === "differential" || cf === "profile" || cf === "batch");
         (safeForMatrix ? enableMatrixTabs : disableMatrixTabs)();
         if (safeForMatrix) {
             $('#tooManyGenes').css('display', 'none');
@@ -1111,11 +1108,11 @@ function refreshTabCounts()
 				ysfGeneCount = o.responseText;
 				$('.countHere').text(o.responseText + $('.countHere').text());
 				log('updated .countHere');
+                                checkSafeForMatrix(parseInt(o.responseText))
 			} // end - updated YSF
 			log('updatedYSF: ' + updatedYSF);
-                        //
                         checkSafeForMatrix(parseInt(o.responseText))
-                        //
+
 		}
 		else if(o.tId==imagesRq.tId) YAHOO.util.Dom.get("totalImagesCount").innerHTML = commaDelimit(o.responseText);
 	}

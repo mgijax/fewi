@@ -28,10 +28,17 @@
 #tooManyGenesWrapper {
   padding-bottom: 10px;
 }
-#tooManyResults,
-#tooManyGenes {
+#tooManyResults {
   border: 1px solid red;
   color: red;
+  font-weight: bold;
+  display: none;
+  padding: 4px;
+  margin-left: 5px;
+}
+#tooManyGenes {
+  border: 1px solid black;
+  color: black;
   font-weight: bold;
   display: none;
   padding: 4px;
@@ -90,7 +97,7 @@
     	</div>
     </div>
     <div id="tooManyGenesWrapper">
-    	<div id="tooManyGenes">When a Differential Expression or Profile Search returns &gt;1,300 genes, the matrix displays are disabled.  To view them, use the filters to reduce the gene return to &lt;1,300 genes.
+    	<div id="tooManyGenes">Under Contruction - matrix displays are temporarily disabled for Differential Expression, Profile, and Batch queries while we retool our indexing infrastructure.
     	</div>
     </div>
 <div id="resultSummary" class="yui-navset">
