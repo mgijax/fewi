@@ -25,17 +25,18 @@ function enableMatrixTabs () {
         document.getElementById(tabid).closest("li").classList.remove("disabled")
     })
 }
-function checkSafeForMatrix (genesCount) {
+function checkSafeForMatrix () {
         const cf = getCurrentForm()
         safeForMatrix = !(cf === "differential" || cf === "profile" || cf === "batch");
         (safeForMatrix ? enableMatrixTabs : disableMatrixTabs)();
         if (safeForMatrix) {
             $('#tooManyGenes').css('display', 'none');
             $('#tooManyGenesWrapper').css('display', 'none');
-        } else if (genesCount !== -1) {
+        } else {
             $('#tooManyGenes').css('display', 'inline');
             $('#tooManyGenesWrapper').css('display', 'block');
         }
+        return safeForMatrix
 }
 //-------------------------
 
@@ -1675,7 +1676,7 @@ window.prevStageGridQuery="";
 
 var structureStageGrid = function()
 {
-        if (!safeForMatrix) return;
+        if (!checkSafeForMatrix()) return;
 
 	// hide page controls
 	hidePaginators();
@@ -1868,7 +1869,7 @@ var handleStructGeneTab = function() {
 // after the hidden YUI datatable is loaded
 var structureGeneGrid = function()
 {
-        if (!safeForMatrix) return;
+        if (!checkSafeForMatrix()) return;
 
 	var querystringWithFilters = getQueryStringWithFilters();
 	window.prevGeneGridQuery=querystringWithFilters;
