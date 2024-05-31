@@ -4303,7 +4303,7 @@ public class GXDController {
 			List<String> tokens = QueryParser.tokeniseOnWhitespaceAndComma(query.getLocations());
 			List<Filter> locationFilters = new ArrayList<Filter>();
 			for(String token : tokens){
-				String spatialQueryString = SolrLocationTranslator.getIntersectsQueryValue(token, query.getLocationUnit());
+				String spatialQueryString = SolrLocationTranslator.getQueryValue(token, query.getLocationUnit());
 				if(spatialQueryString !=null && !spatialQueryString.equals("")) {
 					locationFilters.add(new Filter(SearchConstants.MOUSE_COORDINATE,spatialQueryString,Filter.Operator.OP_HAS_WORD));
 				}
