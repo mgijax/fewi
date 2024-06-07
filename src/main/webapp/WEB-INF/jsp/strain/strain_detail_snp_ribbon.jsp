@@ -12,7 +12,7 @@
 				<div id="snpCounts" class="summarySec2snp">
 				<ul>
 					<li>
-						<div class="label rightLabelSnp">SNPs Involving 
+						<div class="label rightLabelSnp">SNP Calls Involving 
 							<c:if test='${fn:length(strain.name) > 21}'>
 								this strain
 							</c:if>
