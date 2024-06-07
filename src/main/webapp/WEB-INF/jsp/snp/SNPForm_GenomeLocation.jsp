@@ -34,11 +34,6 @@
 	      			<span class="example" style="margin-left:50px;">Example: between D19Mit32 and Tbx10</span>
 				</div>
 
-				<div style="height: 30px; float: left; position: relative;">
-					<div style="position: absolute; bottom: 0; width: 385px;">
-						You can filter SNPs by function class in the search results.
-					</div>
-				</div>
 			</div>
 		</td>
 	</tr>

@@ -149,6 +149,15 @@ function main() {
 		}); 
 	};
 
+        var hideTooManyResultsMessage = function () {
+            document.getElementById("snpTooManyResults").classList.remove("showing");
+        };
+
+        var showTooManyResultsMessage = function () {
+            document.getElementById("snpTooManyResults").classList.add("showing");
+        };
+
+
 	// update the snpDataTable
 	var updateSnpTable = function(state) {
 		$("#snpSummaryDiv").html("<img src='" + fewiurl + "assets/images/loading.gif' height='24' width='24'> Searching...");
@@ -161,6 +170,7 @@ function main() {
 				var lines = html.split('\n');
 				var count = lines[0];
 				myPaginator.setTotalRecords(count);
+                                ((parseInt(count) > 100000) ? showTooManyResultsMessage : hideTooManyResultsMessage)();
 				// remove one line, starting at the first position
 				lines.splice(0,1);
 				// join the array back into a single string
