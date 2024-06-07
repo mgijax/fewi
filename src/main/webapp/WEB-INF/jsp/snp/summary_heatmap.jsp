@@ -11,16 +11,18 @@
 		</script>
 	</c:when>
 	<c:otherwise>
-		<c:set var="maxCount" value="${snpQueryForm.sliceMaxCount}" scope="request"/>
-		<c:if test="${empty maxCount}">
-			<c:set var="maxCount" value="1" scope="request"/>
-			<c:forEach var="count" items="${sliceCounts}" varStatus="loop">
-				<c:if test="${count > maxCount}">
-					<c:set var="maxCount" value="${count}" scope="request"/>
-				</c:if>
-			</c:forEach>
-		</c:if>
+                <c:set var="minCount" value="999999999" scope="request"/>
+                <c:set var="maxCount" value="1" scope="request"/>
+                <c:forEach var="count" items="${sliceCounts}" varStatus="loop">
+                        <c:if test="${count > 0 && count < minCount}">
+                                <c:set var="minCount" value="${count}" scope="request"/>
+                        </c:if>
+                        <c:if test="${count > maxCount}">
+                                <c:set var="maxCount" value="${count}" scope="request"/>
+                        </c:if>
+                </c:forEach>
 
+		<% Integer minCount = Integer.parseInt("" + request.getAttribute("minCount")); %>
 		<% Integer maxCount = Integer.parseInt("" + request.getAttribute("maxCount")); %>
 		<div id="snpHeatmapHelp" style="visibility: hidden;">
 			<div class="hd">SNP Density Heatmap Overview</div>
@@ -28,14 +30,15 @@
 				Each cell represents a ${binSize} span of the region matching your search.<p/>
 				The colors represent the relative SNP density across the sub-regions.<p/>
 				Hover over a cell to see the exact number of SNPs.<p/>
-				Click on a cell to refine your search to that sub-region.<p/>
+				Click on a cell to refine your search to that sub-region.
+                                Heat map colors readjust with each view.<p/>
 				<div style="text-align: center">
 				<b>Legend:</b><br/>
 				<table id="heatmapLegend">
 				<tr>
 					<c:choose>
 						<c:when test="${maxCount > 1}">
-							<td style="text-align: left; width: 100px;">1 SNP</td>
+							<td style="text-align: left; width: 100px;">${minCount} SNPs</td>
 							<td style="text-align: right; width: 100px">${maxCount} SNPs</td>
 						</c:when>
 						<c:otherwise>
@@ -47,13 +50,13 @@
 					<c:choose>
 						<c:when test="${maxCount > 1}">
 							<td colspan="2" style="background: linear-gradient(to right,
-								<%= FormatHelper.getSnpColorCode(1, 1, maxCount) %>,
-								<%= FormatHelper.getSnpColorCode(maxCount, maxCount, maxCount) %>);"></td>
+								<%= FormatHelper.getSnpColorCode(minCount, minCount, maxCount) %>,
+								<%= FormatHelper.getSnpColorCode(maxCount, minCount, maxCount) %>);"></td>
 						</c:when>
 						<c:otherwise>
 							<td style="background: linear-gradient(to right,
-								<%= FormatHelper.getSnpColorCode(1, 1, maxCount) %>,
-								<%= FormatHelper.getSnpColorCode(maxCount, maxCount, maxCount) %>);"></td>
+								<%= FormatHelper.getSnpColorCode(minCount, minCount, maxCount) %>,
+								<%= FormatHelper.getSnpColorCode(maxCount, minCount, maxCount) %>);"></td>
 						</c:otherwise>
 					</c:choose>
 				</tr>
@@ -75,7 +78,7 @@
 					<c:when test="${count > 0}">
 						<td class="heatmapTD" style="background-color: ${color}"
 							title='${count} SNPs from <fmt:formatNumber type="number" groupingUsed="true" value="${sliceStart}"/> to <fmt:formatNumber type="number" groupingUsed="true" value="${sliceEnd}"/>'
-							onClick="window.location='${configBean.FEWI_URL}snp/summary?sliceStartCoord=${sliceStart}&sliceEndCoord=${sliceEnd}&sliceMaxCount=${sliceMaxCount}&' + getFullRangeQuerystring()"></td>
+							onClick="window.location='${configBean.FEWI_URL}snp/summary?sliceStartCoord=${sliceStart}&sliceEndCoord=${sliceEnd}&sliceMaxCount=${sliceMaxCount}&sliceMinCount=${sliceMinCount}&' + getFullRangeQuerystring()"></td>
 					</c:when>
 					<c:otherwise>
 						<td class="heatmapTD" style="background-color: ${color}"

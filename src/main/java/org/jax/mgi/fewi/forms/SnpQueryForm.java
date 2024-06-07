@@ -31,6 +31,7 @@ public class SnpQueryForm implements Cloneable {
 	/* These fields are set by zooming in using the heatmap on the summary display.  They should not be
 	 * submitted as part of an actual query form submission.
 	 */
+	private Integer sliceMinCount;
 	private Integer sliceMaxCount;
 	private Long sliceStartCoord;
 	private Long sliceEndCoord;
@@ -59,6 +60,7 @@ public class SnpQueryForm implements Cloneable {
 		newQF.allowNullsForComparisonStrains = this.allowNullsForComparisonStrains;
 		newQF.sliceEndCoord = this.sliceEndCoord;
 		newQF.sliceStartCoord = this.sliceStartCoord;
+		newQF.sliceMinCount = this.sliceMinCount;
 		newQF.sliceMaxCount = this.sliceMaxCount;
 
 		if (this.referenceStrains != null) {
@@ -89,6 +91,14 @@ public class SnpQueryForm implements Cloneable {
 	}
 	public String getAllowNullsForReferenceStrains() {
 		return FormatHelper.noScript(FormatHelper.noAlert(allowNullsForReferenceStrains));
+	}
+
+	public Integer getSliceMinCount() {
+		return sliceMinCount;
+	}
+
+	public void setSliceMinCount(Integer sliceMinCount) {
+		this.sliceMinCount = sliceMinCount;
 	}
 
 	public Integer getSliceMaxCount() {

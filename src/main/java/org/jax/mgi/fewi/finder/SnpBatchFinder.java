@@ -37,7 +37,7 @@ public class SnpBatchFinder {
 
 	//--- accessor methods ---//
 
-	// are there more results to process?
+	// are there more results to process? NOTE that this test does NOT account for max_result_window limits.
 	public boolean hasNextResults() {
 		if(totalCount != null && totalCount <= currentOffset) return false;
 		return true;

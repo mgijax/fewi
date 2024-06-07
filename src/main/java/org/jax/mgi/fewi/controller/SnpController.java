@@ -1067,9 +1067,13 @@ public class SnpController {
 		// 1. the count passed in via the link from a heatmap click, or
 		// 2. the highest count for the cells (if we're not coming from an existing
 		// heatmap)
+		int minCount = 0;
 		int maxCount = 0;
+                boolean minMaxFromQF = false;
 		if (query.getSliceMaxCount() != null) {
-			maxCount = query.getSliceMaxCount();
+                        //minCount = query.getSliceMinCount();
+			//maxCount = query.getSliceMaxCount();
+                        //minMaxFromQF = true;
 		}
 
                 long[][] slices = new long[numberOfBins][2];
@@ -1121,20 +1125,28 @@ public class SnpController {
 			sliceStartCoord.put(i, "" + slice[0]);
 			sliceEndCoord.put(i, "" + slice[1]);
                         sliceCounts.add((int)slice[2]);       
-			maxCount = Math.max(maxCount, (int)slice[2]);
+                        if (! minMaxFromQF) {
+                                if (minCount == 0) {
+                                        minCount = (int)slice[2];
+                                } else if ((int)slice[2] > 0) {
+                                        minCount = Math.min(minCount, (int)slice[2]);
+                                }
+                                maxCount = Math.max(maxCount, (int)slice[2]);
+                        }
                 }
 
 		// Now that we have computed the maximum bin count, we can also assign cell
 		// colors.
 		for (int i = 0; i < numberOfBins; i++) {
 			int sliceCount = sliceCounts.get(i);
-			sliceColors.put(sliceCount, FormatHelper.getSnpColorCode(sliceCount, maxCount, maxCount));
+			sliceColors.put(sliceCount, FormatHelper.getSnpColorCode(sliceCount, minCount, maxCount, false));
 		}
 
 		mav.addObject("sliceCounts", sliceCounts);
 		mav.addObject("sliceColors", sliceColors);
 		mav.addObject("sliceStartCoords", sliceStartCoord);
 		mav.addObject("sliceEndCoords", sliceEndCoord);
+		mav.addObject("sliceMinCount", minCount);
 		mav.addObject("sliceMaxCount", maxCount);
 		mav.addObject("prettyStart", FormatHelper.getPrettyCoordinate(startCoordinate));
 		mav.addObject("prettyEnd", FormatHelper.getPrettyCoordinate(endCoordinate));

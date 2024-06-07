@@ -23,9 +23,11 @@
 							<div id="snpTableHelp" style="visibility: hidden;">
 								<div class="hd">SNP Data Overview</div>
 								<div class="bd" style="text-align: left">
-									Hover over a colored cell to see the number of SNPs.<p/>
-									Click on a cell to see the SNPs and refine your search.<p/>
-									Click on a column heading to sort. 
+									Hover over a colored cell to see the number of SNPs.
+                                                                        <p/>
+                                                                        Click on a colored cell to link to a summary of SNPs between the featured and comparison strains for that chromosome. 
+                                                                        <p/>
+									Click on a column heading (Chromosome) to sort the SNP Profile Heat Map by SNP count for the comparison strain.  Click the Comparison Strain heading (left column) to resort by Strain name.
 								</div>
 							</div>
 					<tr>
@@ -76,11 +78,11 @@
 
 							<% Integer cellCount = (Integer) request.getAttribute("cellCount"); %>
 							<td title="${cellTitle}" class="cell ${flagCell}"
-								style="background-color: <%= FormatHelper.getSnpColorCode(cellCount, cell.getAllCount(), maxCount) %>"
+								style="background-color: <%= FormatHelper.getSnpColorCode(cellCount, 1, maxCount) %>"
 								<c:if test='${cellCount > 0}'>
 								onClick="window.open('${configBean.FEWI_URL}snp/summary?selectedChromosome=${cell.chromosome}&coordinate=0-${chromosomeSize.get(cell.chromosome)}&coordinateUnit=bp&selectedStrains=${row.comparisonStrainName}&referenceStrains=${strain.name}&alleleAgreementFilter=${qfMode}&selectedTab=1');"
 								</c:if>
-								></td>
+								> <!-- ${cellCount}, ${cell.getAllCount()}, ${maxSnpCount} --> </td>
 						</c:forEach>
 						</tr>
 					</c:forEach>
@@ -111,15 +113,38 @@
 					<p/>
 					<span id="legendLabel">Legend</span><br/>
 					<table id="snpLegend">
-						<tr><td class="cell slash" style=""></td>
-							<td class="rlPad">No data</td></tr>
-						<tr><td rowspan="6" class="cell" style="background: linear-gradient(
-							<%= FormatHelper.getSnpColorCode(1, 1, maxCount) %>, <%= FormatHelper.getSnpColorCode(maxCount, maxCount, maxCount) %>);"></td>
-							<td class="rlPad" style="height: 29px">1 SNP</td></tr>
-						<c:set var="snpBins" value="100 1000 10000 100000 ${maxSnpCount}"/>
-						<c:forEach var="bin" items="${fn:split(snpBins, ' ')}">
-							<tr><td class="rlPad" style="height: 29px"><fmt:formatNumber type="number" value="${bin}" maxFractionDigits="0" groupingUsed="true"/> SNPs</td></tr>
-						</c:forEach>
+						<tr>
+                                                    <td class="cell slash" style=""></td>
+                                                    <td class="rlPad">No data</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cell" style="background: <%= FormatHelper.getSnpColorCode(1, 1, maxCount) %>;"></td>
+                                                    <td class="rlPad" style="height: 29px">1 SNP</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cell" style="background: <%= FormatHelper.getSnpColorCode(100, 1, maxCount) %>;"></td>
+                                                    <td class="rlPad" style="height: 29px">100 SNPs</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cell" style="background: <%= FormatHelper.getSnpColorCode(1000, 1, maxCount) %>;"></td>
+                                                    <td class="rlPad" style="height: 29px">1000 SNPs</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cell" style="background: <%= FormatHelper.getSnpColorCode(10000, 1, maxCount) %>;"></td>
+                                                    <td class="rlPad" style="height: 29px">10000 SNPs</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cell" style="background: <%= FormatHelper.getSnpColorCode(100000, 1, maxCount) %>;"></td>
+                                                    <td class="rlPad" style="height: 29px">100000 SNPs</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cell" style="background: <%= FormatHelper.getSnpColorCode(1000000, 1, maxCount) %>;"></td>
+                                                    <td class="rlPad" style="height: 29px">1000000 SNPs</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cell" style="background: <%= FormatHelper.getSnpColorCode(maxCount, 1, maxCount) %>;"></td>
+                                                    <td class="rlPad" style="height: 29px"><%= ""+maxCount %> SNPs</td>
+                                                </tr>
 					</table>
 					</div>
 				</div>
