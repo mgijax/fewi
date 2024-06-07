@@ -115,6 +115,11 @@ width: 1250px;
   </div>
 </div>
 
+<div id="snpTooManyResults">
+<br/>Your search exceeds the maximum result limit of 100,000 SNPs that can be displayed or exported to text.  Use filters to refine your search or select a sub-region from the SNP Density Heatmap.
+</div>
+
+
 <div id="snpSummaryDiv"><img src="${configBean.FEWI_URL}assets/images/loading.gif" height="24" width="24"> Searching...</div>
 <div id="dynamicdata"></div>
 <div id="bottomWrapper" class="fixedWidth">
@@ -157,7 +162,7 @@ width: 1250px;
 	// get the query string, but without any slice-specific parameters
 	function getFullRangeQuerystring() {
 		var s = getQuerystring();
-		var params = [ 'sliceMaxCount', 'sliceStartCoord', 'sliceEndCoord' ];
+		var params = [ 'sliceMinCount', 'sliceMaxCount', 'sliceStartCoord', 'sliceEndCoord' ];
 		for (var i in params) {
 			s = stripParameter(s, params[i]);
 			console.log('s=' + s);
