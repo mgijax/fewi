@@ -6,7 +6,9 @@
 <%@ page import = "java.util.LinkedHashMap" %>
 
 <%@ page trimDirectiveWhitespaces="true" %>
+
 <fewi:count count="${count}" />
+
     <div id="heatmapDiv" style="float: left; display:inline; width: 400px; margin-left: 10px;">
     	<table id="heatmap"><tbody>
     		<tr><td style="width: 400px; text-align: center; border: 1px solid black;">Loading...</td></tr>

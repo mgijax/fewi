@@ -20,10 +20,6 @@
 				<fewi:radio name="withinRange" divider="<br/>" idPrefix="rangeDropList" items="${withinRanges}" value="${e:forHtml(snpQueryForm.withinRange)}" />
 			</div>
 			<br/>
-			<div class="left" style="margin-left: 70px;">
-				All SNP function classes will be returned.<br />
-				You can filter SNPs by function class in the search results.
-			</div>
 			<div id="outOfSyncGeneMessage" class="left" style="margin-left: 70px; display:none; color: red; padding-top: 10px;">
 				<br>
 				--This section is temporarily limited due to a discrepancy between the genome coordinates of RefSNPs and MGI genes.--
