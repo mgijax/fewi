@@ -983,6 +983,9 @@ function hideTooManyResultsMessage() {
 function showTooManyResultsMessage() {
 	$('#tooManyResults').css('display', 'inline');
 	$('#tooManyResultsWrapper').css('display', 'block');
+        // In case this message is still showing from previous query...
+        $('#tooManyGenes').css('display', 'none');
+        $('#tooManyGenesWrapper').css('display', 'none');
 }
 
 function disableControls() {
