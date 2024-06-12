@@ -14,15 +14,13 @@ fi
 
 # Build type. Used to construct names of the build config and fewi properties files.
 BTYPE=default 
-
 BUILD_CONFIG="./build.config.${BTYPE}"
 
 # If there is a fewi.properties.${BTYPE}, use that, otherwise,
 # use fewi.properties.${SERVER}.
-FEWI_PROPERTIES="./config/fewi.properties.${BTYPE}"
+FEWI_PROPERTIES="./config/fewi.properties.${SERVER_NAME}"
 if [ ! -e ${FEWI_PROPERTIES} ]; then
-    SERVER=`uname -n`
-    FEWI_PROPERTIES="./config/fewi.properties.${SERVER%%.*}"
+    echo "No fewi properties file found: ${FEWI_PROPERTIES}"
 fi
 
 . ${BUILD_CONFIG}

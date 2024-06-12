@@ -8,4 +8,5 @@ WEB_XML=./config/web.xml.public
 DEPLOY_DIR=${WILDFLY}/fewi/deployments/
 
 # if you want a second deployment (for a batch instance) define the path
-DEPLOY_BATCH_DIR=
+DEPLOY_BATCH_DIR=${WILDFLY}/fewiBatch/deployments/
+
