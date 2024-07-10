@@ -99,7 +99,7 @@ public class ConsensusSNPSummaryRow {
 		String ret = "";
 		
 		// <StartCoordinate, Marker Symbol, Function Class> = ConsensusMarkerSNP
-		TreeMap<Integer, TreeMap<String, TreeMap<String, ConsensusMarkerSNP>>> map = new TreeMap<Integer, TreeMap<String, TreeMap<String,ConsensusMarkerSNP>>>();
+		TreeMap<Long, TreeMap<String, TreeMap<String, ConsensusMarkerSNP>>> map = new TreeMap<Long, TreeMap<String, TreeMap<String,ConsensusMarkerSNP>>>();
 		
 		for(ConsensusCoordinateSNP c: consensusSNP.getConsensusCoordinates()) {
 			if(!map.containsKey(c.getStartCoordinate())) {
@@ -118,7 +118,7 @@ public class ConsensusSNPSummaryRow {
 		boolean outOfSync = ("true".equalsIgnoreCase(ContextLoader.getConfigBean().getProperty("snpsOutOfSync")));
 
 		String hr = "";
-		for(Integer sc: map.keySet()) {
+		for(Long sc: map.keySet()) {
 			ret += hr;
 			for(String symbol: map.get(sc).keySet()) {
 				for(String functionClass: map.get(sc).get(symbol.toLowerCase()).keySet()) {

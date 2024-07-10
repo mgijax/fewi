@@ -115,14 +115,14 @@ public class SnpFinder {
 		
 		// <Start Sorting>
 		// <Chromosome, <StartCoodinate, Snp>>
-		TreeMap<Integer, TreeMap<Integer, ConsensusSNPDocument>> sortedMap = new TreeMap<Integer, TreeMap<Integer, ConsensusSNPDocument>>();
+		TreeMap<Integer, TreeMap<Long, ConsensusSNPDocument>> sortedMap = new TreeMap<Integer, TreeMap<Long, ConsensusSNPDocument>>();
 
 		// Sort by chromosome then by start coordinate
 		for(ConsensusSNPDocument snp: searchResults2.getResultObjects()) {
 			if(snp.getObjectJSONData().getConsensusCoordinates() != null && snp.getObjectJSONData().getConsensusCoordinates().size() > 0) {
 				
 				ConsensusCoordinateSNP coord = snp.getObjectJSONData().getConsensusCoordinates().get(0);
-				TreeMap<Integer, ConsensusSNPDocument> coordinateMap = null;
+				TreeMap<Long, ConsensusSNPDocument> coordinateMap = null;
 				
 				int chromosomeLookup = 0;
 				String chromosome = coord.getChromosome();
@@ -149,7 +149,7 @@ public class SnpFinder {
 
 				coordinateMap = sortedMap.get(chromosomeLookup);
 				if(coordinateMap == null) {
-					coordinateMap = new TreeMap<Integer, ConsensusSNPDocument>();
+					coordinateMap = new TreeMap<Long, ConsensusSNPDocument>();
 					sortedMap.put(chromosomeLookup, coordinateMap);
 				}
 				coordinateMap.put(coord.getStartCoordinate(), snp);
@@ -158,7 +158,7 @@ public class SnpFinder {
 
 		// Loop and Add
 		for(Integer chromosome: sortedMap.keySet()) {
-			for(Integer startCoordinate: sortedMap.get(chromosome).keySet()) {
+			for(Long startCoordinate: sortedMap.get(chromosome).keySet()) {
 				summaryRows.add(new ConsensusSNPSummaryRow(sortedMap.get(chromosome).get(startCoordinate), ml));
 			}
 		}

@@ -27,7 +27,7 @@ public class TextSnpResultsSummary extends AbstractTextView {
 
 	// format the input parameters into a single line of output, including
 	// the trailing newline
-	private String buildLine(String snpID, String chromosome, int coordinate, String markerID, String symbol, String category, String variationClass, String alleleSummary, List<String> strains, List<ConsensusAlleleSNP> alleles) {
+	private String buildLine(String snpID, String chromosome, long coordinate, String markerID, String symbol, String category, String variationClass, String alleleSummary, List<String> strains, List<ConsensusAlleleSNP> alleles) {
 
 		StringBuffer sb = new StringBuffer();
 
