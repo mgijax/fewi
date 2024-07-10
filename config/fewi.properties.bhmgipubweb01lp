@@ -12,9 +12,11 @@
 #----- solr server urls -----#
 
 solr.server1.url=http://bhmgipfesolr01lp.jax.org:9995/solr
-solr.server2.url=http://bhmgisnp01lp.jax.org:18983/solr
 solr.server3.url=http://bhmgipubweb01lp.jax.org:9992/solr
 
+#----- elastic search -----#
+es.server.host=bhmgisnp01lp.jax.org
+es.server.port=9200
 
 #-------------------------------------------------------------------------------
 #----- INSTALL VALUES
