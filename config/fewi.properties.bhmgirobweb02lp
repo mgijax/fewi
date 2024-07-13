@@ -15,7 +15,7 @@ solr.server1.url=http://bhmgirfesolr02lp.jax.org:9995/solr
 solr.server3.url=http://bhmgibgxd02lp.jax.org:9995/solr
 
 es.server.host=bhmgisnp02lp.jax.org
-es.server.port=9300
+es.server.port=9201
 
 #-------------------------------------------------------------------------------
 #----- INSTALL VALUES
