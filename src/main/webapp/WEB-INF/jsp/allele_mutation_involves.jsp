@@ -7,14 +7,14 @@
 
 <HTML><HEAD>
 
-<script type='text/javascript' src='${configBean.FEWI_URL}assets/js/yui-2.8.custom.min.js'></script>
+<script type='text/javascript' src='${configBean.FEWI_URL}webshare/js/yui-2.8.custom.min.js'></script>
 <script type='text/javascript' src='${configBean.FEWI_URL}assets/js/hideshow.js'></script>
 <!-- CSS -->
 <!-- YUI Reset -->
-<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/yui-reset.css">
+<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}webshare/css/yui-reset.css">
 
 <!-- Combo-handled YUI CSS files: -->
-<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/yui-2.8-combo.css">
+<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}webshare/css/yui-2.8-combo.css">
 
 <!-- MGI CSS files: -->
 <link href="${configBean.WEBSHARE_URL}css/mgi_template01.css" rel="stylesheet" type="text/css"/>
