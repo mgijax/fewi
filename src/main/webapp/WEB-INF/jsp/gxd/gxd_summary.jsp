@@ -24,8 +24,7 @@
   no-repeat right;
 }
 .yui-skin-sam .yui-pg-last { display: none; }
-#tooManyResultsWrapper,
-#tooManyGenesWrapper {
+#tooManyResultsWrapper {
   padding-bottom: 10px;
 }
 #tooManyResults {
@@ -94,10 +93,6 @@
     </div>
     <div id="tooManyResultsWrapper">
     	<div id="tooManyResults">Large search returns make our pages slow to load. Therefore, some functionality has been disabled until you refine your search to bring the number of returned assay results under <span id="maxCount">TBD</span>.
-    	</div>
-    </div>
-    <div id="tooManyGenesWrapper">
-    	<div id="tooManyGenes">Under Contruction - matrix displays are temporarily disabled for Differential Expression, Profile, and Batch queries while we retool our indexing infrastructure.
     	</div>
     </div>
 <div id="resultSummary" class="yui-navset">
