@@ -16,6 +16,11 @@ public class SolrGxdDifferentialHunter extends SolrHunter<String> {
 	public SolrGxdDifferentialHunter() {
 
 		/*
+		 * For GXD solr queries, don't bother with relevance scores.
+		 */
+		relevanceScoreMatters = false;
+
+		/*
 		 * Setup the property map. This maps from the properties of the incoming
 		 * filter list to the corresponding field names in the Solr
 		 * implementation.

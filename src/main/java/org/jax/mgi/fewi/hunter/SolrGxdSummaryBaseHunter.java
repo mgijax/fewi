@@ -57,6 +57,12 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 	 * perform all of the needed work via the hunt() method.
 	 */
 	public SolrGxdSummaryBaseHunter() {
+		
+		/*
+		 * For GXD solr queries, don't bother with relevance scores.
+		 */
+		relevanceScoreMatters = false;
+
 		/*
 		 * Setup the property map. This maps from the properties of the incoming
 		 * filter list to the corresponding field names in the Solr

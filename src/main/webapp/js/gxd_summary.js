@@ -8,38 +8,6 @@ var maxResults = 21000000;	// max number of results allowed for full functionali
 var controlsDisabled = false;	// all controls enabled (false) or disabled (true)
 var resultsCount = -1;		// count of results for current query
 
-//-------------------------
-// Hopefully temporary measure because of Solr 8 performance problems with GXD indexes.
-// If the query is "complex" (a differential or profile query)
-// Give the user a warning message instead.
-var safeForMatrix = false;       // is the current query safe for showing the matrix views?
-var matrixTabs = ['stagegridtab','genegridtab']
-function disableMatrixTabs () {
-    matrixTabs.forEach(tabid => {
-        document.getElementById(tabid).closest("li").classList.add("disabled")
-    })
-    resultsTabs.set("activeIndex",mgiTab.tabs["resultstab"])
-}
-function enableMatrixTabs () {
-    matrixTabs.forEach(tabid => {
-        document.getElementById(tabid).closest("li").classList.remove("disabled")
-    })
-}
-function checkSafeForMatrix () {
-        const cf = getCurrentForm()
-        safeForMatrix = !(cf === "differential" || cf === "profile" || cf === "batch");
-        (safeForMatrix ? enableMatrixTabs : disableMatrixTabs)();
-        if (safeForMatrix) {
-            $('#tooManyGenes').css('display', 'none');
-            $('#tooManyGenesWrapper').css('display', 'none');
-        } else {
-            $('#tooManyGenes').css('display', 'inline');
-            $('#tooManyGenesWrapper').css('display', 'block');
-        }
-        return safeForMatrix
-}
-//-------------------------
-
 //default page size for each summary
 var GENES_PAGE_SIZE = 100;
 var ASSAYS_PAGE_SIZE = 100;
@@ -1112,10 +1080,8 @@ function refreshTabCounts()
 				ysfGeneCount = o.responseText;
 				$('.countHere').text(o.responseText + $('.countHere').text());
 				log('updated .countHere');
-                                checkSafeForMatrix(parseInt(o.responseText))
 			} // end - updated YSF
 			log('updatedYSF: ' + updatedYSF);
-                        checkSafeForMatrix(parseInt(o.responseText))
 
 		}
 		else if(o.tId==imagesRq.tId) YAHOO.util.Dom.get("totalImagesCount").innerHTML = commaDelimit(o.responseText);
@@ -1679,7 +1645,6 @@ window.prevStageGridQuery="";
 
 var structureStageGrid = function()
 {
-        if (!checkSafeForMatrix()) return;
 
 	// hide page controls
 	hidePaginators();
@@ -1872,7 +1837,6 @@ var handleStructGeneTab = function() {
 // after the hidden YUI datatable is loaded
 var structureGeneGrid = function()
 {
-        if (!checkSafeForMatrix()) return;
 
 	var querystringWithFilters = getQueryStringWithFilters();
 	window.prevGeneGridQuery=querystringWithFilters;

@@ -60,6 +60,11 @@ public class SolrHunter<T> implements Hunter<T> {
 	// What is the name of the facet that we want to pull out
 	protected String facetString = null;
 
+	// For many (most?) queries, we don't care about document relevance score, just whether the doc matches or not.
+	// If relevance score doesn't matter, we can improve performance by (sometimes a lot) by a slight change in execution.
+	// See hunt() method below.
+	protected boolean relevanceScoreMatters = true;
+
 	/**
 	 * solr server settings from configuration
 	 */
@@ -238,7 +243,13 @@ public class SolrHunter<T> implements Hunter<T> {
 		if (doJoin) {
 			queryString = joinIndices.get(joinField).getJoinClause(queryString, extraJoinClause);
 		}
-		query.setQuery(queryString);
+
+		if (relevanceScoreMatters) {
+			query.setQuery(queryString);
+		} else {
+			query.setQuery("*:*");
+			query.addFilterQuery(queryString);
+		}
 
 		// Add group field, if passed in.
 		boolean doGrouping = false;
