@@ -398,13 +398,17 @@ public class GXDHTController {
 			facetChoices.remove("Not Specified");
 			facetChoices.remove("Not Curated");
 
-			Collections.sort(facetChoices);
+			if ("variable".equals(filterName)) {
+				Collections.sort(facetChoices, new GxdHtExperiment.SortExperimentalVariables());
+			} else {
+				Collections.sort(facetChoices);
+			}
 			out.put("resultFacets", facetChoices);
 		}
 		return out;
 	}
-	
-	/*
+
+	 /*
 	 * This is a convenience method to handle packing the SearchParams object
 	 * and return the SearchResults from the finder.
 	 */

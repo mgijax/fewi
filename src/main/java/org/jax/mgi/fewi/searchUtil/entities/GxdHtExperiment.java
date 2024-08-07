@@ -3,6 +3,7 @@ package org.jax.mgi.fewi.searchUtil.entities;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Comparator;
 
 import org.jax.mgi.fewi.util.FormatHelper;
 
@@ -78,8 +79,30 @@ public class GxdHtExperiment
 		}
 		return displayable;
 	}
+	/*
+	 * WTS2-1515 Custom comparator for ExperimentalVariables facet. Push RNA-seq terms to the bottom.
+	 */
+	public static class SortExperimentalVariables implements Comparator<String> 
+	{ 
+		public int compare(String a, String b) 
+                { 
+			String rnaseq = "RNA-seq";
+			if (a.contains(rnaseq)) {
+				if (b.contains(rnaseq)) {
+					return a.compareTo(b);
+				} else {
+					return 1;
+				}
+			} else if (b.contains(rnaseq)) {
+				return -1;
+			} else {
+				return a.compareTo(b);
+			}
+		} 
+	} 
+	
 	public List<String> getExperimentalVariables() {
-		Collections.sort(experimentalVariables);
+		Collections.sort(experimentalVariables, new SortExperimentalVariables());
 		return experimentalVariables;
 	}
 	public void setExperimentalVariables(List<String> experimentalVariables) {
