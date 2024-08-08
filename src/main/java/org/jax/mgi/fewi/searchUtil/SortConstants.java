@@ -19,6 +19,7 @@ public class SortConstants {
 	public static final String REF_BY_AUTHOR       = "authorSort";
 	public static final String REF_JOURNAL_AC      = "journalSortLower";
 	public static final String REF_YEAR            = "year";
+	public static final String REF_JNUM            = "jnum";
 	public static final String REF_KEY             = "referenceKey";
 
 	// recombinase summary page

@@ -1024,6 +1024,12 @@ public class ReferenceController {
 		Sort sort = new Sort(s, desc);
 
 		sorts.add(sort);
+		if (s.equals(SortConstants.REF_YEAR)) {
+		    // Add secondary sort by J#, always ascending
+		    // (The SortMap implementation assumes 2ary sorts always follow the same direction as the primary,
+		    // so we can't use that here.)
+		    sorts.add(new Sort(SortConstants.REF_JNUM, false)); 
+		}
 		return sorts;
 	}
 
