@@ -5068,11 +5068,13 @@ public class GXDController {
                 Enumeration<String> pnames = request.getParameterNames();
                 while (pnames.hasMoreElements()) {
                    String pname = pnames.nextElement();
-                   String value = request.getParameter(pname);
-                   if (qString.length() > 0) {
-                       qString += "&";
-                   }
-                   qString += pname + "=" + URLEncoder.encode(value, "UTF-8");
+		   String[] values = request.getParameterValues(pname);
+		   for (String value : values) {
+		       if (qString.length() > 0) {
+			   qString += "&";
+		       }
+		       qString += pname + "=" + URLEncoder.encode(value, "UTF-8");
+		   }
                 }
                 return qString;
             } else {
