@@ -243,7 +243,7 @@
 		<td>
             Collaborators and Data Providers:<br>
             <br>
-            Mouse SNP data in MGI are obtained from the <a href='https://www.ncbi.nlm.nih.gov/SNP/snp_summary.cgi' target="_blank">dbSNP</a> resource at NCBI<br>
+            Mouse SNP data in MGI are obtained from the dbSNP resource at NCBI<br>
             <br>
             The registered mouse strains in MGI include strains
             <ul>          
@@ -273,8 +273,7 @@
 		<td>
 			<ul>
 				<li><a href="http://www.informatics.jax.org/inbred_strains/" target="_blank">Characteristics of Inbred Strains</a> of Mice and Rats by M. Festing</li>
-				<li><a href="https://compgen.unc.edu/wp/?page_id=99" target="_blank">Collaborative Cross Project</a> at the University of North Carolina</li> 
-                <li><a href="https://www.sanger.ac.uk/sanger/Mouse_SnpViewer/rel-1505" target="_blank">Mouse Genomes Project</a> at the Wellcome Sanger Institute</li>
+                <li><a href="https://www.mousegenomes.org/" target="_blank">Mouse Genomes Project</a> at the Wellcome Sanger Institute</li>
                 <li><a href="https://www.ebi.ac.uk/eva/" target="_blank">European Variation Archive</a> (EVA) at EBI</li>
                 <li>Ensembl <a href="https://www.ensembl.org/info/docs/tools/vep/index.html" target="_blank">Variant Effect Predictor</a> (VEP)</li>
 			</ul>
