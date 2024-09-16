@@ -66,7 +66,6 @@ public class ExpressionHelperFinder {
          * Defines allExpression as distinct marker_key/structure_key combinations
          * from all positive GXD results (not including RNAseq data). marker_key is
          * renamed as subject_key so downstream parts can be "generic".
-         */
         String allGxd = 
           "allExpression AS ("
           + "SELECT distinct " 
@@ -80,6 +79,15 @@ public class ExpressionHelperFinder {
           + "    OR "
           + "    (s.assay_type = 'In situ reporter (knock in)' AND g.genotype_type = 'ht') "
           + ")), ";
+         */
+
+	String allGxd =
+          "allExpression AS ("
+          + "SELECT " 
+          + "s.marker_key as subject_key, "
+          + "s.structure_key "
+          + "FROM uni_all_genes_tissues s"
+          + "), ";
 
         /*
          * Append allExpression, depending on argument
@@ -87,7 +95,7 @@ public class ExpressionHelperFinder {
         query.append("gene".equals(geneOrRecombinase) ? allGxd : allCre );
         
         /* EMAPS structure keys corresponding to one EMAPA key. Instantiate 
-         * for easch EMAPA key passed by caller. In the final query, these will be named
+         * for each EMAPA key passed by caller. In the final query, these will be named
          * "structure0", "structure1", ...
          */
         String structureA = 

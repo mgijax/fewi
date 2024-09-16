@@ -2653,6 +2653,7 @@ public class GXDController {
 			Paginator page)
 	{
 		logger.debug("getGridColDisplayList() started");
+		logger.info("getGridColDisplayList: Paginator = " + page.toString());
 
 		// parse the various query parameter to generate SearchParams object
 		SearchParams params = new SearchParams();
@@ -2671,6 +2672,7 @@ public class GXDController {
 				matrixDisplayList.add(marker.getMgiid());
 			}
 		}
+		logger.info("getGridColDisplayList: display list (" + matrixDisplayList.size() + ")= " + matrixDisplayList.toString());
 		return matrixDisplayList;
 	}	
 
@@ -4077,11 +4079,6 @@ public class GXDController {
 
 		logger.debug("get params");
 
-		// exclude RNA-Seq data from differential searches
-		if (isDifferentialQuery(query)) {
-			queryFilters.add(new Filter(SearchConstants.GXD_ASSAY_TYPE, "RNA-Seq", Filter.Operator.OP_NOT_EQUAL));
-		}
-
 		// ---------------------------
 		// heat map sample restriction (for looking up an individual sample's records)
 		// ---------------------------
@@ -4211,7 +4208,6 @@ public class GXDController {
 			logger.info("In profile form processing");
 
 			// default filters for profile search
-			queryFilters.add(new Filter(SearchConstants.GXD_ASSAY_TYPE, "RNA-Seq", Filter.Operator.OP_NOT_EQUAL));
 			queryFilters.add(new Filter(SearchConstants.GXD_IS_WILD_TYPE, WILD_TYPE));
 
 			// Process PROFILE QUERY FORM params
@@ -4234,6 +4230,13 @@ public class GXDController {
 
 			if (facetList.size() > 0) {
 				queryFilters.addAll(facetList);
+			}
+
+			// pagination list
+			List<String> matrixDisplayList = query.getMatrixDisplayList();
+			if ((matrixDisplayList != null) && (matrixDisplayList.size() > 0)) {
+				Filter matrixDisplayListFilter = new Filter(SearchConstants.MRK_ID, matrixDisplayList, Filter.Operator.OP_IN);
+				queryFilters.add(matrixDisplayListFilter);
 			}
 
 			return Filter.and(queryFilters);
@@ -4266,6 +4269,13 @@ public class GXDController {
 
 			if (facetList.size() > 0) {
 				queryFilters.addAll(facetList);
+			}
+
+			// pagination list
+			List<String> matrixDisplayList = query.getMatrixDisplayList();
+			if ((matrixDisplayList != null) && (matrixDisplayList.size() > 0)) {
+				Filter matrixDisplayListFilter = new Filter(SearchConstants.MRK_ID, matrixDisplayList, Filter.Operator.OP_IN);
+				queryFilters.add(matrixDisplayListFilter);
 			}
 
 			return Filter.and(queryFilters);
