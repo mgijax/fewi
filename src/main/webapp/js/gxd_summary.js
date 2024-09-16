@@ -544,22 +544,12 @@ var getRecordsDisplayed = function() {
 
 // Show the paginators (if rules allow it).
 var showPaginators = function() {
-	// If we are showing the tissue x gene grid from a differential search,
-	// do not show the paginators. Hide them instead.
-	if ((getCurrentForm() == 'differential') && (getCurrentTab() == 'genegridtab')) {
-		hidePaginators();
-		return;
-	}
 	$(".yui-pg-container").show();
 }
 
 // Hide the paginators (if the rules allow it).
 var hidePaginators = function() {
-	// If we are showing the tissue x gene grid from a differential search,
-	// do not show the paginators. Hide them instead.
-	if ((getCurrentForm() == 'differential') && (getCurrentTab() == 'genegridtab')) {
-		$(".yui-pg-container").hide();
-	}
+	$(".yui-pg-container").hide();
 }
 
 //a globabl variable to help the summary know when to generate a new datatable
