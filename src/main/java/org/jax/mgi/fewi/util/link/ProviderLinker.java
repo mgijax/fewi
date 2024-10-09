@@ -29,7 +29,7 @@ public class ProviderLinker
 	private static String dotsUrl = "http://genomics.betacell.org/gbco/showSummary.do?questionFullName=TranscriptQuestions.TranscriptFromDtIds&myProp%28dtIdP%29=";
 	private static String mgpSeqUrl = "http://useast.ensembl.org/Mus_musculus_<strain>/Gene/Summary?db=core;g=<id>";
 	private static String ensemblRegUrl = "http://useast.ensembl.org/Mus_musculus/Regulation/Summary?rf=";
-	private static String vistaUrl = "https://enhancer.lbl.gov/cgi-bin/imagedb3.pl?form=presentation&show=1&organism_id=2&experiment_id=";
+	private static String vistaUrl = "https://enhancer.lbl.gov/vista/element?vistaId=mm";
 
     /*-------------------------*/
     /* public instance methods */
