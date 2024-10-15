@@ -303,172 +303,169 @@ function reverseEngineerFormInput(request)
 	{
 		formID = "#gxdProfileQueryForm";
 		showProfileSearchForm();
-		foundParams = profileQueryString2Spec(request);
 	}
-	if (!foundProfile) {
-	    console.log("in reverseEngineerFormInput: formID=" + formID);
 
-	    // resetting query form to default values
-	    if (typeof resetQF == 'function') { resetQF(); }
+	console.log("in reverseEngineerFormInput: formID=" + formID);
 
-	    for(var key in params)
-	    {
-		    // Resetting profile form elements is handled separately (see profileQueryString2Spec)
-		    if (foundProfile) continue;
+	// resetting query form to default values
+	if (typeof resetQF == 'function') { resetQF(); }
 
-		    console.log("--in reverseEngineerFormInput: key=" + key);
-		    console.log("in reverseEngineerFormInput: params[key]=" + params[key]);
-
-		    // Special handling for idFile field.
-		    // Do not set this to an empty string!
-		    if (key == 'idFile') {
-			    // no op - skip it
-		    }
-		    else if(key=="detected") // handling for dynamic detected values
-		    {
-			    if (params[key] == 'Yes') {
-				    if (YAHOO.util.Dom.get("detected1") != null) {
-					    YAHOO.util.Dom.get("detected1").checked = true;
-				    }
-			    } else if (params[key] == 'No') {
-				    if (YAHOO.util.Dom.get("detected2") != null) {
-					    YAHOO.util.Dom.get("detected2").checked = true;
-				    }
-			    }
-		    }
-		    else if(key!=undefined && key!="" && key!="detected" && params[key].length>0)
-		    {
-			    //var input = YAHOO.util.Dom.get(key);
-			    // jQuery is better suited to resolving form name parameters
-			    var input = $(formID+" [name='"+key+"']");
-			    if(input.length < 1) input = $(formID+" #"+key);
-			    if(input!=undefined && input!=null && input.length > 0)
-			    {
-				    input = input[0];
-				    if(input.tagName=="TEXTAREA")
-				    {
-					    input.value = decodeURIComponent(params[key]);
-					    if (input.id == 'ids') {
-						    input.value = input.value.replace(/ /g, '\n');
-					    }
-				    }
-				    else if(input.tagName=="INPUT")
-				    {
-					    foundParams = true;
-					    // do radio boxes
-					    if(input.type == "radio")
-					    {
-						    //console.log("---in reverseEngineerFormInput: key=" + key);
-						    if(key=="isWildType")
-						    {
-							    YAHOO.util.Dom.get("isWildType").checked = true;
-						    }
-						    else if(input.value == params[key])
-						    {
-							    input.checked=true;
-						    }
-						    else if(params[key] == "false")
-						    {
-							    input.checked=false;
-						    } 
-					    }
-					    // do check boxes
-					    else if(input.type=="checkbox")
-					    {
-						    if (foundProfile) {
-							    if (key=='profileNowhereElseCheckbox') {
-								    YAHOO.util.Dom.get("profileNowhereElseCheckbox").checked = true;
-							    }
-						    }
-
-						    var options = [];
-						    var rawParams = [].concat(params[key]);
-						    for(var i=0;i<rawParams.length;i++)
-						    {
-							    options.push(decodeURIComponent(rawParams[i]));
-						    }
-						    // The YUI.get() only returns one checkbox, but we want the whole set.
-						    // The class should also be set to the same name.
-						    var boxes = YAHOO.util.Selector.query("."+key);
-						    for(var i=0;i<boxes.length;i++)
-						    {
-							    var box = boxes[i];
-							    var checked = false;
-							    for(var j=0;j<options.length;j++)
-							    {
-								    if(options[j] == box.value)
-								    {
-									    checked = true;
-									    box.checked = true;
-									    break;
-								    }
-							    }
-							    if(!checked)
-							    {
-								    box.checked = false;
-							    }
-						    }
-						    resetSuper('.allInSitu', '.inSituAssayType');
-						    resetSuper('.allBlot', '.blotAssayType');
-						    resetSuper('.allWholeGenome', '.wholeGenomeAssayType');
-					    }
-					    else
-					    {
-						    if (key == "mutatedIn")
-						    {
-							    YAHOO.util.Dom.get("mutatedSpecimen").checked = true;
-						    }
-						    input.value = decodeURIComponent(params[key]);
-					    }
-				    }
-				    else if(input.tagName=="SELECT")
-				    {
-					    if (input.name == "age") {
-						    // open the age tab
-						    //if(foundDifStage) selectDifAge();
-						    //else selectAge();
-						    selectAge();
-					    }
-					    foundParams = true;
-					    var options = [];
-					    // decode all the options first
-					    var rawParams = [].concat(params[key]);
-					    for(var i=0;i<rawParams.length;i++)
-					    {
-						    options.push(decodeURIComponent(rawParams[i]));
-					    }
-					    // find which options need to be selected, and select them.
-					    for(var key in input.children)
-					    {
-						    if(input[key]!=undefined)
-						    {
-							    var selected = false;
-							    for(var j=0;j<options.length;j++)
-							    {
-								    if(options[j] == input[key].value)
-								    {
-									    selected = true;
-									    input[key].selected = true;
-									    break;
-								    }
-							    }
-							    if(!selected)
-							    {
-								    input[key].selected = false;
-							    }
-						    }
-					    }
-				    }
-			    } else if (typeof isFilterable != 'undefined' &&
-					    isFilterable(key)) {
-				// deal with filters (no form fields for them)
-				    // TODO: This needs to move to a different function. Filters should not be a part of this method
-				filters[key] = [].concat(params[key]);
-			    }
-		    }
-	    }
-	    console.log("in reverseEngineerFormInput: after for loop of inputs");
+	// handle profile query paramaters here, other parameters (like filters) below
+	if (foundProfile) {
+	    foundParams = profileQueryString2Spec(request);
 	}
+
+	for(var key in params)
+	{
+		// profile params handled above
+		if (key.startsWith("profile")) continue;
+
+		console.log("--in reverseEngineerFormInput: key=" + key);
+		console.log("in reverseEngineerFormInput: params[key]=" + params[key]);
+
+		// Special handling for idFile field.
+		// Do not set this to an empty string!
+		if (key == 'idFile') {
+			// no op - skip it
+		}
+		else if(key=="detected") // handling for dynamic detected values
+		{
+			if (params[key] == 'Yes') {
+				if (YAHOO.util.Dom.get("detected1") != null) {
+					YAHOO.util.Dom.get("detected1").checked = true;
+				}
+			} else if (params[key] == 'No') {
+				if (YAHOO.util.Dom.get("detected2") != null) {
+					YAHOO.util.Dom.get("detected2").checked = true;
+				}
+			}
+		}
+		else if(key!=undefined && key!="" && key!="detected" && params[key].length>0)
+		{
+			//var input = YAHOO.util.Dom.get(key);
+			// jQuery is better suited to resolving form name parameters
+			var input = $(formID+" [name='"+key+"']");
+			if(input.length < 1) input = $(formID+" #"+key);
+			if(input!=undefined && input!=null && input.length > 0)
+			{
+				input = input[0];
+				if(input.tagName=="TEXTAREA")
+				{
+					input.value = decodeURIComponent(params[key]);
+					if (input.id == 'ids') {
+						input.value = input.value.replace(/ /g, '\n');
+					}
+				}
+				else if(input.tagName=="INPUT")
+				{
+					foundParams = true;
+					// do radio boxes
+					if(input.type == "radio")
+					{
+						//console.log("---in reverseEngineerFormInput: key=" + key);
+						if(key=="isWildType")
+						{
+							YAHOO.util.Dom.get("isWildType").checked = true;
+						}
+						else if(input.value == params[key])
+						{
+							input.checked=true;
+						}
+						else if(params[key] == "false")
+						{
+							input.checked=false;
+						} 
+					}
+					// do check boxes
+					else if(input.type=="checkbox")
+					{
+						var options = [];
+						var rawParams = [].concat(params[key]);
+						for(var i=0;i<rawParams.length;i++)
+						{
+							options.push(decodeURIComponent(rawParams[i]));
+						}
+						// The YUI.get() only returns one checkbox, but we want the whole set.
+						// The class should also be set to the same name.
+						var boxes = YAHOO.util.Selector.query("."+key);
+						for(var i=0;i<boxes.length;i++)
+						{
+							var box = boxes[i];
+							var checked = false;
+							for(var j=0;j<options.length;j++)
+							{
+								if(options[j] == box.value)
+								{
+									checked = true;
+									box.checked = true;
+									break;
+								}
+							}
+							if(!checked)
+							{
+								box.checked = false;
+							}
+						}
+						resetSuper('.allInSitu', '.inSituAssayType');
+						resetSuper('.allBlot', '.blotAssayType');
+						resetSuper('.allWholeGenome', '.wholeGenomeAssayType');
+					}
+					else
+					{
+						if (key == "mutatedIn")
+						{
+							YAHOO.util.Dom.get("mutatedSpecimen").checked = true;
+						}
+						input.value = decodeURIComponent(params[key]);
+					}
+				}
+				else if(input.tagName=="SELECT")
+				{
+					if (input.name == "age") {
+						// open the age tab
+						//if(foundDifStage) selectDifAge();
+						//else selectAge();
+						selectAge();
+					}
+					foundParams = true;
+					var options = [];
+					// decode all the options first
+					var rawParams = [].concat(params[key]);
+					for(var i=0;i<rawParams.length;i++)
+					{
+						options.push(decodeURIComponent(rawParams[i]));
+					}
+					// find which options need to be selected, and select them.
+					for(var key in input.children)
+					{
+						if(input[key]!=undefined)
+						{
+							var selected = false;
+							for(var j=0;j<options.length;j++)
+							{
+								if(options[j] == input[key].value)
+								{
+									selected = true;
+									input[key].selected = true;
+									break;
+								}
+							}
+							if(!selected)
+							{
+								input[key].selected = false;
+							}
+						}
+					}
+				}
+			} else if (typeof isFilterable != 'undefined' &&
+					isFilterable(key)) {
+			    // deal with filters (no form fields for them)
+				// TODO: This needs to move to a different function. Filters should not be a part of this method
+			    filters[key] = [].concat(params[key]);
+			}
+		}
+	}
+	console.log("in reverseEngineerFormInput: after for loop of inputs");
 
 	if(typeof resetFacets != 'undefined')
 	{
