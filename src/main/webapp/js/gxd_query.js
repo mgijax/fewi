@@ -371,92 +371,19 @@ var updateQuerySummary = function() {
 	else if (currentQF == 'profile') {
 
 
-		// parse the structure inputs
-		var profileStructure1 = YAHOO.util.Dom.get('profileStructure1').value;
-		var profileStructure2 = YAHOO.util.Dom.get('profileStructure2').value;
-		var profileStructure3 = YAHOO.util.Dom.get('profileStructure3').value;
-		var profileStructure4 = YAHOO.util.Dom.get('profileStructure4').value;
-		var profileStructure5 = YAHOO.util.Dom.get('profileStructure5').value;
-		var profileStructure6 = YAHOO.util.Dom.get('profileStructure6').value;
-		var profileStructure7 = YAHOO.util.Dom.get('profileStructure7').value;
-		var profileStructure8 = YAHOO.util.Dom.get('profileStructure8').value;
-		var profileStructure9 = YAHOO.util.Dom.get('profileStructure9').value;
-		var profileStructure10 = YAHOO.util.Dom.get('profileStructure10').value;
-		var profileNowhereElseCheckbox = YAHOO.util.Dom.get('profileNowhereElseCheckbox').checked;
-
 		// collect list of detected structures and not detected structured
 		var posStructures = [];
 		var negStructures = [];
-		if (profileStructure1 != "") {
-			if(YAHOO.util.Dom.get("profileDetected1").checked) {
-				posStructures.push("<b>" + profileStructure1 + "</b>")
+
+		profileSpec.forEach( (m,i) => {
+		    if (m.structure != "") {
+		        if (m.detected) {
+			    posStructures.push("<b>" + m.structure + "</b>")
 			} else {
-				negStructures.push("<b>" + profileStructure1 + "</b>")
-			};
-		}
-		if (profileStructure2 != "") {
-			if(YAHOO.util.Dom.get("profileDetected2").checked) {
-				posStructures.push("<b>" + profileStructure2 + "</b>")
-			} else {
-				negStructures.push("<b>" + profileStructure2 + "</b>")
-			};
-		}
-		if (profileStructure3 != "") {
-			if(YAHOO.util.Dom.get("profileDetected3").checked) {
-				posStructures.push("<b>" + profileStructure3 + "</b>")
-			} else {
-				negStructures.push("<b>" + profileStructure3 + "</b>")
-			};
-		}
-		if (profileStructure4 != "") {
-			if(YAHOO.util.Dom.get("profileDetected4").checked) {
-				posStructures.push("<b>" + profileStructure4 + "</b>")
-			} else {
-				negStructures.push("<b>" + profileStructure4 + "</b>")
-			};
-		}
-		if (profileStructure5 != "") {
-			if(YAHOO.util.Dom.get("profileDetected5").checked) {
-				posStructures.push("<b>" + profileStructure5 + "</b>")
-			} else {
-				negStructures.push("<b>" + profileStructure5 + "</b>")
-			};
-		}
-		if (profileStructure6 != "") {
-			if(YAHOO.util.Dom.get("profileDetected6").checked) {
-				posStructures.push("<b>" + profileStructure6 + "</b>")
-			} else {
-				negStructures.push("<b>" + profileStructure6 + "</b>")
-			};
-		}
-		if (profileStructure7 != "") {
-			if(YAHOO.util.Dom.get("profileDetected7").checked) {
-				posStructures.push("<b>" + profileStructure7 + "</b>")
-			} else {
-				negStructures.push("<b>" + profileStructure7 + "</b>")
-			};
-		}
-		if (profileStructure8 != "") {
-			if(YAHOO.util.Dom.get("profileDetected8").checked) {
-				posStructures.push("<b>" + profileStructure8 + "</b>")
-			} else {
-				negStructures.push("<b>" + profileStructure8 + "</b>")
-			};
-		}
-		if (profileStructure9 != "") {
-			if(YAHOO.util.Dom.get("profileDetected9").checked) {
-				posStructures.push("<b>" + profileStructure9 + "</b>")
-			} else {
-				negStructures.push("<b>" + profileStructure9 + "</b>")
-			};
-		}
-		if (profileStructure10 != "") {
-			if(YAHOO.util.Dom.get("profileDetected10").checked) {
-				posStructures.push("<b>" + profileStructure10 + "</b>")
-			} else {
-				negStructures.push("<b>" + profileStructure10 + "</b>")
-			};
-		}
+			    negStructures.push("<b>" + m.structure + "</b>")
+			}
+		    }
+		})
 
 		// create You Searched For... strings
 		var newInnerHTML = '';		
@@ -465,7 +392,7 @@ var updateQuerySummary = function() {
 			if (negStructures.length > 0) {
 				newInnerHTML = newInnerHTML + " and not detected or assayed in " + negStructures.join(", ");
 			}
-			if (profileNowhereElseCheckbox) {
+			if (profileNowhereElseCheckbox.checked) {
 				newInnerHTML = newInnerHTML + " and not detected anywhere else. ";
 			}
 		} else {
@@ -1048,56 +975,14 @@ var profileFormCheck  = function() {
 	var submittedStructureIDs = {};
 	var submittedStructureNames = {};
 	var hasPosStructure = false;
-	if(profileForm.profileStructure1ID.value!=''){
-		submittedStructureIDs[1] = profileForm.profileStructure1ID.value;
-		submittedStructureNames[1] = profileForm.profileStructure1.value;
-		if(profileForm.profileDetected1.checked==true) {hasPosStructure = true};
-	}
-	if(profileForm.profileStructure2ID.value!=''){
-		submittedStructureIDs[2] = profileForm.profileStructure2ID.value;
-		submittedStructureNames[2] = profileForm.profileStructure2.value;
-		if(profileForm.profileDetected2.checked==true) {hasPosStructure = true};
-	}
-	if(profileForm.profileStructure3ID.value!=''){
-		submittedStructureIDs[3] = profileForm.profileStructure3ID.value;
-		submittedStructureNames[3] = profileForm.profileStructure3.value;
-		if(profileForm.profileDetected3.checked==true) {hasPosStructure = true};
-	}
-	if(profileForm.profileStructure4ID.value!=''){
-		submittedStructureIDs[4] = profileForm.profileStructure4ID.value;
-		submittedStructureNames[4] = profileForm.profileStructure4.value;
-		if(profileForm.profileDetected4.checked==true) {hasPosStructure = true};
-	}
-	if(profileForm.profileStructure5ID.value!=''){
-		submittedStructureIDs[5] = profileForm.profileStructure5ID.value;
-		submittedStructureNames[5] = profileForm.profileStructure5.value;
-		if(profileForm.profileDetected5.checked==true) {hasPosStructure = true};
-	}
-	if(profileForm.profileStructure6ID.value!=''){
-		submittedStructureIDs[6] = profileForm.profileStructure6ID.value;
-		submittedStructureNames[6] = profileForm.profileStructure6.value;
-		if(profileForm.profileDetected6.checked==true) {hasPosStructure = true};
-	}
-	if(profileForm.profileStructure7ID.value!=''){
-		submittedStructureIDs[7] = profileForm.profileStructure7ID.value;
-		submittedStructureNames[7] = profileForm.profileStructure7.value;
-		if(profileForm.profileDetected7.checked==true) {hasPosStructure = true};
-	}
-	if(profileForm.profileStructure8ID.value!=''){
-		submittedStructureIDs[8] = profileForm.profileStructure8ID.value;
-		submittedStructureNames[8] = profileForm.profileStructure8.value;
-		if(profileForm.profileDetected8.checked==true) {hasPosStructure = true};
-	}	
-	if(profileForm.profileStructure9ID.value!=''){
-		submittedStructureIDs[9] = profileForm.profileStructure9ID.value;
-		submittedStructureNames[9] = profileForm.profileStructure9.value;
-		if(profileForm.profileDetected9.checked==true) {hasPosStructure = true};
-	}
-	if(profileForm.profileStructure10ID.value!=''){
-		submittedStructureIDs[10] = profileForm.profileStructure10ID.value;
-		submittedStructureNames[10] = profileForm.profileStructure10.value;
-		if(profileForm.profileDetected10.checked==true) {hasPosStructure = true};
-	}
+
+	profileSpec.forEach( (m,i) => {
+	    if (m.structureID !== "") {
+		submittedStructureIDs[i] = m.structureID;
+		submittedStructureNames[i] = m.structure;
+		if(m.detected==true) {hasPosStructure = true};
+	    }
+	})
 
 	// check for empty submission
 	if (Object.keys(submittedStructureIDs).length == 0 || !hasPosStructure) {
@@ -1568,16 +1453,6 @@ function makeStructureAC(inputID,containerID){
 makeStructureAC("structure","structureContainer");
 makeStructureAC("difStructure3","difStructureContainer3");
 makeStructureAC("difStructure4","difStructureContainer4");
-makeStructureAC("profileStructure1","profileStructureContainer1");
-makeStructureAC("profileStructure2","profileStructureContainer2");
-makeStructureAC("profileStructure3","profileStructureContainer3");
-makeStructureAC("profileStructure4","profileStructureContainer4");
-makeStructureAC("profileStructure5","profileStructureContainer5");
-makeStructureAC("profileStructure6","profileStructureContainer6");
-makeStructureAC("profileStructure7","profileStructureContainer7");
-makeStructureAC("profileStructure8","profileStructureContainer8");
-makeStructureAC("profileStructure9","profileStructureContainer9");
-makeStructureAC("profileStructure10","profileStructureContainer10");
 
 //
 // Wire up the functionality to reset the query form
@@ -1630,68 +1505,10 @@ var resetQF = function (e) {
 
 	if(profileForm)
 	{
-		// clear displayed structure
-		profileForm.profileStructure1.value="";
-		profileForm.profileStructure2.value="";
-		profileForm.profileStructure3.value="";
-		profileForm.profileStructure4.value="";
-		profileForm.profileStructure5.value="";
-		profileForm.profileStructure6.value="";
-		profileForm.profileStructure7.value="";
-		profileForm.profileStructure8.value="";
-		profileForm.profileStructure9.value="";
-		profileForm.profileStructure10.value="";
-
-		// clear hidden structure ID
-		profileForm.profileStructure1ID.value="";
-		profileForm.profileStructure2ID.value="";
-		profileForm.profileStructure3ID.value="";
-		profileForm.profileStructure4ID.value="";
-		profileForm.profileStructure5ID.value="";
-		profileForm.profileStructure6ID.value="";
-		profileForm.profileStructure7ID.value="";
-		profileForm.profileStructure8ID.value="";
-		profileForm.profileStructure9ID.value="";
-		profileForm.profileStructure10ID.value="";
-
-		// reset radio buttons
-		profileForm.profileDetected1.checked=true;
-		profileForm.profileDetected2.checked=true;
-		profileForm.profileDetected3.checked=true;
-		profileForm.profileDetected4.checked=true;
-		profileForm.profileDetected5.checked=true;
-		profileForm.profileDetected6.checked=true;
-		profileForm.profileDetected7.checked=true;
-		profileForm.profileDetected8.checked=true;
-		profileForm.profileDetected9.checked=true;
-		profileForm.profileDetected10.checked=true;
+		resetProfileForm();
 
 		// reset the No Where Else... check box
 		profileForm.profileNowhereElseCheckbox.checked = false;
-
-		// ensure only the first three rows are displayed
-		document.getElementById("profileStructureRow1").style.display = "";
-		document.getElementById("profileStructureRow2").style.display = "";
-		document.getElementById("profileStructureRow3").style.display = "";
-		document.getElementById("profileStructureRow4").style.display = "none";
-		document.getElementById("profileStructureRow5").style.display = "none";
-		document.getElementById("profileStructureRow6").style.display = "none";
-		document.getElementById("profileStructureRow7").style.display = "none";
-		document.getElementById("profileStructureRow8").style.display = "none";
-		document.getElementById("profileStructureRow9").style.display = "none";
-		document.getElementById("profileStructureRow10").style.display = "none";
-
-		// ensure qf state regarding not-in & nowhere-else 
-		ensureProfileFormStatus();
-
-		// ensure all row removals are visible
-		document.getElementById("removeStructureRowButton1").style.display = "";
-
-		// reset row count
-		rowCount = 3;
-
-
-
 	}
 
 	// batch
@@ -1745,6 +1562,9 @@ YAHOO.util.Event.addListener("gxdProfileQueryForm", "reset", fullResetQF);
 var getQueryString = function(form) {
 	console.log("---into getQueryString");
 	if(form==undefined) form = getCurrentQF();
+	if (form.id === 'gxdProfileQueryForm') {
+	    return profileSpec2QueryString();
+	}
 	var _qs = [];
 	for(var i=0; i<form.elements.length; i++)
 	{
@@ -2010,210 +1830,156 @@ function checkBatchInput(){
  * Profile Search special handling 
  */
 
-// ensure input compatibility; disable "NoWhere Else" checkbox if needed
-function structureRadioChange() {
+var profileSpec = []
 
-   	var checkBox = document.getElementById("profileNowhereElseCheckbox");
-   	var nowhereElseText = document.getElementById("nowhereElseText");
-	var notDetectedNodes = YAHOO.util.Dom.getElementsByClassName('notDetected', 'input');
-	var hasNotDetected = false;
-	for (let i = 0; i < notDetectedNodes.length; i++) {
-		if (notDetectedNodes[i].checked == true){
-			hasNotDetected = true;
-		}
-	}
-	if (hasNotDetected) {
-		checkBox.disabled = true;
-		nowhereElseText.classList.add("disabledText"); // add class to text
-	} else {
-		checkBox.disabled = false;
-		nowhereElseText.classList.remove("disabledText");
-	}
-};
-
-// ensure input compatibility; disable 'Not Detected' radio buttons if needed
-function handleNowhereElse() {
-
-	var checkBox = document.getElementById("profileNowhereElseCheckbox");
-	var notDetectedNodes = YAHOO.util.Dom.getElementsByClassName('notDetected', 'input');
-   	var notDetectedHeaderText = document.getElementById("notDetectedHeaderText");
-
-	if (checkBox.checked == true){
-		for (let i = 0; i < notDetectedNodes.length; i++) {
-			notDetectedNodes[i].disabled = true;
-		}
-		notDetectedHeaderText.classList.add("disabledText");
-	} else {
-		for (let i = 0; i < notDetectedNodes.length; i++) {
-			notDetectedNodes[i].disabled = false;
-		}
-		notDetectedHeaderText.classList.remove("disabledText");
-	}
-
-};
-
-// profile search; if there is only 1 structure row, don't show remove button
-function handleProfileRemoveButtonVisibility() {
-
-	if (rowCount==1){
-		document.getElementById("removeStructureRowButton1").style.display = "none";
-	} else {
-		document.getElementById("removeStructureRowButton1").style.display = "";
-	}
-
-}; 
-
-// adding rows to gxd profile query form
-var rowCount = 3;
-function handleAddStructure() {
-
-	// ensure we don't have more structures than allowed
-	if (rowCount == 10) {
-		alert("Maximum of ten anatomical structures allowed.")
-		exit();
-	}
-
-	rowCount++;
-	var idToShow = "profileStructureRow" + rowCount;
-	document.getElementById(idToShow).style.display = "";
-
-	// ensure status of form inputs
-	ensureProfileFormStatus();
-};
-
-// functionality for user to remove a structure row from the profile search; as each
-// row is removed, rows from below are copied upward 
-function removeStructureRow(rowNum) {
-
-	if (rowNum<=1){
-		document.getElementById("profileStructure1").value = document.getElementById("profileStructure2").value;
-		document.getElementById("profileStructure1ID").value = document.getElementById("profileStructure2ID").value;
-		document.getElementById("profileStructure2").value = "";
-		document.getElementById("profileStructure2ID").value = "";
-		if (document.getElementById("profileDetected2").checked == true) {document.getElementById("profileDetected1").checked = true;}
-		if (document.getElementById("profileNotDetected2").checked == true) {document.getElementById("profileNotDetected1").checked = true;}
-	}
-	if (rowNum<=2){
-		document.getElementById("profileStructure2").value = document.getElementById("profileStructure3").value;
-		document.getElementById("profileStructure2ID").value = document.getElementById("profileStructure3ID").value;
-		document.getElementById("profileStructure3").value = "";
-		document.getElementById("profileStructure3ID").value = "";
-		if (document.getElementById("profileDetected3").checked == true) {document.getElementById("profileDetected2").checked = true;}
-		if (document.getElementById("profileNotDetected3").checked == true) {document.getElementById("profileNotDetected2").checked = true;}
-	}
-	if (rowNum<=3){
-		document.getElementById("profileStructure3").value = document.getElementById("profileStructure4").value;
-		document.getElementById("profileStructure3ID").value = document.getElementById("profileStructure4ID").value;
-		document.getElementById("profileStructure4").value = "";
-		document.getElementById("profileStructure4ID").value = "";
-		if (document.getElementById("profileDetected4").checked == true) {document.getElementById("profileDetected3").checked = true;}
-		if (document.getElementById("profileNotDetected4").checked == true) {document.getElementById("profileNotDetected3").checked = true;}
-	}
-	if (rowNum<=4){
-		document.getElementById("profileStructure4").value = document.getElementById("profileStructure5").value;
-		document.getElementById("profileStructure4ID").value = document.getElementById("profileStructure5ID").value;
-		document.getElementById("profileStructure5").value = "";
-		document.getElementById("profileStructure5ID").value = "";
-		if (document.getElementById("profileDetected5").checked == true) {document.getElementById("profileDetected4").checked = true;}
-		if (document.getElementById("profileNotDetected5").checked == true) {document.getElementById("profileNotDetected4").checked = true;}
-	}
-	if (rowNum<=5){
-		document.getElementById("profileStructure5").value = document.getElementById("profileStructure6").value;
-		document.getElementById("profileStructure5ID").value = document.getElementById("profileStructure6ID").value;
-		document.getElementById("profileStructure6").value = "";
-		document.getElementById("profileStructure6ID").value = "";
-		if (document.getElementById("profileDetected6").checked == true) {document.getElementById("profileDetected5").checked = true;}
-		if (document.getElementById("profileNotDetected6").checked == true) {document.getElementById("profileNotDetected5").checked = true;}
-	}
-	if (rowNum<=6){
-		document.getElementById("profileStructure6").value = document.getElementById("profileStructure7").value;
-		document.getElementById("profileStructure6ID").value = document.getElementById("profileStructure7ID").value;
-		document.getElementById("profileStructure7").value = "";
-		document.getElementById("profileStructure7ID").value = "";
-		if (document.getElementById("profileDetected7").checked == true) {document.getElementById("profileDetected6").checked = true;}
-		if (document.getElementById("profileNotDetected7").checked == true) {document.getElementById("profileNotDetected6").checked = true;}
-	}
-	if (rowNum<=7){
-		document.getElementById("profileStructure7").value = document.getElementById("profileStructure8").value;
-		document.getElementById("profileStructure7ID").value = document.getElementById("profileStructure8ID").value;
-		document.getElementById("profileStructure8").value = "";
-		document.getElementById("profileStructure8ID").value = "";
-		if (document.getElementById("profileDetected8").checked == true) {document.getElementById("profileDetected7").checked = true;}
-		if (document.getElementById("profileNotDetected8").checked == true) {document.getElementById("profileNotDetected7").checked = true;}
-	}
-	if (rowNum<=8){
-		document.getElementById("profileStructure8").value = document.getElementById("profileStructure9").value;
-		document.getElementById("profileStructure8ID").value = document.getElementById("profileStructure9ID").value;
-		document.getElementById("profileStructure9").value = "";
-		document.getElementById("profileStructure9ID").value = "";
-		if (document.getElementById("profileDetected9").checked == true) {document.getElementById("profileDetected8").checked = true;}
-		if (document.getElementById("profileNotDetected9").checked == true) {document.getElementById("profileNotDetected8").checked = true;}
-	}
-	if (rowNum<=9){
-		document.getElementById("profileStructure9").value = document.getElementById("profileStructure10").value;
-		document.getElementById("profileStructure9ID").value = document.getElementById("profileStructure10ID").value;
-		document.getElementById("profileStructure10").value = "";
-		document.getElementById("profileStructure10ID").value = "";
-		if (document.getElementById("profileDetected10").checked == true) {document.getElementById("profileDetected9").checked = true;}
-		if (document.getElementById("profileNotDetected10").checked == true) {document.getElementById("profileNotDetected9").checked = true;}
-	}
-	if (rowNum==10){
-		document.getElementById("profileStructure10").value = "";
-		document.getElementById("profileStructure10ID").value = "";
-	}
-
-	// hide lowest structure row
-	var idToHide = "profileStructureRow" + rowCount;
-	document.getElementById(idToHide).style.display = "none";
-//	document.getElementById("detected_10").value = true;
-	rowCount--;
-
-	// ensure status of form inputs
-	ensureProfileFormStatus();
-
-};
-
-// ensure profile query form elements hidden post-refresh & reverse engineered form params
-function checkProfileVisibility() {
-	
-	var highestRowToShow = 3;
-
-	// find the highest structure row that contains data
-	if (document.getElementById("profileStructure4ID").value != '') {highestRowToShow = 4;}
-	if (document.getElementById("profileStructure5ID").value != '') {highestRowToShow = 5;}
-	if (document.getElementById("profileStructure6ID").value != '') {highestRowToShow = 6;}
-	if (document.getElementById("profileStructure7ID").value != '') {highestRowToShow = 7;}
-	if (document.getElementById("profileStructure8ID").value != '') {highestRowToShow = 8;}
-	if (document.getElementById("profileStructure9ID").value != '') {highestRowToShow = 9;}
-	if (document.getElementById("profileStructure10ID").value != '') {highestRowToShow = 10;}
-
-	// display all rows befow highest structure parameter sent
-	if (highestRowToShow >= 4){document.getElementById("profileStructureRow4").style.display = "";}
-	if (highestRowToShow >= 5){document.getElementById("profileStructureRow5").style.display = "";}
-	if (highestRowToShow >= 6){document.getElementById("profileStructureRow6").style.display = "";}
-	if (highestRowToShow >= 7){document.getElementById("profileStructureRow7").style.display = "";}
-	if (highestRowToShow >= 8){document.getElementById("profileStructureRow8").style.display = "";}
-	if (highestRowToShow >= 9){document.getElementById("profileStructureRow9").style.display = "";}
-	if (highestRowToShow >= 10){document.getElementById("profileStructureRow10").style.display = "";}
-
-	// reset rowCount used by other functions
-	rowCount = highestRowToShow;
+function resetProfileForm () {
+    profileSpec = [{
+	    structure: "",
+	    structureID: "",
+	    detected: true
+    },{
+	    structure: "",
+	    structureID: "",
+	    detected: true
+    },{
+	    structure: "",
+	    structureID: "",
+	    detected: true
+    }]
+    refreshProfileForm()
 }
 
-// ensure profile query form elements are not in conflict
-function ensureProfileFormStatus() {
+function makeProfileRow (model, i) {
+    var profileRow = `<tr id="profileStructureRow${i}" >
+    <td style="">
+    <button type="button" onClick="removeProfileRow(${i})" id="removeStructureRowButton${i}" class="removeButton" title="Remove this structure.">X</button>
+    <input style="width: 320px; position: relative;" id="profileStructure${i}" name="profileStructure${i}" value="${model.structure}" placeholder="anatomical structure"></input>
+    <input type="hidden" id="profileStructure${i}ID" name="profileStructureID${i}" value="${model.structureID}"/>
+    <div class="anatomyAC" style="width: 400px;" id="profileStructureContainer${i}"></div>
+    </td>
+    <td style=""><input type="radio" name="profileDetected${i}" value="true"  id="profileDetected${i}" class="detected" ${model.detected ? 'checked' : ''} onChange="profileRadioChange(${i})"/></td>
+    <td style=""><input type="radio" name="profileDetected${i}" value="false" id="profileNotDetected${i}" class="notDetected" ${model.detected ? '' : 'checked'} onChange="profileRadioChange(${i})"/></td>
+    </tr>`
+    return profileRow;
+}
 
-	// ensure the removed button is compatible with "nowhere else"
-	handleNowhereElse();
+function profileSpec2QueryString () {
+    var qs = profileSpec.map ((m,i) => {
+        return `profileStructure=${m.structure}&profileStructureID=${m.structureID}&profileDetected=${m.detected}`
+    }).join('&');
+    const nweChecked = YAHOO.util.Dom.get("profileNowhereElseCheckbox").checked;
+    if (nweChecked) qs += "&profileNowhereElseCheckbox=true";
+    return qs;
+}
 
-	// ensure proper visibility of structure removal buttons
-	handleProfileRemoveButtonVisibility();
+function profileQueryString2Spec (qs) {
+    const structures = []
+    const structureIDs = []
+    const detected = []
+    YAHOO.util.Dom.get("profileNowhereElseCheckbox").checked = false;
+    qs.split('&').forEach(q => {
+        const pts = q.split('=');
+	if (pts[0] === "profileStructure") {
+	    structures.push(pts[1])
+	} else if (pts[0] === "profileStructureID") {
+	    structureIDs.push(pts[1])
+	} else if (pts[0] === "profileDetected") {
+	    detected.push( pts[1] ==="true" )
+	} else if (pts[0] === "profileNowhereElseCheckbox") {
+	    YAHOO.util.Dom.get("profileNowhereElseCheckbox").checked = true;
+	}
+    })
+    if (structures.length !== structureIDs.length || structures.length !== detected.length) {
+        throw "query string contains different numbers of profile parameters."
+    }
+    var foundParams = false
+    profileSpec = []
+    structures.forEach((s,i) => {
+	if (s) foundParams = true;
+        profileSpec.push({
+	    structure: s,
+	    structureID: structureIDs[i],
+	    detected: detected[i]
+	})
+    })
+    refreshProfileForm()
+    return foundParams
+}
 
-	structureRadioChange();
+function profileRadioChange (i) {
+    const detectedEl = document.getElementById(`profileDetected${i}`);
+    profileSpec[i].detected = detectedEl.checked;
+    refreshEnabledDisabled();
+}
 
-};
+function profileNweChange () {
+    refreshEnabledDisabled();
+}
 
+function refreshEnabledDisabled () {
 
+    const radios = document.querySelectorAll('#profileStructureTable input[type="radio"].notDetected ');
+    const ndhText = document.getElementById("notDetectedHeaderText");
+    const nwe = document.getElementById("profileNowhereElseCheckbox");
+    const nweText = document.getElementById("nowhereElseText");
 
+    nwe.disabled = profileSpec.reduce( (nd,m) => (nd || !m.detected), false );
+    if (nwe.disabled) {
+	nweText.classList.add("disabledText");
+    } else {
+	nweText.classList.remove("disabledText");
+    }
 
+    radios.forEach(cb => cb.disabled = nwe.checked);
+    if (nwe.checked) {
+	ndhText.classList.add("disabledText");
+    } else {
+	ndhText.classList.remove("disabledText");
+    }
+}
 
+function refreshProfileForm () {
+    const ptbl = document.getElementById("profileStructureTable");
+    const pbody = ptbl.querySelector("tbody");
+    const pbodyContent = profileSpec.map((m,i) => makeProfileRow(m,i)).join('');
+    pbody.innerHTML = pbodyContent;
+    profileSpec.forEach((m,i) => {
+	const objs = makeStructureAC(`profileStructure${i}`,`profileStructureContainer${i}`);
+	objs.oAC.itemSelectEvent.subscribe(() => refreshProfileSpec (i));
+    })
+    refreshEnabledDisabled()
+    if (profileSpec.length === 1) {
+        document.getElementById("removeStructureRowButton0").style.display = 'none';
+    }
+}
+
+function refreshProfileSpec (i) {
+    const structure = document.getElementById(`profileStructure${i}`).value;
+    const structureID = document.getElementById(`profileStructure${i}ID`).value;
+    const detected = document.getElementById(`profileDetected${i}`).checked;
+    profileSpec[i].structure = structure
+    profileSpec[i].structureID = structureID
+    profileSpec[i].detected = detected
+}
+
+function addProfileRow (detected) {
+    if (profileSpec.length === 10) {
+	alert("Maximum of ten anatomical structures allowed.")
+	return
+    }
+    profileSpec.push({
+        structure: "",
+	structureID: "",
+	detected: detected
+    })
+    refreshProfileForm();
+}
+
+function removeProfileRow (i) {
+    if (profileSpec.length > 1) {
+	profileSpec.splice(i,1);
+	refreshProfileForm();
+    }
+}
+
+resetProfileForm()

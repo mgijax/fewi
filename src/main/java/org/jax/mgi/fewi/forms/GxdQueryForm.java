@@ -68,26 +68,9 @@ public class GxdQueryForm implements Cloneable {
 	private String difStructureID = "";
 
 	// profile specific fields
-	private String profileStructureID1 = "";
-	private String profileStructureID2 = "";
-	private String profileStructureID3 = "";
-	private String profileStructureID4 = "";
-	private String profileStructureID5 = "";
-	private String profileStructureID6 = "";
-	private String profileStructureID7 = "";
-	private String profileStructureID8 = "";
-	private String profileStructureID9 = "";
-	private String profileStructureID10 = "";
-	private String detected_1 = "";
-	private String detected_2 = "";
-	private String detected_3 = "";
-	private String detected_4 = "";
-	private String detected_5 = "";
-	private String detected_6 = "";
-	private String detected_7 = "";
-	private String detected_8 = "";
-	private String detected_9= "";
-	private String detected_10 = "";
+	private List<String> profileStructureID = new ArrayList<String>();
+	private List<String> profileDetected = new ArrayList<String>();
+
 	private String profileNowhereElseCheckbox = "";		// profile form:  AND NOT anywhere else
 
 	private Map<Integer, String> theilerStagesRibbon2 = new LinkedHashMap<Integer, String>();
@@ -789,136 +772,20 @@ public class GxdQueryForm implements Cloneable {
 	//---------------------------------------------//
 
 
-	public String getProfileStructureID1() {
-		return profileStructureID1;
+	public List<String> getProfileStructureID() {
+		return profileStructureID;
 	}
-	public void setProfileStructureID1(String profileStructureID1) {
-		this.profileStructureID1 = profileStructureID1;
-	}
-
-	public String getProfileStructureID2() {
-		return profileStructureID2;
-	}
-	public void setProfileStructureID2(String profileStructureID2) {
-		this.profileStructureID2 = profileStructureID2;
+	public void setProfileStructureID(List<String> profileStructureID) {
+		this.profileStructureID = profileStructureID;
 	}
 
-	public String getProfileStructureID3() {
-		return profileStructureID3;
+	public List<String> getProfileDetected() {
+		return profileDetected;
 	}
-	public void setProfileStructureID3(String profileStructureID3) {
-		this.profileStructureID3 = profileStructureID3;
-	}
-
-	public String getProfileStructureID4() {
-		return profileStructureID4;
-	}
-	public void setProfileStructureID4(String profileStructureID4) {
-		this.profileStructureID4 = profileStructureID4;
+	public void setProfileDetected(List<String> profileDetected) {
+		this.profileDetected = profileDetected;
 	}
 
-	public String getProfileStructureID5() {
-		return profileStructureID5;
-	}
-	public void setProfileStructureID5(String profileStructureID5) {
-		this.profileStructureID5 = profileStructureID5;
-	}
-
-	public String getProfileStructureID6() {
-		return profileStructureID6;
-	}
-	public void setProfileStructureID6(String profileStructureID6) {
-		this.profileStructureID6 = profileStructureID6;
-	}
-
-	public String getProfileStructureID7() {
-		return profileStructureID7;
-	}
-	public void setProfileStructureID7(String profileStructureID7) {
-		this.profileStructureID7 = profileStructureID7;
-	}
-
-	public String getProfileStructureID8() {
-		return profileStructureID8;
-	}
-	public void setProfileStructureID8(String profileStructureID8) {
-		this.profileStructureID8 = profileStructureID8;
-	}
-
-	public String getProfileStructureID9() {
-		return profileStructureID9;
-	}
-	public void setProfileStructureID9(String profileStructureID9) {
-		this.profileStructureID9 = profileStructureID9;
-	}
-
-	public String getProfileStructureID10() {
-		return profileStructureID10;
-	}
-	public void setProfileStructureID10(String profileStructureID10) {
-		this.profileStructureID10 = profileStructureID10;
-	}
-
-	public String getDetected_1() {
-		return detected_1;
-	}
-	public void setDetected_1(String detected_1) {
-		this.detected_1 = detected_1;
-	}
-	public String getDetected_2() {
-		return detected_2;
-	}
-	public void setDetected_2(String detected_2) {
-		this.detected_2 = detected_2;
-	}
-	public String getDetected_3() {
-		return detected_3;
-	}
-	public void setDetected_3(String detected_3) {
-		this.detected_3 = detected_3;
-	}
-	public String getDetected_4() {
-		return detected_4;
-	}
-	public void setDetected_4(String detected_4) {
-		this.detected_4 = detected_4;
-	}
-	public String getDetected_5() {
-		return detected_5;
-	}
-	public void setDetected_5(String detected_5) {
-		this.detected_5 = detected_5;
-	}
-	public String getDetected_6() {
-		return detected_6;
-	}
-	public void setDetected_6(String detected_6) {
-		this.detected_6 = detected_6;
-	}
-	public String getDetected_7() {
-		return detected_7;
-	}
-	public void setDetected_7(String detected_7) {
-		this.detected_7 = detected_7;
-	}
-	public String getDetected_8() {
-		return detected_8;
-	}
-	public void setDetected_8(String detected_8) {
-		this.detected_8 = detected_8;
-	}
-	public String getDetected_9() {
-		return detected_9;
-	}
-	public void setDetected_9(String detected_9) {
-		this.detected_9 = detected_9;
-	}
-	public String getDetected_10() {
-		return detected_10;
-	}
-	public void setDetected_10(String detected_10) {
-		this.detected_10 = detected_10;
-	}	
 	public String getProfileNowhereElseCheckbox() {
 		return profileNowhereElseCheckbox;
 	}
@@ -1051,26 +918,8 @@ public class GxdQueryForm implements Cloneable {
 				+ ", theilerStageFilter=" + theilerStageFilter
 				+ ", structureIDFilter=" + structureIDFilter
 				+ ", wildtypeFilter=" + wildtypeFilter 
-				+ ", profileStructureID1=" + profileStructureID1 
-				+ ", profileStructureID2=" + profileStructureID2 
-				+ ", profileStructureID3=" + profileStructureID3 
-				+ ", profileStructureID4=" + profileStructureID4 
-				+ ", profileStructureID5=" + profileStructureID5 
-				+ ", profileStructureID6=" + profileStructureID6 
-				+ ", profileStructureID7=" + profileStructureID7 
-				+ ", profileStructureID8=" + profileStructureID8 
-				+ ", profileStructureID9=" + profileStructureID9 
-				+ ", profileStructureID10=" + profileStructureID10 
-				+ ", detected_1=" + detected_1 
-				+ ", detected_2=" + detected_2 
-				+ ", detected_3=" + detected_3 
-				+ ", detected_4=" + detected_4  
-				+ ", detected_5=" + detected_5 
-				+ ", detected_6=" + detected_6 
-				+ ", detected_7=" + detected_7 
-				+ ", detected_8=" + detected_8 
-				+ ", detected_9=" + detected_9 
-				+ ", detected_10=" + detected_10 
+				+ ", profileStructureID=" + profileStructureID.toString() 
+				+ ", profileDetected=" + profileDetected.toString() 
 				+ ", profileNowhereElseCheckbox=" + profileNowhereElseCheckbox 
 				+ ", mpFilter=" + mpFilter 
 				+ ", doFilter=" + doFilter 

@@ -406,7 +406,7 @@ public class AutoCompleteController {
 		return searchResults;
 	}
 
-	/* wrapper for CRE EMAPA autocomplete search
+	/* wrapper for GXD EMAPA autocomplete search
 	 */
 	private SearchResults<EmapaACResult> performGxdEmapaAutoComplete(String query)
 	{

@@ -290,6 +290,7 @@ function reverseEngineerFormInput(request)
 
 	// make sure correct form is visible
 	// this code allows for flexibility to add another ribbon
+	var foundParams = false;
 	if(foundDifStruct || foundDifStage)
 	{
 		formID = "#gxdDifferentialQueryForm3";
@@ -302,208 +303,171 @@ function reverseEngineerFormInput(request)
 	{
 		formID = "#gxdProfileQueryForm";
 		showProfileSearchForm();
+		foundParams = profileQueryString2Spec(request);
 	}
-	console.log("in reverseEngineerFormInput: formID=" + formID);
+	if (!foundProfile) {
+	    console.log("in reverseEngineerFormInput: formID=" + formID);
 
-	// resetting query form to default values
-	if (typeof resetQF == 'function') { resetQF(); }
+	    // resetting query form to default values
+	    if (typeof resetQF == 'function') { resetQF(); }
 
-	var foundParams = false;
-	for(var key in params)
-	{
-		console.log("--in reverseEngineerFormInput: key=" + key);
-		console.log("in reverseEngineerFormInput: params[key]=" + params[key]);
+	    for(var key in params)
+	    {
+		    // Resetting profile form elements is handled separately (see profileQueryString2Spec)
+		    if (foundProfile) continue;
 
-		// Special handling for idFile field.
-		// Do not set this to an empty string!
-		if (key == 'idFile') {
-			// no op - skip it
-		}
-		else if(key=="detected") // handling for dynamic detected values
-		{
-			if (params[key] == 'Yes') {
-				if (YAHOO.util.Dom.get("detected1") != null) {
-					YAHOO.util.Dom.get("detected1").checked = true;
-				}
-			} else if (params[key] == 'No') {
-				if (YAHOO.util.Dom.get("detected2") != null) {
-					YAHOO.util.Dom.get("detected2").checked = true;
-				}
-			}
-		}
-		else if(key!=undefined && key!="" && key!="detected" && params[key].length>0)
-		{
-			//var input = YAHOO.util.Dom.get(key);
-			// jQuery is better suited to resolving form name parameters
-			var input = $(formID+" [name='"+key+"']");
-			if(input.length < 1) input = $(formID+" #"+key);
-			if(input!=undefined && input!=null && input.length > 0)
-			{
-				input = input[0];
-				if(input.tagName=="TEXTAREA")
-				{
-					input.value = decodeURIComponent(params[key]);
-					if (input.id == 'ids') {
-						input.value = input.value.replace(/ /g, '\n');
-					}
-				}
-				else if(input.tagName=="INPUT")
-				{
-					foundParams = true;
-					// do radio boxes
-					if(input.type == "radio")
-					{
-						//console.log("---in reverseEngineerFormInput: key=" + key);
-						if(key=="isWildType")
-						{
-							YAHOO.util.Dom.get("isWildType").checked = true;
-						}
-						else if(input.value == params[key])
-						{
-							input.checked=true;
-						}
-						else if(params[key] == "false")
-						{
-							input.checked=false;
+		    console.log("--in reverseEngineerFormInput: key=" + key);
+		    console.log("in reverseEngineerFormInput: params[key]=" + params[key]);
 
-							// Special handling for profile search.  Only 'Detected' has passed into this code.
-							// If this "Detected" param is 'false', set the 'Not Detected' to checked
-							if (foundProfile) {
-								if (key=='detected_1') {
-									YAHOO.util.Dom.get("profileNotDetected1").checked = true;
-								}
-								if (key=='detected_2') {
-									YAHOO.util.Dom.get("profileNotDetected2").checked = true;
-								}
-								if (key=='detected_3') {
-									YAHOO.util.Dom.get("profileNotDetected3").checked = true;
-								}
-								if (key=='detected_4') {
-									YAHOO.util.Dom.get("profileNotDetected4").checked = true;
-								}
-								if (key=='detected_5') {
-									YAHOO.util.Dom.get("profileNotDetected5").checked = true;
-								}
-								if (key=='detected_6') {
-									YAHOO.util.Dom.get("profileNotDetected6").checked = true;
-								}
-								if (key=='detected_7') {
-									YAHOO.util.Dom.get("profileNotDetected7").checked = true;
-								}
-								if (key=='detected_8') {
-									YAHOO.util.Dom.get("profileNotDetected8").checked = true;
-								}
-								if (key=='detected_9') {
-									YAHOO.util.Dom.get("profileNotDetected9").checked = true;
-								}
-								if (key=='detected_10') {
-									YAHOO.util.Dom.get("profileNotDetected10").checked = true;
-								}
-							}
-						} 
-					}
-					// do check boxes
-					else if(input.type=="checkbox")
-					{
-						if (foundProfile) {
-							if (key=='profileNowhereElseCheckbox') {
-								YAHOO.util.Dom.get("profileNowhereElseCheckbox").checked = true;
-							}
-						}
+		    // Special handling for idFile field.
+		    // Do not set this to an empty string!
+		    if (key == 'idFile') {
+			    // no op - skip it
+		    }
+		    else if(key=="detected") // handling for dynamic detected values
+		    {
+			    if (params[key] == 'Yes') {
+				    if (YAHOO.util.Dom.get("detected1") != null) {
+					    YAHOO.util.Dom.get("detected1").checked = true;
+				    }
+			    } else if (params[key] == 'No') {
+				    if (YAHOO.util.Dom.get("detected2") != null) {
+					    YAHOO.util.Dom.get("detected2").checked = true;
+				    }
+			    }
+		    }
+		    else if(key!=undefined && key!="" && key!="detected" && params[key].length>0)
+		    {
+			    //var input = YAHOO.util.Dom.get(key);
+			    // jQuery is better suited to resolving form name parameters
+			    var input = $(formID+" [name='"+key+"']");
+			    if(input.length < 1) input = $(formID+" #"+key);
+			    if(input!=undefined && input!=null && input.length > 0)
+			    {
+				    input = input[0];
+				    if(input.tagName=="TEXTAREA")
+				    {
+					    input.value = decodeURIComponent(params[key]);
+					    if (input.id == 'ids') {
+						    input.value = input.value.replace(/ /g, '\n');
+					    }
+				    }
+				    else if(input.tagName=="INPUT")
+				    {
+					    foundParams = true;
+					    // do radio boxes
+					    if(input.type == "radio")
+					    {
+						    //console.log("---in reverseEngineerFormInput: key=" + key);
+						    if(key=="isWildType")
+						    {
+							    YAHOO.util.Dom.get("isWildType").checked = true;
+						    }
+						    else if(input.value == params[key])
+						    {
+							    input.checked=true;
+						    }
+						    else if(params[key] == "false")
+						    {
+							    input.checked=false;
+						    } 
+					    }
+					    // do check boxes
+					    else if(input.type=="checkbox")
+					    {
+						    if (foundProfile) {
+							    if (key=='profileNowhereElseCheckbox') {
+								    YAHOO.util.Dom.get("profileNowhereElseCheckbox").checked = true;
+							    }
+						    }
 
-						var options = [];
-						var rawParams = [].concat(params[key]);
-						for(var i=0;i<rawParams.length;i++)
-						{
-							options.push(decodeURIComponent(rawParams[i]));
-						}
-						// The YUI.get() only returns one checkbox, but we want the whole set.
-						// The class should also be set to the same name.
-						var boxes = YAHOO.util.Selector.query("."+key);
-						for(var i=0;i<boxes.length;i++)
-						{
-							var box = boxes[i];
-							var checked = false;
-							for(var j=0;j<options.length;j++)
-							{
-								if(options[j] == box.value)
-								{
-									checked = true;
-									box.checked = true;
-									break;
-								}
-							}
-							if(!checked)
-							{
-								box.checked = false;
-							}
-						}
-						resetSuper('.allInSitu', '.inSituAssayType');
-						resetSuper('.allBlot', '.blotAssayType');
-						resetSuper('.allWholeGenome', '.wholeGenomeAssayType');
-					}
-					else
-					{
-						if (key == "mutatedIn")
-						{
-							YAHOO.util.Dom.get("mutatedSpecimen").checked = true;
-						}
-						input.value = decodeURIComponent(params[key]);
-					}
-				}
-				else if(input.tagName=="SELECT")
-				{
-					if (input.name == "age") {
-						// open the age tab
-						//if(foundDifStage) selectDifAge();
-						//else selectAge();
-						selectAge();
-					}
-					foundParams = true;
-					var options = [];
-					// decode all the options first
-					var rawParams = [].concat(params[key]);
-					for(var i=0;i<rawParams.length;i++)
-					{
-						options.push(decodeURIComponent(rawParams[i]));
-					}
-					// find which options need to be selected, and select them.
-					for(var key in input.children)
-					{
-						if(input[key]!=undefined)
-						{
-							var selected = false;
-							for(var j=0;j<options.length;j++)
-							{
-								if(options[j] == input[key].value)
-								{
-									selected = true;
-									input[key].selected = true;
-									break;
-								}
-							}
-							if(!selected)
-							{
-								input[key].selected = false;
-							}
-						}
-					}
-				}
-			} else if (typeof isFilterable != 'undefined' &&
-					isFilterable(key)) {
-			    // deal with filters (no form fields for them)
-				// TODO: This needs to move to a different function. Filters should not be a part of this method
-			    filters[key] = [].concat(params[key]);
-			}
-		}
-	}
-	console.log("in reverseEngineerFormInput: after for loop of inputs");
-
-	// special handling for profile display; this ensures params reinserted after reset
-	// are displayed rather than hidden
-	if (foundProfile) {
-		checkProfileVisibility();
-		ensureProfileFormStatus();
+						    var options = [];
+						    var rawParams = [].concat(params[key]);
+						    for(var i=0;i<rawParams.length;i++)
+						    {
+							    options.push(decodeURIComponent(rawParams[i]));
+						    }
+						    // The YUI.get() only returns one checkbox, but we want the whole set.
+						    // The class should also be set to the same name.
+						    var boxes = YAHOO.util.Selector.query("."+key);
+						    for(var i=0;i<boxes.length;i++)
+						    {
+							    var box = boxes[i];
+							    var checked = false;
+							    for(var j=0;j<options.length;j++)
+							    {
+								    if(options[j] == box.value)
+								    {
+									    checked = true;
+									    box.checked = true;
+									    break;
+								    }
+							    }
+							    if(!checked)
+							    {
+								    box.checked = false;
+							    }
+						    }
+						    resetSuper('.allInSitu', '.inSituAssayType');
+						    resetSuper('.allBlot', '.blotAssayType');
+						    resetSuper('.allWholeGenome', '.wholeGenomeAssayType');
+					    }
+					    else
+					    {
+						    if (key == "mutatedIn")
+						    {
+							    YAHOO.util.Dom.get("mutatedSpecimen").checked = true;
+						    }
+						    input.value = decodeURIComponent(params[key]);
+					    }
+				    }
+				    else if(input.tagName=="SELECT")
+				    {
+					    if (input.name == "age") {
+						    // open the age tab
+						    //if(foundDifStage) selectDifAge();
+						    //else selectAge();
+						    selectAge();
+					    }
+					    foundParams = true;
+					    var options = [];
+					    // decode all the options first
+					    var rawParams = [].concat(params[key]);
+					    for(var i=0;i<rawParams.length;i++)
+					    {
+						    options.push(decodeURIComponent(rawParams[i]));
+					    }
+					    // find which options need to be selected, and select them.
+					    for(var key in input.children)
+					    {
+						    if(input[key]!=undefined)
+						    {
+							    var selected = false;
+							    for(var j=0;j<options.length;j++)
+							    {
+								    if(options[j] == input[key].value)
+								    {
+									    selected = true;
+									    input[key].selected = true;
+									    break;
+								    }
+							    }
+							    if(!selected)
+							    {
+								    input[key].selected = false;
+							    }
+						    }
+					    }
+				    }
+			    } else if (typeof isFilterable != 'undefined' &&
+					    isFilterable(key)) {
+				// deal with filters (no form fields for them)
+				    // TODO: This needs to move to a different function. Filters should not be a part of this method
+				filters[key] = [].concat(params[key]);
+			    }
+		    }
+	    }
+	    console.log("in reverseEngineerFormInput: after for loop of inputs");
 	}
 
 	if(typeof resetFacets != 'undefined')
@@ -850,35 +814,17 @@ function showNowhereElseMessage(request, matrixType) {
 
 	// parse request for a valid profile structure combined with "Not Detected"
 	var hasNegStructure = false;
-	if ('profileStructureID1' in params && params['profileStructureID1'] != '' && params['detected_1'] != true) {
-		hasNegStructure = true;
-	}
-	if ('profileStructureID2' in params && params['profileStructureID2'] != '' && params['detected_2'] != true) {
-		hasNegStructure = true;
-	}
-	if ('profileStructureID3' in params && params['profileStructureID3'] != '' && params['detected_3'] != true) {
-		hasNegStructure = true;
-	}
-	if ('profileStructureID4' in params && params['profileStructureID4'] != '' && params['detected_4'] != true) {
-		hasNegStructure = true;
-	}
-	if ('profileStructureID5' in params && params['profileStructureID5'] != '' && params['detected_5'] != true) {
-		hasNegStructure = true;
-	}
-	if ('profileStructureID6' in params && params['profileStructureID6'] != '' && params['detected_6'] != true) {
-		hasNegStructure = true;
-	}
-	if ('profileStructureID7' in params && params['profileStructureID7'] != '' && params['detected_7'] != true) {
-		hasNegStructure = true;
-	}
-	if ('profileStructureID8' in params && params['profileStructureID8'] != '' && params['detected_8'] != true) {
-		hasNegStructure = true;
-	}
-	if ('profileStructureID9' in params && params['profileStructureID9'] != '' && params['detected_9'] != true) {
-		hasNegStructure = true;
-	}
-	if ('profileStructureID10' in params && params['profileStructureID10'] != '' && params['detected_10'] != true) {
-		hasNegStructure = true;
+	for (var key in params) {
+	    const m = key.match(/profileDetected([0-9]+)/)
+	    if (m && parms[key] != true) {
+		// if parameter is a not-detected, check that corresponding profile structure is specified
+	        const n = m[1]
+		const key2 = `profileStructureID${n}`
+		if (key2 in parms && params[key2] !== '') {
+			hasNegStructure = true;
+			break;
+		}
+	    }
 	}
 
 	if (('anywhereElse' in params || 'profileNowhereElseCheckbox' in params || hasNegStructure) 

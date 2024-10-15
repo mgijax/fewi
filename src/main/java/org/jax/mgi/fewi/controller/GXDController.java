@@ -2924,6 +2924,7 @@ public class GXDController {
 			@ModelAttribute GxdQueryForm query)
 	{
 		logger.debug("called /results/totalCount");
+		logger.info("Query form:" + query.toString());
 		populateMarkerIDs(session, query);
 		SearchParams params = new SearchParams();
 		params.setFilter(parseGxdQueryForm(query));
@@ -3247,16 +3248,11 @@ public class GXDController {
 	 */
 	private boolean isProfileQuery(GxdQueryForm query)
 	{
-		return (query.getProfileStructureID1()!=null && !query.getProfileStructureID1().equals(""))
-			|| (query.getProfileStructureID2()!=null && !query.getProfileStructureID2().equals(""))
-			|| (query.getProfileStructureID3()!=null && !query.getProfileStructureID3().equals(""))
-			|| (query.getProfileStructureID4()!=null && !query.getProfileStructureID4().equals(""))
-			|| (query.getProfileStructureID5()!=null && !query.getProfileStructureID5().equals(""))
-			|| (query.getProfileStructureID6()!=null && !query.getProfileStructureID6().equals(""))
-			|| (query.getProfileStructureID7()!=null && !query.getProfileStructureID7().equals(""))
-			|| (query.getProfileStructureID8()!=null && !query.getProfileStructureID8().equals(""))
-			|| (query.getProfileStructureID9()!=null && !query.getProfileStructureID9().equals(""))
-			|| (query.getProfileStructureID10()!=null && !query.getProfileStructureID10().equals(""));
+		for (String sid : query.getProfileStructureID()) {
+		    if (sid != null && !sid.equals(""))
+		        return true;
+		}
+		return false;
 	}
 
 	/* This method creates the differential part 1 filters (used by resolveDifferentialMarkers() below)
@@ -3661,31 +3657,11 @@ public class GXDController {
 	{
 		logger.debug("--Starting resolveProfileMarkers()");
 
-        List<String> profileStructureKeys = new ArrayList<String>();
+        	List<String> profileStructureKeys = new ArrayList<String>();
 
 		// start filter list for query filters
 		List<Filter> queryFilters = new ArrayList<Filter>();
 
-		String profileStructureID1 = query.getProfileStructureID1();
-		String profileStructureID2 = query.getProfileStructureID2();
-		String profileStructureID3 = query.getProfileStructureID3();
-		String profileStructureID4 = query.getProfileStructureID4();
-		String profileStructureID5 = query.getProfileStructureID5();
-		String profileStructureID6 = query.getProfileStructureID6();
-		String profileStructureID7 = query.getProfileStructureID7();
-		String profileStructureID8 = query.getProfileStructureID8();
-		String profileStructureID9 = query.getProfileStructureID9();
-		String profileStructureID10 = query.getProfileStructureID10();
-		String detected1 = query.getDetected_1();
-		String detected2 = query.getDetected_2();
-		String detected3 = query.getDetected_3();
-		String detected4 = query.getDetected_4();
-		String detected5 = query.getDetected_5();
-		String detected6 = query.getDetected_6();
-		String detected7 = query.getDetected_7();
-		String detected8 = query.getDetected_8();
-		String detected9 = query.getDetected_9();
-		String detected10 = query.getDetected_10();
 		boolean profileNowhereElse = (query.getProfileNowhereElseCheckbox() != null) 
 						&& (query.getProfileNowhereElseCheckbox().trim().length() > 0);
 
@@ -3693,77 +3669,18 @@ public class GXDController {
 
 			logger.info("-- resolveProfileMarkers(); building profileNowhereElse filters");
 
-			if (profileStructureID1!=null && !profileStructureID1.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 1 = " + profileStructureID1);
-				List<VocabTerm> structureList1 = vocabFinder.getTermByID(profileStructureID1);
-				if (structureList1.size() > 0) {
-					profileStructureKeys.add(Integer.toString(structureList1.get(0).getTermKey()));
+			int i = 0;
+			for ( String profileStructureID : query.getProfileStructureID() ) {
+				i += 1;
+				if (profileStructureID!=null && !profileStructureID.equals("")) {
+					logger.debug("-- resolveProfileMarkers() " + i + " = " + profileStructureID);
+					List<VocabTerm> structureList = vocabFinder.getTermByID(profileStructureID);
+					if (structureList.size() > 0) {
+						profileStructureKeys.add(Integer.toString(structureList.get(0).getTermKey()));
+					}
 				}
 			}
-			if (profileStructureID2!=null && !profileStructureID2.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 2 = " + profileStructureID2);
-				List<VocabTerm> structureList2 = vocabFinder.getTermByID(profileStructureID2);
-				if (structureList2.size() > 0) {
-					profileStructureKeys.add(Integer.toString(structureList2.get(0).getTermKey()));
-				}
-			}
-			if (profileStructureID3!=null && !profileStructureID3.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 3 = " + profileStructureID3);
-				List<VocabTerm> structureList3 = vocabFinder.getTermByID(profileStructureID3);
-				if (structureList3.size() > 0) {
-					profileStructureKeys.add(Integer.toString(structureList3.get(0).getTermKey()));
-				}
-			}
-			if (profileStructureID4!=null && !profileStructureID4.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 4 = " + profileStructureID4);
-				List<VocabTerm> structureList4 = vocabFinder.getTermByID(profileStructureID4);
-				if (structureList4.size() > 0) {
-					profileStructureKeys.add(Integer.toString(structureList4.get(0).getTermKey()));
-				}
-			}
-			if (profileStructureID5!=null && !profileStructureID5.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 5 = " + profileStructureID5);
-				List<VocabTerm> structureList5 = vocabFinder.getTermByID(profileStructureID5);
-				if (structureList5.size() > 0) {
-					profileStructureKeys.add(Integer.toString(structureList5.get(0).getTermKey()));
-				}
-			}
-			if (profileStructureID6!=null && !profileStructureID6.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 6 = " + profileStructureID6);
-				List<VocabTerm> structureList6 = vocabFinder.getTermByID(profileStructureID6);
-				if (structureList6.size() > 0) {
-					profileStructureKeys.add(Integer.toString(structureList6.get(0).getTermKey()));
-				}
-			}
-			if (profileStructureID7!=null && !profileStructureID7.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 7 = " + profileStructureID7);
-				List<VocabTerm> structureList7 = vocabFinder.getTermByID(profileStructureID7);
-				if (structureList7.size() > 0) {
-					profileStructureKeys.add(Integer.toString(structureList7.get(0).getTermKey()));
-				}
-			}
-			if (profileStructureID8!=null && !profileStructureID8.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 8 = " + profileStructureID8);
-				List<VocabTerm> structureList8 = vocabFinder.getTermByID(profileStructureID8);
-				if (structureList8.size() > 0) {
-					profileStructureKeys.add(Integer.toString(structureList8.get(0).getTermKey()));
-				}
-			}
-			if (profileStructureID9!=null && !profileStructureID9.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 9 = " + profileStructureID9);
-				List<VocabTerm> structureList9 = vocabFinder.getTermByID(profileStructureID9);
-				if (structureList9.size() > 0) {
-					profileStructureKeys.add(Integer.toString(structureList9.get(0).getTermKey()));
-				}
-			}
-			if (profileStructureID10!=null && !profileStructureID10.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 10 = " + profileStructureID10);
-				List<VocabTerm> structureList10 = vocabFinder.getTermByID(profileStructureID10);
-				if (structureList10.size() > 0) {
-					profileStructureKeys.add(Integer.toString(structureList10.get(0).getTermKey()));
-				}
-			}
-			
+
 			// retrieve the list of marker keys; uses sql-based expression helper hunter
 			List<String> markerKeys = expressionHelper.expressedIn(profileStructureKeys, "gene"); 
 			return markerKeys;
@@ -3773,66 +3690,17 @@ public class GXDController {
 
 			logger.info("-- resolveProfileMarkers(); building structure match filters");
 
-			if (profileStructureID1!=null && !profileStructureID1.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 1 = " + profileStructureID1);
-				Filter filter1 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID1);
-				if (detected1.equals("false")) {filter1.negate();}
-				queryFilters.add(filter1);
+			int i = 0;
+			for ( String profileStructureID : query.getProfileStructureID() ) {
+				i += 1;
+				if (profileStructureID!=null && !profileStructureID.equals("")) {
+					logger.debug("-- resolveProfileMarkers() " + i + " = " + profileStructureID);
+					Filter filter = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID);
+					if (query.getProfileDetected().get(i-1).equals("false")) {filter.negate();}
+					queryFilters.add(filter);
+				}
 			}
-			if (profileStructureID2!=null && !profileStructureID2.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 2 = " + profileStructureID2);
-				Filter filter2 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID2);
-				if (detected2.equals("false")) {filter2.negate();}
-				queryFilters.add(filter2);
-			}
-			if (profileStructureID3!=null && !profileStructureID3.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 3 = " + profileStructureID3);
-				Filter filter3 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID3);
-				if (detected3.equals("false")) {filter3.negate();}
-				queryFilters.add(filter3);
-			}
-			if (profileStructureID4!=null && !profileStructureID4.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 4 = " + profileStructureID4);
-				Filter filter4 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID4);
-				if (detected4.equals("false")) {filter4.negate();}
-				queryFilters.add(filter4);
-			}
-			if (profileStructureID5!=null && !profileStructureID5.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 5 = " + profileStructureID5);
-				Filter filter5 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID5);
-				if (detected5.equals("false")) {filter5.negate();}
-				queryFilters.add(filter5);
-			}
-			if (profileStructureID6!=null && !profileStructureID6.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 6 = " + profileStructureID6);
-				Filter filter6 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID6);
-				if (detected6.equals("false")) {filter6.negate();}
-				queryFilters.add(filter6);
-			}
-			if (profileStructureID7!=null && !profileStructureID7.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 7 = " + profileStructureID7);
-				Filter filter7 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID7);
-				if (detected7.equals("false")) {filter7.negate();}
-				queryFilters.add(filter7);
-			}
-			if (profileStructureID8!=null && !profileStructureID8.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 8 = " + profileStructureID8);
-				Filter filter8 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID8);
-				if (detected8.equals("false")) {filter8.negate();}
-				queryFilters.add(filter8);
-			}
-			if (profileStructureID9!=null && !profileStructureID9.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 9 = " + profileStructureID9);
-				Filter filter9 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID9);
-				if (detected9.equals("false")) {filter9.negate();}
-				queryFilters.add(filter9);
-			}
-			if (profileStructureID10!=null && !profileStructureID10.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 10 = " + profileStructureID10);
-				Filter filter10 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID10);
-				if (detected10.equals("false")) {filter10.negate();}
-				queryFilters.add(filter10);
-			}
+
 		}
 
 		Filter profileFilter = new Filter();
@@ -3889,176 +3757,35 @@ public class GXDController {
 		// start filter list for query filters
 		List<Filter> structureFilters = new ArrayList<Filter>();
 
-		String profileStructureID1 = query.getProfileStructureID1();
-		String profileStructureID2 = query.getProfileStructureID2();
-		String profileStructureID3 = query.getProfileStructureID3();
-		String profileStructureID4 = query.getProfileStructureID4();
-		String profileStructureID5 = query.getProfileStructureID5();
-		String profileStructureID6 = query.getProfileStructureID6();
-		String profileStructureID7 = query.getProfileStructureID7();
-		String profileStructureID8 = query.getProfileStructureID8();
-		String profileStructureID9 = query.getProfileStructureID9();
-		String profileStructureID10 = query.getProfileStructureID10();
-		String detected1 = query.getDetected_1();
-		String detected2 = query.getDetected_2();
-		String detected3 = query.getDetected_3();
-		String detected4 = query.getDetected_4();
-		String detected5 = query.getDetected_5();
-		String detected6 = query.getDetected_6();
-		String detected7 = query.getDetected_7();
-		String detected8 = query.getDetected_8();
-		String detected9 = query.getDetected_9();
-		String detected10 = query.getDetected_10();
 		boolean profileNowhereElse = (query.getProfileNowhereElseCheckbox() != null) 
 						&& (query.getProfileNowhereElseCheckbox().trim().length() > 0);
 
 
 		if (profileNowhereElse) {
 		logger.debug("makeProfileResultFilters - profileNowhereElse");
-			if (profileStructureID1!=null && !profileStructureID1.equals("")) {
-				structureFilters.add(makeProfileResultPosNegFilters(profileStructureID1));
+			for (String psid : query.getProfileStructureID()) {
+				if (psid!=null && !psid.equals("")) {
+					structureFilters.add(makeProfileResultPosNegFilters(psid));
+				}
 			}
-			if (profileStructureID2!=null && !profileStructureID2.equals("")) {
-				structureFilters.add(makeProfileResultPosNegFilters(profileStructureID2));
-			}			
-			if (profileStructureID3!=null && !profileStructureID3.equals("")) {
-				structureFilters.add(makeProfileResultPosNegFilters(profileStructureID3));
-			}	
-			if (profileStructureID4!=null && !profileStructureID4.equals("")) {
-				structureFilters.add(makeProfileResultPosNegFilters(profileStructureID4));
-			}
-			if (profileStructureID5!=null && !profileStructureID5.equals("")) {
-				structureFilters.add(makeProfileResultPosNegFilters(profileStructureID5));
-			}	
-			if (profileStructureID6!=null && !profileStructureID6.equals("")) {
-				structureFilters.add(makeProfileResultPosNegFilters(profileStructureID6));
-			}	
-			if (profileStructureID7!=null && !profileStructureID7.equals("")) {
-				structureFilters.add(makeProfileResultPosNegFilters(profileStructureID7));
-			}	
-			if (profileStructureID8!=null && !profileStructureID8.equals("")) {
-				structureFilters.add(makeProfileResultPosNegFilters(profileStructureID8));
-			}		
-			if (profileStructureID9!=null && !profileStructureID9.equals("")) {
-				structureFilters.add(makeProfileResultPosNegFilters(profileStructureID9));
-			}		
-			if (profileStructureID10!=null && !profileStructureID10.equals("")) {
-				structureFilters.add(makeProfileResultPosNegFilters(profileStructureID10));
-			}	
-
 		}
 		else {
 			logger.debug("makeProfileResultFilters - not profileNowhereElse");
 
-			if (profileStructureID1!=null && !profileStructureID1.equals("")) {
-				List<Filter> structureFilter1 = new ArrayList<Filter>();
-				if (detected1.equals("false")) {
-					structureFilter1.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID1))	;
-					structureFilter1.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
-				} else {
-					structureFilter1.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID1));
-					structureFilter1.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
+			int i = 0;
+			for (String psid : query.getProfileStructureID()) {
+				i += 1;
+				if (psid!=null && !psid.equals("")) {
+					List<Filter> structureFilter = new ArrayList<Filter>();
+					if (query.getProfileDetected().get(i-1).equals("false")) {
+						structureFilter.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,psid))	;
+						structureFilter.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
+					} else {
+						structureFilter.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,psid));
+						structureFilter.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
+					}
+					structureFilters.add(Filter.and(structureFilter));
 				}
-				structureFilters.add(Filter.and(structureFilter1));
-			}
-			if (profileStructureID2!=null && !profileStructureID2.equals("")) {
-				List<Filter> structureFilter2 = new ArrayList<Filter>();
-				if (detected2.equals("false")) {
-					structureFilter2.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID2))	;
-					structureFilter2.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
-				} else {
-					structureFilter2.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID2));
-					structureFilter2.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
-				}
-				structureFilters.add(Filter.and(structureFilter2));
-			}
-			if (profileStructureID3!=null && !profileStructureID3.equals("")) {
-				List<Filter> structureFilter3 = new ArrayList<Filter>();
-				if (detected3.equals("false")) {
-					structureFilter3.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID3))	;
-					structureFilter3.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
-				} else {
-					structureFilter3.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID3));
-					structureFilter3.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
-				}
-				structureFilters.add(Filter.and(structureFilter3));
-			}
-			if (profileStructureID4!=null && !profileStructureID4.equals("")) {
-				List<Filter> structureFilter4 = new ArrayList<Filter>();
-				if (detected4.equals("false")) {
-					structureFilter4.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID4))	;
-					structureFilter4.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
-				} else {
-					structureFilter4.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID4));
-					structureFilter4.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
-				}
-				structureFilters.add(Filter.and(structureFilter4));
-			}
-			if (profileStructureID5!=null && !profileStructureID5.equals("")) {
-				List<Filter> structureFilter5 = new ArrayList<Filter>();
-				if (detected5.equals("false")) {
-					structureFilter5.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID5))	;
-					structureFilter5.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
-				} else {
-					structureFilter5.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID5));
-					structureFilter5.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
-				}
-				structureFilters.add(Filter.and(structureFilter5));
-			}		
-			if (profileStructureID6!=null && !profileStructureID6.equals("")) {
-				List<Filter> structureFilter6 = new ArrayList<Filter>();
-				if (detected6.equals("false")) {
-					structureFilter6.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID6))	;
-					structureFilter6.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
-				} else {
-					structureFilter6.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID6));
-					structureFilter6.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
-				}
-				structureFilters.add(Filter.and(structureFilter6));
-			}
-			if (profileStructureID7!=null && !profileStructureID7.equals("")) {
-				List<Filter> structureFilter7 = new ArrayList<Filter>();
-				if (detected7.equals("false")) {
-					structureFilter7.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID7))	;
-					structureFilter7.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
-				} else {
-					structureFilter7.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID7));
-					structureFilter7.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
-				}
-				structureFilters.add(Filter.and(structureFilter7));
-			}
-			if (profileStructureID8!=null && !profileStructureID8.equals("")) {
-				List<Filter> structureFilter8 = new ArrayList<Filter>();
-				if (detected8.equals("false")) {
-					structureFilter8.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID8))	;
-					structureFilter8.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
-				} else {
-					structureFilter8.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID8));
-					structureFilter8.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
-				}
-				structureFilters.add(Filter.and(structureFilter8));
-			}
-			if (profileStructureID9!=null && !profileStructureID9.equals("")) {
-				List<Filter> structureFilter9 = new ArrayList<Filter>();
-				if (detected9.equals("false")) {
-					structureFilter9.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID9))	;
-					structureFilter9.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
-				} else {
-					structureFilter9.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID9));
-					structureFilter9.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
-				}
-				structureFilters.add(Filter.and(structureFilter9));
-			}
-			if (profileStructureID10!=null && !profileStructureID10.equals("")) {
-				List<Filter> structureFilter10 = new ArrayList<Filter>();
-				if (detected10.equals("false")) {
-					structureFilter10.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID10))	;
-					structureFilter10.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
-				} else {
-					structureFilter10.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID10));
-					structureFilter10.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
-				}
-				structureFilters.add(Filter.and(structureFilter10));
 			}
 		}
 
