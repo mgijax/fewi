@@ -4,7 +4,7 @@
 #- Applied by <context:property-placeholder/> application context XML file
 #-------------------------------------------------------------------------------
 
-solr.server1.url=http://bhmgipwi02lt.jax.org:9885/solr
+solr.server1.url=http://bhmgiweb06ld.jax.org:9885/solr
 
 solr.server3.url=http://bhmgigxdsolr01ld.jax.org:9885/solr
 
