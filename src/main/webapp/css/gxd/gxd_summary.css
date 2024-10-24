@@ -40,11 +40,73 @@
 
 /* Styles for profile search */
 
+#profileModeC, #profileModeR {
+    margin-left: 120px;
+}
+
 #profileStructureTable td{
 	border:none;
 }
 #profileStructureTable th{
 	border:none;
+}
+#profileStructureTable td {
+	border:none;
+}
+#profileStructureTable tr.detected input.yui-ac-input,
+#profileStructureTable tr.detected select {
+	background-color: #d1e8fc;
+}
+#profileStructureTable tr.not-detected input.yui-ac-input,
+#profileStructureTable tr.not-detected select {
+	background-color: #fed7e9;
+}
+#profileStructureTable.hideStages tr.profile-structure-row td:nth-child(2) *,
+#profileStructureTable.hideStages tr.profile-structure-row td:nth-child(3) *,
+#profileStructureTable.hideStages span.stagesLabel {
+    display: none;
+}
+#gxdProfileQueryForm #addDetected {
+	background-color: #d1e8fc;
+	padding: 4px;
+}
+#gxdProfileQueryForm #addNotDetected {
+	background-color: #fed7e9;
+	padding: 4px;
+}
+#gxdProfileQueryForm #addDetected:hover,
+#gxdProfileQueryForm #addNotDetected:hover {
+	cursor: pointer;
+}
+#gxdProfileQueryForm #addNotDetected span {
+	color: red;
+	font-weight: bold;
+}
+#profileStructureTable #afterDetectedSection tr:first-child {
+        border-bottom: thick solid gray;
+}
+#profileStructureTable .bold {
+	font-weight: bold;
+}
+#profileStructureTable .red {
+	font-weight: bold;
+}
+
+#gxdProfileQueryForm.classical .classicalOnly {
+	display: default;
+}
+#gxdProfileQueryForm.rnaseq .classicalOnly {
+	display: none;
+}
+
+#gxdProfileQueryForm.classical .rnaseqOnly {
+	display: none;
+}
+#gxdProfileQueryForm.rnaseq .rnaseqOnly {
+	display: default;
+}
+#gxdProfileQueryForm .disabledSection {	
+	opacity: 0.5;
 }
 
 /* Styles for image summary tab */

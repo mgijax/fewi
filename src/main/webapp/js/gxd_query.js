@@ -35,6 +35,16 @@ YAHOO.gxd.container.panelProfile.render();
 YAHOO.util.Event.addListener("gxdProfileHelpImage", "mouseover", YAHOO.gxd.container.panelProfile.show, YAHOO.gxd.container.panelProfile, true);
 YAHOO.util.Event.addListener("gxdProfileHelpImage", "mouseout", YAHOO.gxd.container.panelProfile.hide, YAHOO.gxd.container.panelProfile, true);
 
+YAHOO.gxd.container.panelClassical = new YAHOO.widget.Panel("gxdProfileClassicalHelp", { width:"280px", draggable:false, visible:false, constraintoviewport:true,close:false } );
+YAHOO.gxd.container.panelClassical.render();
+YAHOO.util.Event.addListener("gxdProfileClassicalHelpImage", "mouseover", YAHOO.gxd.container.panelClassical.show, YAHOO.gxd.container.panelClassical, true);
+YAHOO.util.Event.addListener("gxdProfileClassicalHelpImage", "mouseout", YAHOO.gxd.container.panelClassical.hide, YAHOO.gxd.container.panelClassical, true);
+
+YAHOO.gxd.container.panelClassical = new YAHOO.widget.Panel("gxdProfileStageHelp", { width:"280px", draggable:false, visible:false, constraintoviewport:true,close:false } );
+YAHOO.gxd.container.panelClassical.render();
+YAHOO.util.Event.addListener("gxdProfileStageHelpImage", "mouseover", YAHOO.gxd.container.panelClassical.show, YAHOO.gxd.container.panelClassical, true);
+YAHOO.util.Event.addListener("gxdProfileStageHelpImage", "mouseout", YAHOO.gxd.container.panelClassical.hide, YAHOO.gxd.container.panelClassical, true);
+
 
 YAHOO.gxd.container.panelDifStruct1 = new YAHOO.widget.Panel("gxdDifStruct1Help", { width:"320px", draggable:false, visible:false, constraintoviewport:true,close:false } );
 YAHOO.gxd.container.panelDifStruct1.render();
@@ -281,108 +291,31 @@ var updateQuerySummary = function() {
 	el.appendChild(new YAHOO.util.Element(document.createElement('br')));
 	el.appendTo(searchParams);
 
-	// handle the differential stuff first
-	//console.log(currentQF);
-	if(currentQF == 'differential') {
-		var el = new YAHOO.util.Element(document.createElement('span'));
-		// parse the structures input
-		var structure = YAHOO.util.Dom.get('difStructure3').value;
-		var notStructure = YAHOO.util.Dom.get('difStructure4').value;
-		
-		// parse the stages input
-		var selectedStages = parseStageOptions("difTheilerStage3","0");
-		var detectedStages = [];
-		var detectedStagesText = "developmental stage(s):";
-		if(selectedStages=="Any") detectedStagesText = "<b>Any</b> developmental stage";
-		else
-		{
-			for(var i=0;i<selectedStages.length;i++)
-			{
-				detectedStages.push("<b>TS:"+selectedStages[i]+"</b>");
-			}
-			detectedStagesText += " ("+detectedStages.join(" or ")+")";
-		}
-		var selectedDifStagesNSA = parseStageOptions("difTheilerStage4","-1");	// any stage not selected above
-		var selectedDifStagesADS = parseStageOptions("difTheilerStage4", "0");	// any developmental stage
-		var notDetectedStages = [];
-		var notDetectedStagesText = "any of the developmental stage(s):";
-		if( (selectedDifStagesNSA =="Any") || (selectedDifStagesADS =="Any") ) {
-			// cases:
-			// 1. structure & notStructure, no selectedStages
-			// 2. structure & selectedStages & (structure == notStructure)
-			// 3. structure & selectedStages & notStructure
-			// 4. other
-			if ((structure != '') && (notStructure != '') && (selectedStages == 'Any')) {
-				notDetectedStagesText = "<b>Any developmental stage</b>";
-			} else if ((structure != '') && (selectedStages != 'Any') && (selectedStages != '') && (structure == notStructure)) {
-				notDetectedStagesText = "<b>Any developmental stage not selected above</b>";
-			} else if ((structure != '') && (selectedStages != 'Any') && (selectedStages != '') && (notStructure != '') && (selectedDifStagesADS == 'Any')) {
-				notDetectedStagesText = "<b>Any developmental stage</b>";
-			} else {
-				notDetectedStagesText = "<b>Any developmental stage not selected above</b>";
-			}
-		} else {
-			for(var i=0;i<selectedDifStagesNSA.length;i++)
-			{
-				notDetectedStages.push("<b>TS:"+selectedDifStagesNSA[i]+"</b>");
-			}
-			notDetectedStagesText += " ("+notDetectedStages.join(", ")+")";
-		}
-		
-		// if structure on top, then must have structure (or nowhere else checked) on bottom.
-		// may or may not have a stage on top and/or bottom.
-		
-		var topStructure = YAHOO.util.Dom.get('difStructure3').value;
-		var bottomStructure = YAHOO.util.Dom.get('difStructure4').value;
-		var nowhereElse = YAHOO.util.Dom.get('anywhereElse').checked;
-
-		if (topStructure != '') {
-			if (nowhereElse) {
-				el.set('innerHTML',"Detected in <b>" + topStructure + "</b>" +
-					"<span class=\"smallGrey\"> includes substructures</span>"+
-					"<br/>at "+detectedStagesText+
-					"<br/>but not detected or assayed <b>anywhere else</b>");
-			} else {
-				el.set('innerHTML',"Detected in <b>"+YAHOO.util.Dom.get('difStructure3').value+"</b>" +
-					"<span class=\"smallGrey\"> includes substructures</span>"+
-					"<br/>at "+detectedStagesText+
-					"<br/>but not detected or assayed in <b>"+
-						YAHOO.util.Dom.get('difStructure4').value+"</b>"+
-					"<span class=\"smallGrey\"> includes substructures</span>"+
-					"<br/>at " + notDetectedStagesText);
-			}
-		} else {
-			// no structures to consider, so we have either:
-			// 1. stage vs. nowhere else, or
-			// 2. stage vs. stage
-
-			if (nowhereElse) {
-				el.set('innerHTML',"Detected at " + detectedStagesText +
-					"<br/>but not detected or assayed <b>anywhere else</b>");
-			} else {
-				el.set('innerHTML',"Detected at " + detectedStagesText +
-					"<br/>but not detected or assayed " +
-					"<br/>at " + notDetectedStagesText);
-			}
-		}
-		
-		el.appendTo(searchParams);
-	}
-	else if (currentQF == 'profile') {
-
+	if (currentQF == 'profile') {
 
 		// collect list of detected structures and not detected structured
 		var posStructures = [];
 		var negStructures = [];
 
-		profileSpec.forEach( (m,i) => {
+		model.profileSpec.forEach( (m,i) => {
+		    var stageClause = ""
+		    var structureClause = ""
+		    if (m.stages.length > 0) {
+		        stageClause = `stage${m.stages.length > 1 ? 's' : ''} ${m.stages.join(', ')}`
+		    }
 		    if (m.structure != "") {
-		        if (m.detected) {
-			    posStructures.push("<b>" + m.structure + "</b>")
+			structureClause = `${m.structure}`
+		    }
+
+		    if (stageClause !== "" || structureClause !== "") {
+		        var clause = `<b> ${structureClause} ${stageClause} </b>`
+			if (m.detected) {
+			    posStructures.push(clause);
 			} else {
-			    negStructures.push("<b>" + m.structure + "</b>")
+			    negStructures.push(clause);
 			}
 		    }
+
 		})
 
 		// create You Searched For... strings
@@ -972,42 +905,18 @@ var profileFormCheck  = function() {
 	// gather parameters from form; add to {rowNum:value} dictionary for 
 	// downstream checking
 	var profileForm = YAHOO.util.Dom.get("gxdProfileQueryForm");
-	var submittedStructureIDs = {};
-	var submittedStructureNames = {};
 	var hasPosStructure = false;
 
-	profileSpec.forEach( (m,i) => {
-	    if (m.structureID !== "") {
-		submittedStructureIDs[i] = m.structureID;
-		submittedStructureNames[i] = m.structure;
-		if(m.detected==true) {hasPosStructure = true};
+	model.profileSpec.forEach( (m,i) => {
+	    if (m.detected === true && (m.structure !== "" || m.stages.length > 0)) {
+		hasPosStructure = true;
 	    }
 	})
 
 	// check for empty submission
-	if (Object.keys(submittedStructureIDs).length == 0 || !hasPosStructure) {
-		alert("Please specify Detected expression for at least one anatomical structure.");
+	if (!hasPosStructure) {
+		alert("Please specify Detected expression for at least one anatomical structure or stage.");
 		hasErrors=true;
-	} else {
-	// check for duplicate IDs (a structure and it's synonym may be submitted)	
-		var handledIDs = {};
-		var hasDupe = false;
-		for (let i = 1; i <= 10; i++) {
-			if (submittedStructureIDs[i] && hasErrors == false) {
-				if (submittedStructureIDs[i] in handledIDs) {
-					hasErrors=true;
-					const msg = "Query error: Duplicate structures detected, id=" +
-						submittedStructureIDs[i] + "\n" +
-						submittedStructureNames[i] + "\n" +
-						handledIDs[submittedStructureIDs[i]] + "\n" +
-						"Please modify your query and try again."
-					alert(msg)
-				} else {
-					// we haven't encountered this ID; save off
-					handledIDs[submittedStructureIDs[i]] = submittedStructureNames[i];
-				}
-			}
-		}
 	}
 
 	return hasErrors;
@@ -1359,7 +1268,6 @@ function makeStructureAC(inputID,containerID){
 	//oAC.forceSelection = false;
     //oAC.delimChar = ";";
 
-    // blank out the hidden ID field upon deleting the structure text in the input field
     var removeSelectedID = function(oSelf,yuiE) {
     	var ac = yuiE[0];
     	if(ac.getInputEl().value.trim() == "")
@@ -1371,7 +1279,7 @@ function makeStructureAC(inputID,containerID){
 	 	   	}
     	}
     };
-    oAC.textboxChangeEvent.subscribe(removeSelectedID);
+    oAC.selectionEnforceEvent.subscribe(removeSelectedID);
 
     // try to set the input field after itemSelect event
     oAC.suppressInputUpdate = true;
@@ -1402,14 +1310,6 @@ function makeStructureAC(inputID,containerID){
 	    var idBox = YAHOO.util.Dom.get(hiddenID);
 	    idBox.value = accID;
 	    
-	    if (inputBox.name == 'difStructure') {
- 	    	if ($('#inCheckbox').length > 0) {
- 	    		$('#inCheckbox')[0].checked = true;			    // check the in-structure checkbox
- 	    	}
- 	    	if ($('#anywhereElse').length > 0) {
- 	    		$('#anywhereElse')[0].checked = false;			// uncheck the default checkbox (any other structure)
- 	    	}
- 	    }
     };
     oAC.itemSelectEvent.subscribe(selectionHandler);
 
@@ -1451,8 +1351,6 @@ function makeStructureAC(inputID,containerID){
     };
 };
 makeStructureAC("structure","structureContainer");
-makeStructureAC("difStructure3","difStructureContainer3");
-makeStructureAC("difStructure4","difStructureContainer4");
 
 //
 // Wire up the functionality to reset the query form
@@ -1826,56 +1724,149 @@ function checkBatchInput(){
 };
 
 
-/*
- * Profile Search special handling 
+/* -------------------------------------------------------------------------------------------------
+ * Profile Search 
+ * -------------------------------------------------------------------------------------------------
  */
 
-var profileSpec = []
+// profile form modes
+const CLASSICAL = "classical"
+const RNASEQ = "rnaseq"
+
+// not expressed modes
+const NOWHEREELSE = "nowhereElse"
+const NOTINSTRUCTURES = "notInStructures"
+
+// data that drives the form display
+var model = {
+    profileSpec: [], // list of {structure, structyreID, detected, stages}
+    formMode: CLASSICAL, // "classical" or "rnaseq"
+    notMode: null // "nowhereElse" or "notInStructures" (may be null if no not-conditions specified)
+}
 
 function resetProfileForm () {
-    profileSpec = [{
+    model.profileSpec = [{
 	    structure: "",
 	    structureID: "",
-	    detected: true
-    },{
+	    detected: true,
+	    stages: []
+	    },{
 	    structure: "",
 	    structureID: "",
-	    detected: true
-    },{
-	    structure: "",
-	    structureID: "",
-	    detected: true
+	    detected: false,
+	    stages: []
     }]
+    model.notMode = null
     refreshProfileForm()
+
+}
+
+function profileSetMode () {
+    const form = document.getElementById('gxdProfileQueryForm')
+    model.formMode = form.querySelector('input[type="radio"][name="profileMode"]:checked').value;
+    resetProfileForm();
+}
+
+function makeTheilerStageSelector (i) {
+    return `
+    <select id="profileStage${i}" name="profileStage${i}" multiple="multiple" size="3" onchange="theilerStageSelectorChanged(${i})" >
+    <option value="0" selected="selected">Any developmental stage</option>
+    <option value="1">TS 1 (0.0-2.5 dpc)</option>
+    <option value="2">TS 2 (1.0-2.5 dpc)</option>
+    <option value="3">TS 3 (1.0-3.5 dpc)</option>
+    <option value="4">TS 4 (2.0-4.0 dpc)</option>
+    <option value="5">TS 5 (3.0-5.5 dpc)</option>
+    <option value="6">TS 6 (4.0-5.5 dpc)</option>
+    <option value="7">TS 7 (4.5-6.0 dpc)</option>
+    <option value="8">TS 8 (5.0-6.5 dpc)</option>
+    <option value="9">TS 9 (6.25-7.25 dpc)</option>
+    <option value="10">TS 10 (6.5-7.75 dpc)</option>
+    <option value="11">TS 11 (7.25-8.0 dpc)</option>
+    <option value="12">TS 12 (7.5-8.75 dpc)</option>
+    <option value="13">TS 13 (8.0-9.25 dpc)</option>
+    <option value="14">TS 14 (8.5-9.75 dpc)</option>
+    <option value="15">TS 15 (9.0-10.25 dpc)</option>
+    <option value="16">TS 16 (9.5-10.75 dpc)</option>
+    <option value="17">TS 17 (10.0-11.25 dpc)</option>
+    <option value="18">TS 18 (10.5-11.25 dpc)</option>
+    <option value="19">TS 19 (11.0-12.25 dpc)</option>
+    <option value="20">TS 20 (11.5-13.0 dpc)</option>
+    <option value="21">TS 21 (12.5-14.0 dpc)</option>
+    <option value="22">TS 22 (13.5-15.0 dpc)</option>
+    <option value="23">TS 23 (15 dpc)</option>
+    <option value="24">TS 24 (16 dpc)</option>
+    <option value="25">TS 25 (17 dpc)</option>
+    <option value="26">TS 26 (18 dpc)</option>
+    <option value="27">TS 27 (newborn)</option>
+    <option value="28">TS 28 (postnatal)</option>
+    </select>
+    `
+}
+
+function resetTheilerStageSelection (i) {
+    const sel = document.getElementById(`profileStage${i}`);
+    Array.from(sel.options).forEach(o => o.selected = (o.value === "0"));
+}
+
+function getTheilerStageSelection (i) {
+    const sel = document.getElementById(`profileStage${i}`);
+    const selected = Array.from(sel.options).filter(o => o.selected && o.value !== "0").map(o => o.value);
+    return selected
+}
+
+function setTheilerStageSelection (i, stages) {
+    const sel = document.getElementById(`profileStage${i}`);
+    Array.from(sel.options).forEach(o => o.selected = false);
+    if (!stages || stages.length === 0) stages = ["0"];
+    stages.forEach(s => {
+        const opt = sel.querySelector(`option[value="${s}"]`).selected = true
+    });
+}
+
+function theilerStageSelectorChanged (i) {
+    model.profileSpec[i].stages = getTheilerStageSelection (i)
+    if (model.profileSpec[i].detected === false) {
+        model.notMode = NOTINSTRUCTURES
+    }
 }
 
 function makeProfileRow (model, i) {
-    var profileRow = `<tr id="profileStructureRow${i}" >
-    <td style="">
-    <button type="button" onClick="removeProfileRow(${i})" id="removeStructureRowButton${i}" class="removeButton" title="Remove this structure.">X</button>
-    <input style="width: 320px; position: relative;" id="profileStructure${i}" name="profileStructure${i}" value="${model.structure}" placeholder="anatomical structure"></input>
-    <input type="hidden" id="profileStructure${i}ID" name="profileStructureID${i}" value="${model.structureID}"/>
-    <div class="anatomyAC" style="width: 400px;" id="profileStructureContainer${i}"></div>
+    var profileRow = 
+    `<tr id="profileStructureRow${i}" class="profile-structure-row ${model.detected ? 'detected' : 'not-detected'}" >
+    <td >
+	<button type="button" onClick="removeProfileRow(${i})" id="removeStructureRowButton${i}" 
+	    class="removeButton" title="Remove this structure.">X</button>
+	<input style="width: 320px; position: relative;" id="profileStructure${i}" name="profileStructure${i}" 
+	    value="${model.structure}" placeholder="anatomical structure"></input>
+	<input type="hidden" id="profileStructure${i}ID" name="profileStructureID${i}" 
+	    value="${model.structureID}"/>
+	<div class="anatomyAC" style="width: 400px;" id="profileStructureContainer${i}"></div>
     </td>
-    <td style=""><input type="radio" name="profileDetected${i}" value="true"  id="profileDetected${i}" class="detected" ${model.detected ? 'checked' : ''} onChange="profileRadioChange(${i})"/></td>
-    <td style=""><input type="radio" name="profileDetected${i}" value="false" id="profileNotDetected${i}" class="notDetected" ${model.detected ? '' : 'checked'} onChange="profileRadioChange(${i})"/></td>
-    </tr>`
+    <td>
+        <span>and/or</span>
+    </td>
+    <td>
+	${makeTheilerStageSelector(i)}
+    </td>
+    </tr>`;
     return profileRow;
 }
 
+// Encodes the current model state into an parameter string
 function profileSpec2QueryString () {
-    var qs = profileSpec.map ((m,i) => {
-        return `profileStructure=${m.structure}&profileStructureID=${m.structureID}&profileDetected=${m.detected}`
+    var qs = model.profileSpec.map ((m,i) => {
+        return `profileStructure=${m.structure}&profileStructureID=${m.structureID}&profileDetected=${m.detected}&profileStage=${m.stages.join('|')}`
     }).join('&');
-    const nweChecked = YAHOO.util.Dom.get("profileNowhereElseCheckbox").checked;
-    if (nweChecked) qs += "&profileNowhereElseCheckbox=true";
+    qs += `&formMode=${model.formMode}&notMode=${model.notMode}`
     return qs;
 }
 
+// Parses a parameter string and refreshes the model data
 function profileQueryString2Spec (qs) {
     const structures = []
     const structureIDs = []
     const detected = []
+    const stages = []
     YAHOO.util.Dom.get("profileNowhereElseCheckbox").checked = false;
     qs.split('&').forEach(q => {
         const pts = q.split('=');
@@ -1885,100 +1876,172 @@ function profileQueryString2Spec (qs) {
 	    structureIDs.push(pts[1])
 	} else if (pts[0] === "profileDetected") {
 	    detected.push( pts[1] ==="true" )
-	} else if (pts[0] === "profileNowhereElseCheckbox") {
-	    YAHOO.util.Dom.get("profileNowhereElseCheckbox").checked = true;
+	} else if (pts[0] === "profileStage") {
+	    stages.push( pts[1].split("|").filter(x=>x))
+	} else if (pts[0] === "formMode") {
+	    model.formMode = pts[1]
+	} else if (pts[0] === "notMode") {
+	    model.notMode = pts[1]
 	}
     })
     if (structures.length !== structureIDs.length || structures.length !== detected.length) {
         throw "query string contains different numbers of profile parameters."
     }
     var foundParams = false
-    profileSpec = []
+    model.profileSpec = []
     structures.forEach((s,i) => {
 	if (s) foundParams = true;
-        profileSpec.push({
+        model.profileSpec.push({
 	    structure: s,
 	    structureID: structureIDs[i],
-	    detected: detected[i]
+	    detected: detected[i],
+	    stages: stages[i]
 	})
     })
     refreshProfileForm()
     return foundParams
 }
 
-function profileRadioChange (i) {
-    const detectedEl = document.getElementById(`profileDetected${i}`);
-    profileSpec[i].detected = detectedEl.checked;
-    refreshEnabledDisabled();
-}
+function enableDisableSection (section, enable) {
+    const sec = document.getElementById(section);
+    if (!sec) return;
 
-function profileNweChange () {
-    refreshEnabledDisabled();
+    const action = enable ? 'remove' : 'add';
+    sec.classList[action]("disabledSection");
+
+    const d = !enable;
+    const inputs = sec.querySelectorAll('input')
+    inputs.forEach(i => i.disabled=d);
+    const buttons = sec.querySelectorAll('button');
+    buttons.forEach(i => i.disabled=d);
+    const selectors = sec.querySelectorAll('select');
+    selectors.forEach(i => i.disabled=d);
+}
+function enableSection (s) {
+    enableDisableSection(s, true)
+}
+function disableSection (s) {
+    enableDisableSection(s, false)
 }
 
 function refreshEnabledDisabled () {
-
-    const radios = document.querySelectorAll('#profileStructureTable input[type="radio"].notDetected ');
-    const ndhText = document.getElementById("notDetectedHeaderText");
     const nwe = document.getElementById("profileNowhereElseCheckbox");
     const nweText = document.getElementById("nowhereElseText");
 
-    nwe.disabled = profileSpec.reduce( (nd,m) => (nd || !m.detected), false );
+    const nis = document.getElementById("profileNotInStructuresCheckbox");
+    const nisText = document.getElementById("profileNotInStructuresText");
+
+    nwe.disabled = (model.notMode === NOTINSTRUCTURES);
     if (nwe.disabled) {
 	nweText.classList.add("disabledText");
     } else {
 	nweText.classList.remove("disabledText");
     }
 
-    radios.forEach(cb => cb.disabled = nwe.checked);
-    if (nwe.checked) {
-	ndhText.classList.add("disabledText");
-    } else {
-	ndhText.classList.remove("disabledText");
+    nis.disabled = (model.notMode === NOWHEREELSE);
+    if (nis.disabled) {
+	disableSection('notDetectedSection')
+	disableSection('afterNotDetectedSection')
+    }
+    else {
+	enableSection('notDetectedSection')
+	enableSection('afterNotDetectedSection')
     }
 }
 
-function refreshProfileForm () {
-    const ptbl = document.getElementById("profileStructureTable");
-    const pbody = ptbl.querySelector("tbody");
-    const pbodyContent = profileSpec.map((m,i) => makeProfileRow(m,i)).join('');
-    pbody.innerHTML = pbodyContent;
-    profileSpec.forEach((m,i) => {
-	const objs = makeStructureAC(`profileStructure${i}`,`profileStructureContainer${i}`);
-	objs.oAC.itemSelectEvent.subscribe(() => refreshProfileSpec (i));
-    })
+function profileSetNotMode() {
+    model.notMode = null
+    if (document.getElementById("profileNowhereElseCheckbox").checked) model.notMode = NOWHEREELSE;
+    if (document.getElementById("profileNotInStructuresCheckbox").checked) model.notMode = NOTINSTRUCTURES;
     refreshEnabledDisabled()
-    if (profileSpec.length === 1) {
-        document.getElementById("removeStructureRowButton0").style.display = 'none';
+}
+
+/*
+ * Refreshes the DOM from the model
+ * */
+function refreshProfileForm () {
+    const pform = document.getElementById("gxdProfileQueryForm");
+    const ptbl = document.getElementById("profileStructureTable");
+
+    const posTbody = ptbl.querySelector("#detectedSection");
+    const posSpecs = model.profileSpec.map((m,i) => m.detected ? makeProfileRow(m,i) : '').join('');
+    posTbody.innerHTML = posSpecs;
+
+    const negTbody = ptbl.querySelector("#notDetectedSection");
+    const negSpecs = model.profileSpec.map((m,i) => m.detected ? '' : makeProfileRow(m,i)).join('');
+    negTbody.innerHTML = negSpecs;
+
+    model.profileSpec.forEach((m,i) => {
+	const objs = makeStructureAC(`profileStructure${i}`,`profileStructureContainer${i}`);
+	objs.oAC.itemSelectEvent.subscribe(() => {
+	    // when user selects from AC, update the model and the form
+	    if (model.notMode !== NOTINSTRUCTURES) {
+		pform.profileNowhereElseCheckbox.checked = false;
+		pform.profileNotInStructuresCheckbox.checked = true;
+		model.notMode = NOTINSTRUCTURES;
+	    }
+	    refreshProfileSpec (i) ;
+	    refreshEnabledDisabled();
+	});
+	setTheilerStageSelection(i, m.stages);
+    })
+
+    const formModeRadio = pform.querySelector(`input[name="profileMode"][value="${model.formMode}"]`)
+    formModeRadio.checked = true
+
+    if (model.formMode === CLASSICAL) {
+        pform.classList.replace(RNASEQ,CLASSICAL);
     }
+    else if (model.formMode === RNASEQ) {
+        pform.classList.replace(CLASSICAL,RNASEQ);
+    }
+
+    pform.profileNowhereElseCheckbox.checked = (model.notMode === NOWHEREELSE)
+    pform.profileNotInStructuresCheckbox.checked = (model.notMode === NOTINSTRUCTURES)
+
+    refreshEnabledDisabled()
 }
 
 function refreshProfileSpec (i) {
     const structure = document.getElementById(`profileStructure${i}`).value;
     const structureID = document.getElementById(`profileStructure${i}ID`).value;
-    const detected = document.getElementById(`profileDetected${i}`).checked;
-    profileSpec[i].structure = structure
-    profileSpec[i].structureID = structureID
-    profileSpec[i].detected = detected
+    model.profileSpec[i].structure = structure
+    model.profileSpec[i].structureID = structureID
 }
 
 function addProfileRow (detected) {
-    if (profileSpec.length === 10) {
+    if (model.profileSpec.length === 10) {
 	alert("Maximum of ten anatomical structures allowed.")
 	return
     }
-    profileSpec.push({
+    model.profileSpec.push({
         structure: "",
 	structureID: "",
-	detected: detected
+	detected: detected,
+	stages: []
     })
     refreshProfileForm();
 }
 
 function removeProfileRow (i) {
-    if (profileSpec.length > 1) {
-	profileSpec.splice(i,1);
+	model.profileSpec.splice(i,1);
 	refreshProfileForm();
+}
+
+function profileClearStages () {
+	model.profileSpec.forEach(m => m.stages = []);
+	refreshProfileForm();
+}
+
+function profileToggleShowStages () {
+    const cb = document.getElementById("profileShowStagesCheckbox");
+    const tbl = document.getElementById("profileStructureTable");
+    if (cb.checked) {
+        tbl.classList.remove("hideStages");
+    }
+    else {
+	profileClearStages();
+        tbl.classList.add("hideStages");
     }
 }
 

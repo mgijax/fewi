@@ -70,8 +70,9 @@ public class GxdQueryForm implements Cloneable {
 	// profile specific fields
 	private List<String> profileStructureID = new ArrayList<String>();
 	private List<String> profileDetected = new ArrayList<String>();
-
-	private String profileNowhereElseCheckbox = "";		// profile form:  AND NOT anywhere else
+	private List<String> profileStage = new ArrayList<String>();
+	private String notMode = "";
+	private String formMode = "";
 
 	private Map<Integer, String> theilerStagesRibbon2 = new LinkedHashMap<Integer, String>();
 	private Map<Integer, String> difTheilerStages = new LinkedHashMap<Integer, String>();
@@ -786,13 +787,26 @@ public class GxdQueryForm implements Cloneable {
 		this.profileDetected = profileDetected;
 	}
 
-	public String getProfileNowhereElseCheckbox() {
-		return profileNowhereElseCheckbox;
+	public List<String> getProfileStage() {
+		return profileStage;
 	}
-	public void setProfileNowhereElseCheckbox(String profileNowhereElseCheckbox) {
-		this.profileNowhereElseCheckbox = profileNowhereElseCheckbox;
+	public void setProfileStage(List<String> profileStage) {
+		this.profileStage = profileStage;
 	}
 
+	public String getNotMode() {
+		return notMode;
+	}
+	public void setNotMode(String notMode) {
+		this.notMode = notMode;
+	}
+
+	public String getFormMode() {
+		return formMode;
+	}
+	public void setFormMode(String formMode) {
+		this.formMode = formMode;
+	}
 
 	//-------------------------------------------//
 	//--- fields related to batch submissions ---//
@@ -920,7 +934,9 @@ public class GxdQueryForm implements Cloneable {
 				+ ", wildtypeFilter=" + wildtypeFilter 
 				+ ", profileStructureID=" + profileStructureID.toString() 
 				+ ", profileDetected=" + profileDetected.toString() 
-				+ ", profileNowhereElseCheckbox=" + profileNowhereElseCheckbox 
+				+ ", profileStage=" + profileStage.toString() 
+				+ ", notMode=" + notMode.toString() 
+				+ ", formMode=" + formMode.toString() 
 				+ ", mpFilter=" + mpFilter 
 				+ ", doFilter=" + doFilter 
 				+ ", len(IDs)=" + (ids == null ? "0" : ids.length() )
