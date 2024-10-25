@@ -839,7 +839,7 @@ filters.getUrlFragmentForFilter = function(filterName) {
 		        var item = items[k];
 
 		        if (item.toString().length > 0) {
-	                s = s + '&' + fieldname + '=' + item;
+	                s = s + '&' + fieldname + '=' + item.replaceAll('&', '%26');
 		        }
 	        }
 	    }
