@@ -71,8 +71,8 @@ public class GxdQueryForm implements Cloneable {
 	private List<String> profileStructureID = new ArrayList<String>();
 	private List<String> profileDetected = new ArrayList<String>();
 	private List<String> profileStage = new ArrayList<String>();
-	private String notMode = "";
-	private String formMode = "";
+	private String profileNowhereElseCheckbox = "";
+	private String profileFormMode = "";
 
 	private Map<Integer, String> theilerStagesRibbon2 = new LinkedHashMap<Integer, String>();
 	private Map<Integer, String> difTheilerStages = new LinkedHashMap<Integer, String>();
@@ -794,18 +794,18 @@ public class GxdQueryForm implements Cloneable {
 		this.profileStage = profileStage;
 	}
 
-	public String getNotMode() {
-		return notMode;
+	public String getProfileNowhereElseCheckbox() {
+		return profileNowhereElseCheckbox;
 	}
-	public void setNotMode(String notMode) {
-		this.notMode = notMode;
+	public void setProfileNowhereElseCheckbox(String profileNowhereElseCheckbox) {
+		this.profileNowhereElseCheckbox = profileNowhereElseCheckbox;
 	}
 
-	public String getFormMode() {
-		return formMode;
+	public String getProfileFormMode() {
+		return profileFormMode;
 	}
-	public void setFormMode(String formMode) {
-		this.formMode = formMode;
+	public void setProfileFormMode(String profileFormMode) {
+		this.profileFormMode = profileFormMode;
 	}
 
 	//-------------------------------------------//
@@ -935,8 +935,8 @@ public class GxdQueryForm implements Cloneable {
 				+ ", profileStructureID=" + profileStructureID.toString() 
 				+ ", profileDetected=" + profileDetected.toString() 
 				+ ", profileStage=" + profileStage.toString() 
-				+ ", notMode=" + notMode.toString() 
-				+ ", formMode=" + formMode.toString() 
+				+ ", profileNowhereElseCheckbox=" + profileNowhereElseCheckbox.toString() 
+				+ ", profileFormMode=" + profileFormMode.toString() 
 				+ ", mpFilter=" + mpFilter 
 				+ ", doFilter=" + doFilter 
 				+ ", len(IDs)=" + (ids == null ? "0" : ids.length() )

@@ -3662,7 +3662,7 @@ public class GXDController {
 		// start filter list for query filters
 		List<Filter> queryFilters = new ArrayList<Filter>();
 
-		boolean profileNowhereElse = "nowhereElse".equals(query.getNotMode());
+		boolean profileNowhereElse = "true".equals(query.getProfileNowhereElseCheckbox());
 
 		if (profileNowhereElse) {
 
@@ -3756,7 +3756,7 @@ public class GXDController {
 		// start filter list for query filters
 		List<Filter> structureFilters = new ArrayList<Filter>();
 
-		boolean profileNowhereElse = "nowhereElse".equals(query.getNotMode());
+		boolean profileNowhereElse = "true".equals(query.getProfileNowhereElseCheckbox());
 
 		if (profileNowhereElse) {
 		logger.debug("makeProfileResultFilters - profileNowhereElse");

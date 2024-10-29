@@ -30,10 +30,10 @@ YAHOO.gxd.container.panelStructure.render();
 YAHOO.util.Event.addListener("gxdStructureHelpImage", "mouseover", YAHOO.gxd.container.panelStructure.show, YAHOO.gxd.container.panelStructure, true);
 
 
-YAHOO.gxd.container.panelProfile = new YAHOO.widget.Panel("gxdProfileHelp", { width:"320px", draggable:false, visible:false, constraintoviewport:true,close:false } );
+YAHOO.gxd.container.panelProfile = new YAHOO.widget.Panel("gxdProfileNdHelp", { width:"320px", draggable:false, visible:false, constraintoviewport:true,close:false } );
 YAHOO.gxd.container.panelProfile.render();
-YAHOO.util.Event.addListener("gxdProfileHelpImage", "mouseover", YAHOO.gxd.container.panelProfile.show, YAHOO.gxd.container.panelProfile, true);
-YAHOO.util.Event.addListener("gxdProfileHelpImage", "mouseout", YAHOO.gxd.container.panelProfile.hide, YAHOO.gxd.container.panelProfile, true);
+YAHOO.util.Event.addListener("gxdProfileNdHelpImage", "mouseover", YAHOO.gxd.container.panelProfile.show, YAHOO.gxd.container.panelProfile, true);
+YAHOO.util.Event.addListener("gxdProfileNdHelpImage", "mouseout", YAHOO.gxd.container.panelProfile.hide, YAHOO.gxd.container.panelProfile, true);
 
 YAHOO.gxd.container.panelClassical = new YAHOO.widget.Panel("gxdProfileClassicalHelp", { width:"280px", draggable:false, visible:false, constraintoviewport:true,close:false } );
 YAHOO.gxd.container.panelClassical.render();
@@ -1733,15 +1733,11 @@ function checkBatchInput(){
 const CLASSICAL = "classical"
 const RNASEQ = "rnaseq"
 
-// not expressed modes
-const NOWHEREELSE = "nowhereElse"
-const NOTINSTRUCTURES = "notInStructures"
-
 // data that drives the form display
 var model = {
-    profileSpec: [], // list of {structure, structyreID, detected, stages}
+    profileSpec: [], // list of {structure, structureID, detected, stages}
     formMode: CLASSICAL, // "classical" or "rnaseq"
-    notMode: null // "nowhereElse" or "notInStructures" (may be null if no not-conditions specified)
+    nowhereElse: false // 
 }
 
 function resetProfileForm () {
@@ -1753,10 +1749,15 @@ function resetProfileForm () {
 	    },{
 	    structure: "",
 	    structureID: "",
-	    detected: false,
+	    detected: null,
+	    stages: []
+	    },{
+	    structure: "",
+	    structureID: "",
+	    detected: null,
 	    stages: []
     }]
-    model.notMode = null
+    model.nowhereElse = false
     refreshProfileForm()
 
 }
@@ -1826,16 +1827,26 @@ function setTheilerStageSelection (i, stages) {
 function theilerStageSelectorChanged (i) {
     model.profileSpec[i].stages = getTheilerStageSelection (i)
     if (model.profileSpec[i].detected === false) {
-        model.notMode = NOTINSTRUCTURES
+        model.nowhereElse = false
     }
 }
 
 function makeProfileRow (model, i) {
+    var dclass = model.detected ? 'detected' : (model.detected === false ? 'not-detected' : '');
+    var dchecked = model.detected ? 'checked' : '';
+    var ndchecked = model.detected === false ? 'checked' : '';
+    var rowClass = `zstripe${ i % 2 }`;
     var profileRow = 
-    `<tr id="profileStructureRow${i}" class="profile-structure-row ${model.detected ? 'detected' : 'not-detected'}" >
+    `<tr id="profileStructureRow${i}" class="profile-structure-row ${dclass} ${rowClass}" >
+    <td>
+        <input type="radio" id="detectedRadio${i}" name="detected${i}" value="true" ${dchecked}
+	    onchange="profileDetectedChanged(${i})" />
+    </td>
+    <td>
+        <input type="radio" id="notdetectedRadio${i}" name="detected${i}" value="false" ${ndchecked}
+	    onchange="profileDetectedChanged(${i})" />
+    </td>
     <td >
-	<button type="button" onClick="removeProfileRow(${i})" id="removeStructureRowButton${i}" 
-	    class="removeButton" title="Remove this structure.">X</button>
 	<input style="width: 320px; position: relative;" id="profileStructure${i}" name="profileStructure${i}" 
 	    value="${model.structure}" placeholder="anatomical structure"></input>
 	<input type="hidden" id="profileStructure${i}ID" name="profileStructureID${i}" 
@@ -1848,8 +1859,23 @@ function makeProfileRow (model, i) {
     <td>
 	${makeTheilerStageSelector(i)}
     </td>
+    <td>
+	<button type="button" onClick="removeProfileRow(${i})" id="removeStructureRowButton${i}" 
+	    class="removeButton" title="Remove this structure.">X</button>
+    </td>
     </tr>`;
     return profileRow;
+}
+
+function profileDetectedChanged(i) {
+    var detectedRadio = document.querySelector(`#gxdProfileQueryForm input[name="detected${i}"]:checked`);
+    var detected = detectedRadio ? (detectedRadio.value === 'true' ? true : false) : null;
+    var m = model.profileSpec[i]
+    m.detected = detected;
+    m.structure = ""
+    m.structureID = ""
+    m.stages = []
+    refreshProfileForm();
 }
 
 // Encodes the current model state into an parameter string
@@ -1857,7 +1883,7 @@ function profileSpec2QueryString () {
     var qs = model.profileSpec.map ((m,i) => {
         return `profileStructure=${m.structure}&profileStructureID=${m.structureID}&profileDetected=${m.detected}&profileStage=${m.stages.join('|')}`
     }).join('&');
-    qs += `&formMode=${model.formMode}&notMode=${model.notMode}`
+    qs += `&profileFormMode=${model.formMode}&profileNowhereElseCheckbox=${model.nowhereElse}`
     return qs;
 }
 
@@ -1875,13 +1901,13 @@ function profileQueryString2Spec (qs) {
 	} else if (pts[0] === "profileStructureID") {
 	    structureIDs.push(pts[1])
 	} else if (pts[0] === "profileDetected") {
-	    detected.push( pts[1] ==="true" )
+	    detected.push( pts[1] ==="true" ? true : pts[1] === "false" ? false : null )
 	} else if (pts[0] === "profileStage") {
 	    stages.push( pts[1].split("|").filter(x=>x))
-	} else if (pts[0] === "formMode") {
+	} else if (pts[0] === "profileFormMode") {
 	    model.formMode = pts[1]
-	} else if (pts[0] === "notMode") {
-	    model.notMode = pts[1]
+	} else if (pts[0] === "profileNowhereElseCheckbox") {
+	    model.nowhereElse = (pts[1] === "true")
 	}
     })
     if (structures.length !== structureIDs.length || structures.length !== detected.length) {
@@ -1902,57 +1928,44 @@ function profileQueryString2Spec (qs) {
     return foundParams
 }
 
-function enableDisableSection (section, enable) {
-    const sec = document.getElementById(section);
-    if (!sec) return;
-
-    const action = enable ? 'remove' : 'add';
-    sec.classList[action]("disabledSection");
-
-    const d = !enable;
-    const inputs = sec.querySelectorAll('input')
-    inputs.forEach(i => i.disabled=d);
-    const buttons = sec.querySelectorAll('button');
-    buttons.forEach(i => i.disabled=d);
-    const selectors = sec.querySelectorAll('select');
-    selectors.forEach(i => i.disabled=d);
-}
-function enableSection (s) {
-    enableDisableSection(s, true)
-}
-function disableSection (s) {
-    enableDisableSection(s, false)
-}
-
 function refreshEnabledDisabled () {
+    const pform = document.getElementById("gxdProfileQueryForm");
+
+    // nowhere else checkbox
     const nwe = document.getElementById("profileNowhereElseCheckbox");
     const nweText = document.getElementById("nowhereElseText");
 
-    const nis = document.getElementById("profileNotInStructuresCheckbox");
-    const nisText = document.getElementById("profileNotInStructuresText");
+    // All the not-detected radio buttons.
+    const ndRadios = pform.querySelectorAll('tr.profile-structure-row input[type="radio"][value="false"]')
+    const ndText = document.getElementById("profileNotDetectedText")
+    var ndChecked = false
 
-    nwe.disabled = (model.notMode === NOTINSTRUCTURES);
-    if (nwe.disabled) {
-	nweText.classList.add("disabledText");
-    } else {
-	nweText.classList.remove("disabledText");
+    // first enable everyone
+    nwe.disabled = false
+    nweText.classList.remove("disabledText")
+    ndText.classList.remove("disabledText")
+    ndRadios.forEach(r => {
+	r.disabled = false
+	ndChecked = ndChecked || r.checked
+    })
+
+    // if nwe checked, disable the nd radios
+    if (nwe.checked) {
+	ndRadios.forEach(r => {
+	    r.disabled = true
+	})
+	ndText.classList.add("disabledText")
+    }
+    else if (ndChecked) {
+	// else if an nd radio is checked, disable the nwe checkbox
+        nwe.disabled = true
+	nweText.classList.add("disabledText")
     }
 
-    nis.disabled = (model.notMode === NOWHEREELSE);
-    if (nis.disabled) {
-	disableSection('notDetectedSection')
-	disableSection('afterNotDetectedSection')
-    }
-    else {
-	enableSection('notDetectedSection')
-	enableSection('afterNotDetectedSection')
-    }
 }
 
-function profileSetNotMode() {
-    model.notMode = null
-    if (document.getElementById("profileNowhereElseCheckbox").checked) model.notMode = NOWHEREELSE;
-    if (document.getElementById("profileNotInStructuresCheckbox").checked) model.notMode = NOTINSTRUCTURES;
+function profileNowhereElseChecked() {
+    model.nowhereElse = document.getElementById("profileNowhereElseCheckbox").checked
     refreshEnabledDisabled()
 }
 
@@ -1963,23 +1976,14 @@ function refreshProfileForm () {
     const pform = document.getElementById("gxdProfileQueryForm");
     const ptbl = document.getElementById("profileStructureTable");
 
-    const posTbody = ptbl.querySelector("#detectedSection");
-    const posSpecs = model.profileSpec.map((m,i) => m.detected ? makeProfileRow(m,i) : '').join('');
-    posTbody.innerHTML = posSpecs;
-
-    const negTbody = ptbl.querySelector("#notDetectedSection");
-    const negSpecs = model.profileSpec.map((m,i) => m.detected ? '' : makeProfileRow(m,i)).join('');
-    negTbody.innerHTML = negSpecs;
+    const tbody = ptbl.querySelector("#detectedSection");
+    const specs = model.profileSpec.map((m,i) => makeProfileRow(m,i)).join('');
+    tbody.innerHTML = specs;
 
     model.profileSpec.forEach((m,i) => {
 	const objs = makeStructureAC(`profileStructure${i}`,`profileStructureContainer${i}`);
 	objs.oAC.itemSelectEvent.subscribe(() => {
 	    // when user selects from AC, update the model and the form
-	    if (model.notMode !== NOTINSTRUCTURES) {
-		pform.profileNowhereElseCheckbox.checked = false;
-		pform.profileNotInStructuresCheckbox.checked = true;
-		model.notMode = NOTINSTRUCTURES;
-	    }
 	    refreshProfileSpec (i) ;
 	    refreshEnabledDisabled();
 	});
@@ -1995,10 +1999,7 @@ function refreshProfileForm () {
     else if (model.formMode === RNASEQ) {
         pform.classList.replace(CLASSICAL,RNASEQ);
     }
-
-    pform.profileNowhereElseCheckbox.checked = (model.notMode === NOWHEREELSE)
-    pform.profileNotInStructuresCheckbox.checked = (model.notMode === NOTINSTRUCTURES)
-
+    pform.profileNowhereElseCheckbox.checked = model.nowhereElse
     refreshEnabledDisabled()
 }
 
@@ -2007,6 +2008,10 @@ function refreshProfileSpec (i) {
     const structureID = document.getElementById(`profileStructure${i}ID`).value;
     model.profileSpec[i].structure = structure
     model.profileSpec[i].structureID = structureID
+    const detected = document.getElementById(`detectedRadio${i}`)
+    const notdetected = document.getElementById(`notdetectedRadio${i}`)
+    if (!(detected.checked || notdetected.checked)) detected.checked = true
+    model.profileSpec[i].detected = detected.checked
 }
 
 function addProfileRow (detected) {
