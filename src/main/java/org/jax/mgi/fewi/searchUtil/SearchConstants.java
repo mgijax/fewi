@@ -200,6 +200,16 @@ public class SearchConstants {
 	public static final String ANATOMICAL_SYSTEM = "anatomicalSystem";
 	public static final String ANATOMY_ID = "anatomyID";
 	public static final String ANCESTOR_ANATOMY_KEY	= "ancestorAnatomyKey";
+	// profile constants
+	public static final String PROF_POS_C_EXACT = "posCExact";
+	public static final String PROF_POS_C_ANC = "posCAnc";
+	public static final String PROF_POS_R_EXACT = "posRExact";
+	public static final String PROF_POS_R_ANC = "posRAnc";
+
+	public static final String PROF_POS_C_EXACT_A = "posCExactA";
+	public static final String PROF_POS_C_ANC_A = "posCAncA";
+	public static final String PROF_POS_R_EXACT_A = "posRExactA";
+	public static final String PROF_POS_R_ANC_A = "posRAncA";
 
 	public static final String PRIMARY_KEY = "pKey";
 

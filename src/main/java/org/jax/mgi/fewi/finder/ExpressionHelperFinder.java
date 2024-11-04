@@ -220,4 +220,155 @@ public class ExpressionHelperFinder {
             return res.get(0).get(0);
         }
     }
+
+    public String emapa2key (String emapa_id) {
+        String q = String.format("select t.term_key, ' ' from term t where t.vocab_name = 'EMAPA' and t.primary_id = '%s'", emapa_id);
+	List<List<String>> res = sqlHunter.sql(q);
+        if (res.size() == 0) {
+            return null;
+        } else {
+            return res.get(0).get(0);
+        }
+    }
+
+    // Translates an EMAPA id and (optionally) a list of stages into a list of EMAPS keys
+    public List<String> emapa2emaps (String emapaId, String stages) {
+        String q = "select t.primary_id, te.term_key, te.stage "
+	    + "from term t, term_emap te "
+	    + "where t.vocab_name = 'EMAPA' "
+	    + "and t.primary_id = '%s' "
+	    + "and t.term_key = te.emapa_term_key "
+	    + " %s "
+	    + "order by te.stage ";
+	    ;
+	String stgExpr = "";
+	if (stages != null && !stages.equals("")) {
+	    stgExpr = String.format("and te.stage in (%s) ", stages);
+	}
+	List<String> stageKeys = new ArrayList<String>();
+	List<List<String>> res = sqlHunter.sql(String.format(q, emapaId, stgExpr));
+	for (List<String> r : res) {
+	    stageKeys.add(r.get(1));
+	}
+	return stageKeys;
+    }
+
+    public List<String> expressedOutsideOf (
+        List<String> emapaIds,
+        List<String> stages
+        ) {
+
+        /*
+         * Defines allExpression as distinct marker_key/structure_key combinations
+         * from all positive GXD results (not including RNAseq data). marker_key is
+         * renamed as subject_key so downstream parts can be "generic".
+         */
+        String allGxd = 
+          "allExpression AS ("
+          + "SELECT distinct " 
+          + "s.marker_key as subject_key, "
+          + "s.structure_key "
+          + "FROM expression_result_summary s, genotype g "
+          + "WHERE s.is_expressed = 'Yes' "
+          + "AND s.genotype_key = g.genotype_key "
+          + "AND ( "
+          + "    g.combination_1 is null "
+          + "    OR "
+          + "    (s.assay_type = 'In situ reporter (knock in)' AND g.genotype_type = 'ht') "
+          + ")), ";
+
+        
+        /* EMAPS structure keys corresponding to one EMAPA key. Instantiate 
+         * for each EMAPA key passed by caller. In the final query, these will be named
+         * "structure0", "structure1", ...
+         *
+         * If stages are specified in the query, restrict the EMAPS structures in
+         * this step accordingly.
+         */
+        String structureA = 
+          "structure%s AS ( "
+          + "SELECT te.term_key "
+          + "FROM term t, term_emap te "
+          + "WHERE t.vocab_name = 'EMAPA' "
+          + "AND t.term_key = te.emapa_term_key  "
+          + "AND t.primary_id = '%s' "
+          + " %s " // stage spec goes here
+          + "), " ;
+
+        /* Region of interest (ROI) for one EMAPA key. Equals all the 
+         * of the EMAPS structures for that EMAPA key and all their descendants. 
+         * In the final query, these will be named "roi0", "roi1", ...
+         */
+        String roiA = 
+          "roi%s AS ( "
+          + "SELECT distinct td.descendent_term_key as term_key "
+          + "FROM term_descendent td "
+          + "WHERE td.term_key in (SELECT term_key from structure%s) "
+          + "UNION "
+          + "SELECT term_key from structure%s "
+          + "), ";
+
+        
+        /* Instantiate each of the above three queries for each EMAPA key,
+         * and append to the final query.
+         */
+        StringBuffer query = new StringBuffer();
+        query.append("WITH ");
+        query.append(allGxd);
+
+        int n = 0;
+        for (String eid : emapaIds) {
+            String A = "" + n;
+	    String stgs = stages.get(n);
+	    if (!stgs.equals("")) {
+	        stgs = "AND te.stage in (" + stgs + ")";
+	    }
+            query.append(String.format(structureA, A, eid, stgs));
+            query.append(String.format(roiA, A, A, A));
+	    n += 1;
+        }
+ 
+	/* Compute the complete ROI set as the union of EMAPS keys from
+	 * all the individual roi sets.
+	 */
+	query.append("roi as ( ");
+	for(int i = 0; i < n; i++) {
+	    if (i > 0) query.append(" UNION ");
+	    query.append("SELECT term_key from roi" + i); 
+	}
+	query.append("),");
+
+	/* Compute non-ROI terms, i.e., all EMAPS terms not in the ROI.
+	 */
+	String nonRoi =
+	  "nonRoi as ("
+	  + "SELECT term_key "
+	  + "FROM term "
+	  + "WHERE vocab_name = 'EMAPS' "
+	  + "AND term_key not in (SELECT term_key FROM roi) "
+	  + "), ";
+	query.append(nonRoi);
+
+	/* Compute the set of things expressed in a non-ROI structure.
+	 */
+	String expressedInNonRoi = 
+	      "expressedInNonRoi as ( "
+	    + "SELECT distinct subject_key "
+	    + "FROM allExpression "
+	    + "WHERE structure_key in (SELECT term_key FROM nonRoi) "
+	    + ") ";
+	query.append(expressedInNonRoi);
+
+	String result = "SELECT subject_key, ' ' FROM expressedInNonRoi" ;
+	query.append(result);
+
+        /* Run the query and return the list of gene keys 
+         */
+        List<String> resultKeys = new ArrayList<String>();
+        for(List<String> row : sqlHunter.sql(query.toString())){
+            resultKeys.add(row.get(0));
+        }
+        return resultKeys;
+    }
 }
+

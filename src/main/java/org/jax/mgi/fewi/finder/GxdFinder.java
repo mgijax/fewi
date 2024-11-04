@@ -8,6 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.hunter.SolrGxdAssayTypeFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdDetectedFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdDifferentialHunter;
+import org.jax.mgi.fewi.hunter.SolrGxdProfileHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdDoFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdGoFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdMarkerTypeFacetHunter;
@@ -69,6 +70,9 @@ public class GxdFinder {
 
 	@Autowired
 	private SolrGxdDifferentialHunter gxdDifferentialHunter;
+
+	@Autowired
+	private SolrGxdProfileHunter gxdProfileHunter;
 
 	@Autowired
 	private SolrGxdSystemFacetHunter gxdSystemFacetHunter;
@@ -431,6 +435,15 @@ public class GxdFinder {
 		SearchResults<String> searchResults = new SearchResults<String>();
 		// ask the hunter to identify which objects to return
 		gxdDifferentialHunter.hunt(params, searchResults);
+		return searchResults.getResultKeys();
+	}
+
+	public List<String> searchProfile(SearchParams params) {
+		params.setPageSize(100000);
+		// result object to be returned
+		SearchResults<String> searchResults = new SearchResults<String>();
+		// ask the hunter to identify which objects to return
+		gxdProfileHunter.hunt(params, searchResults);
 		return searchResults.getResultKeys();
 	}
 

@@ -40,8 +40,6 @@
 				    <li> Blot assays
 					<ul>
 					<li> Northern blot</li>
-					<li> Nuclease S1</li>
-					<li> RNase protection</li>
 					<li> RT-PCR</li>
 					<li> Western blot</li>
 					</ul>

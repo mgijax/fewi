@@ -1881,7 +1881,7 @@ function profileDetectedChanged(i) {
 // Encodes the current model state into an parameter string
 function profileSpec2QueryString () {
     var qs = model.profileSpec.map ((m,i) => {
-        return `profileStructure=${m.structure}&profileStructureID=${m.structureID}&profileDetected=${m.detected}&profileStage=${m.stages.join('|')}`
+        return `profileStructure=${m.structure}&profileStructureID=${m.structureID}&profileDetected=${m.detected}&profileStage=${m.stages.join(',')}`
     }).join('&');
     qs += `&profileFormMode=${model.formMode}&profileNowhereElseCheckbox=${model.nowhereElse}`
     return qs;
@@ -1903,7 +1903,7 @@ function profileQueryString2Spec (qs) {
 	} else if (pts[0] === "profileDetected") {
 	    detected.push( pts[1] ==="true" ? true : pts[1] === "false" ? false : null )
 	} else if (pts[0] === "profileStage") {
-	    stages.push( pts[1].split("|").filter(x=>x))
+	    stages.push( pts[1].split(",").filter(x=>x))
 	} else if (pts[0] === "profileFormMode") {
 	    model.formMode = pts[1]
 	} else if (pts[0] === "profileNowhereElseCheckbox") {

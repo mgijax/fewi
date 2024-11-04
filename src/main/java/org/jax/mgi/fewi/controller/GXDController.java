@@ -3642,7 +3642,7 @@ public class GXDController {
 		if(!structureId.trim().equals(""))
 		{
 			// surround with double quotes to make a solr phrase. added a slop of 100 (longest name is 62 chars)
-			String sToken = "\""+structureId+"\"~100";
+			String sToken = "\""+structureId+"\"";
 			return new Filter(queryField,sToken,Filter.Operator.OP_HAS_WORD);
 		}
 		return null;
@@ -3656,51 +3656,45 @@ public class GXDController {
 	private List<String> resolveProfileMarkers(GxdQueryForm query)
 	{
 		logger.debug("--Starting resolveProfileMarkers()");
-
         	List<String> profileStructureKeys = new ArrayList<String>();
-
-		// start filter list for query filters
 		List<Filter> queryFilters = new ArrayList<Filter>();
-
 		boolean profileNowhereElse = "true".equals(query.getProfileNowhereElseCheckbox());
 
-		if (profileNowhereElse) {
+		logger.info("-- resolveProfileMarkers(); building structure match filters");
 
-			logger.info("-- resolveProfileMarkers(); building profileNowhereElse filters");
+		int i = 0;
+		for ( String profileStructureID : query.getProfileStructureID() ) {
+			String stages = query.getProfileStage().get(i);
+			String detected = query.getProfileDetected().get(i);
+			i += 1;
+			if (profileStructureID.equals("") && stages.equals("")) 
+			    continue;
+			if (profileStructureID.equals("")) 
+			    profileStructureID = "EMAPA:25765";
+			logger.debug("-- resolveProfileMarkers() " + i + " = " + 
+			    (detected.equals("true") ? "detected in " : "not-detected in ") +
+			    profileStructureID + " " + stages);
+			Filter filter;
 
-			int i = 0;
-			for ( String profileStructureID : query.getProfileStructureID() ) {
-				i += 1;
-				if (profileStructureID!=null && !profileStructureID.equals("")) {
-					logger.debug("-- resolveProfileMarkers() " + i + " = " + profileStructureID);
-					List<VocabTerm> structureList = vocabFinder.getTermByID(profileStructureID);
-					if (structureList.size() > 0) {
-						profileStructureKeys.add(Integer.toString(structureList.get(0).getTermKey()));
-					}
-				}
+			if (stages.equals("")) {
+			    String emapaKey = expressionHelper.emapa2key(profileStructureID);
+			    if (detected.equals("true")) {
+			    	filter = new Filter(SearchConstants.PROF_POS_C_ANC_A, emapaKey, Filter.Operator.OP_IN);
+			    } else {
+			    	filter = new Filter(SearchConstants.PROF_POS_C_ANC_A, emapaKey, Filter.Operator.OP_NOT_IN);
+			    }
+			} else {
+			    List<String> emapsKeys = expressionHelper.emapa2emaps(profileStructureID, stages);
+			    if (detected.equals("true")) {
+			    	filter = new Filter(SearchConstants.PROF_POS_C_ANC, emapsKeys, Filter.Operator.OP_IN);
+			    } else {
+			    	filter = new Filter(SearchConstants.PROF_POS_C_ANC, emapsKeys, Filter.Operator.OP_NOT_IN);
+			    }
 			}
 
-			// retrieve the list of marker keys; uses sql-based expression helper hunter
-			List<String> markerKeys = expressionHelper.expressedIn(profileStructureKeys, "gene"); 
-			return markerKeys;
-
+			queryFilters.add(filter);
 		}
-		else { // perform structure matching
 
-			logger.info("-- resolveProfileMarkers(); building structure match filters");
-
-			int i = 0;
-			for ( String profileStructureID : query.getProfileStructureID() ) {
-				i += 1;
-				if (profileStructureID!=null && !profileStructureID.equals("")) {
-					logger.debug("-- resolveProfileMarkers() " + i + " = " + profileStructureID);
-					Filter filter = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID);
-					if (query.getProfileDetected().get(i-1).equals("false")) {filter.negate();}
-					queryFilters.add(filter);
-				}
-			}
-
-		}
 
 		Filter profileFilter = new Filter();
 		logger.debug("-- resolveProfileMarkers() queryFilters.size() = " + queryFilters.size());
@@ -3714,7 +3708,17 @@ public class GXDController {
 		SearchParams profileSP = new SearchParams();
 		profileSP.setFilter(profileFilter);
 
-		return gxdFinder.searchDifferential(profileSP);
+		List<String> mkeys = gxdFinder.searchProfile(profileSP);
+
+		if (profileNowhereElse) {
+			List<String> mkeys2 = expressionHelper.expressedOutsideOf(query.getProfileStructureID(), query.getProfileStage());
+			Set<String> s1 = new HashSet<String>(mkeys);
+			s1.removeAll(mkeys2);
+			mkeys = new ArrayList<String>(s1);
+		}
+		return mkeys;
+
+
 	}
 
 	/*
@@ -3771,18 +3775,27 @@ public class GXDController {
 
 			int i = 0;
 			for (String psid : query.getProfileStructureID()) {
+				String detected = query.getProfileDetected().get(i);
+				String stages = query.getProfileStage().get(i);
 				i += 1;
-				if (psid!=null && !psid.equals("")) {
-					List<Filter> structureFilter = new ArrayList<Filter>();
-					if (query.getProfileDetected().get(i-1).equals("false")) {
-						structureFilter.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,psid))	;
-						structureFilter.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
-					} else {
-						structureFilter.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,psid));
-						structureFilter.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
-					}
-					structureFilters.add(Filter.and(structureFilter));
+				if (psid.equals("") && stages.equals("")) continue;
+				if (psid.equals("")) psid = "EMAPA:25765";
+				List<String> stageList = null;
+				if (!stages.equals("")) {
+				    stageList = Arrays.asList(stages.split(","));
 				}
+				List<Filter> structureFilter = new ArrayList<Filter>();
+				if (detected.equals("false")) {
+					structureFilter.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,psid));
+					structureFilter.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
+				} else {
+					structureFilter.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,psid));
+					structureFilter.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));
+				}
+				if (stageList != null) {
+					structureFilter.add(new Filter(SearchConstants.GXD_THEILER_STAGE, stageList, Filter.Operator.OP_IN));
+				}
+				structureFilters.add(Filter.and(structureFilter));
 			}
 		}
 
