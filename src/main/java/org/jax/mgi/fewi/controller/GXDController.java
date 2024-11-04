@@ -3659,6 +3659,7 @@ public class GXDController {
         	List<String> profileStructureKeys = new ArrayList<String>();
 		List<Filter> queryFilters = new ArrayList<Filter>();
 		boolean profileNowhereElse = "true".equals(query.getProfileNowhereElseCheckbox());
+		String formMode = query.getProfileFormMode();
 
 		logger.info("-- resolveProfileMarkers(); building structure match filters");
 
@@ -3675,21 +3676,19 @@ public class GXDController {
 			    (detected.equals("true") ? "detected in " : "not-detected in ") +
 			    profileStructureID + " " + stages);
 			Filter filter;
+			//String searchField = stages.equals("") ? SearchConstants.PROF_POS_C_ANC_A : SearchConstants.PROF_POS_C_ANC;
+			Filter.Operator op = detected.equals("true") ? Filter.Operator.OP_IN : Filter.Operator.OP_NOT_IN;
 
 			if (stages.equals("")) {
+			    // When no stages are specified, query the EMAPA index fields
 			    String emapaKey = expressionHelper.emapa2key(profileStructureID);
-			    if (detected.equals("true")) {
-			    	filter = new Filter(SearchConstants.PROF_POS_C_ANC_A, emapaKey, Filter.Operator.OP_IN);
-			    } else {
-			    	filter = new Filter(SearchConstants.PROF_POS_C_ANC_A, emapaKey, Filter.Operator.OP_NOT_IN);
-			    }
+			    String field = formMode.equals("classical") ? SearchConstants.PROF_POS_C_ANC_A : SearchConstants.PROF_POS_R_ANC_A;
+			    filter = new Filter(field, emapaKey, op);
 			} else {
+			    // When stages are specified, query the EMAPS index fields
 			    List<String> emapsKeys = expressionHelper.emapa2emaps(profileStructureID, stages);
-			    if (detected.equals("true")) {
-			    	filter = new Filter(SearchConstants.PROF_POS_C_ANC, emapsKeys, Filter.Operator.OP_IN);
-			    } else {
-			    	filter = new Filter(SearchConstants.PROF_POS_C_ANC, emapsKeys, Filter.Operator.OP_NOT_IN);
-			    }
+			    String field = formMode.equals("classical") ? SearchConstants.PROF_POS_C_ANC : SearchConstants.PROF_POS_R_ANC;
+			    filter = new Filter(field, emapsKeys, op);;
 			}
 
 			queryFilters.add(filter);
@@ -3948,7 +3947,13 @@ public class GXDController {
 			logger.info("In profile form processing");
 
 			// default filters for profile search
-			queryFilters.add(new Filter(SearchConstants.GXD_ASSAY_TYPE, "RNA-Seq", Filter.Operator.OP_NOT_EQUAL));
+
+			if (query.getProfileFormMode().equals("classical")){
+			    queryFilters.add(new Filter(SearchConstants.GXD_ASSAY_TYPE, "RNA-Seq", Filter.Operator.OP_NOT_EQUAL));
+			} else {
+			    queryFilters.add(new Filter(SearchConstants.GXD_ASSAY_TYPE, "RNA-Seq", Filter.Operator.OP_EQUAL));
+			}
+
 			queryFilters.add(new Filter(SearchConstants.GXD_IS_WILD_TYPE, WILD_TYPE));
 
 			// Process PROFILE QUERY FORM params
