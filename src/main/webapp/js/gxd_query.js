@@ -1733,6 +1733,10 @@ function checkBatchInput(){
 const CLASSICAL = "classical"
 const RNASEQ = "rnaseq"
 
+// root of the EMAPA ontology
+const MOUSE = "mouse TS1-28"
+const MOUSE_ID = "EMAPA:25765"
+
 // data that drives the form display
 var model = {
     profileSpec: [], // list of {structure, structureID, detected, stages}
@@ -1881,7 +1885,10 @@ function profileDetectedChanged(i) {
 // Encodes the current model state into an parameter string
 function profileSpec2QueryString () {
     var qs = model.profileSpec.map ((m,i) => {
-        return `profileStructure=${m.structure}&profileStructureID=${m.structureID}&profileDetected=${m.detected}&profileStage=${m.stages.join(',')}`
+	var stgs = m.stages.join(',')
+	var sid = (m.structureID === "" && stgs !== "") ? MOUSE_ID : m.structureID
+	var str = (m.structureID === "" && stgs !== "") ? MOUSE : m.structure
+        return `profileStructure=${str}&profileStructureID=${sid}&profileDetected=${m.detected}&profileStage=${stgs}`
     }).join('&');
     qs += `&profileFormMode=${model.formMode}&profileNowhereElseCheckbox=${model.nowhereElse}`
     return qs;
@@ -1970,7 +1977,8 @@ function profileNowhereElseChecked() {
 }
 
 /*
- * Refreshes the DOM from the model
+ * Refreshes the DOM from the model. Builds a new form that replaces the previous.
+ * Reinitializes the autocompletes.
  * */
 function refreshProfileForm () {
     const pform = document.getElementById("gxdProfileQueryForm");
@@ -1981,11 +1989,18 @@ function refreshProfileForm () {
     tbody.innerHTML = specs;
 
     model.profileSpec.forEach((m,i) => {
+	// Init the autocompletes 
 	const objs = makeStructureAC(`profileStructure${i}`,`profileStructureContainer${i}`);
 	objs.oAC.itemSelectEvent.subscribe(() => {
 	    // when user selects from AC, update the model and the form
 	    refreshProfileSpec (i) ;
 	    refreshEnabledDisabled();
+	});
+	objs.oAC.selectionEnforceEvent.subscribe(() => {
+	    // when user clears AC selection, update model
+	    const m = model.profileSpec[i]
+	    m.structure = ""
+	    m.structureID = ""
 	});
 	setTheilerStageSelection(i, m.stages);
     })

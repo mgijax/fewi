@@ -3248,9 +3248,12 @@ public class GXDController {
 	 */
 	private boolean isProfileQuery(GxdQueryForm query)
 	{
+		int i = 0;
 		for (String sid : query.getProfileStructureID()) {
-		    if (sid != null && !sid.equals(""))
+		    String stage = query.getProfileStage().get(i);
+		    if (!sid.equals("") || !stage.equals(""))
 		        return true;
+		    i += 1;
 		}
 		return false;
 	}
@@ -3655,7 +3658,7 @@ public class GXDController {
 	 */
 	private List<String> resolveProfileMarkers(GxdQueryForm query)
 	{
-		logger.debug("--Starting resolveProfileMarkers()");
+		logger.info("--Starting resolveProfileMarkers()");
         	List<String> profileStructureKeys = new ArrayList<String>();
 		List<Filter> queryFilters = new ArrayList<Filter>();
 		boolean profileNowhereElse = "true".equals(query.getProfileNowhereElseCheckbox());
@@ -3672,7 +3675,7 @@ public class GXDController {
 			    continue;
 			if (profileStructureID.equals("")) 
 			    profileStructureID = "EMAPA:25765";
-			logger.debug("-- resolveProfileMarkers() " + i + " = " + 
+			logger.info("-- resolveProfileMarkers() " + i + " = " + 
 			    (detected.equals("true") ? "detected in " : "not-detected in ") +
 			    profileStructureID + " " + stages);
 			Filter filter;
@@ -3785,7 +3788,9 @@ public class GXDController {
 				}
 				List<Filter> structureFilter = new ArrayList<Filter>();
 				if (detected.equals("false")) {
-					structureFilter.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,psid));
+					if (!psid.equals("EMAPA:25765")) {
+						structureFilter.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,psid));
+					}
 					structureFilter.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
 				} else {
 					structureFilter.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,psid));
@@ -3811,7 +3816,7 @@ public class GXDController {
 		// start filter list to store facet filters
 		List<Filter> facetList = new ArrayList<Filter>();
 
-		logger.debug("get params");
+		logger.info("--> parseGxdQueryForm");
 
 		// exclude RNA-Seq data from differential searches
 		if (isDifferentialQuery(query)) {

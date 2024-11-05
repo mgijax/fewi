@@ -68,6 +68,7 @@
 }
 #profileStructureTable tr.profile-structure-row {
 	border: thin solid #aaa;
+	height: 56px;
 }
 #profileStructureTable tr.profile-structure-row.zstripe0 {
 }
