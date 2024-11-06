@@ -919,6 +919,30 @@ var profileFormCheck  = function() {
 		hasErrors=true;
 	}
 
+	// check for duplicate structure/stage specs.
+	var hasDups = false
+	for (var i = 0; i < model.profileSpec.length; i++) {
+	    const s1 = model.profileSpec[i]
+	    const s1s = s1.stages.join(',')
+	    if (s1.structureID === '' && s1s === '') continue
+	    for(var j = i+1; j < model.profileSpec.length; j++) {
+		const s2 = model.profileSpec[j]
+		const s2s = s2.stages.join(',')
+		if (s2.structureID === '' && s2s === '') continue
+		if (s1.structureID !== s2.structureID) continue
+		if (s1s !== s2s && s1s !== "" && s2s !== "") continue
+		const msg = "Query error: Duplicate structures/stages detected:\n" +
+			s1.structureID + " " + s1.structure + " " + (s1s ? "@TS " + s1s : "") + "\n" +
+			s2.structureID + " " + s2.structure + " " + (s2s ? "@TS " + s2s : "") + "\n" +
+			"Please modify your query and try again."
+		alert(msg)
+		hasDups = true
+		hasErrors = true
+		break;
+	    }
+	    if (hasDups) break;
+	}
+
 	return hasErrors;
 };
 
@@ -1829,10 +1853,15 @@ function setTheilerStageSelection (i, stages) {
 }
 
 function theilerStageSelectorChanged (i) {
-    model.profileSpec[i].stages = getTheilerStageSelection (i)
-    if (model.profileSpec[i].detected === false) {
-        model.nowhereElse = false
+    const m = model.profileSpec[i]
+    m.stages = getTheilerStageSelection (i)
+    if (m.stages.length > 0 && m.structureID === "") {
+        m.structureID = MOUSE_ID
+	m.structure = MOUSE
+	document.getElementById(`profileStructure${i}`).value = MOUSE
+	document.getElementById(`profileStructure${i}ID`).value = MOUSE_ID
     }
+    checkDetected(i)
 }
 
 function makeProfileRow (model, i) {
@@ -1871,6 +1900,7 @@ function makeProfileRow (model, i) {
     return profileRow;
 }
 
+// Handler callsed when user selects detected or not-detected radio button.
 function profileDetectedChanged(i) {
     var detectedRadio = document.querySelector(`#gxdProfileQueryForm input[name="detected${i}"]:checked`);
     var detected = detectedRadio ? (detectedRadio.value === 'true' ? true : false) : null;
@@ -1993,8 +2023,11 @@ function refreshProfileForm () {
 	const objs = makeStructureAC(`profileStructure${i}`,`profileStructureContainer${i}`);
 	objs.oAC.itemSelectEvent.subscribe(() => {
 	    // when user selects from AC, update the model and the form
-	    refreshProfileSpec (i) ;
-	    refreshEnabledDisabled();
+	    const structure = document.getElementById(`profileStructure${i}`).value;
+	    const structureID = document.getElementById(`profileStructure${i}ID`).value;
+	    model.profileSpec[i].structure = structure
+	    model.profileSpec[i].structureID = structureID
+	    checkDetected(i)
 	});
 	objs.oAC.selectionEnforceEvent.subscribe(() => {
 	    // when user clears AC selection, update model
@@ -2018,15 +2051,16 @@ function refreshProfileForm () {
     refreshEnabledDisabled()
 }
 
-function refreshProfileSpec (i) {
-    const structure = document.getElementById(`profileStructure${i}`).value;
-    const structureID = document.getElementById(`profileStructure${i}ID`).value;
-    model.profileSpec[i].structure = structure
-    model.profileSpec[i].structureID = structureID
+// If the i-th detected/not-detected radio is unset, selects the detected option,
+// and updates the model.
+function checkDetected (i) {
     const detected = document.getElementById(`detectedRadio${i}`)
     const notdetected = document.getElementById(`notdetectedRadio${i}`)
-    if (!(detected.checked || notdetected.checked)) detected.checked = true
-    model.profileSpec[i].detected = detected.checked
+    if (!(detected.checked || notdetected.checked)) {
+	detected.checked = true
+	detected.closest('tr').classList.add('detected')
+	model.profileSpec[i].detected = true
+    }
 }
 
 function addProfileRow (detected) {
