@@ -18,6 +18,11 @@ public class EmapaACResult implements UniqueableObject
 	private String endStage;
 	private String accID;
 
+	private boolean showInCPosAC=false;
+	private boolean showInCNegAC=false;
+	private boolean showInRPosAC=false;
+	private boolean showInRNegAC=false;
+
 	public EmapaACResult(){}
 	public EmapaACResult (String structure, String synonym, boolean isStrictSynonym)
 	{
@@ -92,4 +97,28 @@ public class EmapaACResult implements UniqueableObject
 		// just here to appease the JSON serialiser gods
 	}
 
+	public boolean getShowInCPosAC () { 
+		return showInCPosAC;
+	}
+	public boolean getShowInCNegAC () { 
+		return showInCNegAC;
+	}
+	public boolean getShowInRPosAC () { 
+		return showInRPosAC;
+	}
+	public boolean getShowInRNegAC () { 
+		return showInRNegAC;
+	}
+	public void setShowInCPosAC (boolean val) {
+		showInCPosAC = val;
+	}
+	public void setShowInCNegAC (boolean val) {
+		showInCNegAC = val;
+	}
+	public void setShowInRPosAC (boolean val) {
+		showInRPosAC = val;
+	}
+	public void setShowInRNegAC (boolean val) {
+		showInRNegAC = val;
+	}
 }

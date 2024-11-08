@@ -1276,7 +1276,7 @@ function makeStructureAC(inputID,containerID){
     oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
     // Define the schema of the JSON results
     //oDS.responseSchema = {resultsList: "resultObjects", fields:["structure", "synonym","isStrictSynonym"]};
-	oDS.responseSchema = {resultsList: "resultObjects", fields:["structure", "synonym","isStrictSynonym","accID","startStage","endStage"]};
+	oDS.responseSchema = {resultsList: "resultObjects", fields:["structure", "synonym","isStrictSynonym","accID","startStage","endStage","showInCPosAC","showInCNegAC","showInRPosAC","showInRNegAC"]};
 
     //oDS.maxCacheEntries = 10;
     oDS.connXhrMode = "cancelStaleRequests";
@@ -2021,6 +2021,15 @@ function refreshProfileForm () {
     model.profileSpec.forEach((m,i) => {
 	// Init the autocompletes 
 	const objs = makeStructureAC(`profileStructure${i}`,`profileStructureContainer${i}`);
+	objs.oAC.doBeforeLoadData = function(sQuery , oResponse , oPayload){
+	    const CR = model.formMode === CLASSICAL ? "C" : "R"
+	    const PN = model.profileSpec[i].detected === false ? "Neg" : "Pos"
+	    const fld = `showIn${CR}${PN}AC`
+	    oResponse.results = oResponse.results.filter(r => {
+	        return r[fld]
+	    })
+	    return true
+	}
 	objs.oAC.itemSelectEvent.subscribe(() => {
 	    // when user selects from AC, update the model and the form
 	    const structure = document.getElementById(`profileStructure${i}`).value;

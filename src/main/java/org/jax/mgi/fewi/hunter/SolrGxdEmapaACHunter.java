@@ -84,12 +84,22 @@ public class SolrGxdEmapaACHunter extends SolrHunter<EmapaACResult> {
 					.getFieldValue(IndexConstants.GXD_END_STAGE);
 			String accID = (String) doc.getFieldValue(IndexConstants.ACC_ID);
 
+			boolean showInCPosAC = (Boolean) doc.getFieldValue(IndexConstants.STRUCTUREAC_SHOW_IN_CPOS);
+			boolean showInCNegAC = (Boolean) doc.getFieldValue(IndexConstants.STRUCTUREAC_SHOW_IN_CNEG);
+			boolean showInRPosAC = (Boolean) doc.getFieldValue(IndexConstants.STRUCTUREAC_SHOW_IN_RPOS);
+			boolean showInRNegAC = (Boolean) doc.getFieldValue(IndexConstants.STRUCTUREAC_SHOW_IN_RNEG);
+
 			EmapaACResult resultObject = new EmapaACResult(structure, synonym,
 					isStrictSynonym, hasCre);
 			resultObject.setStartStage(startStage);
 			resultObject.setEndStage(endStage);
 			resultObject.setAccID(accID);
 			resultObject.setQueryText(queryText);
+
+			resultObject.setShowInCPosAC(showInCPosAC);
+			resultObject.setShowInCNegAC(showInCNegAC);
+			resultObject.setShowInRPosAC(showInRPosAC);
+			resultObject.setShowInRNegAC(showInRNegAC);
 
 			// Add result to SearchResults
 			sr.addResultObjects(resultObject);
