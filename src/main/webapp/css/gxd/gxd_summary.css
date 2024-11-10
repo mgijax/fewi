@@ -76,6 +76,12 @@
     background-color: #ddd;
 }
 
+#profileStructureTable tr.profile-structure-row.detected-not-specified td:nth-child(3) *,
+#profileStructureTable tr.profile-structure-row.detected-not-specified td:nth-child(4) *,
+#profileStructureTable tr.profile-structure-row.detected-not-specified td:nth-child(5) * {
+    opacity: 0.4;
+}
+
 #profileStructureTable.hideStages tr.profile-structure-row td:nth-child(4) *,
 #profileStructureTable.hideStages tr.profile-structure-row td:nth-child(5) *,
 #profileStructureTable.hideStages span.stagesLabel {

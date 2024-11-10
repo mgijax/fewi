@@ -1796,9 +1796,13 @@ function profileSetMode () {
     resetProfileForm();
 }
 
-function makeTheilerStageSelector (i) {
+
+function makeTheilerStageSelector (i, disabled) {
     return `
-    <select id="profileStage${i}" name="profileStage${i}" multiple="multiple" size="3" onchange="theilerStageSelectorChanged(${i})" >
+    <select id="profileStage${i}" name="profileStage${i}"
+	${disabled ? 'disabled' : ''}
+        multiple="multiple" size="3"
+	onchange="theilerStageSelectorChanged(${i})" >
     <option value="0" selected="selected">Any developmental stage</option>
     <option value="1">TS 1 (0.0-2.5 dpc)</option>
     <option value="2">TS 2 (1.0-2.5 dpc)</option>
@@ -1860,12 +1864,22 @@ function theilerStageSelectorChanged (i) {
 	m.structure = MOUSE
 	document.getElementById(`profileStructure${i}`).value = MOUSE
 	document.getElementById(`profileStructure${i}ID`).value = MOUSE_ID
+	document.getElementById(`profileStructure${i}`).disabled = true
+	document.getElementById(`profileStructure${i}`).style.opacity = 0.3
+    } else if (m.stages.length === 0 && m.structureID === MOUSE_ID) {
+        m.structureID = ""
+	m.structure = ""
+	document.getElementById(`profileStructure${i}`).value = ""
+	document.getElementById(`profileStructure${i}ID`).value = ""
+	document.getElementById(`profileStructure${i}`).disabled = false
+	document.getElementById(`profileStructure${i}`).style.opacity = 1
     }
     checkDetected(i)
 }
 
 function makeProfileRow (model, i) {
-    var dclass = model.detected ? 'detected' : (model.detected === false ? 'not-detected' : '');
+    var disabled = model.detected === null ? 'disabled' : ''
+    var dclass = model.detected ? 'detected' : (model.detected === false ? 'not-detected' : 'detected-not-specified');
     var dchecked = model.detected ? 'checked' : '';
     var ndchecked = model.detected === false ? 'checked' : '';
     var rowClass = `zstripe${ i % 2 }`;
@@ -1881,7 +1895,7 @@ function makeProfileRow (model, i) {
     </td>
     <td >
 	<input style="width: 320px; position: relative;" id="profileStructure${i}" name="profileStructure${i}" 
-	    value="${model.structure}" placeholder="anatomical structure"></input>
+	    ${disabled} value="${model.structure}" placeholder="anatomical structure"></input>
 	<input type="hidden" id="profileStructure${i}ID" name="profileStructureID${i}" 
 	    value="${model.structureID}"/>
 	<div class="anatomyAC" style="width: 400px;" id="profileStructureContainer${i}"></div>
@@ -1890,7 +1904,7 @@ function makeProfileRow (model, i) {
         <span>and/or</span>
     </td>
     <td>
-	${makeTheilerStageSelector(i)}
+	${makeTheilerStageSelector(i, disabled)}
     </td>
     <td>
 	<button type="button" onClick="removeProfileRow(${i})" id="removeStructureRowButton${i}" 
@@ -1900,7 +1914,7 @@ function makeProfileRow (model, i) {
     return profileRow;
 }
 
-// Handler callsed when user selects detected or not-detected radio button.
+// Handler called when user selects detected or not-detected radio button.
 function profileDetectedChanged(i) {
     var detectedRadio = document.querySelector(`#gxdProfileQueryForm input[name="detected${i}"]:checked`);
     var detected = detectedRadio ? (detectedRadio.value === 'true' ? true : false) : null;
@@ -2092,7 +2106,13 @@ function removeProfileRow (i) {
 }
 
 function profileClearStages () {
-	model.profileSpec.forEach(m => m.stages = []);
+	model.profileSpec.forEach(m => {
+	    if (m.stages.length > 0 && m.structureID === MOUSE_ID) {
+	        m.structure = ""
+	        m.structureID = ""
+	    }
+	    m.stages = []
+	});
 	refreshProfileForm();
 }
 
