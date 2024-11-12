@@ -355,10 +355,11 @@ public class AutoCompleteController {
 	@RequestMapping("/gxdEmapa")
 	public @ResponseBody SearchResults<EmapaACResult> gxdEmapaAutoCompleteRequest(
 			HttpServletResponse response,
-			@RequestParam("query") String query) {
+			@RequestParam("query") String query,
+			@RequestParam(value="field", required=false) String field) {
 		logger.debug("autoCompleteController.gxdEmapaAutoCompleteRequest");
 		AjaxUtils.prepareAjaxHeaders(response);
-		return performGxdEmapaAutoComplete(query);
+		return performGxdEmapaAutoComplete(query,field);
 	}
 
 	/*
@@ -408,7 +409,7 @@ public class AutoCompleteController {
 
 	/* wrapper for GXD EMAPA autocomplete search
 	 */
-	private SearchResults<EmapaACResult> performGxdEmapaAutoComplete(String query)
+	private SearchResults<EmapaACResult> performGxdEmapaAutoComplete(String query, String field)
 	{
 		if (emapaHelper == null) {
 			logger.info("Initializing: emapaHelper is null");
@@ -425,7 +426,7 @@ public class AutoCompleteController {
 			emapaHelper.setEmapaACResults(results.getResultObjects());
 			logger.info("Processed docs in emapaHelper");
 		}
-		List<EmapaACResult> resultList = removeDuplicates(emapaHelper.asEmapaACResults(emapaHelper.search(query, 200)));
+		List<EmapaACResult> resultList = removeDuplicates(emapaHelper.asEmapaACResults(emapaHelper.search(query, 200, field)));
 		SearchResults<EmapaACResult> searchResults = new SearchResults<EmapaACResult>();
 		searchResults.setResultObjects(resultList);
 		searchResults.setTotalCount(resultList.size());

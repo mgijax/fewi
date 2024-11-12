@@ -1836,6 +1836,29 @@ function makeTheilerStageSelector (i, disabled) {
     `
 }
 
+function setValidTheilerStages (i) {
+    const m = model.profileSpec[i]
+    const s = (m.structure || MOUSE).match(/TS([0-9]+)-([0-9]+)/)
+    const stg1 = parseInt(s[1])
+    const stg2 = parseInt(s[2])
+    const sel = document.getElementById(`profileStage${i}`)
+    const opts = sel.querySelectorAll('option')
+    opts.forEach((o,j) => {
+        if (j===0 || (j >= stg1 && j <= stg2)) {
+	   // valid
+	   o.style.display = ''
+	} else {
+	   // invalid
+	   o.style.display = 'none'
+	   if (o.selected) {
+	       const ii = m.stages.indexOf(o.value)
+	       if (ii >= 0) m.stages.splice(ii,1)
+	       o.selected = false
+	   }
+	}
+    })
+}
+
 function resetTheilerStageSelection (i) {
     const sel = document.getElementById(`profileStage${i}`);
     Array.from(sel.options).forEach(o => o.selected = (o.value === "0"));
@@ -2035,14 +2058,11 @@ function refreshProfileForm () {
     model.profileSpec.forEach((m,i) => {
 	// Init the autocompletes 
 	const objs = makeStructureAC(`profileStructure${i}`,`profileStructureContainer${i}`);
-	objs.oAC.doBeforeLoadData = function(sQuery , oResponse , oPayload){
+	objs.oAC.generateRequest = function (query) {
 	    const CR = model.formMode === CLASSICAL ? "C" : "R"
 	    const PN = model.profileSpec[i].detected === false ? "Neg" : "Pos"
 	    const fld = `showIn${CR}${PN}AC`
-	    oResponse.results = oResponse.results.filter(r => {
-	        return r[fld]
-	    })
-	    return true
+	    return `?query=${query}&field=${fld}`
 	}
 	objs.oAC.itemSelectEvent.subscribe(() => {
 	    // when user selects from AC, update the model and the form
@@ -2051,14 +2071,17 @@ function refreshProfileForm () {
 	    model.profileSpec[i].structure = structure
 	    model.profileSpec[i].structureID = structureID
 	    checkDetected(i)
+	    setValidTheilerStages(i)
 	});
 	objs.oAC.selectionEnforceEvent.subscribe(() => {
 	    // when user clears AC selection, update model
 	    const m = model.profileSpec[i]
 	    m.structure = ""
 	    m.structureID = ""
+	    setValidTheilerStages(i)
 	});
 	setTheilerStageSelection(i, m.stages);
+	setValidTheilerStages(i)
     })
 
     const formModeRadio = pform.querySelector(`input[name="profileMode"][value="${model.formMode}"]`)
