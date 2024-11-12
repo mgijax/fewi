@@ -1837,6 +1837,9 @@ function makeTheilerStageSelector (i, disabled) {
 }
 
 function setValidTheilerStages (i) {
+    // disable temporarily
+    return
+
     const m = model.profileSpec[i]
     const s = (m.structure || MOUSE).match(/TS([0-9]+)-([0-9]+)/)
     const stg1 = parseInt(s[1])
