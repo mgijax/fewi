@@ -23,6 +23,11 @@ public class EmapaACResult implements UniqueableObject
 	private boolean showInRPosAC=false;
 	private boolean showInRNegAC=false;
 
+	private String stagesCPosAC="";
+	private String stagesCNegAC="";
+	private String stagesRPosAC="";
+	private String stagesRNegAC="";
+
 	public EmapaACResult(){}
 	public EmapaACResult (String structure, String synonym, boolean isStrictSynonym)
 	{
@@ -120,5 +125,30 @@ public class EmapaACResult implements UniqueableObject
 	}
 	public void setShowInRNegAC (boolean val) {
 		showInRNegAC = val;
+	}
+
+	public String getStagesCPosAC () {
+		return stagesCPosAC;
+	}
+	public String getStagesCNegAC () {
+		return stagesCNegAC;
+	}
+	public String getStagesRPosAC () {
+		return stagesRPosAC;
+	}
+	public String getStagesRNegAC () {
+		return stagesRNegAC;
+	}
+	public void setStagesCPosAC (String val) {
+		stagesCPosAC = val;
+	}
+	public void setStagesCNegAC (String val) {
+		stagesCNegAC = val;
+	}
+	public void setStagesRPosAC (String val) {
+		stagesRPosAC = val;
+	}
+	public void setStagesRNegAC (String val) {
+		stagesRNegAC = val;
 	}
 }

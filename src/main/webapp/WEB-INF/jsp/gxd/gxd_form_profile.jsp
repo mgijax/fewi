@@ -123,7 +123,7 @@
 		    <tr>
 		    <td colspan="5">
 
-                    <button type="button" id="addDetected" onClick="addProfileRow(null)" 
+                    <button type="button" id="addDetected" onClick="addProfileRow()" 
 		        style="margin-left:20px;">Add structure</button>
 		    </td>
 		    </tr>

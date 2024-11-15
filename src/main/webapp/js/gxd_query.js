@@ -1276,7 +1276,10 @@ function makeStructureAC(inputID,containerID){
     oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
     // Define the schema of the JSON results
     //oDS.responseSchema = {resultsList: "resultObjects", fields:["structure", "synonym","isStrictSynonym"]};
-	oDS.responseSchema = {resultsList: "resultObjects", fields:["structure", "synonym","isStrictSynonym","accID","startStage","endStage","showInCPosAC","showInCNegAC","showInRPosAC","showInRNegAC"]};
+	oDS.responseSchema = {resultsList: "resultObjects",
+	    fields:["structure", "synonym","isStrictSynonym","accID","startStage","endStage",
+	            "showInCPosAC","showInCNegAC","showInRPosAC","showInRNegAC",
+		    "stagesCPosAC","stagesCNegAC","stagesRPosAC","stagesRNegAC" ]};
 
     //oDS.maxCacheEntries = 10;
     oDS.connXhrMode = "cancelStaleRequests";
@@ -1763,28 +1766,31 @@ const MOUSE_ID = "EMAPA:25765"
 
 // data that drives the form display
 var model = {
-    profileSpec: [], // list of {structure, structureID, detected, stages}
+    profileSpec: [],
+    // list of {
+    //    structure: structure print label
+    //    structureID: EMAPA id
+    //    detected: true/false/null
+    //    stages: list of stages to query, or empty for "all stages"
+    // }
     formMode: CLASSICAL, // "classical" or "rnaseq"
     nowhereElse: false // 
 }
+function makeProfileSpec (init) {
+    return Object.assign({
+	structure: "",
+	structureID: "",
+	detected: null,
+	stages: []
+    }, init || {})
+}
 
 function resetProfileForm () {
-    model.profileSpec = [{
-	    structure: "",
-	    structureID: "",
-	    detected: true,
-	    stages: []
-	    },{
-	    structure: "",
-	    structureID: "",
-	    detected: null,
-	    stages: []
-	    },{
-	    structure: "",
-	    structureID: "",
-	    detected: null,
-	    stages: []
-    }]
+    model.profileSpec = [
+        makeProfileSpec({detected:true}),
+	makeProfileSpec(),
+	makeProfileSpec()
+    ]
     model.nowhereElse = false
     refreshProfileForm()
 
@@ -1836,30 +1842,90 @@ function makeTheilerStageSelector (i, disabled) {
     `
 }
 
+// Sets the valid Theiler stage options for row i from the currently selected EMAPA term.
+// Parses the valid stage range from the structure's name. Only stage
+// options in this range are visible.
+//
 function setValidTheilerStages (i) {
-    // disable temporarily
-    return
-
     const m = model.profileSpec[i]
-    const s = (m.structure || MOUSE).match(/TS([0-9]+)-([0-9]+)/)
-    const stg1 = parseInt(s[1])
-    const stg2 = parseInt(s[2])
-    const sel = document.getElementById(`profileStage${i}`)
-    const opts = sel.querySelectorAll('option')
-    opts.forEach((o,j) => {
-        if (j===0 || (j >= stg1 && j <= stg2)) {
-	   // valid
-	   o.style.display = ''
-	} else {
-	   // invalid
-	   o.style.display = 'none'
-	   if (o.selected) {
-	       const ii = m.stages.indexOf(o.value)
-	       if (ii >= 0) m.stages.splice(ii,1)
-	       o.selected = false
-	   }
-	}
+    const emapaID = (m.structureID || MOUSE_ID)
+    getEmapaACRecord(emapaID).then( ac => {
+        if (!ac) return;
+	// min/max stages for this structure
+	const sStage = parseInt(ac.startStage)
+	const eStage = parseInt(ac.endStage)
+	// data-sensitive stages valid for picking . Depends on mode (classical vs rnaseq) and
+	// whether the spec is detected or not-detected
+	const CR = model.formMode === CLASSICAL ? "C" : "R"
+	const PN = m.detected ? "Pos" : "Neg"
+	const dStages = ac[`stages${CR}${PN}AC`]
+	const dStagesInt = dStages ? dStages.split(',').map(x => parseInt(x)) : []
+
+	// (1) hide the stage options that fall outside the valid range
+	// (2) disable stages not listed in dStages 
+	const sel = document.getElementById(`profileStage${i}`)
+	const opts = sel.querySelectorAll('option')
+	opts.forEach((o,j) => {
+	    if (j===0 || (j >= sStage && j <= eStage)) {
+		// valid
+		o.style.display = ''
+		o.disabled = (j !== 0 && dStagesInt.indexOf(j) === -1)
+	    } else {
+		// invalid
+		o.style.display = 'none'
+		o.disabled = true
+		if (o.selected) {
+		    o.selected = false
+		    const ii = m.stages.indexOf(o.value)
+		    if (ii >= 0) m.stages.splice(ii,1)
+		}
+	    }
+	})
     })
+}
+
+// Queries the gxdEmapaAC index for the given emapaID and returns the first record found (or null if not found).
+// The purpose is to access the various fields controlling where this term is shown and what stages are valid.
+// Since these fields are replicated in every AC record for the term, it doesn't matter whether the returned record
+// is for a synonym or the official term. 
+// Example emapa AC record:
+//    "structure": "head",
+//    "synonym": null,
+//    "queryText": "head",
+//    "isStrictSynonym": false,
+//    "hasCre": true,
+//    "hasGxdHT": false,
+//    "startStage": "11",
+//    "endStage": "28",
+//    "accID": "EMAPA:31858",
+//    "showInCPosAC": true,
+//    "showInCNegAC": true,
+//    "showInRPosAC": true,
+//    "showInRNegAC": false,
+//    "stagesCPosAC": "11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28",
+//    "stagesCNegAC": "11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28",
+//    "stagesRPosAC": "14,15,17,19,20,21,22,23,24,25,26,27,28",
+//    "stagesRNegAC": null,
+//    "uniqueKey": "EMAPA:31858"
+// Returns:
+//    a Promise for the record. To use this function:
+//          getEmapaACRecord(someId).then(acRec => {
+//              // do something with acRec
+//              // will be null if the ID was not found
+//          })
+
+const emapaACcache = {}
+function getEmapaACRecord ( emapaID ) {
+    if (emapaID in emapaACcache) return emapaACcache[emapaID];
+    const url = fewiurl + '/autocomplete/emapaID/getACrecords?ids=' + emapaID
+    const promise = fetch(url).then(resp => {
+        return resp.json().then(rr => {
+	    const acRecord = rr.resultObjects[0]
+	    return acRecord
+	})
+    })
+    emapaACcache[emapaID] = promise
+    return promise
 }
 
 function resetTheilerStageSelection (i) {
@@ -1994,12 +2060,12 @@ function profileQueryString2Spec (qs) {
     model.profileSpec = []
     structures.forEach((s,i) => {
 	if (s) foundParams = true;
-        model.profileSpec.push({
+        model.profileSpec.push(makeProfileSpec({
 	    structure: s,
 	    structureID: structureIDs[i],
 	    detected: detected[i],
 	    stages: stages[i]
-	})
+	}))
     })
     refreshProfileForm()
     return foundParams
@@ -2061,13 +2127,15 @@ function refreshProfileForm () {
     model.profileSpec.forEach((m,i) => {
 	// Init the autocompletes 
 	const objs = makeStructureAC(`profileStructure${i}`,`profileStructureContainer${i}`);
+	// override generateRequest so we can add parameters to the call
 	objs.oAC.generateRequest = function (query) {
 	    const CR = model.formMode === CLASSICAL ? "C" : "R"
 	    const PN = model.profileSpec[i].detected === false ? "Neg" : "Pos"
 	    const fld = `showIn${CR}${PN}AC`
 	    return `?query=${query}&field=${fld}`
 	}
-	objs.oAC.itemSelectEvent.subscribe(() => {
+	// AC selection handler. Update the model based on user's selection
+	objs.oAC.itemSelectEvent.subscribe((evt,data) => {
 	    // when user selects from AC, update the model and the form
 	    const structure = document.getElementById(`profileStructure${i}`).value;
 	    const structureID = document.getElementById(`profileStructure${i}ID`).value;
@@ -2112,17 +2180,13 @@ function checkDetected (i) {
     }
 }
 
-function addProfileRow (detected) {
+// called when user click the "Add structure" button
+function addProfileRow () {
     if (model.profileSpec.length === 10) {
 	alert("Maximum of ten anatomical structures allowed.")
 	return
     }
-    model.profileSpec.push({
-        structure: "",
-	structureID: "",
-	detected: detected,
-	stages: []
-    })
+    model.profileSpec.push(makeProfileSpec())
     refreshProfileForm();
 }
 

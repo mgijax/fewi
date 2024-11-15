@@ -73,7 +73,7 @@
 #profileStructureTable tr.profile-structure-row.zstripe0 {
 }
 #profileStructureTable tr.profile-structure-row.zstripe1 {
-    background-color: #ddd;
+    background-color: #f0f0f0;
 }
 
 #profileStructureTable tr.profile-structure-row.detected-not-specified td:nth-child(3) *,
@@ -87,6 +87,10 @@
 #profileStructureTable.hideStages span.stagesLabel {
     display: none;
 }
+#profileStructureTable option:disabled {
+    opacity: 0.3;
+}
+
 #gxdProfileQueryForm #addDetected {
 	padding: 4px;
 }

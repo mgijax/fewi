@@ -659,6 +659,16 @@ public class AutoCompleteController {
 		return jsonResponse;
 	}
 
+	@RequestMapping("/emapaID/getACrecords")
+	public @ResponseBody SearchResults<EmapaACResult> getEmapaACRecordsById(
+			@RequestParam("ids") String ids)
+	{
+		List<String> returnValues = new ArrayList<String>();
+		List<String> idTokens = QueryParser.tokeniseOnWhitespaceAndComma(ids);
+		SearchResults<EmapaACResult> results = resolveEmapaIds(idTokens);
+		return results;
+	}
+
 	/*
 	 * resolve emapaIDs to their names
 	 * assumes a format of "EMAPA:1234,EMAPA:56789,..."
@@ -667,7 +677,7 @@ public class AutoCompleteController {
 	@RequestMapping("/emapaID/resolve")
 	public @ResponseBody List<String> resolveEmapaIdList(
 			@RequestParam("ids") String ids)
-			{
+	{
 		List<String> returnValues = new ArrayList<String>();
 		List<String> idTokens = QueryParser.tokeniseOnWhitespaceAndComma(ids);
 		SearchResults<EmapaACResult> results = resolveEmapaIds(idTokens);
@@ -692,7 +702,7 @@ public class AutoCompleteController {
 		}
 
 		return returnValues;
-			}
+	}
 
 	private SearchResults<EmapaACResult> resolveEmapaIds(List<String> idTokens)
 	{
