@@ -114,9 +114,10 @@ public class GxdMatrixHandler {
 	{
 		boolean mapChildren = childrenOf!=null && !childrenOf.equals("");
 		boolean mapDifferentialStructures = isTissueMatrixDifferentialView(query);
+		boolean mapProfileStructures = isMatrixProfileView(query);
 		boolean mapStructureFilters = isTissueMatrixFilterView(query);
 		boolean mapStructureOnly = isTissueMatrixStructureView(query) && !mapDifferentialStructures && !mapStructureFilters;
-		boolean mapHighLevelTerms = !mapChildren && !mapStructureOnly && !mapDifferentialStructures && !mapStructureFilters;
+		boolean mapHighLevelTerms = !mapChildren && !mapStructureOnly && !mapDifferentialStructures && !mapStructureFilters && !mapProfileStructures;
 
 		List<GxdMatrixRow> parentTerms = new ArrayList<GxdMatrixRow>();
 
@@ -177,6 +178,19 @@ public class GxdMatrixHandler {
 				for(VocabTerm term : sortTerms(terms))
 				{
 					parentTerms.add(makeGxdMatrixRow(term));
+				}
+			}
+		}
+		else if (mapProfileStructures) 
+		{
+			for (String termID : query.getProfileStructureID()) 
+			{
+				if (termID == null || termID.equals("")) continue;
+
+				List<VocabTerm> pterms = vocabFinder.getTermByID(termID.toUpperCase());
+				for(VocabTerm pt : sortTerms(pterms))
+				{
+					parentTerms.add(makeGxdMatrixRow(pt));
 				}
 			}
 		}
@@ -270,6 +284,10 @@ public class GxdMatrixHandler {
 	{
 		return query.getStructureID()!=null && !query.getStructureID().equals("")
 				&& query.getDifStructureID()!=null && !query.getDifStructureID().equals("");
+	}
+	public boolean isMatrixProfileView(GxdQueryForm query)
+	{
+		return query.getProfileFormMode() != null && !query.getProfileFormMode().equals("");
 	}
 	public boolean isTissueMatrixFilterView(GxdQueryForm query)
 	{
