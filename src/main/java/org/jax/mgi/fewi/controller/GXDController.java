@@ -3983,6 +3983,14 @@ public class GXDController {
 				queryFilters.addAll(facetList);
 			}
 
+			// pagination list
+			List<String> matrixDisplayList = query.getMatrixDisplayList();
+			if ((matrixDisplayList != null) && (matrixDisplayList.size() > 0)) {
+				Filter matrixDisplayListFilter = 
+				  new Filter(SearchConstants.MRK_ID, matrixDisplayList, Filter.Operator.OP_IN);
+				queryFilters.add(matrixDisplayListFilter);
+			}
+
 			return Filter.and(queryFilters);
 			// NOTE: THIS WAS A PROFILE QUERY, STANDARD QUERY FORM LOGIC IS NOT EXECUTED
 		}
