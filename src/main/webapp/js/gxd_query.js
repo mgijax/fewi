@@ -1377,6 +1377,8 @@ function makeStructureAC(inputID,containerID){
         oAC: oAC
     };
 };
+makeStructureAC("difStructure3","difStructureContainer3");
+makeStructureAC("difStructure4","difStructureContainer4");
 makeStructureAC("structure","structureContainer");
 
 //
@@ -1766,16 +1768,20 @@ const MOUSE_ID = "EMAPA:25765"
 
 // data that drives the form display
 var model = {
-    profileSpec: [],
-    // list of {
-    //    structure: structure print label
-    //    structureID: EMAPA id
-    //    detected: true/false/null
-    //    stages: list of stages to query, or empty for "all stages"
-    // }
     formMode: CLASSICAL, // "classical" or "rnaseq"
-    nowhereElse: false // 
+    profileSpec: [],  // see makeProfileSpec
+    nowhereElse: false, // 
+    showStageSelectors: false
 }
+
+// Creates/returns a profileSpec. 
+// {
+//    structure: structure print label ("")
+//    structureID: EMAPA id ("")
+//    detected: true/false/null (null)
+//    stages: list of stages to query, or empty for "all stages" ([])
+// }
+// Optional init object may be provide to initialize specific fields with specific values.
 function makeProfileSpec (init) {
     return Object.assign({
 	structure: "",
@@ -2046,14 +2052,18 @@ function profileQueryString2Spec (qs) {
 	} else if (pts[0] === "profileDetected") {
 	    detected.push( pts[1] ==="true" ? true : pts[1] === "false" ? false : null )
 	} else if (pts[0] === "profileStage") {
-	    stages.push( pts[1].split(",").filter(x=>x))
+	    const stgs = pts[1].split(",").filter(x=>x)
+	    stages.push(stgs)
+	    if (stgs.length > 0) model.showStageSelectors = true;
 	} else if (pts[0] === "profileFormMode") {
 	    model.formMode = pts[1]
 	} else if (pts[0] === "profileNowhereElseCheckbox") {
 	    model.nowhereElse = (pts[1] === "true")
 	}
     })
-    if (structures.length !== structureIDs.length || structures.length !== detected.length) {
+    if (structures.length !== structureIDs.length
+    || structures.length !== detected.length
+    || structures.length !== stages.length ) {
         throw "query string contains different numbers of profile parameters."
     }
     var foundParams = false
@@ -2104,7 +2114,6 @@ function refreshEnabledDisabled () {
         nwe.disabled = true
 	nweText.classList.add("disabledText")
     }
-
 }
 
 function profileNowhereElseChecked() {
@@ -2166,6 +2175,7 @@ function refreshProfileForm () {
     }
     pform.profileNowhereElseCheckbox.checked = model.nowhereElse
     refreshEnabledDisabled()
+    profileShowStages ()
 }
 
 // If the i-th detected/not-detected radio is unset, selects the detected option,
@@ -2203,19 +2213,31 @@ function profileClearStages () {
 	    }
 	    m.stages = []
 	});
-	refreshProfileForm();
 }
 
-function profileToggleShowStages () {
+// update UI from model
+function profileShowStages () {
     const cb = document.getElementById("profileShowStagesCheckbox");
     const tbl = document.getElementById("profileStructureTable");
+
+    cb.checked = model.showStageSelectors
     if (cb.checked) {
+	// shown 
         tbl.classList.remove("hideStages");
     }
     else {
+	// hidden
 	profileClearStages();
         tbl.classList.add("hideStages");
     }
+
+}
+// update model from UI
+function profileShowStagesChanged () {
+    const cb = document.getElementById("profileShowStagesCheckbox");
+    model.showStageSelectors = cb.checked
+    profileShowStages ()
+    refreshProfileForm()
 }
 
 resetProfileForm()

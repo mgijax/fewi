@@ -59,7 +59,7 @@
 		    </td>
 		    <td colspan="3">
 		    <input type="checkbox" id="profileShowStagesCheckbox" name="profileShowStagesCheckbox" 
-		        value="true" onchange="profileToggleShowStages()" /> 
+		        value="true" onchange="profileShowStagesChanged()" /> 
 			    <span>Show stage selectors
 				<img id="gxdProfileStageHelpImage" src="${configBean.WEBSHARE_URL}images/help_icon.png" />
                                 <div id="gxdProfileStageHelp">
