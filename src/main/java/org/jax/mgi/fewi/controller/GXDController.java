@@ -1157,6 +1157,58 @@ public class GXDController {
 		return mav;
 	}
 
+	// Returns the "Detected in ... but not in ..." part of  the YSF for a profile query.
+	private String getProfileDetectedPhrase (GxdQueryForm query) {
+	    boolean isRnaSeq = query.getProfileFormMode().equals("rnaseq");
+	    List<String> detecteds = query.getProfileDetected();
+	    List<String> structureIDs = query.getProfileStructureID();
+	    List<String> stages = query.getProfileStage();
+	    String nwe = query.getProfileNowhereElseCheckbox();
+
+	    List<String> detectedClauses = new ArrayList<String>();
+	    List<String> notDetectedClauses = new ArrayList<String>();
+
+	    int i = -1;
+	    for (String structureID : structureIDs) {
+	    	i += 1;
+		if (structureID.equals("")) continue;
+		String detected = detecteds.get(i);
+		//
+		String structure = "";
+		List<VocabTerm> vocabTerms = vocabFinder.getTermByID(structureID);
+		if ((vocabTerms != null) && (vocabTerms.size() > 0)) {
+			structure = vocabTerms.get(0).getTerm();
+			structure = FormatHelper.bold(FormatHelper.cleanHtml(structure));
+		} else {
+			structure = "(unknown structure)";
+		}
+		//
+		String stageClause = "";
+		if (!stages.get(i).equals("")) {
+			String[] stgs = stages.get(i).split(",");
+			for (int j = 0; j < stgs.length; j++) {
+				stgs[j] = FormatHelper.bold("TS" + stgs[j]);
+			}
+			stageClause = String.format("at Theiler stage(s) (%s)", String.join(" OR ", stgs));
+		}
+
+		String clause = String.format("%s %s", structure, stageClause);
+		if (detected.equals("true")) {
+		    detectedClauses.add(clause);
+		} else {
+		    notDetectedClauses.add(clause);
+		}
+	    }
+	    String d = String.format("Detected in %s ", String.join(" AND ", detectedClauses));
+	    String nd = "";
+	    if (notDetectedClauses.size() > 0) {
+		    nd = String.format("<br/>but not detected in %s", String.join(" OR ", notDetectedClauses));
+	    }
+	    
+	    String answer = String.format("%s %s" , d, nd);
+	    return answer;
+	}
+
 	// Returns a String representing the "You Searched For" text describing the given 'query'.
 	// Notes:
 	//	1. This is only for the RNA-Seq heat map, not the regular QF summary.
@@ -1422,7 +1474,9 @@ public class GXDController {
 				sb.append(FormatHelper.bold("any structures"));
 			}
 			lines.add(sb.toString());
-		}
+		} else if (query.getProfileFormMode() != null && !query.getProfileFormMode().equals("")) {
+			lines.add(getProfileDetectedPhrase(query));
+		} 
 		
 		// experiment (preference: filter > single ID)
 		String exptID = query.getExperimentID();
@@ -1512,8 +1566,8 @@ public class GXDController {
 		
 		// assay type
 		sb = new StringBuffer();
-		sb.append("Assayed by ");
-		sb.append(FormatHelper.bold("(RNA-Seq)"));
+		sb.append("Assayed by: ");
+		sb.append(FormatHelper.bold("RNA-Seq"));
 		lines.add(sb.toString());
 		
 		// RNA-Seq (TPM) level

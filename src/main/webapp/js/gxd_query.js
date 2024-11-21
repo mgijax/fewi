@@ -292,8 +292,10 @@ var updateQuerySummary = function() {
 	el.appendTo(searchParams);
 
 	if (currentQF == 'profile') {
+		
+		const isRnaSeq = model.formMode === RNASEQ;
 
-		// collect list of detected structures and not detected structured
+		// collect list of detected structures and not detected structures
 		var posStructures = [];
 		var negStructures = [];
 
@@ -301,14 +303,16 @@ var updateQuerySummary = function() {
 		    var stageClause = ""
 		    var structureClause = ""
 		    if (m.stages.length > 0) {
-		        stageClause = `stage${m.stages.length > 1 ? 's' : ''} ${m.stages.join(', ')}`
+			const stgs = m.stages.map(s=>`<b>TS:${s}</b>`).join(' or ')
+		        stageClause = `at Theiler stage(s) (${stgs})`
 		    }
 		    if (m.structure != "") {
-			structureClause = `${m.structure}`
+			//remove the full TS range from the name
+			structureClause = `<b>${m.structure.replace(/ *TS[0-9][-0-9]*$/, '')}</b>`
 		    }
 
 		    if (stageClause !== "" || structureClause !== "") {
-		        var clause = `<b> ${structureClause} ${stageClause} </b>`
+		        var clause = ` ${structureClause} ${stageClause} `
 			if (m.detected) {
 			    posStructures.push(clause);
 			} else {
@@ -321,16 +325,19 @@ var updateQuerySummary = function() {
 		// create You Searched For... strings
 		var newInnerHTML = '';		
 		if (posStructures.length > 0) {
-			newInnerHTML = "Detected in " + posStructures.join(", ");
+			newInnerHTML = "Detected in " + posStructures.join(" AND ") + "<br/>";
 			if (negStructures.length > 0) {
-				newInnerHTML = newInnerHTML + " and not detected or assayed in " + negStructures.join(", ");
+				newInnerHTML = newInnerHTML + ` but not detected ${isRnaSeq ? '' : 'or assayed'} in ` + negStructures.join(" OR ");
 			}
 			if (profileNowhereElseCheckbox.checked) {
-				newInnerHTML = newInnerHTML + " and not detected anywhere else. ";
+				newInnerHTML = newInnerHTML + ` and not detected ${isRnaSeq ? '' : 'or assayed'} anywhere else.</br>`;
 			}
 		} else {
-				newInnerHTML = "Not detected in " + negStructures.join(", ");
+		    // ? should never get here
+		    throw "Internal error: posStructures has zero length."
 		}
+
+		newInnerHTML += `<br/> Assayed by: ${isRnaSeq ? 'RNA-Seq' : 'Classical Expression Assays'} `
 
 		// create span element, and add our crafted display
 		var el = new YAHOO.util.Element(document.createElement('span'));

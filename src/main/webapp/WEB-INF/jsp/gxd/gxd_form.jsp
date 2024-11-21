@@ -134,7 +134,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 <div id="expressionSearch" class="yui-navset">
 <ul class="yui-nav">
     <li class="selected"><a href="#standard-gxd-expression-search"><em>Standard Search</em></a></li>
-    <li style="display:none;"><a href="#differential-gxd-expression-search"><em>Differential Expression Search</em></a></li>
+    <li style=""><a href="#differential-gxd-expression-search"><em>Differential Expression Search</em></a></li>
     <li><a href="#profile-search"><em>Expression Profile Search</em></a></li>
     <li><a href="#batch-search"><em>Batch Search</em></a></li>
 </ul>
