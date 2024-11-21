@@ -330,7 +330,7 @@ var updateQuerySummary = function() {
 				newInnerHTML = newInnerHTML + ` but not detected ${isRnaSeq ? '' : 'or assayed'} in ` + negStructures.join(" OR ");
 			}
 			if (profileNowhereElseCheckbox.checked) {
-				newInnerHTML = newInnerHTML + ` and not detected ${isRnaSeq ? '' : 'or assayed'} anywhere else.</br>`;
+				newInnerHTML = newInnerHTML + ` and not detected ${isRnaSeq ? '' : 'or assayed'} anywhere else.`;
 			}
 		} else {
 		    // ? should never get here

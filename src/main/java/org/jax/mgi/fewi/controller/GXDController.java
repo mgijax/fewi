@@ -1187,7 +1187,7 @@ public class GXDController {
 		if (!stages.get(i).equals("")) {
 			String[] stgs = stages.get(i).split(",");
 			for (int j = 0; j < stgs.length; j++) {
-				stgs[j] = FormatHelper.bold("TS" + stgs[j]);
+				stgs[j] = FormatHelper.bold("TS:" + stgs[j]);
 			}
 			stageClause = String.format("at Theiler stage(s) (%s)", String.join(" OR ", stgs));
 		}
