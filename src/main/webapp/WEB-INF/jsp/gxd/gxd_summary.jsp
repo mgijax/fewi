@@ -101,8 +101,9 @@
         <li><a id="assaystab" href="#assays"><em>Assays (<span id="totalAssaysCount"></span>)</em></a></li>
         <li class="selected"><a id="resultstab" href="#results"><em>Assay results(<span id="totalResultsCount"></span>)</em></a></li>
         <li><a id="imagestab" href="#images"><em>Images (<span id="totalImagesCount"></span>)</em></a></li>
-   		<li><a id="stagegridtab" href="#stageGrid"><em>Tissue x Stage Matrix</em></a></li>
-   		<li><a id="genegridtab" href="#geneGrid"><em>Tissue x Gene Matrix</em></a></li>
+	<li><a id="stagegridtab" href="#stageGrid"><em>Tissue x Stage Matrix</em></a></li>
+	<li><a id="genegridtab" href="#geneGrid"><em>Tissue x Gene Matrix</em></a></li>
+	<li><a id="heatmaptab" href="#heatmap"><em>Heat Map</em></a></li>
     </ul>
     <div class="yui-content" id="tabSummaryContent">
         <div id="goldbarDiv">
@@ -162,6 +163,23 @@
 				</div>
 	        </div>
 	        <div id="hiddenGeneMatrixPaginator" class="facetFilter" style="display: none;"></div>
+        </div>
+        <div>
+		<div class="goldbar">&nbsp;</div>
+		<div id="heatmaptabcontent">
+		    <table>
+		    <tr style="vertical-align: top;">
+		    <td>
+			<button onclick="popupHeatMap();">&#x279C; RNA-Seq Heat Map</button>
+			<div style="max-width: 350px;font-size:14px;">Export RNA-Seq search results to a heat map for visualization and 
+				 analysis.<br/>(Powered by Morpheus.)</div>
+		    </td>
+		    <td>
+			<img style="width:400px;" onclick="popupHeatMap();" src="/fewi/mgi/assets/images/heatmap_screenshot.png" />
+		    </tr>
+		    </tr>
+		    </table>
+		</div>
         </div>
     </div>
 </div>

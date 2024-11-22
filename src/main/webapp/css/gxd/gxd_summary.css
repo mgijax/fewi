@@ -33,6 +33,15 @@
 {
 	display:table;
 }
+
+#resultSummary li.disabled-tab {
+    display: none;
+}
+
+#resultSummary li.disabled-tab a {
+    color: lightgray;
+}
+
 #gxdLitInfo
 {
 	font-weight:bold;
@@ -124,6 +133,25 @@
 }
 #gxdProfileQueryForm .disabledSection {	
 	opacity: 0.5;
+}
+#heatmaptabcontent {
+    padding: 24px;
+    background-color: white;
+    font-size: 14px;
+}
+#heatmaptabcontent button {
+    padding: 8px;
+    background-color: #ecca6c;
+    font-weight: bold;
+    border-radius: 8px;
+    margin-bottom: 18px;
+}
+#heatmaptabcontent button:hover {
+    cursor: pointer;
+    color: #34ce34;
+}
+#heatmaptabcontent img:hover {
+    cursor: pointer;
 }
 
 /* Styles for image summary tab */

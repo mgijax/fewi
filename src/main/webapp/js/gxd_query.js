@@ -839,10 +839,19 @@ var interceptSubmit = function(e) {
 		newQueryState = true;
 		if(typeof resultsTabs != 'undefined')
 		{
-			// go to tissue x gene matrix for differential, and results tab for anything else
-			if(currentQF=="differential") resultsTabs.selectTab(5);
+			if(currentQF=="differential")
+			    // for diff , go to TxG matrix
+			    resultsTabs.selectTab(5);
+			else if (currentQF=="profile" ) {
+			    // for profile, go to TxG or Heatmap tab, depending on if mode is classical or rnaseq
+			    const tabNum = model.formMode === RNASEQ ? 6 : 5;
+			    resultsTabs.selectTab(tabNum)
+			}
+			// for all otherts, go to results tab
 			else resultsTabs.selectTab(2);
 		}
+		setTabEnabled('genegridtab', true);
+		if (currentQF==="profile" && model.formMode === RNASEQ) setTabEnabled('genegridtab', false)
 		if(gxdDataTable != undefined)
 			gxdDataTable.setAttributes({ width: "100%" }, true);
 

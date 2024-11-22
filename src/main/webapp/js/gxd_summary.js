@@ -90,8 +90,8 @@ var isDisabled = function() {
 //------ tab definitions + functions ------------
 var mgiTab = new MGITabSummary({
 	"tabViewId":"resultSummary",
-	"tabIds":["genestab","assaystab","resultstab","imagestab","stagegridtab","genegridtab"],
-	"pageSizes":[GENES_PAGE_SIZE,ASSAYS_PAGE_SIZE,RESULTS_PAGE_SIZE,IMAGES_PAGE_SIZE,0,GENE_MATRIX_SIZE], // mirrors "tabIds"
+	"tabIds":["genestab","assaystab","resultstab","imagestab","stagegridtab","genegridtab","heatmaptab"],
+	"pageSizes":[GENES_PAGE_SIZE,ASSAYS_PAGE_SIZE,RESULTS_PAGE_SIZE,IMAGES_PAGE_SIZE,0,GENE_MATRIX_SIZE,0], // mirrors "tabIds"
 	"historyId":"gxd"
 }, isDisabled);
 
@@ -889,6 +889,27 @@ function showTooManyResultsMessage() {
         $('#tooManyGenesWrapper').css('display', 'none');
 }
 
+function setTabEnabled (tabId, enabled) {
+    const a = document.getElementById(tabId)
+    const li = a.closest('li')
+    if (enabled) 
+        li.classList.remove('disabled-tab')
+    else
+        li.classList.add('disabled-tab')
+}
+
+function setHeatMapLinksVisible (visible) {
+    if (visible) {
+	$('#heatMapLink').removeClass('heatMapLinkHidden');
+	//setTabEnabled("genegridtab", false);
+	setTabEnabled("heatmaptab", true);
+    } else {
+	$('#heatMapLink').addClass('heatMapLinkHidden');
+	//setTabEnabled("genegridtab", true);
+	setTabEnabled("heatmaptab", false);
+    }
+}
+
 function disableControls() {
 	YAHOO.util.Dom.get("totalGenesCount").innerHTML = '-';
 	YAHOO.util.Dom.get("totalAssaysCount").innerHTML = '-';
@@ -897,11 +918,11 @@ function disableControls() {
 	// Hide what we can immediately, then come back in a second and
 	// hide anything added dynamically
 	$('.canHide').css('display', 'none');
-	$('#heatMapLink').addClass('heatMapLinkHidden');
+	setHeatMapLinksVisible(false);
 
 	setTimeout(function() { 
 		$('.canHide').css('display', 'none');
-		$('#heatMapLink').addClass('heatMapLinkHidden');
+		setHeatMapLinksVisible(false);
 		}, 1000);
 
 	controlsDisabled = true;
@@ -909,7 +930,7 @@ function disableControls() {
 
 function enableControls() {
 	$('.canHide').css('display', 'inline');
-	$('#heatMapLink').removeClass('heatMapLinkHidden');
+	setHeatMapLinksVisible(true);
 	controlsDisabled = false;
 }
 
@@ -984,7 +1005,7 @@ function refreshTabCounts()
 				refreshCurrentTab();
 
 				// Hide the button for the RNA-Seq heat map until we find if there are RNA-Seq data in the results.
-				$('#heatMapLink').addClass('heatMapLinkHidden');
+				setHeatMapLinksVisible(false);
 		
 				// If there are any RNA-Seq results, we need to show the heat map button.  Determine this by
 				// seeing if RNA-Seq appears in the assay type filter values.
@@ -992,9 +1013,9 @@ function refreshTabCounts()
 					function(x) {
 						try {
 							if (x.resultFacets.indexOf('RNA-Seq') >= 0) {
-								$('#heatMapLink').removeClass('heatMapLinkHidden'); 
+								setHeatMapLinksVisible(true);
 							} else {
-								$('#heatMapLink').addClass('heatMapLinkHidden');
+								setHeatMapLinksVisible(false);
 							}
 						} catch (e) {
 							console.log('Caught error (' + e + ') : ' + x);
@@ -1578,9 +1599,6 @@ window.prevStageGridQuery="";
 
 var structureStageGrid = function()
 {
-
-	// hide page controls
-	hidePaginators();
 
 	var querystringWithFilters = getQueryStringWithFilters();
 	window.prevStageGridQuery=querystringWithFilters;
