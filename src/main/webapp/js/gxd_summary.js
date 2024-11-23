@@ -901,12 +901,14 @@ function setTabEnabled (tabId, enabled) {
 function setHeatMapLinksVisible (visible) {
     if (visible) {
 	$('#heatMapLink').removeClass('heatMapLinkHidden');
-	//setTabEnabled("genegridtab", false);
 	setTabEnabled("heatmaptab", true);
     } else {
 	$('#heatMapLink').addClass('heatMapLinkHidden');
-	//setTabEnabled("genegridtab", true);
 	setTabEnabled("heatmaptab", false);
+	if (getCurrentTab() === "heatmaptab") {
+	    resultsTabs.selectTab(5)
+	}
+
     }
 }
 
