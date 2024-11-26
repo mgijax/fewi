@@ -2042,6 +2042,7 @@ function profileDetectedChanged(i) {
 
 // Encodes the current model state into an parameter string
 function profileSpec2QueryString () {
+    if (model.profileSpec.length === 1) model.profileSpec.push(makeProfileSpec());
     var qs = model.profileSpec.map ((m,i) => {
 	var stgs = m.stages.join(',')
 	var sid = (m.structureID === "" && stgs !== "") ? MOUSE_ID : m.structureID
