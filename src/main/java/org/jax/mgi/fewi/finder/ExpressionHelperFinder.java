@@ -253,31 +253,9 @@ public class ExpressionHelperFinder {
 	return stageKeys;
     }
 
-    public List<String> expressedOutsideOf (
-        List<String> emapaIds,
-        List<String> stages
-        ) {
-
-        /*
-         * Defines allExpression as distinct marker_key/structure_key combinations
-         * from all positive GXD results (not including RNAseq data). marker_key is
-         * renamed as subject_key so downstream parts can be "generic".
-         */
-        String allGxd = 
-          "allExpression AS ("
-          + "SELECT distinct " 
-          + "s.marker_key as subject_key, "
-          + "s.structure_key "
-          + "FROM expression_result_summary s, genotype g "
-          + "WHERE s.is_expressed = 'Yes' "
-          + "AND s.genotype_key = g.genotype_key "
-          + "AND ( "
-          + "    g.combination_1 is null "
-          + "    OR "
-          + "    (s.assay_type = 'In situ reporter (knock in)' AND g.genotype_type = 'ht') "
-          + ")), ";
-
-        
+    // Given a profile specification (Region of Interest), return the set of EMAPS keys that
+    // constitutes "everywhere else", i.e., the non-ROI.
+    public List<String> getEmapsNonROI (List<String> emapaIds, List<String> stages) {
         /* EMAPS structure keys corresponding to one EMAPA key. Instantiate 
          * for each EMAPA key passed by caller. In the final query, these will be named
          * "structure0", "structure1", ...
@@ -314,17 +292,21 @@ public class ExpressionHelperFinder {
          */
         StringBuffer query = new StringBuffer();
         query.append("WITH ");
-        query.append(allGxd);
 
         int n = 0;
+	int specCount = 0;
         for (String eid : emapaIds) {
             String A = "" + n;
 	    String stgs = stages.get(n);
-	    if (!stgs.equals("")) {
-	        stgs = "AND te.stage in (" + stgs + ")";
+	    if (!eid.equals("") || !stgs.equals("")) {
+		specCount += 1;
+		if (eid.equals("")) eid = "EMAPA:25765";
+		if (!stgs.equals("")) {
+		    stgs = "AND te.stage in (" + stgs + ")";
+		}
+		query.append(String.format(structureA, A, eid, stgs));
+		query.append(String.format(roiA, A, A, A));
 	    }
-            query.append(String.format(structureA, A, eid, stgs));
-            query.append(String.format(roiA, A, A, A));
 	    n += 1;
         }
  
@@ -332,7 +314,7 @@ public class ExpressionHelperFinder {
 	 * all the individual roi sets.
 	 */
 	query.append("roi as ( ");
-	for(int i = 0; i < n; i++) {
+	for(int i = 0; i < specCount; i++) {
 	    if (i > 0) query.append(" UNION ");
 	    query.append("SELECT term_key from roi" + i); 
 	}
@@ -346,23 +328,13 @@ public class ExpressionHelperFinder {
 	  + "FROM term "
 	  + "WHERE vocab_name = 'EMAPS' "
 	  + "AND term_key not in (SELECT term_key FROM roi) "
-	  + "), ";
+	  + ") ";
 	query.append(nonRoi);
 
-	/* Compute the set of things expressed in a non-ROI structure.
-	 */
-	String expressedInNonRoi = 
-	      "expressedInNonRoi as ( "
-	    + "SELECT distinct subject_key "
-	    + "FROM allExpression "
-	    + "WHERE structure_key in (SELECT term_key FROM nonRoi) "
-	    + ") ";
-	query.append(expressedInNonRoi);
-
-	String result = "SELECT subject_key, ' ' FROM expressedInNonRoi" ;
+	String result = "SELECT term_key, ' ' FROM nonRoi" ;
 	query.append(result);
 
-        /* Run the query and return the list of gene keys 
+        /* Run the query and return the list of EMAPS keys 
          */
         List<String> resultKeys = new ArrayList<String>();
         for(List<String> row : sqlHunter.sql(query.toString())){

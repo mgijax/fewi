@@ -26,6 +26,11 @@ public class Filter {
 	protected List<Filter> nestedFilters = new ArrayList<Filter>();
 
 	// The type of comparison to use for joining nested filters
+	//
+	// Beware that "join" has two meanings in this file.
+	// (1) joining nested filters together with "AND" or "OR" operators, and
+	// (2) A Solr join query between two indexes
+	// 
 	protected JoinClause filterJoinClause = JoinClause.FC_OR;
 	
 	protected boolean negate=false;
@@ -36,6 +41,12 @@ public class Filter {
 	// Used for proximity searches in multi valued fields
 	protected int proximity = 0;
 	
+	// Used when operator == JOIN
+	protected Filter joinQuery = null;
+	protected String fromIndex = null;
+	protected String fromField = null;
+	protected String toField = null;
+
 
     //////////////////////////////////////////////////////////////////////////
     //  CONSTRUCTORS
@@ -150,13 +161,40 @@ public class Filter {
 		this.filterJoinClause = filterJoinClause;
 	}
 
-	// filter join clause
+	// filter join clause (AND or OR)
 	public JoinClause getFilterJoinClause() {
 		return filterJoinClause;
 	}
 	public void setFilterJoinClause(JoinClause filterJoinClause) {
 		this.filterJoinClause = filterJoinClause;
 	}
+
+	// JOIN operation properties
+	public Filter getJoinQuery () {
+		return joinQuery;
+	}
+	public void setJoinQuery (Filter jq) {
+		joinQuery = jq;
+	}
+	public String getFromIndex () {
+		return fromIndex;
+	}
+	public void setFromIndex (String fi) {
+		fromIndex = fi;
+	}
+	public String getFromField () {
+		return fromField;
+	}
+	public void setFromField (String ff) {
+		fromField = ff;
+	}
+	public String getToField () {
+		return toField;
+	}
+	public void setToField (String tf) {
+		toField = tf;
+	}
+	// ------------
 
 	public boolean isQuoted() {
 		return quoted;
@@ -180,7 +218,7 @@ public class Filter {
 	}
 
 	public boolean isBasicFilter() {
-		return (nestedFilters==null || nestedFilters.isEmpty());
+		return (nestedFilters==null || nestedFilters.isEmpty()) && joinQuery == null;
 	}
 
 	/* retrieve the first-found Filter which has the given property name,
@@ -309,6 +347,18 @@ public class Filter {
 		return filter;
 	}
 
+	/**
+	 */
+	public static Filter join(String fromIndex, String fromField, String toField, Filter joinQuery) {
+		Filter filter = new Filter();
+		filter.setOperator( Operator.OP_JOIN );
+		filter.setJoinQuery( joinQuery );
+		filter.setFromIndex( fromIndex );
+		filter.setFromField( fromField );
+		filter.setToField( toField );
+		return filter;
+	}
+
 	public static Filter extractTermsForNestedFilter(Filter filter) {
 		Filter nestedFilter = new Filter();
 		extractTermsForNestedFilter(filter, nestedFilter);
@@ -352,17 +402,23 @@ public class Filter {
         }
         else {
 
-            StringBuffer filterStrings = new StringBuffer();
-            Iterator<Filter> filterIter = nestedFilters.iterator();
+	    StringBuffer filterStrings = new StringBuffer();
+	    if (joinQuery == null) {
+		Iterator<Filter> filterIter = nestedFilters.iterator();
 
-            filterStrings.append("[[NestedFilters=" + nestedFilters.size() + " NOT: " + negate + " -- ");
-            while (filterIter.hasNext()) {
-              filterStrings.append(filterIter.next().toString());
-            }
-            filterStrings.append("]] " );
+		filterStrings.append("[[NestedFilters=" + nestedFilters.size() + " NOT: " + negate + " -- ");
+		while (filterIter.hasNext()) {
+		    filterStrings.append(filterIter.next().toString());
+		}
+		filterStrings.append("]] " );
 
+	    }
+	    else {
+	        filterStrings.append(String.format("[[Join FromIndex=%s FromField=%s ToField=%s JoinQuery=%s]]",
+		    fromIndex, fromField, toField, joinQuery.toString() ));
+	    }
+	    returnString = filterStrings.toString();
 
-            returnString = filterStrings.toString();
         }
 
         return returnString;
@@ -427,20 +483,21 @@ public class Filter {
 		OP_LIKE(6, "LIKE"),
 		OP_NULL(7, "NULL"),
 		OP_NOT_NULL(8, "!NULL"),
-	    OP_BEGINS(9, "BIGINS"),
-	    OP_ENDS(10, "ENDS"),
-	    OP_CONTAINS(11, "CONTAINS"),
-	    OP_HAS_WORD(12, "HAS WORD"),
-	    OP_WORD_BEGINS(13, "WORD BEGINS"),
-	    OP_NOT_HAS(14, "!HAS"),
-	    OP_CONTAINS_WITH_COLON(15, "CONTAINS WITH COLON"),
-	    OP_GREEDY_BEGINS(99, "GREEDY BEGIN"),
+		OP_BEGINS(9, "BIGINS"),
+		OP_ENDS(10, "ENDS"),
+		OP_CONTAINS(11, "CONTAINS"),
+		OP_HAS_WORD(12, "HAS WORD"),
+		OP_WORD_BEGINS(13, "WORD BEGINS"),
+		OP_NOT_HAS(14, "!HAS"),
+		OP_CONTAINS_WITH_COLON(15, "CONTAINS WITH COLON"),
+		OP_GREEDY_BEGINS(99, "GREEDY BEGIN"),
 		OP_IN(100, "IN"),
 		OP_NOT_IN(101, "!IN"),
 		OP_PROXIMITY(103, "proximity"),
 		OP_STRING_CONTAINS(102, "STRING CONTAINS"),
 		OP_EQUAL_WILDCARD_ALLOWED(200, "EQUAL WITH WILDCARD"),
-		OP_RANGE(201, "RANGE")
+		OP_RANGE(201, "RANGE"),
+		OP_JOIN(301, "JOIN")
 	    ;
 		
 		private int	id = 0;

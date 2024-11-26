@@ -138,6 +138,9 @@ public class GXDController {
 	// value for the isWildType field in gxdResult index
 	private static String WILD_TYPE = "wild type";
 
+	private static String MOUSE_ID = "EMAPA:25765";
+	private static String ORGAN_SYSTEM_ID = "EMAPA:16103";
+
 	// values for defining how we sort facet results
 	private static String ALPHA = "alphabetic";	// sort alphabetically
 	private static String RAW = "raw";		// as returned by solr
@@ -2557,8 +2560,8 @@ public class GXDController {
 			queryFilters.add(Filter.or(parentFilters));
 		} else {
 			// initial search should include cells for mouse, child terms of mouse, and child terms of organ system
-			String mouseId = "EMAPA:25765";
-			String organSystemId = "EMAPA:16103";
+			String mouseId = MOUSE_ID;
+			String organSystemId = ORGAN_SYSTEM_ID;
 			List<Filter> termFilters = new ArrayList<Filter>();
 			List<Filter> parentFilters = new ArrayList<Filter>();
 			parentFilters.add(new Filter(SearchConstants.CM_PARENT_ANATOMY_ID, mouseId));
@@ -2619,8 +2622,8 @@ public class GXDController {
 			queryFilters.add(Filter.or(parentFilters));
 		} else {
 			// initial search should include cells for mouse, child terms of mouse, and child terms of organ system
-			String mouseId = "EMAPA:25765";
-			String organSystemId = "EMAPA:16103";
+			String mouseId = MOUSE_ID;
+			String organSystemId = ORGAN_SYSTEM_ID;
 			List<Filter> termFilters = new ArrayList<Filter>();
 			List<Filter> parentFilters = new ArrayList<Filter>();
 			parentFilters.add(new Filter(SearchConstants.CM_PARENT_ANATOMY_ID, mouseId));
@@ -3705,20 +3708,14 @@ public class GXDController {
 		return null;
 	}
 
-	/*
-	 * Creates the profile part 1 filters,
-	 * 	performs the query against gxdDifferentialMarker index
-	 * 	and returns the unique marker keys 
+	/**
+	 * Create the filter for a profile query.
 	 */
-	private List<String> resolveProfileMarkers(GxdQueryForm query)
-	{
-		logger.info("--Starting resolveProfileMarkers()");
+	private Filter buildProfileFilter (GxdQueryForm query) {
         	List<String> profileStructureKeys = new ArrayList<String>();
 		List<Filter> queryFilters = new ArrayList<Filter>();
-		boolean profileNowhereElse = "true".equals(query.getProfileNowhereElseCheckbox());
 		String formMode = query.getProfileFormMode();
 
-		logger.info("-- resolveProfileMarkers(); building structure match filters");
 
 		int i = 0;
 		for ( String profileStructureID : query.getProfileStructureID() ) {
@@ -3728,12 +3725,8 @@ public class GXDController {
 			if (profileStructureID.equals("") && stages.equals("")) 
 			    continue;
 			if (profileStructureID.equals("")) 
-			    profileStructureID = "EMAPA:25765";
-			logger.info("-- resolveProfileMarkers() " + i + " = " + 
-			    (detected.equals("true") ? "detected in " : "not-detected in ") +
-			    profileStructureID + " " + stages);
+			    profileStructureID = MOUSE_ID;
 			Filter filter;
-			//String searchField = stages.equals("") ? SearchConstants.PROF_POS_C_ANC_A : SearchConstants.PROF_POS_C_ANC;
 			Filter.Operator op = detected.equals("true") ? Filter.Operator.OP_IN : Filter.Operator.OP_NOT_IN;
 
 			if (stages.equals("")) {
@@ -3753,29 +3746,23 @@ public class GXDController {
 
 
 		Filter profileFilter = new Filter();
-		logger.debug("-- resolveProfileMarkers() queryFilters.size() = " + queryFilters.size());
 		if(queryFilters.size() > 0)
 		{
 			profileFilter.setNestedFilters(queryFilters,Filter.JoinClause.FC_AND);
 		}		
 		else return null; // punt; no filters
 
-		// build Search Params object;  add our profile filters
-		SearchParams profileSP = new SearchParams();
-		profileSP.setFilter(profileFilter);
-
-		List<String> mkeys = gxdFinder.searchProfile(profileSP);
-
-		if (profileNowhereElse) {
-			List<String> mkeys2 = expressionHelper.expressedOutsideOf(query.getProfileStructureID(), query.getProfileStage());
-			Set<String> s1 = new HashSet<String>(mkeys);
-			s1.removeAll(mkeys2);
-			mkeys = new ArrayList<String>(s1);
-		}
-		return mkeys;
-
-
+		return profileFilter;
 	}
+
+	private Filter buildProfileNowhereElseFilter (GxdQueryForm query) {
+		List<String> emapaIds = query.getProfileStructureID();
+		List<String> stages = query.getProfileStage();
+	        List<String> emapsKeys = expressionHelper.getEmapsNonROI(emapaIds, stages);
+		Filter filter = new Filter(SearchConstants.PROF_POS_C_EXACT, emapsKeys, Filter.Operator.OP_NOT_IN);
+		return filter;
+	}
+
 
 	/*
 	 * Helper for the profile part 2 filter (below); factoring out pos/neg
@@ -3835,14 +3822,14 @@ public class GXDController {
 				String stages = query.getProfileStage().get(i);
 				i += 1;
 				if (psid.equals("") && stages.equals("")) continue;
-				if (psid.equals("")) psid = "EMAPA:25765";
+				if (psid.equals("")) psid = MOUSE_ID;
 				List<String> stageList = null;
 				if (!stages.equals("")) {
 				    stageList = Arrays.asList(stages.split(","));
 				}
 				List<Filter> structureFilter = new ArrayList<Filter>();
 				if (detected.equals("false")) {
-					if (!psid.equals("EMAPA:25765")) {
+					if (!psid.equals(MOUSE_ID)) {
 						structureFilter.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,psid));
 					}
 					structureFilter.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
@@ -4015,22 +4002,18 @@ public class GXDController {
 
 			queryFilters.add(new Filter(SearchConstants.GXD_IS_WILD_TYPE, WILD_TYPE));
 
-			// Process PROFILE QUERY FORM params
-			// Do part 1 of the profile search (I.e. find out what markers to bring back)
-			List<String> markerKeys = resolveProfileMarkers(query);
+			boolean profileNowhereElse = "true".equals(query.getProfileNowhereElseCheckbox());
 
-			logger.info("resolveProfileMarkers found " + markerKeys.size() + " marker keys");
-			Collections.sort(markerKeys);
-			logger.info(Arrays.toString(markerKeys.toArray()));
-			if(markerKeys !=null && markerKeys.size()>0)
-			{
-				queryFilters.add( new Filter(SearchConstants.MRK_KEY,markerKeys,Filter.Operator.OP_IN));
-			}else{
-				// need a way to prevent the standard query from returning results when the differential fails to find markers
-				queryFilters.add( new Filter(SearchConstants.MRK_KEY,"NO_MARKERS_FOUND",Filter.Operator.OP_EQUAL));
+			Filter jf = Filter.join("gxdProfileMarker", "markerMgiid", "markerMgiid", buildProfileFilter(query));
+			queryFilters.add(jf);
+
+			if (profileNowhereElse) {
+			    Filter nwe = buildProfileNowhereElseFilter(query);
+			    Filter jf2 = Filter.join("gxdProfileMarker", "markerMgiid", "markerMgiid", nwe);
+			    queryFilters.add(jf2);
 			}
 
-			// add the 2nd part of the profile query (I.e. what results to display for the given markers)
+			// part 2 gets expression results
 			queryFilters.add(makeProfileResultFilters(query));
 
 			if (facetList.size() > 0) {
