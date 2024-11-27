@@ -168,15 +168,37 @@
 		<div class="goldbar">&nbsp;</div>
 		<div id="heatmaptabcontent">
 		    <table>
-		    <tr style="vertical-align: top;">
+		    <tr>
 		    <td>
-			<button onclick="popupHeatMap();">&#x279C; RNA-Seq Heat Map</button>
-			<div style="max-width: 350px;font-size:14px;">Export RNA-Seq search results to a heat map for visualization and 
-				 analysis.<br/>(Powered by Morpheus.)</div>
+			<img onclick="popupHeatMap();" src="/fewi/mgi/assets/images/heatmap_screenshot.png" />
 		    </td>
 		    <td>
-			<img style="width:400px;" onclick="popupHeatMap();" src="/fewi/mgi/assets/images/heatmap_screenshot.png" />
-		    </tr>
+			<table>
+			<tr>
+			    <td>
+			    <button onclick="popupHeatMap();">&#x279C; RNA-Seq Heat Map</button>
+			    </td>
+			</tr>
+			<tr>
+			    <td>
+			    Export RNA-Seq search results to a heat map <br/> for visualization and analysis.
+			    </td>
+			</tr>
+
+			<tr>
+			    <td>
+			    Powered by: 
+			    <svg id="morpheusLogo" width="32px" height="32px">
+			    <g>
+				<rect x="0" y="0" width="32" height="14" style="fill:#ca0020;stroke:none"></rect>
+				<rect x="0" y="18" width="32" height="14" style="fill:#0571b0;stroke:none"></rect>
+			    </g>
+			    </svg>
+			    Morpheus.
+			    </td>
+			</tr>
+			</table>
+		    </td>
 		    </tr>
 		    </table>
 		</div>

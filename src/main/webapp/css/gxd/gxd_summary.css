@@ -146,6 +146,13 @@
     padding: 24px;
     background-color: white;
     font-size: 14px;
+    text-align: center;
+}
+#heatmaptabcontent tr {
+}
+#heatmaptabcontent #morpheusLogo {
+    position: relative;
+    top: 10px;
 }
 #heatmaptabcontent button {
     padding: 8px;
@@ -158,8 +165,17 @@
     cursor: pointer;
     color: #34ce34;
 }
+#heatmaptabcontent img {
+    border: 0.5px solid black;
+    width:400px;
+    margin-right: 50px;
+}
 #heatmaptabcontent img:hover {
     cursor: pointer;
+}
+#heatmaptabcontent div.text {
+    max-width: 350px;
+    font-size:14px;
 }
 
 /* Styles for image summary tab */

@@ -1832,7 +1832,7 @@ function makeTheilerStageSelector (i, disabled) {
 	${disabled ? 'disabled' : ''}
         multiple="multiple" size="3"
 	onchange="theilerStageSelectorChanged(${i})" >
-    <option value="0" selected="selected">Any developmental stage</option>
+    <option value="0" selected="selected">Any Theiler Stage</option>
     <option value="1">TS 1 (0.0-2.5 dpc)</option>
     <option value="2">TS 2 (1.0-2.5 dpc)</option>
     <option value="3">TS 3 (1.0-3.5 dpc)</option>
@@ -2075,6 +2075,8 @@ function profileQueryString2Spec (qs) {
 	    if (stgs.length > 0) model.showStageSelectors = true;
 	} else if (pts[0] === "profileFormMode") {
 	    model.formMode = pts[1]
+	    // if we followed a link to get here, we need to enable the form (it starts off disabled)
+	    document.getElementById("profileStructureTable").classList.remove("disabled");
 	} else if (pts[0] === "profileNowhereElseCheckbox") {
 	    model.nowhereElse = (pts[1] === "true")
 	}
