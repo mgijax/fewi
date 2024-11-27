@@ -14,13 +14,10 @@
 		<td>
 		<div class="floatLeft">
 
-		<table id="profileStructureTable" style="border:none;" class="hideStages" >
-
-		<!-- ---------------------------------------- -->
-		<tbody id="topSection">
+		<table id="profileFormModeTable" style="border:none;" >
 		<tr>
-		<td colspan="5" style="padding-bottom: 20px;">
-		    <input type="radio" id="profileModeC" name="profileMode" value="classical" checked="true" onchange="profileSetMode()" />
+		<td colspan="5" style="padding-bottom: 20px; border:none;">
+		    <input type="radio" id="profileModeC" name="profileMode" value="classical" onchange="profileSetMode()" />
 		    <label for="profileModeC"> 
 			Classical Expression <span>Assays
 			    <img id="gxdProfileClassicalHelpImage" src="${configBean.WEBSHARE_URL}images/help_icon.png" />
@@ -53,6 +50,14 @@
 		    <label for="profileModeR">RNA-Seq</label>
 		</td>
 		</tr>
+		</table>
+
+
+
+		<table id="profileStructureTable" style="border:none;" class="hideStages disabled" >
+
+		<!-- ---------------------------------------- -->
+		<tbody id="topSection">
 		<tr>
 		<td colspan="2">
 		    Find genes where expression is:

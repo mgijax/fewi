@@ -1784,7 +1784,7 @@ const MOUSE_ID = "EMAPA:25765"
 
 // data that drives the form display
 var model = {
-    formMode: CLASSICAL, // "classical" or "rnaseq"
+    formMode: null, // "classical" or "rnaseq"
     profileSpec: [],  // see makeProfileSpec
     nowhereElse: false, // 
     showStageSelectors: false
@@ -1821,6 +1821,7 @@ function resetProfileForm () {
 function profileSetMode () {
     const form = document.getElementById('gxdProfileQueryForm')
     model.formMode = form.querySelector('input[type="radio"][name="profileMode"]:checked').value;
+    document.getElementById("profileStructureTable").classList.remove("disabled");
     resetProfileForm();
 }
 
@@ -2181,8 +2182,10 @@ function refreshProfileForm () {
 	setValidTheilerStages(i)
     })
 
-    const formModeRadio = pform.querySelector(`input[name="profileMode"][value="${model.formMode}"]`)
-    formModeRadio.checked = true
+    if (model.formMode) {
+	const formModeRadio = pform.querySelector(`input[name="profileMode"][value="${model.formMode}"]`)
+	formModeRadio.checked = true
+    }
 
     if (model.formMode === CLASSICAL) {
         pform.classList.replace(RNASEQ,CLASSICAL);

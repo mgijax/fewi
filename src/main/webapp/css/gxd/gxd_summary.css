@@ -49,8 +49,16 @@
 
 /* Styles for profile search */
 
-#profileModeC, #profileModeR {
+#profileModeC {
+    margin-left: 20px;
+}
+#profileModeR {
     margin-left: 120px;
+}
+
+#profileStructureTable.disabled {
+    opacity: 0.2;
+    pointer-events: none;
 }
 
 #profileStructureTable td{
