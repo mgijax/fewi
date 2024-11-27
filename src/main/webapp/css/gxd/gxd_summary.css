@@ -75,6 +75,10 @@
     text-align: left;
 }
 
+#profileStructureTable .profile-structure-row select.hasSelections {
+    border: 2px solid green;
+}
+
 #profileStructureTable tr.detected input.yui-ac-input,
 #profileStructureTable tr.detected select {
 	background-color: #d1e8fc;

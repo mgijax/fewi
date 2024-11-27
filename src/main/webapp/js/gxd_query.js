@@ -1956,6 +1956,16 @@ function resetTheilerStageSelection (i) {
     Array.from(sel.options).forEach(o => o.selected = (o.value === "0"));
 }
 
+function setSelectorClass (i) {
+    const sel = document.getElementById(`profileStage${i}`);
+    const selected = Array.from(sel.options).filter(o => o.selected && o.value !== "0").map(o => o.value);
+    if (selected.length > 0) {
+        sel.classList.add('hasSelections')
+    } else {
+        sel.classList.remove('hasSelections')
+    }
+}
+
 function getTheilerStageSelection (i) {
     const sel = document.getElementById(`profileStage${i}`);
     const selected = Array.from(sel.options).filter(o => o.selected && o.value !== "0").map(o => o.value);
@@ -1990,6 +2000,7 @@ function theilerStageSelectorChanged (i) {
 	document.getElementById(`profileStructure${i}`).style.opacity = 1
     }
     checkDetected(i)
+    setSelectorClass(i)
 }
 
 function makeProfileRow (model, i) {
@@ -2182,6 +2193,7 @@ function refreshProfileForm () {
 	});
 	setTheilerStageSelection(i, m.stages);
 	setValidTheilerStages(i)
+	setSelectorClass(i)
     })
 
     if (model.formMode) {
