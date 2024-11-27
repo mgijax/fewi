@@ -2016,7 +2016,7 @@ function makeProfileRow (model, i) {
 	<div class="anatomyAC" style="width: 400px;" id="profileStructureContainer${i}"></div>
     </td>
     <td>
-        <span>and/or</span>
+        <span></span>
     </td>
     <td>
 	${makeTheilerStageSelector(i, disabled)}

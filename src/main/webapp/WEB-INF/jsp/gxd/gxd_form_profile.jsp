@@ -107,7 +107,7 @@
 		        <span>Anatomical Structure</span>
 		    </td>
 		    <td>
-		        <span></span>
+		        <span class="stagesLabel" >and/or</span>
 		    </td>
 		    <td>
 		        <span class="stagesLabel" >Theiler Stage(s)</span>
