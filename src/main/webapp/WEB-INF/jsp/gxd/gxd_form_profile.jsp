@@ -65,12 +65,12 @@
 		    <td colspan="3">
 		    <input type="checkbox" id="profileShowStagesCheckbox" name="profileShowStagesCheckbox" 
 		        value="true" onchange="profileShowStagesChanged()" /> 
-			    <span>Show stage selectors
+			    <span>Show Theiler Stage selectors
 				<img id="gxdProfileStageHelpImage" src="${configBean.WEBSHARE_URL}images/help_icon.png" />
                                 <div id="gxdProfileStageHelp">
-                                        <div class="hd">Show stage selectors ...</div>
+                                        <div class="hd">Show Theiler Stage selectors ...</div>
                                         <div class="bd">
-					    <p> You can restrict your query to specific stages for each structure specified.
+					    <p> You can restrict your query to specific Theiler Stages for each structure specified.
 					    You can also query for stages without specifying a structure.
 					    NOTE: that when you toggle this button, previous stage specifications (if any) are discarded.
 					    </p>
@@ -104,13 +104,13 @@
 			</span>
 		    </td>
 		    <td>
-		        <span>Structure</span>
+		        <span>Anatomical Structure</span>
 		    </td>
 		    <td>
 		        <span></span>
 		    </td>
 		    <td>
-		        <span class="stagesLabel" >Stage(s)</span>
+		        <span class="stagesLabel" >Theiler Stage(s)</span>
 		    </td>
 		    <td>
 		        <span></span>
