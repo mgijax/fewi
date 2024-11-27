@@ -133,7 +133,6 @@
 		    <form name="resultsExportForm" id="resultsExportForm" action="" method="POST">
                     <span class="label canHide">Export:</span>
                     <a id="resultsTextDownload" class="canHide filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
-                    <a id="heatMapLink" class="filterButton heatMapLinkHidden" onClick="popupHeatMap()"> RNA-Seq <img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" style="margin-bottom: -1px;"/> Heat Map</a>
 		    <span class="label" style="padding-left: 100px;">Show Additional Sample Data <input id="showHide" type="checkbox" onClick="flipOptionalColumns()"></span>
 		    </form><!-- resultsExportForm -->
                 </div>

@@ -900,10 +900,8 @@ function setTabEnabled (tabId, enabled) {
 
 function setHeatMapLinksVisible (visible) {
     if (visible) {
-	$('#heatMapLink').removeClass('heatMapLinkHidden');
 	setTabEnabled("heatmaptab", true);
     } else {
-	$('#heatMapLink').addClass('heatMapLinkHidden');
 	setTabEnabled("heatmaptab", false);
 	if (getCurrentTab() === "heatmaptab") {
 	    resultsTabs.selectTab(5)
