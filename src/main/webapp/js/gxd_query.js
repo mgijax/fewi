@@ -1815,7 +1815,6 @@ function resetProfileForm () {
     ]
     model.nowhereElse = false
     refreshProfileForm()
-
 }
 
 function profileSetMode () {
@@ -2202,10 +2201,12 @@ function refreshProfileForm () {
     }
 
     if (model.formMode === CLASSICAL) {
-        pform.classList.replace(RNASEQ,CLASSICAL);
+        pform.classList.remove(RNASEQ);
+        pform.classList.add(CLASSICAL);
     }
     else if (model.formMode === RNASEQ) {
-        pform.classList.replace(CLASSICAL,RNASEQ);
+        pform.classList.remove(CLASSICAL);
+        pform.classList.add(RNASEQ);
     }
     pform.profileNowhereElseCheckbox.checked = model.nowhereElse
     refreshEnabledDisabled()
@@ -2275,3 +2276,11 @@ function profileShowStagesChanged () {
 }
 
 resetProfileForm()
+
+/* Firefox quirk. If you choose a form mode and then immediately reload the page, the radio button is still selected
+ * even though model.formMode is null and the form itself is grayed out.
+ */
+if (model.formMode === null) {
+    document.getElementById('profileModeC').checked = false
+    document.getElementById('profileModeR').checked = false
+}

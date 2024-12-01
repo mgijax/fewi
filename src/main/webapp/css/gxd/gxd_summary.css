@@ -130,11 +130,19 @@
 	font-weight: bold;
 }
 
+#gxdProfileQueryForm.classical .noModeSelected,
+#gxdProfileQueryForm.rnaseq .noModeSelected {
+    display: none;
+}
+
 #gxdProfileQueryForm.classical .classicalOnly {
 	display: default;
 }
 #gxdProfileQueryForm.rnaseq .classicalOnly {
 	display: none;
+}
+#profileModeHandIcon {
+    font-size: 24px;
 }
 
 #gxdProfileQueryForm.classical .rnaseqOnly {

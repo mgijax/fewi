@@ -1,4 +1,4 @@
-<form:form commandName="gxdProfileQueryForm" id="gxdProfileQueryForm" class="gxdQf classical">
+<form:form commandName="gxdProfileQueryForm" id="gxdProfileQueryForm" class="gxdQf">
 <table class="pad5 borderedTable" width="100%">
 	<tr>
 		<td colspan="3" align="left">
@@ -7,6 +7,7 @@
 			<input type="reset" id="reset3">
 			&nbsp;&nbsp;
 			Search for genes by expression profile.
+			<span class="noModeSelected"><b>Select an Assay Type to activate the form.</b></span>
 		</td>
 	</tr>
 	<tr class="stripe1">
@@ -17,6 +18,7 @@
 		<table id="profileFormModeTable" style="border:none;" >
 		<tr>
 		<td colspan="5" style="padding-bottom: 20px; border:none;">
+		    <span id="profileModeHandIcon" class="noModeSelected">&#x261E;</span>
 		    <input type="radio" id="profileModeC" name="profileMode" value="classical" onchange="profileSetMode()" />
 		    <label for="profileModeC"> 
 			Classical Expression <span>Assays
