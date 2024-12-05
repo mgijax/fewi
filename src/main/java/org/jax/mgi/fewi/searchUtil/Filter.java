@@ -536,6 +536,12 @@ public class Filter {
 		for (Filter f : a.nestedFilters) {
 			b.nestedFilters.add(Filter.copy(f));
 		}
+
+		b.joinQuery = a.joinQuery == null ? null : Filter.copy(a.joinQuery);
+		b.fromIndex = a.fromIndex;
+		b.fromField = a.fromField;
+		b.toField = a.toField;
+
 		return b;
 	}
 }
