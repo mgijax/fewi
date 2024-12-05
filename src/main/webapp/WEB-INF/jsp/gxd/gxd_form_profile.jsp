@@ -155,6 +155,8 @@
 			<input class="buttonLabel" value="Search" type="submit"  id="submit4">
 			&nbsp;&nbsp;
 			<input type="reset" id="reset4">
+			&nbsp;&nbsp;
+			<span>Expression Profile Search limited to expression data from wild-type specimens.</span>
 		</td>
 	</tr>
 </table>
