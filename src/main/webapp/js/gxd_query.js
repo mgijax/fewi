@@ -850,8 +850,6 @@ var interceptSubmit = function(e) {
 			// for all otherts, go to results tab
 			else resultsTabs.selectTab(2);
 		}
-		setTabEnabled('genegridtab', true);
-		if (currentQF==="profile" && model.formMode === RNASEQ) setTabEnabled('genegridtab', false)
 		if(gxdDataTable != undefined)
 			gxdDataTable.setAttributes({ width: "100%" }, true);
 
@@ -1865,9 +1863,7 @@ function makeTheilerStageSelector (i, disabled) {
 }
 
 // Sets the valid Theiler stage options for row i from the currently selected EMAPA term.
-// Parses the valid stage range from the structure's name. Only stage
-// options in this range are visible.
-//
+// 
 function setValidTheilerStages (i) {
     const m = model.profileSpec[i]
     const emapaID = (m.structureID || MOUSE_ID)
@@ -1888,10 +1884,10 @@ function setValidTheilerStages (i) {
 	const sel = document.getElementById(`profileStage${i}`)
 	const opts = sel.querySelectorAll('option')
 	opts.forEach((o,j) => {
-	    if (j===0 || (j >= sStage && j <= eStage)) {
+	    if (j===0 || dStagesInt.indexOf(j) !== -1) {
 		// valid
 		o.style.display = ''
-		o.disabled = (j !== 0 && dStagesInt.indexOf(j) === -1)
+		o.disabled = false
 	    } else {
 		// invalid
 		o.style.display = 'none'
@@ -1903,6 +1899,7 @@ function setValidTheilerStages (i) {
 		}
 	    }
 	})
+	setSelectorClass(i)
     })
 }
 
@@ -1988,15 +1985,11 @@ function theilerStageSelectorChanged (i) {
 	m.structure = MOUSE
 	document.getElementById(`profileStructure${i}`).value = MOUSE
 	document.getElementById(`profileStructure${i}ID`).value = MOUSE_ID
-	document.getElementById(`profileStructure${i}`).disabled = true
-	document.getElementById(`profileStructure${i}`).style.opacity = 0.3
     } else if (m.stages.length === 0 && m.structureID === MOUSE_ID) {
         m.structureID = ""
 	m.structure = ""
 	document.getElementById(`profileStructure${i}`).value = ""
 	document.getElementById(`profileStructure${i}ID`).value = ""
-	document.getElementById(`profileStructure${i}`).disabled = false
-	document.getElementById(`profileStructure${i}`).style.opacity = 1
     }
     checkDetected(i)
     setSelectorClass(i)
