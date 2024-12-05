@@ -1,0 +1,9 @@
+TAG: fewi-6-0-24-14
+DATE: 12/05/2024
+STAFF: lec
+CHANGES:
+wts2-1487/e4g-87/Install: fixes for MGI_Install
+        modified:   .gitignore
+        new file:   HISTORY
+        modified:   Install
+
