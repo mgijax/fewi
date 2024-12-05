@@ -505,7 +505,11 @@ var getRecordsDisplayed = function() {
 
 // Show the paginators (if rules allow it).
 var showPaginators = function() {
-	$(".yui-pg-container").show();
+	if (getCurrentTab() === 'stagegridtab' || getCurrentTab() === 'heatmaptab') {
+	    hidePaginators()
+	} else {
+	    $(".yui-pg-container").show();
+	}
 }
 
 // Hide the paginators (if the rules allow it).
@@ -613,6 +617,9 @@ handleNavigation = function (request, calledLocally) {
 		if (typeof openSummaryControl == 'function')
 			openSummaryControl();
 
+		setTabEnabled('genegridtab', true);
+		if (currentQF==="profile" && model.formMode === RNASEQ) setTabEnabled('genegridtab', false)
+
 		// update the report buttons
 		var querystringWithFilters = getQueryStringWithFilters();
 		if (querystringWithFilters != previousFilterString)
@@ -673,7 +680,7 @@ handleNavigation = function (request, calledLocally) {
 		// build the summary inside the tab (if below max results)
 		waitForResultCount(request, tabState);
 
-		// Shh, do not tell anyone about this. We are sneaking in secret Google Analytics calls, even though there is no approved User Story for it.
+		// log the page view
 		var GAState = "/gxd/summary/" + tabState + "?" + querystringWithFilters + '&records=' + getRecordsDisplayed();
 		if(GAState != previousGAState)
 		{
