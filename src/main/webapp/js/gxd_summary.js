@@ -282,20 +282,14 @@ function reverseEngineerFormInput(request)
 	// review input parameters to determine which QF sent the request
 	for(var key in params)
 	{
-		if(key == "difStructure") foundDifStruct=true;
-		else if(key == "difTheilerStage" || key=="difAge") foundDifStage=true;
-		else if(key == 'idType') foundBatch=true;
+		if(key == 'idType') foundBatch=true;
 		else if(key.slice(0,18) == 'profileStructureID') foundProfile=true;
 	}
 
 	// make sure correct form is visible
 	// this code allows for flexibility to add another ribbon
 	var foundParams = false;
-	if(foundDifStruct || foundDifStage)
-	{
-		formID = "#gxdDifferentialQueryForm3";
-		showDifferentialForm();
-	} else if (foundBatch)
+	if (foundBatch)
 	{
 		formID = "#gxdBatchQueryForm1";
 		showBatchSearchForm();
@@ -328,22 +322,8 @@ function reverseEngineerFormInput(request)
 		if (key == 'idFile') {
 			// no op - skip it
 		}
-		else if(key=="detected") // handling for dynamic detected values
-		{
-			if (params[key] == 'Yes') {
-				if (YAHOO.util.Dom.get("detected1") != null) {
-					YAHOO.util.Dom.get("detected1").checked = true;
-				}
-			} else if (params[key] == 'No') {
-				if (YAHOO.util.Dom.get("detected2") != null) {
-					YAHOO.util.Dom.get("detected2").checked = true;
-				}
-			}
-		}
 		else if(key!=undefined && key!="" && key!="detected" && params[key].length>0)
 		{
-			//var input = YAHOO.util.Dom.get(key);
-			// jQuery is better suited to resolving form name parameters
 			var input = $(formID+" [name='"+key+"']");
 			if(input.length < 1) input = $(formID+" #"+key);
 			if(input!=undefined && input!=null && input.length > 0)
@@ -794,7 +774,6 @@ function showGridMessage(message, request) {
 }
 
 // if the 'request' includes any of the following, show the corresponding message div
-// -if the differential submits it's anywhere else input
 // -if the profile submits it's nowhere-else input
 // -if the profile submits a structure with "Not Detected" selected
 function showNowhereElseMessage(request, matrixType) {

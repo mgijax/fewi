@@ -109,19 +109,10 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary_filters.js"></script>
 
-<c:if test="${showDifferentialQueryForm}">
-<script>
-$(function(){
-	// open the differential query form
-	showDifferentialForm();
-});
-</script>
-</c:if>
-
 <c:if test="${showProfileQueryForm}">
 <script>
 $(function(){
-	// open the differential query form
+	// open the profile query form
 	showProfileSearchForm();
 });
 </script>

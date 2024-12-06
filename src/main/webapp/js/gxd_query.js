@@ -133,9 +133,8 @@ var formTabs = new YAHOO.widget.TabView('expressionSearch');
 
 formTabs.addListener("activeTabChange", function(e){
 	if(formTabs.get('activeIndex')==0) currentQF = "standard";
-	else if(formTabs.get('activeIndex')==3) currentQF = "batch";
-	else if(formTabs.get('activeIndex')==2) currentQF = "profile";
-	else currentQF = "differential";
+	else if(formTabs.get('activeIndex')==2) currentQF = "batch";
+	else if(formTabs.get('activeIndex')==1) currentQF = "profile";
 });
 //basic functions to manage the form tabs
 var showStandardForm = function()
@@ -143,27 +142,20 @@ var showStandardForm = function()
 	currentQF = "standard";
 	formTabs.selectTab(0);
 };
-var showDifferentialForm = function()
-{
-	currentQF = "differential";
-	formTabs.selectTab(1);
-};
 var showProfileSearchForm = function()
 {
 	currentQF = "profile";
-	formTabs.selectTab(2);
+	formTabs.selectTab(1);
 };
 var showBatchSearchForm = function()
 {
 	currentQF = "batch";
-	formTabs.selectTab(3);
+	formTabs.selectTab(2);
 };
 
 function getCurrentQF()
 {
-	if(currentQF=="differential") {
-		return YAHOO.util.Dom.get("gxdDifferentialQueryForm3");
-	} else if (currentQF == 'batch') {
+	if (currentQF == 'batch') {
 		return YAHOO.util.Dom.get("gxdBatchQueryForm1");
 	} else if (currentQF == 'profile') {
 		return YAHOO.util.Dom.get("gxdProfileQueryForm");
@@ -713,8 +705,7 @@ var toggleQF = function(oCallback,noAnimate) {
 
 	console.log("in toggleQF - currentQF:" + currentQF);
     var toHeight = QFHeight;
-    if (currentQF == "differential") { toHeight = DifQFHeight; }
-    else if (currentQF == "batch") { toHeight = BatchQFHeight; }
+    if (currentQF == "batch") { toHeight = BatchQFHeight; }
     else if (currentQF == "profile") { toHeight = BatchQFHeight; }
 	console.log("in toggleQF - toHeight:" + toHeight);
 
@@ -839,10 +830,7 @@ var interceptSubmit = function(e) {
 		newQueryState = true;
 		if(typeof resultsTabs != 'undefined')
 		{
-			if(currentQF=="differential")
-			    // for diff , go to TxG matrix
-			    resultsTabs.selectTab(5);
-			else if (currentQF=="profile" ) {
+			if (currentQF=="profile" ) {
 			    // for profile, go to TxG or Heatmap tab, depending on if mode is classical or rnaseq
 			    const tabNum = model.formMode === RNASEQ ? 6 : 5;
 			    resultsTabs.selectTab(tabNum)
@@ -873,7 +861,6 @@ var interceptSubmit = function(e) {
 
 YAHOO.util.Event.addListener("gxdQueryForm", "submit", interceptSubmit);
 YAHOO.util.Event.addListener("gxdBatchQueryForm1", "submit", interceptSubmit);
-YAHOO.util.Event.addListener("gxdDifferentialQueryForm3","submit", interceptSubmit);
 YAHOO.util.Event.addListener("gxdProfileQueryForm","submit", interceptSubmit);
 
 
@@ -991,87 +978,6 @@ var mutationRestriction  = function() {
 	return selectVisible || geneVisible;
 };
 
-var difTSClick = function() {
-	// if we have a click in the differential Theiler stage box, we need to blank out the
-	// "anywhere else" checkbox
-
-	if ($('#anywhereElse').length > 0) {
-		$('#anywhereElse')[0].checked = false;
-	}
-}
-
-var differentialRestriction  = function()
-{
-	// For a valid search we need...
-	// 1. either a structure or stage for 'detected in'
-	// 2. either a structure, a stage, or not 'anywhere else' for 'not detected in'
-	// 3. if choosing both structure & stage (top or bottom ribbon), then you can't
-	//		select just one in the other ribbon
-	
-	var form = YAHOO.util.Dom.get("gxdDifferentialQueryForm3");
-
-	var structure = form.structure.value;
-	var difStructure = form.difStructure.value;
-	var hasStructure = (structure != null) && (structure.trim().length > 0);
-	var hasDifStructure = (difStructure != null) && (difStructure.trim().length > 0);
-
-	var stage = form.theilerStage;
-	var difStage = form.difTheilerStage;
-
-	// For the 'detected in' developmental stage, we need a choice other than "any" for it to count.
-	var hasTS = (stage.selectedOptions.length > 1);
-	var hasAnyTS = (stage.selectedOptions.length > 1);		// includes Any as a valid choice
-	if (!hasTS) {
-		for (var i in stage.selectedOptions) {
-			if (stage.selectedOptions[i].value != '0' && stage.selectedOptions[i].value != undefined) {
-				hasTS = true;
-				hasAnyTS = true;
-				break;
-			} else if (stage.selectedOptions[i].value == '0') {
-				hasAnyTS = true;
-			}
-		}
-	}
-
-	var hasDifTS = (difStage.selectedOptions.length >= 1);
-	var anywhereElseChecked = form.anywhereElse.checked;
-	
-	// If we have 'any' structure for the detected TS choice, then 'any other' doesn't make sense as a
-	// NOT detected TS choice.
-	if (!hasTS) {
-		if ((difStage.selectedOptions.length == 1) && (
-				(difStage.selectedOptions[0].value == '-1') || (difStage.selectedOptions[0].value == '0') )) {
-			hasDifTS = false;
-		}
-	}
-
-	var error = '';
-	
-	if (hasStructure && !hasDifStructure && !anywhereElseChecked) {
-		error = 'If you specify a structure in the top ribbon, then you must either specify a structure in the bottom ribbon or check "anywhere else".';
-
-	} else if (!hasStructure && hasDifStructure) {
-		error = 'If you specify a structure in the bottom ribbon, then you must also specify a structure in the top ribbon.';
-
-	} else if (hasTS && !hasDifTS && !anywhereElseChecked) {
-		error = 'If you specify a stage in the top ribbon, then you must either specify a stage in the bottom ribbon or check "anywhere else".';
-
-	} else if (!hasTS && hasDifTS && !(hasAnyTS && hasStructure && hasDifStructure)) {
-		error = 'If you specify a stage in the bottom ribbon, then you must also specify a stage in the top ribbon.';
-
-	} else if (!(hasStructure || hasTS)) {
-		error = 'In the top ribbon, please specify an anatomical structure or developmental stage or both.';
-
-	} else if (!(hasDifStructure || hasDifTS || anywhereElseChecked)) {
-		error = 'In the bottom ribbon, please specify an anatomical structure or developmental stage or both or check "anywhere else".';
-	}
-
-	setVisibility('differentialError', error.length > 0);
-	$('#differentialError').html(error);
-	
-	return error.length > 0;
-};
-
 /* returns false if there are NO validation errors, true if there are some
  */
 var runValidation  = function(){
@@ -1088,20 +994,11 @@ var runValidation  = function(){
 	else if (currentQF == 'batch') {
 		result = false;			// no current validations
 	}
-	else if(currentQF=="differential") {
-		result = differentialRestriction();
-	}
 	return result;
 };
 var clearValidation = function()
 {
 	if(currentQF == "standard") runValidation();
-	else
-	{
-		setVisibility('difStructureError', false);
-		setVisibility('difStageError',false);
-		setVisibility('difStructStageError',false);
-	}
 }
 
 YAHOO.util.Event.addListener(YAHOO.util.Dom.get("nomenclature"), "keyup", runValidation);
@@ -1317,9 +1214,6 @@ function makeStructureAC(inputID,containerID){
     	{
 		    var idBox = YAHOO.util.Dom.get(hiddenID);
 	 	    idBox.value = "";
-	 	    if (inputID == 'difStructure4') {
-	 	   		$('#inCheckbox')[0].checked = false;			// clearn the in-structure checkbox
-	 	   	}
     	}
     };
     oAC.selectionEnforceEvent.subscribe(removeSelectedID);
@@ -1358,7 +1252,6 @@ function makeStructureAC(inputID,containerID){
 
     oAC.formatResult = function(oResultData, sQuery, sResultMatch) {
 
-//	    var userInputField = YAHOO.util.Dom.get("structure");
 	    var userInputField = YAHOO.util.Dom.get(inputID);
 	    var userInput = userInputField.value.toLowerCase();
 
@@ -1393,8 +1286,6 @@ function makeStructureAC(inputID,containerID){
         oAC: oAC
     };
 };
-makeStructureAC("difStructure3","difStructureContainer3");
-makeStructureAC("difStructure4","difStructureContainer4");
 makeStructureAC("structure","structureContainer");
 
 //
@@ -1427,21 +1318,6 @@ var resetQF = function (e) {
 	form.detected3.checked=true;
 	form.allSpecimen.checked=true;
 	form.mutatedIn.value = "";
-
-	// differential
-	var difForm3 = YAHOO.util.Dom.get("gxdDifferentialQueryForm3");
-	if(difForm3)
-	{
-		difForm3.structure.value="";
-		difForm3.structureID.value="";
-		difForm3.difStructure.value="";
-		difForm3.difStructureID.value="";
-		difForm3.theilerStage.selectedIndex=0;
-		difForm3.difTheilerStage.selectedIndex=0;
-		difForm3.inCheckbox.checked = false;
-		difForm3.anywhereElse.checked = false;
-		setVisibility('differentialError', false);
-	}
 
 	// profile
 	var profileForm = YAHOO.util.Dom.get("gxdProfileQueryForm");
@@ -1494,9 +1370,6 @@ var fullResetQF = function(e) {
 
 YAHOO.util.Event.addListener("gxdQueryForm", "reset", fullResetQF);
 YAHOO.util.Event.addListener("gxdBatchQueryForm1", "reset", fullResetQF);
-YAHOO.util.Event.addListener("gxdDifferentialQueryForm1", "reset", fullResetQF);
-YAHOO.util.Event.addListener("gxdDifferentialQueryForm2", "reset", fullResetQF);
-YAHOO.util.Event.addListener("gxdDifferentialQueryForm3", "reset", fullResetQF);
 YAHOO.util.Event.addListener("gxdProfileQueryForm", "reset", fullResetQF);
 
 //
@@ -1721,29 +1594,6 @@ var readFile = function(e) {
 		
 	};
 	reader.readAsText(input.files[0]);
-};
-
-// if the 'any other structure' button is clicked and will be checked, then we'll need to
-// blank out the 'specify structure' box and clear the other checkbox.
-var anywhereElseClick = function() {
-	if ($('#anywhereElse').length > 0) {
-		if ($('#anywhereElse')[0].checked) {
-			$('#difStructure4')[0].value = '';
-			$('#difStructure4ID')[0].value = '';
-			$('#inCheckbox')[0].checked = false;
-			$('#difTheilerStage4')[0].selectedIndex = 0;
-		}
-	}
-};
-
-// if the 'in this structure' checkbox is clicked and will be checked, then we'll need to
-// blank out the 'anywhere else' checkbox
-var inCheckboxClick = function() {
-	if ($('#inCheckbox').length > 0) {
-		if ($('#inCheckbox')[0].checked) {
-			$('#anywhereElse')[0].checked = false;
-		}
-	}
 };
 
 // ensure user hasn't input more than the server can easily handle

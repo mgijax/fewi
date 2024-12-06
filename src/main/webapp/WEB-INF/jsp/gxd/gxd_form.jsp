@@ -134,7 +134,6 @@ span.smallGrey { font-size: 75%; color: #999999; }
 <div id="expressionSearch" class="yui-navset">
 <ul class="yui-nav">
     <li class="selected"><a href="#standard-gxd-expression-search"><em>Standard Search</em></a></li>
-    <li style=""><a href="#differential-gxd-expression-search"><em>Differential Expression Search</em></a></li>
     <li><a href="#profile-search"><em>Expression Profile Search</em></a></li>
     <li><a href="#batch-search"><em>Batch Search</em></a></li>
 </ul>
@@ -384,105 +383,6 @@ span.smallGrey { font-size: 75%; color: #999999; }
 </div>
 
 </form:form>
-</div>
-<div id="differential-qf" >
-<form:form commandName="gxdDifferentialQueryForm" id="gxdDifferentialQueryForm3" class="gxdQf">
-<table class="pad5 borderedTable" width="100%">
-	<tr>
-		<td colspan="3" align="left">
-			<input class="buttonLabel" value="Search" type="submit"  id="submit3">
-			&nbsp;&nbsp;
-			<input type="reset" id="reset3">
-			&nbsp;&nbsp;
-			Search for genes expressed in an anatomical structure and/or developmental stage(s) but not in others.
-			<div id="differentialError" class="small error" style="display:none; white-space:nowrap;padding-bottom:4px;padding-top:4px;">
-			</div>
-		</td>
-	</tr>
-	<tr class="stripe1">
-		<td class="cat1Gxd"></td>
-		<td>
-		<div class="floatLeft">
-			Find genes where expression is detected<br/>
-			<div class="anatomyAC" id="difStructureAutoComplete3" style="padding-top: 10px; width: 317.22px;">
-				in
-				<input id="difStructure3" name="structure" placeholder="anatomical structure"></input>
-				<input type="hidden" id="difStructure3ID" name="structureID" value=""/>
-				<div id="difStructureContainer3"></div>
-			</div>
-		</div>
-		<div class="floatLeft andOr" style="padding-top: 10px"><br/>and/or</div>
-		<div class="floatLeft" style="padding-top: 10px"><br/>
-			<div id="ageStage3">
-				<form:select multiple="true" path="theilerStage" id="difTheilerStage3" size="7" items="${gxdQueryForm.theilerStages}">
-	                <form:options items="${theilerStages}" />
-	            </form:select>
-	            <br/>
-	            <span style="font-size:90%">
-	            	<a href="${configBean.FEWI_URL}glossary/theiler" target="_blank">Theiler Stages</a> (age ranges)
-	            </span>
-		  	</div>
-		</div>
-		</td>
-	</tr>
-	<tr class="stripe2">
-		<td class="cat2Gxd"></td>
-		<td>
-		<div class="floatLeft">
-			and <span class="redNot">NOT</span> detected or analyzed
-				<img id="gxdDifStruct1HelpImage" src="${configBean.WEBSHARE_URL}images/help_icon.png" />
-				<div id="gxdDifStruct1Help">
-					<div class="hd"><b>NOT</b> detected or analyzed in...</div>
-					<div class="bd">
-						<p>The search will return genes whose expression was absent (not detected),
-						as well as genes whose expression has not been analyzed or recorded in the database for the specified structure.</p>
-					</div>
-				</div>
-			<div style="padding-top: 10px;">
-				<input type="checkbox" class="anywhereElse" id="anywhereElse" name="anywhereElse" value="true" style="padding-bottom: 3px;" onClick="anywhereElseClick()"/>
-					anywhere else
-			</div>
-			<div style="padding-top:10px; padding-bottom: 8px;">
-				<div class="floatLeft">
-					<input type="checkbox" class="inCheckbox" id="inCheckbox" name="inCheckbox" style="padding-bottom: 3px;" onClick="inCheckboxClick()"/>
-				</div>
-				<div class="floatLeft anatomyAC" style="padding-left: 5px" id="difStructureAutoComplete4">
-					in
-					<input id="difStructure4" name="difStructure" style="width:270px;" placeholder="anatomical structure"></input>
-					<input type="hidden" id="difStructure4ID" name="difStructureID" value=""/>
-					<div id="difStructureContainer4"></div>
-				</div>
-			</div>
-		</div>
-		<div class="floatLeft andOr" style="padding-top:10px"><br/>and/or</div>
-		<div class="floatLeft" style="padding-top:10px">
-			<br/>
-			<div id="stageContainer4">
-				<div id="ageStage4">
-					<form:select multiple="true" path="difTheilerStage" id="difTheilerStage4" size="7" items="${gxdQueryForm.difTheilerStages}" onClick="difTSClick()">
-	                    <form:options items="${difTheilerStages}" />
-	                </form:select>
-		        </div>
-			</div>
-		</div>
-		</td>
-	</tr>
-	<tr>
-		<td colspan="3" align="left">
-			<input class="buttonLabel" value="Search" type="submit"  id="submit4">
-			&nbsp;&nbsp;
-			<input type="reset" id="reset4">
-			&nbsp;&nbsp;
-			<span style='font-weight: bold;'>RNA-Seq data not yet included in this search. </span>			
-		</td>
-	</tr>
-</table>
-</form:form>
-<script>
-	$('#difTheilerStage4 option')[0].selected = true;
-   	$('#anywhereElse')[0].checked = false;
-   	$('#inCheckbox')[0].checked = false;
-</script>
 </div>
 
 <div id="profile-qf">
