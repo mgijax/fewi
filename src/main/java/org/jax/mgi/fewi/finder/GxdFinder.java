@@ -7,7 +7,6 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.hunter.SolrGxdAssayTypeFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdDetectedFacetHunter;
-import org.jax.mgi.fewi.hunter.SolrGxdDifferentialHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdProfileHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdDoFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdGoFacetHunter;
@@ -67,9 +66,6 @@ public class GxdFinder {
 
 	@Autowired
 	private SolrGxdRnaSeqHeatMapResultHunter gxdRnaSeqHeatMapResultHunter;
-
-	@Autowired
-	private SolrGxdDifferentialHunter gxdDifferentialHunter;
 
 	@Autowired
 	private SolrGxdProfileHunter gxdProfileHunter;
@@ -424,18 +420,6 @@ public class GxdFinder {
 		SearchResults<SolrDagEdge> srTC = new SearchResults<SolrDagEdge>();
 		srTC.cloneFrom(results, SolrDagEdge.class);
 		return srTC;
-	}
-
-	/*
-	 * Returns marker keys based on differential search
-	 */
-	public List<String> searchDifferential(SearchParams params) {
-		params.setPageSize(100000);
-		// result object to be returned
-		SearchResults<String> searchResults = new SearchResults<String>();
-		// ask the hunter to identify which objects to return
-		gxdDifferentialHunter.hunt(params, searchResults);
-		return searchResults.getResultKeys();
 	}
 
 	public List<String> searchProfile(SearchParams params) {

@@ -11,7 +11,7 @@ public class SolrGxdProfileHunter extends SolrHunter<String> {
 
 	/***
 	 * The constructor sets up this hunter so that it is specific to finding
-	 * marker keys given a differential structure/stage query.
+	 * marker keys given a profile structure/stage query.
 	 */
 	public SolrGxdProfileHunter() {
 

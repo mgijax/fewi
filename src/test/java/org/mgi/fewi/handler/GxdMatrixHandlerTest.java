@@ -89,58 +89,6 @@ public class GxdMatrixHandlerTest {
 	}
 	
 	@Test
-	public void testGetParentTermsDifferentialStructureQuery() 
-	{
-		GxdQueryForm query = new GxdQueryForm();
-		query.setStructureID(TERMID1);
-		query.setDifStructureID(TERMID2);
-		List<GxdMatrixRow> parentRows = handler.getParentTermsToDisplay(query,null,null);
-		assertMatrixRowIds(parentRows,TERMID1,TERMID2);
-	}
-	@Test
-	public void testGetParentTermsDifferentialStageQuery() 
-	{
-		GxdQueryForm query =  new GxdQueryForm();
-		query.setTheilerStage(Arrays.asList(12));
-		query.setDifTheilerStage(Arrays.asList(13));
-		List<GxdMatrixRow> parentRows = handler.getParentTermsToDisplay(query,null,null);
-		assertMatrixHighLevelRows(parentRows);
-	}
-	@Test
-	public void testGetParentTermsDifferentialStructureAndStageQuery() 
-	{
-		GxdQueryForm query = new GxdQueryForm();
-		query.setStructureID(TERMID1);
-		query.setDifStructureID(TERMID2);
-		query.setTheilerStage(Arrays.asList(12));
-		query.setDifTheilerStage(Arrays.asList(13));
-		List<GxdMatrixRow> parentRows = handler.getParentTermsToDisplay(query,null,null);
-		assertMatrixRowIds(parentRows,TERMID1,TERMID2);
-	}
-	@Test
-	public void testGetParentTermsDifferentialStructureAndStageQuerySameStructure() 
-	{
-		GxdQueryForm query = new GxdQueryForm();
-		query.setStructureID(TERMID1);
-		query.setDifStructureID(TERMID1);
-		query.setTheilerStage(Arrays.asList(12));
-		query.setDifTheilerStage(Arrays.asList(13));
-		List<GxdMatrixRow> parentRows = handler.getParentTermsToDisplay(query,null,null);
-		assertMatrixRowIds(parentRows,TERMID1);
-		// verify term has no children
-		Assert.assertEquals(0,parentRows.get(0).getChildren().size());
-	}
-	@Test
-	public void testGetParentTermsDifferentialQueryNotUsed() 
-	{
-		GxdQueryForm query = newFleshedOutQuery();
-		query.setStructureID("");
-		query.setDifStructureID("");
-		List<GxdMatrixRow> parentRows = handler.getParentTermsToDisplay(query,null,null);
-		assertMatrixHighLevelRows(parentRows);
-	}
-	
-	@Test
 	public void testGetParentTermsExpandRowQueryEmpty() 
 	{
 		GxdQueryForm query = new GxdQueryForm();
@@ -167,24 +115,6 @@ public class GxdMatrixHandlerTest {
 	{
 		GxdQueryForm query = this.newFleshedOutQuery();
 		query.setStructureID(CHILD_TERM1);
-		List<GxdMatrixRow> parentRows = handler.getParentTermsToDisplay(query,TERMID1,null);
-		assertMatrixRowIds(parentRows,CHILD_TERM1);
-	}
-	@Test
-	public void testGetParentTermsExpandRowQueryDifferential() 
-	{
-		GxdQueryForm query = this.newFleshedOutQuery();
-		query.setStructureID(TERMID1);
-		query.setDifStructureID(TERMID2);
-		List<GxdMatrixRow> parentRows = handler.getParentTermsToDisplay(query,TERMID1,null);
-		assertMatrixRowIds(parentRows,CHILD_TERM1);
-	}
-	@Test
-	public void testGetParentTermsExpandRowQueryDifferentialChildStructure() 
-	{
-		GxdQueryForm query = this.newFleshedOutQuery();
-		query.setStructureID(TERMID1);
-		query.setDifStructureID(CHILD_TERM1);
 		List<GxdMatrixRow> parentRows = handler.getParentTermsToDisplay(query,TERMID1,null);
 		assertMatrixRowIds(parentRows,CHILD_TERM1);
 	}
@@ -242,17 +172,6 @@ public class GxdMatrixHandlerTest {
 		query.setStructureIDFilter(Arrays.asList(TERMID2));
 		List<GxdMatrixRow> parentRows = handler.getParentTermsToDisplay(query,null,null);
 		assertMatrixRowIds(parentRows,TERMID2);
-	}
-	
-	@Test
-	public void testGetParentTermsFilterAndDifferentialQuery() 
-	{
-		GxdQueryForm query = new GxdQueryForm();
-		query.setStructureID(TERMID1);
-		query.setDifStructureID(TERMID2);
-		query.setStructureIDFilter(Arrays.asList(CHILD_TERM1));
-		List<GxdMatrixRow> parentRows = handler.getParentTermsToDisplay(query,null,null);
-		assertMatrixRowIds(parentRows,CHILD_TERM1);
 	}
 	
 	@Test

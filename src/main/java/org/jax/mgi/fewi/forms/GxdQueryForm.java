@@ -63,28 +63,12 @@ public class GxdQueryForm implements Cloneable {
 	private String antibodyKey = "";
 	private String sampleKey = "";
 	
-	// differential specific fields
-	private String difStructure = "";
-	private String difStructureID = "";
-
 	// profile specific fields
 	private List<String> profileStructureID = new ArrayList<String>();
 	private List<String> profileDetected = new ArrayList<String>();
 	private List<String> profileStage = new ArrayList<String>();
 	private String profileNowhereElseCheckbox = "";
 	private String profileFormMode = "";
-
-	private Map<Integer, String> theilerStagesRibbon2 = new LinkedHashMap<Integer, String>();
-	private Map<Integer, String> difTheilerStages = new LinkedHashMap<Integer, String>();
-	private List<Integer> difTheilerStage = new ArrayList<Integer>();
-	public static Integer ANY_STAGE_NOT_ABOVE = -1;
-
-	private Map<String, String> difAges = new LinkedHashMap<String, String>();
-	private List<String> difAge = new ArrayList<String>();
-	public final static String ANY_AGE_NOT_ABOVE = "NOT_ABOVE";
-
-	private String anywhereElse = "";		// differential form:  AND NOT anywhere else
-	private String inCheckbox = "";			// differential form:  AND NOT IN this other structure/stage 
 
 	// filters for a result set
 	private List<String> systemFilter = new ArrayList<String>();
@@ -222,26 +206,6 @@ public class GxdQueryForm implements Cloneable {
 		assayTypes.add("RNA-Seq");
 	}
 
-	private void populateDifferentialFields() {
-		// init differential fields
-		for (Integer key : theilerStages.keySet()) {
-			if (!key.equals(ANY_STAGE))
-				theilerStagesRibbon2.put(key, theilerStages.get(key));
-		}
-		difTheilerStages.put(ANY_STAGE, "Any developmental stage");
-		difTheilerStages.put(ANY_STAGE_NOT_ABOVE, "Any stage not selected above");
-		for (Integer key : theilerStages.keySet()) {
-			if (!key.equals(ANY_STAGE))
-				difTheilerStages.put(key, theilerStages.get(key));
-		}
-
-		difAges.put(ANY_AGE_NOT_ABOVE, "Any age not selected above");
-		for (String key : ages.keySet()) {
-			if (key != ANY_AGE)
-				difAges.put(key, ages.get(key));
-		}
-	}
-
 	private void populateIdTypes() {
 		idTypes.put("auto", "Search all input types");
 		idTypes.put("MGI", "MGI Gene/Marker ID");
@@ -265,7 +229,6 @@ public class GxdQueryForm implements Cloneable {
 		this.populateAges();
 		this.populateStages();
 		this.populateAssayTypes();
-		this.populateDifferentialFields();
 		this.populateIdTypes();
 
 		this.locationUnits.add(MBP);
@@ -287,22 +250,6 @@ public class GxdQueryForm implements Cloneable {
 
 	public List<String> getLocationUnits() {
 		return locationUnits;
-	}
-
-	public String getAnywhereElse() {
-		return anywhereElse;
-	}
-
-	public void setAnywhereElse(String anywhereElse) {
-		this.anywhereElse = anywhereElse;
-	}
-
-	public String getInCheckbox() {
-		return inCheckbox;
-	}
-
-	public void setInCheckbox(String inCheckbox) {
-		this.inCheckbox = inCheckbox;
 	}
 
 	public List<String> getAssayType() {
@@ -537,84 +484,6 @@ public class GxdQueryForm implements Cloneable {
 		this.antibodyKey = antibodyKey;
 	}
 
-	/*
-	 * Differential getters / setters
-	 */
-	public String getDifStructure() {
-		return difStructure;
-	}
-
-	public void setDifStructure(String difStructure) {
-		this.difStructure = difStructure;
-	}
-
-	public Map<Integer, String> getDifTheilerStages() {
-		return difTheilerStages;
-	}
-
-	public void setDifTheilerStages(Map<Integer, String> difTheilerStages) {
-		this.difTheilerStages = difTheilerStages;
-	}
-
-	public List<Integer> getDifTheilerStage() {
-		return difTheilerStage;
-	}
-
-	public void setDifTheilerStage(List<Integer> difTheilerStage) {
-		this.difTheilerStage = difTheilerStage;
-	}
-
-	public Map<String, String> getDifAges() {
-		return difAges;
-	}
-
-	public void setDifAges(Map<String, String> difAges) {
-		this.difAges = difAges;
-	}
-
-	public List<String> getDifAge() {
-		return difAge;
-	}
-
-	public void setDifAge(List<String> difAge) {
-		this.difAge = difAge;
-	}
-
-	public Map<Integer, String> getTheilerStagesRibbon2() {
-		return theilerStagesRibbon2;
-	}
-
-	public void setTheilerStagesRibbon2(
-			Map<Integer, String> theilerStagesRibbon2) {
-		this.theilerStagesRibbon2 = theilerStagesRibbon2;
-	}
-
-	/*
-	 * resolve difTheilerStages by processing "ANY_OTHER_STAGE" option (assumes
-	 * this part of the form is filled in)
-	 */
-	public Collection<Integer> getResolvedDifTheilerStage() {
-		if (difTheilerStage.contains(ANY_STAGE_NOT_ABOVE) || difTheilerStage.contains(ANY_STAGE)) {
-			// I'm actually not sure what to do in this case. What does
-			// "any not selected" from "any" mean?
-			if (theilerStage.contains(ANY_STAGE))
-				return new ArrayList<Integer>();
-
-			// populate stagesBelow with the full list of stages
-			Set<Integer> stagesBelow = new HashSet<Integer>();
-			for (Integer s : theilerStages.keySet()) {
-				// don't include the ANY option
-				if (!s.equals(ANY_STAGE)) {
-					stagesBelow.add(s);
-				}
-			}
-			stagesBelow.removeAll(theilerStage);
-			return stagesBelow;
-		}
-
-		return difTheilerStage;
-	}
-
 	// ----------------------------
 	// setters/getters for filters
 	// ----------------------------
@@ -723,15 +592,6 @@ public class GxdQueryForm implements Cloneable {
 		this.goCcFilter = goCcFilter;
 	}
 	
-	public String getDifStructureID() {
-		this.difStructureID = FewiUtil.sanitizeID(difStructureID);
-		return this.difStructureID;
-	}
-
-	public void setDifStructureID(String difStructureID) {
-		this.difStructureID = difStructureID;
-	}
-
 	public List<String> getStructureIDFilter() {
 		this.structureIDFilter = FewiUtil.sanitizeIDs(structureIDFilter);
 		return this.structureIDFilter;
