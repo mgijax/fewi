@@ -941,18 +941,6 @@ function enableControls() {
 	controlsDisabled = false;
 }
 
-function refreshCurrentTab() {
-	// click the results tab, immediately followed by the current tab,
-	// to ensure it refreshes it
-	var currentTab = getCurrentTab();
-	console.log('Refreshing current tab: ' + currentTab);
-	$('#resultstab')[0].click();
-	// allow a slight delay before clicking on the original tab again
-	setTimeout(function () {
-		$('#' + currentTab)[0].click();
-		}, 100);
-}
-
 function clearOtherTabs() {
 	var tabs = ["genesdata", "assaysdata", "imagesdata"];
 	var message = 'Some functionality has been disabled until you refine your search to bring the number of returned assay results under 21,000,000.';
@@ -1009,11 +997,7 @@ function refreshTabCounts()
 					failure:function(o){}
 					}, querystringWithFilters);
 				refreshGxdLitLink();
-				refreshCurrentTab();
 
-				// Hide the button for the RNA-Seq heat map until we find if there are RNA-Seq data in the results.
-				setHeatMapLinksVisible(false);
-		
 				// If there are any RNA-Seq results, we need to show the heat map button.  Determine this by
 				// seeing if RNA-Seq appears in the assay type filter values.
 				$.post(fewiurl + 'gxd/facet/assayType' , getQueryStringWithFilters(),

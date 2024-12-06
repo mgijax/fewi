@@ -846,6 +846,8 @@ var interceptSubmit = function(e) {
 			    // for profile, go to TxG or Heatmap tab, depending on if mode is classical or rnaseq
 			    const tabNum = model.formMode === RNASEQ ? 6 : 5;
 			    resultsTabs.selectTab(tabNum)
+			    setTabEnabled('genegridtab', true);
+			    if (currentQF==="profile" && model.formMode === RNASEQ) setTabEnabled('genegridtab', false)
 			}
 			// for all otherts, go to results tab
 			else resultsTabs.selectTab(2);
