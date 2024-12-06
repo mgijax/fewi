@@ -704,37 +704,35 @@ function buildSummary(request,tabState)
 	// init
 	if (tabState == "genestab") {
 		dataTableInitFunction = window.gxdGenesTable;
-	} else if(tabState == "assaystab"){
+	} else if(tabState == "assaystab") {
 		dataTableInitFunction = window.gxdAssaysTable;
 	}
-	else if(tabState == "imagestab"){
+	else if(tabState == "imagestab") {
 		dataTableInitFunction = window.gxdImagesTable;
 	}
-	else if(tabState == "stagegridtab")
-	{
+	else if(tabState == "stagegridtab") {
 		doStageGrid=true;
 	}
-	else if(tabState == "genegridtab")
-	{
+	else if(tabState == "genegridtab") {
 		doGeneGrid=true;
+	}
+	else if(tabState == "heatmaptab") {
+		dataTableInitFunction = null;
 	}
 	else {
 		dataTableInitFunction = window.gxdResultsTable;
 	}
 
 	// Load the appropriate summary
-	if(doStageGrid)
-	{
+	if(doStageGrid) {
 		structureStageGrid();
 		showNowhereElseMessage(request, 'Tissue x Stage Matrix');
 	}
-	else if(doGeneGrid)
-	{
+	else if(doGeneGrid) {
 		loadDatatable (handleStructGeneTab,request);
 		showNowhereElseMessage(request, 'Tissue x Gene Matrix');
 	}
-	else
-	{
+	else if (dataTableInitFunction) {
 		loadDatatable(dataTableInitFunction,request);
 		// not showing a grid, so hide the "nowhere else" message (that applies only to the grids)
 		$('#nowhereElseMessage').hide();

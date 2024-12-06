@@ -183,14 +183,21 @@ public class GxdMatrixHandler {
 		}
 		else if (mapProfileStructures) 
 		{
-			for (String termID : query.getProfileStructureID()) 
-			{
-				if (termID == null || termID.equals("")) continue;
 
-				List<VocabTerm> pterms = vocabFinder.getTermByID(termID.toUpperCase());
-				for(VocabTerm pt : sortTerms(pterms))
+			if (query.getProfileNowhereElseCheckbox().equals("true")
+			&& query.getDetectedFilter() != null
+			&& query.getDetectedFilter().size() > 0) {
+				mapHighLevelTerms=true;
+			} else {
+				for (String termID : query.getProfileStructureID()) 
 				{
-					parentTerms.add(makeGxdMatrixRow(pt));
+					if (termID == null || termID.equals("")) continue;
+
+					List<VocabTerm> pterms = vocabFinder.getTermByID(termID.toUpperCase());
+					for(VocabTerm pt : sortTerms(pterms))
+					{
+						parentTerms.add(makeGxdMatrixRow(pt));
+					}
 				}
 			}
 		}
