@@ -101,8 +101,9 @@
         <li><a id="assaystab" href="#assays"><em>Assays (<span id="totalAssaysCount"></span>)</em></a></li>
         <li class="selected"><a id="resultstab" href="#results"><em>Assay results(<span id="totalResultsCount"></span>)</em></a></li>
         <li><a id="imagestab" href="#images"><em>Images (<span id="totalImagesCount"></span>)</em></a></li>
-   		<li><a id="stagegridtab" href="#stageGrid"><em>Tissue x Stage Matrix</em></a></li>
-   		<li><a id="genegridtab" href="#geneGrid"><em>Tissue x Gene Matrix</em></a></li>
+	<li><a id="stagegridtab" href="#stageGrid"><em>Tissue x Stage Matrix</em></a></li>
+	<li><a id="genegridtab" href="#geneGrid"><em>Tissue x Gene Matrix</em></a></li>
+	<li><a id="heatmaptab" href="#heatmap"><em>Heat Map</em></a></li>
     </ul>
     <div class="yui-content" id="tabSummaryContent">
         <div id="goldbarDiv">
@@ -132,7 +133,6 @@
 		    <form name="resultsExportForm" id="resultsExportForm" action="" method="POST">
                     <span class="label canHide">Export:</span>
                     <a id="resultsTextDownload" class="canHide filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
-                    <a id="heatMapLink" class="filterButton heatMapLinkHidden" onClick="popupHeatMap()"> RNA-Seq <img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" style="margin-bottom: -1px;"/> Heat Map</a>
 		    <span class="label" style="padding-left: 100px;">Show Additional Sample Data <input id="showHide" type="checkbox" onClick="flipOptionalColumns()"></span>
 		    </form><!-- resultsExportForm -->
                 </div>
@@ -162,6 +162,45 @@
 				</div>
 	        </div>
 	        <div id="hiddenGeneMatrixPaginator" class="facetFilter" style="display: none;"></div>
+        </div>
+        <div>
+		<div class="goldbar">&nbsp;</div>
+		<div id="heatmaptabcontent">
+		    <table>
+		    <tr>
+		    <td>
+			<img onclick="popupHeatMap();" src="/fewi/mgi/assets/images/heatmap_screenshot.png" />
+		    </td>
+		    <td>
+			<table>
+			<tr>
+			    <td>
+			    <button onclick="popupHeatMap();">&#x279C; RNA-Seq Heat Map</button>
+			    </td>
+			</tr>
+			<tr>
+			    <td>
+			    Export RNA-Seq search results to a heat map <br/> for visualization and analysis.
+			    </td>
+			</tr>
+
+			<tr>
+			    <td>
+			    Powered by: 
+			    <svg id="morpheusLogo" width="32px" height="32px">
+			    <g>
+				<rect x="0" y="0" width="32" height="14" style="fill:#ca0020;stroke:none"></rect>
+				<rect x="0" y="18" width="32" height="14" style="fill:#0571b0;stroke:none"></rect>
+			    </g>
+			    </svg>
+			    Morpheus.
+			    </td>
+			</tr>
+			</table>
+		    </td>
+		    </tr>
+		    </table>
+		</div>
         </div>
     </div>
 </div>

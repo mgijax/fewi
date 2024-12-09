@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import java.lang.reflect.Method;
+import java.lang.Exception;
+
 import org.jax.mgi.fe.datamodel.VocabTerm;
 import org.jax.mgi.fewi.searchUtil.entities.EmapaACResult;
 import org.slf4j.Logger;
@@ -99,7 +102,7 @@ public class ACHelper {
 	
 	// Match the given 'query' string against our set of terms, returning the top 200 matches.
 	public List<ACTerm> search(String query) {
-		return search(query, 200);
+		return search(query, 200, "");
 	}
 
 	// Match the given 'query' string against our set of terms, returning the top 'maxCount' matches.
@@ -112,7 +115,7 @@ public class ACHelper {
 	//		c. begins matches to the term
 	//		d. begins matches to the synonym
 	//		e. everything else
-	public List<ACTerm> search(String query, int maxCount) {
+	public List<ACTerm> search(String query, int maxCount, String checkField) {
 		String queryLower = query.toLowerCase();
 		List<ACTerm> matches = new ArrayList<ACTerm>();
 		List<String> queryTokens = FewiUtil.tokenize(query);
@@ -181,6 +184,18 @@ public class ACHelper {
 			// Search through the identified ACTerm objects, compiling the five bins of matches.
 			for (Integer index : indexesToSearch) {
 				ACTerm term = this.searchableTerms.get(index);
+
+				if (checkField != null && !checkField.equals("")) {
+				    String mname = "get" + checkField.substring(0, 1).toUpperCase() + checkField.substring(1);
+
+				    EmapaACResult emapaRes = term.getEmapaACResult();
+				    try {
+					Method fieldGet = EmapaACResult.class.getMethod(mname);
+					boolean fieldValue = (boolean) fieldGet.invoke(emapaRes);
+					if (!fieldValue) continue;
+				    } catch (Exception e) { }
+				}
+
 				int matchCode = term.getMatchType(queryLower, queryTokens);
 
 				if (matchCode == ACTerm.NO_MATCH) {

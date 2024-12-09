@@ -90,8 +90,8 @@ var isDisabled = function() {
 //------ tab definitions + functions ------------
 var mgiTab = new MGITabSummary({
 	"tabViewId":"resultSummary",
-	"tabIds":["genestab","assaystab","resultstab","imagestab","stagegridtab","genegridtab"],
-	"pageSizes":[GENES_PAGE_SIZE,ASSAYS_PAGE_SIZE,RESULTS_PAGE_SIZE,IMAGES_PAGE_SIZE,0,GENE_MATRIX_SIZE], // mirrors "tabIds"
+	"tabIds":["genestab","assaystab","resultstab","imagestab","stagegridtab","genegridtab","heatmaptab"],
+	"pageSizes":[GENES_PAGE_SIZE,ASSAYS_PAGE_SIZE,RESULTS_PAGE_SIZE,IMAGES_PAGE_SIZE,0,GENE_MATRIX_SIZE,0], // mirrors "tabIds"
 	"historyId":"gxd"
 }, isDisabled);
 
@@ -282,19 +282,14 @@ function reverseEngineerFormInput(request)
 	// review input parameters to determine which QF sent the request
 	for(var key in params)
 	{
-		if(key == "difStructure") foundDifStruct=true;
-		else if(key == "difTheilerStage" || key=="difAge") foundDifStage=true;
-		else if(key == 'idType') foundBatch=true;
+		if(key == 'idType') foundBatch=true;
 		else if(key.slice(0,18) == 'profileStructureID') foundProfile=true;
 	}
 
 	// make sure correct form is visible
 	// this code allows for flexibility to add another ribbon
-	if(foundDifStruct || foundDifStage)
-	{
-		formID = "#gxdDifferentialQueryForm3";
-		showDifferentialForm();
-	} else if (foundBatch)
+	var foundParams = false;
+	if (foundBatch)
 	{
 		formID = "#gxdBatchQueryForm1";
 		showBatchSearchForm();
@@ -303,14 +298,22 @@ function reverseEngineerFormInput(request)
 		formID = "#gxdProfileQueryForm";
 		showProfileSearchForm();
 	}
+
 	console.log("in reverseEngineerFormInput: formID=" + formID);
 
 	// resetting query form to default values
 	if (typeof resetQF == 'function') { resetQF(); }
 
-	var foundParams = false;
+	// handle profile query paramaters here, other parameters (like filters) below
+	if (foundProfile) {
+	    foundParams = profileQueryString2Spec(request);
+	}
+
 	for(var key in params)
 	{
+		// profile params handled above
+		if (key.startsWith("profile")) continue;
+
 		console.log("--in reverseEngineerFormInput: key=" + key);
 		console.log("in reverseEngineerFormInput: params[key]=" + params[key]);
 
@@ -319,22 +322,8 @@ function reverseEngineerFormInput(request)
 		if (key == 'idFile') {
 			// no op - skip it
 		}
-		else if(key=="detected") // handling for dynamic detected values
-		{
-			if (params[key] == 'Yes') {
-				if (YAHOO.util.Dom.get("detected1") != null) {
-					YAHOO.util.Dom.get("detected1").checked = true;
-				}
-			} else if (params[key] == 'No') {
-				if (YAHOO.util.Dom.get("detected2") != null) {
-					YAHOO.util.Dom.get("detected2").checked = true;
-				}
-			}
-		}
 		else if(key!=undefined && key!="" && key!="detected" && params[key].length>0)
 		{
-			//var input = YAHOO.util.Dom.get(key);
-			// jQuery is better suited to resolving form name parameters
 			var input = $(formID+" [name='"+key+"']");
 			if(input.length < 1) input = $(formID+" #"+key);
 			if(input!=undefined && input!=null && input.length > 0)
@@ -365,52 +354,11 @@ function reverseEngineerFormInput(request)
 						else if(params[key] == "false")
 						{
 							input.checked=false;
-
-							// Special handling for profile search.  Only 'Detected' has passed into this code.
-							// If this "Detected" param is 'false', set the 'Not Detected' to checked
-							if (foundProfile) {
-								if (key=='detected_1') {
-									YAHOO.util.Dom.get("profileNotDetected1").checked = true;
-								}
-								if (key=='detected_2') {
-									YAHOO.util.Dom.get("profileNotDetected2").checked = true;
-								}
-								if (key=='detected_3') {
-									YAHOO.util.Dom.get("profileNotDetected3").checked = true;
-								}
-								if (key=='detected_4') {
-									YAHOO.util.Dom.get("profileNotDetected4").checked = true;
-								}
-								if (key=='detected_5') {
-									YAHOO.util.Dom.get("profileNotDetected5").checked = true;
-								}
-								if (key=='detected_6') {
-									YAHOO.util.Dom.get("profileNotDetected6").checked = true;
-								}
-								if (key=='detected_7') {
-									YAHOO.util.Dom.get("profileNotDetected7").checked = true;
-								}
-								if (key=='detected_8') {
-									YAHOO.util.Dom.get("profileNotDetected8").checked = true;
-								}
-								if (key=='detected_9') {
-									YAHOO.util.Dom.get("profileNotDetected9").checked = true;
-								}
-								if (key=='detected_10') {
-									YAHOO.util.Dom.get("profileNotDetected10").checked = true;
-								}
-							}
 						} 
 					}
 					// do check boxes
 					else if(input.type=="checkbox")
 					{
-						if (foundProfile) {
-							if (key=='profileNowhereElseCheckbox') {
-								YAHOO.util.Dom.get("profileNowhereElseCheckbox").checked = true;
-							}
-						}
-
 						var options = [];
 						var rawParams = [].concat(params[key]);
 						for(var i=0;i<rawParams.length;i++)
@@ -499,13 +447,6 @@ function reverseEngineerFormInput(request)
 	}
 	console.log("in reverseEngineerFormInput: after for loop of inputs");
 
-	// special handling for profile display; this ensures params reinserted after reset
-	// are displayed rather than hidden
-	if (foundProfile) {
-		checkProfileVisibility();
-		ensureProfileFormStatus();
-	}
-
 	if(typeof resetFacets != 'undefined')
 	{
 		resetFacets(filters);
@@ -544,22 +485,16 @@ var getRecordsDisplayed = function() {
 
 // Show the paginators (if rules allow it).
 var showPaginators = function() {
-	// If we are showing the tissue x gene grid from a differential search,
-	// do not show the paginators. Hide them instead.
-	if ((getCurrentForm() == 'differential') && (getCurrentTab() == 'genegridtab')) {
-		hidePaginators();
-		return;
+	if (getCurrentTab() === 'stagegridtab' || getCurrentTab() === 'heatmaptab') {
+	    hidePaginators()
+	} else {
+	    $(".yui-pg-container").show();
 	}
-	$(".yui-pg-container").show();
 }
 
 // Hide the paginators (if the rules allow it).
 var hidePaginators = function() {
-	// If we are showing the tissue x gene grid from a differential search,
-	// do not show the paginators. Hide them instead.
-	if ((getCurrentForm() == 'differential') && (getCurrentTab() == 'genegridtab')) {
-		$(".yui-pg-container").hide();
-	}
+	$(".yui-pg-container").hide();
 }
 
 //a globabl variable to help the summary know when to generate a new datatable
@@ -662,6 +597,9 @@ handleNavigation = function (request, calledLocally) {
 		if (typeof openSummaryControl == 'function')
 			openSummaryControl();
 
+		setTabEnabled('genegridtab', true);
+		if (currentQF==="profile" && model.formMode === RNASEQ) setTabEnabled('genegridtab', false)
+
 		// update the report buttons
 		var querystringWithFilters = getQueryStringWithFilters();
 		if (querystringWithFilters != previousFilterString)
@@ -722,7 +660,7 @@ handleNavigation = function (request, calledLocally) {
 		// build the summary inside the tab (if below max results)
 		waitForResultCount(request, tabState);
 
-		// Shh, do not tell anyone about this. We are sneaking in secret Google Analytics calls, even though there is no approved User Story for it.
+		// log the page view
 		var GAState = "/gxd/summary/" + tabState + "?" + querystringWithFilters + '&records=' + getRecordsDisplayed();
 		if(GAState != previousGAState)
 		{
@@ -746,37 +684,35 @@ function buildSummary(request,tabState)
 	// init
 	if (tabState == "genestab") {
 		dataTableInitFunction = window.gxdGenesTable;
-	} else if(tabState == "assaystab"){
+	} else if(tabState == "assaystab") {
 		dataTableInitFunction = window.gxdAssaysTable;
 	}
-	else if(tabState == "imagestab"){
+	else if(tabState == "imagestab") {
 		dataTableInitFunction = window.gxdImagesTable;
 	}
-	else if(tabState == "stagegridtab")
-	{
+	else if(tabState == "stagegridtab") {
 		doStageGrid=true;
 	}
-	else if(tabState == "genegridtab")
-	{
+	else if(tabState == "genegridtab") {
 		doGeneGrid=true;
+	}
+	else if(tabState == "heatmaptab") {
+		dataTableInitFunction = null;
 	}
 	else {
 		dataTableInitFunction = window.gxdResultsTable;
 	}
 
 	// Load the appropriate summary
-	if(doStageGrid)
-	{
+	if(doStageGrid) {
 		structureStageGrid();
 		showNowhereElseMessage(request, 'Tissue x Stage Matrix');
 	}
-	else if(doGeneGrid)
-	{
+	else if(doGeneGrid) {
 		loadDatatable (handleStructGeneTab,request);
 		showNowhereElseMessage(request, 'Tissue x Gene Matrix');
 	}
-	else
-	{
+	else if (dataTableInitFunction) {
 		loadDatatable(dataTableInitFunction,request);
 		// not showing a grid, so hide the "nowhere else" message (that applies only to the grids)
 		$('#nowhereElseMessage').hide();
@@ -838,7 +774,6 @@ function showGridMessage(message, request) {
 }
 
 // if the 'request' includes any of the following, show the corresponding message div
-// -if the differential submits it's anywhere else input
 // -if the profile submits it's nowhere-else input
 // -if the profile submits a structure with "Not Detected" selected
 function showNowhereElseMessage(request, matrixType) {
@@ -850,35 +785,17 @@ function showNowhereElseMessage(request, matrixType) {
 
 	// parse request for a valid profile structure combined with "Not Detected"
 	var hasNegStructure = false;
-	if ('profileStructureID1' in params && params['profileStructureID1'] != '' && params['detected_1'] != true) {
-		hasNegStructure = true;
-	}
-	if ('profileStructureID2' in params && params['profileStructureID2'] != '' && params['detected_2'] != true) {
-		hasNegStructure = true;
-	}
-	if ('profileStructureID3' in params && params['profileStructureID3'] != '' && params['detected_3'] != true) {
-		hasNegStructure = true;
-	}
-	if ('profileStructureID4' in params && params['profileStructureID4'] != '' && params['detected_4'] != true) {
-		hasNegStructure = true;
-	}
-	if ('profileStructureID5' in params && params['profileStructureID5'] != '' && params['detected_5'] != true) {
-		hasNegStructure = true;
-	}
-	if ('profileStructureID6' in params && params['profileStructureID6'] != '' && params['detected_6'] != true) {
-		hasNegStructure = true;
-	}
-	if ('profileStructureID7' in params && params['profileStructureID7'] != '' && params['detected_7'] != true) {
-		hasNegStructure = true;
-	}
-	if ('profileStructureID8' in params && params['profileStructureID8'] != '' && params['detected_8'] != true) {
-		hasNegStructure = true;
-	}
-	if ('profileStructureID9' in params && params['profileStructureID9'] != '' && params['detected_9'] != true) {
-		hasNegStructure = true;
-	}
-	if ('profileStructureID10' in params && params['profileStructureID10'] != '' && params['detected_10'] != true) {
-		hasNegStructure = true;
+	for (var key in params) {
+	    const m = key.match(/profileDetected([0-9]+)/)
+	    if (m && parms[key] != true) {
+		// if parameter is a not-detected, check that corresponding profile structure is specified
+	        const n = m[1]
+		const key2 = `profileStructureID${n}`
+		if (key2 in parms && params[key2] !== '') {
+			hasNegStructure = true;
+			break;
+		}
+	    }
 	}
 
 	if (('anywhereElse' in params || 'profileNowhereElseCheckbox' in params || hasNegStructure) 
@@ -956,6 +873,27 @@ function showTooManyResultsMessage() {
         $('#tooManyGenesWrapper').css('display', 'none');
 }
 
+function setTabEnabled (tabId, enabled) {
+    const a = document.getElementById(tabId)
+    const li = a.closest('li')
+    if (enabled) 
+        li.classList.remove('disabled-tab')
+    else
+        li.classList.add('disabled-tab')
+}
+
+function setHeatMapLinksVisible (visible) {
+    if (visible) {
+	setTabEnabled("heatmaptab", true);
+    } else {
+	setTabEnabled("heatmaptab", false);
+	if (getCurrentTab() === "heatmaptab") {
+	    resultsTabs.selectTab(5)
+	}
+
+    }
+}
+
 function disableControls() {
 	YAHOO.util.Dom.get("totalGenesCount").innerHTML = '-';
 	YAHOO.util.Dom.get("totalAssaysCount").innerHTML = '-';
@@ -964,11 +902,11 @@ function disableControls() {
 	// Hide what we can immediately, then come back in a second and
 	// hide anything added dynamically
 	$('.canHide').css('display', 'none');
-	$('#heatMapLink').addClass('heatMapLinkHidden');
+	setHeatMapLinksVisible(false);
 
 	setTimeout(function() { 
 		$('.canHide').css('display', 'none');
-		$('#heatMapLink').addClass('heatMapLinkHidden');
+		setHeatMapLinksVisible(false);
 		}, 1000);
 
 	controlsDisabled = true;
@@ -976,20 +914,8 @@ function disableControls() {
 
 function enableControls() {
 	$('.canHide').css('display', 'inline');
-	$('#heatMapLink').removeClass('heatMapLinkHidden');
+	setHeatMapLinksVisible(true);
 	controlsDisabled = false;
-}
-
-function refreshCurrentTab() {
-	// click the results tab, immediately followed by the current tab,
-	// to ensure it refreshes it
-	var currentTab = getCurrentTab();
-	console.log('Refreshing current tab: ' + currentTab);
-	$('#resultstab')[0].click();
-	// allow a slight delay before clicking on the original tab again
-	setTimeout(function () {
-		$('#' + currentTab)[0].click();
-		}, 100);
 }
 
 function clearOtherTabs() {
@@ -1048,20 +974,16 @@ function refreshTabCounts()
 					failure:function(o){}
 					}, querystringWithFilters);
 				refreshGxdLitLink();
-				refreshCurrentTab();
 
-				// Hide the button for the RNA-Seq heat map until we find if there are RNA-Seq data in the results.
-				$('#heatMapLink').addClass('heatMapLinkHidden');
-		
 				// If there are any RNA-Seq results, we need to show the heat map button.  Determine this by
 				// seeing if RNA-Seq appears in the assay type filter values.
 				$.post(fewiurl + 'gxd/facet/assayType' , getQueryStringWithFilters(),
 					function(x) {
 						try {
 							if (x.resultFacets.indexOf('RNA-Seq') >= 0) {
-								$('#heatMapLink').removeClass('heatMapLinkHidden'); 
+								setHeatMapLinksVisible(true);
 							} else {
-								$('#heatMapLink').addClass('heatMapLinkHidden');
+								setHeatMapLinksVisible(false);
 							}
 						} catch (e) {
 							console.log('Caught error (' + e + ') : ' + x);
@@ -1645,9 +1567,6 @@ window.prevStageGridQuery="";
 
 var structureStageGrid = function()
 {
-
-	// hide page controls
-	hidePaginators();
 
 	var querystringWithFilters = getQueryStringWithFilters();
 	window.prevStageGridQuery=querystringWithFilters;

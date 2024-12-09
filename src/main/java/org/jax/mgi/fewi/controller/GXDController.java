@@ -138,6 +138,9 @@ public class GXDController {
 	// value for the isWildType field in gxdResult index
 	private static String WILD_TYPE = "wild type";
 
+	private static String MOUSE_ID = "EMAPA:25765";
+	private static String ORGAN_SYSTEM_ID = "EMAPA:16103";
+
 	// values for defining how we sort facet results
 	private static String ALPHA = "alphabetic";	// sort alphabetically
 	private static String RAW = "raw";		// as returned by solr
@@ -231,26 +234,6 @@ public class GXDController {
 		mav.addObject("sort", new Paginator());
 		mav.addObject("gxdQueryForm", new GxdQueryForm());
 		mav.addObject("gxdBatchQueryForm", new GxdQueryForm());
-		mav.addObject("gxdDifferentialQueryForm", new GxdQueryForm());
-
-		return mav;
-	}
-
-	// "expanded" differential query form
-	@RequestMapping("differential")
-	public ModelAndView getDifferentialQueryForm(HttpServletRequest request) {
-		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
-			return UserMonitor.getSharedInstance().getLimitedMessage();
-		}
-
-		logger.debug("->getDifferentialQueryForm started");
-
-		ModelAndView mav = new ModelAndView("gxd/gxd_query");
-		mav.addObject("sort", new Paginator());
-		mav.addObject("gxdQueryForm", new GxdQueryForm());
-		mav.addObject("gxdBatchQueryForm", new GxdQueryForm());
-		mav.addObject("gxdDifferentialQueryForm", new GxdQueryForm());
-		mav.addObject("showDifferentialQueryForm",true);
 
 		return mav;
 	}
@@ -262,13 +245,12 @@ public class GXDController {
 			return UserMonitor.getSharedInstance().getLimitedMessage();
 		}
 
-		logger.debug("->getDifferentialQueryForm started");
+		logger.debug("->getProfileQueryForm started");
 
 		ModelAndView mav = new ModelAndView("gxd/gxd_query");
 		mav.addObject("sort", new Paginator());
 		mav.addObject("gxdQueryForm", new GxdQueryForm());
 		mav.addObject("gxdBatchQueryForm", new GxdQueryForm());
-		mav.addObject("gxdDifferentialQueryForm", new GxdQueryForm());
 		mav.addObject("showProfileQueryForm",true);
 
 		return mav;
@@ -373,7 +355,6 @@ public class GXDController {
 		mav.addObject("sort", new Paginator());
 		mav.addObject("gxdQueryForm", new GxdQueryForm());
 		mav.addObject("gxdBatchQueryForm", query);
-		mav.addObject("gxdDifferentialQueryForm", new GxdQueryForm());
 		mav.addObject("showBatchSearchForm",true);
 
 		if (query.getBatchSubmission()) {
@@ -424,7 +405,6 @@ public class GXDController {
 		
 		mav.addObject("gxdQueryForm", new GxdQueryForm());
 		mav.addObject("gxdBatchQueryForm", gxdQF);
-		mav.addObject("gxdDifferentialQueryForm", new GxdQueryForm());
 		mav.addObject("showBatchSearchForm",true);
 		
 		// Translate the anatomy filter value from terms to term IDs, to be added to the GXD batch QF as structureIDFilter.
@@ -1157,10 +1137,62 @@ public class GXDController {
 		return mav;
 	}
 
+	// Returns the "Detected in ... but not in ..." part of  the YSF for a profile query.
+	private String getProfileDetectedPhrase (GxdQueryForm query) {
+	    boolean isRnaSeq = query.getProfileFormMode().equals("rnaseq");
+	    List<String> detecteds = query.getProfileDetected();
+	    List<String> structureIDs = query.getProfileStructureID();
+	    List<String> stages = query.getProfileStage();
+	    String nwe = query.getProfileNowhereElseCheckbox();
+
+	    List<String> detectedClauses = new ArrayList<String>();
+	    List<String> notDetectedClauses = new ArrayList<String>();
+
+	    int i = -1;
+	    for (String structureID : structureIDs) {
+	    	i += 1;
+		if (structureID.equals("")) continue;
+		String detected = detecteds.get(i);
+		//
+		String structure = "";
+		List<VocabTerm> vocabTerms = vocabFinder.getTermByID(structureID);
+		if ((vocabTerms != null) && (vocabTerms.size() > 0)) {
+			structure = vocabTerms.get(0).getTerm();
+			structure = FormatHelper.bold(FormatHelper.cleanHtml(structure));
+		} else {
+			structure = "(unknown structure)";
+		}
+		//
+		String stageClause = "";
+		if (!stages.get(i).equals("")) {
+			String[] stgs = stages.get(i).split(",");
+			for (int j = 0; j < stgs.length; j++) {
+				stgs[j] = FormatHelper.bold("TS:" + stgs[j]);
+			}
+			stageClause = String.format("at Theiler stage(s) (%s)", String.join(" OR ", stgs));
+		}
+
+		String clause = String.format("%s %s", structure, stageClause);
+		if (detected.equals("true")) {
+		    detectedClauses.add(clause);
+		} else {
+		    notDetectedClauses.add(clause);
+		}
+	    }
+	    String d = String.format("Detected in %s ", String.join(" AND ", detectedClauses));
+	    String nd = "";
+	    if (notDetectedClauses.size() > 0) {
+		    nd = String.format("<br/>but not detected in %s", String.join(" OR ", notDetectedClauses));
+	    }
+	    
+	    String answer = String.format("%s %s" , d, nd);
+	    return answer;
+	}
+
 	// Returns a String representing the "You Searched For" text describing the given 'query'.
 	// Notes:
 	//	1. This is only for the RNA-Seq heat map, not the regular QF summary.
-	//	2. Since we do not support heat maps from the differential QF or the batch QF, their idiosyncrasies are not considered.
+	//	2. Since we do not support heat maps from the differential QF or the batch QF, their idiosyncrasies are not considered. [Obsolete comment?]
 	private String getRnaSeqHeatMapYSF(GxdQueryForm originalQF) throws CloneNotSupportedException {
 		// Create a clone of the given query object and overwrite base values with more specific filter values as appropriate.
 		GxdQueryForm query = (GxdQueryForm) originalQF.clone();
@@ -1422,7 +1454,9 @@ public class GXDController {
 				sb.append(FormatHelper.bold("any structures"));
 			}
 			lines.add(sb.toString());
-		}
+		} else if (query.getProfileFormMode() != null && !query.getProfileFormMode().equals("")) {
+			lines.add(getProfileDetectedPhrase(query));
+		} 
 		
 		// experiment (preference: filter > single ID)
 		String exptID = query.getExperimentID();
@@ -1512,8 +1546,8 @@ public class GXDController {
 		
 		// assay type
 		sb = new StringBuffer();
-		sb.append("Assayed by ");
-		sb.append(FormatHelper.bold("(RNA-Seq)"));
+		sb.append("Assayed by: ");
+		sb.append(FormatHelper.bold("RNA-Seq"));
 		lines.add(sb.toString());
 		
 		// RNA-Seq (TPM) level
@@ -2080,11 +2114,13 @@ public class GXDController {
                 int totCount = 0;
                 List<SolrGxdStageMatrixResult> resultList = null;
 
-                /* The following is a terrible hack to try to ease a problem when differential/profile queries
+                /* The following is a terrible hack to try to ease a problem when profile queries
                  * generate queries containing 1000s of marker IDs in a gigantic OR expression. The following breaks up the
                  * IDs into chunks and then loops, one query per chunck. The results are combined.
                  *
                  * There is a similar hack in the handler for gxd/genegrid/json.
+		 *
+		 * FIXME: this hack is no longer necessary since we started using Solr joins.
                  */
                 if (mkFilter != null) {
                         List<String> mkeys = mkFilter.getValues();
@@ -2503,8 +2539,8 @@ public class GXDController {
 			queryFilters.add(Filter.or(parentFilters));
 		} else {
 			// initial search should include cells for mouse, child terms of mouse, and child terms of organ system
-			String mouseId = "EMAPA:25765";
-			String organSystemId = "EMAPA:16103";
+			String mouseId = MOUSE_ID;
+			String organSystemId = ORGAN_SYSTEM_ID;
 			List<Filter> termFilters = new ArrayList<Filter>();
 			List<Filter> parentFilters = new ArrayList<Filter>();
 			parentFilters.add(new Filter(SearchConstants.CM_PARENT_ANATOMY_ID, mouseId));
@@ -2565,8 +2601,8 @@ public class GXDController {
 			queryFilters.add(Filter.or(parentFilters));
 		} else {
 			// initial search should include cells for mouse, child terms of mouse, and child terms of organ system
-			String mouseId = "EMAPA:25765";
-			String organSystemId = "EMAPA:16103";
+			String mouseId = MOUSE_ID;
+			String organSystemId = ORGAN_SYSTEM_ID;
 			List<Filter> termFilters = new ArrayList<Filter>();
 			List<Filter> parentFilters = new ArrayList<Filter>();
 			parentFilters.add(new Filter(SearchConstants.CM_PARENT_ANATOMY_ID, mouseId));
@@ -2735,7 +2771,10 @@ public class GXDController {
                 int totCount = 0;
                 List<SolrGxdGeneMatrixResult> resultList = null;
 
-                /* Thie following is a hack. See notes in handler for gxd/stagegrid/json */
+                /* Thie following is a hack. See notes in handler for gxd/stagegrid/json 
+		 *
+		 * FIXME: this hack is no longer necessary since we started using Solr joins.
+		 */
                 if (mkFilter != null) {
                         List<String> mkeys = mkFilter.getValues();
                         logger.info("Marker keys = " + mkeys.toString());
@@ -2924,6 +2963,7 @@ public class GXDController {
 			@ModelAttribute GxdQueryForm query)
 	{
 		logger.debug("called /results/totalCount");
+		logger.info("Query form:" + query.toString());
 		populateMarkerIDs(session, query);
 		SearchParams params = new SearchParams();
 		params.setFilter(parseGxdQueryForm(query));
@@ -3076,8 +3116,7 @@ public class GXDController {
 				|| (query.getAnnotatedStructureKey()!=null && !query.getAnnotatedStructureKey().equals(""))
 				|| (query.getJnum()!=null && !query.getJnum().equals(""))
 				|| (query.getProbeKey()!=null && !query.getProbeKey().equals(""))
-				|| (query.getAntibodyKey()!=null && !query.getAntibodyKey().equals(""))
-				|| isDifferentialQuery(query))
+				|| (query.getAntibodyKey()!=null && !query.getAntibodyKey().equals(""))  )
 		{
 			logger.debug("Form fields have been entered that do not apply to gxd lit query.");
 			// return null if we have no valid mapped query to make
@@ -3227,19 +3266,9 @@ public class GXDController {
 	}
 
 	//
-	// DIFFERENTIAL AND PROFILE HANDLING
+	// PROFILE HANDLING
 	//
 
-
-	/*
-	 * Returns whether or not this query form has differential query params
-	 */
-	private boolean isDifferentialQuery(GxdQueryForm query)
-	{
-		return (query.getDifStructureID()!=null && !query.getDifStructureID().equals(""))
-			|| (query.getDifTheilerStage().size() > 0)
-			|| (query.getAnywhereElse() != "" && query.getAnywhereElse().trim().length() > 0);
-	}
 
 	/*
 	 * Returns whether or not this query form has profile query params; web-side checking
@@ -3247,386 +3276,14 @@ public class GXDController {
 	 */
 	private boolean isProfileQuery(GxdQueryForm query)
 	{
-		return (query.getProfileStructureID1()!=null && !query.getProfileStructureID1().equals(""))
-			|| (query.getProfileStructureID2()!=null && !query.getProfileStructureID2().equals(""))
-			|| (query.getProfileStructureID3()!=null && !query.getProfileStructureID3().equals(""))
-			|| (query.getProfileStructureID4()!=null && !query.getProfileStructureID4().equals(""))
-			|| (query.getProfileStructureID5()!=null && !query.getProfileStructureID5().equals(""))
-			|| (query.getProfileStructureID6()!=null && !query.getProfileStructureID6().equals(""))
-			|| (query.getProfileStructureID7()!=null && !query.getProfileStructureID7().equals(""))
-			|| (query.getProfileStructureID8()!=null && !query.getProfileStructureID8().equals(""))
-			|| (query.getProfileStructureID9()!=null && !query.getProfileStructureID9().equals(""))
-			|| (query.getProfileStructureID10()!=null && !query.getProfileStructureID10().equals(""));
-	}
-
-	/* This method creates the differential part 1 filters (used by resolveDifferentialMarkers() below)
-	 * for cases where the "NOT anywhere else" checkbox has been checked.  It seemed simpler and more
-	 * maintainable than trying to work it into the existing complex code.
-	 */
-	private void buildDifferentialNowhereElseFilters(List<Filter> queryFilters, String structureID, List<Integer> stages) {
-		/* If we got here, we have one of three cases:
-		 * 1. user specified a single structure and checked "AND NOT anywhere else"
-		 * 2. user specified 1+ Theiler stages and checked "AND NOT anywhere else"
-		 * 3. user specified both a structure and 1+ Theiler stages and checked "AND NOT anywhere else"
-		 */
-		logger.info("entering buildDifferentialNowhereElseFilters() with " + queryFilters.size() + " filters");
-		boolean hasStructure = (structureID != null) && (structureID.trim().length() > 0);
-		boolean hasStages = (stages != null) && (stages.size() > 0);
-		
-		List<Filter> diffFilters = new ArrayList<Filter>();
-		
-		// Look for the single specified structure (by key) in the exclusive structures field.
-		if (hasStructure) {
-			List<VocabTerm> structureList = vocabFinder.getTermByID(structureID);
-			if (structureList.size() > 0) {
-				diffFilters.add(new Filter(GxdResultFields.DIFF_EXCLUSIVE_STRUCTURES, 
-					structureList.get(0).getTermKey(), Filter.Operator.OP_EQUAL));
-			} else {
-				logger.error("Cannot find key of EMAPA ID: " + structureID);
-			}
-		} 
-		
-		// Ensure that no other stages (other than those specified) appear in the exclusive stages field.
-		if (hasStages && !stages.contains(GxdQueryForm.ANY_STAGE)) {
-			for (int stage = 1; stage <= 28; stage++) {
-				if (!stages.contains(stage)) {
-					diffFilters.add(new Filter(GxdResultFields.DIFF_EXCLUSIVE_STAGES, stage, Filter.Operator.OP_NOT_HAS));
-				} else {
-					diffFilters.add(new Filter(GxdResultFields.DIFF_EXCLUSIVE_STAGES, stage, Filter.Operator.OP_CONTAINS));
-				}
-			}
+		int i = 0;
+		for (String sid : query.getProfileStructureID()) {
+		    String stage = query.getProfileStage().get(i);
+		    if (!sid.equals("") || !stage.equals(""))
+		        return true;
+		    i += 1;
 		}
-		
-		if (diffFilters.size() > 1) {
-			queryFilters.add(Filter.and(diffFilters));
-		} else if (diffFilters.size() == 1) {
-			queryFilters.add(diffFilters.get(0));
-		}
-		logger.info("exiting with " + queryFilters.size() + " filters");
-	}
-
-	/*
-	 * Creates the differental part 1 filters,
-	 * 	performs the query against gxdDifferentialMarker index
-	 * 	and returns the unique marker keys returned
-	 */
-	private List<String> resolveDifferentialMarkers(GxdQueryForm query)
-	{
-		// start filter list for query filters
-		List<Filter> queryFilters = new ArrayList<Filter>();
-
-		// if a symbol is specified (e.g.- a column heading in differential search grid), use it to reduce the set
-		String mmSymbol = query.getMatrixMarkerSymbol();
-		if ((mmSymbol == null) || ("".equals(mmSymbol))) {
-			List<String> symbols = query.getMarkerSymbolFilter();
-			if ((symbols != null) && (symbols.size() == 1)) {
-				mmSymbol = symbols.get(0);
-			}
-		}
-		if ((mmSymbol != null) && (!"".equals(mmSymbol))) {
-			SearchResults<Marker> mmMarkers = markerFinder.getMarkerBySymbol(mmSymbol);
-			logger.info("mmMarkers.size = " + mmMarkers.getResultObjects().size());
-			if (mmMarkers.getResultObjects().size() == 1) {
-				queryFilters.add(new Filter(GxdResultFields.MARKER_MGIID, mmMarkers.getResultObjects().get(0).getPrimaryID()));
-				logger.info("added markerMgiid criteria: " + mmMarkers.getResultObjects().get(0).getPrimaryID());
-			}
-		}
-
-		// init form fields
-		String structure = query.getStructureID();
-		String difStructure = query.getDifStructureID();
-		List<Integer> stages = query.getTheilerStage();
-		List<Integer> difStages = query.getDifTheilerStage();
-
-		// figure out what kind of diff query this is
-		boolean hasStructures = (structure!=null && !structure.equals("")
-				&& difStructure!=null && !difStructure.equals(""));
-		boolean hasStages = (stages.size() > 0 && difStages.size()>0
-				&& !(stages.contains(GxdQueryForm.ANY_STAGE) && (
-						difStages.contains(GxdQueryForm.ANY_STAGE_NOT_ABOVE) || difStages.contains(GxdQueryForm.ANY_STAGE)) ));
-		boolean nowhereElse = (query.getAnywhereElse() != null) && (query.getAnywhereElse().trim().length() > 0);
-
-		if (!nowhereElse) {
-			if (query.getAnywhereElse() == null) {
-				logger.info("anywhereElse is null");
-			} else if (query.getAnywhereElse().trim().length() == 0) {
-				logger.info("anywhereElse is empty string");
-			}
-		}
-		// handle the case on the differential form where the "AND NOT anywhere else" checkbox is checked
-		if (nowhereElse) {
-			logger.info("building nowhereElse filters");
-			buildDifferentialNowhereElseFilters(queryFilters, structure, stages);
-			logger.info("returned from building nowhereElse filters");
-		}
-		// perform structure diff
-		else if(hasStructures && !hasStages)
-		{
-			Filter sFilter = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,structure);
-			Filter dsFilter = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,difStructure);
-			dsFilter.negate();
-			queryFilters.add(sFilter);
-			queryFilters.add(dsFilter);
-		}
-		// perform stages diff
-		else if(hasStages && !hasStructures)
-		{
-			if(stages.size() > 0 && !stages.contains(GxdQueryForm.ANY_STAGE))
-			{
-				List<Filter> stageFilters = new ArrayList<Filter>();
-				for(Integer stage : stages)
-				{
-					stageFilters.add(new Filter(SearchConstants.POS_STRUCTURE,"TS"+stage,Filter.Operator.OP_HAS_WORD));
-				}
-				// OR the stages together
-				queryFilters.add(Filter.or(stageFilters));
-			}
-			List<Filter> dStageFilters = new ArrayList<Filter>();
-			for(Integer dStage : query.getResolvedDifTheilerStage())
-			{
-				dStageFilters.add(new Filter(SearchConstants.POS_STRUCTURE,"TS"+dStage,Filter.Operator.OP_HAS_WORD));
-			}
-			Filter dStageFilter = Filter.or(dStageFilters);
-			dStageFilter.negate();
-			queryFilters.add(dStageFilter);
-		}
-		// perform both structure and stage diff
-		else if(hasStructures && hasStages)
-		{
-			logger.debug("Performing dif query for BOTH structure and stage");
-			// stub for 3rd differential ribbon logic
-			if(stages.size() > 0 && !stages.contains(GxdQueryForm.ANY_STAGE))
-			{
-				List<Filter> stageFilters = new ArrayList<Filter>();
-				for(Integer stage : stages)
-				{
-					stageFilters.add(makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,"TS"+stage+" "+structure));
-				}
-				// OR the stages together
-				queryFilters.add(Filter.or(stageFilters));
-			}
-			List<Filter> dStageFilters = new ArrayList<Filter>();
-			for(Integer dStage : query.getResolvedDifTheilerStage())
-			{
-				dStageFilters.add(makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,"TS"+dStage+" "+difStructure));
-			}
-			Filter dStageFilter = Filter.or(dStageFilters);
-			dStageFilter.negate();
-			queryFilters.add(dStageFilter);
-		}
-
-
-
-		Filter difFilter = new Filter();
-		if(queryFilters.size() > 0)
-		{
-			difFilter.setNestedFilters(queryFilters,Filter.JoinClause.FC_AND);
-		}		
-		else return null;
-
-
-		SearchParams difSP = new SearchParams();
-		difSP.setFilter(difFilter);
-
-		return gxdFinder.searchDifferential(difSP);
-	}
-
-	/* For differential searches where the 'AND NOT anywhere else' checkbox was checked...  Creates the
-	 * differential part 2 filters that goes against the gxdResult index.  Split out into a separate method
-	 * to make more maintainable in the future.
-	 */
-	private void buildNowhereElsePart2Filters(List<Filter> queryFilters, String structureID, List<Integer> stages) {
-		// Need to return a set of positive results and a set of negative results.  Positive results should
-		// match by structure, stage, or both, depending on whether either or both were specified.
-
-		List<Filter> myFilters = new ArrayList<Filter>();
-		
-		// Create the positive results filter based on structure and/or stages specified.  This should return
-		// all the "detected" results for each of the genes in the set selected by the part1 filters.
-
-		List<Filter> posFilters = new ArrayList<Filter>();
-
-		if ((structureID != null) && (structureID.trim().length() > 0)) {
-			posFilters.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID, structureID));
-		}
-			
-		if ((stages != null) && (stages.size() > 0)) {
-			if (!stages.contains(GxdQueryForm.ANY_STAGE)) {
-				List<Filter> stageFilters = new ArrayList<Filter>();
-				for(Integer stage : stages) {
-					stageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE, stage, Filter.Operator.OP_HAS_WORD));
-				}
-				// OR the stages together
-				posFilters.add(Filter.or(stageFilters));
-			}
-		}
-			
-		if (posFilters.size() > 0) {
-			posFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));
-			myFilters.add(Filter.and(posFilters));
-		}
-
-		// Create the negative results filter based on structure and/or stages specified.  This should return
-		// the "not detected" results for each of the genes in the set selected by the part1 filters.
-		
-		List<Filter> negFilters = new ArrayList<Filter>();
-
-		if ((structureID != null) && (structureID.trim().length() > 0)) {
-			// Structure ID field also has ancestor IDs, so this should ensure that we avoid the specified
-			// structure and its descendants.  This filter will be negate()-ed later in the code.
-			negFilters.add(new Filter(SearchConstants.STRUCTURE_ID, structureID, Filter.Operator.OP_EQUAL));
-		}
-			
-		if ((stages != null) && (stages.size() > 0)) {
-			if (!stages.contains(GxdQueryForm.ANY_STAGE)) {
-				List<Filter> stageFilters = new ArrayList<Filter>();
-				// User specified 1+ stages, so we need to make sure that the results are outside those stages.
-				for(Integer stage : stages) {
-					stageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE, stage, Filter.Operator.OP_HAS_WORD));
-				}
-				negFilters.add(Filter.or(stageFilters));
-			}
-		}
-		
-		if (negFilters.size() > 0) {
-			// 1. We always want detected=No for these negative results.
-			// 2. If both structure and stage are filled in, then we should OR those together, since if
-			//		either is different, we would want to return the record.
-
-			List<Filter> combinedNegFilters = new ArrayList<Filter>();
-			combinedNegFilters.add(new Filter(SearchConstants.GXD_DETECTED, "No", Filter.Operator.OP_EQUAL));
-			Filter poolFilter = Filter.and(negFilters);
-			poolFilter.negate();
-			combinedNegFilters.add(poolFilter);
-			myFilters.add(Filter.and(combinedNegFilters));
-		}
-		
-		// Find results matching either the positive criteria or the negative criteria.
-		queryFilters.add(Filter.or(myFilters));
-	}
-	
-	/*
-	 * Creates the differential part 2 filter that goes against the gxdResult index
-	 */
-	public Filter makeDifferentialPart2Filter(GxdQueryForm query)
-	{
-		ArrayList<Filter> queryFilters = new ArrayList<Filter>();
-		// init form fields
-		String structure = query.getStructureID();
-		String difStructure = query.getDifStructureID();
-		List<Integer> stages = query.getTheilerStage();
-		List<Integer> difStages = query.getDifTheilerStage();
-
-		// figure out what kind of diff query this is
-		boolean hasStructures = (structure!=null && !structure.equals("")
-				&& difStructure!=null && !difStructure.equals(""));
-		boolean hasStages = (stages.size() > 0 && difStages.size()>0
-				&& !(stages.contains(GxdQueryForm.ANY_STAGE) && (
-					difStages.contains(GxdQueryForm.ANY_STAGE_NOT_ABOVE) || difStages.contains(GxdQueryForm.ANY_STAGE)) ));
-		boolean nowhereElse = (query.getAnywhereElse() != null) && (query.getAnywhereElse().trim().length() > 0);
-
-		// if user checked 'AND NOT anywhere else' checkbox, handle that separately
-		if (nowhereElse) {
-			buildNowhereElsePart2Filters(queryFilters, structure, stages);
-		}
-		// perform structure diff
-		else if(hasStructures && !hasStages)
-		{
-			// create the positive results filter
-			List<Filter> posFilters = new ArrayList<Filter>();
-			posFilters.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,structure));
-			posFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));
-			Filter posFilter = Filter.and(posFilters);
-
-			// create negative results filter
-			List<Filter> negFilters = new ArrayList<Filter>();
-			negFilters.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,difStructure));
-			negFilters.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
-			Filter negFilter = Filter.and(negFilters);
-
-			// or them to bring back both datasets
-			queryFilters.add(Filter.or(Arrays.asList(posFilter,negFilter)));
-		}
-		// perform stages diff
-		else if(hasStages && !hasStructures)
-		{
-			// create the positive results filter
-			List<Filter> posFilters = new ArrayList<Filter>();
-			posFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));
-			if(stages.size() > 0 && !stages.contains(GxdQueryForm.ANY_STAGE))
-			{
-				List<Filter> stageFilters = new ArrayList<Filter>();
-				for(Integer stage : stages)
-				{
-					Filter stageF = new Filter(SearchConstants.GXD_THEILER_STAGE,stage,Filter.Operator.OP_HAS_WORD);
-					stageFilters.add(stageF);
-
-				}
-				// OR the stages together
-				posFilters.add(Filter.or(stageFilters));
-			}
-			Filter posFilter = Filter.and(posFilters);
-
-			// create the negative results filter
-			List<Filter> negFilters = new ArrayList<Filter>();
-			negFilters.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
-			List<Filter> difStageFilters = new ArrayList<Filter>();
-			for(Integer difStage : query.getResolvedDifTheilerStage())
-			{
-				Filter difStageF = new Filter(SearchConstants.GXD_THEILER_STAGE,difStage,Filter.Operator.OP_HAS_WORD);
-				difStageFilters.add(difStageF);
-
-			}
-			// OR the stages together
-			negFilters.add(Filter.or(difStageFilters));
-			Filter negFilter = Filter.and(negFilters);
-
-			queryFilters.add(Filter.or(Arrays.asList(posFilter,negFilter)));
-		}
-		else if(hasStructures && hasStages)
-		{
-			// stub for 3rd differential ribbon logic
-			// create the positive results filter
-			List<Filter> posFilters = new ArrayList<Filter>();
-			posFilters.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,structure));
-			posFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));
-			if(stages.size() > 0 && !stages.contains(GxdQueryForm.ANY_STAGE))
-			{
-				List<Filter> stageFilters = new ArrayList<Filter>();
-				for(Integer stage : stages)
-				{
-					Filter stageF = new Filter(SearchConstants.GXD_THEILER_STAGE,stage,Filter.Operator.OP_HAS_WORD);
-					stageFilters.add(stageF);
-
-				}
-				// OR the stages together
-				posFilters.add(Filter.or(stageFilters));
-			}
-			Filter posFilter = Filter.and(posFilters);
-
-			// create negative results filter
-			List<Filter> negFilters = new ArrayList<Filter>();
-			negFilters.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,difStructure));
-			negFilters.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
-			List<Filter> difStageFilters = new ArrayList<Filter>();
-			for(Integer difStage : query.getResolvedDifTheilerStage())
-			{
-				Filter difStageF = new Filter(SearchConstants.GXD_THEILER_STAGE,difStage,Filter.Operator.OP_HAS_WORD);
-				difStageFilters.add(difStageF);
-
-			}
-			// OR the stages together
-			negFilters.add(Filter.or(difStageFilters));
-			Filter negFilter = Filter.and(negFilters);
-
-			// or them to bring back both datasets
-			queryFilters.add(Filter.or(Arrays.asList(posFilter,negFilter)));
-		}
-
-		// all results MUST be wild type (broad definition)
-		queryFilters.add(new Filter(SearchConstants.GXD_IS_WILD_TYPE, WILD_TYPE));
-
-		return Filter.and(queryFilters);
+		return false;
 	}
 
 	/*
@@ -3646,209 +3303,67 @@ public class GXDController {
 		if(!structureId.trim().equals(""))
 		{
 			// surround with double quotes to make a solr phrase. added a slop of 100 (longest name is 62 chars)
-			String sToken = "\""+structureId+"\"~100";
+			String sToken = "\""+structureId+"\"";
 			return new Filter(queryField,sToken,Filter.Operator.OP_HAS_WORD);
 		}
 		return null;
 	}
 
-	/*
-	 * Creates the profile part 1 filters,
-	 * 	performs the query against gxdDifferentialMarker index
-	 * 	and returns the unique marker keys 
+	/**
+	 * Create the filter for a profile query.
 	 */
-	private List<String> resolveProfileMarkers(GxdQueryForm query)
-	{
-		logger.debug("--Starting resolveProfileMarkers()");
-
-        List<String> profileStructureKeys = new ArrayList<String>();
-
-		// start filter list for query filters
+	private Filter buildProfileFilter (GxdQueryForm query) {
+        	List<String> profileStructureKeys = new ArrayList<String>();
 		List<Filter> queryFilters = new ArrayList<Filter>();
+		String formMode = query.getProfileFormMode();
 
-		String profileStructureID1 = query.getProfileStructureID1();
-		String profileStructureID2 = query.getProfileStructureID2();
-		String profileStructureID3 = query.getProfileStructureID3();
-		String profileStructureID4 = query.getProfileStructureID4();
-		String profileStructureID5 = query.getProfileStructureID5();
-		String profileStructureID6 = query.getProfileStructureID6();
-		String profileStructureID7 = query.getProfileStructureID7();
-		String profileStructureID8 = query.getProfileStructureID8();
-		String profileStructureID9 = query.getProfileStructureID9();
-		String profileStructureID10 = query.getProfileStructureID10();
-		String detected1 = query.getDetected_1();
-		String detected2 = query.getDetected_2();
-		String detected3 = query.getDetected_3();
-		String detected4 = query.getDetected_4();
-		String detected5 = query.getDetected_5();
-		String detected6 = query.getDetected_6();
-		String detected7 = query.getDetected_7();
-		String detected8 = query.getDetected_8();
-		String detected9 = query.getDetected_9();
-		String detected10 = query.getDetected_10();
-		boolean profileNowhereElse = (query.getProfileNowhereElseCheckbox() != null) 
-						&& (query.getProfileNowhereElseCheckbox().trim().length() > 0);
 
-		if (profileNowhereElse) {
+		int i = 0;
+		for ( String profileStructureID : query.getProfileStructureID() ) {
+			String stages = query.getProfileStage().get(i);
+			String detected = query.getProfileDetected().get(i);
+			i += 1;
+			if (profileStructureID.equals("") && stages.equals("")) 
+			    continue;
+			if (profileStructureID.equals("")) 
+			    profileStructureID = MOUSE_ID;
+			Filter filter;
+			Filter.Operator op = detected.equals("true") ? Filter.Operator.OP_IN : Filter.Operator.OP_NOT_IN;
 
-			logger.info("-- resolveProfileMarkers(); building profileNowhereElse filters");
+			if (stages.equals("")) {
+			    // When no stages are specified, query the EMAPA index fields
+			    String emapaKey = expressionHelper.emapa2key(profileStructureID);
+			    String field = formMode.equals("classical") ? SearchConstants.PROF_POS_C_ANC_A : SearchConstants.PROF_POS_R_ANC_A;
+			    filter = new Filter(field, emapaKey, op);
+			} else {
+			    // When stages are specified, query the EMAPS index fields
+			    List<String> emapsKeys = expressionHelper.emapa2emaps(profileStructureID, stages);
+			    String field = formMode.equals("classical") ? SearchConstants.PROF_POS_C_ANC : SearchConstants.PROF_POS_R_ANC;
+			    filter = new Filter(field, emapsKeys, op);;
+			}
 
-			if (profileStructureID1!=null && !profileStructureID1.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 1 = " + profileStructureID1);
-				List<VocabTerm> structureList1 = vocabFinder.getTermByID(profileStructureID1);
-				if (structureList1.size() > 0) {
-					profileStructureKeys.add(Integer.toString(structureList1.get(0).getTermKey()));
-				}
-			}
-			if (profileStructureID2!=null && !profileStructureID2.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 2 = " + profileStructureID2);
-				List<VocabTerm> structureList2 = vocabFinder.getTermByID(profileStructureID2);
-				if (structureList2.size() > 0) {
-					profileStructureKeys.add(Integer.toString(structureList2.get(0).getTermKey()));
-				}
-			}
-			if (profileStructureID3!=null && !profileStructureID3.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 3 = " + profileStructureID3);
-				List<VocabTerm> structureList3 = vocabFinder.getTermByID(profileStructureID3);
-				if (structureList3.size() > 0) {
-					profileStructureKeys.add(Integer.toString(structureList3.get(0).getTermKey()));
-				}
-			}
-			if (profileStructureID4!=null && !profileStructureID4.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 4 = " + profileStructureID4);
-				List<VocabTerm> structureList4 = vocabFinder.getTermByID(profileStructureID4);
-				if (structureList4.size() > 0) {
-					profileStructureKeys.add(Integer.toString(structureList4.get(0).getTermKey()));
-				}
-			}
-			if (profileStructureID5!=null && !profileStructureID5.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 5 = " + profileStructureID5);
-				List<VocabTerm> structureList5 = vocabFinder.getTermByID(profileStructureID5);
-				if (structureList5.size() > 0) {
-					profileStructureKeys.add(Integer.toString(structureList5.get(0).getTermKey()));
-				}
-			}
-			if (profileStructureID6!=null && !profileStructureID6.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 6 = " + profileStructureID6);
-				List<VocabTerm> structureList6 = vocabFinder.getTermByID(profileStructureID6);
-				if (structureList6.size() > 0) {
-					profileStructureKeys.add(Integer.toString(structureList6.get(0).getTermKey()));
-				}
-			}
-			if (profileStructureID7!=null && !profileStructureID7.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 7 = " + profileStructureID7);
-				List<VocabTerm> structureList7 = vocabFinder.getTermByID(profileStructureID7);
-				if (structureList7.size() > 0) {
-					profileStructureKeys.add(Integer.toString(structureList7.get(0).getTermKey()));
-				}
-			}
-			if (profileStructureID8!=null && !profileStructureID8.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 8 = " + profileStructureID8);
-				List<VocabTerm> structureList8 = vocabFinder.getTermByID(profileStructureID8);
-				if (structureList8.size() > 0) {
-					profileStructureKeys.add(Integer.toString(structureList8.get(0).getTermKey()));
-				}
-			}
-			if (profileStructureID9!=null && !profileStructureID9.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 9 = " + profileStructureID9);
-				List<VocabTerm> structureList9 = vocabFinder.getTermByID(profileStructureID9);
-				if (structureList9.size() > 0) {
-					profileStructureKeys.add(Integer.toString(structureList9.get(0).getTermKey()));
-				}
-			}
-			if (profileStructureID10!=null && !profileStructureID10.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 10 = " + profileStructureID10);
-				List<VocabTerm> structureList10 = vocabFinder.getTermByID(profileStructureID10);
-				if (structureList10.size() > 0) {
-					profileStructureKeys.add(Integer.toString(structureList10.get(0).getTermKey()));
-				}
-			}
-			
-			// retrieve the list of marker keys; uses sql-based expression helper hunter
-			List<String> markerKeys = expressionHelper.expressedIn(profileStructureKeys, "gene"); 
-			return markerKeys;
-
+			queryFilters.add(filter);
 		}
-		else { // perform structure matching
 
-			logger.info("-- resolveProfileMarkers(); building structure match filters");
-
-			if (profileStructureID1!=null && !profileStructureID1.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 1 = " + profileStructureID1);
-				Filter filter1 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID1);
-				if (detected1.equals("false")) {filter1.negate();}
-				queryFilters.add(filter1);
-			}
-			if (profileStructureID2!=null && !profileStructureID2.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 2 = " + profileStructureID2);
-				Filter filter2 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID2);
-				if (detected2.equals("false")) {filter2.negate();}
-				queryFilters.add(filter2);
-			}
-			if (profileStructureID3!=null && !profileStructureID3.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 3 = " + profileStructureID3);
-				Filter filter3 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID3);
-				if (detected3.equals("false")) {filter3.negate();}
-				queryFilters.add(filter3);
-			}
-			if (profileStructureID4!=null && !profileStructureID4.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 4 = " + profileStructureID4);
-				Filter filter4 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID4);
-				if (detected4.equals("false")) {filter4.negate();}
-				queryFilters.add(filter4);
-			}
-			if (profileStructureID5!=null && !profileStructureID5.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 5 = " + profileStructureID5);
-				Filter filter5 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID5);
-				if (detected5.equals("false")) {filter5.negate();}
-				queryFilters.add(filter5);
-			}
-			if (profileStructureID6!=null && !profileStructureID6.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 6 = " + profileStructureID6);
-				Filter filter6 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID6);
-				if (detected6.equals("false")) {filter6.negate();}
-				queryFilters.add(filter6);
-			}
-			if (profileStructureID7!=null && !profileStructureID7.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 7 = " + profileStructureID7);
-				Filter filter7 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID7);
-				if (detected7.equals("false")) {filter7.negate();}
-				queryFilters.add(filter7);
-			}
-			if (profileStructureID8!=null && !profileStructureID8.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 8 = " + profileStructureID8);
-				Filter filter8 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID8);
-				if (detected8.equals("false")) {filter8.negate();}
-				queryFilters.add(filter8);
-			}
-			if (profileStructureID9!=null && !profileStructureID9.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 9 = " + profileStructureID9);
-				Filter filter9 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID9);
-				if (detected9.equals("false")) {filter9.negate();}
-				queryFilters.add(filter9);
-			}
-			if (profileStructureID10!=null && !profileStructureID10.equals("")) {
-				logger.debug("-- resolveProfileMarkers() 10 = " + profileStructureID10);
-				Filter filter10 = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,profileStructureID10);
-				if (detected10.equals("false")) {filter10.negate();}
-				queryFilters.add(filter10);
-			}
-		}
 
 		Filter profileFilter = new Filter();
-		logger.debug("-- resolveProfileMarkers() queryFilters.size() = " + queryFilters.size());
 		if(queryFilters.size() > 0)
 		{
 			profileFilter.setNestedFilters(queryFilters,Filter.JoinClause.FC_AND);
 		}		
 		else return null; // punt; no filters
 
-		// build Search Params object;  add our profile filters
-		SearchParams profileSP = new SearchParams();
-		profileSP.setFilter(profileFilter);
-
-		return gxdFinder.searchDifferential(profileSP);
+		return profileFilter;
 	}
+
+	private Filter buildProfileNowhereElseFilter (GxdQueryForm query) {
+		List<String> emapaIds = query.getProfileStructureID();
+		List<String> stages = query.getProfileStage();
+	        List<String> emapsKeys = expressionHelper.getEmapsNonROI(emapaIds, stages);
+		Filter filter = new Filter(SearchConstants.PROF_POS_C_EXACT, emapsKeys, Filter.Operator.OP_NOT_IN);
+		return filter;
+	}
+
 
 	/*
 	 * Helper for the profile part 2 filter (below); factoring out pos/neg
@@ -3889,176 +3404,44 @@ public class GXDController {
 		// start filter list for query filters
 		List<Filter> structureFilters = new ArrayList<Filter>();
 
-		String profileStructureID1 = query.getProfileStructureID1();
-		String profileStructureID2 = query.getProfileStructureID2();
-		String profileStructureID3 = query.getProfileStructureID3();
-		String profileStructureID4 = query.getProfileStructureID4();
-		String profileStructureID5 = query.getProfileStructureID5();
-		String profileStructureID6 = query.getProfileStructureID6();
-		String profileStructureID7 = query.getProfileStructureID7();
-		String profileStructureID8 = query.getProfileStructureID8();
-		String profileStructureID9 = query.getProfileStructureID9();
-		String profileStructureID10 = query.getProfileStructureID10();
-		String detected1 = query.getDetected_1();
-		String detected2 = query.getDetected_2();
-		String detected3 = query.getDetected_3();
-		String detected4 = query.getDetected_4();
-		String detected5 = query.getDetected_5();
-		String detected6 = query.getDetected_6();
-		String detected7 = query.getDetected_7();
-		String detected8 = query.getDetected_8();
-		String detected9 = query.getDetected_9();
-		String detected10 = query.getDetected_10();
-		boolean profileNowhereElse = (query.getProfileNowhereElseCheckbox() != null) 
-						&& (query.getProfileNowhereElseCheckbox().trim().length() > 0);
-
+		boolean profileNowhereElse = "true".equals(query.getProfileNowhereElseCheckbox());
 
 		if (profileNowhereElse) {
 		logger.debug("makeProfileResultFilters - profileNowhereElse");
-			if (profileStructureID1!=null && !profileStructureID1.equals("")) {
-				structureFilters.add(makeProfileResultPosNegFilters(profileStructureID1));
+			for (String psid : query.getProfileStructureID()) {
+				if (psid!=null && !psid.equals("")) {
+					structureFilters.add(makeProfileResultPosNegFilters(psid));
+				}
 			}
-			if (profileStructureID2!=null && !profileStructureID2.equals("")) {
-				structureFilters.add(makeProfileResultPosNegFilters(profileStructureID2));
-			}			
-			if (profileStructureID3!=null && !profileStructureID3.equals("")) {
-				structureFilters.add(makeProfileResultPosNegFilters(profileStructureID3));
-			}	
-			if (profileStructureID4!=null && !profileStructureID4.equals("")) {
-				structureFilters.add(makeProfileResultPosNegFilters(profileStructureID4));
-			}
-			if (profileStructureID5!=null && !profileStructureID5.equals("")) {
-				structureFilters.add(makeProfileResultPosNegFilters(profileStructureID5));
-			}	
-			if (profileStructureID6!=null && !profileStructureID6.equals("")) {
-				structureFilters.add(makeProfileResultPosNegFilters(profileStructureID6));
-			}	
-			if (profileStructureID7!=null && !profileStructureID7.equals("")) {
-				structureFilters.add(makeProfileResultPosNegFilters(profileStructureID7));
-			}	
-			if (profileStructureID8!=null && !profileStructureID8.equals("")) {
-				structureFilters.add(makeProfileResultPosNegFilters(profileStructureID8));
-			}		
-			if (profileStructureID9!=null && !profileStructureID9.equals("")) {
-				structureFilters.add(makeProfileResultPosNegFilters(profileStructureID9));
-			}		
-			if (profileStructureID10!=null && !profileStructureID10.equals("")) {
-				structureFilters.add(makeProfileResultPosNegFilters(profileStructureID10));
-			}	
-
 		}
 		else {
 			logger.debug("makeProfileResultFilters - not profileNowhereElse");
 
-			if (profileStructureID1!=null && !profileStructureID1.equals("")) {
-				List<Filter> structureFilter1 = new ArrayList<Filter>();
-				if (detected1.equals("false")) {
-					structureFilter1.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID1))	;
-					structureFilter1.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
-				} else {
-					structureFilter1.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID1));
-					structureFilter1.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
+			int i = 0;
+			for (String psid : query.getProfileStructureID()) {
+				String detected = query.getProfileDetected().get(i);
+				String stages = query.getProfileStage().get(i);
+				i += 1;
+				if (psid.equals("") && stages.equals("")) continue;
+				if (psid.equals("")) psid = MOUSE_ID;
+				List<String> stageList = null;
+				if (!stages.equals("")) {
+				    stageList = Arrays.asList(stages.split(","));
 				}
-				structureFilters.add(Filter.and(structureFilter1));
-			}
-			if (profileStructureID2!=null && !profileStructureID2.equals("")) {
-				List<Filter> structureFilter2 = new ArrayList<Filter>();
-				if (detected2.equals("false")) {
-					structureFilter2.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID2))	;
-					structureFilter2.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
+				List<Filter> structureFilter = new ArrayList<Filter>();
+				if (detected.equals("false")) {
+					if (!psid.equals(MOUSE_ID)) {
+						structureFilter.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,psid));
+					}
+					structureFilter.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
 				} else {
-					structureFilter2.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID2));
-					structureFilter2.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
+					structureFilter.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,psid));
+					structureFilter.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));
 				}
-				structureFilters.add(Filter.and(structureFilter2));
-			}
-			if (profileStructureID3!=null && !profileStructureID3.equals("")) {
-				List<Filter> structureFilter3 = new ArrayList<Filter>();
-				if (detected3.equals("false")) {
-					structureFilter3.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID3))	;
-					structureFilter3.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
-				} else {
-					structureFilter3.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID3));
-					structureFilter3.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
+				if (stageList != null) {
+					structureFilter.add(new Filter(SearchConstants.GXD_THEILER_STAGE, stageList, Filter.Operator.OP_IN));
 				}
-				structureFilters.add(Filter.and(structureFilter3));
-			}
-			if (profileStructureID4!=null && !profileStructureID4.equals("")) {
-				List<Filter> structureFilter4 = new ArrayList<Filter>();
-				if (detected4.equals("false")) {
-					structureFilter4.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID4))	;
-					structureFilter4.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
-				} else {
-					structureFilter4.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID4));
-					structureFilter4.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
-				}
-				structureFilters.add(Filter.and(structureFilter4));
-			}
-			if (profileStructureID5!=null && !profileStructureID5.equals("")) {
-				List<Filter> structureFilter5 = new ArrayList<Filter>();
-				if (detected5.equals("false")) {
-					structureFilter5.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID5))	;
-					structureFilter5.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
-				} else {
-					structureFilter5.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID5));
-					structureFilter5.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
-				}
-				structureFilters.add(Filter.and(structureFilter5));
-			}		
-			if (profileStructureID6!=null && !profileStructureID6.equals("")) {
-				List<Filter> structureFilter6 = new ArrayList<Filter>();
-				if (detected6.equals("false")) {
-					structureFilter6.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID6))	;
-					structureFilter6.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
-				} else {
-					structureFilter6.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID6));
-					structureFilter6.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
-				}
-				structureFilters.add(Filter.and(structureFilter6));
-			}
-			if (profileStructureID7!=null && !profileStructureID7.equals("")) {
-				List<Filter> structureFilter7 = new ArrayList<Filter>();
-				if (detected7.equals("false")) {
-					structureFilter7.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID7))	;
-					structureFilter7.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
-				} else {
-					structureFilter7.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID7));
-					structureFilter7.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
-				}
-				structureFilters.add(Filter.and(structureFilter7));
-			}
-			if (profileStructureID8!=null && !profileStructureID8.equals("")) {
-				List<Filter> structureFilter8 = new ArrayList<Filter>();
-				if (detected8.equals("false")) {
-					structureFilter8.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID8))	;
-					structureFilter8.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
-				} else {
-					structureFilter8.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID8));
-					structureFilter8.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
-				}
-				structureFilters.add(Filter.and(structureFilter8));
-			}
-			if (profileStructureID9!=null && !profileStructureID9.equals("")) {
-				List<Filter> structureFilter9 = new ArrayList<Filter>();
-				if (detected9.equals("false")) {
-					structureFilter9.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID9))	;
-					structureFilter9.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
-				} else {
-					structureFilter9.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID9));
-					structureFilter9.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
-				}
-				structureFilters.add(Filter.and(structureFilter9));
-			}
-			if (profileStructureID10!=null && !profileStructureID10.equals("")) {
-				List<Filter> structureFilter10 = new ArrayList<Filter>();
-				if (detected10.equals("false")) {
-					structureFilter10.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,profileStructureID10))	;
-					structureFilter10.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
-				} else {
-					structureFilter10.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,profileStructureID10));
-					structureFilter10.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));				
-				}
-				structureFilters.add(Filter.and(structureFilter10));
+				structureFilters.add(Filter.and(structureFilter));
 			}
 		}
 
@@ -4075,12 +3458,7 @@ public class GXDController {
 		// start filter list to store facet filters
 		List<Filter> facetList = new ArrayList<Filter>();
 
-		logger.debug("get params");
-
-		// exclude RNA-Seq data from differential searches
-		if (isDifferentialQuery(query)) {
-			queryFilters.add(new Filter(SearchConstants.GXD_ASSAY_TYPE, "RNA-Seq", Filter.Operator.OP_NOT_EQUAL));
-		}
+		logger.info("--> parseGxdQueryForm");
 
 		// ---------------------------
 		// heat map sample restriction (for looking up an individual sample's records)
@@ -4188,9 +3566,6 @@ public class GXDController {
 			queryFilters.add(new Filter(SearchConstants.MRK_SYMBOL, query.getMatrixMarkerSymbol()));
 		}
 
-		// Move processing of a batch of marker IDs up above the differential
-		// handling, so we can do pagination on the tissue x gene matrix.
-
 		// do we have a list of marker IDs (via the Batch Search tab)
 
 		List<String> markerIDs = query.getMarkerIDs();
@@ -4211,29 +3586,39 @@ public class GXDController {
 			logger.info("In profile form processing");
 
 			// default filters for profile search
-			queryFilters.add(new Filter(SearchConstants.GXD_ASSAY_TYPE, "RNA-Seq", Filter.Operator.OP_NOT_EQUAL));
-			queryFilters.add(new Filter(SearchConstants.GXD_IS_WILD_TYPE, WILD_TYPE));
 
-			// Process PROFILE QUERY FORM params
-			// Do part 1 of the profile search (I.e. find out what markers to bring back)
-			List<String> markerKeys = resolveProfileMarkers(query);
-
-			logger.info("resolveProfileMarkers found " + markerKeys.size() + " marker keys");
-			Collections.sort(markerKeys);
-			logger.info(Arrays.toString(markerKeys.toArray()));
-			if(markerKeys !=null && markerKeys.size()>0)
-			{
-				queryFilters.add( new Filter(SearchConstants.MRK_KEY,markerKeys,Filter.Operator.OP_IN));
-			}else{
-				// need a way to prevent the standard query from returning results when the differential fails to find markers
-				queryFilters.add( new Filter(SearchConstants.MRK_KEY,"NO_MARKERS_FOUND",Filter.Operator.OP_EQUAL));
+			if (query.getProfileFormMode().equals("classical")){
+			    queryFilters.add(new Filter(SearchConstants.GXD_ASSAY_TYPE, "RNA-Seq", Filter.Operator.OP_NOT_EQUAL));
+			} else {
+			    queryFilters.add(new Filter(SearchConstants.GXD_ASSAY_TYPE, "RNA-Seq", Filter.Operator.OP_EQUAL));
 			}
 
-			// add the 2nd part of the profile query (I.e. what results to display for the given markers)
+			queryFilters.add(new Filter(SearchConstants.GXD_IS_WILD_TYPE, WILD_TYPE));
+
+			boolean profileNowhereElse = "true".equals(query.getProfileNowhereElseCheckbox());
+
+			Filter jf = Filter.join("gxdProfileMarker", "markerMgiid", "markerMgiid", buildProfileFilter(query));
+			queryFilters.add(jf);
+
+			if (profileNowhereElse) {
+			    Filter nwe = buildProfileNowhereElseFilter(query);
+			    Filter jf2 = Filter.join("gxdProfileMarker", "markerMgiid", "markerMgiid", nwe);
+			    queryFilters.add(jf2);
+			}
+
+			// part 2 gets expression results
 			queryFilters.add(makeProfileResultFilters(query));
 
 			if (facetList.size() > 0) {
 				queryFilters.addAll(facetList);
+			}
+
+			// pagination list
+			List<String> matrixDisplayList = query.getMatrixDisplayList();
+			if ((matrixDisplayList != null) && (matrixDisplayList.size() > 0)) {
+				Filter matrixDisplayListFilter = 
+				  new Filter(SearchConstants.MRK_ID, matrixDisplayList, Filter.Operator.OP_IN);
+				queryFilters.add(matrixDisplayListFilter);
 			}
 
 			return Filter.and(queryFilters);
@@ -4241,37 +3626,6 @@ public class GXDController {
 		}
 
 		
-		// differential handling; this method will end further processing of query parameters
-		if(isDifferentialQuery(query))
-		{
-			logger.info("In differential form processing");
-
-			// Process DIFFERENTIAL QUERY FORM params
-			// Do part 1 of the differential (I.e. find out what markers to bring back)
-			List<String> markerKeys = resolveDifferentialMarkers(query);
-			logger.info("resolveDifferentialMarkers found " + markerKeys.size() + " marker keys");
-			Collections.sort(markerKeys);
-			logger.info(Arrays.toString(markerKeys.toArray()));
-			if(markerKeys !=null && markerKeys.size()>0)
-			{
-				queryFilters.add( new Filter(SearchConstants.MRK_KEY,markerKeys,Filter.Operator.OP_IN));
-			}
-			else
-			{
-				// need a way to prevent the standard query from returning results when the differential fails to find markers
-				queryFilters.add( new Filter(SearchConstants.MRK_KEY,"NO_MARKERS_FOUND",Filter.Operator.OP_EQUAL));
-			}
-			// add the 2nd part of the differential query (I.e. what results to display for the given markers)
-			queryFilters.add(makeDifferentialPart2Filter(query));
-
-			if (facetList.size() > 0) {
-				queryFilters.addAll(facetList);
-			}
-
-			return Filter.and(queryFilters);
-			// NOTE: THIS WAS A DIFFERENTIAL QUERY, STANDARD QUERY FORM LOGIC IS NOT EXECUTED
-		}
-
 		/*
 		* Standard QF Parameter handling
 		*/

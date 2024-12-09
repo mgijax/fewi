@@ -30,10 +30,20 @@ YAHOO.gxd.container.panelStructure.render();
 YAHOO.util.Event.addListener("gxdStructureHelpImage", "mouseover", YAHOO.gxd.container.panelStructure.show, YAHOO.gxd.container.panelStructure, true);
 
 
-YAHOO.gxd.container.panelProfile = new YAHOO.widget.Panel("gxdProfileHelp", { width:"320px", draggable:false, visible:false, constraintoviewport:true,close:false } );
+YAHOO.gxd.container.panelProfile = new YAHOO.widget.Panel("gxdProfileNdHelp", { width:"320px", draggable:false, visible:false, constraintoviewport:true,close:false } );
 YAHOO.gxd.container.panelProfile.render();
-YAHOO.util.Event.addListener("gxdProfileHelpImage", "mouseover", YAHOO.gxd.container.panelProfile.show, YAHOO.gxd.container.panelProfile, true);
-YAHOO.util.Event.addListener("gxdProfileHelpImage", "mouseout", YAHOO.gxd.container.panelProfile.hide, YAHOO.gxd.container.panelProfile, true);
+YAHOO.util.Event.addListener("gxdProfileNdHelpImage", "mouseover", YAHOO.gxd.container.panelProfile.show, YAHOO.gxd.container.panelProfile, true);
+YAHOO.util.Event.addListener("gxdProfileNdHelpImage", "mouseout", YAHOO.gxd.container.panelProfile.hide, YAHOO.gxd.container.panelProfile, true);
+
+YAHOO.gxd.container.panelClassical = new YAHOO.widget.Panel("gxdProfileClassicalHelp", { width:"280px", draggable:false, visible:false, constraintoviewport:true,close:false } );
+YAHOO.gxd.container.panelClassical.render();
+YAHOO.util.Event.addListener("gxdProfileClassicalHelpImage", "mouseover", YAHOO.gxd.container.panelClassical.show, YAHOO.gxd.container.panelClassical, true);
+YAHOO.util.Event.addListener("gxdProfileClassicalHelpImage", "mouseout", YAHOO.gxd.container.panelClassical.hide, YAHOO.gxd.container.panelClassical, true);
+
+YAHOO.gxd.container.panelClassical = new YAHOO.widget.Panel("gxdProfileStageHelp", { width:"280px", draggable:false, visible:false, constraintoviewport:true,close:false } );
+YAHOO.gxd.container.panelClassical.render();
+YAHOO.util.Event.addListener("gxdProfileStageHelpImage", "mouseover", YAHOO.gxd.container.panelClassical.show, YAHOO.gxd.container.panelClassical, true);
+YAHOO.util.Event.addListener("gxdProfileStageHelpImage", "mouseout", YAHOO.gxd.container.panelClassical.hide, YAHOO.gxd.container.panelClassical, true);
 
 
 YAHOO.gxd.container.panelDifStruct1 = new YAHOO.widget.Panel("gxdDifStruct1Help", { width:"320px", draggable:false, visible:false, constraintoviewport:true,close:false } );
@@ -123,9 +133,8 @@ var formTabs = new YAHOO.widget.TabView('expressionSearch');
 
 formTabs.addListener("activeTabChange", function(e){
 	if(formTabs.get('activeIndex')==0) currentQF = "standard";
-	else if(formTabs.get('activeIndex')==3) currentQF = "batch";
-	else if(formTabs.get('activeIndex')==2) currentQF = "profile";
-	else currentQF = "differential";
+	else if(formTabs.get('activeIndex')==2) currentQF = "batch";
+	else if(formTabs.get('activeIndex')==1) currentQF = "profile";
 });
 //basic functions to manage the form tabs
 var showStandardForm = function()
@@ -133,27 +142,20 @@ var showStandardForm = function()
 	currentQF = "standard";
 	formTabs.selectTab(0);
 };
-var showDifferentialForm = function()
-{
-	currentQF = "differential";
-	formTabs.selectTab(1);
-};
 var showProfileSearchForm = function()
 {
 	currentQF = "profile";
-	formTabs.selectTab(2);
+	formTabs.selectTab(1);
 };
 var showBatchSearchForm = function()
 {
 	currentQF = "batch";
-	formTabs.selectTab(3);
+	formTabs.selectTab(2);
 };
 
 function getCurrentQF()
 {
-	if(currentQF=="differential") {
-		return YAHOO.util.Dom.get("gxdDifferentialQueryForm3");
-	} else if (currentQF == 'batch') {
+	if (currentQF == 'batch') {
 		return YAHOO.util.Dom.get("gxdBatchQueryForm1");
 	} else if (currentQF == 'profile') {
 		return YAHOO.util.Dom.get("gxdProfileQueryForm");
@@ -281,196 +283,53 @@ var updateQuerySummary = function() {
 	el.appendChild(new YAHOO.util.Element(document.createElement('br')));
 	el.appendTo(searchParams);
 
-	// handle the differential stuff first
-	//console.log(currentQF);
-	if(currentQF == 'differential') {
-		var el = new YAHOO.util.Element(document.createElement('span'));
-		// parse the structures input
-		var structure = YAHOO.util.Dom.get('difStructure3').value;
-		var notStructure = YAHOO.util.Dom.get('difStructure4').value;
+	if (currentQF == 'profile') {
 		
-		// parse the stages input
-		var selectedStages = parseStageOptions("difTheilerStage3","0");
-		var detectedStages = [];
-		var detectedStagesText = "developmental stage(s):";
-		if(selectedStages=="Any") detectedStagesText = "<b>Any</b> developmental stage";
-		else
-		{
-			for(var i=0;i<selectedStages.length;i++)
-			{
-				detectedStages.push("<b>TS:"+selectedStages[i]+"</b>");
-			}
-			detectedStagesText += " ("+detectedStages.join(" or ")+")";
-		}
-		var selectedDifStagesNSA = parseStageOptions("difTheilerStage4","-1");	// any stage not selected above
-		var selectedDifStagesADS = parseStageOptions("difTheilerStage4", "0");	// any developmental stage
-		var notDetectedStages = [];
-		var notDetectedStagesText = "any of the developmental stage(s):";
-		if( (selectedDifStagesNSA =="Any") || (selectedDifStagesADS =="Any") ) {
-			// cases:
-			// 1. structure & notStructure, no selectedStages
-			// 2. structure & selectedStages & (structure == notStructure)
-			// 3. structure & selectedStages & notStructure
-			// 4. other
-			if ((structure != '') && (notStructure != '') && (selectedStages == 'Any')) {
-				notDetectedStagesText = "<b>Any developmental stage</b>";
-			} else if ((structure != '') && (selectedStages != 'Any') && (selectedStages != '') && (structure == notStructure)) {
-				notDetectedStagesText = "<b>Any developmental stage not selected above</b>";
-			} else if ((structure != '') && (selectedStages != 'Any') && (selectedStages != '') && (notStructure != '') && (selectedDifStagesADS == 'Any')) {
-				notDetectedStagesText = "<b>Any developmental stage</b>";
-			} else {
-				notDetectedStagesText = "<b>Any developmental stage not selected above</b>";
-			}
-		} else {
-			for(var i=0;i<selectedDifStagesNSA.length;i++)
-			{
-				notDetectedStages.push("<b>TS:"+selectedDifStagesNSA[i]+"</b>");
-			}
-			notDetectedStagesText += " ("+notDetectedStages.join(", ")+")";
-		}
-		
-		// if structure on top, then must have structure (or nowhere else checked) on bottom.
-		// may or may not have a stage on top and/or bottom.
-		
-		var topStructure = YAHOO.util.Dom.get('difStructure3').value;
-		var bottomStructure = YAHOO.util.Dom.get('difStructure4').value;
-		var nowhereElse = YAHOO.util.Dom.get('anywhereElse').checked;
+		const isRnaSeq = model.formMode === RNASEQ;
 
-		if (topStructure != '') {
-			if (nowhereElse) {
-				el.set('innerHTML',"Detected in <b>" + topStructure + "</b>" +
-					"<span class=\"smallGrey\"> includes substructures</span>"+
-					"<br/>at "+detectedStagesText+
-					"<br/>but not detected or assayed <b>anywhere else</b>");
-			} else {
-				el.set('innerHTML',"Detected in <b>"+YAHOO.util.Dom.get('difStructure3').value+"</b>" +
-					"<span class=\"smallGrey\"> includes substructures</span>"+
-					"<br/>at "+detectedStagesText+
-					"<br/>but not detected or assayed in <b>"+
-						YAHOO.util.Dom.get('difStructure4').value+"</b>"+
-					"<span class=\"smallGrey\"> includes substructures</span>"+
-					"<br/>at " + notDetectedStagesText);
-			}
-		} else {
-			// no structures to consider, so we have either:
-			// 1. stage vs. nowhere else, or
-			// 2. stage vs. stage
-
-			if (nowhereElse) {
-				el.set('innerHTML',"Detected at " + detectedStagesText +
-					"<br/>but not detected or assayed <b>anywhere else</b>");
-			} else {
-				el.set('innerHTML',"Detected at " + detectedStagesText +
-					"<br/>but not detected or assayed " +
-					"<br/>at " + notDetectedStagesText);
-			}
-		}
-		
-		el.appendTo(searchParams);
-	}
-	else if (currentQF == 'profile') {
-
-
-		// parse the structure inputs
-		var profileStructure1 = YAHOO.util.Dom.get('profileStructure1').value;
-		var profileStructure2 = YAHOO.util.Dom.get('profileStructure2').value;
-		var profileStructure3 = YAHOO.util.Dom.get('profileStructure3').value;
-		var profileStructure4 = YAHOO.util.Dom.get('profileStructure4').value;
-		var profileStructure5 = YAHOO.util.Dom.get('profileStructure5').value;
-		var profileStructure6 = YAHOO.util.Dom.get('profileStructure6').value;
-		var profileStructure7 = YAHOO.util.Dom.get('profileStructure7').value;
-		var profileStructure8 = YAHOO.util.Dom.get('profileStructure8').value;
-		var profileStructure9 = YAHOO.util.Dom.get('profileStructure9').value;
-		var profileStructure10 = YAHOO.util.Dom.get('profileStructure10').value;
-		var profileNowhereElseCheckbox = YAHOO.util.Dom.get('profileNowhereElseCheckbox').checked;
-
-		// collect list of detected structures and not detected structured
+		// collect list of detected structures and not detected structures
 		var posStructures = [];
 		var negStructures = [];
-		if (profileStructure1 != "") {
-			if(YAHOO.util.Dom.get("profileDetected1").checked) {
-				posStructures.push("<b>" + profileStructure1 + "</b>")
+
+		model.profileSpec.forEach( (m,i) => {
+		    var stageClause = ""
+		    var structureClause = ""
+		    if (m.stages.length > 0) {
+			const stgs = m.stages.map(s=>`<b>TS:${s}</b>`).join(' or ')
+		        stageClause = `at Theiler stage(s) (${stgs})`
+		    }
+		    if (m.structure != "") {
+			//remove the full TS range from the name
+			structureClause = `<b>${m.structure.replace(/ *TS[0-9][-0-9]*$/, '')}</b>`
+		    }
+
+		    if (stageClause !== "" || structureClause !== "") {
+		        var clause = ` ${structureClause} ${stageClause} `
+			if (m.detected) {
+			    posStructures.push(clause);
 			} else {
-				negStructures.push("<b>" + profileStructure1 + "</b>")
-			};
-		}
-		if (profileStructure2 != "") {
-			if(YAHOO.util.Dom.get("profileDetected2").checked) {
-				posStructures.push("<b>" + profileStructure2 + "</b>")
-			} else {
-				negStructures.push("<b>" + profileStructure2 + "</b>")
-			};
-		}
-		if (profileStructure3 != "") {
-			if(YAHOO.util.Dom.get("profileDetected3").checked) {
-				posStructures.push("<b>" + profileStructure3 + "</b>")
-			} else {
-				negStructures.push("<b>" + profileStructure3 + "</b>")
-			};
-		}
-		if (profileStructure4 != "") {
-			if(YAHOO.util.Dom.get("profileDetected4").checked) {
-				posStructures.push("<b>" + profileStructure4 + "</b>")
-			} else {
-				negStructures.push("<b>" + profileStructure4 + "</b>")
-			};
-		}
-		if (profileStructure5 != "") {
-			if(YAHOO.util.Dom.get("profileDetected5").checked) {
-				posStructures.push("<b>" + profileStructure5 + "</b>")
-			} else {
-				negStructures.push("<b>" + profileStructure5 + "</b>")
-			};
-		}
-		if (profileStructure6 != "") {
-			if(YAHOO.util.Dom.get("profileDetected6").checked) {
-				posStructures.push("<b>" + profileStructure6 + "</b>")
-			} else {
-				negStructures.push("<b>" + profileStructure6 + "</b>")
-			};
-		}
-		if (profileStructure7 != "") {
-			if(YAHOO.util.Dom.get("profileDetected7").checked) {
-				posStructures.push("<b>" + profileStructure7 + "</b>")
-			} else {
-				negStructures.push("<b>" + profileStructure7 + "</b>")
-			};
-		}
-		if (profileStructure8 != "") {
-			if(YAHOO.util.Dom.get("profileDetected8").checked) {
-				posStructures.push("<b>" + profileStructure8 + "</b>")
-			} else {
-				negStructures.push("<b>" + profileStructure8 + "</b>")
-			};
-		}
-		if (profileStructure9 != "") {
-			if(YAHOO.util.Dom.get("profileDetected9").checked) {
-				posStructures.push("<b>" + profileStructure9 + "</b>")
-			} else {
-				negStructures.push("<b>" + profileStructure9 + "</b>")
-			};
-		}
-		if (profileStructure10 != "") {
-			if(YAHOO.util.Dom.get("profileDetected10").checked) {
-				posStructures.push("<b>" + profileStructure10 + "</b>")
-			} else {
-				negStructures.push("<b>" + profileStructure10 + "</b>")
-			};
-		}
+			    negStructures.push(clause);
+			}
+		    }
+
+		})
 
 		// create You Searched For... strings
 		var newInnerHTML = '';		
 		if (posStructures.length > 0) {
-			newInnerHTML = "Detected in " + posStructures.join(", ");
+			newInnerHTML = "Detected in " + posStructures.join(" AND ") + "<br/>";
 			if (negStructures.length > 0) {
-				newInnerHTML = newInnerHTML + " and not detected or assayed in " + negStructures.join(", ");
+				newInnerHTML = newInnerHTML + ` but not detected ${isRnaSeq ? '' : 'or assayed'} in ` + negStructures.join(" OR ");
 			}
-			if (profileNowhereElseCheckbox) {
-				newInnerHTML = newInnerHTML + " and not detected anywhere else. ";
+			if (profileNowhereElseCheckbox.checked) {
+				newInnerHTML = newInnerHTML + ` and not detected ${isRnaSeq ? '' : 'or assayed'} anywhere else.`;
 			}
 		} else {
-				newInnerHTML = "Not detected in " + negStructures.join(", ");
+		    // ? should never get here
+		    throw "Internal error: posStructures has zero length."
 		}
+
+		newInnerHTML += `<br/> Assayed by: ${isRnaSeq ? 'RNA-Seq' : 'Classical Expression Assays'} `
 
 		// create span element, and add our crafted display
 		var el = new YAHOO.util.Element(document.createElement('span'));
@@ -846,8 +705,7 @@ var toggleQF = function(oCallback,noAnimate) {
 
 	console.log("in toggleQF - currentQF:" + currentQF);
     var toHeight = QFHeight;
-    if (currentQF == "differential") { toHeight = DifQFHeight; }
-    else if (currentQF == "batch") { toHeight = BatchQFHeight; }
+    if (currentQF == "batch") { toHeight = BatchQFHeight; }
     else if (currentQF == "profile") { toHeight = BatchQFHeight; }
 	console.log("in toggleQF - toHeight:" + toHeight);
 
@@ -972,8 +830,14 @@ var interceptSubmit = function(e) {
 		newQueryState = true;
 		if(typeof resultsTabs != 'undefined')
 		{
-			// go to tissue x gene matrix for differential, and results tab for anything else
-			if(currentQF=="differential") resultsTabs.selectTab(5);
+			if (currentQF=="profile" ) {
+			    // for profile, go to TxG or Heatmap tab, depending on if mode is classical or rnaseq
+			    const tabNum = model.formMode === RNASEQ ? 6 : 5;
+			    resultsTabs.selectTab(tabNum)
+			    setTabEnabled('genegridtab', true);
+			    if (currentQF==="profile" && model.formMode === RNASEQ) setTabEnabled('genegridtab', false)
+			}
+			// for all otherts, go to results tab
 			else resultsTabs.selectTab(2);
 		}
 		if(gxdDataTable != undefined)
@@ -997,7 +861,6 @@ var interceptSubmit = function(e) {
 
 YAHOO.util.Event.addListener("gxdQueryForm", "submit", interceptSubmit);
 YAHOO.util.Event.addListener("gxdBatchQueryForm1", "submit", interceptSubmit);
-YAHOO.util.Event.addListener("gxdDifferentialQueryForm3","submit", interceptSubmit);
 YAHOO.util.Event.addListener("gxdProfileQueryForm","submit", interceptSubmit);
 
 
@@ -1045,84 +908,42 @@ var profileFormCheck  = function() {
 	// gather parameters from form; add to {rowNum:value} dictionary for 
 	// downstream checking
 	var profileForm = YAHOO.util.Dom.get("gxdProfileQueryForm");
-	var submittedStructureIDs = {};
-	var submittedStructureNames = {};
 	var hasPosStructure = false;
-	if(profileForm.profileStructure1ID.value!=''){
-		submittedStructureIDs[1] = profileForm.profileStructure1ID.value;
-		submittedStructureNames[1] = profileForm.profileStructure1.value;
-		if(profileForm.profileDetected1.checked==true) {hasPosStructure = true};
-	}
-	if(profileForm.profileStructure2ID.value!=''){
-		submittedStructureIDs[2] = profileForm.profileStructure2ID.value;
-		submittedStructureNames[2] = profileForm.profileStructure2.value;
-		if(profileForm.profileDetected2.checked==true) {hasPosStructure = true};
-	}
-	if(profileForm.profileStructure3ID.value!=''){
-		submittedStructureIDs[3] = profileForm.profileStructure3ID.value;
-		submittedStructureNames[3] = profileForm.profileStructure3.value;
-		if(profileForm.profileDetected3.checked==true) {hasPosStructure = true};
-	}
-	if(profileForm.profileStructure4ID.value!=''){
-		submittedStructureIDs[4] = profileForm.profileStructure4ID.value;
-		submittedStructureNames[4] = profileForm.profileStructure4.value;
-		if(profileForm.profileDetected4.checked==true) {hasPosStructure = true};
-	}
-	if(profileForm.profileStructure5ID.value!=''){
-		submittedStructureIDs[5] = profileForm.profileStructure5ID.value;
-		submittedStructureNames[5] = profileForm.profileStructure5.value;
-		if(profileForm.profileDetected5.checked==true) {hasPosStructure = true};
-	}
-	if(profileForm.profileStructure6ID.value!=''){
-		submittedStructureIDs[6] = profileForm.profileStructure6ID.value;
-		submittedStructureNames[6] = profileForm.profileStructure6.value;
-		if(profileForm.profileDetected6.checked==true) {hasPosStructure = true};
-	}
-	if(profileForm.profileStructure7ID.value!=''){
-		submittedStructureIDs[7] = profileForm.profileStructure7ID.value;
-		submittedStructureNames[7] = profileForm.profileStructure7.value;
-		if(profileForm.profileDetected7.checked==true) {hasPosStructure = true};
-	}
-	if(profileForm.profileStructure8ID.value!=''){
-		submittedStructureIDs[8] = profileForm.profileStructure8ID.value;
-		submittedStructureNames[8] = profileForm.profileStructure8.value;
-		if(profileForm.profileDetected8.checked==true) {hasPosStructure = true};
-	}	
-	if(profileForm.profileStructure9ID.value!=''){
-		submittedStructureIDs[9] = profileForm.profileStructure9ID.value;
-		submittedStructureNames[9] = profileForm.profileStructure9.value;
-		if(profileForm.profileDetected9.checked==true) {hasPosStructure = true};
-	}
-	if(profileForm.profileStructure10ID.value!=''){
-		submittedStructureIDs[10] = profileForm.profileStructure10ID.value;
-		submittedStructureNames[10] = profileForm.profileStructure10.value;
-		if(profileForm.profileDetected10.checked==true) {hasPosStructure = true};
-	}
+
+	model.profileSpec.forEach( (m,i) => {
+	    if (m.detected === true && (m.structure !== "" || m.stages.length > 0)) {
+		hasPosStructure = true;
+	    }
+	})
 
 	// check for empty submission
-	if (Object.keys(submittedStructureIDs).length == 0 || !hasPosStructure) {
-		alert("Please specify Detected expression for at least one anatomical structure.");
+	if (!hasPosStructure) {
+		alert("Please specify Detected expression for at least one anatomical structure or stage.");
 		hasErrors=true;
-	} else {
-	// check for duplicate IDs (a structure and it's synonym may be submitted)	
-		var handledIDs = {};
-		var hasDupe = false;
-		for (let i = 1; i <= 10; i++) {
-			if (submittedStructureIDs[i] && hasErrors == false) {
-				if (submittedStructureIDs[i] in handledIDs) {
-					hasErrors=true;
-					const msg = "Query error: Duplicate structures detected, id=" +
-						submittedStructureIDs[i] + "\n" +
-						submittedStructureNames[i] + "\n" +
-						handledIDs[submittedStructureIDs[i]] + "\n" +
-						"Please modify your query and try again."
-					alert(msg)
-				} else {
-					// we haven't encountered this ID; save off
-					handledIDs[submittedStructureIDs[i]] = submittedStructureNames[i];
-				}
-			}
-		}
+	}
+
+	// check for duplicate structure/stage specs.
+	var hasDups = false
+	for (var i = 0; i < model.profileSpec.length; i++) {
+	    const s1 = model.profileSpec[i]
+	    const s1s = s1.stages.join(',')
+	    if (s1.structureID === '' && s1s === '') continue
+	    for(var j = i+1; j < model.profileSpec.length; j++) {
+		const s2 = model.profileSpec[j]
+		const s2s = s2.stages.join(',')
+		if (s2.structureID === '' && s2s === '') continue
+		if (s1.structureID !== s2.structureID) continue
+		if (s1s !== s2s && s1s !== "" && s2s !== "") continue
+		const msg = "Query error: Duplicate structures/stages detected:\n" +
+			s1.structureID + " " + s1.structure + " " + (s1s ? "@TS " + s1s : "") + "\n" +
+			s2.structureID + " " + s2.structure + " " + (s2s ? "@TS " + s2s : "") + "\n" +
+			"Please modify your query and try again."
+		alert(msg)
+		hasDups = true
+		hasErrors = true
+		break;
+	    }
+	    if (hasDups) break;
 	}
 
 	return hasErrors;
@@ -1157,87 +978,6 @@ var mutationRestriction  = function() {
 	return selectVisible || geneVisible;
 };
 
-var difTSClick = function() {
-	// if we have a click in the differential Theiler stage box, we need to blank out the
-	// "anywhere else" checkbox
-
-	if ($('#anywhereElse').length > 0) {
-		$('#anywhereElse')[0].checked = false;
-	}
-}
-
-var differentialRestriction  = function()
-{
-	// For a valid search we need...
-	// 1. either a structure or stage for 'detected in'
-	// 2. either a structure, a stage, or not 'anywhere else' for 'not detected in'
-	// 3. if choosing both structure & stage (top or bottom ribbon), then you can't
-	//		select just one in the other ribbon
-	
-	var form = YAHOO.util.Dom.get("gxdDifferentialQueryForm3");
-
-	var structure = form.structure.value;
-	var difStructure = form.difStructure.value;
-	var hasStructure = (structure != null) && (structure.trim().length > 0);
-	var hasDifStructure = (difStructure != null) && (difStructure.trim().length > 0);
-
-	var stage = form.theilerStage;
-	var difStage = form.difTheilerStage;
-
-	// For the 'detected in' developmental stage, we need a choice other than "any" for it to count.
-	var hasTS = (stage.selectedOptions.length > 1);
-	var hasAnyTS = (stage.selectedOptions.length > 1);		// includes Any as a valid choice
-	if (!hasTS) {
-		for (var i in stage.selectedOptions) {
-			if (stage.selectedOptions[i].value != '0' && stage.selectedOptions[i].value != undefined) {
-				hasTS = true;
-				hasAnyTS = true;
-				break;
-			} else if (stage.selectedOptions[i].value == '0') {
-				hasAnyTS = true;
-			}
-		}
-	}
-
-	var hasDifTS = (difStage.selectedOptions.length >= 1);
-	var anywhereElseChecked = form.anywhereElse.checked;
-	
-	// If we have 'any' structure for the detected TS choice, then 'any other' doesn't make sense as a
-	// NOT detected TS choice.
-	if (!hasTS) {
-		if ((difStage.selectedOptions.length == 1) && (
-				(difStage.selectedOptions[0].value == '-1') || (difStage.selectedOptions[0].value == '0') )) {
-			hasDifTS = false;
-		}
-	}
-
-	var error = '';
-	
-	if (hasStructure && !hasDifStructure && !anywhereElseChecked) {
-		error = 'If you specify a structure in the top ribbon, then you must either specify a structure in the bottom ribbon or check "anywhere else".';
-
-	} else if (!hasStructure && hasDifStructure) {
-		error = 'If you specify a structure in the bottom ribbon, then you must also specify a structure in the top ribbon.';
-
-	} else if (hasTS && !hasDifTS && !anywhereElseChecked) {
-		error = 'If you specify a stage in the top ribbon, then you must either specify a stage in the bottom ribbon or check "anywhere else".';
-
-	} else if (!hasTS && hasDifTS && !(hasAnyTS && hasStructure && hasDifStructure)) {
-		error = 'If you specify a stage in the bottom ribbon, then you must also specify a stage in the top ribbon.';
-
-	} else if (!(hasStructure || hasTS)) {
-		error = 'In the top ribbon, please specify an anatomical structure or developmental stage or both.';
-
-	} else if (!(hasDifStructure || hasDifTS || anywhereElseChecked)) {
-		error = 'In the bottom ribbon, please specify an anatomical structure or developmental stage or both or check "anywhere else".';
-	}
-
-	setVisibility('differentialError', error.length > 0);
-	$('#differentialError').html(error);
-	
-	return error.length > 0;
-};
-
 /* returns false if there are NO validation errors, true if there are some
  */
 var runValidation  = function(){
@@ -1254,20 +994,11 @@ var runValidation  = function(){
 	else if (currentQF == 'batch') {
 		result = false;			// no current validations
 	}
-	else if(currentQF=="differential") {
-		result = differentialRestriction();
-	}
 	return result;
 };
 var clearValidation = function()
 {
 	if(currentQF == "standard") runValidation();
-	else
-	{
-		setVisibility('difStructureError', false);
-		setVisibility('difStageError',false);
-		setVisibility('difStructStageError',false);
-	}
 }
 
 YAHOO.util.Event.addListener(YAHOO.util.Dom.get("nomenclature"), "keyup", runValidation);
@@ -1458,7 +1189,10 @@ function makeStructureAC(inputID,containerID){
     oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
     // Define the schema of the JSON results
     //oDS.responseSchema = {resultsList: "resultObjects", fields:["structure", "synonym","isStrictSynonym"]};
-	oDS.responseSchema = {resultsList: "resultObjects", fields:["structure", "synonym","isStrictSynonym","accID","startStage","endStage"]};
+	oDS.responseSchema = {resultsList: "resultObjects",
+	    fields:["structure", "synonym","isStrictSynonym","accID","startStage","endStage",
+	            "showInCPosAC","showInCNegAC","showInRPosAC","showInRNegAC",
+		    "stagesCPosAC","stagesCNegAC","stagesRPosAC","stagesRNegAC" ]};
 
     //oDS.maxCacheEntries = 10;
     oDS.connXhrMode = "cancelStaleRequests";
@@ -1474,19 +1208,15 @@ function makeStructureAC(inputID,containerID){
 	//oAC.forceSelection = false;
     //oAC.delimChar = ";";
 
-    // blank out the hidden ID field upon deleting the structure text in the input field
     var removeSelectedID = function(oSelf,yuiE) {
     	var ac = yuiE[0];
     	if(ac.getInputEl().value.trim() == "")
     	{
 		    var idBox = YAHOO.util.Dom.get(hiddenID);
 	 	    idBox.value = "";
-	 	    if (inputID == 'difStructure4') {
-	 	   		$('#inCheckbox')[0].checked = false;			// clearn the in-structure checkbox
-	 	   	}
     	}
     };
-    oAC.textboxChangeEvent.subscribe(removeSelectedID);
+    oAC.selectionEnforceEvent.subscribe(removeSelectedID);
 
     // try to set the input field after itemSelect event
     oAC.suppressInputUpdate = true;
@@ -1517,20 +1247,11 @@ function makeStructureAC(inputID,containerID){
 	    var idBox = YAHOO.util.Dom.get(hiddenID);
 	    idBox.value = accID;
 	    
-	    if (inputBox.name == 'difStructure') {
- 	    	if ($('#inCheckbox').length > 0) {
- 	    		$('#inCheckbox')[0].checked = true;			    // check the in-structure checkbox
- 	    	}
- 	    	if ($('#anywhereElse').length > 0) {
- 	    		$('#anywhereElse')[0].checked = false;			// uncheck the default checkbox (any other structure)
- 	    	}
- 	    }
     };
     oAC.itemSelectEvent.subscribe(selectionHandler);
 
     oAC.formatResult = function(oResultData, sQuery, sResultMatch) {
 
-//	    var userInputField = YAHOO.util.Dom.get("structure");
 	    var userInputField = YAHOO.util.Dom.get(inputID);
 	    var userInput = userInputField.value.toLowerCase();
 
@@ -1566,18 +1287,6 @@ function makeStructureAC(inputID,containerID){
     };
 };
 makeStructureAC("structure","structureContainer");
-makeStructureAC("difStructure3","difStructureContainer3");
-makeStructureAC("difStructure4","difStructureContainer4");
-makeStructureAC("profileStructure1","profileStructureContainer1");
-makeStructureAC("profileStructure2","profileStructureContainer2");
-makeStructureAC("profileStructure3","profileStructureContainer3");
-makeStructureAC("profileStructure4","profileStructureContainer4");
-makeStructureAC("profileStructure5","profileStructureContainer5");
-makeStructureAC("profileStructure6","profileStructureContainer6");
-makeStructureAC("profileStructure7","profileStructureContainer7");
-makeStructureAC("profileStructure8","profileStructureContainer8");
-makeStructureAC("profileStructure9","profileStructureContainer9");
-makeStructureAC("profileStructure10","profileStructureContainer10");
 
 //
 // Wire up the functionality to reset the query form
@@ -1610,88 +1319,15 @@ var resetQF = function (e) {
 	form.allSpecimen.checked=true;
 	form.mutatedIn.value = "";
 
-	// differential
-	var difForm3 = YAHOO.util.Dom.get("gxdDifferentialQueryForm3");
-	if(difForm3)
-	{
-		difForm3.structure.value="";
-		difForm3.structureID.value="";
-		difForm3.difStructure.value="";
-		difForm3.difStructureID.value="";
-		difForm3.theilerStage.selectedIndex=0;
-		difForm3.difTheilerStage.selectedIndex=0;
-		difForm3.inCheckbox.checked = false;
-		difForm3.anywhereElse.checked = false;
-		setVisibility('differentialError', false);
-	}
-
 	// profile
 	var profileForm = YAHOO.util.Dom.get("gxdProfileQueryForm");
 
 	if(profileForm)
 	{
-		// clear displayed structure
-		profileForm.profileStructure1.value="";
-		profileForm.profileStructure2.value="";
-		profileForm.profileStructure3.value="";
-		profileForm.profileStructure4.value="";
-		profileForm.profileStructure5.value="";
-		profileForm.profileStructure6.value="";
-		profileForm.profileStructure7.value="";
-		profileForm.profileStructure8.value="";
-		profileForm.profileStructure9.value="";
-		profileForm.profileStructure10.value="";
-
-		// clear hidden structure ID
-		profileForm.profileStructure1ID.value="";
-		profileForm.profileStructure2ID.value="";
-		profileForm.profileStructure3ID.value="";
-		profileForm.profileStructure4ID.value="";
-		profileForm.profileStructure5ID.value="";
-		profileForm.profileStructure6ID.value="";
-		profileForm.profileStructure7ID.value="";
-		profileForm.profileStructure8ID.value="";
-		profileForm.profileStructure9ID.value="";
-		profileForm.profileStructure10ID.value="";
-
-		// reset radio buttons
-		profileForm.profileDetected1.checked=true;
-		profileForm.profileDetected2.checked=true;
-		profileForm.profileDetected3.checked=true;
-		profileForm.profileDetected4.checked=true;
-		profileForm.profileDetected5.checked=true;
-		profileForm.profileDetected6.checked=true;
-		profileForm.profileDetected7.checked=true;
-		profileForm.profileDetected8.checked=true;
-		profileForm.profileDetected9.checked=true;
-		profileForm.profileDetected10.checked=true;
+		resetProfileForm();
 
 		// reset the No Where Else... check box
 		profileForm.profileNowhereElseCheckbox.checked = false;
-
-		// ensure only the first three rows are displayed
-		document.getElementById("profileStructureRow1").style.display = "";
-		document.getElementById("profileStructureRow2").style.display = "";
-		document.getElementById("profileStructureRow3").style.display = "";
-		document.getElementById("profileStructureRow4").style.display = "none";
-		document.getElementById("profileStructureRow5").style.display = "none";
-		document.getElementById("profileStructureRow6").style.display = "none";
-		document.getElementById("profileStructureRow7").style.display = "none";
-		document.getElementById("profileStructureRow8").style.display = "none";
-		document.getElementById("profileStructureRow9").style.display = "none";
-		document.getElementById("profileStructureRow10").style.display = "none";
-
-		// ensure qf state regarding not-in & nowhere-else 
-		ensureProfileFormStatus();
-
-		// ensure all row removals are visible
-		document.getElementById("removeStructureRowButton1").style.display = "";
-
-		// reset row count
-		rowCount = 3;
-
-
-
 	}
 
 	// batch
@@ -1734,9 +1370,6 @@ var fullResetQF = function(e) {
 
 YAHOO.util.Event.addListener("gxdQueryForm", "reset", fullResetQF);
 YAHOO.util.Event.addListener("gxdBatchQueryForm1", "reset", fullResetQF);
-YAHOO.util.Event.addListener("gxdDifferentialQueryForm1", "reset", fullResetQF);
-YAHOO.util.Event.addListener("gxdDifferentialQueryForm2", "reset", fullResetQF);
-YAHOO.util.Event.addListener("gxdDifferentialQueryForm3", "reset", fullResetQF);
 YAHOO.util.Event.addListener("gxdProfileQueryForm", "reset", fullResetQF);
 
 //
@@ -1745,6 +1378,9 @@ YAHOO.util.Event.addListener("gxdProfileQueryForm", "reset", fullResetQF);
 var getQueryString = function(form) {
 	console.log("---into getQueryString");
 	if(form==undefined) form = getCurrentQF();
+	if (form.id === 'gxdProfileQueryForm') {
+	    return profileSpec2QueryString();
+	}
 	var _qs = [];
 	for(var i=0; i<form.elements.length; i++)
 	{
@@ -1960,29 +1596,6 @@ var readFile = function(e) {
 	reader.readAsText(input.files[0]);
 };
 
-// if the 'any other structure' button is clicked and will be checked, then we'll need to
-// blank out the 'specify structure' box and clear the other checkbox.
-var anywhereElseClick = function() {
-	if ($('#anywhereElse').length > 0) {
-		if ($('#anywhereElse')[0].checked) {
-			$('#difStructure4')[0].value = '';
-			$('#difStructure4ID')[0].value = '';
-			$('#inCheckbox')[0].checked = false;
-			$('#difTheilerStage4')[0].selectedIndex = 0;
-		}
-	}
-};
-
-// if the 'in this structure' checkbox is clicked and will be checked, then we'll need to
-// blank out the 'anywhere else' checkbox
-var inCheckboxClick = function() {
-	if ($('#inCheckbox').length > 0) {
-		if ($('#inCheckbox')[0].checked) {
-			$('#anywhereElse')[0].checked = false;
-		}
-	}
-};
-
 // ensure user hasn't input more than the server can easily handle
 function checkBatchInput(){
 
@@ -2006,214 +1619,513 @@ function checkBatchInput(){
 };
 
 
-/*
- * Profile Search special handling 
+/* -------------------------------------------------------------------------------------------------
+ * Profile Search 
+ * -------------------------------------------------------------------------------------------------
  */
 
-// ensure input compatibility; disable "NoWhere Else" checkbox if needed
-function structureRadioChange() {
+// profile form modes
+const CLASSICAL = "classical"
+const RNASEQ = "rnaseq"
 
-   	var checkBox = document.getElementById("profileNowhereElseCheckbox");
-   	var nowhereElseText = document.getElementById("nowhereElseText");
-	var notDetectedNodes = YAHOO.util.Dom.getElementsByClassName('notDetected', 'input');
-	var hasNotDetected = false;
-	for (let i = 0; i < notDetectedNodes.length; i++) {
-		if (notDetectedNodes[i].checked == true){
-			hasNotDetected = true;
-		}
-	}
-	if (hasNotDetected) {
-		checkBox.disabled = true;
-		nowhereElseText.classList.add("disabledText"); // add class to text
-	} else {
-		checkBox.disabled = false;
-		nowhereElseText.classList.remove("disabledText");
-	}
-};
+// root of the EMAPA ontology
+const MOUSE = "mouse TS1-28"
+const MOUSE_ID = "EMAPA:25765"
 
-// ensure input compatibility; disable 'Not Detected' radio buttons if needed
-function handleNowhereElse() {
-
-	var checkBox = document.getElementById("profileNowhereElseCheckbox");
-	var notDetectedNodes = YAHOO.util.Dom.getElementsByClassName('notDetected', 'input');
-   	var notDetectedHeaderText = document.getElementById("notDetectedHeaderText");
-
-	if (checkBox.checked == true){
-		for (let i = 0; i < notDetectedNodes.length; i++) {
-			notDetectedNodes[i].disabled = true;
-		}
-		notDetectedHeaderText.classList.add("disabledText");
-	} else {
-		for (let i = 0; i < notDetectedNodes.length; i++) {
-			notDetectedNodes[i].disabled = false;
-		}
-		notDetectedHeaderText.classList.remove("disabledText");
-	}
-
-};
-
-// profile search; if there is only 1 structure row, don't show remove button
-function handleProfileRemoveButtonVisibility() {
-
-	if (rowCount==1){
-		document.getElementById("removeStructureRowButton1").style.display = "none";
-	} else {
-		document.getElementById("removeStructureRowButton1").style.display = "";
-	}
-
-}; 
-
-// adding rows to gxd profile query form
-var rowCount = 3;
-function handleAddStructure() {
-
-	// ensure we don't have more structures than allowed
-	if (rowCount == 10) {
-		alert("Maximum of ten anatomical structures allowed.")
-		exit();
-	}
-
-	rowCount++;
-	var idToShow = "profileStructureRow" + rowCount;
-	document.getElementById(idToShow).style.display = "";
-
-	// ensure status of form inputs
-	ensureProfileFormStatus();
-};
-
-// functionality for user to remove a structure row from the profile search; as each
-// row is removed, rows from below are copied upward 
-function removeStructureRow(rowNum) {
-
-	if (rowNum<=1){
-		document.getElementById("profileStructure1").value = document.getElementById("profileStructure2").value;
-		document.getElementById("profileStructure1ID").value = document.getElementById("profileStructure2ID").value;
-		document.getElementById("profileStructure2").value = "";
-		document.getElementById("profileStructure2ID").value = "";
-		if (document.getElementById("profileDetected2").checked == true) {document.getElementById("profileDetected1").checked = true;}
-		if (document.getElementById("profileNotDetected2").checked == true) {document.getElementById("profileNotDetected1").checked = true;}
-	}
-	if (rowNum<=2){
-		document.getElementById("profileStructure2").value = document.getElementById("profileStructure3").value;
-		document.getElementById("profileStructure2ID").value = document.getElementById("profileStructure3ID").value;
-		document.getElementById("profileStructure3").value = "";
-		document.getElementById("profileStructure3ID").value = "";
-		if (document.getElementById("profileDetected3").checked == true) {document.getElementById("profileDetected2").checked = true;}
-		if (document.getElementById("profileNotDetected3").checked == true) {document.getElementById("profileNotDetected2").checked = true;}
-	}
-	if (rowNum<=3){
-		document.getElementById("profileStructure3").value = document.getElementById("profileStructure4").value;
-		document.getElementById("profileStructure3ID").value = document.getElementById("profileStructure4ID").value;
-		document.getElementById("profileStructure4").value = "";
-		document.getElementById("profileStructure4ID").value = "";
-		if (document.getElementById("profileDetected4").checked == true) {document.getElementById("profileDetected3").checked = true;}
-		if (document.getElementById("profileNotDetected4").checked == true) {document.getElementById("profileNotDetected3").checked = true;}
-	}
-	if (rowNum<=4){
-		document.getElementById("profileStructure4").value = document.getElementById("profileStructure5").value;
-		document.getElementById("profileStructure4ID").value = document.getElementById("profileStructure5ID").value;
-		document.getElementById("profileStructure5").value = "";
-		document.getElementById("profileStructure5ID").value = "";
-		if (document.getElementById("profileDetected5").checked == true) {document.getElementById("profileDetected4").checked = true;}
-		if (document.getElementById("profileNotDetected5").checked == true) {document.getElementById("profileNotDetected4").checked = true;}
-	}
-	if (rowNum<=5){
-		document.getElementById("profileStructure5").value = document.getElementById("profileStructure6").value;
-		document.getElementById("profileStructure5ID").value = document.getElementById("profileStructure6ID").value;
-		document.getElementById("profileStructure6").value = "";
-		document.getElementById("profileStructure6ID").value = "";
-		if (document.getElementById("profileDetected6").checked == true) {document.getElementById("profileDetected5").checked = true;}
-		if (document.getElementById("profileNotDetected6").checked == true) {document.getElementById("profileNotDetected5").checked = true;}
-	}
-	if (rowNum<=6){
-		document.getElementById("profileStructure6").value = document.getElementById("profileStructure7").value;
-		document.getElementById("profileStructure6ID").value = document.getElementById("profileStructure7ID").value;
-		document.getElementById("profileStructure7").value = "";
-		document.getElementById("profileStructure7ID").value = "";
-		if (document.getElementById("profileDetected7").checked == true) {document.getElementById("profileDetected6").checked = true;}
-		if (document.getElementById("profileNotDetected7").checked == true) {document.getElementById("profileNotDetected6").checked = true;}
-	}
-	if (rowNum<=7){
-		document.getElementById("profileStructure7").value = document.getElementById("profileStructure8").value;
-		document.getElementById("profileStructure7ID").value = document.getElementById("profileStructure8ID").value;
-		document.getElementById("profileStructure8").value = "";
-		document.getElementById("profileStructure8ID").value = "";
-		if (document.getElementById("profileDetected8").checked == true) {document.getElementById("profileDetected7").checked = true;}
-		if (document.getElementById("profileNotDetected8").checked == true) {document.getElementById("profileNotDetected7").checked = true;}
-	}
-	if (rowNum<=8){
-		document.getElementById("profileStructure8").value = document.getElementById("profileStructure9").value;
-		document.getElementById("profileStructure8ID").value = document.getElementById("profileStructure9ID").value;
-		document.getElementById("profileStructure9").value = "";
-		document.getElementById("profileStructure9ID").value = "";
-		if (document.getElementById("profileDetected9").checked == true) {document.getElementById("profileDetected8").checked = true;}
-		if (document.getElementById("profileNotDetected9").checked == true) {document.getElementById("profileNotDetected8").checked = true;}
-	}
-	if (rowNum<=9){
-		document.getElementById("profileStructure9").value = document.getElementById("profileStructure10").value;
-		document.getElementById("profileStructure9ID").value = document.getElementById("profileStructure10ID").value;
-		document.getElementById("profileStructure10").value = "";
-		document.getElementById("profileStructure10ID").value = "";
-		if (document.getElementById("profileDetected10").checked == true) {document.getElementById("profileDetected9").checked = true;}
-		if (document.getElementById("profileNotDetected10").checked == true) {document.getElementById("profileNotDetected9").checked = true;}
-	}
-	if (rowNum==10){
-		document.getElementById("profileStructure10").value = "";
-		document.getElementById("profileStructure10ID").value = "";
-	}
-
-	// hide lowest structure row
-	var idToHide = "profileStructureRow" + rowCount;
-	document.getElementById(idToHide).style.display = "none";
-//	document.getElementById("detected_10").value = true;
-	rowCount--;
-
-	// ensure status of form inputs
-	ensureProfileFormStatus();
-
-};
-
-// ensure profile query form elements hidden post-refresh & reverse engineered form params
-function checkProfileVisibility() {
-	
-	var highestRowToShow = 3;
-
-	// find the highest structure row that contains data
-	if (document.getElementById("profileStructure4ID").value != '') {highestRowToShow = 4;}
-	if (document.getElementById("profileStructure5ID").value != '') {highestRowToShow = 5;}
-	if (document.getElementById("profileStructure6ID").value != '') {highestRowToShow = 6;}
-	if (document.getElementById("profileStructure7ID").value != '') {highestRowToShow = 7;}
-	if (document.getElementById("profileStructure8ID").value != '') {highestRowToShow = 8;}
-	if (document.getElementById("profileStructure9ID").value != '') {highestRowToShow = 9;}
-	if (document.getElementById("profileStructure10ID").value != '') {highestRowToShow = 10;}
-
-	// display all rows befow highest structure parameter sent
-	if (highestRowToShow >= 4){document.getElementById("profileStructureRow4").style.display = "";}
-	if (highestRowToShow >= 5){document.getElementById("profileStructureRow5").style.display = "";}
-	if (highestRowToShow >= 6){document.getElementById("profileStructureRow6").style.display = "";}
-	if (highestRowToShow >= 7){document.getElementById("profileStructureRow7").style.display = "";}
-	if (highestRowToShow >= 8){document.getElementById("profileStructureRow8").style.display = "";}
-	if (highestRowToShow >= 9){document.getElementById("profileStructureRow9").style.display = "";}
-	if (highestRowToShow >= 10){document.getElementById("profileStructureRow10").style.display = "";}
-
-	// reset rowCount used by other functions
-	rowCount = highestRowToShow;
+// data that drives the form display
+var model = {
+    formMode: null, // "classical" or "rnaseq"
+    profileSpec: [],  // see makeProfileSpec
+    nowhereElse: false, // 
+    showStageSelectors: false
 }
 
-// ensure profile query form elements are not in conflict
-function ensureProfileFormStatus() {
+// Creates/returns a profileSpec. 
+// {
+//    structure: structure print label ("")
+//    structureID: EMAPA id ("")
+//    detected: true/false/null (null)
+//    stages: list of stages to query, or empty for "all stages" ([])
+// }
+// Optional init object may be provide to initialize specific fields with specific values.
+function makeProfileSpec (init) {
+    return Object.assign({
+	structure: "",
+	structureID: "",
+	detected: null,
+	stages: []
+    }, init || {})
+}
 
-	// ensure the removed button is compatible with "nowhere else"
-	handleNowhereElse();
+function resetProfileForm () {
+    model.profileSpec = [
+        makeProfileSpec({detected:true}),
+	makeProfileSpec(),
+	makeProfileSpec()
+    ]
+    model.nowhereElse = false
+    refreshProfileForm()
+}
 
-	// ensure proper visibility of structure removal buttons
-	handleProfileRemoveButtonVisibility();
-
-	structureRadioChange();
-
-};
-
-
+function profileSetMode () {
+    const form = document.getElementById('gxdProfileQueryForm')
+    model.formMode = form.querySelector('input[type="radio"][name="profileMode"]:checked').value;
+    document.getElementById("profileStructureTable").classList.remove("disabled");
+    resetProfileForm();
+}
 
 
+function makeTheilerStageSelector (i, disabled) {
+    return `
+    <select id="profileStage${i}" name="profileStage${i}"
+	${disabled ? 'disabled' : ''}
+        multiple="multiple" size="3"
+	onchange="theilerStageSelectorChanged(${i})" >
+    <option value="0" selected="selected">Any Theiler Stage</option>
+    <option value="1">TS 1 (0.0-2.5 dpc)</option>
+    <option value="2">TS 2 (1.0-2.5 dpc)</option>
+    <option value="3">TS 3 (1.0-3.5 dpc)</option>
+    <option value="4">TS 4 (2.0-4.0 dpc)</option>
+    <option value="5">TS 5 (3.0-5.5 dpc)</option>
+    <option value="6">TS 6 (4.0-5.5 dpc)</option>
+    <option value="7">TS 7 (4.5-6.0 dpc)</option>
+    <option value="8">TS 8 (5.0-6.5 dpc)</option>
+    <option value="9">TS 9 (6.25-7.25 dpc)</option>
+    <option value="10">TS 10 (6.5-7.75 dpc)</option>
+    <option value="11">TS 11 (7.25-8.0 dpc)</option>
+    <option value="12">TS 12 (7.5-8.75 dpc)</option>
+    <option value="13">TS 13 (8.0-9.25 dpc)</option>
+    <option value="14">TS 14 (8.5-9.75 dpc)</option>
+    <option value="15">TS 15 (9.0-10.25 dpc)</option>
+    <option value="16">TS 16 (9.5-10.75 dpc)</option>
+    <option value="17">TS 17 (10.0-11.25 dpc)</option>
+    <option value="18">TS 18 (10.5-11.25 dpc)</option>
+    <option value="19">TS 19 (11.0-12.25 dpc)</option>
+    <option value="20">TS 20 (11.5-13.0 dpc)</option>
+    <option value="21">TS 21 (12.5-14.0 dpc)</option>
+    <option value="22">TS 22 (13.5-15.0 dpc)</option>
+    <option value="23">TS 23 (15 dpc)</option>
+    <option value="24">TS 24 (16 dpc)</option>
+    <option value="25">TS 25 (17 dpc)</option>
+    <option value="26">TS 26 (18 dpc)</option>
+    <option value="27">TS 27 (newborn)</option>
+    <option value="28">TS 28 (postnatal)</option>
+    </select>
+    `
+}
 
+// Sets the valid Theiler stage options for row i from the currently selected EMAPA term.
+// 
+function setValidTheilerStages (i) {
+    const m = model.profileSpec[i]
+    const emapaID = (m.structureID || MOUSE_ID)
+    getEmapaACRecord(emapaID).then( ac => {
+        if (!ac) return;
+	// min/max stages for this structure
+	const sStage = parseInt(ac.startStage)
+	const eStage = parseInt(ac.endStage)
+	// data-sensitive stages valid for picking . Depends on mode (classical vs rnaseq) and
+	// whether the spec is detected or not-detected
+	const CR = model.formMode === CLASSICAL ? "C" : "R"
+	const PN = m.detected ? "Pos" : "Neg"
+	const dStages = ac[`stages${CR}${PN}AC`]
+	const dStagesInt = dStages ? dStages.split(',').map(x => parseInt(x)) : []
+
+	// (1) hide the stage options that fall outside the valid range
+	// (2) disable stages not listed in dStages 
+	const sel = document.getElementById(`profileStage${i}`)
+	const opts = sel.querySelectorAll('option')
+	opts.forEach((o,j) => {
+	    if (j===0 || dStagesInt.indexOf(j) !== -1) {
+		// valid
+		o.style.display = ''
+		o.disabled = false
+	    } else {
+		// invalid
+		o.style.display = 'none'
+		o.disabled = true
+		if (o.selected) {
+		    o.selected = false
+		    const ii = m.stages.indexOf(o.value)
+		    if (ii >= 0) m.stages.splice(ii,1)
+		}
+	    }
+	})
+	setSelectorClass(i)
+    })
+}
+
+// Queries the gxdEmapaAC index for the given emapaID and returns the first record found (or null if not found).
+// The purpose is to access the various fields controlling where this term is shown and what stages are valid.
+// Since these fields are replicated in every AC record for the term, it doesn't matter whether the returned record
+// is for a synonym or the official term. 
+// Example emapa AC record:
+//    "structure": "head",
+//    "synonym": null,
+//    "queryText": "head",
+//    "isStrictSynonym": false,
+//    "hasCre": true,
+//    "hasGxdHT": false,
+//    "startStage": "11",
+//    "endStage": "28",
+//    "accID": "EMAPA:31858",
+//    "showInCPosAC": true,
+//    "showInCNegAC": true,
+//    "showInRPosAC": true,
+//    "showInRNegAC": false,
+//    "stagesCPosAC": "11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28",
+//    "stagesCNegAC": "11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28",
+//    "stagesRPosAC": "14,15,17,19,20,21,22,23,24,25,26,27,28",
+//    "stagesRNegAC": null,
+//    "uniqueKey": "EMAPA:31858"
+// Returns:
+//    a Promise for the record. To use this function:
+//          getEmapaACRecord(someId).then(acRec => {
+//              // do something with acRec
+//              // will be null if the ID was not found
+//          })
+
+const emapaACcache = {}
+function getEmapaACRecord ( emapaID ) {
+    if (emapaID in emapaACcache) return emapaACcache[emapaID];
+    const url = fewiurl + '/autocomplete/emapaID/getACrecords?ids=' + emapaID
+    const promise = fetch(url).then(resp => {
+        return resp.json().then(rr => {
+	    const acRecord = rr.resultObjects[0]
+	    return acRecord
+	})
+    })
+    emapaACcache[emapaID] = promise
+    return promise
+}
+
+function resetTheilerStageSelection (i) {
+    const sel = document.getElementById(`profileStage${i}`);
+    Array.from(sel.options).forEach(o => o.selected = (o.value === "0"));
+}
+
+function setSelectorClass (i) {
+    const sel = document.getElementById(`profileStage${i}`);
+    const selected = Array.from(sel.options).filter(o => o.selected && o.value !== "0").map(o => o.value);
+    if (selected.length > 0) {
+        sel.classList.add('hasSelections')
+    } else {
+        sel.classList.remove('hasSelections')
+    }
+}
+
+function getTheilerStageSelection (i) {
+    const sel = document.getElementById(`profileStage${i}`);
+    const selected = Array.from(sel.options).filter(o => o.selected && o.value !== "0").map(o => o.value);
+    return selected
+}
+
+function setTheilerStageSelection (i, stages) {
+    const sel = document.getElementById(`profileStage${i}`);
+    Array.from(sel.options).forEach(o => o.selected = false);
+    if (!stages || stages.length === 0) stages = ["0"];
+    stages.forEach(s => {
+        const opt = sel.querySelector(`option[value="${s}"]`).selected = true
+    });
+}
+
+function theilerStageSelectorChanged (i) {
+    const m = model.profileSpec[i]
+    m.stages = getTheilerStageSelection (i)
+    if (m.stages.length > 0 && m.structureID === "") {
+        m.structureID = MOUSE_ID
+	m.structure = MOUSE
+	document.getElementById(`profileStructure${i}`).value = MOUSE
+	document.getElementById(`profileStructure${i}ID`).value = MOUSE_ID
+    } else if (m.stages.length === 0 && m.structureID === MOUSE_ID) {
+        m.structureID = ""
+	m.structure = ""
+	document.getElementById(`profileStructure${i}`).value = ""
+	document.getElementById(`profileStructure${i}ID`).value = ""
+    }
+    checkDetected(i)
+    setSelectorClass(i)
+}
+
+function makeProfileRow (model, i) {
+    var disabled = model.detected === null ? 'disabled' : ''
+    var dclass = model.detected ? 'detected' : (model.detected === false ? 'not-detected' : 'detected-not-specified');
+    var dchecked = model.detected ? 'checked' : '';
+    var ndchecked = model.detected === false ? 'checked' : '';
+    var rowClass = `zstripe${ i % 2 }`;
+    var profileRow = 
+    `<tr id="profileStructureRow${i}" class="profile-structure-row ${dclass} ${rowClass}" >
+    <td>
+        <input type="radio" id="detectedRadio${i}" name="detected${i}" value="true" ${dchecked}
+	    onchange="profileDetectedChanged(${i})" />
+    </td>
+    <td>
+        <input type="radio" id="notdetectedRadio${i}" name="detected${i}" value="false" ${ndchecked}
+	    onchange="profileDetectedChanged(${i})" />
+    </td>
+    <td >
+	<input style="width: 320px; position: relative;" id="profileStructure${i}" name="profileStructure${i}" 
+	    ${disabled} value="${model.structure}" placeholder="anatomical structure"></input>
+	<input type="hidden" id="profileStructure${i}ID" name="profileStructureID${i}" 
+	    value="${model.structureID}"/>
+	<div class="anatomyAC" style="width: 400px;" id="profileStructureContainer${i}"></div>
+    </td>
+    <td>
+        <span></span>
+    </td>
+    <td>
+	${makeTheilerStageSelector(i, disabled)}
+    </td>
+    <td>
+	<button type="button" onClick="removeProfileRow(${i})" id="removeStructureRowButton${i}" 
+	    class="removeButton" title="Remove this structure.">X</button>
+    </td>
+    </tr>`;
+    return profileRow;
+}
+
+// Handler called when user selects detected or not-detected radio button.
+function profileDetectedChanged(i) {
+    var detectedRadio = document.querySelector(`#gxdProfileQueryForm input[name="detected${i}"]:checked`);
+    var detected = detectedRadio ? (detectedRadio.value === 'true' ? true : false) : null;
+    var m = model.profileSpec[i]
+    m.detected = detected;
+    m.structure = ""
+    m.structureID = ""
+    m.stages = []
+    refreshProfileForm();
+}
+
+// Encodes the current model state into an parameter string
+function profileSpec2QueryString () {
+    if (model.profileSpec.length === 1) model.profileSpec.push(makeProfileSpec());
+    var qs = model.profileSpec.map ((m,i) => {
+	var stgs = m.stages.join(',')
+	var sid = (m.structureID === "" && stgs !== "") ? MOUSE_ID : m.structureID
+	var str = (m.structureID === "" && stgs !== "") ? MOUSE : m.structure
+        return `profileStructure=${str}&profileStructureID=${sid}&profileDetected=${m.detected}&profileStage=${stgs}`
+    }).join('&');
+    qs += `&profileFormMode=${model.formMode}&profileNowhereElseCheckbox=${model.nowhereElse}`
+    return qs;
+}
+
+// Parses a parameter string and refreshes the model data
+function profileQueryString2Spec (qs) {
+    const structures = []
+    const structureIDs = []
+    const detected = []
+    const stages = []
+    YAHOO.util.Dom.get("profileNowhereElseCheckbox").checked = false;
+    qs.split('&').forEach(q => {
+        const pts = q.split('=');
+	if (pts[0] === "profileStructure") {
+	    structures.push(pts[1])
+	} else if (pts[0] === "profileStructureID") {
+	    structureIDs.push(pts[1])
+	} else if (pts[0] === "profileDetected") {
+	    detected.push( pts[1] ==="true" ? true : pts[1] === "false" ? false : null )
+	} else if (pts[0] === "profileStage") {
+	    const stgs = pts[1].split(",").filter(x=>x)
+	    stages.push(stgs)
+	    if (stgs.length > 0) model.showStageSelectors = true;
+	} else if (pts[0] === "profileFormMode") {
+	    model.formMode = pts[1]
+	    // if we followed a link to get here, we need to enable the form (it starts off disabled)
+	    document.getElementById("profileStructureTable").classList.remove("disabled");
+	} else if (pts[0] === "profileNowhereElseCheckbox") {
+	    model.nowhereElse = (pts[1] === "true")
+	}
+    })
+    if (structures.length !== structureIDs.length
+    || structures.length !== detected.length
+    || structures.length !== stages.length ) {
+        throw "query string contains different numbers of profile parameters."
+    }
+    var foundParams = false
+    model.profileSpec = []
+    structures.forEach((s,i) => {
+	if (s) foundParams = true;
+        model.profileSpec.push(makeProfileSpec({
+	    structure: s,
+	    structureID: structureIDs[i],
+	    detected: detected[i],
+	    stages: stages[i]
+	}))
+    })
+    refreshProfileForm()
+    return foundParams
+}
+
+function refreshEnabledDisabled () {
+    const pform = document.getElementById("gxdProfileQueryForm");
+
+    // nowhere else checkbox
+    const nwe = document.getElementById("profileNowhereElseCheckbox");
+    const nweText = document.getElementById("nowhereElseText");
+
+    // All the not-detected radio buttons.
+    const ndRadios = pform.querySelectorAll('tr.profile-structure-row input[type="radio"][value="false"]')
+    const ndText = document.getElementById("profileNotDetectedText")
+    var ndChecked = false
+
+    // first enable everyone
+    nwe.disabled = false
+    nweText.classList.remove("disabledText")
+    ndText.classList.remove("disabledText")
+    ndRadios.forEach(r => {
+	r.disabled = false
+	ndChecked = ndChecked || r.checked
+    })
+
+    // if nwe checked, disable the nd radios
+    if (nwe.checked) {
+	ndRadios.forEach(r => {
+	    r.disabled = true
+	})
+	ndText.classList.add("disabledText")
+    }
+    else if (ndChecked) {
+	// else if an nd radio is checked, disable the nwe checkbox
+        nwe.disabled = true
+	nweText.classList.add("disabledText")
+    }
+}
+
+function profileNowhereElseChecked() {
+    model.nowhereElse = document.getElementById("profileNowhereElseCheckbox").checked
+    refreshEnabledDisabled()
+}
+
+/*
+ * Refreshes the DOM from the model. Builds a new form that replaces the previous.
+ * Reinitializes the autocompletes.
+ * */
+function refreshProfileForm () {
+    const pform = document.getElementById("gxdProfileQueryForm");
+    const ptbl = document.getElementById("profileStructureTable");
+
+    const tbody = ptbl.querySelector("#detectedSection");
+    const specs = model.profileSpec.map((m,i) => makeProfileRow(m,i)).join('');
+    tbody.innerHTML = specs;
+
+    model.profileSpec.forEach((m,i) => {
+	// Init the autocompletes 
+	const objs = makeStructureAC(`profileStructure${i}`,`profileStructureContainer${i}`);
+	// override generateRequest so we can add parameters to the call
+	objs.oAC.generateRequest = function (query) {
+	    const CR = model.formMode === CLASSICAL ? "C" : "R"
+	    const PN = model.profileSpec[i].detected === false ? "Neg" : "Pos"
+	    const fld = `showIn${CR}${PN}AC`
+	    return `?query=${query}&field=${fld}`
+	}
+	// AC selection handler. Update the model based on user's selection
+	objs.oAC.itemSelectEvent.subscribe((evt,data) => {
+	    // when user selects from AC, update the model and the form
+	    const structure = document.getElementById(`profileStructure${i}`).value;
+	    const structureID = document.getElementById(`profileStructure${i}ID`).value;
+	    model.profileSpec[i].structure = structure
+	    model.profileSpec[i].structureID = structureID
+	    checkDetected(i)
+	    setValidTheilerStages(i)
+	});
+	objs.oAC.selectionEnforceEvent.subscribe(() => {
+	    // when user clears AC selection, update model
+	    const m = model.profileSpec[i]
+	    m.structure = ""
+	    m.structureID = ""
+	    setValidTheilerStages(i)
+	});
+	setTheilerStageSelection(i, m.stages);
+	setValidTheilerStages(i)
+	setSelectorClass(i)
+    })
+
+    if (model.formMode) {
+	const formModeRadio = pform.querySelector(`input[name="profileMode"][value="${model.formMode}"]`)
+	formModeRadio.checked = true
+    }
+
+    if (model.formMode === CLASSICAL) {
+        pform.classList.remove(RNASEQ);
+        pform.classList.add(CLASSICAL);
+    }
+    else if (model.formMode === RNASEQ) {
+        pform.classList.remove(CLASSICAL);
+        pform.classList.add(RNASEQ);
+    }
+    pform.profileNowhereElseCheckbox.checked = model.nowhereElse
+    refreshEnabledDisabled()
+    profileShowStages ()
+}
+
+// If the i-th detected/not-detected radio is unset, selects the detected option,
+// and updates the model.
+function checkDetected (i) {
+    const detected = document.getElementById(`detectedRadio${i}`)
+    const notdetected = document.getElementById(`notdetectedRadio${i}`)
+    if (!(detected.checked || notdetected.checked)) {
+	detected.checked = true
+	detected.closest('tr').classList.add('detected')
+	model.profileSpec[i].detected = true
+    }
+}
+
+// called when user click the "Add structure" button
+function addProfileRow () {
+    if (model.profileSpec.length === 10) {
+	alert("Maximum of ten anatomical structures allowed.")
+	return
+    }
+    model.profileSpec.push(makeProfileSpec())
+    refreshProfileForm();
+}
+
+function removeProfileRow (i) {
+	model.profileSpec.splice(i,1);
+	refreshProfileForm();
+}
+
+function profileClearStages () {
+	model.profileSpec.forEach(m => {
+	    if (m.stages.length > 0 && m.structureID === MOUSE_ID) {
+	        m.structure = ""
+	        m.structureID = ""
+	    }
+	    m.stages = []
+	});
+}
+
+// update UI from model
+function profileShowStages () {
+    const cb = document.getElementById("profileShowStagesCheckbox");
+    const tbl = document.getElementById("profileStructureTable");
+
+    cb.checked = model.showStageSelectors
+    if (cb.checked) {
+	// shown 
+        tbl.classList.remove("hideStages");
+    }
+    else {
+	// hidden
+	profileClearStages();
+        tbl.classList.add("hideStages");
+    }
+
+}
+// update model from UI
+function profileShowStagesChanged () {
+    const cb = document.getElementById("profileShowStagesCheckbox");
+    model.showStageSelectors = cb.checked
+    profileShowStages ()
+    refreshProfileForm()
+}
+
+resetProfileForm()
+
+/* Firefox quirk. If you choose a form mode and then immediately reload the page, the radio button is still selected
+ * even though model.formMode is null and the form itself is grayed out.
+ */
+if (model.formMode === null) {
+    document.getElementById('profileModeC').checked = false
+    document.getElementById('profileModeR').checked = false
+}

@@ -21,7 +21,7 @@
 }
 
 .disabledText {
-	color: gray;
+	color: lightgray;
 }
 
 .disabled {
@@ -33,6 +33,15 @@
 {
 	display:table;
 }
+
+#resultSummary li.disabled-tab {
+    display: none;
+}
+
+#resultSummary li.disabled-tab a {
+    color: lightgray;
+}
+
 #gxdLitInfo
 {
 	font-weight:bold;
@@ -40,11 +49,145 @@
 
 /* Styles for profile search */
 
+#profileModeC {
+    margin-left: 20px;
+}
+#profileModeR {
+    margin-left: 120px;
+}
+
+#profileStructureTable.disabled {
+    opacity: 0.2;
+    pointer-events: none;
+}
+
 #profileStructureTable td{
 	border:none;
 }
 #profileStructureTable th{
 	border:none;
+}
+#profileStructureTable td {
+	border:none;
+	text-align: center;
+}
+#profileStructureTable td div.bd {
+    text-align: left;
+}
+
+#profileStructureTable .profile-structure-row select.hasSelections {
+    border: 2px solid green;
+}
+
+#profileStructureTable tr.detected input.yui-ac-input,
+#profileStructureTable tr.detected select {
+	background-color: #d1e8fc;
+}
+#profileStructureTable tr.not-detected input.yui-ac-input,
+#profileStructureTable tr.not-detected select {
+	background-color: #fed7e9;
+}
+#profileStructureTable tr.profile-structure-row {
+	border: thin solid #aaa;
+	height: 56px;
+}
+#profileStructureTable tr.profile-structure-row.zstripe0 {
+}
+#profileStructureTable tr.profile-structure-row.zstripe1 {
+    background-color: #f0f0f0;
+}
+
+#profileStructureTable tr.profile-structure-row.detected-not-specified td:nth-child(3) *,
+#profileStructureTable tr.profile-structure-row.detected-not-specified td:nth-child(4) *,
+#profileStructureTable tr.profile-structure-row.detected-not-specified td:nth-child(5) * {
+    opacity: 0.4;
+}
+
+#profileStructureTable.hideStages tr.profile-structure-row td:nth-child(4) *,
+#profileStructureTable.hideStages tr.profile-structure-row td:nth-child(5) *,
+#profileStructureTable.hideStages span.stagesLabel {
+    display: none;
+}
+#profileStructureTable option:disabled {
+    display: none;
+}
+
+#gxdProfileQueryForm #addDetected {
+	padding: 4px;
+}
+#gxdProfileQueryForm #addDetected:hover,
+#gxdProfileQueryForm #addNotDetected:hover {
+	cursor: pointer;
+}
+#gxdProfileQueryForm #addNotDetected span {
+	color: red;
+	font-weight: bold;
+}
+#profileStructureTable .bold {
+	font-weight: bold;
+}
+#profileStructureTable .red {
+	font-weight: bold;
+}
+
+#gxdProfileQueryForm.classical .noModeSelected,
+#gxdProfileQueryForm.rnaseq .noModeSelected {
+    display: none;
+}
+
+#gxdProfileQueryForm.classical .classicalOnly {
+	display: default;
+}
+#gxdProfileQueryForm.rnaseq .classicalOnly {
+	display: none;
+}
+#profileModeHandIcon {
+    font-size: 24px;
+}
+
+#gxdProfileQueryForm.classical .rnaseqOnly {
+	display: none;
+}
+#gxdProfileQueryForm.rnaseq .rnaseqOnly {
+	display: default;
+}
+#gxdProfileQueryForm .disabledSection {	
+	opacity: 0.5;
+}
+#heatmaptabcontent {
+    padding: 24px;
+    background-color: white;
+    font-size: 14px;
+    text-align: center;
+}
+#heatmaptabcontent tr {
+}
+#heatmaptabcontent #morpheusLogo {
+    position: relative;
+    top: 10px;
+}
+#heatmaptabcontent button {
+    padding: 8px;
+    background-color: #ecca6c;
+    font-weight: bold;
+    border-radius: 8px;
+    margin-bottom: 18px;
+}
+#heatmaptabcontent button:hover {
+    cursor: pointer;
+    color: #34ce34;
+}
+#heatmaptabcontent img {
+    border: 0.5px solid black;
+    width:400px;
+    margin-right: 50px;
+}
+#heatmaptabcontent img:hover {
+    cursor: pointer;
+}
+#heatmaptabcontent div.text {
+    max-width: 350px;
+    font-size:14px;
 }
 
 /* Styles for image summary tab */

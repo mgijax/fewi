@@ -355,10 +355,11 @@ public class AutoCompleteController {
 	@RequestMapping("/gxdEmapa")
 	public @ResponseBody SearchResults<EmapaACResult> gxdEmapaAutoCompleteRequest(
 			HttpServletResponse response,
-			@RequestParam("query") String query) {
+			@RequestParam("query") String query,
+			@RequestParam(value="field", required=false) String field) {
 		logger.debug("autoCompleteController.gxdEmapaAutoCompleteRequest");
 		AjaxUtils.prepareAjaxHeaders(response);
-		return performGxdEmapaAutoComplete(query);
+		return performGxdEmapaAutoComplete(query,field);
 	}
 
 	/*
@@ -406,9 +407,9 @@ public class AutoCompleteController {
 		return searchResults;
 	}
 
-	/* wrapper for CRE EMAPA autocomplete search
+	/* wrapper for GXD EMAPA autocomplete search
 	 */
-	private SearchResults<EmapaACResult> performGxdEmapaAutoComplete(String query)
+	private SearchResults<EmapaACResult> performGxdEmapaAutoComplete(String query, String field)
 	{
 		if (emapaHelper == null) {
 			logger.info("Initializing: emapaHelper is null");
@@ -425,7 +426,7 @@ public class AutoCompleteController {
 			emapaHelper.setEmapaACResults(results.getResultObjects());
 			logger.info("Processed docs in emapaHelper");
 		}
-		List<EmapaACResult> resultList = removeDuplicates(emapaHelper.asEmapaACResults(emapaHelper.search(query, 200)));
+		List<EmapaACResult> resultList = removeDuplicates(emapaHelper.asEmapaACResults(emapaHelper.search(query, 200, field)));
 		SearchResults<EmapaACResult> searchResults = new SearchResults<EmapaACResult>();
 		searchResults.setResultObjects(resultList);
 		searchResults.setTotalCount(resultList.size());
@@ -658,6 +659,16 @@ public class AutoCompleteController {
 		return jsonResponse;
 	}
 
+	@RequestMapping("/emapaID/getACrecords")
+	public @ResponseBody SearchResults<EmapaACResult> getEmapaACRecordsById(
+			@RequestParam("ids") String ids)
+	{
+		List<String> returnValues = new ArrayList<String>();
+		List<String> idTokens = QueryParser.tokeniseOnWhitespaceAndComma(ids);
+		SearchResults<EmapaACResult> results = resolveEmapaIds(idTokens);
+		return results;
+	}
+
 	/*
 	 * resolve emapaIDs to their names
 	 * assumes a format of "EMAPA:1234,EMAPA:56789,..."
@@ -666,7 +677,7 @@ public class AutoCompleteController {
 	@RequestMapping("/emapaID/resolve")
 	public @ResponseBody List<String> resolveEmapaIdList(
 			@RequestParam("ids") String ids)
-			{
+	{
 		List<String> returnValues = new ArrayList<String>();
 		List<String> idTokens = QueryParser.tokeniseOnWhitespaceAndComma(ids);
 		SearchResults<EmapaACResult> results = resolveEmapaIds(idTokens);
@@ -691,7 +702,7 @@ public class AutoCompleteController {
 		}
 
 		return returnValues;
-			}
+	}
 
 	private SearchResults<EmapaACResult> resolveEmapaIds(List<String> idTokens)
 	{

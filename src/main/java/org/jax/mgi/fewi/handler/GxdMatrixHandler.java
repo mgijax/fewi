@@ -113,35 +113,14 @@ public class GxdMatrixHandler {
 	public List<GxdMatrixRow> getParentTermsToDisplay(GxdQueryForm query,String childrenOf,List<String> pathsToOpen)
 	{
 		boolean mapChildren = childrenOf!=null && !childrenOf.equals("");
-		boolean mapDifferentialStructures = isTissueMatrixDifferentialView(query);
+		boolean mapProfileStructures = isMatrixProfileView(query);
 		boolean mapStructureFilters = isTissueMatrixFilterView(query);
-		boolean mapStructureOnly = isTissueMatrixStructureView(query) && !mapDifferentialStructures && !mapStructureFilters;
-		boolean mapHighLevelTerms = !mapChildren && !mapStructureOnly && !mapDifferentialStructures && !mapStructureFilters;
+		boolean mapStructureOnly = isTissueMatrixStructureView(query) && !mapStructureFilters;
+		boolean mapHighLevelTerms = !mapChildren && !mapStructureOnly && !mapStructureFilters && !mapProfileStructures;
 
 		List<GxdMatrixRow> parentTerms = new ArrayList<GxdMatrixRow>();
 
-		// added for the 'and nowhere else' differential query
-		if ( ((childrenOf == null) || (childrenOf.trim().length() == 0))
-				&& (query.getAnywhereElse() != null) && (query.getAnywhereElse().trim().length() > 0) ) {
-
-			// If the user asks for 'structure A and not anywhere else', then just show a single matrix row
-			// for structure A.  Unless this search has a Detected filter, in which case show the set of 
-			// (default) high level terms.
-			if ((query.getStructureID() != null) && (query.getStructureID().trim().length() > 0)) {
-				List<VocabTerm> terms = vocabFinder.getTermByID(query.getStructureID());
-				if ((terms != null) && (terms.size() > 0) && ((query.getDetectedFilter() == null) || (query.getDetectedFilter().size() == 0))) {
-					parentTerms.add(makeGxdMatrixRow(terms.get(0)));
-				} else {
-					// can't find term for structure A -- should not happen, but fall back on the set of
-					// high level terms just in case
-					mapHighLevelTerms = true;
-				}
-			} else {
-				// no structure specified; show the default set of high level terms in the matrix display
-				mapHighLevelTerms = true;
-			}
-		}
-		else if(mapChildren)
+		if(mapChildren)
 		{
 			// need to map query to VocabTerm object
 			List<VocabTerm> terms = vocabFinder.getTermByID(childrenOf.toUpperCase());
@@ -180,7 +159,27 @@ public class GxdMatrixHandler {
 				}
 			}
 		}
-		else if(mapStructureOnly || mapDifferentialStructures)
+		else if (mapProfileStructures) 
+		{
+
+			if (query.getProfileNowhereElseCheckbox().equals("true")
+			&& query.getDetectedFilter() != null
+			&& query.getDetectedFilter().size() > 0) {
+				mapHighLevelTerms=true;
+			} else {
+				for (String termID : query.getProfileStructureID()) 
+				{
+					if (termID == null || termID.equals("")) continue;
+
+					List<VocabTerm> pterms = vocabFinder.getTermByID(termID.toUpperCase());
+					for(VocabTerm pt : sortTerms(pterms))
+					{
+						parentTerms.add(makeGxdMatrixRow(pt));
+					}
+				}
+			}
+		}
+		else if(mapStructureOnly)
 		{
 			// need to map query to VocabTerm object
 			List<VocabTerm> terms = new ArrayList<VocabTerm>();
@@ -228,24 +227,6 @@ public class GxdMatrixHandler {
 						}
 					}
 				}
-				if(mapDifferentialStructures
-						&& !query.getDifStructureID().equals(query.getStructureID()))
-				{
-					// need to map query to VocabTerm object for the differential structure
-					List<VocabTerm> difTerms = vocabFinder.getTermByID(query.getDifStructureID().toUpperCase());
-					if(difTerms.size()==0)
-					{
-						mapHighLevelTerms=true; // revert to normal high level emapa terms
-						logger.warn("Could not find database object for differential structure ID: "+query.getDifStructureID());
-					}
-					else
-					{
-						for(VocabTerm difTerm : sortTerms(difTerms))
-						{
-							parentTerms.add(makeGxdMatrixRow(difTerm));
-						}
-					}
-				}
 			}
 		}
 
@@ -266,10 +247,9 @@ public class GxdMatrixHandler {
 		return (query.getStructureID()!=null && !query.getStructureID().equals(""))
 				|| (query.getAnnotatedStructureKey()!=null && !query.getAnnotatedStructureKey().equals(""));
 	}
-	public boolean isTissueMatrixDifferentialView(GxdQueryForm query)
+	public boolean isMatrixProfileView(GxdQueryForm query)
 	{
-		return query.getStructureID()!=null && !query.getStructureID().equals("")
-				&& query.getDifStructureID()!=null && !query.getDifStructureID().equals("");
+		return query.getProfileFormMode() != null && !query.getProfileFormMode().equals("");
 	}
 	public boolean isTissueMatrixFilterView(GxdQueryForm query)
 	{

@@ -449,25 +449,35 @@ public class SolrHunter<T> implements Hunter<T> {
 
 		else {
 
-			List<Filter> filters = filter.getNestedFilters();
-
-			List<String> resultsString = new ArrayList<String>();
-
-			for (Filter f : filters) {
-
-				String tempString = translateFilter(f, propertyMap);
-				if (!tempString.equals("")) {
-					resultsString.add(tempString);
-				}
-			}
-			// handle negating a nested filter
-			String negation = filter.isNegate() ? "-" : "";
-			if (resultsString.size() > 1) {
-				return negation + "(" + StringUtils.join(resultsString, filterClauseMap.get(filter.getFilterJoinClause())) + ")";
-			} else if (filter.isNegate()) {
-				return negation + "(" + StringUtils.join(resultsString, filterClauseMap.get(filter.getFilterJoinClause())) + ")";
+			if (filter.getJoinQuery() != null) {
+			        String s = String.format("{!join fromIndex=%s from=%s to=%s v='%s'}",
+				  filter.getFromIndex(), filter.getFromField(), filter.getToField(),
+				  translateFilter(filter.getJoinQuery(), propertyMap));
+				if (filter.isNegate()) s = "-(" + s + ")";
+				return s;
 			} else {
-				return resultsString.get(0);
+				List<Filter> filters = filter.getNestedFilters();
+
+				List<String> resultsString = new ArrayList<String>();
+
+				for (Filter f : filters) {
+
+					String tempString = translateFilter(f, propertyMap);
+					if (!tempString.equals("")) {
+						resultsString.add(tempString);
+					}
+				}
+				// handle negating a nested filter
+				String negation = filter.isNegate() ? "-" : "";
+				if (resultsString.size() > 1) {
+					return negation + "(" + StringUtils.join(resultsString,
+					    filterClauseMap.get(filter.getFilterJoinClause())) + ")";
+				} else if (filter.isNegate()) {
+					return negation + "(" + StringUtils.join(resultsString,
+					    filterClauseMap.get(filter.getFilterJoinClause())) + ")";
+				} else {
+					return resultsString.get(0);
+				}
 			}
 		}
 	}
