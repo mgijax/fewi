@@ -598,7 +598,7 @@ handleNavigation = function (request, calledLocally) {
 			openSummaryControl();
 
 		setTabEnabled('genegridtab', true);
-		if (currentQF==="profile" && model.formMode === RNASEQ) setTabEnabled('genegridtab', false)
+		if (getCurrentForm()==="profile" && model.formMode === RNASEQ) setTabEnabled('genegridtab', false)
 
 		// update the report buttons
 		var querystringWithFilters = getQueryStringWithFilters();
