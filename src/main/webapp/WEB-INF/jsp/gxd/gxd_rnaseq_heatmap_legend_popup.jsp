@@ -102,9 +102,11 @@
 			<table>
 				<tr>
 					<td class="tpmColorCell" style="background-color: #FFFFFF"></td>
-					<td class="legendFont" style="padding-left: 3px;"> no TPM value available (NaN); either
-						the gene was not analyzed for that column or application of a GXD expression value filter removed
-						it from the result set
+					<td class="legendFont" style="padding-left: 3px;"> 
+					no TPM value available (NaN) occurs either because application of a GXD expression value filter excluded 
+					the gene from the results for that bioreplicate set or the bioreplicate set was returned because its 
+					structure is included in the list of detected structures for an Expression Profile Search but that gene 
+					is not detected (below cutoff) in that bioreplicate set.
 					</td>
 				</tr>
 			</table>
