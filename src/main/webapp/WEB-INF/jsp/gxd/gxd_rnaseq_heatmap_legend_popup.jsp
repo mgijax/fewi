@@ -101,7 +101,9 @@
 		<div id="legendNan">
 			<table>
 				<tr>
-					<td class="tpmColorCell" style="background-color: #FFFFFF"></td>
+					<td style="vertical-align:top;">
+					    <div class="tpmColorCell" style="background-color: #FFFFFF"></div>
+					</td>
 					<td class="legendFont" style="padding-left: 3px;"> 
 					no TPM value available (NaN) occurs either because application of a GXD expression value filter excluded 
 					the gene from the results for that bioreplicate set or the bioreplicate set was returned because its 

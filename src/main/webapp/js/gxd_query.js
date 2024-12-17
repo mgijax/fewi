@@ -317,12 +317,12 @@ var updateQuerySummary = function() {
 		// create You Searched For... strings
 		var newInnerHTML = '';		
 		if (posStructures.length > 0) {
-			newInnerHTML = "Detected in " + posStructures.join(" AND ") + "<br/>";
+			newInnerHTML = "Detected in " + posStructures.join(" AND ")
 			if (negStructures.length > 0) {
-				newInnerHTML = newInnerHTML + ` but not detected ${isRnaSeq ? '' : 'or assayed'} in ` + negStructures.join(" OR ");
+				newInnerHTML = newInnerHTML + `<br/> but not detected ${isRnaSeq ? '' : 'or assayed'} in ` + negStructures.join(" OR ");
 			}
 			if (profileNowhereElseCheckbox.checked) {
-				newInnerHTML = newInnerHTML + ` and not detected ${isRnaSeq ? '' : 'or assayed'} anywhere else.`;
+				newInnerHTML = newInnerHTML + `<br/> and not detected ${isRnaSeq ? '' : 'or assayed'} anywhere else.`;
 			}
 		} else {
 		    // ? should never get here

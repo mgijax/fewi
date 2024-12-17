@@ -99,7 +99,7 @@
     <ul class="yui-nav">
         <li><a id="genestab" href="#genes"><em>Genes (<span id="totalGenesCount"></span>)</em></a></li>
         <li><a id="assaystab" href="#assays"><em>Assays (<span id="totalAssaysCount"></span>)</em></a></li>
-        <li class="selected"><a id="resultstab" href="#results"><em>Assay results(<span id="totalResultsCount"></span>)</em></a></li>
+        <li class="selected"><a id="resultstab" href="#results"><em>Assay results (<span id="totalResultsCount"></span>)</em></a></li>
         <li><a id="imagestab" href="#images"><em>Images (<span id="totalImagesCount"></span>)</em></a></li>
 	<li><a id="stagegridtab" href="#stageGrid"><em>Tissue x Stage Matrix</em></a></li>
 	<li><a id="genegridtab" href="#geneGrid"><em>Tissue x Gene Matrix</em></a></li>
