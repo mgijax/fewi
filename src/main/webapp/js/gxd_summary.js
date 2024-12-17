@@ -715,7 +715,9 @@ function buildSummary(request,tabState)
 	else if (dataTableInitFunction) {
 		loadDatatable(dataTableInitFunction,request);
 		// not showing a grid, so hide the "nowhere else" message (that applies only to the grids)
-		$('#nowhereElseMessage').hide();
+		$('#showNegativeDataMessage').hide();
+	} else {
+		$('#showNegativeDataMessage').hide();
 	}
 	showPaginators();
 }
@@ -745,7 +747,7 @@ function clickNotDetectedFilter(retries) {
 // programmatically select the 'Detected' filter, choose the 'No' option, and apply it
 function addNotDetectedFilter() {
 	// hide the grid-specific message
-	$('#nowhereElseMessage').css('display', 'none');
+	$('#showNegativeDataMessage').hide()
 
 	// click to bring up the filter box, then wait for it to appear
 	$('#detectedFilter')[0].click();
@@ -764,10 +766,10 @@ function showGridMessage(message, request) {
 				}
 			}
 			if (showIt) {
-				$('#nowhereElseMessage').html(message);
-				$('#nowhereElseMessage').css('display', 'block');
+				$('#showNegativeDataMessage').html(message);
+				$('#showNegativeDataMessage').show()
 			} else {
-				$('#nowhereElseMessage').css('display', 'none');
+				$('#showNegativeDataMessage').hide()
 			}
 		}
 	);
@@ -781,7 +783,7 @@ function showNowhereElseMessage(request, matrixType) {
 	var resultCount = YAHOO.util.Dom.get("totalResultsCount").innerHTML;
 
 	// turn the message off by default, and only display it if appropriate
-	$('#nowhereElseMessage').css('display', 'none');
+	$('#showNegativeDataMessage').hide()
 
 	// parse request for a valid profile structure combined with "Not Detected"
 	var hasNegStructure = false;
@@ -949,7 +951,7 @@ function refreshTabCounts()
 			YAHOO.util.Dom.get("totalResultsCount").innerHTML = commaDelimit(o.responseText);
 			// if no results, we don't need the grid-specific message for 'nowhere else' queries
 			if (parseInt(o.responseText) == 0) {
-				$('#nowhereElseMessage').css('display', 'none');
+				$('#showNegativeDataMessage').hide();
 			}
 
 			resultsCount = parseInt(o.responseText);

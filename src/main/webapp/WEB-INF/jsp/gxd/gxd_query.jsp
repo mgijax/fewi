@@ -96,7 +96,7 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 <div class="summaryControl" style="display:none;">
 <div id="resultbar" class="goldbar">Results</div>
 	<%@ include file="/WEB-INF/jsp/gxd/gxd_summary.jsp" %>
-	<div id="nowhereElseMessage" style="display:none; width:900px"></div>
+	<div id="showNegativeDataMessage" style="display:none; width:900px"></div>
 </div>
 
 <script type="text/javascript">
