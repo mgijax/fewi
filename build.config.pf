@@ -5,7 +5,7 @@ WEB_RESOURCES=/home/pf/fe/mgiconfig/web
 WEB_XML=./config/web.xml.public
 
 # where to deploy the war file
-DEPLOY_DIR=/data/jboss/fewi_pf/deployments
+DEPLOY_DIR=/usr/local/mgi/wildfly/pf_fewi/deployments
 
 # if you want a second deployment (for a batch instance) define the path
 DEPLOY_BATCH_DIR=

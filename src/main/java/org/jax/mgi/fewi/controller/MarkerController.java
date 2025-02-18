@@ -600,9 +600,16 @@ public class MarkerController {
 
 		String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
 
-		// Ribbon 1
+		// Cluster and cluster members
 		mav.addObject("hasClusters", marker.getClusters().size() > 0);
 		mav.addObject("hasClusterMembers", marker.getClusterMembers().size() > 0);
+		mav.addObject("memberCount", marker.getClusterMembers().size());
+
+		// Regulation of Expression - related markers
+		mav.addObject("hasRegulatedMarkers", marker.getRegulatedMarkers().size() > 0);
+		mav.addObject("hasRegulatingMarkers", marker.getRegulatingMarkers().size() > 0);
+		mav.addObject("regulatedMarkerCount", marker.getRegulatedMarkers().size());
+		mav.addObject("regulatingMarkerCount", marker.getRegulatingMarkers().size());
 
 		List<MarkerBiotypeConflict> conflicts = marker.getBiotypeConflicts();
 		if ((conflicts != null) && (conflicts.size() > 0)) {
@@ -641,7 +648,6 @@ public class MarkerController {
 			mav.addObject ("strainSpecificNote", ssNote);
 		}
 
-		mav.addObject("memberCount", marker.getClusterMembers().size());
 
 		mav.addObject("hasTss", marker.getTss().size() > 0);
 		mav.addObject("isTssFor", marker.getTssFor().size() > 0);

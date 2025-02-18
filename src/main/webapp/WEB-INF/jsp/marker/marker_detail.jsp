@@ -61,7 +61,81 @@
 </div>
 
 <!-- Elements not part of page structure that are hidden by default -->
+<!-- Listeners are attached to link that enable display -->
 <div class="hiddenItems">
+
+
+
+
+
+	<!-- Marker regulates expression of other related markers -->
+	<c:if test="${hasRegulatedMarkers}">
+	
+		<div id="regulatedMarkersDiv" class="" style="visibility:hidden;">
+			<div class="hd">${marker.symbol} regulates expression of:</div>
+			<div class="bd" style="overflow:auto">
+				<table id="regulatedMarkersTable">
+					<tr>
+						<td class="bold leftAlign allBorders">Feature</td>
+						<td class="bold leftAlign allBorders">Feature Type</td>
+						<td class="bold leftAlign allBorders">Location</td>
+						<td class="bold leftAlign allBorders">Reference</td>
+					</tr>
+					<c:forEach var="regulatedMarker" items="${marker.regulatedMarkers}">
+						<tr>
+							<td class="leftAlign allBorders">
+								<a href="${configBean.FEWI_URL}marker/${regulatedMarker.relatedMarkerID}">${regulatedMarker.relatedMarkerSymbol}</a>, ${regulatedMarker.relatedMarkerName}</td>
+							<td class="leftAlign allBorders">${regulatedMarker.relatedMarkerFeatureType}</td>
+							<td class="leftAlign allBorders">${regulatedMarker.relatedMarkerLocation}</td>
+							<td class="leftAlign allBorders">
+								<a href="${configBean.FEWI_URL}reference/${regulatedMarker.jnumID}">${regulatedMarker.jnumID}</a>
+							</td>
+						</tr>
+					</c:forEach>
+				</table>
+			</div>
+		</div>
+	</c:if>
+
+
+
+
+	<!-- Other marker(s) that regulate expression of this marker -->
+	<c:if test="${hasRegulatingMarkers}">
+	
+		<div id="regulatingMarkersDiv" class="" style="visibility:hidden;">
+			<div class="hd">${marker.symbol} expression regulated by:</div>
+			<div class="bd" style="overflow:auto">
+				<table id="regulatingMarkersTable">
+					<tr>
+						<td class="bold leftAlign allBorders">Feature</td>
+						<td class="bold leftAlign allBorders">Feature Type</td>
+						<td class="bold leftAlign allBorders">Location</td>
+						<td class="bold leftAlign allBorders">Reference</td>
+					</tr>
+					<c:forEach var="regulatingMarker" items="${marker.regulatingMarkers}">
+						<tr>
+							<td class="leftAlign allBorders">
+								<a href="${configBean.FEWI_URL}marker/${regulatingMarker.relatedMarkerID}">${regulatingMarker.relatedMarkerSymbol}</a>, ${regulatingMarker.relatedMarkerName}</td>
+							<td class="leftAlign allBorders">${regulatingMarker.relatedMarkerFeatureType}</td>
+							<td class="leftAlign allBorders">${regulatingMarker.relatedMarkerLocation}</td>
+							<td class="leftAlign allBorders">
+								<a href="${configBean.FEWI_URL}reference/${regulatingMarker.jnumID}">${regulatingMarker.jnumID}</a>
+							</td>
+						</tr>
+					</c:forEach>
+				</table>
+			</div>
+		</div>
+	</c:if>
+
+
+
+
+
+
+
+
 	<!-- Cluster Relationship items -->
 	<c:if test="${hasClusterMembers}">
 		<form style='display:none;' id="batchWebForm" name='batchWeb' enctype='multipart/form-data' target='_blank' method='post' action='${configBean.FEWI_URL}batch/summary'>
