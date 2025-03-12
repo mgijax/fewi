@@ -130,11 +130,14 @@ public class SequenceController {
             mav.addObject("errorMsg", "No Sequence Found");
             return mav;
         }
-        if (seqList.size() > 1) { // dupe found
-            ModelAndView mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "Duplicate ID");
-            return mav;
-        }
+	// Removing check; it was decided to simply use the first seq key in cases of dupes
+	// -pf
+	// 
+        //if (seqList.size() > 1) { // dupe found
+        //    ModelAndView mav = new ModelAndView("error");
+        //    mav.addObject("errorMsg", "Duplicate ID");
+        //    return mav;
+        //}
         // success - we have a single object;
         
         return renderSequenceDetail(seqList.get(0));
