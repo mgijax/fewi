@@ -65,6 +65,7 @@ public class VocabularyController {
     public static String GO_VOCAB = "GO";
     public static String HPO_VOCAB = "Human Phenotype Ontology";
     public static String DO_VOCAB = "Disease Ontology";
+    public static String CO_VOCAB = "Cell Ontology";
     
     // set of special words that must be matched exactly, rather than using wildcards
     private static Set<String> noWildcards = null;
@@ -785,6 +786,116 @@ public class VocabularyController {
     	// remove any script tags or alert() calls embedded in edgeType
     	edgeType = FormatHelper.noScript(FormatHelper.noAlert(edgeType));
     	return this.getSharedBrowserTreeChildren(id, nodeID, edgeType, MA_VOCAB);
+    }
+
+
+    /*--- Cell Ontology browser ----------------------------------------------------------------*/
+
+    /* Cell Ontology browser home page
+     */
+    @RequestMapping("/cell_ontology")
+    public ModelAndView getCellOntologyDetail(HttpServletRequest request) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
+    	logger.debug("->getCellOntologyDetail() started");
+
+    	// this is the default term opened
+    	return getCellOntologyDetail("CL:0000000");
+    }
+    
+    /* fill in the standard URLs for the Cell Ontology browser
+     */
+    private ModelAndView fillCellOntologyUrls(ModelAndView mav) {
+    	String baseUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "vocab/cell_ontology/";
+    	mav.addObject("browserUrl", baseUrl);
+    	mav.addObject("termPaneUrl", baseUrl + "termPane/");
+    	mav.addObject("searchPaneUrl", baseUrl + "/search?term=");
+    	mav.addObject("treeInitialUrl", baseUrl + "treeInitial");
+    	mav.addObject("treeChildrenUrl", baseUrl + "treeChildren");
+//TODO; set corrent autocomplete
+    	mav.addObject("autocompleteUrl", ContextLoader.getConfigBean().getProperty("FEWI_URL") + "autocomplete/ma_ontology?query=");
+//TODO; verify message
+    	mav.addObject("message", "Your input is welcome.");
+    	return mav;
+    }
+    
+    /* get the browser title string for a term in the Cell Ontology browser
+     */
+    private String getCellOntologyTitle(BrowserTerm term) {
+    	if (term == null) { return "Cell Ontology Browser"; }
+    	return term.getTerm() + " Cell Ontology Term (" + term.getPrimaryID().getAccID() + ")";
+    }
+
+    /* Cell Ontology browser for a specified ID */
+
+    @RequestMapping("/cell_ontology/{id}")
+    public ModelAndView getCellOntologyDetail(@PathVariable("id") String id) {
+    	logger.debug("->getCellOntologyDetail(" + id + ") started");
+    	ModelAndView mav = getSharedBrowserDetail(id, CO_VOCAB);
+    	mav.addObject("pageTitle", "Cell Ontology Browser");
+    	mav.addObject("searchPaneTitle", "Cell Type Search");
+    	mav.addObject("termPaneTitle", "Cell Type Detail");
+    	mav.addObject("treePaneTitle", "Cell Type Tree View");
+//TODO; correct help doc?
+    	mav.addObject("helpDoc", "VOCAB_amad_browser_help.shtml");
+    	mav.addObject("branding", "GXD");
+//TODO; SEO
+    	mav.addObject("seoDescription", "The Adult Mouse Anatomy Ontology organizes anatomical structures "
+    		+ "for the postnatal mouse (Theiler stage 28) spatially and functionally, using 'is a' and "
+    		+ "'part of' relationships.  This browser can be used to view anatomical terms and their "
+    		+ "relationships in a hierarchical display.");
+
+    	mav.addObject("title", getCellOntologyTitle((BrowserTerm) mav.getModel().get("term")));
+    	fillCellOntologyUrls(mav);
+    	return mav;
+    }
+    
+    /* Cell Ontology term detail pane
+     */
+    @RequestMapping("/cell_ontology/termPane/{id}")
+    public ModelAndView getCellOntologyTermPane(HttpServletRequest request, @PathVariable("id") String id) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
+    	logger.debug("->getCellOntologyTermPane(" + id + ") started");
+    	ModelAndView mav = getSharedBrowserTermPane(id, CO_VOCAB);
+    	mav.addObject("title", getCellOntologyTitle((BrowserTerm) mav.getModel().get("term")));
+    	fillCellOntologyUrls(mav);
+    	return mav;
+    }
+    
+    /* Cell Ontology search pane
+     */
+    @RequestMapping("/cell_ontology/search")
+    public ModelAndView getCellOntologySearchPane(@RequestParam("term") String term) {
+    	ModelAndView mav = getSharedBrowserSearchPane(term, CO_VOCAB);
+    	fillCellOntologyUrls(mav);
+    	return mav;
+    }
+
+    /* Rules of initial load of terms for tree view for given ID
+     * 1. retrieve specified node
+     * 2. retrieve its children
+     * 3. retrieve its default parent and its children
+     * 4. repeat #3 all the way up to the root node
+     */
+    @RequestMapping("/cell_ontology/treeInitial")
+    public @ResponseBody String getCellOntologyTreeInitial(@RequestParam("id") String id) {
+    	return this.getSharedBrowserTreeInitial(id, CO_VOCAB);
+    }
+
+    /* CellOntology browser - load children of the term with the given ID
+     */
+    @RequestMapping("/cell_ontology/treeChildren")
+    public @ResponseBody String getCellOntologyTreeChildren(@RequestParam("id") String id,
+    		@RequestParam("nodeID") String nodeID, @RequestParam("edgeType") String edgeType) {
+
+    	// remove any script tags or alert() calls embedded in edgeType
+    	edgeType = FormatHelper.noScript(FormatHelper.noAlert(edgeType));
+    	return this.getSharedBrowserTreeChildren(id, nodeID, edgeType, CO_VOCAB);
     }
     
     /*--- MP browser ----------------------------------------------------------------*/

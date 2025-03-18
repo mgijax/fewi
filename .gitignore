@@ -30,3 +30,9 @@ server.log
 *~
 .project
 .classpath
+dependency-reduced-pom.xml
+src/main/webapp/WEB-INF/jsp/templates/
+src/main/webapp/WEB-INF/properties/GlobalConfig.properties
+src/main/webapp/WEB-INF/properties/fewi.properties
+
+
