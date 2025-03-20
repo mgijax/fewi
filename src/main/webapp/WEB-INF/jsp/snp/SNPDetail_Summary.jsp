@@ -41,8 +41,11 @@
 							<c:if test="${!snp.multiCoord}">
 								<a href="${snp.getJBrowserLink(JBrowserLinkTemplate)}" target="_blank"><nobr>JBrowse Genome Browser</nobr></a> |
 							</c:if>
-							<a href="http://www.ensembl.org/Mus_musculus/snpview?snp=${snp.accid}" target="_blank"><nobr>Ensembl SNPView</nobr></a> |
-							<a href="http://genome.ucsc.edu/cgi-bin/hgTracks?clade=vertebrate&amp;org=Mouse&amp;db=mm39&amp;position=${snp.accid}" target="_blank"><nobr>UCSC Browser</nobr></a> 
+							<a href="https://www.ensembl.org/Mus_musculus/snpview?snp=${snp.accid}" target="_blank"><nobr>Ensembl SNPView</nobr></a> |
+							<a href="https://genome.ucsc.edu/cgi-bin/hgTracks?clade=vertebrate&amp;org=Mouse&amp;db=mm39&amp;position=${snp.accid}" target="_blank"><nobr>UCSC Browser</nobr></a> 
+							| <a href="${fn:replace(externalUrls.AGR_Variant, '@@@@', snp.accid)}" target="_blank"><nobr>Alliance Variant</nobr></a> 
+
+
 							<br>
 							<c:if test="${snp.multiCoord}">
 								<div style="color:red; padding-top:3px;">
