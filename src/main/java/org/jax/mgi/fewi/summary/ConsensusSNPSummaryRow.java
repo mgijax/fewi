@@ -44,9 +44,11 @@ public class ConsensusSNPSummaryRow {
 		ret += "<a href=\"" + fewiUrl + "snp/" + consensusSNP.getAccid() + "\" target=\"_blank\">MGI&nbsp;SNP&nbsp;Detail</a>";
 		ret += "</font>";
 		
-		ret += "<br/><font class=\"small\">";
-		ret += "<a href=\"" + agrUrl + "\" target=\"_blank\">Alliance&nbsp;Variant</a>";
-		ret += "</font>";
+		if (consensusSNP.hasVepFunctionClass()) {
+			ret += "<br/><font class=\"small\">";
+			ret += "<a href=\"" + agrUrl + "\" target=\"_blank\">Alliance&nbsp;Variant</a>";
+			ret += "</font>";
+		}
 
 		return ret;
 	}

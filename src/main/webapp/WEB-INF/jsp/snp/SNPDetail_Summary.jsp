@@ -43,7 +43,10 @@
 							</c:if>
 							<a href="https://www.ensembl.org/Mus_musculus/snpview?snp=${snp.accid}" target="_blank"><nobr>Ensembl SNPView</nobr></a> |
 							<a href="https://genome.ucsc.edu/cgi-bin/hgTracks?clade=vertebrate&amp;org=Mouse&amp;db=mm39&amp;position=${snp.accid}" target="_blank"><nobr>UCSC Browser</nobr></a> 
+
+							<c:if test="${snp.hasVepFunctionClass()}">
 							| <a href="${fn:replace(externalUrls.AGR_Variant, '@@@@', snp.accid)}" target="_blank"><nobr>Alliance Variant</nobr></a> 
+							</c:if>
 
 
 							<br>
