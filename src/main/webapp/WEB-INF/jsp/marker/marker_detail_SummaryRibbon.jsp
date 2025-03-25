@@ -84,7 +84,7 @@
 									<a href="${configBean.FEWI_URL}marker/${member.relatedMarkerID}">${member.relatedMarkerSymbol}</a><c:if test="${!status.last}">, </c:if>
 								</c:forEach>
 								<c:if test="${memberCount > 3}">...</c:if>
-								(<span id="showClusterMembers" class="link">${memberCount}</span> member<c:if test="${memberCount > 1}">s</c:if>)
+								(<span id="showClusterMembers" class="link">${memberCount} member<c:if test="${memberCount > 1}">s</c:if></span>)
 							</div>
 						</li>
 					</c:if>
@@ -102,6 +102,34 @@
 							<div class="label">Transcription Start Sites</div>
 							<div class="value">
 								<span id="showTss" class="link">${tssCount} TSS</span>
+							</div>
+						</li>
+					</c:if>
+
+					<c:if test="${hasRegulatedMarkers}">
+						<li>
+							<div class="label">Regulates expression of</div>
+							<div class="value">
+								<c:forEach var="regulatedMarker" items="${marker.regulatedMarkers}" varStatus="status" end="2">
+									<a href="${configBean.FEWI_URL}marker/${regulatedMarker.relatedMarkerID}">
+									  ${regulatedMarker.relatedMarkerSymbol}</a><c:if test="${!status.last}">, </c:if>
+								</c:forEach>
+								<c:if test="${regulatedMarkerCount > 3}">...</c:if>
+								(<span id="showRegulatedMarkers" class="link">${regulatedMarkerCount} regulated gene</span><c:if test="${regulatedMarkerCount > 1}">s</c:if>)
+							</div>
+						</li>
+					</c:if>
+
+					<c:if test="${hasRegulatingMarkers}">
+						<li>
+							<div class="label">Regulated by</div>
+							<div class="value">
+								<c:forEach var="regulatingMarker" items="${marker.regulatingMarkers}" varStatus="status" end="2">
+									<a href="${configBean.FEWI_URL}marker/${regulatingMarker.relatedMarkerID}">
+									  ${regulatingMarker.relatedMarkerSymbol}</a><c:if test="${!status.last}">, </c:if>
+								</c:forEach>
+								<c:if test="${regulatingMarkerCount > 3}">...</c:if>
+								(<span id="showRegulatingMarkers" class="link">${regulatingMarkerCount} regulatory region<c:if test="${regulatingMarkerCount > 1}">s</c:if></span>)
 							</div>
 						</li>
 					</c:if>

@@ -92,6 +92,8 @@
 				);
 			}
 		}
+                initializePopup('regulatedMarkersDiv','regulatedMarkersTable','showRegulatedMarkers','regulatedMarkersPanel')
+                initializePopup('regulatingMarkersDiv','regulatingMarkersTable','showRegulatingMarkers','regulatingMarkersPanel')
                 initializePopup('clusterMemberDiv','clusterMemberTable','showClusterMembers','clusterMemberPanel')
                 initializePopup('tssDiv','tssTable','showTss','tssPanel')
                 initializePopup('candidatesDiv','candidatesTbl','showCandidates','candidatesPanel')
