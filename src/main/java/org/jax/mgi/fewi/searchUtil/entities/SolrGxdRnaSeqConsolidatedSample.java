@@ -12,6 +12,7 @@ public class SolrGxdRnaSeqConsolidatedSample implements SolrGxdEntity {
 	protected String alleles;
 	protected String consolidatedSampleKey;
 	protected String assayMgiID;
+	protected Integer bioreplicateCount;
 
 	public String getStructure() {
 		return structure;
@@ -68,6 +69,12 @@ public class SolrGxdRnaSeqConsolidatedSample implements SolrGxdEntity {
 		this.assayMgiID = assayMgiID;
 	}
 
+	public Integer getBioreplicateCount() {
+		return bioreplicateCount;
+	}
+	public void setBioreplicateCount(Integer bioreplicateCount) {
+		this.bioreplicateCount = bioreplicateCount;
+	}
 	@Override
 	public String toString() {
 		return "SolrGxdRnaSeqConsolidatedSample [structure=" + structure + ", structureID=" + structureID

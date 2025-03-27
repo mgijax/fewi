@@ -13,6 +13,7 @@ public class GxdRnaSeqHeatMapSample implements Cloneable {
 	public String expID;
 	public String bioreplicateSetID;
 	public Integer index;
+	public Integer bioreplicateCount;
 		
 	public String getStructure() {
 		return structure;
@@ -26,6 +27,13 @@ public class GxdRnaSeqHeatMapSample implements Cloneable {
 	}
 	public void setAge(String age) {
 		this.age = age;
+	}
+
+	public Integer getBioreplicateCount() {
+		return bioreplicateCount;
+	}
+	public void setBioreplicateCount(Integer bioreplicateCount) {
+		this.bioreplicateCount = bioreplicateCount;
 	}
 
 	public Integer getStage() {
