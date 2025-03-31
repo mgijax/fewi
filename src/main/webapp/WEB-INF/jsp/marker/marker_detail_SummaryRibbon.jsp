@@ -110,12 +110,12 @@
 						<li>
 							<div class="label">Regulates expression of</div>
 							<div class="value">
-								<c:forEach var="regulatedMarker" items="${marker.regulatedMarkers}" varStatus="status" end="2">
+								<c:forEach var="regulatedMarker" items="${uniqueRegulatedMarkers}" varStatus="status" end="2">
 									<a href="${configBean.FEWI_URL}marker/${regulatedMarker.relatedMarkerID}">
 									  ${regulatedMarker.relatedMarkerSymbol}</a><c:if test="${!status.last}">, </c:if>
 								</c:forEach>
-								<c:if test="${regulatedMarkerCount > 3}">...</c:if>
-								(<span id="showRegulatedMarkers" class="link">${regulatedMarkerDisplayCount} regulated gene</span><c:if test="${regulatedMarkerDisplayCount > 1}">s</c:if>)
+								<c:if test="${uniqueRegulatedMarkers.size() > 3}">...</c:if>
+								(<span id="showRegulatedMarkers" class="link">${uniqueRegulatedMarkers.size()} regulated gene</span><c:if test="${uniqueRegulatedMarkers.size() > 1}">s</c:if>)
 							</div>
 						</li>
 					</c:if>
@@ -124,12 +124,12 @@
 						<li>
 							<div class="label">Regulated by</div>
 							<div class="value">
-								<c:forEach var="regulatingMarker" items="${marker.regulatingMarkers}" varStatus="status" end="2">
+								<c:forEach var="regulatingMarker" items="${uniqueRegulatingMarkers}" varStatus="status" end="2">
 									<a href="${configBean.FEWI_URL}marker/${regulatingMarker.relatedMarkerID}">
 									  ${regulatingMarker.relatedMarkerSymbol}</a><c:if test="${!status.last}">, </c:if>
 								</c:forEach>
-								<c:if test="${regulatingMarkerCount > 3}">...</c:if>
-								(<span id="showRegulatingMarkers" class="link">${regulatingMarkerDisplayCount} regulatory region<c:if test="${regulatingMarkerDisplayCount > 1}">s</c:if></span>)
+								<c:if test="${uniqueRegulatingMarkers.size() > 3}">...</c:if>
+								(<span id="showRegulatingMarkers" class="link">${uniqueRegulatingMarkers.size()} regulatory region<c:if test="${uniqueRegulatingMarkers.size() > 1}">s</c:if></span>)
 							</div>
 						</li>
 					</c:if>

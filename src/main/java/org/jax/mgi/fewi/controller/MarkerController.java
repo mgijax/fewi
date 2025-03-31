@@ -611,21 +611,26 @@ public class MarkerController {
 		mav.addObject("regulatedMarkerCount", marker.getRegulatedMarkers().size());
 		mav.addObject("regulatingMarkerCount", marker.getRegulatingMarkers().size());
 
-		List<String>  uniqueRegulatedMarkers = new ArrayList<String>();
+		// Regulation of Expression section needs dupes removed
+		List<String>  uniqueRegulatedMarkerSymbols = new ArrayList<String>();
+		List<RelatedMarker>  uniqueRegulatedMarkers = new ArrayList<RelatedMarker>();
 		for(RelatedMarker thisMarker : marker.getRegulatedMarkers()) {
-			if (!uniqueRegulatedMarkers.contains(thisMarker.getRelatedMarkerSymbol())) {
-				uniqueRegulatedMarkers.add(thisMarker.getRelatedMarkerSymbol());
+			if (!uniqueRegulatedMarkerSymbols.contains(thisMarker.getRelatedMarkerSymbol())) {
+				uniqueRegulatedMarkerSymbols.add(thisMarker.getRelatedMarkerSymbol());
+				uniqueRegulatedMarkers.add(thisMarker);
 			}
 		}
-		mav.addObject("regulatedMarkerDisplayCount",  uniqueRegulatedMarkers.size());
+		mav.addObject("uniqueRegulatedMarkers",  uniqueRegulatedMarkers);
 
-		List<String>  uniqueRegulatingMarkers = new ArrayList<String>();
+		List<String>  uniqueRegulatingMarkerSymbols = new ArrayList<String>();
+		List<RelatedMarker>  uniqueRegulatingMarkers = new ArrayList<RelatedMarker>();
 		for(RelatedMarker thisMarker : marker.getRegulatingMarkers()) {
-			if (!uniqueRegulatingMarkers.contains(thisMarker.getRelatedMarkerSymbol())) {
-				uniqueRegulatingMarkers.add(thisMarker.getRelatedMarkerSymbol());
+			if (!uniqueRegulatingMarkerSymbols.contains(thisMarker.getRelatedMarkerSymbol())) {
+				uniqueRegulatingMarkerSymbols.add(thisMarker.getRelatedMarkerSymbol());
+				uniqueRegulatingMarkers.add(thisMarker);
 			}
 		}
-		mav.addObject("regulatingMarkerDisplayCount",  uniqueRegulatingMarkers.size());
+		mav.addObject("uniqueRegulatingMarkers",  uniqueRegulatingMarkers);
 
 		// Bio Conflicts
 		List<MarkerBiotypeConflict> conflicts = marker.getBiotypeConflicts();
