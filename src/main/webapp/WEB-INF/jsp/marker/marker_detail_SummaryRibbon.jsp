@@ -115,7 +115,7 @@
 									  ${regulatedMarker.relatedMarkerSymbol}</a><c:if test="${!status.last}">, </c:if>
 								</c:forEach>
 								<c:if test="${regulatedMarkerCount > 3}">...</c:if>
-								(<span id="showRegulatedMarkers" class="link">${regulatedMarkerCount} regulated gene</span><c:if test="${regulatedMarkerCount > 1}">s</c:if>)
+								(<span id="showRegulatedMarkers" class="link">${regulatedMarkerDisplayCount} regulated gene</span><c:if test="${regulatedMarkerDisplayCount > 1}">s</c:if>)
 							</div>
 						</li>
 					</c:if>
@@ -129,7 +129,7 @@
 									  ${regulatingMarker.relatedMarkerSymbol}</a><c:if test="${!status.last}">, </c:if>
 								</c:forEach>
 								<c:if test="${regulatingMarkerCount > 3}">...</c:if>
-								(<span id="showRegulatingMarkers" class="link">${regulatingMarkerCount} regulatory region<c:if test="${regulatingMarkerCount > 1}">s</c:if></span>)
+								(<span id="showRegulatingMarkers" class="link">${regulatingMarkerDisplayCount} regulatory region<c:if test="${regulatingMarkerDisplayCount > 1}">s</c:if></span>)
 							</div>
 						</li>
 					</c:if>

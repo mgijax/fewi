@@ -611,6 +611,23 @@ public class MarkerController {
 		mav.addObject("regulatedMarkerCount", marker.getRegulatedMarkers().size());
 		mav.addObject("regulatingMarkerCount", marker.getRegulatingMarkers().size());
 
+		List<String>  uniqueRegulatedMarkers = new ArrayList<String>();
+		for(RelatedMarker thisMarker : marker.getRegulatedMarkers()) {
+			if (!uniqueRegulatedMarkers.contains(thisMarker.getRelatedMarkerSymbol())) {
+				uniqueRegulatedMarkers.add(thisMarker.getRelatedMarkerSymbol());
+			}
+		}
+		mav.addObject("regulatedMarkerDisplayCount",  uniqueRegulatedMarkers.size());
+
+		List<String>  uniqueRegulatingMarkers = new ArrayList<String>();
+		for(RelatedMarker thisMarker : marker.getRegulatingMarkers()) {
+			if (!uniqueRegulatingMarkers.contains(thisMarker.getRelatedMarkerSymbol())) {
+				uniqueRegulatingMarkers.add(thisMarker.getRelatedMarkerSymbol());
+			}
+		}
+		mav.addObject("regulatingMarkerDisplayCount",  uniqueRegulatingMarkers.size());
+
+		// Bio Conflicts
 		List<MarkerBiotypeConflict> conflicts = marker.getBiotypeConflicts();
 		if ((conflicts != null) && (conflicts.size() > 0)) {
 			StringBuffer conflictTable = new StringBuffer();
