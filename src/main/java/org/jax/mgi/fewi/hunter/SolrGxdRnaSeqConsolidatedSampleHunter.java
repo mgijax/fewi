@@ -34,6 +34,7 @@ public class SolrGxdRnaSeqConsolidatedSampleHunter extends SolrGxdSummaryBaseHun
 		this.returnedFields.add(GxdResultFields.STRUCTURE_PRINTNAME);
 		this.returnedFields.add(GxdResultFields.CONSOLIDATED_SAMPLE_KEY);
 		this.returnedFields.add(GxdResultFields.SEX);
+		this.returnedFields.add(GxdResultFields.BIOREPLICATE_COUNT);
 	}
 
 	 @Override
@@ -60,6 +61,7 @@ public class SolrGxdRnaSeqConsolidatedSampleHunter extends SolrGxdSummaryBaseHun
 			 String structure = (String) doc.getFieldValue(GxdResultFields.STRUCTURE_PRINTNAME);
 			 String consolidatedSampleKey = (String) doc.getFieldValue(GxdResultFields.CONSOLIDATED_SAMPLE_KEY);
 			 String sex = (String) doc.getFieldValue(GxdResultFields.SEX);
+			 Integer bioreplicateCount = (Integer) doc.getFieldValue(GxdResultFields.BIOREPLICATE_COUNT);
 
 			 if (genotype == null) {
 				 genotype = wildType;
@@ -76,6 +78,7 @@ public class SolrGxdRnaSeqConsolidatedSampleHunter extends SolrGxdSummaryBaseHun
 			 resultObject.setStructure(structure);
 			 resultObject.setConsolidatedSampleKey(consolidatedSampleKey);
 			 resultObject.setSex(sex);
+			 resultObject.setBioreplicateCount(bioreplicateCount);
 
 			 // Add result to SearchResults
 			 sr.addResultObjects(resultObject);

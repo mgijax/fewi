@@ -1809,6 +1809,7 @@ public class GXDController {
 						sample.setStage(result.getTheilerStage());
 						sample.setStrain(result.getStrain());
 						sample.setStructure(result.getStructure());
+						sample.setBioreplicateCount(result.getBioreplicateCount());
 
 						samples.add(sample);										// add to list of samples for this request
 						hmSamples.put(result.getConsolidatedSampleKey(), sample);	// add to cache of samples for future use
