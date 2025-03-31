@@ -611,6 +611,28 @@ public class MarkerController {
 		mav.addObject("regulatedMarkerCount", marker.getRegulatedMarkers().size());
 		mav.addObject("regulatingMarkerCount", marker.getRegulatingMarkers().size());
 
+		// Regulation of Expression section needs dupes removed
+		List<String>  uniqueRegulatedMarkerSymbols = new ArrayList<String>();
+		List<RelatedMarker>  uniqueRegulatedMarkers = new ArrayList<RelatedMarker>();
+		for(RelatedMarker thisMarker : marker.getRegulatedMarkers()) {
+			if (!uniqueRegulatedMarkerSymbols.contains(thisMarker.getRelatedMarkerSymbol())) {
+				uniqueRegulatedMarkerSymbols.add(thisMarker.getRelatedMarkerSymbol());
+				uniqueRegulatedMarkers.add(thisMarker);
+			}
+		}
+		mav.addObject("uniqueRegulatedMarkers",  uniqueRegulatedMarkers);
+
+		List<String>  uniqueRegulatingMarkerSymbols = new ArrayList<String>();
+		List<RelatedMarker>  uniqueRegulatingMarkers = new ArrayList<RelatedMarker>();
+		for(RelatedMarker thisMarker : marker.getRegulatingMarkers()) {
+			if (!uniqueRegulatingMarkerSymbols.contains(thisMarker.getRelatedMarkerSymbol())) {
+				uniqueRegulatingMarkerSymbols.add(thisMarker.getRelatedMarkerSymbol());
+				uniqueRegulatingMarkers.add(thisMarker);
+			}
+		}
+		mav.addObject("uniqueRegulatingMarkers",  uniqueRegulatingMarkers);
+
+		// Bio Conflicts
 		List<MarkerBiotypeConflict> conflicts = marker.getBiotypeConflicts();
 		if ((conflicts != null) && (conflicts.size() > 0)) {
 			StringBuffer conflictTable = new StringBuffer();
