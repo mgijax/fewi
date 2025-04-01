@@ -197,7 +197,7 @@ function fillInSamples(sampleList) {
 		hmData['columnMetadataModel']['vectors'][5]['array'].push(sample['strain']);
 		hmData['columnMetadataModel']['vectors'][6]['array'].push(sample['sex']);
 		hmData['columnMetadataModel']['vectors'][7]['array'].push(sample['expID']);
-		hmData['columnMetadataModel']['vectors'][8]['array'].push(sample['bioreplicateCount']);
+		hmData['columnMetadataModel']['vectors'][8]['array'].push(String(sample['bioreplicateCount']));
 		hmData['columnMetadataModel']['vectors'][9]['array'].push(sample['bioreplicateSetID']);
 	}
 
