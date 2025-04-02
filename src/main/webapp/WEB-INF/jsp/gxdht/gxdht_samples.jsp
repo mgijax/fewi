@@ -73,17 +73,26 @@ a { text-decoration: none; }
       <div id="sampleWrapper">
   	    <div id="sampleTitle">Sample information</div>
   	    <table id="sampleTable">
+	      <c:set var="cSpan" value="5"/>
   	      <tr>
   	  	    <th>Name</th>
-  	  	    <c:if test="${not empty showOrganism}"><th>Organism</th></c:if>
+  	  	    <c:if test="${not empty showOrganism}">
+		        <c:set var="cSpan" value="${cSpan + 1}"/>
+		        <th>Organism</th>
+		    </c:if>
   	  	    <th>Age</th>
   	  	    <th>Structure</th>
                     <c:if test="${not empty showCellTypes}">
+		        <c:set var="cSpan" value="${cSpan + 1}"/>
   	  	        <th>Cell Type</th>
                     </c:if>
   	  	    <th>Genetic Background</th>
   	  	    <th>Mutant Allele(s)</th>
   	  	    <th>Sex</th>
+		    <c:if test="${experiment.method == 'RNA-Seq'}">
+		        <c:set var="cSpan" value="${cSpan + 1}"/>
+			<th>RNA-Seq Type</th>
+		    </c:if>
   	  	    <th>Note</th>
   	      </tr>
   	      <c:forEach var="sample" items="${samples}" varStatus="status">
@@ -103,9 +112,12 @@ a { text-decoration: none; }
   	          	<td><fewi:super value="${sample.geneticBackground}" /></td>
   	          	<td><fewi:allelePairs value="${sample.mutantAlleles}" newWindow="true" /></td>
   	          	<td>${sample.sex}</td>
-  	          </c:if>
+			<c:if test="${experiment.method == 'RNA-Seq'}">
+			    <td>${sample.rnaseqType}</td>
+			</c:if>
+		      </c:if>
   	  	      <c:if test="${sample.relevancy != 'Yes'}">
-				<td colspan="5" class="center">${sample.relevancy}</td>
+				<td colspan="${cSpan}" class="center">${sample.relevancy}</td>
   	          </c:if>
   	          <td><fewi:super value="${sample.note}" /></td>
   	        </tr>

@@ -199,6 +199,7 @@ public class SearchConstants {
 	public static final String POS_STRUCTURE = "posStructure";
 	public static final String ANATOMICAL_SYSTEM = "anatomicalSystem";
 	public static final String ANATOMY_ID = "anatomyID";
+	public static final String RNASEQ_TYPE = "rnaseqType";
 	public static final String ANCESTOR_ANATOMY_KEY	= "ancestorAnatomyKey";
 	// profile constants
 	public static final String PROF_POS_C_EXACT = "posCExact";
