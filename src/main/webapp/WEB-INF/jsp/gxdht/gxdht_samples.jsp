@@ -77,7 +77,6 @@ a { text-decoration: none; }
   	      <tr>
   	  	    <th>Name</th>
   	  	    <c:if test="${not empty showOrganism}">
-		        <c:set var="cSpan" value="${cSpan + 1}"/>
 		        <th>Organism</th>
 		    </c:if>
   	  	    <th>Age</th>
