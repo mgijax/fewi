@@ -815,7 +815,7 @@ public class VocabularyController {
     	mav.addObject("treeInitialUrl", baseUrl + "treeInitial");
     	mav.addObject("treeChildrenUrl", baseUrl + "treeChildren");
 //TODO; set corrent autocomplete
-    	mav.addObject("autocompleteUrl", ContextLoader.getConfigBean().getProperty("FEWI_URL") + "autocomplete/ma_ontology?query=");
+    	mav.addObject("autocompleteUrl", ContextLoader.getConfigBean().getProperty("FEWI_URL") + "autocomplete/cell_ontology?query=");
 //TODO; verify message
     	mav.addObject("message", "Your input is welcome.");
     	return mav;

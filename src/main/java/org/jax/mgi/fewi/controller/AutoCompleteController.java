@@ -762,6 +762,18 @@ public class AutoCompleteController {
 		AjaxUtils.prepareAjaxHeaders(response);
 		return getSharedVocabBrowserAutocomplete(query, VocabularyController.GO_VOCAB);
 	}
+
+	/*-------------------- Cell Ontology methods --------------------*/
+
+	/* autocomplete for the Cell Ontology browser's search pane
+	 */
+	@RequestMapping("/cell_ontology")
+	public @ResponseBody SearchResults<VocabBrowserACResult> getCOAutocomplete(
+			HttpServletResponse response, @RequestParam("query") String query) {
+		logger.debug("autoCompleteController.getCOAutocomplete(" + query + ")");
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getSharedVocabBrowserAutocomplete(query, VocabularyController.CO_VOCAB);
+	}
 	
 	/*-------------------- Human Phenotype Ontology (HPO) methods --------------------*/
 
