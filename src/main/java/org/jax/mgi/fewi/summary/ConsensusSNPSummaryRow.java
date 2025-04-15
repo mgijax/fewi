@@ -18,6 +18,7 @@ public class ConsensusSNPSummaryRow {
 	private ConsensusSNP consensusSNP;
 	
 	private String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+	private String allianceUrl = ContextLoader.getExternalUrls().getProperty("AGR_Variant");
 	private HashMap<String, String> matchingMarkerIdList = new HashMap<String, String>();
 	
 	private Map<String,String> alleles = null;
@@ -36,11 +37,19 @@ public class ConsensusSNPSummaryRow {
 
 	public String getAccid() {
 		
-		String ret = consensusSNP.getAccid() + "<br>";
+		String ret = consensusSNP.getAccid() ;
+		String agrUrl = ContextLoader.getExternalUrls().getProperty("AGR_Variant").replace("@@@@",consensusSNP.getAccid());
 		
-		ret += "<font class=\"small\">";
-		ret += "<a href=\"" + fewiUrl + "snp/" + consensusSNP.getAccid() + "\" target=\"_blank\">MGI&nbsp;SNP&nbsp;Detail</a></font>";
+		ret += "<br/><font class=\"small\">";
+		ret += "<a href=\"" + fewiUrl + "snp/" + consensusSNP.getAccid() + "\" target=\"_blank\">MGI&nbsp;SNP&nbsp;Detail</a>";
+		ret += "</font>";
 		
+		if (consensusSNP.hasVepFunctionClass()) {
+			ret += "<br/><font class=\"small\">";
+			ret += "<a href=\"" + agrUrl + "\" target=\"_blank\">Alliance&nbsp;Variant</a>";
+			ret += "</font>";
+		}
+
 		return ret;
 	}
 	
