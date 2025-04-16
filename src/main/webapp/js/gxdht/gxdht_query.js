@@ -77,8 +77,8 @@ var gq_reset = function(e) {
 	$('#mutatedIn').val('');
 	
 	// Method ribbon
-	$('input:radio[name=method]').prop('checked', false);
-	$('input:radio[name=method][value=""]').prop('checked', true);
+	$('input:checkbox[name=method]').prop('checked', true);
+	$('input:checkbox[name=rnaseqType]').prop('checked', true);
 	
 	// Text ribbon
 	$('input:text[name=text]').val('');
@@ -90,6 +90,129 @@ var gq_reset = function(e) {
 	// strain ribbon
 	$('input:text[name=strain]').val('');
 };
+
+// Initialize hierarchical checkbox behavior
+// The hierarchy of checkboxes is encoded in their id attributes.
+// All the accessor functions defined below are based on this encoding.
+// The root has id "mcb_1". Its children have ids "mcb_1_1", "mcb_1_2", etc.
+// The children of "mcb_1_2" have ids "mcb_1_2_1" "mcb_1_2_2", etc.
+(function () {
+    function getParentId (tgtId) {
+        const parts = tgtId.split("_")
+	if (parts.length > 2) {
+	    parts.pop()
+	    return parts.join("_")
+	}
+    }
+    function getParent (tgtId) {
+	const pid = getParentId(tgtId)
+	if (pid) return $('#' + pid);
+    }
+
+    function getDescendants (tgtId) {
+        const matchString = `input[type="checkbox"][id^="${tgtId}_"]`
+	const desc = $(matchString)
+	return desc
+    }
+    function getAncestors (tgtId) {
+	const anc = []
+	var pid = getParentId (tgtId)
+	while (pid) {
+	    anc.push(document.getElementById(pid))
+	    pid = getParentId (pid)
+	}
+	return $(anc)
+    }
+    function getChildren (tgtId) {
+	const kids = []
+	var n = 1
+	while (true) {
+	    const chId = tgtId + "_" + n
+	    const child = document.getElementById(chId)
+	    if (!child) break
+	    kids.push(child)
+	    n += 1
+	}
+	return $(kids)
+    }
+    function getSiblings (tgtId) {
+	const pid = getParentId (tgtId)
+	if (pid) {
+	    return getChildren(pid)
+	}
+	return $([])
+    }
+
+    // if all siblings are checked, then check the parent and recurse up
+    function checkSiblings (tgtId) {
+	const sibs = getSiblings(tgtId)
+	var allChecked = true;
+	sibs.each((i,s) => {allChecked = allChecked && s.checked})
+	const p = getParent(tgtId)
+	if (allChecked && p) {
+	    // check the parent and recurse up the tree
+	    p.prop('checked', true)
+	    checkSiblings(p.attr('id'))
+	}
+    }
+
+    $('#methodCheckboxes').on('change', e => {
+	const tgt = e.target
+	const tgtId = tgt.getAttribute('id')
+	const tgtChecked = tgt.checked
+	if (tgtChecked) {
+	    // check all descendants
+	    getDescendants(tgtId).prop('checked', true)
+	    // possibly check ancestors
+	    checkSiblings(tgtId)
+
+	} else {
+	    // uncheck all descendants
+	    getDescendants(tgtId).prop('checked', false)
+	    // uncheck all ancestors
+	    getAncestors(tgtId).prop('checked', false)
+	}
+    });
+
+    $('#methodCheckboxes input[type="checkbox"]').each((i, cb) => {
+	cb = $(cb)
+        const depth = cb.attr('id').split('_').length - 1;
+	const indent = 16 * depth ;
+	cb.css('margin-left', indent + 'px')
+    })
+
+    function parseParams () {
+	    var srch = document.location.search.slice(1);
+	    const pieces = srch.split('&');
+	    const pmap = pieces.reduce((a,v) => {
+		const vpieces = v.split('=')
+		const n = vpieces[0]
+		const vv = vpieces[1].replaceAll('+', ' ')
+		if (a[n] === undefined) {
+		    a[n] = [ vv ]
+		} else {
+		    a[n].push(vv)
+		}
+		return a
+	    }, {});
+	    return pmap;
+    }
+
+    function resetFromParams () {
+	    const pmap = parseParams()
+	    const methodCbs = $('input:checkbox[name=method]');
+	    methodCbs.each((i, cb) => {
+		cb.checked = ((pmap['method'] || []).indexOf(cb.value) >= 0);
+	    })
+	    const rnaseqTypeCbs = $('input:checkbox[name=rnaseqType]');
+	    rnaseqTypeCbs.each((i, cb) => {
+		cb.checked = ((pmap['rnaseqType'] || []).indexOf(cb.value) >= 0);
+	    })
+    }
+
+    resetFromParams();
+
+})();
 
 // initialize the autocompletes
 $(function() {

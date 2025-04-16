@@ -57,8 +57,8 @@ public class GXDHTController {
 	@Value("${solr.factetNumberDefault}")
 	private Integer facetLimit; 
 
-    @Autowired
-    private IDLinker idLinker;
+	@Autowired
+	private IDLinker idLinker;
 
 	//--- public methods ---//
 
@@ -126,19 +126,33 @@ public class GXDHTController {
 		}
 		if ((queryForm.getMutatedIn() != null) && (queryForm.getMutatedIn().length() > 0)) {
 			return true;
-		} else if ((queryForm.getMutantAlleleId() != null) && (queryForm.getMutantAlleleId().length() > 0)) {
+		} 
+		if ((queryForm.getMutantAlleleId() != null) && (queryForm.getMutantAlleleId().length() > 0)) {
 			return true;
-		} else if ((queryForm.getSex() != null) && (queryForm.getSex().length() > 0)) {
+		} 
+		if ((queryForm.getSex() != null) && (queryForm.getSex().length() > 0)) {
 			return true;
-		} else if ((queryForm.getStrain() != null) && (queryForm.getStrain().length() > 0)) {
+		} 
+		if ((queryForm.getStrain() != null) && (queryForm.getStrain().length() > 0)) {
 			return true;
-		} else if ((queryForm.getStructure() != null) && (queryForm.getStructure().length() > 0)) {
+		} 
+		if ((queryForm.getStructure() != null) && (queryForm.getStructure().length() > 0)) {
 			return true;
-		} else if ((queryForm.getStructureID() != null) && (queryForm.getStructureID().length() > 0)) {
+		} 
+		if ((queryForm.getStructureID() != null) && (queryForm.getStructureID().length() > 0)) {
 			return true;
-		} else if ((queryForm.getTheilerStage() != null) && (queryForm.getTheilerStage().size() > 0)) {
+		} 
+		if ((queryForm.getTheilerStage() != null) && (queryForm.getTheilerStage().size() > 0)) {
 			for (Integer ts : queryForm.getTheilerStage()) {
 				if (ts != queryForm.ANY_STAGE) {
+					return true;
+				}
+			}
+		} 
+		if ((queryForm.getRnaseqType() != null) && (queryForm.getRnaseqType().size() > 0)
+		&& (queryForm.getMethod() == null || queryForm.getMethod().indexOf("RNA-seq") == -1)) {
+			for (String rst : queryForm.getRnaseqType()) {
+				if (!rst.equals("")) {
 					return true;
 				}
 			}
@@ -229,6 +243,7 @@ public class GXDHTController {
 					nonMatches.add(sample);
 				}
 			}
+
 			matches.addAll(nonMatches);
 			samples = matches;
 		}
@@ -288,6 +303,17 @@ public class GXDHTController {
 			}
 		}
 		
+		//
+		List<String> rsts = query.getRnaseqType();
+		if (rsts != null) {
+			Map<String,String> validRnaseqTypes = query.getRnaseqTypeOptions();
+			for (String rst : rsts) {
+				if (!validRnaseqTypes.containsKey(rst)) {
+					return "Invalid selection for RNA-seq type: " + rst;
+				}
+			}
+		}
+		
 		String sex = query.getSex();
 		if ((sex != null) && (sex.length() > 0) && !query.getSexOptions().containsKey(sex)) {
 				return "Invalid selection for Sex: " + sex;
@@ -298,9 +324,11 @@ public class GXDHTController {
 			return "Mutant field must contain at least one letter or number; you specified: " + mutant;
 		}
 		
-		String method = query.getMethod();
-		if ((method != null) && !query.getMethodOptions().containsKey(method)) {
-			return "Invalid selection for Method: " + method;
+		List<String> methods = query.getMethod();
+		for (String m : methods) {
+			if (!query.getMethodOptions().containsKey(m)) {
+				return "Invalid selection for Method: " + m;
+			}
 		}
 		return null;
 	}
@@ -513,12 +541,31 @@ public class GXDHTController {
 			filterList.add(new Filter(SearchConstants.GXDHT_STRAIN, strain, Filter.Operator.OP_EQUAL_WILDCARD_ALLOWED));
 		}
 		
+		// -----------------------------------------------------------------------
 		// search by method
-		String method = query.getMethod();
-		if ((method != null) && (method.length() > 0)) {
-			filterList.add(new Filter(SearchConstants.GXDHT_METHOD, method, Filter.Operator.OP_EQUAL));
+		List<String> methods = query.getMethod();
+		List<Filter> mFilters = new ArrayList<Filter>();
+		if (methods != null && (methods.size() > 0)) {
+			for (String m : methods) {
+				if ((m != null) && (m.length() > 0)) {
+					Filter mF = new Filter(SearchConstants.GXDHT_METHOD, m, Filter.Operator.OP_EQUAL);
+					mFilters.add(mF);
+				}
+			}
 		}
-		
+		// search by RNA-seq assay type
+		List<String> rnaseqTypes = query.getRnaseqType();
+		if (rnaseqTypes != null && (rnaseqTypes.size() > 0)) {
+			for (String rst : rnaseqTypes) {
+				Filter rstF = new Filter(SearchConstants.RNASEQ_TYPE, rst, Filter.Operator.OP_EQUAL);
+				mFilters.add(rstF);
+			}
+		}
+		if (mFilters.size() > 0) {
+			filterList.add(Filter.or(mFilters));
+		}
+		// -----------------------------------------------------------------------
+
 		// search by sex
 		String sex = query.getSex();
 		if ((sex != null) && (sex.length() > 0)) {

@@ -64,8 +64,24 @@ var updateYouSearchedFor = function() {
 	if (params.hasOwnProperty('mutantAlleleId')) {
 		ysf = ysf + 'Samples <b>carrying mutant allele ' + decode(params['mutantAlleleId'][0]) + '</b> ';
 	}
-	if (params.hasOwnProperty('method')) {
-		ysf = ysf + 'Assayed by <b>(' + decode(params['method'][0]) + ')</b><br/>';
+	if (params.hasOwnProperty('method') || params.hasOwnProperty('rnaseqType')) {
+		var terms = []
+		var showRnaseqTypes = true
+		if (params['method']) {
+		    if (params['method'].length === 2) {
+		        terms.push('ANY method')
+			showRnaseqTypes = false
+		    } else {
+		        terms.push(decode(params['method'][0]))
+			if (terms[0] === "RNA seq") showRnaseqTypes = false;
+		    }
+		}
+		if (params['rnaseqType'] &&  showRnaseqTypes) {
+		    terms = terms.concat(params['rnaseqType'].map(decode))
+		}
+		ysf = ysf + 'Assayed by <b>(' + terms.join(', ') + ')</b><br/>';
+	} else {
+		ysf = ysf + 'Assayed by <b>(ANY method)</b><br/>';
 	}
 	if (params.hasOwnProperty('arrayExpressID')) {
 		ysf = ysf + 'ArrayExpress or GEO ID <b>' + params['arrayExpressID'][0].trim() + '</b><br/>';
