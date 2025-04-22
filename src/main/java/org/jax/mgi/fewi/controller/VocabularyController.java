@@ -814,7 +814,6 @@ public class VocabularyController {
     	mav.addObject("searchPaneUrl", baseUrl + "/search?term=");
     	mav.addObject("treeInitialUrl", baseUrl + "treeInitial");
     	mav.addObject("treeChildrenUrl", baseUrl + "treeChildren");
-//TODO; set corrent autocomplete
     	mav.addObject("autocompleteUrl", ContextLoader.getConfigBean().getProperty("FEWI_URL") + "autocomplete/cell_ontology?query=");
 //TODO; verify message
     	mav.addObject("message", "Your input is welcome.");
@@ -841,11 +840,9 @@ public class VocabularyController {
 //TODO; correct help doc?
     	mav.addObject("helpDoc", "VOCAB_amad_browser_help.shtml");
     	mav.addObject("branding", "GXD");
+    	mav.addObject("hideIsaIcon", "true");
 //TODO; SEO
-    	mav.addObject("seoDescription", "The Adult Mouse Anatomy Ontology organizes anatomical structures "
-    		+ "for the postnatal mouse (Theiler stage 28) spatially and functionally, using 'is a' and "
-    		+ "'part of' relationships.  This browser can be used to view anatomical terms and their "
-    		+ "relationships in a hierarchical display.");
+    	mav.addObject("seoDescription", "seoDescription incoming soon");
 
     	mav.addObject("title", getCellOntologyTitle((BrowserTerm) mav.getModel().get("term")));
     	fillCellOntologyUrls(mav);
