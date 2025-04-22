@@ -559,6 +559,52 @@ public class GXDController {
 
 
 	/*
+	 * Summary by Cell Type ID
+	 */
+	@RequestMapping(value="/celltype/{celltypeID}")
+	public ModelAndView summeryByCellTypeId(
+			HttpServletRequest request,
+			@PathVariable("celltypeID") String celltypeID) {
+		if (!UserMonitor.getSharedInstance().isOkay(request.getRemoteAddr())) {
+			return UserMonitor.getSharedInstance().getLimitedMessage();
+		}
+
+		logger.debug("->summeryByCellTypeId started");
+
+		// setup view object
+		ModelAndView mav = new ModelAndView("gxd/gxd_summary_by_cell_type");
+
+		// setup search parameters object to gather the requested term
+		SearchParams searchParams = new SearchParams();
+		Filter idFilter = new Filter(SearchConstants.CELLTYPE_ID, celltypeID);
+		searchParams.setFilter(idFilter);
+
+		// find the requested structure
+		List<VocabTerm> termList = vocabFinder.getTermByID(celltypeID);
+
+		// there can be only one...
+		if (termList.size() < 1) {
+			// forward to error page
+			return errorMav("No term found for " + celltypeID);
+		}
+		if (termList.size() > 1) {
+			// forward to error page
+			return errorMav("Multiple terms found for " + celltypeID);
+		}
+		VocabTerm cellTypeTerm = termList.get(0);
+		mav.addObject("cellTypeTerm", cellTypeTerm);
+		mav.addObject("queryString", FormatHelper.cleanJavaScript(request.getQueryString()));
+
+		logger.debug("summeryByCellTypeId routing to view ");
+		return mav;
+	}
+
+
+
+
+
+
+	/*
 	 * Summary by EMAPA/EMAPS ID
 	 */
 	@RequestMapping(value="/structure/{emapID}")

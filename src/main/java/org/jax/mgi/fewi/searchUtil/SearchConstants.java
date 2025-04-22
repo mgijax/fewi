@@ -194,6 +194,7 @@ public class SearchConstants {
 	public static final String STRUCTURE_EXACT = "structureExact";
 	public static final String STRUCTURE_KEY = "structureKey";
 	public static final String STRUCTURE_ID = "structureID";
+	public static final String CELLTYPE_ID = "celltypeID";
 	public static final String PROBE_KEY = "probeKey";
 	public static final String ANTIBODY_KEY = "antibodyKey";
 	public static final String POS_STRUCTURE = "posStructure";
