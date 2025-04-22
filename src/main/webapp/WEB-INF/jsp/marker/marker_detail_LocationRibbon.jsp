@@ -40,19 +40,14 @@
 								<c:set var="coord2" value="${fn:replace(coord1, '<start>', startCoord)}"/>
 								<c:set var="coords" value="${fn:replace(coord2, '<end>', endCoord)}"/>
 
-								<c:set var="strand_display" value=""/>
-								<c:if test="${not empty marker.preferredCoordinates.strand}">
-									<c:choose>
-										<c:when test="${marker.preferredCoordinates.strand == '.'}"></c:when>
-										<c:otherwise>
-											<c:set var="strand_display" value=", ${marker.preferredCoordinates.strand} strand" />
-										</c:otherwise>
-									</c:choose>
+								<c:set var="strandDisplay" value="${marker.preferredCoordinates.strandDisplay}"/>
+								<c:if test="${not empty strandDisplay}">
+									<c:set var="strandDisplay" value=", ${strandDisplay} strand" />
 								</c:if>
 	
 								<c:if test="${not empty marker.preferredCoordinates}">
 									<div style="padding-bottom: 3px">
-									Chr${chromosome}:${startCoord}-${endCoord} ${marker.preferredCoordinates.mapUnits}${strand_display}</div>										
+									Chr${chromosome}:${startCoord}-${endCoord} ${marker.preferredCoordinates.mapUnits}${strandDisplay}</div>										
 									From ${marker.preferredCoordinates.provider} annotation of ${marker.preferredCoordinates.buildIdentifier}<br />
 								</c:if>
 							</c:if>

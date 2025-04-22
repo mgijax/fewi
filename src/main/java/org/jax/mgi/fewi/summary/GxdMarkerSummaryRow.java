@@ -93,8 +93,11 @@ public class GxdMarkerSummaryRow {
 	  }
 	  
 	  public String getStrand() {
+		  if (".".equals(marker.getStrand())) {
+			  return null;
+		  }
 	      return marker.getStrand();
-	  }
+	  } 
 	  
 	  public String getType() {
 	      return marker.getType();
