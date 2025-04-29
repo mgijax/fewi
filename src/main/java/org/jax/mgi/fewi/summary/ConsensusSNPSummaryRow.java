@@ -136,6 +136,8 @@ public class ConsensusSNPSummaryRow {
 					// Rules:
 					// For a marker that matches the nomen search, show all function classes/distance relationships for that marker
 					// For other markers, Display all relationship/function classes except "distance from" (within distance of)
+					// (Between the regulatory regions, CpG islands and TSS's, for some SNPs, it's hard to find your gene amongst 
+					// the upstreams, proximals, downstreams and distals.)
 					// Do not show function class "Contig-Reference"
 					
 					if((matchingMarkerIdList.containsKey(m.getAccid()) || !m.getFunctionClass().equals("within distance of")) && !m.getFunctionClass().equals("Contig-Reference")) {

@@ -238,7 +238,8 @@ function updateRequest() {
 	filters.populateFilterSummary();
 	updatePaginatorCount();
 	resetTableOrder();
-	handleNavigation(generateRequest());
+	const state = globalPaginator.getState()
+	handleNavigation(generateRequest(state.recordOffset, 0, 0, state.rowsPerPage));
 }
 
 function parseRequest(request){

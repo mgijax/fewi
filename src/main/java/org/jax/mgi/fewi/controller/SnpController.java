@@ -1453,7 +1453,7 @@ public class SnpController {
 		// suppressed on the summary page (see summary object)
 		facets.remove("Contig-Reference");
 
-		// remove this facet because it does not work properly in a filter
+		// remove this facet because it does not work well as a filter
 		facets.remove("within distance of");
 
 		SearchResults<String> results = new SearchResults<String>();
