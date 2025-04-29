@@ -78,6 +78,7 @@ td.padTop { padding-top: 2px }
   <c:when test="${branding == 'GXD'}">
 	<style>
 		.highlight { background-color: #EBCA6D }
+		.jstree-clicked {background: #EBCA6D !important}
 	</style>
     <div id="titleBarWrapperGxd" userdoc="${helpDoc}">
       <a href="${configBean.HOMEPAGES_URL}expression.shtml"><img class="gxdLogo" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="75"></a>
@@ -106,6 +107,15 @@ td.padTop { padding-top: 2px }
 	</div>
   </c:otherwise>
 </c:choose>
+
+<c:choose>
+  <c:when test="${hideIsaIcon == 'true'}">
+    <style>
+      .jstree-themeicon, .jstree-themeicon-custom {display: none !important}
+    </style>
+  </c:when>
+</c:choose>
+
 
 <!-- 3-section table: search, term detail, tree view -->
 

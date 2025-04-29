@@ -51,7 +51,11 @@ function b1Show(data) {
 			if (item.strand === null) {
 				tbl = tbl + '<TD>&nbsp;</TD>';
 			} else {
-				tbl = tbl + '<TD class="small">' + item.strand + '</TD>';
+				var strandDisplay = item.strand;
+				if ( strandDisplay == '.' ) {
+					strandDisplay = '';
+				}
+				tbl = tbl + '<TD class="small">' + strandDisplay + '</TD>';
 			}
 			if (item.bestMatchType === null) {
 				tbl = tbl + '<TD>&nbsp;</TD></TR>';

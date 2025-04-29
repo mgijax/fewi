@@ -104,6 +104,9 @@ public class BatchSummaryRow {
 
     // Get the value for the strand column.
     public String getStrand() {
+    	if ( ".".equals(bmi.getStrand()) ) {
+    		return null;
+    	}
     	return bmi.getStrand();
     }
 
