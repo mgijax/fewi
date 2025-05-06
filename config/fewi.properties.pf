@@ -12,12 +12,12 @@
 #----- solr server urls -----#
 
 # scrum fe / gxd solr instances
-solr.server1.url=http://bhmgifesolr01ld.jax.org:9995/solr
-solr.server3.url=http://bhmgigxdsolr02ld.jax.org:9995/solr
+#solr.server1.url=http://bhmgifesolr01ld.jax.org:9995/solr
+#solr.server3.url=http://bhmgigxdsolr02ld.jax.org:9995/solr
 
 # pf fe / gxd solr instances
-#solr.server1.url=http://bhmgiweb03ld.jax.org:9995/solr
-#solr.server3.url=http://bhmgigxdsolr03ld.jax.org:9995/solr
+solr.server1.url=http://bhmgiweb03ld.jax.org:9995/solr
+solr.server3.url=http://bhmgigxdsolr03ld.jax.org:9995/solr
 
 
 #----- elastic search -----#
