@@ -92,6 +92,15 @@ public class SolrGxdHtExperimentBaseHunter extends SolrHunter<GxdHtExperiment> {
 				variables.add((String) o);
 			}
 			experiment.setExperimentalVariables(variables);
+
+			if (doc.getFieldValues(GxdHtFields.RNASEQ_TYPE) != null) {
+				List<String> rnaseqTypes = new ArrayList<String>();
+				for (Object o : doc.getFieldValues(GxdHtFields.RNASEQ_TYPE)) {
+					rnaseqTypes.add((String) o);
+				}
+				experiment.setRnaseqType(rnaseqTypes);
+			}
+
 			sr.addResultObjects(experiment);
 		}
 		this.packFacetData(rsp, sr);

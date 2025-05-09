@@ -70,7 +70,11 @@
 	  	  		</ul>
 	  	  	</td>
 			<td id="studyTypeData${status.index}">${exp.studyType}</td>
-			<td id="methodData${status.index}">${exp.method}</td>
+			<td id="methodData${status.index}">${exp.method}
+			    <c:forEach var="rst" items="${exp.rnaseqType}">
+				<br/>&nbsp;&nbsp;${rst.replace("RNA-seq","")}
+			    </c:forEach>
+			</td>
 			<td id="pubMedData${status.index}">
 			  	<c:if test="${not empty exp.pubmedIDs}">
 			  		<c:forEach var="pmID" items="${exp.pubmedIDs}" varStatus="pmStatus">
