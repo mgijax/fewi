@@ -245,7 +245,7 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 			}
 
 			// user requested UniProt IDs
-			else if(queryForm.getRefseq()){
+			else if(queryForm.getUniprot()){
 				List<List<String>> wrapper = new ArrayList<List<String>>();
 				List<String> uniProtIds;
 				for (String mId : bmi.getIDs(DBConstants.PROVIDER_SWISSPROT, DBConstants.PROVIDER_TREMBL)) {
