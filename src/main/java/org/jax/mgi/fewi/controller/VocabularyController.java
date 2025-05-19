@@ -838,11 +838,17 @@ public class VocabularyController {
     	mav.addObject("termPaneTitle", "Cell Type Detail");
     	mav.addObject("treePaneTitle", "Cell Type Tree View");
 //TODO; correct help doc?
-    	mav.addObject("helpDoc", "VOCAB_amad_browser_help.shtml");
+    	mav.addObject("helpDoc", "VOCAB_cl_browser_help.shtml");
     	mav.addObject("branding", "GXD");
     	mav.addObject("hideIsaIcon", "true");
 //TODO; SEO
-    	mav.addObject("seoDescription", "seoDescription incoming soon");
+    	mav.addObject("seoDescription", "The Cell Ontology (CL) is a structured controlled "
+    		+ "vocabulary that describes a broad range of canonical biological cell types. "
+    		+ "The CL is not organism-specific, covering cell types from prokaryotes to mammals, "
+    		+ "but excludes plant cell types. The ontology organizes cell type classes into a DAG "
+    		+ "hierarchy composed exclusively of 'is a' relationships. The Cell Ontology Browser "
+    		+ "can be used to find and view descriptions of cell types, and links to GXD expression "
+    		+ "results, GXD HT experiments and MGI Recombinase Alleles.");
 
     	mav.addObject("title", getCellOntologyTitle((BrowserTerm) mav.getModel().get("term")));
     	fillCellOntologyUrls(mav);
