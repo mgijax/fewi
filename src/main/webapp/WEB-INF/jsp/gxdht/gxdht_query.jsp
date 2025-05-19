@@ -145,6 +145,7 @@ function initializeFilterLibrary(delay) {
 		filters.setQueryStringFunction(getQuerystring);
 		filters.addFilter('variableFilter', 'Variable', 'variableFilter', 'variableFilter', fewiurl + 'gxd/htexp_index/facet/variable');
 		filters.addFilter('studyTypeFilter', 'Study Type', 'studyTypeFilter', 'studyTypeFilter', fewiurl + 'gxd/htexp_index/facet/studyType');
+		filters.addFilter('methodFilter', 'Method', 'methodFilter', 'methodFilter', fewiurl + 'gxd/htexp_index/facet/method');
 		filters.setSummaryNames('filterSummary', 'filterList');
 		filters.registerCallback("htCallback", gs_updateRequest);
 		filters.registerCallback("htCallback2", gs_logFilters);

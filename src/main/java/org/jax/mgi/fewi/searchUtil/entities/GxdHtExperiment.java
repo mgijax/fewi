@@ -20,7 +20,7 @@ public class GxdHtExperiment
 	private List<String> experimentalVariables;
 	private String studyType;
 	private String method;
-	private List<String> rnaseqType;
+	private List<String> methods;
 	private String description;
 	private String note;
 	private Integer byDefault;
@@ -121,11 +121,11 @@ public class GxdHtExperiment
 	public void setMethod(String method) {
 		this.method = method;
 	}
-	public List<String> getRnaseqType() {
-		return rnaseqType;
+	public List<String> getMethods() {
+		return methods;
 	}
-	public void setRnaseqType(List<String> rnaseqType) {
-		this.rnaseqType = rnaseqType;
+	public void setMethods(List<String> methods) {
+		this.methods = methods;
 	}
 	public String getLinkedDescription() {
 		return FormatHelper.makeUrlsIntoLinks(description, true, null);
@@ -165,7 +165,7 @@ public class GxdHtExperiment
 		return "GxdHtExperiment [experimentKey=" + experimentKey + ", arrayExpressID=" + arrayExpressID + ", geoID="
 				+ geoID + ", title=" + title + ", sampleCount=" + sampleCount + ", experimentalVariables="
 				+ experimentalVariables + ", studyType=" + studyType + ", method=" + method  
-				+ ", rnaseqType=" + rnaseqType + ", description="
+				+ ", methods=" + methods + ", description="
 				+ description + ", note=" + note + ", byDefault=" + byDefault + "]";
 	}
 }

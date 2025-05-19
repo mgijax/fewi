@@ -112,7 +112,7 @@ a { text-decoration: none; }
   	          	<td><fewi:allelePairs value="${sample.mutantAlleles}" newWindow="true" /></td>
   	          	<td>${sample.sex}</td>
 			<c:if test="${experiment.method == 'RNA-Seq'}">
-			    <td>${sample.rnaseqType}</td>
+			    <td>${sample.method}</td>
 			</c:if>
 		      </c:if>
   	  	      <c:if test="${sample.relevancy != 'Yes'}">

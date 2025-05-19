@@ -149,10 +149,9 @@ public class GXDHTController {
 				}
 			}
 		} 
-		if ((queryForm.getRnaseqType() != null) && (queryForm.getRnaseqType().size() > 0)
-		&& (queryForm.getMethod() == null || queryForm.getMethod().indexOf("RNA-seq") == -1)) {
-			for (String rst : queryForm.getRnaseqType()) {
-				if (!rst.equals("")) {
+		if (queryForm.getMethod() == null || queryForm.getMethod().indexOf("RNA-seq") == -1) {
+			for (String m : queryForm.getMethod()) {
+				if (m.contains("bulk") || m.contains("spatial") || m.contains("single cell")) {
 					return true;
 				}
 			}
@@ -303,17 +302,6 @@ public class GXDHTController {
 			}
 		}
 		
-		//
-		List<String> rsts = query.getRnaseqType();
-		if (rsts != null) {
-			Map<String,String> validRnaseqTypes = query.getRnaseqTypeOptions();
-			for (String rst : rsts) {
-				if (!validRnaseqTypes.containsKey(rst)) {
-					return "Invalid selection for RNA-seq type: " + rst;
-				}
-			}
-		}
-		
 		String sex = query.getSex();
 		if ((sex != null) && (sex.length() > 0) && !query.getSexOptions().containsKey(sex)) {
 				return "Invalid selection for Sex: " + sex;
@@ -387,6 +375,14 @@ public class GXDHTController {
 		return this.getFacets(qf, "studyType");
 	}
 
+	/* get the set of method filter options for the current result set
+	 */
+	@RequestMapping("/facet/method")
+	public @ResponseBody Map<String, List<String>> getMethodFacet (@ModelAttribute GxdHtQueryForm qf, BindingResult result, HttpServletResponse response) {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return this.getFacets(qf, "method");
+	}
+
 	//--------------------------------------------------------------------//
 	// private methods
 	//--------------------------------------------------------------------//
@@ -406,6 +402,8 @@ public class GXDHTController {
 			facetChoices = gxdHtFinder.getVariableFacet(params, qf).getResultFacets();
 		} else if ("studyType".equals(filterName)) {
 			facetChoices = gxdHtFinder.getStudyTypeFacet(params, qf).getResultFacets();
+		} else if ("method".equals(filterName)) {
+			facetChoices = gxdHtFinder.getMethodFacet(params, qf).getResultFacets();
 		}
 
 		if (facetChoices == null) {
@@ -543,7 +541,11 @@ public class GXDHTController {
 		
 		// -----------------------------------------------------------------------
 		// search by method
-		List<String> methods = query.getMethod();
+		List<String> methods = query.getMethod(); // from query form
+		List<String> methodFilter = query.getMethodFilter(); // from method filter
+		if (methodFilter != null && methodFilter.size() > 0) {
+			methods = methodFilter;
+		}
 		List<Filter> mFilters = new ArrayList<Filter>();
 		if (methods != null && (methods.size() > 0)) {
 			for (String m : methods) {
@@ -551,14 +553,6 @@ public class GXDHTController {
 					Filter mF = new Filter(SearchConstants.GXDHT_METHOD, m, Filter.Operator.OP_EQUAL);
 					mFilters.add(mF);
 				}
-			}
-		}
-		// search by RNA-seq assay type
-		List<String> rnaseqTypes = query.getRnaseqType();
-		if (rnaseqTypes != null && (rnaseqTypes.size() > 0)) {
-			for (String rst : rnaseqTypes) {
-				Filter rstF = new Filter(SearchConstants.RNASEQ_TYPE, rst, Filter.Operator.OP_EQUAL);
-				mFilters.add(rstF);
 			}
 		}
 		if (mFilters.size() > 0) {

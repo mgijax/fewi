@@ -185,9 +185,9 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			<label><input id="mcb_1" name="method" type="checkbox" checked value=""> All</label><br>
 			<label><input id="mcb_1_1" name="method" type="checkbox" checked value="transcription profiling by array"> transcription profiling by array</label><br>
 			<label><input id="mcb_1_2" name="method" type="checkbox" checked value="RNA-seq"> RNA-seq</label><br>
-			<label><input id="mcb_1_2_1" name="rnaseqType" type="checkbox" checked value="bulk RNA-seq"> bulk RNA-seq</label><br>
-			<label><input id="mcb_1_2_2" name="rnaseqType" type="checkbox" checked value="single cell RNA-seq"> single cell RNA-seq</label><br>
-			<label><input id="mcb_1_2_3" name="rnaseqType" type="checkbox" checked value="spatial RNA-seq"> spatial RNA-seq</label><br>
+			<label><input id="mcb_1_2_1" name="method" type="checkbox" checked value="bulk RNA-seq"> bulk RNA-seq</label><br>
+			<label><input id="mcb_1_2_2" name="method" type="checkbox" checked value="single cell RNA-seq"> single cell RNA-seq</label><br>
+			<label><input id="mcb_1_2_3" name="method" type="checkbox" checked value="spatial RNA-seq"> spatial RNA-seq</label><br>
 		</td>
 	</tr>
 	<tr class="stripe1">

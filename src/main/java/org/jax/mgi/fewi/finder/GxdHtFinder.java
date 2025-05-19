@@ -9,6 +9,7 @@ import org.jax.mgi.fewi.forms.GxdHtQueryForm;
 import org.jax.mgi.fewi.hunter.SolrGxdHtExperimentHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdHtExperimentStudyTypeFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdHtExperimentVariableFacetHunter;
+import org.jax.mgi.fewi.hunter.SolrGxdHtExperimentMethodFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdHtSampleHunter;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.Operator;
@@ -48,6 +49,9 @@ public class GxdHtFinder {
 
 	@Autowired
 	private SolrGxdHtExperimentVariableFacetHunter variableFacetHunter;
+
+	@Autowired
+	private SolrGxdHtExperimentMethodFacetHunter methodFacetHunter;
 
 	//--- public methods ---//
 	public SearchResults<GxdHtExperiment> getExperiments(SearchParams searchParams, GxdHtQueryForm query) {
@@ -166,6 +170,19 @@ public class GxdHtFinder {
 
 		SearchResults<GxdHtExperiment> results = new SearchResults<GxdHtExperiment>();
 		variableFacetHunter.hunt(keySearchParams, results);
+		return results;
+	}
+
+    public SearchResults<GxdHtExperiment> getMethodFacet(SearchParams params, GxdHtQueryForm query) {
+		Map<String, Integer> experimentKeyMap = this.getMatchingExperimentKeyMap(params, query);
+		List<String> experimentKeys = this.getMatchingExperimentKeys(experimentKeyMap);
+
+		SearchParams keySearchParams = new SearchParams();
+		keySearchParams.setPaginator(new Paginator(1));
+		keySearchParams.setFilter(new Filter(GxdHtFields.EXPERIMENT_KEY, experimentKeys, Operator.OP_IN));
+
+		SearchResults<GxdHtExperiment> results = new SearchResults<GxdHtExperiment>();
+		methodFacetHunter.hunt(keySearchParams, results);
 		return results;
 	}
 }

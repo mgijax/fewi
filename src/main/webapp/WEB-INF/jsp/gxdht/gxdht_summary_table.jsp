@@ -70,10 +70,16 @@
 	  	  		</ul>
 	  	  	</td>
 			<td id="studyTypeData${status.index}">${exp.studyType}</td>
-			<td id="methodData${status.index}">${exp.method}
-			    <c:forEach var="rst" items="${exp.rnaseqType}">
-				<br/>&nbsp;&nbsp;${rst.replace("RNA-seq","")}
-			    </c:forEach>
+			<td id="methodData${status.index}">
+			    <c:if test = "${exp.methods.size() == 1 and exp.methods[0] == 'transcription profiling by array'}">
+			        ${exp.methods[0]}
+			    </c:if>
+			    <c:if test = "${exp.methods.size() > 0 and exp.methods[0] != 'transcription profiling by array'}">
+				RNA-seq<br/>
+				<c:forEach var="rst" items="${exp.methods}">
+				    &nbsp;&nbsp;${rst.replace("RNA-seq","")}<br/>
+				</c:forEach>
+			    </c:if>
 			</td>
 			<td id="pubMedData${status.index}">
 			  	<c:if test="${not empty exp.pubmedIDs}">

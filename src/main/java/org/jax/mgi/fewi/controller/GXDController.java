@@ -4787,6 +4787,12 @@ public class GXDController {
 		return gxdhtController.getStudyTypeFacet(query, null, response);
 	}
 
+	// filter values for methods for a GXD HT summary (retrieve via Ajax)
+	@RequestMapping("/htexp_index/facet/method")
+	public @ResponseBody Map<String, List<String>> htFacetMethod (HttpServletRequest request, @ModelAttribute GxdHtQueryForm query, @ModelAttribute Paginator page, HttpServletResponse response) {
+		return gxdhtController.getMethodFacet(query, null, response);
+	}
+
 	// comparator for markers in an RNA-Seq heat map
     private class HeatMapMarkerComparator extends SmartAlphaComparator<GxdRnaSeqHeatMapMarker> {
     	public int compare(GxdRnaSeqHeatMapMarker t1, GxdRnaSeqHeatMapMarker t2) {

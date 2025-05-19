@@ -200,7 +200,6 @@ public class SearchConstants {
 	public static final String POS_STRUCTURE = "posStructure";
 	public static final String ANATOMICAL_SYSTEM = "anatomicalSystem";
 	public static final String ANATOMY_ID = "anatomyID";
-	public static final String RNASEQ_TYPE = "rnaseqType";
 	public static final String ANCESTOR_ANATOMY_KEY	= "ancestorAnatomyKey";
 	// profile constants
 	public static final String PROF_POS_C_EXACT = "posCExact";
@@ -224,6 +223,7 @@ public class SearchConstants {
 	public static final String GXDHT_MUTATED_GENE = "mutatedGene";
 	public static final String GXDHT_MUTANT_ALLELE_IDS = "mutantAlleleIds";
 	public static final String GXDHT_METHOD = "method";
+	public static final String GXDHT_METHODS = "methods";
 	public static final String GXDHT_STRAIN = "strainSearch";
 	public static final String GXDHT_TITLE = "title";
 	public static final String GXDHT_DESCRIPTION = "description";

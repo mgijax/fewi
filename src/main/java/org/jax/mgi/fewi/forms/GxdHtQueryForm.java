@@ -19,8 +19,8 @@ public class GxdHtQueryForm {
 	private List<String> variable = new ArrayList<String>();
 	private List<String> variableFilter = new ArrayList<String>();
 	private List<String> studyTypeFilter = new ArrayList<String>();
-	private List<String> rnaseqType = new ArrayList<String>();
 	private List<String> method =  new ArrayList<String>();
+	private List<String> methodFilter = new ArrayList<String>();
 	private String mutatedIn = "";
 	private String mutantAlleleId = "";
 	private String relevancy = "";
@@ -35,7 +35,6 @@ public class GxdHtQueryForm {
 	private Map<String,String> sexOptions = new LinkedHashMap<String,String>();
 	private Map<String,String> textScopeOptions = new LinkedHashMap<String,String>();
 	private Map<String,String> methodOptions = new LinkedHashMap<String,String>();
-	private Map<String,String> rnaseqTypeOptions = new LinkedHashMap<String,String>();
 	private Map<Integer, String> theilerStages = new LinkedHashMap<Integer, String>();
 	public static Integer ANY_STAGE = 0;
 
@@ -67,10 +66,9 @@ public class GxdHtQueryForm {
 		methodOptions.put("", "All");
 		methodOptions.put("transcription profiling by array", "transcription profiling by array");
 		methodOptions.put("RNA-seq", "RNA-seq");
-
-		rnaseqTypeOptions.put("bulk RNA-seq", "bulk RNA-seq");
-		rnaseqTypeOptions.put("single cell RNA-seq", "single cell RNA-seq");
-		rnaseqTypeOptions.put("spatial RNA-seq", "spatial RNA-seq");
+		methodOptions.put("bulk RNA-seq", "bulk RNA-seq");
+		methodOptions.put("single cell RNA-seq", "single cell RNA-seq");
+		methodOptions.put("spatial RNA-seq", "spatial RNA-seq");
 	}
 	
     //--------------------//
@@ -117,10 +115,6 @@ public class GxdHtQueryForm {
 		return methodOptions;
 	}
 
-	public Map<String,String> getRnaseqTypeOptions() {
-		return rnaseqTypeOptions;
-	}
-
 	public Map<String,String> getTextScopeOptions() {
 		return textScopeOptions;
 	}
@@ -140,19 +134,6 @@ public class GxdHtQueryForm {
 	}
 
 	//
-	public List<String> getRnaseqType() {
-		return rnaseqType;
-	}
-	public void setRnaseqType(List<String> rnaseqType) {
-		this.rnaseqType = rnaseqType;
-	}
-	public void setRnaseqType(String rnaseqType) {
-		if ((rnaseqType != null) && (rnaseqType.length() > 0)) {
-			List<String> t = new ArrayList<String>();
-			t.add(rnaseqType);
-			this.rnaseqType = t;
-		}
-	}
 	//
 
 	public List<String> getAge() {
@@ -217,6 +198,20 @@ public class GxdHtQueryForm {
 			List<String> t = new ArrayList<String>();
 			t.add(method);
 			this.method = t;
+		}
+	}
+
+	public List<String> getMethodFilter() {
+		return methodFilter;
+	}
+	public void setMethodFilter(List<String> methodFilter) {
+		this.methodFilter = methodFilter;
+	}
+	public void setMethodFilter(String methodFilter) {
+		if ((methodFilter != null) && (methodFilter.length() > 0)) {
+			List<String> t = new ArrayList<String>();
+			t.add(methodFilter);
+			this.methodFilter = t;
 		}
 	}
 
@@ -293,7 +288,7 @@ public class GxdHtQueryForm {
 
 	@Override
 	public String toString() {
-		return "GxdHtQueryForm [age=" + age + ", theilerStage=" + theilerStage + ", method=" + method + ", rnaseqType=" + rnaseqType + ", mutatedIn="
+		return "GxdHtQueryForm [age=" + age + ", theilerStage=" + theilerStage + ", method=" + method + ", mutatedIn="
 				+ mutatedIn + ", mutantAlleleId=" + mutantAlleleId + ", sex=" + sex + ", structure=" + structure + ", structureID=" + structureID + ", text="
 				+ text + ", textScope=" + textScope + "]";
 	}

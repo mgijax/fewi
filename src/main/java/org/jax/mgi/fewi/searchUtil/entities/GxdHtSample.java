@@ -15,7 +15,7 @@ public class GxdHtSample
 	private String sex;
 	private Integer experimentKey;
 	private String name;
-	private String rnaseqType;
+	private String method;
 	private String organism;
 	private String mutantAlleles;
 	private String geneticBackground;
@@ -30,11 +30,11 @@ public class GxdHtSample
 	public void setMatchesSearch(boolean matchesSearch) {
 		this.matchesSearch = matchesSearch;
 	}
-	public String getRnaseqType() {
-		return rnaseqType;
+	public String getMethod() {
+		return method;
 	}
-	public void setRnaseqType(String rnaseqType) {
-		this.rnaseqType = rnaseqType;
+	public void setMethod(String method) {
+		this.method = method;
 	}
 	public String getRelevancy() {
 		return relevancy;

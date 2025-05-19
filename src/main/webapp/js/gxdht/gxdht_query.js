@@ -78,7 +78,6 @@ var gq_reset = function(e) {
 	
 	// Method ribbon
 	$('input:checkbox[name=method]').prop('checked', true);
-	$('input:checkbox[name=rnaseqType]').prop('checked', true);
 	
 	// Text ribbon
 	$('input:text[name=text]').val('');
@@ -203,10 +202,6 @@ var gq_reset = function(e) {
 	    const methodCbs = $('input:checkbox[name=method]');
 	    methodCbs.each((i, cb) => {
 		cb.checked = ((pmap['method'] || []).indexOf(cb.value) >= 0);
-	    })
-	    const rnaseqTypeCbs = $('input:checkbox[name=rnaseqType]');
-	    rnaseqTypeCbs.each((i, cb) => {
-		cb.checked = ((pmap['rnaseqType'] || []).indexOf(cb.value) >= 0);
 	    })
     }
 

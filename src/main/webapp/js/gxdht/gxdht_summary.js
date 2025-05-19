@@ -64,22 +64,31 @@ var updateYouSearchedFor = function() {
 	if (params.hasOwnProperty('mutantAlleleId')) {
 		ysf = ysf + 'Samples <b>carrying mutant allele ' + decode(params['mutantAlleleId'][0]) + '</b> ';
 	}
-	if (params.hasOwnProperty('method') || params.hasOwnProperty('rnaseqType')) {
-		var terms = []
-		var showRnaseqTypes = true
-		if (params['method']) {
-		    if (params['method'].length === 2) {
-		        terms.push('ANY method')
-			showRnaseqTypes = false
+	if (params.hasOwnProperty('method') && params['method'].length > 0 && params['method'].length < 5) {
+		var otherTerms = []
+		var rnaseqTerms = []
+		seenRNA = false
+		params['method'].forEach(m => {
+		    m = decode(m)
+		    if (m.includes('RNA')) {
+			seenRNA = true
+			i = m.indexOf("RNA")
+			if (i > 0) {
+			    rnaseqTerms.push(m.substring(0, i-1))
+			}
 		    } else {
-		        terms.push(decode(params['method'][0]))
-			if (terms[0] === "RNA seq") showRnaseqTypes = false;
+		        otherTerms.push(m)
+		    }
+		})
+		var rString = ""
+		if (seenRNA) {
+		    rString = "RNA-seq"
+		    if (rnaseqTerms.length > 0) {
+		        rString = rString + ' (' + rnaseqTerms.join(', ') + ')'
 		    }
 		}
-		if (params['rnaseqType'] &&  showRnaseqTypes) {
-		    terms = terms.concat(params['rnaseqType'].map(decode))
-		}
-		ysf = ysf + 'Assayed by <b>(' + terms.join(', ') + ')</b><br/>';
+		if (rString.length > 0) otherTerms.push(rString);
+		ysf = ysf + 'Assayed by <b>(' + otherTerms.join(', ') + ')</b><br/>';
 	} else {
 		ysf = ysf + 'Assayed by <b>(ANY method)</b><br/>';
 	}

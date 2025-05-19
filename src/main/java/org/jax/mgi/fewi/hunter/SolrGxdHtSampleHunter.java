@@ -54,7 +54,6 @@ public class SolrGxdHtSampleHunter extends SolrHunter<GxdHtSample> {
         propertyMap.put(SearchConstants.GXDHT_TITLE_DESCRIPTION, new SolrPropertyMapper(GxdHtFields.TITLE_DESCRIPTION));
         propertyMap.put(SearchConstants.GXDHT_EXPERIMENT_ID, new SolrPropertyMapper(GxdHtFields.EXPERIMENT_ID));
         propertyMap.put(SearchConstants.GXDHT_EXPERIMENTAL_VARIABLE, new SolrPropertyMapper(GxdHtFields.EXPERIMENTAL_VARIABLES));
-        propertyMap.put(SearchConstants.RNASEQ_TYPE, new SolrPropertyMapper(GxdHtFields.RNASEQ_TYPE));
         propertyMap.put(SearchConstants.REF_ID, new SolrPropertyMapper(GxdHtFields.REFERENCE_ID));
         propertyMap.put(SearchConstants.GXD_AGE_MIN, new SolrPropertyMapper(GxdHtFields.AGE_MIN));
         propertyMap.put(SearchConstants.GXD_AGE_MAX, new SolrPropertyMapper(GxdHtFields.AGE_MAX));
@@ -97,7 +96,7 @@ public class SolrGxdHtSampleHunter extends SolrHunter<GxdHtSample> {
 			sample.setGeneticBackground((String) doc.getFieldValue(GxdHtFields.GENETIC_BACKGROUND));
 			sample.setMutantAlleles((String) doc.getFieldValue(GxdHtFields.MUTANT_ALLELES));
 			sample.setName((String) doc.getFieldValue(GxdHtFields.NAME));
-			sample.setRnaseqType((String) doc.getFieldValue(GxdHtFields.RNASEQ_TYPE));
+			sample.setMethod ((String) doc.getFieldValue(GxdHtFields.METHOD));
 			sample.setNote((String) doc.getFieldValue(GxdHtFields.NOTE));
 			sample.setOrganism((String) doc.getFieldValue(GxdHtFields.ORGANISM));
 			sample.setSampleKey(Integer.parseInt((String) doc.getFieldValue(GxdHtFields.SAMPLE_KEY)));

@@ -42,7 +42,7 @@ mvn -Dmaven.repo.local=${MAVEN_REPO_LOCAL} clean package
 
 # deploy
 if [ $? -eq 0 ] && [ $# -gt 0 ] ; then
-    if [ $1 == "-deploy" ] ; then
+    if [ $1 == "-deploy" ] || [ $1 == "-d" ] ; then
       echo "Deploying fewi.war to ${DEPLOY_DIR}"
       cp ./target/fewi.war  ${DEPLOY_DIR}
       if [ "${DEPLOY_BATCH_DIR}" != "" ] ; then
