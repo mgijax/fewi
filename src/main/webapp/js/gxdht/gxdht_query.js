@@ -182,6 +182,8 @@ var gq_reset = function(e) {
 
     function parseParams () {
 	    var srch = document.location.search.slice(1);
+	    if (srch === '')
+	    	return {};
 	    const pieces = srch.split('&');
 	    const pmap = pieces.reduce((a,v) => {
 		const vpieces = v.split('=')
