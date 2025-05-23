@@ -47,7 +47,15 @@ public class RecomSpecificitySummaryRow {
 
     // structure
     public String getStructure() {
-        return "<span class='summaryDataCell'>" + alleleSystemAssayResult.getStructure() + "</span>";
+    	String structureDisplay = null;
+    	if (alleleSystemAssayResult.getTerm() != null) {
+    		structureDisplay = "<a href='" + fewiUrl
+    		          + "vocab/gxd/anatomy/" +alleleSystemAssayResult.getTerm().getPrimaryID()
+    		          + "'>" + alleleSystemAssayResult.getStructure() + "</a>";
+    	} else {
+    		structureDisplay = alleleSystemAssayResult.getStructure();
+    	}
+        return "<span class='summaryDataCell'>" + structureDisplay + " </span>";
     }
 
     // age
