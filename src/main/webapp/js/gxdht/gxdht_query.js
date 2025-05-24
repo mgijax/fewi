@@ -203,7 +203,7 @@ var gq_reset = function(e) {
 	    const pmap = parseParams()
 	    const methodCbs = $('input:checkbox[name=method]');
 	    methodCbs.each((i, cb) => {
-		cb.checked = ((pmap['method'] || []).indexOf(cb.value) >= 0);
+		cb.checked =  pmap['method'] ? (pmap['method'].indexOf(cb.value) >= 0) : true;
 	    })
     }
 
