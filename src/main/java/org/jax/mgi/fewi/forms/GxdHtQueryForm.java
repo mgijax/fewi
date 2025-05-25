@@ -27,6 +27,8 @@ public class GxdHtQueryForm {
 	private String sex = "";
 	private String structure = "";
 	private String structureID = "";
+	private String cellType = "";
+	private String cellTypeID = "";
 	private String text = "";
 	private String arrayExpressID = "";
 	private String experimentKey = "";
@@ -164,6 +166,20 @@ public class GxdHtQueryForm {
 		this.structureID = structureID;
 	}
 
+	public String getCellType() {
+		return cellType;
+	}
+	public void setCellType(String cellType) {
+		this.cellType = cellType;
+	}
+
+	public String getCellTypeID() {
+		return cellTypeID;
+	}
+	public void setCellTypeID(String cellTypeID) {
+		this.cellTypeID = cellTypeID;
+	}
+
 	public String getSex() {
 		return sex;
 	}
@@ -289,8 +305,10 @@ public class GxdHtQueryForm {
 	@Override
 	public String toString() {
 		return "GxdHtQueryForm [age=" + age + ", theilerStage=" + theilerStage + ", method=" + method + ", mutatedIn="
-				+ mutatedIn + ", mutantAlleleId=" + mutantAlleleId + ", sex=" + sex + ", structure=" + structure + ", structureID=" + structureID + ", text="
-				+ text + ", textScope=" + textScope + "]";
+				+ mutatedIn + ", mutantAlleleId=" + mutantAlleleId + ", sex=" + sex 
+				+ ", structure=" + structure + ", structureID=" + structureID 
+				+ ", cellType=" + cellType + ", cellTypeID=" + cellTypeID 
+				+ ", text=" + text + ", textScope=" + textScope + "]";
 	}
 
     //--- private methods ---//

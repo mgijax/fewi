@@ -43,6 +43,10 @@ var updateYouSearchedFor = function() {
 	} else {
 		ysf = ysf + '<b>Assayed</b> in <b>any structures</b><br/>';
 	}
+	if (params.hasOwnProperty('cellType')) {
+		ysf = ysf + 'in cell type: ' + decode(params['cellType'][0]) + '<br/>';
+	}
+
 	if (params.hasOwnProperty('theilerStage') && (JSON.stringify(params['theilerStage']) != JSON.stringify(['0']))) {
 		ysf = ysf + 'at developmental stage(s): <b>(TS:' + params['theilerStage'].join(')</b> or <b>(TS:') + ')</b><br/>';
 	} else if (params.hasOwnProperty('age') && (JSON.stringify(params['age']) != JSON.stringify(['ANY']))) {

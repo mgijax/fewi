@@ -114,6 +114,18 @@ public class GXDHTController {
 		return mav;
 	}
 
+	public Integer getGxdHtExperimentCount(
+			HttpServletRequest request,
+			GxdHtQueryForm query)
+	{
+		logger.debug("called /summary/totalCount");
+		SearchParams params = new SearchParams();
+		params.setFilter(genFilters(query));
+		params.setPageSize(0);
+
+		return gxdHtFinder.getExperimentCount(params, query);
+	}
+
 	// determine if we searched by any sample-specific fields (not experiment-level fields); if
 	// so, then we will need to float the matching samples to the top and do highlighting
 	public boolean searchedBySampleFields(GxdHtQueryForm queryForm) {
@@ -140,6 +152,12 @@ public class GXDHTController {
 			return true;
 		} 
 		if ((queryForm.getStructureID() != null) && (queryForm.getStructureID().length() > 0)) {
+			return true;
+		} 
+		if ((queryForm.getCellTypeID() != null) && (queryForm.getCellTypeID().length() > 0)) {
+			return true;
+		} 
+		if ((queryForm.getCellType() != null) && (queryForm.getCellType().length() > 0)) {
 			return true;
 		} 
 		if ((queryForm.getTheilerStage() != null) && (queryForm.getTheilerStage().size() > 0)) {
@@ -588,6 +606,18 @@ public class GXDHTController {
 		String structure = query.getStructure();
 		if ((structure != null) && (structure.length() > 0)) {
 			filterList.add(new Filter(SearchConstants.GXDHT_STRUCTURE_SEARCH, structure.replaceAll(" ", "+"), Filter.Operator.OP_EQUAL));
+		}
+		
+		// search by cell type
+		String cellType = query.getCellType();
+		if ((cellType != null) && (cellType.length() > 0)) {
+			filterList.add(new Filter(SearchConstants.GXDHT_CT_SEARCH_TERMS, cellType, Filter.Operator.OP_EQUAL));
+		}
+		
+		// search by cell type ID
+		String cellTypeID = query.getCellTypeID();
+		if ((cellTypeID != null) && (cellTypeID.length() > 0)) {
+			filterList.add(new Filter(SearchConstants.GXDHT_CT_SEARCH_IDS, cellTypeID, Filter.Operator.OP_EQUAL));
 		}
 		
 		// search by stage (if available) or fall back on age (if no stage)

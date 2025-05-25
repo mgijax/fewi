@@ -4763,6 +4763,12 @@ public class GXDController {
 		return gxdhtController.gxdHtSummary(request, queryForm);
 	}
 	
+	// Count of HT experiments
+	@RequestMapping("/htexp_index/summary/totalCount")
+	public @ResponseBody Integer gxdHtSummaryCount(HttpServletRequest request, @ModelAttribute GxdHtQueryForm queryForm) {
+		return gxdhtController.getGxdHtExperimentCount(request, queryForm);
+	}
+	
 	// HT sample popup (expects ArrayExpress ID)
 	@RequestMapping(value="/htexp_index/samples/{experimentID:.+}", method = RequestMethod.GET)
 	public ModelAndView htSamplePopup(HttpServletRequest request, @PathVariable("experimentID") String experimentID, @ModelAttribute GxdHtQueryForm queryForm) {

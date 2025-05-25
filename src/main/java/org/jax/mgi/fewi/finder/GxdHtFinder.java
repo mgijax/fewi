@@ -88,6 +88,12 @@ public class GxdHtFinder {
 		return searchResults;
 	}
 
+	public Integer getExperimentCount(SearchParams searchParams, GxdHtQueryForm query) {
+		Map<String, Integer> experimentKeyMap = this.getMatchingExperimentKeyMap(searchParams, query);
+		List<String> experimentKeys = this.getMatchingExperimentKeys(experimentKeyMap);
+		return experimentKeys.size();
+	}
+
 	// convert an experimentKeyMap to just a list of keys
 	private List<String> getMatchingExperimentKeys(Map<String, Integer> experimentKeyMap) {
 		List<String> experimentKeys = new ArrayList<String>();
