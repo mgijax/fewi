@@ -44,7 +44,9 @@ var updateYouSearchedFor = function() {
 		ysf = ysf + '<b>Assayed</b> in <b>any structures</b><br/>';
 	}
 	if (params.hasOwnProperty('cellType')) {
-		ysf = ysf + 'in cell type: ' + decode(params['cellType'][0]) + '<br/>';
+		ysf = ysf + 'in cell type: <b>' + decode(params['cellType'][0]) + '</b><br/>';
+	} else if (params.hasOwnProperty('cellTypeID')) {
+		ysf = ysf + 'in cell type: <b>' + decode(params['cellTypeID'][0]) + '</b><br/>';
 	}
 
 	if (params.hasOwnProperty('theilerStage') && (JSON.stringify(params['theilerStage']) != JSON.stringify(['0']))) {

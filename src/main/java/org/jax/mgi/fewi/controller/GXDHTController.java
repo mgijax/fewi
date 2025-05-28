@@ -401,6 +401,14 @@ public class GXDHTController {
 		return this.getFacets(qf, "method");
 	}
 
+	/* get the set of cell type filter options for the current result set
+	 */
+	@RequestMapping("/facet/celltype")
+	public @ResponseBody Map<String, List<String>> getCellTypeFacet (@ModelAttribute GxdHtQueryForm qf, BindingResult result, HttpServletResponse response) {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return this.getFacets(qf, "cellType");
+	}
+
 	//--------------------------------------------------------------------//
 	// private methods
 	//--------------------------------------------------------------------//
@@ -422,6 +430,8 @@ public class GXDHTController {
 			facetChoices = gxdHtFinder.getStudyTypeFacet(params, qf).getResultFacets();
 		} else if ("method".equals(filterName)) {
 			facetChoices = gxdHtFinder.getMethodFacet(params, qf).getResultFacets();
+		} else if ("cellType".equals(filterName)) {
+			facetChoices = gxdHtFinder.getCellTypeFacet(params, qf).getResultFacets();
 		}
 
 		if (facetChoices == null) {
@@ -620,6 +630,21 @@ public class GXDHTController {
 			filterList.add(new Filter(SearchConstants.GXDHT_CT_SEARCH_IDS, cellTypeID, Filter.Operator.OP_EQUAL));
 		}
 		
+		// if cell type filter specified, add to query
+		List<String> cellTypeFilter = query.getCellTypeFilter();
+		if ((cellTypeFilter != null) && (cellTypeFilter.size() > 0)) {
+		    List<Filter> ctFilters = new ArrayList<Filter>();
+		    for (String ct : cellTypeFilter) {
+			    if ((ct != null) && (ct.length() > 0)) {
+				    Filter ctF = new Filter(SearchConstants.GXDHT_CT_SEARCH_IDS, ct, Filter.Operator.OP_EQUAL);
+				    ctFilters.add(ctF);
+			    }
+		    }
+		    if (ctFilters.size() > 0) {
+			    filterList.add(Filter.or(ctFilters));
+		    }
+		}
+
 		// search by stage (if available) or fall back on age (if no stage)
 		List<Integer> stages = query.getTheilerStage();
 		List<String> ages = query.getAge();

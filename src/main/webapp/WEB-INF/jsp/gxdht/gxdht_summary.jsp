@@ -34,10 +34,11 @@ table.id-table * {
 	<div id="breadbox">
 		<div id="contentcolumn">
 			<div class="innertube">
-				<div id="filterDiv" style="width: 360px;">
+				<div id="filterDiv" style="width: 420px;">
 					<span id="filterLabel" class="label">Filter experiments by:</span>
 					<a id="variableFilter" class="filterButton">Variable&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
 					<a id="studyTypeFilter" class="filterButton">Study Type&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
+					<a id="cellTypeFilter" class="filterButton">Cell Type&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
 					<a id="methodFilter" class="filterButton">Method&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
 				</div><br/>
 				<div id="filterSummary" class="filters" style="clear:both;">

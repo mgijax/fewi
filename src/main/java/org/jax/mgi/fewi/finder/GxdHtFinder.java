@@ -10,6 +10,7 @@ import org.jax.mgi.fewi.hunter.SolrGxdHtExperimentHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdHtExperimentStudyTypeFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdHtExperimentVariableFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdHtExperimentMethodFacetHunter;
+import org.jax.mgi.fewi.hunter.SolrGxdHtSampleCellTypeFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdHtSampleHunter;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.Operator;
@@ -52,6 +53,9 @@ public class GxdHtFinder {
 
 	@Autowired
 	private SolrGxdHtExperimentMethodFacetHunter methodFacetHunter;
+
+	@Autowired
+	private SolrGxdHtSampleCellTypeFacetHunter cellTypeFacetHunter;
 
 	//--- public methods ---//
 	public SearchResults<GxdHtExperiment> getExperiments(SearchParams searchParams, GxdHtQueryForm query) {
@@ -189,6 +193,13 @@ public class GxdHtFinder {
 
 		SearchResults<GxdHtExperiment> results = new SearchResults<GxdHtExperiment>();
 		methodFacetHunter.hunt(keySearchParams, results);
+		return results;
+	}
+
+    public SearchResults<GxdHtSample> getCellTypeFacet(SearchParams params, GxdHtQueryForm query) {
+		params.setPaginator(new Paginator(1));
+		SearchResults<GxdHtSample> results = new SearchResults<GxdHtSample>();
+		cellTypeFacetHunter.hunt(params, results);
 		return results;
 	}
 }

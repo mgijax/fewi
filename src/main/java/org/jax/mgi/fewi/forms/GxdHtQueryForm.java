@@ -29,6 +29,7 @@ public class GxdHtQueryForm {
 	private String structureID = "";
 	private String cellType = "";
 	private String cellTypeID = "";
+	private List<String> cellTypeFilter = new ArrayList<String>();
 	private String text = "";
 	private String arrayExpressID = "";
 	private String experimentKey = "";
@@ -178,6 +179,20 @@ public class GxdHtQueryForm {
 	}
 	public void setCellTypeID(String cellTypeID) {
 		this.cellTypeID = cellTypeID;
+	}
+
+	public List<String> getCellTypeFilter() {
+		return cellTypeFilter;
+	}
+	public void setCellTypeFilter(List<String> cellTypeFilter) {
+		this.cellTypeFilter = cellTypeFilter;
+	}
+	public void setCellTypeFilter(String cellTypeFilter) {
+		if ((cellTypeFilter != null) && (cellTypeFilter.length() > 0)) {
+			List<String> t = new ArrayList<String>();
+			t.add(cellTypeFilter);
+			this.cellTypeFilter = t;
+		}
 	}
 
 	public String getSex() {
