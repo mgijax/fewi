@@ -129,14 +129,6 @@
 			
 										<div style="float: left; margin-right: 20px;">NCBI Gene ID: <a href="${fn:replace(urls.Entrez_Gene, '@@@@', humanHomolog.entrezGeneID.accID)}" target="_blank">${humanHomolog.entrezGeneID.accID}</a></div>
 
-										<c:if test="${not empty humanHomolog.neXtProtIDs}">
-											<div style="float: left; margin-right: 20px;">neXtProt AC:
-												<c:forEach var="neXtProt" items="${humanHomolog.neXtProtIDs}" varStatus="neXtProtStatus">
-													<a href="${fn:replace(urls.neXtProt, '@@@@', neXtProt.accID)}" target="_blank">${neXtProt.accID}</a><c:if test="${!neXtProtStatus.last}">, </c:if>
-												</c:forEach>
-											</div>
-										</c:if>
-
 										<c:if test="${not empty humanHomolog.uniProtIDs}">
 											<div style="float: left; margin-right: 20px;">UniProt:
 												<c:forEach var="uniProt" items="${humanHomolog.uniProtIDs}" varStatus="uniProtStatus">
