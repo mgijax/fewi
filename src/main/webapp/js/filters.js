@@ -258,8 +258,8 @@ filters.defaultFilterFormatter = function(mydata) {
     for (var pos in myValues) {
 
 	    var value = myValues[pos];
-	    var id = mydata.name + '|' + fieldname + '|' + value;
-	    var text = mydata.nameForUser + ': ' + filters.decode(mydata.val2label[value]);
+	    var id = mydata.name + ':' + fieldname + ':' + value;
+	    var text = mydata.nameForUser + ': ' + filters.decode(value);
 
 	    var el = document.createElement('a');
 	    el.setAttribute('class', 'filterItem'); 
@@ -320,8 +320,8 @@ filters.sliderFormatter = function(mydata) {
 	    myValue = myValue[0];
     }
 
-    var id = mydata.name + '|' + fieldname + '|' + myValue;
-    var text = mydata.nameForUser + ': >= ' + filters.decode(mydata.val2label[myValue]);
+    var id = mydata.name + ':' + fieldname + ':' + myValue;
+    var text = mydata.nameForUser + ': >= ' + filters.decode(myValue);
 
     var el = document.createElement('a');
     el.setAttribute('class', 'filterItem'); 
@@ -409,7 +409,6 @@ filters.addFilter = function(
 	    'formatter' : formatter,
 	    'fields' : fields,
 	    'values' : {},		// fieldname -> [ value 1, ... value n ]
-	    'val2label' : {},
 	    'dataSource' : filterDS,
 	    'callback' : buildCallback(filterName, nameForUser),
 	    'parser' : parser,
@@ -591,9 +590,12 @@ filters.getAllSummaryButtons = function(fieldnames, skipRemoveAllButton) {
 	    list.push(el); 
     }
 
+    filters.log('point 1');
     if (list.length > 0) {
 	    // if there were some filters selected, may need to add a 'clear all' button
+    	filters.log('point 2');
     	if (!skipRemoveAllButton) {
+    		filters.log('point 3');
     		var el = document.createElement('a');
     		el.setAttribute('class', 'filterItem'); 
     		el.setAttribute('id', 'clearAllFilters');
@@ -601,12 +603,15 @@ filters.getAllSummaryButtons = function(fieldnames, skipRemoveAllButton) {
     		el.setAttribute('title', 'click to remove all filters');
     		setText(el, 'Remove All Filters');
     		list.push(el); 
+    		filters.log('point 4');
 	    }
 
+   		filters.log('point 5');
 	    // And, wire up all the buttons to the clearFilter() function.
 	    for (var i = 0; i < list.length; i++) {
 	        YAHOO.util.Event.addListener(list[i], 'click', filters.clearFilter);
 	    }
+   		filters.log('point 6');
     }
     filters.log('exiting getAllSummaryButtons() -- list.length = ' + list.length);
     return list;
@@ -1127,45 +1132,9 @@ filters.parseResponseShared = function(oRequest, oResponse, oPayload, widgetType
     filters.log('parseResponse() : ' + oPayload.name);
 
     var list = [];
+    var res = oResponse.results;
     var options = [];
     var title = "Filter";
-
-    // By default, res will be an array of facet values. The order of terms, the labels shown to the 
-    // user and the values submitted are all determined by the simple list of values in the response. 
-    // The result list may may also contain the ordering and the values to submit as PIPE-separated 
-    // fields in the results string. That is, each item in the response is a string of the 
-    // form "<sequencenum>|<primary_id>|<label>". 
-
-    var res = oResponse.results;
-    var vals = [].concat(res);
-
-    // -------------------------------------------------------------------------
-    // try to parse each result into <sequencenum>|<prinary_id>|<label>
-    // if successful:
-    //     sort the lines accoring to sequencenum
-    //     use the primary_id's as the vals array
-    // otherwise:
-    //     keep the default res and vals
-    var mapped = true;
-    var lineParts = res.map(line => {
-	const pieces = line.split("|");
-	if (pieces.length == 3) {
-	    return pieces
-	} else {
-	    mapped = false;
-	}
-    });
-    if (mapped) {
-        lineParts.sort((a,b) => parseInt(a[0]) - parseInt(b[0]));
-	res = lineParts.map(l => l[2]);
-	vals = lineParts.map(l => l[1]);
-    }
-    var val2label = {}
-    vals.forEach((v,i) => {
-        val2label[v] = res[i];
-    })
-    filters.filtersByName[oPayload.name].val2label = val2label;
-    // -------------------------------------------------------------------------
 
     var fieldname = null;
     if (oPayload.name in filters.filtersByName) {
@@ -1173,7 +1142,7 @@ filters.parseResponseShared = function(oRequest, oResponse, oPayload, widgetType
 	    if (fields.length > 0) {
 	        fieldname = fields[0];
 	    }
-	    filters.log('fieldname: ' + fieldname); 
+        filters.log('fieldname: ' + fieldname); 
 	    title = filters.filtersByName[oPayload.name].title;
     } else {
 	    filters.log('Unknown filter name: ' + oPayload.name);
@@ -1202,7 +1171,7 @@ filters.parseResponseShared = function(oRequest, oResponse, oPayload, widgetType
 
     for (var x in res) {
 	    var checked = '';
-	    var fVal = filters.encode(vals[x]);
+	    var fVal = filters.encode(res[x]);
 	    var fVal2 = fVal.replace(/\(/g, ',');
 
 	    var i = selectedList.length;
@@ -1233,7 +1202,7 @@ filters.parseResponseShared = function(oRequest, oResponse, oPayload, widgetType
 
 	options[x] = '<label><input type="' + widgetType + '" name="'
 	    + fieldname + '" value="'
-	    + vals[x] + '"'
+	    + res[x] + '"'
 	    + checked + '> '
 	    + res[x] + '</label>';
 
@@ -1422,7 +1391,7 @@ filters.clearFilter = function() {
 	    return;
     }
 
-    var kv = this.id.split('|');
+    var kv = this.id.split(':');
 
     // special case where we want to clear all values for a filter
 
