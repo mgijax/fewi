@@ -172,8 +172,8 @@ public class RecomSpecificitySummaryRow {
         	return "";
         }
         
-        // need to decide to select which one
-        Term displayTerm = alleleSystemAssayResult.getCellTypeTerms().getFirst();
+        // if more than one, just get first one for now.
+        Term displayTerm = alleleSystemAssayResult.getCellTypeTerms().get(0);
         return "<a href='" + fewiUrl
 		          + "vocab/cell_ontology/" + displayTerm.getPrimaryID()
 		          + "'>" + displayTerm.getTerm() + "</a>";
