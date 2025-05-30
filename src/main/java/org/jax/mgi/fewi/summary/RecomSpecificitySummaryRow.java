@@ -178,9 +178,9 @@ public class RecomSpecificitySummaryRow {
         
         // if more than one, just get first one for now.
         Term displayTerm = alleleSystemAssayResult.getCellTypeTerms().get(0);
-        return "<a href='" + fewiUrl
+        return "<span class='summaryDataCell'><a href='" + fewiUrl
 		          + "vocab/cell_ontology/" + displayTerm.getPrimaryID()
-		          + "'>" + displayTerm.getTerm() + "</a>";
+		          + "'>" + displayTerm.getTerm() + "</a></span>";
     }
 
     // specimen note
