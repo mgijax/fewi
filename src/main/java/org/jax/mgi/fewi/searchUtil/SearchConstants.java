@@ -221,6 +221,7 @@ public class SearchConstants {
 	public static final String GXDHT_STRUCTURE_SEARCH = "structureSearch";
 	public static final String GXDHT_CT_SEARCH_IDS = "ctSearchIDs";
 	public static final String GXDHT_CT_SEARCH_TERMS = "ctSearchTerms";
+	public static final String GXDHT_CT_FACET_TERMS = "ctFacetTerms";
 	public static final String GXDHT_SEX = "sex";
 	public static final String GXDHT_MUTATED_GENE = "mutatedGene";
 	public static final String GXDHT_MUTANT_ALLELE_IDS = "mutantAlleleIds";

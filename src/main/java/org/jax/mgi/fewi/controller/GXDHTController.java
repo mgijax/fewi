@@ -636,7 +636,7 @@ public class GXDHTController {
 		    List<Filter> ctFilters = new ArrayList<Filter>();
 		    for (String ct : cellTypeFilter) {
 			    if ((ct != null) && (ct.length() > 0)) {
-				    Filter ctF = new Filter(SearchConstants.GXDHT_CT_SEARCH_IDS, ct, Filter.Operator.OP_EQUAL);
+				    Filter ctF = new Filter(SearchConstants.GXDHT_CT_FACET_TERMS, ct, Filter.Operator.OP_EQUAL);
 				    ctFilters.add(ctF);
 			    }
 		    }
