@@ -7,6 +7,7 @@ import java.util.List;
 import org.jax.mgi.fe.datamodel.AlleleSystemAssayResult;
 import org.jax.mgi.fe.datamodel.AlleleSystemAssayResultImagePane;
 import org.jax.mgi.fe.datamodel.Image;
+import org.jax.mgi.fe.datamodel.Term;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.NotesTagConverter;
@@ -167,12 +168,15 @@ public class RecomSpecificitySummaryRow {
 
     // cell types
     public String getCellTypes() {
-        if (alleleSystemAssayResult.getCellTypes() != null) {
-          return "<span class='summaryDataCell'>" + alleleSystemAssayResult.getCellTypes() + "</span>";
-	    }
-	    else {
-	    	return "";
-		}
+        if (alleleSystemAssayResult.getCellTypeTerms() == null || alleleSystemAssayResult.getCellTypeTerms().size() < 1) {
+        	return "";
+        }
+        
+        // need to decide to select which one
+        Term displayTerm = alleleSystemAssayResult.getCellTypeTerms().getFirst();
+        return "<a href='" + fewiUrl
+		          + "vocab/cell_ontology/" + displayTerm.getPrimaryID()
+		          + "'>" + displayTerm.getTerm() + "</a>";
     }
 
     // specimen note
