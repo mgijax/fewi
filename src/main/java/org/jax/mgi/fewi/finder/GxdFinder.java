@@ -8,6 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.hunter.SolrGxdAssayTypeFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdDetectedFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdProfileHunter;
+import org.jax.mgi.fewi.hunter.SolrGxdCoFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdDoFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdGoFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdMarkerTypeFacetHunter;
@@ -91,6 +92,9 @@ public class GxdFinder {
 	@Autowired
 	private SolrGxdMpFacetHunter gxdMpFacetHunter;
 		
+	@Autowired
+	private SolrGxdCoFacetHunter gxdCoFacetHunter;
+
 	@Autowired
 	private SolrGxdDoFacetHunter gxdDoFacetHunter;
 
@@ -500,6 +504,15 @@ public class GxdFinder {
 		logger.debug("Starting: getDoFacet");
 		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
 		gxdDoFacetHunter.hunt(params, results);
+		SearchResults<SolrString> srSS = new SearchResults<SolrString>();
+		srSS.cloneFrom(results, SolrString.class);
+		return srSS;
+	}
+
+	public SearchResults<SolrString> getCoFacet(SearchParams params) {
+		logger.debug("Starting: getCoFacet");
+		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
+		gxdCoFacetHunter.hunt(params, results);
 		SearchResults<SolrString> srSS = new SearchResults<SolrString>();
 		srSS.cloneFrom(results, SolrString.class);
 		return srSS;

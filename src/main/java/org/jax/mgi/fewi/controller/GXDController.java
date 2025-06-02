@@ -3550,6 +3550,11 @@ public class GXDController {
 					query.getMpFilter(), Filter.Operator.OP_IN));
 		}
 
+		if (query.getCoFilter().size() > 0) {
+			facetList.add(new Filter(FacetConstants.GXD_CO,
+					query.getCoFilter(), Filter.Operator.OP_IN));
+		}
+
 		if (query.getDoFilter().size() > 0) {
 			facetList.add(new Filter(FacetConstants.GXD_DO,
 					query.getDoFilter(), Filter.Operator.OP_IN));
@@ -4391,6 +4396,20 @@ public class GXDController {
 				FacetConstants.GXD_MP);
 	}
 
+	/* gets a list of Cell Type Ontology values for the facet list, returned
+	 * as JSON
+	 */
+	@RequestMapping("/facet/co")
+	public @ResponseBody Map<String, List<String>> facetCo(
+			HttpSession session,
+			@ModelAttribute GxdQueryForm query,
+			BindingResult result) {
+
+		populateMarkerIDs(session, query);
+		return facetGeneric(query, result,
+				FacetConstants.GXD_CO);
+	}
+
 	/* gets a list of DO values for the facet list, returned
 	 * as JSON
 	 */
@@ -4515,6 +4534,9 @@ public class GXDController {
 		} else if (FacetConstants.GXD_MP.equals(facetType)) {
 			emptyListMsg = "No genes found with ontology associations.";
 			facetResults = gxdFinder.getMpFacet(params);
+		} else if (FacetConstants.GXD_CO.equals(facetType)) {
+			emptyListMsg = "No genes found with ontology associations.";
+			facetResults = gxdFinder.getCoFacet(params);
 		} else if (FacetConstants.GXD_DO.equals(facetType)) {
 			emptyListMsg = "No genes found with ontology associations.";
 			facetResults = gxdFinder.getDoFacet(params);
