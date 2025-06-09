@@ -4535,7 +4535,6 @@ public class GXDController {
 			emptyListMsg = "No genes found with ontology associations.";
 			facetResults = gxdFinder.getMpFacet(params);
 		} else if (FacetConstants.GXD_CO.equals(facetType)) {
-			emptyListMsg = "No genes found with ontology associations.";
 			facetResults = gxdFinder.getCoFacet(params);
 		} else if (FacetConstants.GXD_DO.equals(facetType)) {
 			emptyListMsg = "No genes found with ontology associations.";

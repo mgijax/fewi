@@ -815,7 +815,6 @@ public class VocabularyController {
     	mav.addObject("treeInitialUrl", baseUrl + "treeInitial");
     	mav.addObject("treeChildrenUrl", baseUrl + "treeChildren");
     	mav.addObject("autocompleteUrl", ContextLoader.getConfigBean().getProperty("FEWI_URL") + "autocomplete/cell_ontology?query=");
-//TODO; verify message
     	mav.addObject("message", "Your input is welcome.");
     	return mav;
     }
@@ -837,11 +836,9 @@ public class VocabularyController {
     	mav.addObject("searchPaneTitle", "Cell Type Search");
     	mav.addObject("termPaneTitle", "Cell Type Detail");
     	mav.addObject("treePaneTitle", "Cell Type Tree View");
-//TODO; correct help doc?
     	mav.addObject("helpDoc", "VOCAB_cl_browser_help.shtml");
     	mav.addObject("branding", "GXD");
     	mav.addObject("hideIsaIcon", "true");
-//TODO; SEO
     	mav.addObject("seoDescription", "The Cell Ontology (CL) is a structured controlled "
     		+ "vocabulary that describes a broad range of canonical biological cell types. "
     		+ "The CL is not organism-specific, covering cell types from prokaryotes to mammals, "
