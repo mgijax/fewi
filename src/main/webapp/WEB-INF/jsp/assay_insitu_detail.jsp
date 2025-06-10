@@ -281,7 +281,7 @@ function toggleSpecimenInfo(idToHide, idToShow) {
               <c:forEach var="cellType" items="${specimenResult.cellTypes}">
                 <tr>
                 <td style=''><a href="${structureLink}">${specimenResult.structure}</a></td>
-                <td style=''>${cellType.cellType}</td>
+                <td style=''><a href='${configBean.FEWI_URL}vocab/cell_ontology/${cellType.cellTypeId}'>${cellType.cellType}</a></td>
                 <td style=''>${specimenResult.level}</td>
                 <td style=''>${specimenResult.pattern}</td>
                 <td style=''>
