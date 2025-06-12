@@ -17,6 +17,7 @@ public class FacetConstants {
 	public static final String GXD_WILDTYPE = "isWildType";
 	public static final String GXD_MARKER_TYPE = "featureTypes";
 	public static final String GXD_MP = "mpHeaders";
+	public static final String GXD_CO = "coHeaders";
 	public static final String GXD_DO = "doHeaders";
 	public static final String GXD_GO = "goHeaders";
 	public static final String GXD_GO_MF = "goMfHeaders"; 
