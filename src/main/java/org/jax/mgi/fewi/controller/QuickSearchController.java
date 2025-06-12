@@ -1705,10 +1705,10 @@ public class QuickSearchController {
 	private List<QSVocabResultWrapper> wrapVocabResults(List<QSVocabResult> results) {
         List<QSVocabResultWrapper> wrapped = new ArrayList<QSVocabResultWrapper>();
         for (QSVocabResult r : results) {
-        	// For EMAPA and EMAPS terms, we need to retrieve and remember annotation counts.
+		// For EMAPA, EMAPS, and CL terms, we need to retrieve and remember annotation counts.
         	if ("<<gxdCount>>".equals(r.getAnnotationText())) {
         		Integer resultCount = gxdController.getResultCountForID(r.getPrimaryID());
-        		logger.debug("count for " + r.getPrimaryID() + ": " + resultCount);
+			logger.info("count for " + r.getPrimaryID() + ": " + resultCount);
         		if (resultCount > 0) {
         			String s = "";
         			if (resultCount > 1) {
@@ -1717,8 +1717,8 @@ public class QuickSearchController {
         			r.setAnnotationCount(resultCount.longValue());
         			r.setAnnotationText(resultCount + " gene expression result" + s);
         		} else {
-        			r.setAnnotationCount(0L);
-        			r.setAnnotationText(null);
+				r.setAnnotationCount(0L);
+				r.setAnnotationText(null);
         		}
         	}
         	wrapped.add(new QSVocabResultWrapper(r));
