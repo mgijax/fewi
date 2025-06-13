@@ -145,6 +145,7 @@ function initializeFilterLibrary(delay) {
 		filters.addFilter('phenotypeFilterV', 'Phenotype', 'phenotypeFilterV', 'phenotypeFilterV', fewiurl + 'quicksearch/vocabBucket/phenotype');
 		filters.addFilter('diseaseFilterV', 'Disease', 'diseaseFilterV', 'diseaseFilterV', fewiurl + 'quicksearch/vocabBucket/disease');
 		filters.addFilter('expressionFilterV', 'Expression', 'expressionFilterV', 'expressionFilterV', fewiurl + 'quicksearch/vocabBucket/expression');
+		filters.addFilter('cellTypeFilterV', 'Cell Type', 'cellTypeFilterV', 'cellTypeFilterV', fewiurl + 'quicksearch/vocabBucket/cellType');
 
 		filters.addFilter('phenotypeFilterS', 'Phenotype', 'phenotypeFilterS', 'phenotypeFilterS', fewiurl + 'quicksearch/strainBucket/phenotype');
 		filters.addFilter('diseaseFilterS', 'Disease', 'diseaseFilterS', 'diseaseFilterS', fewiurl + 'quicksearch/strainBucket/disease');
@@ -170,6 +171,7 @@ function initializeFilterLibrary(delay) {
 			'phenotypeFilterV' : [ 'filterSummaryV', 'filterListV' ],
 			'diseaseFilterV' : [ 'filterSummaryV', 'filterListV' ],
 			'expressionFilterV' : [ 'filterSummaryV', 'filterListV' ],
+			'cellTypeFilterV' : [ 'filterSummaryV', 'filterListV' ],
 
 			'featureTypeFilterO' : [ 'filterSummaryO', 'filterListO' ],		// other IDs filters
 

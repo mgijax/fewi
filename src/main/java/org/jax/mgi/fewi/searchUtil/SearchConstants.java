@@ -374,6 +374,7 @@ public class SearchConstants {
 	public static final String QS_PHENOTYPE_FACETS = "phenotypeFacets";
 	public static final String QS_MARKER_TYPE_FACETS = "markerTypeFacets";
 	public static final String QS_EXPRESSION_FACETS = "expressionFacets";
+	public static final String QS_CELL_TYPE_FACETS = "cellTypeFacets";
 	
 	public static final String QS_ATTRIBUTES = "attributes";			// special for strain bucket
 	public static final String QS_REFERENCE_COUNT = "referenceCount";

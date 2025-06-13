@@ -105,6 +105,7 @@ public class QuickSearchController {
 		validFacetFields.add(SearchConstants.QS_DISEASE_FACETS);
 		validFacetFields.add(SearchConstants.QS_MARKER_TYPE_FACETS);
 		validFacetFields.add(SearchConstants.QS_EXPRESSION_FACETS);
+		validFacetFields.add(SearchConstants.QS_CELL_TYPE_FACETS);
 	}
 
 	// Stemmed "words" that should not be matched alone in annotation-related fields (only in combination with
@@ -660,6 +661,7 @@ public class QuickSearchController {
 			filters.add(getFilterForOneField(SearchConstants.QS_GO_COMPONENT_FACETS, qf.getComponentFilterV()));
 			filters.add(getFilterForOneField(SearchConstants.QS_PHENOTYPE_FACETS, qf.getPhenotypeFilterV()));
 			filters.add(getFilterForOneField(SearchConstants.QS_EXPRESSION_FACETS, qf.getExpressionFilterV()));
+			filters.add(getFilterForOneField(SearchConstants.QS_CELL_TYPE_FACETS, qf.getCellTypeFilterV()));
 			filters.add(getFilterForOneField(SearchConstants.QS_DISEASE_FACETS, qf.getDiseaseFilterV()));
 
 		} else if (bucket == OTHER) {
@@ -1440,6 +1442,14 @@ public class QuickSearchController {
 	public @ResponseBody Map<String, List<String>> getExpressionFacetV (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
 		AjaxUtils.prepareAjaxHeaders(response);
 		return getFacets(qf, SearchConstants.QS_EXPRESSION_FACETS, VOCAB_TERM);
+	}
+
+	/* Get the set of cell type filter options for the vocab bucket's current result set
+	 */
+	@RequestMapping("/vocabBucket/cellType")
+	public @ResponseBody Map<String, List<String>> getCellTypeFacetV (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_CELL_TYPE_FACETS, VOCAB_TERM);
 	}
 
 	/* Get the set of phenotype filter options for the vocab bucket's current result set
