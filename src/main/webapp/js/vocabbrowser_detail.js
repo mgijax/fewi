@@ -445,9 +445,29 @@ var addTooltips = function() {
 	$('[style*="/assets/images/positively_regulates.gif"]').prop('title', 'positively-regulates');
 };
 
+function highlightAnnotated (treeId) {
+    const domNodes = document.querySelectorAll(`#${treeId} li.jstree-node`)
+    domNodes.forEach(dn => {
+        const jn = $(`#${treeId}`).jstree().get_node(dn.id);
+        if (jn.data.hasNoAnnotations == 'true') {
+            dn.style.color = 'lightgray'
+        } else {
+            dn.style.color = 'black'
+        }
+    })  
+};
+
+
 /* set up automatic pane resizing for when the page first loads and when the browser is resized.
  */
 $(document).ready(function() { 
+
 	setTimeout(resizePanes, 250);
+	
+    // 
+	$('#treeViewDiv').on('changed.jstree', () => highlightAnnotated('treeViewDiv'));
+    highlightAnnotated('treeViewDiv');
 	});
+
 $(window).resize(resizePanes);
+

@@ -3030,7 +3030,19 @@ public class GXDController {
 
 		return gxdFinder.getAssayResultCount(params);
 	}
-	
+
+	// lookup of result count for CellType Ontoloty term
+	public Integer getResultCountForCoID(String termID) {
+		logger.debug("in getResultCountForCoID(" + termID + ")");
+		SearchParams params = new SearchParams();
+		GxdQueryForm form = new GxdQueryForm();
+		form.setAnnotationId(termID);
+		params.setFilter(parseGxdQueryForm(form));
+		params.setPageSize(0);
+
+		return gxdFinder.getAssayResultCount(params);
+	}	
+
 	@RequestMapping("/images/totalCount")
 	public @ResponseBody Integer getGxdImageCount(
 			HttpSession session,
