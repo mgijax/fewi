@@ -105,6 +105,7 @@ public class QuickSearchController {
 		validFacetFields.add(SearchConstants.QS_DISEASE_FACETS);
 		validFacetFields.add(SearchConstants.QS_MARKER_TYPE_FACETS);
 		validFacetFields.add(SearchConstants.QS_EXPRESSION_FACETS);
+		validFacetFields.add(SearchConstants.QS_CELL_TYPE_FACETS);
 	}
 
 	// Stemmed "words" that should not be matched alone in annotation-related fields (only in combination with
@@ -642,6 +643,7 @@ public class QuickSearchController {
 			filters.add(getFilterForOneField(SearchConstants.QS_GO_COMPONENT_FACETS, qf.getComponentFilterF()));
 			filters.add(getFilterForOneField(SearchConstants.QS_PHENOTYPE_FACETS, qf.getPhenotypeFilterF()));
 			filters.add(getFilterForOneField(SearchConstants.QS_EXPRESSION_FACETS, qf.getExpressionFilterF()));
+			filters.add(getFilterForOneField(SearchConstants.QS_CELL_TYPE_FACETS, qf.getCellTypeFilterF()));
 			filters.add(getFilterForOneField(SearchConstants.QS_DISEASE_FACETS, qf.getDiseaseFilterF()));
 			filters.add(getFilterForOneField(SearchConstants.QS_MARKER_TYPE_FACETS, qf.getFeatureTypeFilterF()));
 
@@ -660,6 +662,7 @@ public class QuickSearchController {
 			filters.add(getFilterForOneField(SearchConstants.QS_GO_COMPONENT_FACETS, qf.getComponentFilterV()));
 			filters.add(getFilterForOneField(SearchConstants.QS_PHENOTYPE_FACETS, qf.getPhenotypeFilterV()));
 			filters.add(getFilterForOneField(SearchConstants.QS_EXPRESSION_FACETS, qf.getExpressionFilterV()));
+			filters.add(getFilterForOneField(SearchConstants.QS_CELL_TYPE_FACETS, qf.getCellTypeFilterV()));
 			filters.add(getFilterForOneField(SearchConstants.QS_DISEASE_FACETS, qf.getDiseaseFilterV()));
 
 		} else if (bucket == OTHER) {
@@ -1362,6 +1365,15 @@ public class QuickSearchController {
 		return getFacets(qf, SearchConstants.QS_EXPRESSION_FACETS, FEATURE);
 	}
 
+	/* Get the set of cell type filter options for the feature bucket's current result set
+	 */
+	@RequestMapping("/featureBucket/cellType")
+	public @ResponseBody Map<String, List<String>> getCellTypeFacetF (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_CELL_TYPE_FACETS, FEATURE);
+	}
+
+
 	/* Get the set of phenotype filter options for the feature bucket's current result set
 	 */
 	@RequestMapping("/featureBucket/phenotype")
@@ -1440,6 +1452,14 @@ public class QuickSearchController {
 	public @ResponseBody Map<String, List<String>> getExpressionFacetV (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
 		AjaxUtils.prepareAjaxHeaders(response);
 		return getFacets(qf, SearchConstants.QS_EXPRESSION_FACETS, VOCAB_TERM);
+	}
+
+	/* Get the set of cell type filter options for the vocab bucket's current result set
+	 */
+	@RequestMapping("/vocabBucket/cellType")
+	public @ResponseBody Map<String, List<String>> getCellTypeFacetV (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_CELL_TYPE_FACETS, VOCAB_TERM);
 	}
 
 	/* Get the set of phenotype filter options for the vocab bucket's current result set
@@ -1705,10 +1725,10 @@ public class QuickSearchController {
 	private List<QSVocabResultWrapper> wrapVocabResults(List<QSVocabResult> results) {
         List<QSVocabResultWrapper> wrapped = new ArrayList<QSVocabResultWrapper>();
         for (QSVocabResult r : results) {
-        	// For EMAPA and EMAPS terms, we need to retrieve and remember annotation counts.
+		// For EMAPA, EMAPS, and CL terms, we need to retrieve and remember annotation counts.
         	if ("<<gxdCount>>".equals(r.getAnnotationText())) {
         		Integer resultCount = gxdController.getResultCountForID(r.getPrimaryID());
-        		logger.debug("count for " + r.getPrimaryID() + ": " + resultCount);
+			logger.info("count for " + r.getPrimaryID() + ": " + resultCount);
         		if (resultCount > 0) {
         			String s = "";
         			if (resultCount > 1) {
@@ -1717,8 +1737,8 @@ public class QuickSearchController {
         			r.setAnnotationCount(resultCount.longValue());
         			r.setAnnotationText(resultCount + " gene expression result" + s);
         		} else {
-        			r.setAnnotationCount(0L);
-        			r.setAnnotationText(null);
+				r.setAnnotationCount(0L);
+				r.setAnnotationText(null);
         		}
         	}
         	wrapped.add(new QSVocabResultWrapper(r));

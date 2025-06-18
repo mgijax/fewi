@@ -3024,7 +3024,11 @@ public class GXDController {
 		logger.debug("in getResultCountForID(" + termID + ")");
 		SearchParams params = new SearchParams();
 		GxdQueryForm form = new GxdQueryForm();
-		form.setStructureID(termID);
+		if (termID.startsWith("EMAP")) {
+			form.setStructureID(termID);
+		} else {
+			form.setAnnotationId(termID);
+		}
 		params.setFilter(parseGxdQueryForm(form));
 		params.setPageSize(0);
 

@@ -3,7 +3,8 @@
    <a id="functionFilterV" class="filterButton">Molecular Function <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
    <a id="processFilterV" class="filterButton">Biological Process <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
    <a id="componentFilterV" class="filterButton">Cellular Component <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
-   <a id="expressionFilterV" class="filterButton">Expression <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
+   <a id="expressionFilterV" class="filterButton">Expression (Anatomy)<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
+   <a id="cellTypeFilterV" class="filterButton">Expression (Cell Type)<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
    <a id="phenotypeFilterV" class="filterButton">Phenotype <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
    <a id="diseaseFilterV" class="filterButton">Disease <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
 </div>
