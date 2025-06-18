@@ -643,6 +643,7 @@ public class QuickSearchController {
 			filters.add(getFilterForOneField(SearchConstants.QS_GO_COMPONENT_FACETS, qf.getComponentFilterF()));
 			filters.add(getFilterForOneField(SearchConstants.QS_PHENOTYPE_FACETS, qf.getPhenotypeFilterF()));
 			filters.add(getFilterForOneField(SearchConstants.QS_EXPRESSION_FACETS, qf.getExpressionFilterF()));
+			filters.add(getFilterForOneField(SearchConstants.QS_CELL_TYPE_FACETS, qf.getCellTypeFilterF()));
 			filters.add(getFilterForOneField(SearchConstants.QS_DISEASE_FACETS, qf.getDiseaseFilterF()));
 			filters.add(getFilterForOneField(SearchConstants.QS_MARKER_TYPE_FACETS, qf.getFeatureTypeFilterF()));
 
@@ -1363,6 +1364,15 @@ public class QuickSearchController {
 		AjaxUtils.prepareAjaxHeaders(response);
 		return getFacets(qf, SearchConstants.QS_EXPRESSION_FACETS, FEATURE);
 	}
+
+	/* Get the set of cell type filter options for the feature bucket's current result set
+	 */
+	@RequestMapping("/featureBucket/cellType")
+	public @ResponseBody Map<String, List<String>> getCellTypeFacetF (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_CELL_TYPE_FACETS, FEATURE);
+	}
+
 
 	/* Get the set of phenotype filter options for the feature bucket's current result set
 	 */

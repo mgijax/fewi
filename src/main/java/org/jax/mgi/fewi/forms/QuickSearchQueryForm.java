@@ -44,6 +44,7 @@ public class QuickSearchQueryForm {
     private List<String> functionFilterF;
     private List<String> phenotypeFilterF;
     private List<String> expressionFilterF;
+    private List<String> cellTypeFilterF;
     private List<String> diseaseFilterF;
     private List<String> featureTypeFilterF;
 
@@ -150,6 +151,12 @@ public class QuickSearchQueryForm {
 	}
 	public void setExpressionFilterF(List<String> expressionFilter) {
 		this.expressionFilterF = expressionFilter;
+	}
+	public List<String> getCellTypeFilterF() {
+		return cellTypeFilterF;
+	}
+	public void setCellTypeFilterF(List<String> cellTypeFilterF) {
+		this.cellTypeFilterF = cellTypeFilterF;
 	}
 	public List<String> getPhenotypeFilterF() {
 		return phenotypeFilterF;
