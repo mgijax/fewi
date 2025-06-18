@@ -445,6 +445,7 @@ var addTooltips = function() {
 	$('[style*="/assets/images/positively_regulates.gif"]').prop('title', 'positively-regulates');
 };
 
+// enables de-highlight of terms without annotations
 function highlightAnnotated (treeId) {
     const domNodes = document.querySelectorAll(`#${treeId} li.jstree-node`)
     domNodes.forEach(dn => {

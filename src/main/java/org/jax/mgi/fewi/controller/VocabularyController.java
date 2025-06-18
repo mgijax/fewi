@@ -1637,7 +1637,6 @@ public class VocabularyController {
             if (id.startsWith("CL:")) { // if it's a cell type ontology term
 
                 Integer resultCount = gxdController.getResultCountForCoID(id);
-logger.info("-----------counts: " + resultCount.toString());
                 if (resultCount > 0) {
 
                     // set label and url here; other browsers have these set upstream in indexer
@@ -1657,7 +1656,6 @@ logger.info("-----------counts: " + resultCount.toString());
                       }
                     }
                 } else { // no counts; set proper values to indicate this
-logger.info("-----no counts");
                     thisTerm.setHasNoAnnotations("true");
                     
                     // if the parent has no counts (rolled-up), neither do the children
