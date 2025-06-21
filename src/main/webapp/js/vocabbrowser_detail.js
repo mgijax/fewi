@@ -211,6 +211,11 @@ var buildTree = function(id) {
 	$('#treeViewDiv').on('ready.jstree', function() {
 		// adding a little time before the scrolling seems to help some browsers (IE, possibly Mac browsers)
 		setTimeout(scrollTreeView, 250); 
+
+		// attach change listener for visual of annotated vs non
+		$('#treeViewDiv').on('changed.jstree', () => highlightAnnotated('treeViewDiv'));
+		highlightAnnotated('treeViewDiv');		
+
 		} );
 	addTooltips();
 	log("initialized jstree");
@@ -459,7 +464,8 @@ function highlightAnnotated (treeId) {
 };
 
 
-/* set up automatic pane resizing for when the page first loads and when the browser is resized.
+/* set up automatic pane resizing for when the page first loads and when the browser is resized,
+ * and attach highlighting to terms with annotations
  */
 $(document).ready(function() { 
 
@@ -467,7 +473,7 @@ $(document).ready(function() {
 	
     // 
 	$('#treeViewDiv').on('changed.jstree', () => highlightAnnotated('treeViewDiv'));
-    highlightAnnotated('treeViewDiv');
+	highlightAnnotated('treeViewDiv');
 	});
 
 $(window).resize(resizePanes);
