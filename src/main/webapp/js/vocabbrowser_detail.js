@@ -456,7 +456,7 @@ function highlightAnnotated (treeId) {
     domNodes.forEach(dn => {
         const jn = $(`#${treeId}`).jstree().get_node(dn.id);
         if (jn.data.hasNoAnnotations == 'true') {
-            dn.style.color = 'lightgray'
+            dn.style.color = '#848482'
         } else {
             dn.style.color = 'black'
         }
