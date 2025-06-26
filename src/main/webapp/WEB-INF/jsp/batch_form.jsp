@@ -5,7 +5,7 @@
 				<td colspan="2" align="left" style="padding:5px;">
 					<input class="buttonLabel" value="Search" type="submit">
 					<input type="reset">
-					<span class="example">&nbsp;Download gene/marker data for a batch of IDs or symbols.</span>
+					<span class="example">&nbsp;Download mouse gene/marker data for a batch of IDs or symbols. For human diseases only diseases with experimental evidence in mouse are included.</span>
 				</td>
 			</tr>
 			<tr>

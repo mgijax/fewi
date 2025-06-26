@@ -33,6 +33,7 @@ import org.jax.mgi.fewi.util.UserMonitor;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.shr.jsonmodel.BrowserParent;
 import org.jax.mgi.shr.jsonmodel.BrowserTerm;
+import org.jax.mgi.shr.jsonmodel.BrowserChild;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +98,9 @@ public class VocabularyController {
     
     @Autowired
     private IDLinker idLinker;
-    
+
+    @Autowired
+    private GXDController gxdController;
     
     /* OMIM vocabulary browser */
 
@@ -1626,7 +1629,44 @@ public class VocabularyController {
     		terms = vocabFinder.getBrowserTerm(id.toUpperCase(), vocab);
     	}
     	if (terms.size() >= 1) {
-    		return terms.get(0);
+            BrowserTerm thisTerm = terms.get(0);
+            
+            // Special handling for Cell Type Ontology.  Normally these counts are added in the
+            // indexer layer (which was easier for other vocabs).  Cell Ontology result counts
+            // are easiest to gather via controller-to-controller request.
+            if (id.startsWith("CL:")) { // if it's a cell type ontology term
+
+                Integer resultCount = gxdController.getResultCountForCoID(id);
+                if (resultCount > 0) {
+
+                    // set label and url here; other browsers have these set upstream in indexer
+                    thisTerm.setAnnotationLabel(resultCount.toString() + " expression results");
+                    thisTerm.setAnnotationUrl("gxd/celltype/" + thisTerm.getPrimaryID().getAccID() );
+                    
+                    // set label and url for all the children of this term
+                    if (thisTerm.getChildren() != null) {
+                      for (BrowserChild child : thisTerm.getChildren() ) {
+                        Integer childResultCount = gxdController.getResultCountForCoID(child.getPrimaryID());
+                        if (childResultCount > 0) { 
+                            child.setAnnotationLabel(childResultCount.toString() + " expression results");
+                            child.setAnnotationUrl("gxd/celltype/" + child.getPrimaryID() );
+                        } else {
+                        	child.setHasNoAnnotations("true");
+                        }
+                      }
+                    }
+                } else { // no counts; set proper values to indicate this
+                    thisTerm.setHasNoAnnotations("true");
+                    
+                    // if the parent has no counts (rolled-up), neither do the children
+                    if (thisTerm.getChildren() != null) {
+                      for (BrowserChild child : thisTerm.getChildren() ) {
+                        child.setHasNoAnnotations("true");
+                      }
+                    }
+                }
+            }
+    		return thisTerm;
     	}
     	return null;
     }

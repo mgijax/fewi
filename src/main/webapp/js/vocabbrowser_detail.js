@@ -211,6 +211,11 @@ var buildTree = function(id) {
 	$('#treeViewDiv').on('ready.jstree', function() {
 		// adding a little time before the scrolling seems to help some browsers (IE, possibly Mac browsers)
 		setTimeout(scrollTreeView, 250); 
+
+		// attach change listener for visual of annotated vs non
+		$('#treeViewDiv').on('changed.jstree', () => highlightAnnotated('treeViewDiv'));
+		highlightAnnotated('treeViewDiv');		
+
 		} );
 	addTooltips();
 	log("initialized jstree");
@@ -445,9 +450,31 @@ var addTooltips = function() {
 	$('[style*="/assets/images/positively_regulates.gif"]').prop('title', 'positively-regulates');
 };
 
-/* set up automatic pane resizing for when the page first loads and when the browser is resized.
+// enables de-highlight of terms without annotations
+function highlightAnnotated (treeId) {
+    const domNodes = document.querySelectorAll(`#${treeId} li.jstree-node`)
+    domNodes.forEach(dn => {
+        const jn = $(`#${treeId}`).jstree().get_node(dn.id);
+        if (jn.data.hasNoAnnotations == 'true') {
+            dn.style.color = '#848482'
+        } else {
+            dn.style.color = 'black'
+        }
+    })  
+};
+
+
+/* set up automatic pane resizing for when the page first loads and when the browser is resized,
+ * and attach highlighting to terms with annotations
  */
 $(document).ready(function() { 
+
 	setTimeout(resizePanes, 250);
+	
+    // 
+	$('#treeViewDiv').on('changed.jstree', () => highlightAnnotated('treeViewDiv'));
+	highlightAnnotated('treeViewDiv');
 	});
+
 $(window).resize(resizePanes);
+

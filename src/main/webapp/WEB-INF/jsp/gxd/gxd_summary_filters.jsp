@@ -12,7 +12,7 @@
 	<a id="wildtypeFilter"     class="filterButton">Wild&nbsp;type?&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
   </td>
   <td>&nbsp;&nbsp;</td>
-  <td>
+  <td style="vertical-align: top;">
 	<a id="markerTypeFilter"   class="filterButton">Gene&nbsp;Type&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> <br>
 	<a id="goMfFilter"         class="filterButton">Molecular&nbsp;Function&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> <br>
 	<a id="goBpFilter"         class="filterButton">Biological&nbsp;Process&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> <br>
