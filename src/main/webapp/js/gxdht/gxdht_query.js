@@ -244,7 +244,7 @@ $(function() {
 			.appendTo(ul);
 	}
 	// adding the item this way makes it disabled
-	return $('<li class="ui-menu-item disabled" style="color:#CCC;"></li>')
+	return $('<li class="ui-menu-item disabled" style="color:#999;"></li>')
 		.data("item.autocomplete", item)
 		.append('<span>'+value+'</span>')
 		.appendTo(ul);

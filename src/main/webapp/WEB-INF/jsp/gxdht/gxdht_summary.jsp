@@ -18,46 +18,57 @@ table tr.noteRow td.noteTitle { width: 85px; background-color: #EBCA6D; font-wei
 ul.variables { padding-top: 0px; }
 ul.variables li { padding-top: 0px; margin-left: 0px; list-style-type: none; }
 #paginationBottom { float: right; margin-right: 20px; text-align: right; }
-#querySummary { width: 500px; }
+#querySummary { width: 400px; }
 a { text-decoration: none; }
 .blue { color: blue; }
 .yellow { background-color: yellow; }
 #contentcolumn { margin: 0 425px 0 425px; }
 .facetFilter .yui-panel .bd { width: 284px; }
-
+#filterSummary {
+    max-width: 800px;
+}
 table.id-table * {
     border: none !important;
 }
+
+table.summary_header td {
+    padding: 6px;
+    vertical-align: top;
+}
 </style>
 
-<div id="summary">
-	<div id="breadbox">
-		<div id="contentcolumn">
-			<div class="innertube">
+<table class="summary_header" style="width:100%">
+ <tr>
+     <td>
+            <div id="searchSummary"> <!-- filled via js --> </div>
+     </td>
+     <td id="breadbox" style="float:none;width:auto;">
 				<div id="filterDiv" style="width: 420px;">
 					<span id="filterLabel" class="label">Filter experiments by:</span>
 					<a id="variableFilter" class="filterButton">Variable&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
 					<a id="studyTypeFilter" class="filterButton">Study Type&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
 					<a id="cellTypeFilter" class="filterButton">Cell Type&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
 					<a id="methodFilter" class="filterButton">Method&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
-				</div><br/>
-				<div id="filterSummary" class="filters" style="clear:both;">
+				</div>
+				<br/><br/>
+				<div id="filterSummary" class="filters" style="">
 					<span class="label">Filtered by:</span>
 					&nbsp;<span id="defaultText">No filters selected.</span>
 					<span id="filterList"></span><br/>
 					<span id="fCount" ><span id="filterCount">0</span> result(s) match after applying filter(s)</span>
 				</div>
-			</div>
-		</div>
-	</div>
+     </td>
+     <td style="text-align:right;white-space:nowrap;" >
+	      <div id="paginationTop">
+	    	<div id="pageControlsTop" class="paginator"></div>
+	    	<div id="pageLengthTop" class="pageLength"></div>
+	    	<div id="pageReportTop" class="pageReport"></div>
+	      </div>
+     </td>
+ </tr>
+</table>
 
-    <div id="querySummary">
-        <div class="innertube">
-            <div id="searchSummary"> <!-- filled via js --> </div>
-        </div>
-    </div>
-
-
+<div id="summary">
     <div class="facetFilter">
     	<div id="facetDialog">
 			<div class="hd">Filter</div>
@@ -70,17 +81,6 @@ table.id-table * {
 		</div>
     </div>
 
-    <div id="rightcolumn">
-        <div class="innertube">
-	      <div id="paginationTop">
-	    	<div id="pageControlsTop" class="paginator"></div>
-	    	<div id="pageLengthTop" class="pageLength"></div>
-	    	<div id="pageReportTop" class="pageReport"></div>
-	      </div>
-		</div>
-    </div>
-
-	    <br clear="all" />
     </div>
 
 	<div id="resultSummary" style="width:100%"></div>
