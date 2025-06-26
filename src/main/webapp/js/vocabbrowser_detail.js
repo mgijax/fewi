@@ -208,6 +208,7 @@ var buildTree = function(id) {
 	$('#treeViewDiv').jstree(config);
 	$('#treeViewDiv').on('changed.jstree', onChange);
 	$('#treeViewDiv').on('select_node.jstree', onSelectNode);
+	$('#treeViewDiv').on('after_open.jstree', afterOpenNode);
 	$('#treeViewDiv').on('ready.jstree', function() {
 		// adding a little time before the scrolling seems to help some browsers (IE, possibly Mac browsers)
 		setTimeout(scrollTreeView, 250); 
@@ -219,6 +220,16 @@ var buildTree = function(id) {
 		} );
 	addTooltips();
 	log("initialized jstree");
+};
+
+/* Ensure child terms are colored correctly, when new term is opened
+ */
+var afterOpenNode = function(node, event) {
+    log('afterOpenNode');
+
+    // attach change listener for visual of annotated vs non
+    $('#treeViewDiv').on('changed.jstree', () => highlightAnnotated('treeViewDiv'));
+    highlightAnnotated('treeViewDiv');  
 };
 
 /* handle a 'change' event from jsTree.  This event fires when the user clicks a triangle to expand a node's
