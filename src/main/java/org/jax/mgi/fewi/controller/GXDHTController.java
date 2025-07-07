@@ -570,10 +570,6 @@ public class GXDHTController {
 		// -----------------------------------------------------------------------
 		// search by method
 		List<String> methods = query.getMethod(); // from query form
-		List<String> methodFilter = query.getMethodFilter(); // from method filter
-		if (methodFilter != null && methodFilter.size() > 0) {
-			methods = methodFilter;
-		}
 		List<Filter> mFilters = new ArrayList<Filter>();
 		if (methods != null && (methods.size() > 0)) {
 			for (String m : methods) {
@@ -586,6 +582,22 @@ public class GXDHTController {
 		if (mFilters.size() > 0) {
 			filterList.add(Filter.or(mFilters));
 		}
+		// -----------------------------------------------------------------------
+		// Apply method filter
+		methods = query.getMethodFilter(); // from method filter
+		mFilters = new ArrayList<Filter>();
+		if (methods != null && (methods.size() > 0)) {
+			for (String m : methods) {
+				if ((m != null) && (m.length() > 0)) {
+					Filter mF = new Filter(SearchConstants.GXDHT_METHODS, m, Filter.Operator.OP_EQUAL);
+					mFilters.add(mF);
+				}
+			}
+		}
+		if (mFilters.size() > 0) {
+			filterList.add(Filter.or(mFilters));
+		}
+
 		// -----------------------------------------------------------------------
 
 		// search by sex
