@@ -60,7 +60,7 @@ public class SequenceFinder {
 
 	List<Sequence> seqList = this.getSequencesByID(seqID);
 
-	if (seqList.size() != 1) {
+	if (seqList.size() < 1) {
 	    logger.debug("->found " + seqList.size() + " sequences for ID " + seqID);
 	    return null;
 	}
