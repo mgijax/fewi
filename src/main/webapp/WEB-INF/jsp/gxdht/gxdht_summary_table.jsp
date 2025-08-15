@@ -6,7 +6,7 @@
 	StyleAlternator headingClass = new StyleAlternator("headerShade2", "headerShade1");
 	request.setAttribute("headingClass", headingClass);
     IDLinker idLinker = (IDLinker) request.getAttribute("idLinker");
-    String pmID = null;
+    String jnumID = null;
 %>
 <%@ page import = "java.util.List" %>
 
@@ -50,7 +50,7 @@
 			<td id="variableLabel${status.index}">Experimental variables</td>
 			<td id="studyTypeLabel${status.index}">Study type</td>
 			<td id="methodLabel${status.index}">Method</td>
-			<td id="pubMedLabel${status.index}">PubMed ID</td>
+			<td id="jnumLabel${status.index}">Reference</td>
 			<td id="viewLabel${status.index}">View experiment at</td>
 		</tr>
 
@@ -75,11 +75,11 @@
 				${rst}<br/>
 			    </c:forEach>
 			</td>
-			<td id="pubMedData${status.index}">
-			  	<c:if test="${not empty exp.pubmedIDs}">
-			  		<c:forEach var="pmID" items="${exp.pubmedIDs}" varStatus="pmStatus">
-						<% pmID = (String) pageContext.getAttribute("pmID"); %>
-		  				<%= idLinker.getLink("PubMed", pmID, pmID, "extUrl") %><c:if test="${!pmStatus.last}">, </c:if>
+			<td id="jnumData${status.index}">
+			  	<c:if test="${not empty exp.jnumIDs}">
+			  		<c:forEach var="jnumID" items="${exp.jnumIDs}" varStatus="jnumStatus">
+						<% jnumID = (String) pageContext.getAttribute("jnumID"); %>
+						<a href="/reference/${jnumID}">${jnumID}</a><c:if test="${!jnumStatus.last}">, </c:if>
 		  			</c:forEach>
 		  		</c:if>
 		  	</td>
