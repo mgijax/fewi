@@ -21,6 +21,7 @@ public class GxdHtQueryForm {
 	private List<String> studyTypeFilter = new ArrayList<String>();
 	private List<String> method =  new ArrayList<String>();
 	private List<String> methodFilter = new ArrayList<String>();
+	private String referenceID = "";
 	private String mutatedIn = "";
 	private String mutantAlleleId = "";
 	private String relevancy = "";
@@ -104,6 +105,14 @@ public class GxdHtQueryForm {
 
 	public void setStrain(String strain) {
 		this.strain = strain;
+	}
+
+	public String getReferenceID() {
+		return referenceID;
+	}
+
+	public void setReferenceID(String referenceID) {
+		this.referenceID = referenceID;
 	}
 
 	public Map<String, String> getAges() {
@@ -323,7 +332,9 @@ public class GxdHtQueryForm {
 				+ mutatedIn + ", mutantAlleleId=" + mutantAlleleId + ", sex=" + sex 
 				+ ", structure=" + structure + ", structureID=" + structureID 
 				+ ", cellType=" + cellType + ", cellTypeID=" + cellTypeID 
-				+ ", text=" + text + ", textScope=" + textScope + "]";
+				+ ", text=" + text + ", textScope=" + textScope 
+				+ ", referenceID=" + referenceID 
+				+ "]";
 	}
 
     //--- private methods ---//

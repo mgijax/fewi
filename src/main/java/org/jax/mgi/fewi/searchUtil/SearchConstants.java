@@ -218,6 +218,7 @@ public class SearchConstants {
 	public static final String GXDHT_EXPERIMENT_KEY = "experimentKey";
 	public static final String GXDHT_SAMPLE_KEY = "sampleKey";
 	public static final String GXDHT_EXPERIMENT_ID = "experimentID";
+	public static final String GXDHT_REFERENCE_ID = "referenceID";
 	public static final String GXDHT_STRUCTURE_SEARCH = "structureSearch";
 	public static final String GXDHT_CT_SEARCH_IDS = "ctSearchIDs";
 	public static final String GXDHT_CT_SEARCH_TERMS = "ctSearchTerms";
