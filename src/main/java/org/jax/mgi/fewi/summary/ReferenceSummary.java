@@ -151,6 +151,9 @@ public class ReferenceSummary {
         if(reference.getCountOfProbes() > 0){
         	sb.append(String.format("<li>Molecular probes and clones: <a href=\"%sprobe/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfProbes()));
         }
+        if(reference.getCountOfGXDHtExperiments() > 0){
+        	sb.append(String.format("<li>RNA-Seq or microarray experiments: <a href=\"%sgxd/htexp_index/summary?referenceID=%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfGXDHtExperiments()));
+        }
         if(reference.getCountOfSequenceResults() >0){
         	sb.append(String.format("<li>Sequences: <a href=\"%ssequence/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfSequenceResults()));
         }
