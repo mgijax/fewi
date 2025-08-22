@@ -7,12 +7,8 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHost;
-import org.apache.http.client.config.RequestConfig.Builder;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
-import org.elasticsearch.client.RestClientBuilder.RequestConfigCallback;
 import org.jax.mgi.fewi.propertyMapper.ESPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.JoinClause;
@@ -24,25 +20,25 @@ import org.jax.mgi.snpdatamodel.document.BaseESDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import co.elastic.clients.elasticsearch.ElasticsearchClient;
-import co.elastic.clients.elasticsearch._types.query_dsl.QueryStringQuery;
-import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
 
-import co.elastic.clients.elasticsearch._types.aggregations.RangeAggregation;
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.FieldSort;
+import co.elastic.clients.elasticsearch._types.SortOptions;
+import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.aggregations.AggregationRange;
 import co.elastic.clients.elasticsearch._types.aggregations.RangeBucket;
-
+import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
+import co.elastic.clients.elasticsearch._types.query_dsl.QueryStringQuery;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Highlight;
+import co.elastic.clients.elasticsearch.core.search.HighlightField;
 import co.elastic.clients.elasticsearch.core.search.Hit;
+import co.elastic.clients.elasticsearch.core.search.TrackHits;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.ElasticsearchTransport;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
-import co.elastic.clients.elasticsearch.core.search.TrackHits;
-import co.elastic.clients.elasticsearch._types.SortOptions;
-import co.elastic.clients.elasticsearch._types.FieldSort;
-import co.elastic.clients.elasticsearch._types.SortOrder;
-
+import co.elastic.clients.util.NamedValue;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -191,6 +187,10 @@ public class ESHunter<T extends BaseESDocument> {
                                 .trackTotalHits(th.build())
                                 .size(searchParams.getPageSize());
 
+                        Highlight highlight = addHighlightingFields(searchParams);
+                        if (highlight != null) {
+                            srb.highlight(highlight);
+                        }
                         addSorts(searchParams, srb);
 
                         if (groupField != null) {
@@ -203,7 +203,7 @@ public class ESHunter<T extends BaseESDocument> {
                                 List<AggregationRange> aggRanges = new ArrayList<AggregationRange>();
                                 for (long[] r : rangeSpec.getRanges()) {
                                     AggregationRange.Builder arb = new AggregationRange.Builder();
-                                    aggRanges.add(arb.from(""+r[0]).to(""+r[1]).build());
+                                    aggRanges.add(arb.from((double)r[0]).to((double)r[1]).build());
                                 }
                                 srb.aggregations(rangeSpec.getName(), t -> t.range(f -> 
                                     f.field(rangeSpec.getField())
@@ -336,44 +336,60 @@ public class ESHunter<T extends BaseESDocument> {
 	}
 
 
-	protected void createESConnection() {
-		if (esClient == null) {
-			RestClientBuilder client = RestClient.builder(new HttpHost(esHost, Integer.parseInt(esPort)));
-			client.setRequestConfigCallback(new RequestConfigCallback() {
-				public Builder customizeRequestConfig(Builder requestConfigBuilder) {
-					int hour = (60 * 60 * 1000);
-					int hours = 2 * hour;
-					return requestConfigBuilder.setConnectTimeout(5000).setSocketTimeout(hours).setConnectionRequestTimeout(hours);
-				}
-			});
-			ElasticsearchTransport transport = new RestClientTransport(client.build(), new JacksonJsonpMapper());
-			esClient = new ElasticsearchClient(transport);
+	protected void createESConnection() {		
+	    if (esClient == null) {
+	        RestClientBuilder builder = RestClient.builder(
+	            new HttpHost(esHost, Integer.parseInt(esPort), "http")
+	        );
+	        builder.setRequestConfigCallback(new RestClientBuilder.RequestConfigCallback() {
+	            @Override
+	            public org.apache.http.client.config.RequestConfig.Builder customizeRequestConfig(
+	                    org.apache.http.client.config.RequestConfig.Builder requestConfigBuilder) {
+	                int hour = 60 * 60 * 1000;
+	                int hours = 2 * hour;
+	                return requestConfigBuilder
+	                        .setConnectTimeout(5000)
+	                        .setSocketTimeout(hours)
+	                        .setConnectionRequestTimeout(hours);
+	            }
+	        });
 
-			log.info("Finished Connecting to ES client: " + client);
-		}
+	        ElasticsearchTransport transport = new RestClientTransport(
+	            builder.build(), new JacksonJsonpMapper()
+	        );
+	        esClient = new ElasticsearchClient(transport);
+	        log.info("Finished Connecting to ES client: " + esHost + ":" + esPort);
+	    }		
 	}
 
-        // Not yet converted to Elastic!!
-	protected void addHighlightingFields(SearchParams searchParams, SolrQuery query) {
-		if (! highlightFields.isEmpty() && searchParams.includeMetaHighlight()) {
-			for (String field: highlightFields) {
-				query.addHighlightField(field);
-			}
-			query.setHighlight(Boolean.TRUE);
-			query.setHighlightFragsize(this.highlightFragmentSize);
-			query.setHighlightSnippets(this.highlightSnippets);
-			query.setHighlightRequireFieldMatch(this.highlightRequireFieldMatch);
-			if(this.highlightPre!=null)
-			{
-				query.setParam("hl.simple.pre", this.highlightPre);
-				query.setParam("hl.simple.post", this.highlightPost);
-			}
-			else
-			{
-				query.setParam("hl.simple.pre", highlightToken);
-				query.setParam("hl.simple.post", highlightToken);
-			}
-		}
+	protected Highlight addHighlightingFields(SearchParams searchParams) {
+	    if (!highlightFields.isEmpty() && searchParams.includeMetaHighlight()) {
+
+	        List<NamedValue<HighlightField>> hlFields = new ArrayList<>();
+	        for (String field : highlightFields) {
+	            hlFields.add(
+	                NamedValue.of(
+	                    field,
+	                    HighlightField.of(hf -> hf
+	                        .fragmentSize(highlightFragmentSize)
+	                        .numberOfFragments(highlightSnippets)
+	                        .requireFieldMatch(highlightRequireFieldMatch)
+	                    )
+	                )
+	            );
+	        }
+
+	        return Highlight.of(h -> {
+	            h.fields(hlFields);
+	            if (highlightPre != null && highlightPost != null) {
+	                h.preTags(highlightPre).postTags(highlightPost);
+	            } else {
+	                h.preTags(highlightToken).postTags(highlightToken);
+	            }
+	            return h;
+	        });
+	    }
+	    return null; // no highlighting
 	}
 
 	protected void addSorts(SearchParams searchParams, SearchRequest.Builder srb) {
