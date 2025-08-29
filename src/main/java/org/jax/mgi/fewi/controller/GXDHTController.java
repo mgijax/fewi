@@ -126,6 +126,21 @@ public class GXDHTController {
 		return gxdHtFinder.getExperimentCount(params, query);
 	}
 
+	// lookup of experiment count for CellType Ontoloty term
+	public Integer getExperimentCountForCoID(String termID) {
+
+		logger.debug("---in getExperimentCountForCoID(" + termID + ")");
+
+		SearchParams params = new SearchParams();
+		GxdHtQueryForm query = new GxdHtQueryForm();
+
+		query.setCellTypeID(termID);
+		params.setFilter(genFilters(query));
+		params.setPageSize(0);
+
+		return gxdHtFinder.getExperimentCount(params, query);
+	}
+
 	// determine if we searched by any sample-specific fields (not experiment-level fields); if
 	// so, then we will need to float the matching samples to the top and do highlighting
 	public boolean searchedBySampleFields(GxdHtQueryForm queryForm) {

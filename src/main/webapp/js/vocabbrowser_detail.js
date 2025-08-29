@@ -466,10 +466,10 @@ function highlightAnnotated (treeId) {
     const domNodes = document.querySelectorAll(`#${treeId} li.jstree-node`)
     domNodes.forEach(dn => {
         const jn = $(`#${treeId}`).jstree().get_node(dn.id);
-        if (jn.data.hasNoAnnotations == 'true') {
-            dn.style.color = '#848482'
-        } else {
+        if (jn.data.hasAnnotations == 'true') {
             dn.style.color = 'black'
+        } else {
+            dn.style.color = '#848482'
         }
     })  
 };

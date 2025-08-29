@@ -102,6 +102,9 @@ public class VocabularyController {
     @Autowired
     private GXDController gxdController;
     
+    @Autowired
+    private GXDHTController gxdHtController;
+
     /* OMIM vocabulary browser */
 
     @RequestMapping("/omim")
@@ -1624,53 +1627,81 @@ public class VocabularyController {
     /* get the first term for the given id in the given vocabulary.  Return null if there are none.
      */
     private BrowserTerm getBrowserTerm(String id, String vocab) {
+
     	List<BrowserTerm> terms = vocabFinder.getBrowserTerm(id, vocab);
     	if (terms.size() < 1) {
     		terms = vocabFinder.getBrowserTerm(id.toUpperCase(), vocab);
     	}
+
     	if (terms.size() >= 1) {
-            BrowserTerm thisTerm = terms.get(0);
+
+            BrowserTerm selectedTerm = terms.get(0); // the selected browser term
             
             // Special handling for Cell Type Ontology.  Normally these counts are added in the
             // indexer layer (which was easier for other vocabs).  Cell Ontology result counts
             // are easiest to gather via controller-to-controller request.
             if (id.startsWith("CL:")) { // if it's a cell type ontology term
 
-                Integer resultCount = gxdController.getResultCountForCoID(id);
-                if (resultCount > 0) {
+				String baseUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");            
 
-                    // set label and url here; other browsers have these set upstream in indexer
-                    thisTerm.setAnnotationLabel(resultCount.toString() + " expression results");
-                    thisTerm.setAnnotationUrl("gxd/celltype/" + thisTerm.getPrimaryID().getAccID() );
-                    
-                    // set label and url for all the children of this term
-                    if (thisTerm.getChildren() != null) {
-                      for (BrowserChild child : thisTerm.getChildren() ) {
-                        Integer childResultCount = gxdController.getResultCountForCoID(child.getPrimaryID());
-                        if (childResultCount > 0) { 
-                            child.setAnnotationLabel(childResultCount.toString() + " expression results");
-                            child.setAnnotationUrl("gxd/celltype/" + child.getPrimaryID() );
-                        } else {
-                        	child.setHasNoAnnotations("true");
-                        }
-                      }
+                // gather all needed counts for this term
+                Integer resultCount = gxdController.getResultCountForCoID(id);
+                Integer htCount     = gxdHtController.getExperimentCountForCoID(id); 
+// TODO         Integer recomCount  = gxdController.getResultCountForCoID(id); 
+                //logger.info("---------- " + selectedTerm.getTerm() + " resultCount & htCount: " + resultCount + " " + htCount);
+               	selectedTerm.setHasAnnotations("");
+                if (resultCount > 0 || htCount > 0) {
+
+                	selectedTerm.setHasAnnotations("true");
+
+                    // set label here; other browsers have this set upstream in indexer
+                    StringBuilder termAnnotLabel = new StringBuilder("");
+                    if (resultCount > 0) {
+                    	termAnnotLabel.append("<a href='" + baseUrl + "gxd/celltype/" + selectedTerm.getPrimaryID().getAccID() +"' target='_blank'>"
+                    	+ resultCount.toString() + " expression results" + "</a> ");
                     }
-                } else { // no counts; set proper values to indicate this
-                    thisTerm.setHasNoAnnotations("true");
-                    
-                    // if the parent has no counts (rolled-up), neither do the children
-                    if (thisTerm.getChildren() != null) {
-                      for (BrowserChild child : thisTerm.getChildren() ) {
-                        child.setHasNoAnnotations("true");
+                    if (htCount > 0) {
+                    	termAnnotLabel.append("<a href='" + baseUrl + "gxdhtexp_index/summary?cellType=" + selectedTerm.getTerm() +"' target='_blank'>"
+                    	+ htCount.toString() + " HT results" + "</a> ");
+                    }
+                    selectedTerm.setAnnotationLabel( termAnnotLabel.toString() );
+
+                   
+                    // set count labels for all the children of this term
+                    if (selectedTerm.getChildren() != null) {
+                      for (BrowserChild child : selectedTerm.getChildren() ) {
+
+                        Integer childResultCount = gxdController.getResultCountForCoID(child.getPrimaryID());
+                        Integer childHtCount     = gxdHtController.getExperimentCountForCoID(child.getPrimaryID()); 
+                        //logger.info("---------- " + child.getTerm() + " childResultCount & childHtCount: " + childResultCount + " " + childHtCount);
+                        child.setHasAnnotations("");
+                        if (childResultCount > 0 || childHtCount > 0) {
+
+                            child.setHasAnnotations("true"); 
+
+                            // set label here; other browsers have this set upstream in indexer
+                            StringBuilder childAnnotLabel = new StringBuilder("");
+                            if (childResultCount > 0) {
+                            	childAnnotLabel.append("<a href='" + baseUrl + "gxd/celltype/" + child.getPrimaryID() +"' target='_blank'>"
+                            	+ childResultCount.toString() + " expression results" + "</a> ");
+                            }
+                            if (childHtCount > 0) {
+                    	        childAnnotLabel.append("<a href='" + baseUrl + "gxdhtexp_index/summary?cellType=" + child.getTerm() +"' target='_blank'>"
+                    	        + childHtCount.toString() + " HT results" + "</a> ");
+                            }
+                            child.setAnnotationLabel( childAnnotLabel.toString() );
+                        }
                       }
                     }
                 }
             }
-    		return thisTerm;
+    		return selectedTerm;
     	}
     	return null;
     }
     
+
+
     /***--- special comparators for smart-alpha sorting vocab browser results (shared and EMAPA-specific) ---***/
     
     private class BrowserTermComparator extends SmartAlphaComparator<BrowserTerm> {
