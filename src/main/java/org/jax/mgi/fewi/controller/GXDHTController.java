@@ -127,7 +127,7 @@ public class GXDHTController {
 	}
 
 	// lookup of experiment count for CellType Ontoloty term
-	public Integer getExperimentCountForCoID(String termID) {
+	public synchronized Integer getExperimentCountForCoID(String termID) {
 
 		logger.debug("---in getExperimentCountForCoID(" + termID + ")");
 
