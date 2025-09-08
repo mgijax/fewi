@@ -29,7 +29,7 @@ public class JSTreeNode {
 	private JSTreeNode chosenChild;
 	private String annotationLinkText;
 	private String annotationLinkUrl;
-	private String hasNoAnnotations;
+	private String hasAnnotations;
 	
 	/*--- constructors ---*/
 
@@ -94,7 +94,7 @@ public class JSTreeNode {
 		this.hasChildren = ((this.children != null) && (this.children.size() > 0));
 		this.annotationLinkText = term.getAnnotationLabel();
 		this.annotationLinkUrl = term.getAnnotationUrl();
-		this.hasNoAnnotations = term.getHasNoAnnotations();
+		this.hasAnnotations = term.getHasAnnotations();
 	}
 	
 	/* take the values we need from the BrowserChild to initialize this object
@@ -105,7 +105,7 @@ public class JSTreeNode {
 		this.hasChildren = child.getHasChildren() > 0;
 		this.annotationLinkText = child.getAnnotationLabel();
 		this.annotationLinkUrl = child.getAnnotationUrl();
-		this.hasNoAnnotations = child.getHasNoAnnotations();
+		this.hasAnnotations = child.getHasAnnotations();
 	}
 	
 	/* get the next available ID, wrapping the nextID back to 1 if we go past the max int
@@ -195,8 +195,8 @@ public class JSTreeNode {
 		sb.append(this.edgeType);
 		sb.append("\"");
 		
-		sb.append(", \"hasNoAnnotations\" : \"");
-		sb.append(this.hasNoAnnotations);
+		sb.append(", \"hasAnnotations\" : \"");
+		sb.append(this.hasAnnotations);
 		sb.append("\"}");
 
 		// attribute for the <li> tag, used to help find like terms in tree
