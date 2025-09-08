@@ -915,7 +915,7 @@ public class ReferenceController {
 
 		// build allele key query filter
 		if (query.getMarkerKey() != null) {
-			logger.info("set alleleKey filter");
+			logger.info("set markerKey filter");
 			queryList.add(new Filter(SearchConstants.MRK_KEY, query.getMarkerKey().toString(), Filter.Operator.OP_EQUAL));
 		}
 
