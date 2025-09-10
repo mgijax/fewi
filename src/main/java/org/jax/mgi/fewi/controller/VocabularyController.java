@@ -1657,11 +1657,13 @@ public class VocabularyController {
                     // set label here; other browsers have this set upstream in indexer
                     StringBuilder termAnnotLabel = new StringBuilder("");
                     if (resultCount > 0) {
-                    	termAnnotLabel.append("<a href='" + baseUrl + "gxd/celltype/" + selectedTerm.getPrimaryID().getAccID() +"' target='_blank'>"
+                    	termAnnotLabel.append("<a id='resultLink_" + selectedTerm.getPrimaryID().getAccID() 
+                    	+ "' href='" + baseUrl + "gxd/celltype/" + selectedTerm.getPrimaryID().getAccID() +"' target='_blank'>"
                     	+ resultCount.toString() + " expression results" + "</a> ");
                     }
                     if (htCount > 0) {
-                    	termAnnotLabel.append("<a href='" + baseUrl + "gxdhtexp_index/summary?cellType=" + selectedTerm.getTerm() +"' target='_blank'>"
+                    	termAnnotLabel.append("<a id='htLink_" + selectedTerm.getPrimaryID().getAccID() 
+                    	+ "' href='" + baseUrl + "gxdhtexp_index/summary?cellType=" + selectedTerm.getTerm() +"' target='_blank'>"
                     	+ htCount.toString() + " HT results" + "</a> ");
                     }
                     selectedTerm.setAnnotationLabel( termAnnotLabel.toString() );
@@ -1682,11 +1684,13 @@ public class VocabularyController {
                             // set label here; other browsers have this set upstream in indexer
                             StringBuilder childAnnotLabel = new StringBuilder("");
                             if (childResultCount > 0) {
-                            	childAnnotLabel.append("<a href='" + baseUrl + "gxd/celltype/" + child.getPrimaryID() +"' target='_blank'>"
+                            	childAnnotLabel.append("<a id='resultLink_" + child.getPrimaryID()
+                            	+ "' href='" + baseUrl + "gxd/celltype/" + child.getPrimaryID() +"' target='_blank'>"
                             	+ childResultCount.toString() + " expression results" + "</a> ");
                             }
                             if (childHtCount > 0) {
-                    	        childAnnotLabel.append("<a href='" + baseUrl + "gxdhtexp_index/summary?cellType=" + child.getTerm() +"' target='_blank'>"
+                    	        childAnnotLabel.append("<a id='htLink_" + child.getPrimaryID()
+                    	        + "' href='" + baseUrl + "gxdhtexp_index/summary?cellType=" + child.getTerm() +"' target='_blank'>"
                     	        + childHtCount.toString() + " HT results" + "</a> ");
                             }
                             child.setAnnotationLabel( childAnnotLabel.toString() );
