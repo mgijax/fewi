@@ -301,14 +301,14 @@ public class FormatHelper {
 	 */
 	public static String getSeqForwardValue(Sequence seq) {
 		List<SequenceLocation> locList = seq.getLocations();
+		String seqProvider = getSeqProviderForward(seq.getProvider());
 
 		// if genomic location, include coordinates
 
-		if ("mousegenome".equals(getSeqProviderForward(seq.getProvider())) && !locList.isEmpty()) {
+		if ("mousegenome".equals(seqProvider) || "straingene".equals(seqProvider) ) {
+			String strain = seq.getSources().get(0).getStrain();
 			SequenceLocation loc = locList.get(0);
-			return getSeqForwardValue(seq.getProvider(), seq.getPrimaryID(), loc.getChromosome(), String.valueOf(loc.getStartCoordinate().intValue()), String.valueOf(loc.getEndCoordinate().intValue()), "+");
-		} else if ("straingene".equals(getSeqProviderForward(seq.getProvider()))) {
-			return getSeqForwardValue(seq.getProvider(), seq.getPrimaryID(), "", "", "", "");
+			return getSeqForwardValue(seq.getProvider(), strain, seq.getPrimaryID(), loc.getChromosome(), String.valueOf(loc.getStartCoordinate().intValue()), String.valueOf(loc.getEndCoordinate().intValue()), loc.getStrand());
 		}
 
 		// no genomic location, so use genbank ID if we have one, primary ID if not
@@ -317,7 +317,7 @@ public class FormatHelper {
 		if (seq.getPreferredGenBankID() != null) {
 			seqID = seq.getPreferredGenBankID().getAccID();
 		}
-		return getSeqForwardValue(seq.getProvider(), seqID, "", "", "", "");
+		return getSeqForwardValue(seq.getProvider(), "", seqID, "", "", "", "");
 	}
 
 	/**
@@ -326,10 +326,11 @@ public class FormatHelper {
 	 */
 	public static String getSeqForwardValue(SimpleSequence seq) {
 		// if genomic location, include coordinates
+		String seqProvider = getSeqProviderForward(seq.getProvider());
 
-		if ("mousegenome".equals(getSeqProviderForward(seq.getProvider())) && (seq.getLocation() != null)) {
+		if ("mousegenome".equals(seqProvider) || "straingene".equals(seqProvider)) {
 			GenomicLocation loc = seq.getLocation();
-			return getSeqForwardValue(seq.getProvider(), seq.getPrimaryID(), loc.getChromosome(), loc.getStartCoordinate(), loc.getEndCoordinate(), "+");
+			return getSeqForwardValue(seq.getProvider(), seq.getStrain(), seq.getPrimaryID(), loc.getChromosome(), loc.getStartCoordinate(), loc.getEndCoordinate(), loc.getStrand());
 		}
 
 		// no genomic location, so use genbank ID if we have one, primary ID if not
@@ -338,16 +339,20 @@ public class FormatHelper {
 		if (seq.getPreferredGenbankID() != null) {
 			seqID = seq.getPreferredGenbankID();
 		}
-		return getSeqForwardValue(seq.getProvider(), seqID, "", "", "", "");
+		return getSeqForwardValue(seq.getProvider(), "", seqID, "", "", "", "");
 	}
 
-	public static String getSeqForwardValue(String seqProvider, String seqID, String chromosome, String startCoord, String endCoord, String strand) {
+	public static String getSeqForwardValue(String seqProvider, String strain, String seqID, String chromosome, String startCoord, String endCoord, String strand) {
+		logger.info("getSeqForwardValue: " + seqProvider + "," + strain + "," + seqID + "," + chromosome + "," + startCoord + "," + endCoord + "," + strand);
 		// buffer to collect/build value
 		StringBuffer seqForwardValue = new StringBuffer();
 		String provider = getSeqProviderForward(seqProvider);
 
 		seqForwardValue.append(provider);
 		seqForwardValue.append("!");
+		if ("mousegenome".equals(provider) || "straingene".equals(provider)) {
+			seqForwardValue.append(strain + ":");
+		}
 		seqForwardValue.append(seqID);
 		seqForwardValue.append("!");
 		seqForwardValue.append(chromosome);
