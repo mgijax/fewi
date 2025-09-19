@@ -125,7 +125,7 @@ td.outline { border: 1px solid black; }
 							<a class='MP' target="_blank" href="${configBean.FEWI_URL}disease/${disease.termID}">${disease.term}</a>
 						</td>
 						<td class="outline padded">
-							<a class='MP' target="_blank" href="http://www.disease-ontology.org/?id=${disease.termID}">${disease.termID}</a>
+							<a class='MP' target="_blank" href="https://www.disease-ontology.org/?id=${disease.termID}">${disease.termID}</a>
 						</td>
 						<td class="outline padded">
 							<c:forEach var="omimId" items="${disease.omimIds}">
