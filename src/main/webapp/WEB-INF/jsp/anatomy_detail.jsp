@@ -131,7 +131,10 @@ ul.ui-autocomplete {
 	</div>
   </td></tr>
 </table>
+
 </div>
+
+<div> ${message} </div>
 
 <script type="text/javascript">
 var crossRef = "${crossRef}";

@@ -175,6 +175,18 @@ public class VocabularyController {
 
     /*--- developmental anatomy browser ----------------------------------------------*/
 
+    private void addAnatomyFooter (ModelAndView mav) {
+	mav.addObject("message", "The Mouse Developmental Anatomy (EMAPA) Ontology was originally described in "
+		+ "<a href='https://www.sciencedirect.com/science/article/pii/S0925477398000690?via%3Dihub' target='_blank'>Bard et al., 1998</a> "
+		+ "and continues to be maintained, expanded, and refined by the GXD project "
+		+ "(<a href='https://jbiomedsem.biomedcentral.com/articles/10.1186/2041-1480-4-15' target='_blank'>Hayamizu et al., 2013</a>; "
+		+ "<a href='https://pmc.ncbi.nlm.nih.gov/articles/PMC4602063/' target='_blank'>Hayamizu et al. 2015</a>)."
+		+ "<br/><br/>" 
+		+ "Please <a href='mailto:MAontology@jax.org'>contact</a> us with suggestions, additions, or questions about the EMAPA Ontology. "
+		+ "Your input is welcome."
+		);
+    }
+
     /* support new GXD anatomy browser by dynamically looking up children for
      * a given node
      */
@@ -494,6 +506,7 @@ public class VocabularyController {
 	ModelAndView mav = new ModelAndView("anatomy_term_pane");
 
 	mav.addObject("term", term);
+	addAnatomyFooter(mav);
 	mav.addObject("title", getAnatomyTermDetailTitle(term)); 
 
 	// compose the dropdown list for linking to term at other stages
@@ -587,6 +600,7 @@ public class VocabularyController {
 
 	ModelAndView mav = new ModelAndView("anatomy_detail");
 	mav.addObject("term", term);
+	addAnatomyFooter(mav);
 	mav.addObject("crossRef", id);
 
 	return mav;
@@ -628,6 +642,7 @@ public class VocabularyController {
 	mav.addObject("term", term);
 	mav.addObject("allele", allele);
 	mav.addObject("crossRef", id);
+	addAnatomyFooter(mav);
 
 	return mav;
     }
@@ -648,6 +663,7 @@ public class VocabularyController {
 
 	ModelAndView mav = new ModelAndView("anatomy_detail");
 	mav.addObject("term", term);
+	addAnatomyFooter(mav);
 
 	return mav;
     }
@@ -671,6 +687,7 @@ public class VocabularyController {
 
 	ModelAndView mav = new ModelAndView("anatomy_detail");
 	mav.addObject("term", term);
+	addAnatomyFooter(mav);
 
 	return mav;
     }
@@ -711,11 +728,13 @@ public class VocabularyController {
     	mav.addObject("treeInitialUrl", baseUrl + "treeInitial");
     	mav.addObject("treeChildrenUrl", baseUrl + "treeChildren");
     	mav.addObject("autocompleteUrl", ContextLoader.getConfigBean().getProperty("FEWI_URL") + "autocomplete/ma_ontology?query=");
-    	mav.addObject("message", "Your input is welcome. Please "
-    		+ "<a href='mailto:MAontology@jax.org'>contact</a> us with suggestions, additions, or questions "
-    		+ "about the Adult Mouse Anatomy Ontology.<p>The Adult Mouse Anatomy Ontology was originally described in "
+    	mav.addObject("message", "The Adult Mouse Anatomy (MA) Ontology was originally described in "
     		+ "<a href='https://genomebiology.biomedcentral.com/articles/10.1186/gb-2005-6-3-r29' target='_blank'>Hayamizu et al., 2005</a> "
-    		+ "and continues to be maintained, expanded, and refined by the GXD project.");
+		+ "and continues to be maintained, expanded, and refined by the GXD project "
+		+ "(<a href='https://pmc.ncbi.nlm.nih.gov/articles/PMC4602063/' target='_blank'>Hayamizu et al, 2015</a>). "
+		+ "<br/><br/> "
+		+ "Please <a href='mailto:MAontology@jax.org'>contact</a> us with suggestions, additions, or questions about the MA Ontology. "
+		+ "Your input is welcome.");
     	return mav;
     }
     
@@ -821,7 +840,11 @@ public class VocabularyController {
     	mav.addObject("treeInitialUrl", baseUrl + "treeInitial");
     	mav.addObject("treeChildrenUrl", baseUrl + "treeChildren");
     	mav.addObject("autocompleteUrl", ContextLoader.getConfigBean().getProperty("FEWI_URL") + "autocomplete/cell_ontology?query=");
-    	mav.addObject("message", "Your input is welcome.");
+    	mav.addObject("message", "The Cell Ontology (CL) is an OBO Foundry ontology and is available at: "
+		+ "<a href='https://obofoundry.org/ontology/cl.html' target='_blank'>https://obofoundry.org/ontology/cl.html</a>. "
+		+ "<br/><br/>Additional terms or revisions may be requested through the CL issue tracker at GitHub. "
+		+ "Your input is welcome."
+	);
     	return mav;
     }
     
