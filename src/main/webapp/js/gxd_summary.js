@@ -1196,7 +1196,7 @@ var gxdGenesTable = function (oCallback) {
 				rowsPerPage: Number(pRequest['results']) || GENES_PAGE_SIZE,
 				recordOffset: Number(pRequest['startIndex']) || 0
 		};
-
+        gtag('event', 'gxdSumGeneOffset', { 'recordOffset': oPayload.pagination.recordOffset });
 		ga_logPagination('GXD Summary', 'Genes', oPayload.pagination.recordOffset);
 		return true;
 	};
@@ -1315,7 +1315,7 @@ var gxdAssaysTable = function() {
 				rowsPerPage: Number(pRequest['results']) || paginator.getRowsPerPage(),
 				recordOffset: Number(pRequest['startIndex']) || 0
 		};
-
+        gtag('event', 'gxdSumAssayOffset', { 'recordOffset': oPayload.pagination.recordOffset });
 		ga_logPagination('GXD Summary', 'Assays', oPayload.pagination.recordOffset);
 		return true;
 	};
@@ -1440,7 +1440,7 @@ var gxdResultsTable = function() {
 				rowsPerPage: rowCount,
 				recordOffset: offset
 		};
-        gtag('event', 'testPF', { 'recordOffset': oPayload.pagination.recordOffset });
+        gtag('event', 'gxdSumResultOffset', { 'recordOffset': oPayload.pagination.recordOffset });
 		ga_logPagination('GXD Summary', 'Assay Results', oPayload.pagination.recordOffset);
 		return true;
 	};
@@ -1546,7 +1546,7 @@ var gxdImagesTable = function() {
 				rowsPerPage: Number(pRequest['results']) || paginator.getRowsPerPage(),
 				recordOffset: Number(pRequest['startIndex']) || 0
 		};
-
+        gtag('event', 'gxdSumImageOffset', { 'recordOffset': oPayload.pagination.recordOffset });
 		ga_logPagination('GXD Summary', 'Images', oPayload.pagination.recordOffset);
 		return true;
 	};
