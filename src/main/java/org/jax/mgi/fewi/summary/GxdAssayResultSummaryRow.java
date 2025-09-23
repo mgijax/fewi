@@ -125,7 +125,7 @@ public class GxdAssayResultSummaryRow {
 	}
 
 	public String getReference() {
-		if (result.getJNum().startsWith("J:")) {
+		if (result.getJNum() != null && result.getJNum().startsWith("J:")) {
 			return "<a href='" + fewiUrl + "reference/" + result.getJNum() + "'>"
 				+ result.getJNum() + "</a> " + result.getShortCitation();
 		}

@@ -1,8 +1,9 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
+import org.jax.mgi.snpdatamodel.document.BaseESDocument;
 
-public class SolrGxdAssay implements SolrGxdEntity {
+public class SolrGxdAssay extends BaseESDocument implements SolrGxdEntity {
 
 	String markerSymbol;
 	String assayKey;

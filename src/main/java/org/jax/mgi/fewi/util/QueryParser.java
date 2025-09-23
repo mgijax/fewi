@@ -149,7 +149,8 @@ public class QueryParser {
 		{
 			for (String token : tokens)
 			{
-				token = token.toLowerCase();
+//Hongping: need more wor, to set up index with lowercase_keyword and test out first
+//				token = token.toLowerCase();
 				List<String> sTokens = tokeniseOnSpecialCharacters(token);
 				if (sTokens.size()>0)
 				{

@@ -4,8 +4,9 @@ import java.util.List;
 
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
 import org.jax.mgi.shr.jsonmodel.GxdImageMeta;
+import org.jax.mgi.snpdatamodel.document.BaseESDocument;
 
-public class SolrGxdImage implements SolrGxdEntity {
+public class SolrGxdImage extends BaseESDocument implements SolrGxdEntity {
 
 	Integer imagePaneKey;
 	String imageID;

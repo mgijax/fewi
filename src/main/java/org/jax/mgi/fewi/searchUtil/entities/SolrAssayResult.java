@@ -4,8 +4,9 @@ import java.text.NumberFormat;
 import java.util.List;
 
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
+import org.jax.mgi.snpdatamodel.document.BaseESDocument;
 
-public class SolrAssayResult implements SolrGxdEntity
+public class SolrAssayResult extends BaseESDocument implements SolrGxdEntity
 {
 	private String jNum;
 	private String pubmedId;
@@ -198,5 +199,8 @@ public class SolrAssayResult implements SolrGxdEntity
 	}
 	public void setCellType(String cellType) {
 		this.cellType = cellType;
+	}
+	public void setjNum(String jNum) {
+		this.jNum = jNum;
 	}
 }
