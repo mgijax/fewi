@@ -169,13 +169,13 @@
 		    <table>
 		    <tr>
 		    <td>
-			<img onclick="popupHeatMap();" src="/fewi/mgi/assets/images/heatmap_screenshot.png" />
+			<img id="heatmaptabImage" onclick="popupHeatMap();" src="/fewi/mgi/assets/images/heatmap_screenshot.png" />
 		    </td>
 		    <td>
 			<table>
 			<tr>
 			    <td>
-			    <button onclick="popupHeatMap();">&#x279C; RNA-Seq Heat Map</button>
+			    <button id="heatmaptabButton" onclick="popupHeatMap();">&#x279C; RNA-Seq Heat Map</button>
 			    </td>
 			</tr>
 			<tr>

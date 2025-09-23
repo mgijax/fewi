@@ -679,27 +679,34 @@ function buildSummary(request,tabState)
 	var doStageGrid=false;
 	var doGeneGrid=false;
 
-	// determine which type of summary to load.
+	// determine which type of summary to load; notify GA4
 	var dataTableInitFunction;
 	// init
 	if (tabState == "genestab") {
+        gtag('event', 'gxdSumGeneTab', { 'tab_id': 'genestab' });
 		dataTableInitFunction = window.gxdGenesTable;
 	} else if(tabState == "assaystab") {
+        gtag('event', 'gxdSumAssayTab', { 'tab_id': 'assaystab' });
 		dataTableInitFunction = window.gxdAssaysTable;
 	}
 	else if(tabState == "imagestab") {
+        gtag('event', 'gxdSumImageTab', { 'tab_id': 'imagestab' });
 		dataTableInitFunction = window.gxdImagesTable;
 	}
 	else if(tabState == "stagegridtab") {
+        gtag('event', 'gxdSumTisStageTab', { 'tab_id': 'imagestab' });
 		doStageGrid=true;
 	}
 	else if(tabState == "genegridtab") {
+        gtag('event', 'gxdSumTisGeneTab', { 'tab_id': 'imagestab' });
 		doGeneGrid=true;
 	}
 	else if(tabState == "heatmaptab") {
+        gtag('event', 'gxdSumHeatMapTab', { 'tab_id': 'imagestab' });
 		dataTableInitFunction = null;
 	}
 	else {
+        gtag('event', 'gxdSumResultTab', { 'tab_id': 'resultstab' });
 		dataTableInitFunction = window.gxdResultsTable;
 	}
 
@@ -1433,7 +1440,7 @@ var gxdResultsTable = function() {
 				rowsPerPage: rowCount,
 				recordOffset: offset
 		};
-
+        gtag('event', 'testPF', { 'recordOffset': oPayload.pagination.recordOffset });
 		ga_logPagination('GXD Summary', 'Assay Results', oPayload.pagination.recordOffset);
 		return true;
 	};
