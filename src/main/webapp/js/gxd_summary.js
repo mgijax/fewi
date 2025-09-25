@@ -443,6 +443,13 @@ function reverseEngineerFormInput(request)
 				// TODO: This needs to move to a different function. Filters should not be a part of this method
 			    filters[key] = [].concat(params[key]);
 			}
+		} else if (key === 'detected') {
+			var form = $(formID)[0];
+			if (params[key] === 'Yes') {
+			    form['detected1'].checked = true
+			} else if (params[key] === 'No') {
+			    form['detected2'].checked = true
+			} 
 		}
 	}
 	console.log("in reverseEngineerFormInput: after for loop of inputs");
