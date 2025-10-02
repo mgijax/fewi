@@ -812,6 +812,10 @@ var interceptSubmit = function(e) {
 	ga_logEvent("GXD Query Form Submission", currentQF);
 	YAHOO.util.Event.preventDefault(e);
 
+	// update GA4 with submission type (standard / profile / batch)
+	console.log("Updating GA4 - GXD Form Submission: " + currentQF);
+	gtag('event', 'gxdSumSubType', { 'submissionType': currentQF });
+
 	if (!runValidation()){
 		// Do not allow any content to overflow the outer
 		// div when it is hiding

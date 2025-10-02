@@ -701,15 +701,15 @@ function buildSummary(request,tabState)
 		dataTableInitFunction = window.gxdImagesTable;
 	}
 	else if(tabState == "stagegridtab") {
-        gtag('event', 'gxdSumTisStageTab', { 'tab_id': 'imagestab' });
+        gtag('event', 'gxdSumTisStageTab', { 'tab_id': 'stagegridtab' });
 		doStageGrid=true;
 	}
 	else if(tabState == "genegridtab") {
-        gtag('event', 'gxdSumTisGeneTab', { 'tab_id': 'imagestab' });
+        gtag('event', 'gxdSumTisGeneTab', { 'tab_id': 'genegridtab' });
 		doGeneGrid=true;
 	}
 	else if(tabState == "heatmaptab") {
-        gtag('event', 'gxdSumHeatMapTab', { 'tab_id': 'imagestab' });
+        gtag('event', 'gxdSumHeatMapTab', { 'tab_id': 'heatmaptab' });
 		dataTableInitFunction = null;
 	}
 	else {
