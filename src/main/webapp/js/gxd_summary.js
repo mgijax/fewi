@@ -443,6 +443,13 @@ function reverseEngineerFormInput(request)
 				// TODO: This needs to move to a different function. Filters should not be a part of this method
 			    filters[key] = [].concat(params[key]);
 			}
+		} else if (key === 'detected') {
+			var form = $(formID)[0];
+			if (params[key] === 'Yes') {
+			    form['detected1'].checked = true
+			} else if (params[key] === 'No') {
+			    form['detected2'].checked = true
+			} 
 		}
 	}
 	console.log("in reverseEngineerFormInput: after for loop of inputs");
@@ -679,27 +686,34 @@ function buildSummary(request,tabState)
 	var doStageGrid=false;
 	var doGeneGrid=false;
 
-	// determine which type of summary to load.
+	// determine which type of summary to load; notify GA4
 	var dataTableInitFunction;
 	// init
 	if (tabState == "genestab") {
+        gtag('event', 'gxdSumGeneTab', { 'tab_id': 'genestab' });
 		dataTableInitFunction = window.gxdGenesTable;
 	} else if(tabState == "assaystab") {
+        gtag('event', 'gxdSumAssayTab', { 'tab_id': 'assaystab' });
 		dataTableInitFunction = window.gxdAssaysTable;
 	}
 	else if(tabState == "imagestab") {
+        gtag('event', 'gxdSumImageTab', { 'tab_id': 'imagestab' });
 		dataTableInitFunction = window.gxdImagesTable;
 	}
 	else if(tabState == "stagegridtab") {
+        gtag('event', 'gxdSumTisStageTab', { 'tab_id': 'stagegridtab' });
 		doStageGrid=true;
 	}
 	else if(tabState == "genegridtab") {
+        gtag('event', 'gxdSumTisGeneTab', { 'tab_id': 'genegridtab' });
 		doGeneGrid=true;
 	}
 	else if(tabState == "heatmaptab") {
+        gtag('event', 'gxdSumHeatMapTab', { 'tab_id': 'heatmaptab' });
 		dataTableInitFunction = null;
 	}
 	else {
+        gtag('event', 'gxdSumResultTab', { 'tab_id': 'resultstab' });
 		dataTableInitFunction = window.gxdResultsTable;
 	}
 
@@ -1189,7 +1203,7 @@ var gxdGenesTable = function (oCallback) {
 				rowsPerPage: Number(pRequest['results']) || GENES_PAGE_SIZE,
 				recordOffset: Number(pRequest['startIndex']) || 0
 		};
-
+        gtag('event', 'gxdSumGeneOffset', { 'recordOffset': oPayload.pagination.recordOffset });
 		ga_logPagination('GXD Summary', 'Genes', oPayload.pagination.recordOffset);
 		return true;
 	};
@@ -1308,7 +1322,7 @@ var gxdAssaysTable = function() {
 				rowsPerPage: Number(pRequest['results']) || paginator.getRowsPerPage(),
 				recordOffset: Number(pRequest['startIndex']) || 0
 		};
-
+        gtag('event', 'gxdSumAssayOffset', { 'recordOffset': oPayload.pagination.recordOffset });
 		ga_logPagination('GXD Summary', 'Assays', oPayload.pagination.recordOffset);
 		return true;
 	};
@@ -1433,7 +1447,7 @@ var gxdResultsTable = function() {
 				rowsPerPage: rowCount,
 				recordOffset: offset
 		};
-
+        gtag('event', 'gxdSumResultOffset', { 'recordOffset': oPayload.pagination.recordOffset });
 		ga_logPagination('GXD Summary', 'Assay Results', oPayload.pagination.recordOffset);
 		return true;
 	};
@@ -1539,7 +1553,7 @@ var gxdImagesTable = function() {
 				rowsPerPage: Number(pRequest['results']) || paginator.getRowsPerPage(),
 				recordOffset: Number(pRequest['startIndex']) || 0
 		};
-
+        gtag('event', 'gxdSumImageOffset', { 'recordOffset': oPayload.pagination.recordOffset });
 		ga_logPagination('GXD Summary', 'Images', oPayload.pagination.recordOffset);
 		return true;
 	};
