@@ -645,6 +645,12 @@ public class GXDHTController {
 			filterList.add(new Filter(SearchConstants.GXDHT_RELEVANCY, relevancy, Filter.Operator.OP_EQUAL));
 		}
 		
+		// search by structureID
+		String structureID = query.getStructureID();
+		if ((structureID != null) && (structureID.length() > 0)) {
+			filterList.add(new Filter(SearchConstants.GXDHT_STRUCTURE_SEARCH, structureID, Filter.Operator.OP_EQUAL));
+		}
+		
 		// search by structure
 		String structure = query.getStructure();
 		if ((structure != null) && (structure.length() > 0)) {

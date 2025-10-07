@@ -221,12 +221,15 @@ $(function() {
 			dataType: "json",
 			success: function( data ) {
 				response($.map(data["resultObjects"], function( item ) {
-					return {label: item.synonym, hasGxdHT: item.hasGxdHT,
+					return {accID:item.accID, label: item.synonym, hasGxdHT: item.hasGxdHT,
 						isStrictSynonym: item.isStrictSynonym,
 						original: item.structure};
 				}));
 			}
 		});
+	},
+	select: function (evt, ui) {
+	    $( "#structureID" )[0].value = ui.item.accID
 	},
 	minLength: 1
     }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {

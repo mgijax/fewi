@@ -130,6 +130,8 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		<td><input type="text" size="40" name="structure" id="structureAC"
 			placeholder="any anatomical structure"
 			value="<c:out value="${queryForm.structure}"/>" />
+		    <input type="hidden" name="structureID", id="structureID" />
+
 		</td>
 	</tr>
 
