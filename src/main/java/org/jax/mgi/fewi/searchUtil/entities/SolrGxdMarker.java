@@ -1,9 +1,9 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
-import org.jax.mgi.snpdatamodel.document.BaseESDocument;
+import org.jax.mgi.snpdatamodel.document.ESEntity;
 
-public class SolrGxdMarker extends BaseESDocument implements SolrGxdEntity {
+public class SolrGxdMarker extends ESEntity implements SolrGxdEntity {
 
 	String mgiid;
 	String symbol;

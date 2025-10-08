@@ -497,7 +497,8 @@ public class Filter {
 		OP_STRING_CONTAINS(102, "STRING CONTAINS"),
 		OP_EQUAL_WILDCARD_ALLOWED(200, "EQUAL WITH WILDCARD"),
 		OP_RANGE(201, "RANGE"),
-		OP_JOIN(301, "JOIN")
+		OP_JOIN(301, "JOIN"),
+		OP_SHAPE(301, "SHAPE"),
 	    ;
 		
 		private int	id = 0;

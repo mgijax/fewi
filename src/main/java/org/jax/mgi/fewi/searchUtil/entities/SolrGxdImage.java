@@ -1,12 +1,16 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
 import org.jax.mgi.shr.jsonmodel.GxdImageMeta;
-import org.jax.mgi.snpdatamodel.document.BaseESDocument;
+import org.jax.mgi.snpdatamodel.document.ESEntity;
 
-public class SolrGxdImage extends BaseESDocument implements SolrGxdEntity {
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class SolrGxdImage extends ESEntity implements SolrGxdEntity {
 
 	Integer imagePaneKey;
 	String imageID;
@@ -20,6 +24,10 @@ public class SolrGxdImage extends BaseESDocument implements SolrGxdEntity {
 	Integer imageHeight;
 	String assayID;
 	List<GxdImageMeta> metaData;
+	
+	public String toString() {
+		return "SolrGxdImage: " + imagePaneKey + " " + imageLabel;
+	}
 
 	public String getAssayID() {
 		return assayID;
@@ -32,11 +40,23 @@ public class SolrGxdImage extends BaseESDocument implements SolrGxdEntity {
 	public List<GxdImageMeta> getMetaData() {
 		return metaData;
 	}
+	
+    @JsonSetter("metaData")
+    public void setMetaData(List<String> metaData) {
+        ObjectMapper mapper = new ObjectMapper();
+        this.metaData = metaData.stream().map(json -> {
+            try {
+                return mapper.readValue(json, GxdImageMeta.class);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to parse metaData JSON", e);
+            }
+        }).collect(Collectors.toList());
+    }	
 
-	public void setMetaData(List<GxdImageMeta> metaData) {
-		this.metaData = metaData;
-	}
-
+    public void setGxdMetaData(List<GxdImageMeta> metaData) {    	
+    	this.metaData = metaData;
+    }
+    
 	public Integer getImagePaneKey() {
 		return imagePaneKey;
 	}

@@ -3727,7 +3727,7 @@ public class GXDController {
 			for(String token : tokens){
 				String spatialQueryString = SolrLocationTranslator.getQueryValue(token, query.getLocationUnit());
 				if(spatialQueryString !=null && !spatialQueryString.equals("")) {
-					locationFilters.add(new Filter(SearchConstants.MOUSE_COORDINATE,spatialQueryString,Filter.Operator.OP_HAS_WORD));
+					locationFilters.add(new Filter(SearchConstants.MOUSE_COORDINATE,spatialQueryString,Filter.Operator.OP_SHAPE));
 				}
 			}
 			if(locationFilters.size() > 0)

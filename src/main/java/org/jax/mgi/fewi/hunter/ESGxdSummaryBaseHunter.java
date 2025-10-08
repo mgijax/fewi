@@ -1,10 +1,10 @@
 package org.jax.mgi.fewi.hunter;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.jax.mgi.fewi.propertyMapper.ESPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -17,21 +17,18 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrString;
 import org.jax.mgi.fewi.sortMapper.ESSortMapper;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.shr.fe.indexconstants.ImagePaneFields;
-import org.jax.mgi.snpdatamodel.document.BaseESDocument;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jax.mgi.snpdatamodel.document.ESEntity;
 
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregate;
 import co.elastic.clients.elasticsearch._types.aggregations.StringTermsAggregate;
 import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
 import co.elastic.clients.elasticsearch._types.aggregations.TopHitsAggregate;
-import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.elasticsearch.core.search.HitsMetadata;
 import co.elastic.clients.json.JsonData;
 
-public class ESGxdSummaryBaseHunter<T extends BaseESDocument> extends ESHunter<T> {
+public class ESGxdSummaryBaseHunter<T extends ESEntity> extends ESHunter<T> {
 
 	/***
 	 * The constructor sets up this hunter so that it is specific to gxd summary
@@ -133,7 +130,7 @@ public class ESGxdSummaryBaseHunter<T extends BaseESDocument> extends ESHunter<T
 
 		// these are only available on the join index gxdImagePane (use wisely my
 		// friend)
-		sortMap.put(SortConstants.BY_IMAGE_ASSAY_TYPE, new ESSortMapper(ImagePaneFields.BY_ASSAY_TYPE));
+		sortMap.put(SortConstants.BY_IMAGE_ASSAY_TYPE, new ESSortMapper(GxdResultFields.A_BY_ASSAY_TYPE));
 		sortMap.put(SortConstants.BY_IMAGE_MARKER, new ESSortMapper(ImagePaneFields.BY_MARKER));
 		sortMap.put(SortConstants.BY_IMAGE_HYBRIDIZATION_ASC, new ESSortMapper(ImagePaneFields.BY_HYBRIDIZATION_ASC));
 		sortMap.put(SortConstants.BY_IMAGE_HYBRIDIZATION_DESC, new ESSortMapper(ImagePaneFields.BY_HYBRIDIZATION_DESC));
@@ -166,30 +163,9 @@ public class ESGxdSummaryBaseHunter<T extends BaseESDocument> extends ESHunter<T
 		return size;
 	}
 
-	@Override
-	protected void addAggregations(SearchParams searchParams, SearchRequest.Builder srb, String groupField, int size) {
-		List<String> properties = new ArrayList<String>();
-		if (GxdResultFields.MARKER_SYMBOL.equals(groupField)) {
-			properties = List.of(GxdResultFields.MARKER_MGIID, GxdResultFields.MARKER_SYMBOL,
-					GxdResultFields.MARKER_NAME, GxdResultFields.MARKER_TYPE, GxdResultFields.CHROMOSOME,
-					GxdResultFields.CENTIMORGAN, GxdResultFields.CYTOBAND, GxdResultFields.START_COORD,
-					GxdResultFields.END_COORD, GxdResultFields.STRAND);
-		} else if (GxdResultFields.ASSAY_KEY.equals(groupField)) {
-			properties = List.of(GxdResultFields.MARKER_SYMBOL, GxdResultFields.ASSAY_KEY, GxdResultFields.ASSAY_MGIID,
-					GxdResultFields.ASSAY_TYPE, GxdResultFields.JNUM, GxdResultFields.SHORT_CITATION);
-		} else if (GxdResultFields.STRUCTURE_EXACT.equals(groupField)) {
-			properties = List.of(GxdResultFields.STRUCTURE_EXACT);
-		} else if (GxdResultFields.THEILER_STAGE.equals(groupField)) {
-			properties = List.of(GxdResultFields.THEILER_STAGE);
-		}
-		List<String> fprop = properties;
-		srb.aggregations(groupField, t -> t.terms(f -> f.field(groupField).size(size)).aggregations("first_doc",
-				top -> top.topHits(thit -> thit.size(1).source(src -> src.filter(ff -> ff.includes(fprop))))));
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
-	protected boolean processESSearchAggregation(SearchResponse resp, SearchResults<T> searchResults,
+	protected <T extends ESEntity> boolean processESSearchAggregation(SearchResponse resp, SearchResults<T> searchResults,
 			SearchParams searchParams) {
 		// loop over your group aggregation
 		Map<String, Aggregate> aggs = resp.aggregations();
@@ -205,7 +181,7 @@ public class ESGxdSummaryBaseHunter<T extends BaseESDocument> extends ESHunter<T
 			StringTermsAggregate ta = groupAgg.sterms();
 			List<StringTermsBucket> buckets = ta.buckets().array();
 
-			searchResults.setTotalCount(buckets.size());
+//			searchResults.setTotalCount(buckets.size());
 			for (StringTermsBucket bucket : buckets) {
 				Aggregate topAgg = bucket.aggregations().get("first_doc");
 				if (topAgg == null || !topAgg.isTopHits()) {
@@ -218,7 +194,7 @@ public class ESGxdSummaryBaseHunter<T extends BaseESDocument> extends ESHunter<T
 					Hit<JsonData> hit = hitsMeta.hits().get(0);
 					Map<String, Object> src = hit.source().to(Map.class);
 
-					if (GxdResultFields.MARKER_SYMBOL.equals(aggName)) {
+					if (GxdResultFields.MARKER_KEY.equals(aggName)) {
 						SolrGxdMarker marker = new SolrGxdMarker();
 						marker.setMgiid((String) src.get(GxdResultFields.MARKER_MGIID));
 						marker.setSymbol((String) src.get(GxdResultFields.MARKER_SYMBOL));

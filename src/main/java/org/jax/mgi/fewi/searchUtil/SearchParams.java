@@ -3,8 +3,6 @@ package org.jax.mgi.fewi.searchUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jax.mgi.fewi.hunter.ESQuery;
-
 /**
  * A SearchParams object represents Search parameters
  */
@@ -33,9 +31,6 @@ public class SearchParams {
 	private boolean fetchKeysOnly = false;
 	private boolean suppressLogs = false;
 	private boolean returnFilterQuery = false;
-	
-	private ESQuery esQuery;
-	private boolean esGroupCountOnly = false;
 	
 	public String toString() {
 	    String s = "SearchParams [Filter: ";
@@ -217,22 +212,4 @@ public class SearchParams {
 		}
 		return b;
 	}
-
-	public ESQuery getEsQuery() {
-		return esQuery;
-	}
-
-	public void setEsQuery(ESQuery esQuery) {
-		this.esQuery = esQuery;
-	}
-
-	public boolean isEsGroupCountOnly() {
-		return esGroupCountOnly;
-	}
-
-	public void setEsGroupCountOnly(boolean esGroupCountOnly) {
-		this.esGroupCountOnly = esGroupCountOnly;
-	}
-
-
 }

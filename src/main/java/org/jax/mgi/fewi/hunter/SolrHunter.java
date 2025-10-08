@@ -476,7 +476,11 @@ public class SolrHunter<T> implements Hunter<T> {
 					return negation + "(" + StringUtils.join(resultsString,
 					    filterClauseMap.get(filter.getFilterJoinClause())) + ")";
 				} else {
-					return resultsString.get(0);
+					if ( resultsString.size() > 0 ) {
+						return resultsString.get(0);
+					} else {
+						return "";
+					}
 				}
 			}
 		}

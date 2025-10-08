@@ -1,12 +1,14 @@
-package org.jax.mgi.fewi.hunter;
+package org.jax.mgi.fewi.searchUtil;
 
 public class ESLookupIndex {
 	private String indexName;
 	private String joinFieldName;
+	private boolean joinFieldMultiValues;
 
-	public ESLookupIndex(String indexName, String joinFieldName) {
+	public ESLookupIndex(String indexName, String joinFieldName, boolean joinFieldMultiValues) {
 		this.indexName = indexName;
 		this.joinFieldName = joinFieldName;
+		this.joinFieldMultiValues = joinFieldMultiValues;
 	}
 	
 	public String toString() {
@@ -27,5 +29,13 @@ public class ESLookupIndex {
 
 	public void setJoinFieldName(String joinFieldName) {
 		this.joinFieldName = joinFieldName;
+	}
+
+	public boolean isJoinFieldMultiValues() {
+		return joinFieldMultiValues;
+	}
+
+	public void setJoinFieldMultiValues(boolean joinFieldMultiValues) {
+		this.joinFieldMultiValues = joinFieldMultiValues;
 	}
 }

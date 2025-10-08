@@ -1,9 +1,9 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
-import org.jax.mgi.snpdatamodel.document.BaseESDocument;
+import org.jax.mgi.snpdatamodel.document.ESEntity;
 
-public class SolrGxdAssay extends BaseESDocument implements SolrGxdEntity {
+public class SolrGxdAssay extends ESEntity implements SolrGxdEntity {
 
 	String markerSymbol;
 	String assayKey;
@@ -13,6 +13,9 @@ public class SolrGxdAssay extends BaseESDocument implements SolrGxdEntity {
 	String miniCitation;
 	boolean hasImage;
 
+	public String toString() {
+		return "SolrGxdAssay: " + assayKey + " " + markerSymbol + ", " + assayMgiid;
+	}
 	// List<String> figure;
 
 	public String getMarkerSymbol() {

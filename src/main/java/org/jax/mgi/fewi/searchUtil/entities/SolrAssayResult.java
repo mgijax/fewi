@@ -4,9 +4,9 @@ import java.text.NumberFormat;
 import java.util.List;
 
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
-import org.jax.mgi.snpdatamodel.document.BaseESDocument;
+import org.jax.mgi.snpdatamodel.document.ESEntity;
 
-public class SolrAssayResult extends BaseESDocument implements SolrGxdEntity
+public class SolrAssayResult extends ESEntity implements SolrGxdEntity
 {
 	private String jNum;
 	private String pubmedId;
@@ -43,6 +43,10 @@ public class SolrAssayResult extends BaseESDocument implements SolrGxdEntity
 	private static NumberFormat fmt = null;
 
 	//*** methods ***//
+	
+	public String toString() {
+		return "SolrAssayResult: " + markerSymbol + " " + assayType + " " + assayMgiid;
+	}
 
 	public String getJNum() {
 		return jNum;

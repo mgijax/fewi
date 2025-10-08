@@ -456,7 +456,7 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 					logger.error("Error parsing GxdImageMeta JSON from GXD Image Summary Solr Index", e);
 				} 
 			}
-			image.setMetaData(metaData);
+			image.setGxdMetaData(metaData);
 
 			sr.addResultObjects(image);
 		}

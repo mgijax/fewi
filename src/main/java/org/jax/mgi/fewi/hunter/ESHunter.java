@@ -2,23 +2,29 @@ package org.jax.mgi.fewi.hunter;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.jax.mgi.fewi.propertyMapper.ESPropertyMapper;
+import org.jax.mgi.fewi.searchUtil.ESSearchOption;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.JoinClause;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
+import org.jax.mgi.fewi.searchUtil.entities.ESAggLongCount;
+import org.jax.mgi.fewi.searchUtil.entities.ESAggStringCount;
 import org.jax.mgi.fewi.sortMapper.ESSortMapper;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.snpdatamodel.document.BaseESDocument;
+import org.jax.mgi.snpdatamodel.document.ESEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,12 +34,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.FieldSort;
+import co.elastic.clients.elasticsearch._types.GeoShapeRelation;
 import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregate;
 import co.elastic.clients.elasticsearch._types.aggregations.AggregationRange;
+import co.elastic.clients.elasticsearch._types.aggregations.LongTermsAggregate;
+import co.elastic.clients.elasticsearch._types.aggregations.LongTermsBucket;
 import co.elastic.clients.elasticsearch._types.aggregations.RangeBucket;
+import co.elastic.clients.elasticsearch._types.aggregations.StringTermsAggregate;
 import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
+import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryStringQuery;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
@@ -43,6 +55,7 @@ import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.elasticsearch.core.search.TrackHits;
 import co.elastic.clients.elasticsearch.esql.EsqlFormat;
 import co.elastic.clients.elasticsearch.esql.QueryRequest;
+import co.elastic.clients.json.JsonData;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.ElasticsearchTransport;
 import co.elastic.clients.transport.endpoints.BinaryResponse;
@@ -56,7 +69,8 @@ import lombok.Setter;
  * higher-level generic webapp requests to Elastic's specific API
  */
 
-public class ESHunter<T extends BaseESDocument> {
+@SuppressWarnings({ "unchecked", "hiding", "rawtypes" })
+public class ESHunter<T extends ESEntity> {
 
 	public Logger log = LoggerFactory.getLogger(getClass());
 
@@ -139,103 +153,347 @@ public class ESHunter<T extends BaseESDocument> {
 		this.mapper = new ObjectMapper(); // ✅ initialize here
 	}
 
-	// -----
-	public void setRangeAggSpecification(String name, String field, long[][] ranges) {
-		rangeSpec = new RangeAggSpecification(name, field, ranges);
+	public ESHunter(Class<T> clazz, String host, String port, String index) {
+		this(clazz);
+		this.esHost = host;
+		this.esPort = port;
+		this.esIndex = index;
 	}
-
-	public void clearRangeAggSpecification() {
-		rangeSpec = null;
-	}
-	// -----
 
 	public void hunt(SearchParams searchParams, SearchResults<T> searchResults) {
-		hunt(searchParams, searchResults, null, null);
+		ESSearchOption searchOption = new ESSearchOption();
+		searchOption.setGetTotalCount(true);
+		hunt(searchParams, searchResults, searchOption);
 	}
 
-	public void hunt(SearchParams searchParams, SearchResults<T> searchResults, String groupField) {
-		hunt(searchParams, searchResults, groupField, null);
+	public <T extends ESEntity> void hunt(SearchParams searchParams, SearchResults<T> searchResults,
+			ESSearchOption searchOption) {
+
+		createESConnection();
+
+		String queryString = translateFilter(searchParams.getFilter(), propertyMap);
+
+		// collect shape filter differently
+		List<Filter> shapeFilters = collectShapeFilters(searchParams.getFilter());
+
+		if (searchParams.getReturnFilterQuery())
+			searchResults.setFilterQuery(queryString);
+
+		try {
+			// log.info("Running query & packaging searchResults: " + esIndex);
+			int size = getPageSize(searchParams);
+			if (searchOption.getEsQuery() != null) {
+				huntESQuery(searchParams, searchResults, queryString, size, shapeFilters, searchOption);
+			} else {
+				huntESSearch(searchParams, searchResults, searchOption, queryString, size, shapeFilters);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		log.debug("ESHunter.hunt finished");
 	}
 
-	public void joinHunt(SearchParams searchParams, SearchResults<T> searchResults, String joinField) {
-		hunt(searchParams, searchResults, null, null);
+	public <T extends ESEntity> void huntESSearch(SearchParams searchParams, SearchResults<T> searchResults,
+			ESSearchOption searchOption, String queryString, int size, List<Filter> shapeFilters) throws Exception {
+
+		String groupField = searchOption.getGroupField();
+
+		SearchRequest.Builder srb = new SearchRequest.Builder();
+		srb.index(esIndex);
+
+		setSearchQuery(srb, queryString, shapeFilters);
+
+		SearchResponse<T> resp = null;
+		TrackHits.Builder th = new TrackHits.Builder();
+		th.enabled(true);
+		srb.trackTotalHits(th.build());
+
+		Highlight highlight = addHighlightingFields(searchParams);
+		if (highlight != null) {
+			srb.highlight(highlight);
+		}
+		addSorts(searchParams, srb);
+
+		if (groupField != null) {
+			// for aggregation, need to set the size of bucket, not the size of doc, and
+			// from too
+			if (searchOption.isGetTotalCount()) {
+				srb.aggregations(getAggUniqueCountKey(groupField), a -> a.cardinality(c -> c.field(groupField)));
+			} else {
+				if (searchOption.isGetGroupFirstDoc()) {
+					addGroupGetFirstDoc(searchParams, srb, groupField, searchParams.getStartIndex(), size);
+				} else {
+					srb.aggregations(groupField, t -> t.terms(f -> f.field(groupField).size(size)));
+
+					srb.aggregations(groupField, t -> t
+							.terms(f -> f.field(groupField).size(searchParams.getStartIndex() + size))
+							.aggregations("bucket_pagination",
+									a -> a.bucketSort(bs -> bs.from(searchParams.getStartIndex()).size(size)
+											.sort(s -> s.field(fld -> fld.field("_key").order(SortOrder.Asc))))));
+				}
+			}
+			srb.size(0);
+		} else {
+			srb.from(searchParams.getStartIndex());
+			srb.size(size);
+		}
+		if (facetString != null) {
+			srb.aggregations(facetString, t -> t.terms(f -> f.field(facetString).size(150)));
+		}
+		if (rangeSpec != null) {
+			List<AggregationRange> aggRanges = new ArrayList<AggregationRange>();
+			for (long[] r : rangeSpec.getRanges()) {
+				AggregationRange.Builder arb = new AggregationRange.Builder();
+				aggRanges.add(arb.from((double) r[0]).to((double) r[1]).build());
+			}
+			srb.aggregations(rangeSpec.getName(), t -> t.range(f -> f.field(rangeSpec.getField()).ranges(aggRanges)));
+		}
+
+		SearchRequest searchRequest = srb.build();
+		log.info("Sending search request: " + searchRequest);
+
+		resp = (SearchResponse<T>) esClient.search(searchRequest, clazz);
+		log.info("Total hits: " + resp.hits().total().value());
+
+		if (resp.aggregations().size() > 0) {
+			if (searchOption.isGetTotalCount()) {
+				Aggregate agg = resp.aggregations().get(getAggUniqueCountKey(groupField));
+				int uniqueCount = (int) agg.cardinality().value();
+				searchResults.setTotalCount(uniqueCount);
+				return;
+			}
+
+			if (searchOption.isGetGroupInfo()) {
+				processGroupFieldValues(resp, searchResults, groupField);
+				return;
+			}
+
+			if (facetString != null) {
+				for (StringTermsBucket bucket : resp.aggregations().get(facetString).sterms().buckets().array()) {
+					searchResults.getResultFacets().add(bucket.key().stringValue());
+				}
+			}
+			if (rangeSpec != null) {
+				for (RangeBucket bucket : resp.aggregations().get(rangeSpec.getName()).range().buckets().array()) {
+					long[] b = { bucket.from().longValue(), bucket.to().longValue(), bucket.docCount() };
+					searchResults.getHistogram().add(b);
+				}
+			}
+
+			if (processESSearchAggregation(resp, searchResults, searchParams)) {
+				log.debug("no need further processing for aggregation");
+				return;
+			}
+		}
+
+		for (Hit<T> hit : resp.hits().hits()) {
+			if (hit.source() instanceof BaseESDocument) {
+				searchResults.getResultKeys().add(((BaseESDocument) hit.source()).getConsensussnp_accid());
+			}
+			searchResults.getResultObjects().add(hit.source());
+		}
+		if (searchOption.isGetTotalCount()) {
+			searchResults.setTotalCount((int) resp.hits().total().value());
+		}
 	}
 
-	public void joinHunt(SearchParams searchParams, SearchResults<T> searchResults, String joinField,
-			String extraJoinClause) {
-		hunt(searchParams, searchResults, null, extraJoinClause);
+	private <T extends ESEntity> void huntESQuery(SearchParams searchParams, SearchResults<T> searchResults,
+			String queryString, int size, List<Filter> shapeFilters, ESSearchOption searchOption) throws Exception {
+
+		List<String> whereCauses = new ArrayList<String>();
+		if (queryString != null && !queryString.isEmpty()) {
+			whereCauses.add(queryString.replaceAll(":", "==").replaceAll("~100", ""));
+		}
+
+		if (shapeFilters != null && !shapeFilters.isEmpty()) {
+			List<String> polygons = new ArrayList<String>();
+			for (Filter filter : shapeFilters) {
+				String polygon = toPolygon(filter);
+				if (polygon != null) {
+					polygons.add(polygon);
+				}
+			}
+			if (polygons != null && !polygons.isEmpty()) {
+				String joinedPolygons = polygons.stream()
+						.map(p -> "ST_INTERSECTS(mc, \"" + p + "\" :: cartesian_shape)")
+						.collect(Collectors.joining(" OR "));
+				whereCauses.add(joinedPolygons);
+			}
+		}
+
+		String query = searchOption.getEsQuery().toQuery(whereCauses, size, searchOption.isGetTotalCount());
+		log.info("esquery: " + query);
+		BinaryResponse binResp = esClient.esql().query(QueryRequest.of(q -> q.query(query).format(EsqlFormat.Json)));
+
+		JsonNode root = mapper.readTree(binResp.content());
+		if (searchOption.isGetTotalCount()) {
+			int totalCount = root.path("values").get(0).get(0).asInt();
+			searchResults.setTotalCount(totalCount);
+		} else {
+			List results = processLookupResponse(root, clazz);
+			searchResults.setResultObjects(results);
+		}
+		log.info("esql found: " + searchResults.getTotalCount());
 	}
 
-	public void joinGroupHunt(SearchParams searchParams, SearchResults<T> searchResults, String groupField,
-			String joinField) {
-		hunt(searchParams, searchResults, groupField, null);
+	private void setSearchQuery(SearchRequest.Builder srb, String queryString, List<Filter> shapeFilters) {
+		List<Query> queryList = new ArrayList<>();
+		// create "Query String Query"
+		if (queryString != null && !queryString.isEmpty()) {
+			QueryStringQuery.Builder qsb = new QueryStringQuery.Builder();
+			qsb.query(queryString);
+			Query queryStringQuery = new QueryStringQuery.Builder().query(queryString).build()._toQuery();
+			queryList.add(queryStringQuery);
+		}
+
+		// "Shape Query"
+		if (shapeFilters != null && !shapeFilters.isEmpty()) {
+			Query shapeQuery = getShapeQuery(queryString, shapeFilters);
+			queryList.add(shapeQuery);
+		}
+
+		if (!queryList.isEmpty()) {
+			if (queryList.size() == 1) {
+				srb.query(queryList.get(0));
+			} else {
+				// combine "Query String Query" and "Shape Query" together
+				BoolQuery.Builder boolBuilder = new BoolQuery.Builder();
+				for (Query query : queryList) {
+					boolBuilder.must(query);
+				}
+				Query combinedQuery = new Query.Builder().bool(boolBuilder.build()).build();
+				srb.query(combinedQuery);
+			}
+		}
 	}
 
-	public void joinGroupHunt(SearchParams searchParams, SearchResults<T> searchResults, String groupField,
-			String joinField, String extraJoinClause) {
-		hunt(searchParams, searchResults, groupField, extraJoinClause);
+	private <T extends ESEntity> void processGroupFieldValues(SearchResponse<T> resp, SearchResults searchResults,
+			String groupField) {
+		Aggregate agg = resp.aggregations().get(groupField);
+		if (agg.isSterms()) {
+			StringTermsAggregate stringAgg = agg.sterms();
+			List<ESAggStringCount> resultObjects = new ArrayList<ESAggStringCount>();
+			for (StringTermsBucket term : stringAgg.buckets().array()) {
+				resultObjects.add(new ESAggStringCount(term.key().stringValue(), term.docCount()));
+			}
+			searchResults.setResultObjects(resultObjects);
+		} else if (agg.isLterms()) {
+			LongTermsAggregate longAgg = agg.lterms();
+			List<ESAggLongCount> resultObjects = new ArrayList<ESAggLongCount>();
+			for (LongTermsBucket term : longAgg.buckets().array()) {
+				resultObjects.add(new ESAggLongCount(term.key(), term.docCount()));
+			}
+			searchResults.setResultObjects(resultObjects);
+		}
 	}
 
-    /**
-     * Retrieves the page size for the search request.  
-     * <p>
-     * By default, this method delegates to {@link SearchParams#getPageSize()}, 
-     * but subclasses can override to apply custom logic.
-     *
-     * @param searchParams the search parameters containing pagination information
-     * @return the number of results per page
-     */
-	protected int getPageSize(SearchParams searchParams) {
-		return searchParams.getPageSize();
+	protected List<Filter> collectShapeFilters(Filter filter) {
+		if (filter == null)
+			return null;
+
+		if (filter.isBasicFilter() && filter.getOperator() == Filter.Operator.OP_SHAPE) {
+			if (filter.getValue() != null && !filter.getValue().isEmpty()) {
+				return new ArrayList<>(List.of(filter));
+			}
+		}
+
+		List<Filter> shapeFilters = new ArrayList<Filter>();
+		List<Filter> filters = filter.getNestedFilters();
+		for (Filter f : filters) {
+			List<Filter> temp = collectShapeFilters(f);
+			if (temp != null) {
+				shapeFilters.addAll(temp);
+			}
+		}
+		return shapeFilters;
 	}
 
-    /**
-     * Adds one or more aggregations to the Elasticsearch search request.  
-     * <p>
-     * By default, this method applies a simple terms aggregation on the given
-     * {@code groupField}. Subclasses can override to define different
-     * or more complex aggregations.
-     *
-     * @param searchParams the search parameters for the request
-     * @param srb the Elasticsearch search request builder
-     * @param groupField the field to group by in the aggregation
-     * @param size the maximum number of aggregation buckets to return
-     */
-	protected void addAggregations(SearchParams searchParams, SearchRequest.Builder srb, String groupField, int size) {
-		srb.aggregations(groupField, t -> t.terms(f -> f.field(groupField)));
+	private String toPolygon(Filter filter) {
+		String value = filter.getValue();
+		if (value == null) {
+			return null;
+		}
+		value = value.replaceAll("[\\[\\]\\s]", "");
+		String[] points = value.split("TO");
+		long[] point1 = parsePoint(points[0]);
+		long[] point2 = parsePoint(points[1]);
+
+		long xmin = Math.min(point1[0], point2[0]);
+		long xmax = Math.max(point1[0], point2[0]);
+		long ymin = Math.min(point1[1], point2[1]);
+		long ymax = Math.max(point1[1], point2[1]);
+
+		// Build POLYGON WKT string
+		String polygon = String.format("POLYGON((%d %d, %d %d, %d %d, %d %d, %d %d))", xmin, ymin, // lower-left
+				xmin, ymax, // upper-left
+				xmax, ymax, // upper-right
+				xmax, ymin, // lower-right
+				xmin, ymin // close polygon
+		);
+
+		return polygon;
 	}
 
-    /**
-     * Processes the aggregation results from an Elasticsearch search response.  
-     * <p>
-     * By default, this implementation does nothing and returns {@code false}.
-     * Subclasses should override to extract aggregation results and populate
-     * {@link SearchResults}.
-     *
-     * @param resp the Elasticsearch search response
-     * @param searchResults the container to hold processed search results
-     * @param searchParams the search parameters associated with the request
-     * @return {@code true} if aggregations were processed and applied, {@code false} otherwise
-     */
-	protected boolean processESSearchAggregation(SearchResponse resp, SearchResults<T> searchResults,
-			SearchParams searchParams) {
-		return false;
+	protected String getAggUniqueCountKey(String groupField) {
+		return "unique_" + groupField + "_count";
 	}
 
-    /**
-     * Processes the JSON response returned from a lookup request and converts it
-     * into a list of domain objects.
-     * <p>
-     * This method is responsible for parsing the provided {@link JsonNode}
-     * structure and mapping its contents into a list of {@code T} instances.
-     * Subclasses or implementations can override this method to customize the
-     * parsing and mapping logic.
-     *
-     * @param root the root {@link JsonNode} representing the lookup response payload
-     * @return a list of parsed objects of type {@code T}
-     * @throws Exception if an error occurs while parsing or converting the response
-     */
-	public List<T> processLookupResponse(JsonNode root) throws Exception {
+	private long[] parsePoint(String pointStr) {
+		try {
+			String[] parts = pointStr.split(",");
+			return new long[] { (long) Double.parseDouble(parts[0]), (long) Double.parseDouble(parts[1]) };
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
+
+	private Query getShapeQuery(String queryString, List<Filter> shapeFilters) {
+
+		List<Map<String, Object>> geometries = new ArrayList<Map<String, Object>>();
+		for (Filter filter : shapeFilters) {
+			String value = filter.getValue();
+			if (value == null) {
+				continue;
+			}
+			value = value.replaceAll("[\\[\\]\\s]", "");
+			String[] points = value.split("TO");
+			long[] point1 = parsePoint(points[0]);
+			long[] point2 = parsePoint(points[1]);
+
+			List<List<Long>> envelopeCoordinates = List.of(List.of(point1[0], point2[1]), // top-left (minX, maxY)
+					List.of(point2[0], point1[1]) // bottom-right (maxX, minY)
+			);
+
+			Map<String, Object> geoJsonEnvelope = Map.of("type", "envelope", "coordinates", envelopeCoordinates);
+			geometries.add(geoJsonEnvelope);
+		}
+
+		Map<String, Object> geometryCollection = Map.of("type", "geometrycollection", "geometries", geometries);
+
+		if (geometries.isEmpty()) {
+			return null;
+		}
+
+		Query shapeQuery = Query.of(q -> q.shape(g -> g.field("mc")
+				.shape(s -> s.relation(GeoShapeRelation.Intersects).shape(JsonData.of(geometryCollection)))));
+		return shapeQuery;
+	}
+
+	/**
+	 * Processes the JSON response returned from a lookup request and converts it
+	 * into a list of domain objects.
+	 * <p>
+	 * This method is responsible for parsing the provided {@link JsonNode}
+	 * structure and mapping its contents into a list of {@code T} instances.
+	 * Subclasses or implementations can override this method to customize the
+	 * parsing and mapping logic.
+	 *
+	 * @param root the root {@link JsonNode} representing the lookup response
+	 *             payload
+	 * @return a list of parsed objects of type {@code T}
+	 * @throws Exception if an error occurs while parsing or converting the response
+	 */
+	public <T extends ESEntity> List<T> processLookupResponse(JsonNode root, Class<T> clazz) throws Exception {
 		List<String> columns = new ArrayList<>();
 		root.get("columns").forEach(col -> columns.add(col.get("name").asText()));
 
@@ -284,136 +542,6 @@ public class ESHunter<T extends BaseESDocument> {
 		return results;
 	}
 
-	public void hunt(SearchParams searchParams, SearchResults<T> searchResults, String groupField,
-			String extraJoinClause) {
-
-		createESConnection();
-
-		String queryString = translateFilter(searchParams.getFilter(), propertyMap);
-		// if(!searchParams.getSuppressLogs()) log.debug("TranslatedFilters: " +
-		// queryString);
-
-		searchResults.setFilterQuery(queryString);
-		if (searchParams.getReturnFilterQuery())
-			searchResults.setFilterQuery(queryString);
-
-		try {
-			// log.info("Running query & packaging searchResults: " + esIndex);
-			int size = getPageSize(searchParams);
-			if (searchParams.getEsQuery() != null) {
-				huntESQuery(searchParams, searchResults, queryString, size);
-			} else {
-				huntESSearch(searchParams, searchResults, groupField, extraJoinClause, queryString, size);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		log.debug("ESHunter.hunt finished");
-
-	}
-
-	private void huntESQuery(SearchParams searchParams, SearchResults<T> searchResults, String queryString, int size)
-			throws Exception {
-
-		String query = searchParams.getEsQuery().toQuery(queryString, size, searchParams.isEsGroupCountOnly());
-
-		log.info("esquery: " + query);
-		BinaryResponse binResp = esClient.esql().query(QueryRequest.of(q -> q.query(query).format(EsqlFormat.Json)));
-
-		JsonNode root = mapper.readTree(binResp.content());
-		if (searchParams.isEsGroupCountOnly()) {
-			int totalCount = root.path("values").get(0).get(0).asInt();
-			searchResults.setTotalCount(totalCount);
-		} else {
-			List<T> results = processLookupResponse(root);
-			searchResults.setResultObjects(results);
-			searchResults.setTotalCount(results.size());
-		}
-		log.info("esql found: " + searchResults.getTotalCount());
-	}
-
-	protected String getAggUniqueCountKey(String groupField) {
-		return "unique_" + groupField + "_count";
-	}
-
-	public void huntESSearch(SearchParams searchParams, SearchResults<T> searchResults, String groupField,
-			String extraJoinClause, String queryString, int size) throws Exception {
-		SearchResponse<T> resp = null;
-		TrackHits.Builder th = new TrackHits.Builder();
-		th.enabled(true);
-
-		SearchRequest.Builder srb = new SearchRequest.Builder();
-		QueryStringQuery.Builder qsb = new QueryStringQuery.Builder();
-		qsb.query(queryString);
-		srb.index(esIndex).query(qsb.build()._toQuery()).from(searchParams.getStartIndex()).trackTotalHits(th.build())
-				.size(size);
-
-		Highlight highlight = addHighlightingFields(searchParams);
-		if (highlight != null) {
-			srb.highlight(highlight);
-		}
-		addSorts(searchParams, srb);
-
-		if (groupField != null) {
-			if (searchParams.isEsGroupCountOnly()) {
-				srb.aggregations(getAggUniqueCountKey(groupField), a -> a.cardinality(c -> c.field(groupField)));
-			} else {
-				addAggregations(searchParams, srb, groupField, size);
-			}
-		}
-		if (facetString != null) {
-			srb.aggregations(facetString, t -> t.terms(f -> f.field(facetString).size(150)));
-		}
-		if (rangeSpec != null) {
-			List<AggregationRange> aggRanges = new ArrayList<AggregationRange>();
-			for (long[] r : rangeSpec.getRanges()) {
-				AggregationRange.Builder arb = new AggregationRange.Builder();
-				aggRanges.add(arb.from((double) r[0]).to((double) r[1]).build());
-			}
-			srb.aggregations(rangeSpec.getName(), t -> t.range(f -> f.field(rangeSpec.getField()).ranges(aggRanges)));
-		}
-
-		SearchRequest searchRequest = srb.build();
-		log.info("Sending search request: " + searchRequest);
-
-		resp = esClient.search(searchRequest, clazz);
-		log.info("Total hits: " + resp.hits().total().value());
-
-		if (resp.aggregations().size() > 0) {
-			if (searchParams.isEsGroupCountOnly()) {
-				Aggregate agg = resp.aggregations().get(getAggUniqueCountKey(groupField));
-				int uniqueCount = (int) agg.cardinality().value();
-				searchResults.setTotalCount(uniqueCount);
-				return;
-			}
-
-			if (facetString != null) {
-				for (StringTermsBucket bucket : resp.aggregations().get(facetString).sterms().buckets().array()) {
-					searchResults.getResultFacets().add(bucket.key().stringValue());
-				}
-			}
-			if (rangeSpec != null) {
-				for (RangeBucket bucket : resp.aggregations().get(rangeSpec.getName()).range().buckets().array()) {
-					long[] b = { bucket.from().longValue(), bucket.to().longValue(), bucket.docCount() };
-					searchResults.getHistogram().add(b);
-				}
-			}
-
-			if (processESSearchAggregation(resp, searchResults, searchParams)) {
-				log.debug("no need further processing for aggregation");
-				return;
-			}
-		}
-
-		for (Hit<T> hit : resp.hits().hits()) {
-			searchResults.getResultKeys().add(hit.source().getConsensussnp_accid());
-			searchResults.getResultObjects().add(hit.source());
-		}
-		searchResults.setTotalCount((int) resp.hits().total().value());
-	}
-
 	protected String translateFilter(Filter filter, HashMap<String, ESPropertyMapper> propertyMap) {
 		/**
 		 * This is the end case for the recursion. If we are at a node in the tree
@@ -436,6 +564,10 @@ public class ESHunter<T extends BaseESDocument> {
 		}
 
 		if (filter.isBasicFilter()) {
+			// do nothing for shape parameter
+			if (filter.getOperator() == Filter.Operator.OP_SHAPE) {
+				return "";
+			}
 			// Check to see if the property is null or an empty string,
 			// if it is, return an empty string
 			if (filterProperty == null || filterProperty.equals("")) {
@@ -444,15 +576,7 @@ public class ESHunter<T extends BaseESDocument> {
 
 			if (filter.getOperator() != Filter.Operator.OP_IN && filter.getOperator() != Filter.Operator.OP_NOT_IN
 					&& filter.getOperator() != Filter.Operator.OP_RANGE) {
-				
-				 // NOTE: Solr uses "nomenclature" to filter out the marker/genes. In ES it does not work. Need
-				 // to switch to use "markerSymbol". To keep the same UI, but switch the field here. Later to change 
-				 // UI and here at the same time
-				if ("nomenclature".equals(filterProperty)) {
-					return toMarkerSymbolQuery(filter);
-				} else {
-					return pm.getClause(filter);
-				}
+				return pm.getClause(filter);
 			} else if (filter.getOperator() == Filter.Operator.OP_RANGE) {
 				return pm.getClause(filter);
 			} else {
@@ -504,17 +628,93 @@ public class ESHunter<T extends BaseESDocument> {
 				return negation + "("
 						+ StringUtils.join(resultsString, filterClauseMap.get(filter.getFilterJoinClause())) + ")";
 			} else {
-				return resultsString.get(0);
+				if (resultsString.size() > 0) {
+					return resultsString.get(0);
+				} else {
+					return "";
+				}
 			}
 		}
 	}
 
 	/**
-	 * NOTE: Solr uses "nomenclature" to filter out the marker/genes. In ES it does not work. Need
-	 * to switch to user "markerSymbol". To keep the same UI, switch the field here.
+	 * Retrieves the page size for the search request.
+	 * <p>
+	 * By default, this method delegates to {@link SearchParams#getPageSize()}, but
+	 * subclasses can override to apply custom logic.
+	 *
+	 * @param searchParams the search parameters containing pagination information
+	 * @return the number of results per page
+	 */
+	protected int getPageSize(SearchParams searchParams) {
+		return searchParams.getPageSize();
+	}
+
+	/**
+	 * Adds one or more aggregations to the Elasticsearch search request.
+	 * <p>
+	 * By default, this method applies a simple terms aggregation on the given
+	 * {@code groupField}. Subclasses can override to define different or more
+	 * complex aggregations.
+	 *
+	 * @param searchParams the search parameters for the request
+	 * @param srb          the Elasticsearch search request builder
+	 * @param groupField   the field to group by in the aggregation
+	 * @param size         the maximum number of aggregation buckets to return
+	 */
+	protected void addGroupGetFirstDoc(SearchParams searchParams, SearchRequest.Builder srb, String groupField,
+			int from, int size) {
+		List<String> returnFields = new ArrayList<String>();
+		if (GxdResultFields.MARKER_SYMBOL.equals(groupField)) {
+			returnFields = List.of(GxdResultFields.MARKER_MGIID, GxdResultFields.MARKER_SYMBOL,
+					GxdResultFields.MARKER_NAME, GxdResultFields.MARKER_TYPE, GxdResultFields.CHROMOSOME,
+					GxdResultFields.CENTIMORGAN, GxdResultFields.CYTOBAND, GxdResultFields.START_COORD,
+					GxdResultFields.END_COORD, GxdResultFields.STRAND);
+		} else if (GxdResultFields.ASSAY_KEY.equals(groupField)) {
+			returnFields = List.of(GxdResultFields.MARKER_SYMBOL, GxdResultFields.ASSAY_KEY,
+					GxdResultFields.ASSAY_MGIID, GxdResultFields.ASSAY_TYPE, GxdResultFields.JNUM,
+					GxdResultFields.SHORT_CITATION);
+		} else if (GxdResultFields.STRUCTURE_EXACT.equals(groupField)) {
+			returnFields = List.of(GxdResultFields.STRUCTURE_EXACT);
+		} else if (GxdResultFields.THEILER_STAGE.equals(groupField)) {
+			returnFields = List.of(GxdResultFields.THEILER_STAGE);
+		}
+
+		NamedValue<SortOrder> keySort = NamedValue.of("_key", SortOrder.Asc);
+		List<String> fprop = returnFields;
+		srb.aggregations(groupField, a -> a
+				.terms(t -> t.field(groupField).size(from + size).order(Collections.singletonList(keySort)))
+				.aggregations("first_doc",
+						subAgg -> subAgg.topHits(th -> th.size(1).source(src -> src.filter(f -> f.includes(fprop)))))
+				.aggregations("bucket_pagination", subAgg -> subAgg.bucketSort(bs -> bs.from(from).size(size)
+						.sort(List.of(SortOptions.of(so -> so.field(f -> f.field("_key").order(SortOrder.Asc))))))));
+	}
+
+	/**
+	 * Processes the aggregation results from an Elasticsearch search response.
+	 * <p>
+	 * By default, this implementation does nothing and returns {@code false}.
+	 * Subclasses should override to extract aggregation results and populate
+	 * {@link SearchResults}.
+	 *
+	 * @param resp          the Elasticsearch search response
+	 * @param searchResults the container to hold processed search results
+	 * @param searchParams  the search parameters associated with the request
+	 * @return {@code true} if aggregations were processed and applied,
+	 *         {@code false} otherwise
+	 */
+	protected <T extends ESEntity> boolean processESSearchAggregation(SearchResponse resp,
+			SearchResults<T> searchResults, SearchParams searchParams) {
+		return false;
+	}
+
+	/**
+	 * NOTE: Solr uses "nomenclature" to filter out the marker/genes. In ES it does
+	 * not work. Need to switch to user "markerSymbol". To keep the same UI, switch
+	 * the field here.
 	 * 
-	 * Builds an Elasticsearch query string to search by marker symbol 
-	 * based on the provided filter.
+	 * Builds an Elasticsearch query string to search by marker symbol based on the
+	 * provided filter.
 	 *
 	 * @param f the {@link Filter} containing marker-related criteria
 	 * @return a query string formatted for Elasticsearch marker symbol search
@@ -543,7 +743,7 @@ public class ESHunter<T extends BaseESDocument> {
 		return translateFilter(f, propertyMap);
 	}
 
-	protected void createESConnection() {
+	public void createESConnection() {
 		if (esClient == null) {
 			RestClientBuilder builder = RestClient.builder(new HttpHost(esHost, Integer.parseInt(esPort), "http"));
 			builder.setRequestConfigCallback(new RestClientBuilder.RequestConfigCallback() {
@@ -651,5 +851,17 @@ public class ESHunter<T extends BaseESDocument> {
 			field = f;
 			ranges = r;
 		}
+	}
+
+	public ElasticsearchClient getEsClient() {
+		return esClient;
+	}
+	
+	public void setRangeAggSpecification(String name, String field, long[][] ranges) {
+		rangeSpec = new RangeAggSpecification(name, field, ranges);
+	}
+
+	public void clearRangeAggSpecification() {
+		rangeSpec = null;
 	}
 }
