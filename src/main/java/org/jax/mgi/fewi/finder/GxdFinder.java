@@ -200,6 +200,9 @@ public class GxdFinder {
 	}
 
 	public SearchResults<SolrGxdMarker> searchMarkers(SearchParams params) {
+		SearchResults<SolrGxdEntity> result = new SearchResults<SolrGxdEntity>();
+		gxdResultHunter.hunt(params, result, SearchConstants.MRK_KEY);		
+		
 		ESSearchOption searchOption = new ESSearchOption(GxdResultFields.MARKER_KEY);
 		searchOption.setGetGroupFirstDoc(true);
 		searchOption.setGetTotalCount(true);

@@ -270,15 +270,15 @@ public class ESHunter<T extends ESEntity> {
 				}
 			}
 		} else {
-			for (Hit<T> hit : resp.hits().hits()) {
-				if (hit.source() instanceof BaseESDocument) {
-					searchResults.getResultKeys().add(((BaseESDocument) hit.source()).getConsensussnp_accid());
-				}
-				searchResults.getResultObjects().add(hit.source());
-			}
 			if (searchOption.isGetTotalCount()) {
 				searchResults.setTotalCount((int) resp.hits().total().value());
 			}
+		}
+		for (Hit<T> hit : resp.hits().hits()) {
+			if (hit.source() instanceof BaseESDocument) {
+				searchResults.getResultKeys().add(((BaseESDocument) hit.source()).getConsensussnp_accid());
+			}
+			searchResults.getResultObjects().add(hit.source());
 		}
 	}
 
