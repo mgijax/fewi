@@ -151,8 +151,8 @@ Added aggregation and shape query
 public class ESHunterTest {
 	private static final Logger log = LoggerFactory.getLogger(ESHunterTest.class);
 
-//	private static final String ES_HOST = "bhmgigxdsolr01ld.jax.org";
-	private static final String ES_HOST = "localhost";
+	private static final String ES_HOST = "bhmgigxdsolr01ld.jax.org";
+//	private static final String ES_HOST = "localhost";
 	private static final String ES_PORT = "9200";
 
 	private ESGxdResultHunter gxdHasResultHunter;
