@@ -152,15 +152,4 @@ public class ESGxdSummaryBaseHunter<T extends ESEntity> extends ESHunter<T> {
 		 */
 	}
 
-	@Override
-	protected int getPageSize(SearchParams searchParams) {
-		// temp fix, got ES server exception when more than 10000. might be configurable on
-		// server, need check.
-		int size = searchParams.getPageSize();
-		if (size > 10000) {
-			size = 10000;
-		}
-		return size;
-	}
-
 }

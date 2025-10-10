@@ -1,6 +1,9 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
+import java.util.List;
+
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
+import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.snpdatamodel.document.ESEntity;
 
 public class SolrGxdAssay extends ESEntity implements SolrGxdEntity {
@@ -12,6 +15,11 @@ public class SolrGxdAssay extends ESEntity implements SolrGxdEntity {
 	String jNum;
 	String miniCitation;
 	boolean hasImage;
+
+	public static final List<String> RETURN_FIELDS = List.of(GxdResultFields.MARKER_SYMBOL, GxdResultFields.ASSAY_KEY,
+			GxdResultFields.ASSAY_MGIID, GxdResultFields.ASSAY_TYPE, GxdResultFields.JNUM,
+			GxdResultFields.SHORT_CITATION, GxdResultFields.ASSAY_HAS_IMAGE
+	);
 
 	public String toString() {
 		return "SolrGxdAssay: " + assayKey + " " + markerSymbol + ", " + assayMgiid;

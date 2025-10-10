@@ -132,7 +132,9 @@ public class GxdFinder {
 	 * Only does the Solr query to return the total document (or group) count
 	 */
 	public Integer getMarkerCount(SearchParams params) {
-		ESSearchOption searchOption = new ESSearchOption(GxdResultFields.MARKER_KEY, true);
+		ESSearchOption searchOption = new ESSearchOption();
+		searchOption.setGroupField(GxdResultFields.MARKER_KEY);
+		searchOption.setGetTotalCount(true);		
 		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
 		esGxdResultHunter.hunt(params, results, searchOption);
 		logger.info("gxd finder marker count =" + results.getTotalCount());
@@ -143,7 +145,9 @@ public class GxdFinder {
 	 * Only does the Solr query to return the total document (or group) count
 	 */
 	public Integer getAssayCount(SearchParams params) {
-		ESSearchOption searchOption = new ESSearchOption(GxdResultFields.ASSAY_KEY, true);
+		ESSearchOption searchOption = new ESSearchOption();
+		searchOption.setGroupField(GxdResultFields.ASSAY_KEY);
+		searchOption.setGetTotalCount(true);		
 		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
 		esGxdResultHunter.hunt(params, results, searchOption);
 		logger.info("gxd finder assay count =" + results.getTotalCount());
@@ -163,7 +167,9 @@ public class GxdFinder {
 	}
 
 	public Integer getImageCount(SearchParams params) {
-		ESSearchOption searchOption = new ESSearchOption(ImagePaneFields.IMAGE_PANE_KEY, true);
+		ESSearchOption searchOption = new ESSearchOption();
+		searchOption.setGroupField(ImagePaneFields.IMAGE_PANE_KEY);
+		searchOption.setGetTotalCount(true);
 		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
 		esGxdResultHasImageHunter.hunt(params, results, searchOption);
 		logger.debug("gxd finder image count =" + results.getTotalCount());
@@ -173,6 +179,7 @@ public class GxdFinder {
 	public SearchResults<SolrAssayResult> searchAssayResults(SearchParams params) {
 		ESSearchOption searchOption = new ESSearchOption();
 		searchOption.setGetTotalCount(true);
+		searchOption.setReturnFields(SolrAssayResult.RETURN_FIELDS);
 		SearchResults<SolrAssayResult> result = new SearchResults<SolrAssayResult>();
 		esGxdAssayResultHunter.hunt(params, result, searchOption);
 
@@ -182,9 +189,11 @@ public class GxdFinder {
 	}
 
 	public SearchResults<SolrGxdAssay> searchAssays(SearchParams params) {
-		ESSearchOption searchOption = new ESSearchOption(GxdResultFields.ASSAY_KEY);
+		ESSearchOption searchOption = new ESSearchOption();
+		searchOption.setGroupField(GxdResultFields.ASSAY_KEY);
 		searchOption.setGetGroupFirstDoc(true);
 		searchOption.setGetTotalCount(true);
+		searchOption.setReturnFields(SolrGxdAssay.RETURN_FIELDS);
 		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
 		esGxdResultHunter.hunt(params, results, searchOption);
 
@@ -199,13 +208,12 @@ public class GxdFinder {
 		return srGA;
 	}
 
-	public SearchResults<SolrGxdMarker> searchMarkers(SearchParams params) {
-		SearchResults<SolrGxdEntity> result = new SearchResults<SolrGxdEntity>();
-		gxdResultHunter.hunt(params, result, SearchConstants.MRK_KEY);		
-		
-		ESSearchOption searchOption = new ESSearchOption(GxdResultFields.MARKER_KEY);
+	public SearchResults<SolrGxdMarker> searchMarkers(SearchParams params) {	
+		ESSearchOption searchOption = new ESSearchOption();
+		searchOption.setGroupField(GxdResultFields.MARKER_KEY);
 		searchOption.setGetGroupFirstDoc(true);
 		searchOption.setGetTotalCount(true);
+		searchOption.setReturnFields(SolrGxdMarker.RETURN_FIELDS);
 		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
 		esGxdResultHunter.hunt(params, results, searchOption);
 
@@ -215,9 +223,11 @@ public class GxdFinder {
 	}
 
 	public SearchResults<SolrString> searchStructureIds(SearchParams params) {
-		ESSearchOption searchOption = new ESSearchOption(GxdResultFields.STRUCTURE_EXACT);
+		ESSearchOption searchOption = new ESSearchOption();
+		searchOption.setGroupField(GxdResultFields.STRUCTURE_EXACT);
 		searchOption.setGetGroupFirstDoc(true);
 		searchOption.setGetTotalCount(true);
+		searchOption.setReturnFields(List.of(GxdResultFields.STRUCTURE_EXACT));
 		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
 		esGxdResultHunter.hunt(params, results, searchOption);
 
@@ -227,9 +237,11 @@ public class GxdFinder {
 	}
 
 	public SearchResults<SolrString> searchStagesInMatrix(SearchParams params) {
-		ESSearchOption searchOption = new ESSearchOption(GxdResultFields.THEILER_STAGE);
+		ESSearchOption searchOption = new ESSearchOption();
+		searchOption.setGroupField(GxdResultFields.THEILER_STAGE);
 		searchOption.setGetGroupFirstDoc(true);
 		searchOption.setGetTotalCount(true);
+		searchOption.setReturnFields(List.of(GxdResultFields.THEILER_STAGE));
 		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
 		esGxdResultHunter.hunt(params, results, searchOption);
 
@@ -239,7 +251,8 @@ public class GxdFinder {
 	}
 
 	public SearchResults<SolrGxdImage> searchImages(SearchParams params) {
-		ESSearchOption searchOption = new ESSearchOption(ImagePaneFields.IMAGE_PANE_KEY);
+		ESSearchOption searchOption = new ESSearchOption();
+		searchOption.setGroupField(ImagePaneFields.IMAGE_PANE_KEY);
 		searchOption.setGetGroupInfo(true);
 		searchOption.setGetTotalCount(true);
 		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
@@ -262,7 +275,8 @@ public class GxdFinder {
 	}
 
 	public SearchResults<SolrGxdMarker> searchBatchMarkerIDs(SearchParams params) {
-		ESSearchOption searchOption = new ESSearchOption(GxdResultFields.MARKER_KEY);
+		ESSearchOption searchOption = new ESSearchOption();
+		searchOption.setGroupField(GxdResultFields.MARKER_KEY);
 		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
 		esGxdResultHunter.hunt(params, results, searchOption);
 

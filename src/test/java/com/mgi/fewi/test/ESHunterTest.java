@@ -15,9 +15,11 @@ import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.entities.ESAggLongCount;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.shr.fe.indexconstants.ImagePaneFields;
@@ -172,7 +174,7 @@ public class ESHunterTest {
 	 * Test search with a single parameter
 	 */
 	@Test
-	public void testSearchByParameter() {
+	public void testSimpleSearch() {
 		log.info("Test: testSearchByParameter");
 		SearchParams searchParams = new SearchParams();
 		searchParams.setFilter(Filter.equal(GxdResultFields.NOMENCLATURE, "Apob"));
@@ -200,11 +202,11 @@ public class ESHunterTest {
 		List<Filter> filters = new ArrayList<Filter>();
 		filters.add(Filter.equal(GxdResultFields.NOMENCLATURE, "Apob"));
 		filters.add(Filter.equal(GxdResultFields.ASSAY_TYPE, "Western blot"));
-//		filters.add(Filter.equal(GxdResultFields.STRUCTURE_EXACT, "EMAPA:17163"));
 		searchParams.setFilter(Filter.and(filters));
 
 		SearchResults<SolrAssayResult> searchResults = new SearchResults<SolrAssayResult>();
 		ESSearchOption searchOption = new ESSearchOption();
+		searchOption.setReturnFields(SolrAssayResult.RETURN_FIELDS);
 		this.gxdHasResultHunter.hunt(searchParams, searchResults, searchOption);
 		List<SolrAssayResult> resultObjects = searchResults.getResultObjects();
 		Assert.assertEquals(searchParams.getPageSize(), resultObjects.size());
@@ -212,6 +214,30 @@ public class ESHunterTest {
 		show(resultObjects, 5);
 		log.info("\n");
 	}
+	
+	@Test
+	public void testAggregationBy() {
+		log.info("Test: testAggregationBy");
+		SearchParams searchParams = new SearchParams();
+		searchParams.setFilter(Filter.equal(GxdResultFields.ASSAY_TYPE, "Western blot"));
+		searchParams.addSort(new Sort(GxdResultFields.M_BY_MRK_SYMBOL, true));
+		
+		SearchResults<ESEntity> searchResults = new SearchResults<ESEntity>();
+		ESSearchOption searchOption = new ESSearchOption();
+		searchOption.setGetTotalCount(true);;
+		searchOption.setGroupField(GxdResultFields.MARKER_KEY);	
+		searchOption.setGetGroupFirstDoc(true);
+		searchOption.setReturnFields(SolrGxdMarker.RETURN_FIELDS);
+
+		this.gxdHasResultHunter.hunt(searchParams, searchResults, searchOption);
+
+		List<ESEntity> resultObjects = searchResults.getResultObjects();
+		Assert.assertNotNull(resultObjects);
+		Assert.assertTrue(resultObjects.size() > 0);
+		log.info("total number of groups: " + resultObjects.size());
+		show(resultObjects, 5);
+		log.info("\n");
+	}		
 
 	@Test
 	public void testSearchByMouseCoordinates() {
@@ -244,7 +270,8 @@ public class ESHunterTest {
 		searchParams.setFilter(Filter.equal(GxdResultFields.NOMENCLATURE, "Apob"));
 
 		SearchResults<ESEntity> searchResults = new SearchResults<ESEntity>();
-		ESSearchOption searchOption = new ESSearchOption(GxdResultFields.MARKER_KEY);
+		ESSearchOption searchOption = new ESSearchOption();
+		searchOption.setGroupField(GxdResultFields.MARKER_KEY);
 		searchOption.setGetTotalCount(true);
 
 		this.gxdHasResultHunter.hunt(searchParams, searchResults, searchOption);
@@ -263,7 +290,9 @@ public class ESHunterTest {
 		searchParams.setFilter(Filter.equal(GxdResultFields.NOMENCLATURE, "Apob"));
 
 		SearchResults<ESEntity> searchResults = new SearchResults<ESEntity>();
-		ESSearchOption searchOption = new ESSearchOption(GxdResultFields.MARKER_KEY);
+		ESSearchOption searchOption = new ESSearchOption();
+		searchOption.setGetTotalCount(true);;
+		searchOption.setGroupField(GxdResultFields.MARKER_KEY);	
 		searchOption.setGetGroupFirstDoc(true);
 
 		this.gxdHasResultHunter.hunt(searchParams, searchResults, searchOption);
@@ -285,7 +314,8 @@ public class ESHunterTest {
 		searchParams.setFilter(Filter.equal(GxdResultFields.NOMENCLATURE, "Apob"));
 
 		SearchResults<ESEntity> searchResults = new SearchResults<ESEntity>();
-		ESSearchOption searchOption = new ESSearchOption(GxdResultFields.ASSAY_KEY);
+		ESSearchOption searchOption = new ESSearchOption();
+		searchOption.setGroupField(GxdResultFields.ASSAY_KEY);
 		searchOption.setGetGroupFirstDoc(true);
 		this.gxdHasResultHunter.hunt(searchParams, searchResults, searchOption);
 		List<ESEntity> resultObjects = searchResults.getResultObjects();
@@ -357,7 +387,8 @@ public class ESHunterTest {
 		log.info("Test: testJoinTwoIndexes");
 		SearchParams searchParams = new SearchParams();
 		SearchResults<ESEntity> searchResults = new SearchResults<ESEntity>();
-		ESSearchOption searchOption = new ESSearchOption(ImagePaneFields.IMAGE_PANE_KEY);
+		ESSearchOption searchOption = new ESSearchOption();
+		searchOption.setGroupField(ImagePaneFields.IMAGE_PANE_KEY);
 		searchOption.setGetGroupInfo(true);
 		this.gxdHasResultHasImageHunter.hunt(searchParams, searchResults, searchOption);
 
@@ -391,7 +422,8 @@ public class ESHunterTest {
 		SearchParams searchParams = new SearchParams();
 		searchParams.setPageSize(10);
 		SearchResults<ESEntity> searchResults = new SearchResults<ESEntity>();
-		ESSearchOption searchOption = new ESSearchOption(GxdResultFields.MARKER_SYMBOL);
+		ESSearchOption searchOption = new ESSearchOption();
+		searchOption.setGroupField(GxdResultFields.MARKER_SYMBOL);
 		searchOption.setGetGroupInfo(true);
 
 		this.gxdHasResultHasImageHunter.hunt(searchParams, searchResults, searchOption);
@@ -409,7 +441,8 @@ public class ESHunterTest {
 		SearchParams searchParams = new SearchParams();
 		searchParams.setPageSize(10);
 		SearchResults<ESEntity> searchResults = new SearchResults<ESEntity>();
-		ESSearchOption searchOption = new ESSearchOption(ImagePaneFields.IMAGE_PANE_KEY);
+		ESSearchOption searchOption = new ESSearchOption();
+		searchOption.setGroupField(ImagePaneFields.IMAGE_PANE_KEY);
 		searchOption.setGetGroupInfo(true);
 
 		this.gxdHasResultHasImageHunter.hunt(searchParams, searchResults, searchOption);

@@ -12,11 +12,6 @@ public class ESSearchOption {
 	private ESQuery esQuery;
 	
 	public ESSearchOption() {
-		this(null, false);
-	}
-	
-	public ESSearchOption(String groupField) {
-		this(groupField, false);
 	}
 	
 	public ESSearchOption(String groupField, boolean isGetTotalCount) {

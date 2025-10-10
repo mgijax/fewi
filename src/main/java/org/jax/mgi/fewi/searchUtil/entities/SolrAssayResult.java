@@ -4,10 +4,10 @@ import java.text.NumberFormat;
 import java.util.List;
 
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
+import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.snpdatamodel.document.ESEntity;
 
-public class SolrAssayResult extends ESEntity implements SolrGxdEntity
-{
+public class SolrAssayResult extends ESEntity implements SolrGxdEntity {
 	private String jNum;
 	private String pubmedId;
 
@@ -20,7 +20,7 @@ public class SolrAssayResult extends ESEntity implements SolrGxdEntity
 	private List<String> figures;
 	private List<String> figuresPlain;
 	private String cellType;
-	
+
 	private String genotype;
 	private String age;
 
@@ -30,7 +30,7 @@ public class SolrAssayResult extends ESEntity implements SolrGxdEntity
 
 	private String detectionLevel;
 	private String shortCitation;
-	
+
 	// fields related to RNA-Seq data
 	private String tpmLevel;
 	private String avgQnTpmLevel;
@@ -39,11 +39,20 @@ public class SolrAssayResult extends ESEntity implements SolrGxdEntity
 	private String sex;
 	private String notes;
 
-	//*** static variables ***//
+	public static final List<String> RETURN_FIELDS = List.of(GxdResultFields.JNUM, GxdResultFields.PUBMED_ID,
+			GxdResultFields.MARKER_SYMBOL, GxdResultFields.MARKER_MGIID, GxdResultFields.MARKER_NAME,
+			GxdResultFields.STRUCTURE_PRINTNAME, GxdResultFields.ANATOMICAL_SYSTEM, GxdResultFields.THEILER_STAGE,
+			GxdResultFields.FIGURE, GxdResultFields.FIGURE_PLAIN, GxdResultFields.CELL_TYPE, GxdResultFields.GENOTYPE,
+			GxdResultFields.AGE, GxdResultFields.ASSAY_MGIID, GxdResultFields.ASSAY_KEY, GxdResultFields.ASSAY_TYPE,
+			GxdResultFields.DETECTION_LEVEL, GxdResultFields.SHORT_CITATION, GxdResultFields.TPM_LEVEL,
+			GxdResultFields.AVG_QN_TPM_LEVEL, GxdResultFields.BIOLOGICAL_REPLICATES, GxdResultFields.STRAIN,
+			GxdResultFields.SEX, GxdResultFields.NOTES);
+
+	// *** static variables ***//
 	private static NumberFormat fmt = null;
 
-	//*** methods ***//
-	
+	// *** methods ***//
+
 	public String toString() {
 		return "SolrAssayResult: " + markerSymbol + " " + assayType + " " + assayMgiid;
 	}
@@ -51,96 +60,127 @@ public class SolrAssayResult extends ESEntity implements SolrGxdEntity
 	public String getJNum() {
 		return jNum;
 	}
+
 	public void setJNum(String jNum) {
 		this.jNum = jNum;
 	}
+
 	public String getMarkerSymbol() {
 		return markerSymbol;
 	}
+
 	public void setMarkerSymbol(String markerSymbol) {
 		this.markerSymbol = markerSymbol;
 	}
+
 	public String getPrintname() {
 		return printname;
 	}
+
 	public void setPrintname(String printname) {
 		this.printname = printname;
 	}
+
 	public List<String> getAnatomicalSystems() {
 		return anatomicalSystems;
 	}
+
 	public void setAnatomicalSystems(List<String> anatomicalSystems) {
 		this.anatomicalSystems = anatomicalSystems;
 	}
+
 	public Integer getTheilerStage() {
 		return theilerStage;
 	}
+
 	public void setTheilerStage(Integer theilerStage) {
 		this.theilerStage = theilerStage;
 	}
+
 	public List<String> getFigures() {
 		return figures;
 	}
+
 	public void setFigures(List<String> figures) {
 		this.figures = figures;
 	}
+
 	public String getGenotype() {
 		return genotype;
 	}
+
 	public void setGenotype(String genotype) {
 		this.genotype = genotype;
 	}
+
 	public String getAge() {
 		return age;
 	}
+
 	public void setAge(String age) {
 		this.age = age;
 	}
+
 	public String getAssayMgiid() {
 		return assayMgiid;
 	}
+
 	public void setAssayMgiid(String assayMgiid) {
 		this.assayMgiid = assayMgiid;
 	}
+
 	public String getAssayKey() {
 		return assayKey;
 	}
+
 	public void setAssayKey(String assayKey) {
 		this.assayKey = assayKey;
 	}
+
 	public String getAssayType() {
 		return assayType;
 	}
+
 	public void setAssayType(String assayType) {
 		this.assayType = assayType;
 	}
+
 	public String getDetectionLevel() {
 		return detectionLevel;
 	}
+
 	public void setDetectionLevel(String detectionLevel) {
 		this.detectionLevel = detectionLevel;
 	}
+
 	public String getShortCitation() {
 		return shortCitation;
 	}
+
 	public void setShortCitation(String shortCitation) {
 		this.shortCitation = shortCitation;
 	}
+
 	public String getMarkerMgiid() {
 		return markerMgiid;
 	}
+
 	public void setMarkerMgiid(String markerMgiid) {
 		this.markerMgiid = markerMgiid;
 	}
+
 	public String getMarkerName() {
 		return markerName;
 	}
+
 	public void setMarkerName(String markerName) {
 		this.markerName = markerName;
 	}
+
 	public List<String> getFiguresPlain() {
 		return figuresPlain;
 	}
+
 	public void setFiguresPlain(List<String> figuresPlain) {
 		this.figuresPlain = figuresPlain;
 	}
@@ -148,30 +188,38 @@ public class SolrAssayResult extends ESEntity implements SolrGxdEntity
 	public String getPubmedId() {
 		return pubmedId;
 	}
+
 	public void setPubmedId(String pubmedId) {
 		this.pubmedId = pubmedId;
 	}
+
 	public String getTpmLevel() {
 		// returns High, Medium, Low, or Below Cutoff
 		return tpmLevel;
 	}
+
 	public void setTpmLevel(String tpmLevel) {
 		this.tpmLevel = tpmLevel;
 	}
+
 	public String getAvgQnTpmLevel() {
 		// The indexer already trims digits appropriately for this
 		// value and stores the result as a string.
 		return avgQnTpmLevel;
 	}
+
 	public void setAvgQnTpmLevel(String avgQnTpmLevel) {
 		this.avgQnTpmLevel = avgQnTpmLevel;
 	}
+
 	public String getBiologicalReplicates() {
 		return biologicalReplicates;
 	}
+
 	public void setBiologicalReplicates(String biologicalReplicates) {
 		this.biologicalReplicates = biologicalReplicates;
 	}
+
 	public String getStrain() {
 		// not just a getter -- also convert Not Specified to a space
 		if ("Not Specified".equals(strain)) {
@@ -179,9 +227,11 @@ public class SolrAssayResult extends ESEntity implements SolrGxdEntity
 		}
 		return strain;
 	}
+
 	public void setStrain(String strain) {
 		this.strain = strain;
 	}
+
 	public String getSex() {
 		// not just a getter -- also convert Not Specified to a space
 		if ("Not Specified".equals(sex)) {
@@ -189,21 +239,27 @@ public class SolrAssayResult extends ESEntity implements SolrGxdEntity
 		}
 		return sex;
 	}
+
 	public void setSex(String sex) {
 		this.sex = sex;
 	}
+
 	public String getNotes() {
 		return notes;
 	}
+
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
+
 	public String getCellType() {
 		return cellType;
 	}
+
 	public void setCellType(String cellType) {
 		this.cellType = cellType;
 	}
+
 	public void setjNum(String jNum) {
 		this.jNum = jNum;
 	}

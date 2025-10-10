@@ -183,10 +183,12 @@ public class ESHunter<T extends ESEntity> {
 			searchResults.setFilterQuery(queryString);
 
 		try {
-			int size = getPageSize(searchParams);
+			int size = searchParams.getPageSize();
 			if (searchOption.getEsQuery() == null) {
+				// ES endpint "/search"
 				huntDoSearch(searchParams, searchResults, searchOption, queryString, size, shapeFilters);
 			} else {
+				// ES endpoint "/query" for ESQL
 				huntDoQuery(searchParams, searchResults, queryString, size, shapeFilters, searchOption);
 			}
 		} catch (Exception e) {
@@ -216,6 +218,9 @@ public class ESHunter<T extends ESEntity> {
 		}
 
 		if (groupField == null) {
+			if (searchOption.getReturnFields() != null && !searchOption.getReturnFields().isEmpty()) {
+				srb.source(src -> src.filter(f -> f.includes(searchOption.getReturnFields())));
+			}
 			addSorts(searchParams, srb);
 			srb.from(searchParams.getStartIndex());
 			srb.size(size);
@@ -626,19 +631,6 @@ public class ESHunter<T extends ESEntity> {
 		}
 	}
 
-	/**
-	 * Retrieves the page size for the search request.
-	 * <p>
-	 * By default, this method delegates to {@link SearchParams#getPageSize()}, but
-	 * subclasses can override to apply custom logic.
-	 *
-	 * @param searchParams the search parameters containing pagination information
-	 * @return the number of results per page
-	 */
-	protected int getPageSize(SearchParams searchParams) {
-		return searchParams.getPageSize();
-	}
-
 	private void addSearchAggregation(SearchParams searchParams, ESSearchOption searchOption, SearchRequest.Builder srb,
 			int from, int size) {
 
@@ -659,32 +651,26 @@ public class ESHunter<T extends ESEntity> {
 
 			// Conditionally add top_hits aggregation
 			if (searchOption.isGetGroupFirstDoc()) {
-				List<String> returnFields = switch (groupField) {
-				case GxdResultFields.MARKER_SYMBOL -> List.of(GxdResultFields.MARKER_MGIID,
-						GxdResultFields.MARKER_SYMBOL, GxdResultFields.MARKER_NAME, GxdResultFields.MARKER_TYPE,
-						GxdResultFields.CHROMOSOME, GxdResultFields.CENTIMORGAN, GxdResultFields.CYTOBAND,
-						GxdResultFields.START_COORD, GxdResultFields.END_COORD, GxdResultFields.STRAND);
-				case GxdResultFields.ASSAY_KEY ->
-					List.of(GxdResultFields.MARKER_SYMBOL, GxdResultFields.ASSAY_KEY, GxdResultFields.ASSAY_MGIID,
-							GxdResultFields.ASSAY_TYPE, GxdResultFields.JNUM, GxdResultFields.SHORT_CITATION);
-				case GxdResultFields.STRUCTURE_EXACT -> List.of(GxdResultFields.STRUCTURE_EXACT);
-				case GxdResultFields.THEILER_STAGE -> List.of(GxdResultFields.THEILER_STAGE);
-				default -> List.of();
-				};
+				List<String> returnFields;
+				if (searchOption.getReturnFields() == null) {
+					returnFields = List.of();
+				} else {
+					returnFields = searchOption.getReturnFields();
+				}
 				a.aggregations("first_doc", subAgg -> subAgg
 						.topHits(th -> th.size(1).source(src -> src.filter(f -> f.includes(returnFields)))));
 			}
-			
-			Map<String, SortOptions> sortMap = getSortFields(searchParams, groupField, SortOrder.Asc);
-			if ( !sortMap.isEmpty() ) {
+
+			Map<String, SortOptions> sortMap = getSortFields(searchParams);
+			if (!sortMap.isEmpty()) {
 				for (String key : sortMap.keySet()) {
 					a.aggregations(getAggSortKeyName(key), sub -> sub.min(m -> m.field(key)));
 				}
 			}
-			
+
 			// Always add bucket pagination
 			List<SortOptions> sorts = new ArrayList<>();
-			if ( !sortMap.isEmpty() ) {
+			if (!sortMap.isEmpty()) {
 				sorts = new ArrayList<>(sortMap.values());
 			}
 			List<SortOptions> sortsFinal = sorts;
@@ -920,24 +906,32 @@ public class ESHunter<T extends ESEntity> {
 		}
 	}
 
-	private Map<String, SortOptions> getSortFields(SearchParams searchParams, String groupField, SortOrder order) {
+	private Map<String, SortOptions> getSortFields(SearchParams searchParams) {
 		Map<String, SortOptions> map = new HashMap<>();
 
-		
-		if (sortMap.containsKey(groupField)) {
-			// Loop over sort list
-			for (String ssm : sortMap.get(groupField).getSortList()) {
-				FieldSort fs = new FieldSort.Builder().field(getAggSortKeyName(ssm)).order(order).build();
-				SortOptions so = new SortOptions.Builder().field(fs).build();
-				map.put(ssm, so);
+		SortOrder order;
+		for (Sort sort : searchParams.getSorts()) {
+			if (sort.isDesc()) {
+				order = SortOrder.Desc;
+			} else {
+				order = SortOrder.Asc;
 			}
-		} else {
-			FieldSort fs = new FieldSort.Builder().field(getAggSortKeyName(groupField)).order(order).build();
-			SortOptions so = new SortOptions.Builder().field(fs).build();
-			map.put(groupField, so);
+			if (sortMap.containsKey(sort.getSort())) {
+				// Loop over sort list
+				for (String ssm : sortMap.get(sort.getSort()).getSortList()) {
+					FieldSort fs = new FieldSort.Builder().field(getAggSortKeyName(ssm)).order(order).build();
+					SortOptions so = new SortOptions.Builder().field(fs).build();
+					map.put(ssm, so);
+					break;
+					//Hongping todo  only works for the first one
+				}
+			} else {
+				FieldSort fs = new FieldSort.Builder().field(getAggSortKeyName(sort.getSort())).order(order).build();
+				SortOptions so = new SortOptions.Builder().field(fs).build();
+				map.put(sort.getSort(), so);
+			}
 		}
-
-		return new HashMap<>();
+		return map;
 	}
 
 	private class RangeAggSpecification {
