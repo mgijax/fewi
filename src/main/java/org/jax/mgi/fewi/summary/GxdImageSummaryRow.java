@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdImage;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.ImageUtils;
 import org.jax.mgi.shr.jsonmodel.GxdImageMeta;
@@ -20,7 +20,7 @@ public class GxdImageSummaryRow {
 	// -------------------
 
 	// encapsulated row object
-	private final SolrGxdImage image;
+	private final ESGxdImage image;
 
 	// config values
 	String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
@@ -34,7 +34,7 @@ public class GxdImageSummaryRow {
 	// constructors
 	// -------------
 
-	public GxdImageSummaryRow(SolrGxdImage image) {
+	public GxdImageSummaryRow(ESGxdImage image) {
 		this.image = image;
 	}
 

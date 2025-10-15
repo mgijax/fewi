@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 
 import org.jax.mgi.fe.datamodel.ImagePane;
 import org.jax.mgi.fewi.config.ContextLoader;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdImage;
 
 /**
  * 
@@ -54,7 +54,7 @@ public class ImageUtils
 				maxWidth,maxHeight, null);
 	}
 
-	public static String createImagePaneHTML(SolrGxdImage image, Integer maxWidth, Integer maxHeight)
+	public static String createImagePaneHTML(ESGxdImage image, Integer maxWidth, Integer maxHeight)
 	{
 		return createImagePaneHTML(image.getPaneWidth(),image.getPaneHeight(),
 				image.getPaneX(),image.getPaneY(),
@@ -64,7 +64,7 @@ public class ImageUtils
 				maxWidth,maxHeight, null);
 	}
 
-	public static String createImagePaneHTML(SolrGxdImage image, Integer maxWidth, Integer maxHeight, String extraDivStyle)
+	public static String createImagePaneHTML(ESGxdImage image, Integer maxWidth, Integer maxHeight, String extraDivStyle)
 	{
 		return createImagePaneHTML(image.getPaneWidth(),image.getPaneHeight(),
 				image.getPaneX(),image.getPaneY(),

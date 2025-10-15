@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.matrix.DetectionConverter;
-import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESAssayResult;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.NotesTagConverter;
 
@@ -19,7 +19,7 @@ public class GxdAssayResultSummaryRow {
 	// -------------------
 
 	// encapsulated row object
-	private SolrAssayResult result;
+	private ESAssayResult result;
 
 	// config values
 	String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
@@ -34,7 +34,7 @@ public class GxdAssayResultSummaryRow {
 	// -------------
 	// constructors
 	// -------------
-	public GxdAssayResultSummaryRow(SolrAssayResult result) {
+	public GxdAssayResultSummaryRow(ESAssayResult result) {
 		this.result = result;
 
 		setNTC();

@@ -5,7 +5,7 @@ package org.jax.mgi.fewi.summary;
 //}
 
 import org.jax.mgi.fewi.config.ContextLoader;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdMarker;
 import org.jax.mgi.fewi.util.FormatHelper;
 
 
@@ -17,7 +17,7 @@ public class GxdMarkerSummaryRow {
 		// instance variables
 		//-------------------
 		// encapsulated row object
-		private SolrGxdMarker marker;
+		private ESGxdMarker marker;
 
 		// config values
 	  String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
@@ -28,7 +28,7 @@ public class GxdMarkerSummaryRow {
 		// constructors
 		//-------------
 
-	  public GxdMarkerSummaryRow (SolrGxdMarker marker) {
+	  public GxdMarkerSummaryRow (ESGxdMarker marker) {
 	  	this.marker = marker;
 	  	return;
 	  }

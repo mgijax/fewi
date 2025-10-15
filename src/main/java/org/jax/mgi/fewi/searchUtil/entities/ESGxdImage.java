@@ -12,7 +12,7 @@ import org.jax.mgi.snpdatamodel.document.ESEntity;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class SolrGxdImage extends ESEntity implements SolrGxdEntity {
+public class ESGxdImage extends ESEntity implements SolrGxdEntity {
 
 	Integer imagePaneKey;
 	String imageID;

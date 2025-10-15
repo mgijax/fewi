@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdImage;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.shr.fe.indexconstants.ImagePaneFields;
 import org.jax.mgi.shr.jsonmodel.GxdImageMeta;
@@ -25,7 +25,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class ESGxdImagePaneHunter<T extends ESEntity> extends ESGxdSummaryBaseHunter<T> {
 
     public ESGxdImagePaneHunter() {
-    	super((Class<T>)SolrGxdImage.class);
+    	super((Class<T>)ESGxdImage.class);
         keyString = ImagePaneFields.IMAGE_PANE_KEY;
     }
 
@@ -107,8 +107,8 @@ public class ESGxdImagePaneHunter<T extends ESEntity> extends ESGxdSummaryBaseHu
 		List<T> results = new ArrayList<>();
 		for (JsonNode row : root.get("values")) {
 			T tObj = clazz.getDeclaredConstructor().newInstance();
-			if (tObj instanceof SolrGxdImage) {
-				SolrGxdImage image = (SolrGxdImage)tObj;
+			if (tObj instanceof ESGxdImage) {
+				ESGxdImage image = (ESGxdImage)tObj;
 				if (idxImagePaneKey >= 0)
 					image.setImagePaneKey(row.get(idxImagePaneKey).asInt());
 				if (idxImageId >= 0)

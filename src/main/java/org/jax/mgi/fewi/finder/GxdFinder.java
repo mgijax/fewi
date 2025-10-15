@@ -33,12 +33,12 @@ import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.entities.ESAggLongCount;
-import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDagEdge;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdAssay;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdAssay;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdGeneMatrixResult;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdImage;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdPhenoMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRecombinaseMatrixResult;
@@ -176,31 +176,31 @@ public class GxdFinder {
 		return results.getTotalCount();
 	}
 
-	public SearchResults<SolrAssayResult> searchAssayResults(SearchParams params) {
+	public SearchResults<ESAssayResult> searchAssayResults(SearchParams params) {
 		ESSearchOption searchOption = new ESSearchOption();
 		searchOption.setGetTotalCount(true);
-		searchOption.setReturnFields(SolrAssayResult.RETURN_FIELDS);
-		SearchResults<SolrAssayResult> result = new SearchResults<SolrAssayResult>();
+		searchOption.setReturnFields(ESAssayResult.RETURN_FIELDS);
+		SearchResults<ESAssayResult> result = new SearchResults<ESAssayResult>();
 		esGxdAssayResultHunter.hunt(params, result, searchOption);
 
-		SearchResults<SolrAssayResult> srAR = new SearchResults<SolrAssayResult>();
-		srAR.cloneFrom(result, SolrAssayResult.class);
+		SearchResults<ESAssayResult> srAR = new SearchResults<ESAssayResult>();
+		srAR.cloneFrom(result, ESAssayResult.class);
 		return srAR;
 	}
 
-	public SearchResults<SolrGxdAssay> searchAssays(SearchParams params) {
+	public SearchResults<ESGxdAssay> searchAssays(SearchParams params) {
 		ESSearchOption searchOption = new ESSearchOption();
 		searchOption.setGroupField(GxdResultFields.ASSAY_KEY);
 		searchOption.setGetGroupFirstDoc(true);
 		searchOption.setGetTotalCount(true);
-		searchOption.setReturnFields(SolrGxdAssay.RETURN_FIELDS);
+		searchOption.setReturnFields(ESGxdAssay.RETURN_FIELDS);
 		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
 		esGxdResultHunter.hunt(params, results, searchOption);
 
-		SearchResults<SolrGxdAssay> srGA = new SearchResults<SolrGxdAssay>();
-		srGA.cloneFrom(results, SolrGxdAssay.class);
+		SearchResults<ESGxdAssay> srGA = new SearchResults<ESGxdAssay>();
+		srGA.cloneFrom(results, ESGxdAssay.class);
 
-		for (SolrGxdAssay result : srGA.getResultObjects()) {
+		for (ESGxdAssay result : srGA.getResultObjects()) {
 			if ("RNA-Seq".equals(result.getAssayType())) {
 				result.setMarkerSymbol("Whole Genome");
 			}
@@ -208,17 +208,17 @@ public class GxdFinder {
 		return srGA;
 	}
 
-	public SearchResults<SolrGxdMarker> searchMarkers(SearchParams params) {	
+	public SearchResults<ESGxdMarker> searchMarkers(SearchParams params) {	
 		ESSearchOption searchOption = new ESSearchOption();
 		searchOption.setGroupField(GxdResultFields.MARKER_KEY);
 		searchOption.setGetGroupFirstDoc(true);
 		searchOption.setGetTotalCount(true);
-		searchOption.setReturnFields(SolrGxdMarker.RETURN_FIELDS);
+		searchOption.setReturnFields(ESGxdMarker.RETURN_FIELDS);
 		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
 		esGxdResultHunter.hunt(params, results, searchOption);
 
-		SearchResults<SolrGxdMarker> srGM = new SearchResults<SolrGxdMarker>();
-		srGM.cloneFrom(results, SolrGxdMarker.class);
+		SearchResults<ESGxdMarker> srGM = new SearchResults<ESGxdMarker>();
+		srGM.cloneFrom(results, ESGxdMarker.class);
 		return srGM;
 	}
 
@@ -250,7 +250,7 @@ public class GxdFinder {
 		return srGM;
 	}
 
-	public SearchResults<SolrGxdImage> searchImages(SearchParams params) {
+	public SearchResults<ESGxdImage> searchImages(SearchParams params) {
 		ESSearchOption searchOption = new ESSearchOption();
 		searchOption.setGroupField(ImagePaneFields.IMAGE_PANE_KEY);
 		searchOption.setGetGroupInfo(true);
@@ -267,21 +267,21 @@ public class GxdFinder {
 		
 		SearchParams imageParams = new SearchParams();
 		imageParams.setFilter(Filter.or(clauses));
-		SearchResults<SolrGxdImage> imageResult = new SearchResults<SolrGxdImage>();
+		SearchResults<ESGxdImage> imageResult = new SearchResults<ESGxdImage>();
 		ESSearchOption imageOption = new ESSearchOption();
 		esGxdImagePaneHunter.hunt(imageParams, imageResult, imageOption);
 		imageResult.setTotalCount(results.getTotalCount());
 		return imageResult;
 	}
 
-	public SearchResults<SolrGxdMarker> searchBatchMarkerIDs(SearchParams params) {
+	public SearchResults<ESGxdMarker> searchBatchMarkerIDs(SearchParams params) {
 		ESSearchOption searchOption = new ESSearchOption();
 		searchOption.setGroupField(GxdResultFields.MARKER_KEY);
 		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
 		esGxdResultHunter.hunt(params, results, searchOption);
 
-		SearchResults<SolrGxdMarker> srGM = new SearchResults<SolrGxdMarker>();
-		srGM.cloneFrom(results, SolrGxdMarker.class);
+		SearchResults<ESGxdMarker> srGM = new SearchResults<ESGxdMarker>();
+		srGM.cloneFrom(results, ESGxdMarker.class);
 		return srGM;
 	}
 
@@ -510,7 +510,7 @@ public class GxdFinder {
 
 	public SearchResults<SolrString> getAssayTypeFacet(SearchParams params) {
 		ESSearchOption searchOption = new ESSearchOption();
-		SearchResults<SolrAssayResult> results = new SearchResults<SolrAssayResult>();
+		SearchResults<ESAssayResult> results = new SearchResults<ESAssayResult>();
 		esGxdResultHunter.hunt(params, results, searchOption);
 		SearchResults<SolrString> srSS = new SearchResults<SolrString>();
 		srSS.cloneFrom(results, SolrString.class);

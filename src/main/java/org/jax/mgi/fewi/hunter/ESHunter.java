@@ -20,8 +20,8 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.entities.ESAggLongCount;
 import org.jax.mgi.fewi.searchUtil.entities.ESAggStringCount;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdAssay;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdMarker;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdAssay;
 import org.jax.mgi.fewi.searchUtil.entities.SolrString;
 import org.jax.mgi.fewi.sortMapper.ESSortMapper;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
@@ -36,11 +36,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.FieldSort;
+import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.GeoShapeRelation;
 import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregate;
 import co.elastic.clients.elasticsearch._types.aggregations.AggregationRange;
+import co.elastic.clients.elasticsearch._types.aggregations.CompositeAggregation;
+import co.elastic.clients.elasticsearch._types.aggregations.CompositeAggregationSource;
+import co.elastic.clients.elasticsearch._types.aggregations.CompositeBucket;
 import co.elastic.clients.elasticsearch._types.aggregations.LongTermsAggregate;
 import co.elastic.clients.elasticsearch._types.aggregations.LongTermsBucket;
 import co.elastic.clients.elasticsearch._types.aggregations.RangeBucket;
@@ -197,6 +201,48 @@ public class ESHunter<T extends ESEntity> {
 		log.debug("ESHunter.hunt finished");
 	}
 
+	private int getTotalNumberOfBuckets(SearchParams searchParams, SearchResults searchResults,
+			ESSearchOption searchOption, String queryString, List<Filter> shapeFilters) throws Exception {
+
+		String groupField = searchOption.getGroupField();
+		Map<String, CompositeAggregationSource> sources = Map.of(groupField,
+				CompositeAggregationSource.of(s -> s.terms(t -> t.field(groupField))));
+
+		int pageSize = 10000; // Adjust as needed
+		int totalCount = 0;
+		Map<String, FieldValue> afterKey = null;
+		while (true) {
+			SearchRequest.Builder srb = new SearchRequest.Builder();
+			srb.index(esIndex);
+			setSearchQuery(srb, queryString, shapeFilters);
+
+			CompositeAggregation.Builder compositeBuilder = new CompositeAggregation.Builder().size(pageSize)
+					.sources(sources);
+
+			if (afterKey != null) {
+				compositeBuilder.after(afterKey);
+			}
+			srb.aggregations(getAggUniqueBucketsKey(groupField), a -> a.composite(compositeBuilder.build()));
+			
+			SearchRequest searchRequest = srb.build();
+			log.info("Sending search request: " + searchRequest);
+			SearchResponse<Void> response = this.esClient.search(searchRequest, Void.class);
+
+			var compositeAgg = response.aggregations().get(getAggUniqueBucketsKey(groupField)).composite();
+			List<CompositeBucket> buckets = compositeAgg.buckets().array();
+			totalCount += buckets.size();
+			log.info("Fetched " +  buckets.size() + " buckets, total so far: " + totalCount);
+			afterKey = compositeAgg.afterKey();
+			// If no more pages, break
+			if (afterKey == null || buckets.isEmpty()) {
+				break;
+			}
+		}
+
+		log.info("Total bucket count = " + totalCount);
+		return totalCount;
+	}
+
 	public <T extends ESEntity> void huntDoSearch(SearchParams searchParams, SearchResults<T> searchResults,
 			ESSearchOption searchOption, String queryString, int size, List<Filter> shapeFilters) throws Exception {
 
@@ -225,7 +271,7 @@ public class ESHunter<T extends ESEntity> {
 			srb.from(searchParams.getStartIndex());
 			srb.size(size);
 		} else {
-			addSearchAggregation(searchParams, searchOption, srb, searchParams.getStartIndex(), size);
+			addSearchAggregation(searchParams, searchOption, searchResults, srb, searchParams.getStartIndex(), size);
 			srb.size(0); // no need for agg
 		}
 		if (facetString != null) {
@@ -252,6 +298,17 @@ public class ESHunter<T extends ESEntity> {
 			if (agg != null) {
 				int uniqueCount = (int) agg.cardinality().value();
 				searchResults.setTotalCount(uniqueCount);
+			}
+
+			Aggregate termAgg = resp.aggregations().get(getAggUniqueBucketsKey(groupField));
+			if ( termAgg != null ) {
+				if (termAgg.isSterms()) {
+					StringTermsAggregate stringAgg = termAgg.sterms();
+					searchResults.setTotalCount(stringAgg.buckets().array().size());
+				} else if (termAgg.isLterms()) {
+					LongTermsAggregate longAgg = termAgg.lterms();
+					searchResults.setTotalCount(longAgg.buckets().array().size());
+				}
 			}
 
 			// parse out group info
@@ -426,6 +483,10 @@ public class ESHunter<T extends ESEntity> {
 
 	protected String getAggUniqueCountKey(String groupField) {
 		return "unique_" + groupField + "_count";
+	}
+
+	protected String getAggUniqueBucketsKey(String groupField) {
+		return "unique_" + groupField + "_buckets";
 	}
 
 	protected String getAggSortKeyName(String groupField) {
@@ -631,17 +692,18 @@ public class ESHunter<T extends ESEntity> {
 		}
 	}
 
-	private void addSearchAggregation(SearchParams searchParams, ESSearchOption searchOption, SearchRequest.Builder srb,
-			int from, int size) {
+	private void addSearchAggregation(SearchParams searchParams, ESSearchOption searchOption,
+			SearchResults searchResults, SearchRequest.Builder srb, int from, int size) throws Exception {
 
 		String groupField = searchOption.getGroupField();
 
 		// Add total unique count if needed
 		if (searchOption.isGetTotalCount()) {
-			srb.aggregations(getAggUniqueCountKey(groupField), a -> a.cardinality(c -> c.field(groupField)));
+//			srb.aggregations(getAggUniqueCountKey(groupField), a -> a.cardinality(c -> c.field(groupField)));
+			srb.aggregations(getAggUniqueBucketsKey(groupField),a -> a.terms(t -> t.field(groupField).size(1_000_000)));
 		}
 
-		// just get total count, no need for group info
+		// if size == 0, no need for group info
 		if (size < 1) {
 			return;
 		}
@@ -649,7 +711,7 @@ public class ESHunter<T extends ESEntity> {
 			// Base terms aggregation
 			a.terms(t -> t.field(groupField).size(from + size).order(List.of(NamedValue.of("_key", SortOrder.Asc))));
 
-			// Conditionally add top_hits aggregation
+			// add first_doc aggregation
 			if (searchOption.isGetGroupFirstDoc()) {
 				List<String> returnFields;
 				if (searchOption.getReturnFields() == null) {
@@ -731,8 +793,8 @@ public class ESHunter<T extends ESEntity> {
 	}
 
 	// Helper: map source to marker
-	private SolrGxdMarker mapToMarker(Map<String, Object> src) {
-		SolrGxdMarker marker = new SolrGxdMarker();
+	private ESGxdMarker mapToMarker(Map<String, Object> src) {
+		ESGxdMarker marker = new ESGxdMarker();
 		marker.setMgiid((String) src.get(GxdResultFields.MARKER_MGIID));
 		marker.setSymbol((String) src.get(GxdResultFields.MARKER_SYMBOL));
 		marker.setName((String) src.get(GxdResultFields.MARKER_NAME));
@@ -747,8 +809,8 @@ public class ESHunter<T extends ESEntity> {
 	}
 
 	// Helper: map source to assay
-	private SolrGxdAssay mapToAssay(Map<String, Object> src) {
-		SolrGxdAssay assay = new SolrGxdAssay();
+	private ESGxdAssay mapToAssay(Map<String, Object> src) {
+		ESGxdAssay assay = new ESGxdAssay();
 		assay.setMarkerSymbol((String) src.get(GxdResultFields.MARKER_SYMBOL));
 		assay.setAssayKey((String) src.get(GxdResultFields.ASSAY_KEY));
 		assay.setAssayMgiid((String) src.get(GxdResultFields.ASSAY_MGIID));
@@ -923,7 +985,7 @@ public class ESHunter<T extends ESEntity> {
 					SortOptions so = new SortOptions.Builder().field(fs).build();
 					map.put(ssm, so);
 					break;
-					//Hongping todo  only works for the first one
+					// Hongping todo only works for the first one
 				}
 			} else {
 				FieldSort fs = new FieldSort.Builder().field(getAggSortKeyName(sort.getSort())).order(order).build();

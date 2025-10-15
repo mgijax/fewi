@@ -6,7 +6,7 @@ import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.snpdatamodel.document.ESEntity;
 
-public class SolrGxdAssay extends ESEntity implements SolrGxdEntity {
+public class ESGxdAssay extends ESEntity implements SolrGxdEntity {
 
 	String markerSymbol;
 	String assayKey;

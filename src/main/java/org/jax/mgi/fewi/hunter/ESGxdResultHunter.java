@@ -1,6 +1,6 @@
 package org.jax.mgi.fewi.hunter;
 
-import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESAssayResult;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.snpdatamodel.document.ESEntity;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +14,7 @@ public class ESGxdResultHunter<T extends ESEntity> extends ESGxdSummaryBaseHunte
      * Default constructor uses ESEntity as the type.
      */
     public ESGxdResultHunter() {
-        super((Class<T>) SolrAssayResult.class); // unchecked cast
+        super((Class<T>) ESAssayResult.class); // unchecked cast
         keyString = GxdResultFields.RESULT_KEY;
     }
 

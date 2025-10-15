@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.finder.GxdBatchFinder;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESAssayResult;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.NotesTagConverter;
 
@@ -70,8 +70,8 @@ public class TextGxdResultsSummary extends AbstractTextView
 		NotesTagConverter ntc = new NotesTagConverter();
 		while(finder.hasNextResults())
 		{
-			SearchResults<SolrAssayResult> results = finder.getNextResults();
-			for (SolrAssayResult r : results.getResultObjects())
+			SearchResults<ESAssayResult> results = finder.getNextResults();
+			for (ESAssayResult r : results.getResultObjects())
 			{
 				// for now we will steal logic from the summary row class
 				writer.write(r.getMarkerMgiid()+"\t");

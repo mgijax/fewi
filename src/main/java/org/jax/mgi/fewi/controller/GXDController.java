@@ -71,12 +71,12 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAnatomyTerm;
-import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDagEdge;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdAssay;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdAssay;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdGeneMatrixResult;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdImage;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdPhenoMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRecombinaseMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRnaSeqConsolidatedSample;
@@ -672,8 +672,8 @@ public class GXDController {
 		qf.setAssayType(assayType);
 		qf.setExperimentID(experimentID);
 
-		SearchResults<SolrGxdAssay> searchResults = getGxdAssays(request, qf, page, result);
-		List<SolrGxdAssay> assayList = searchResults.getResultObjects();
+		SearchResults<ESGxdAssay> searchResults = getGxdAssays(request, qf, page, result);
+		List<ESGxdAssay> assayList = searchResults.getResultObjects();
 
 		// there can be only one...
 		if (assayList.size() < 1) {
@@ -684,7 +684,7 @@ public class GXDController {
 			// forward to error page
 			return errorMav("Duplicate experiment found for " + experimentID);
 		}
-		SolrGxdAssay assay = assayList.get(0);
+		ESGxdAssay assay = assayList.get(0);
 		mav.addObject("experiment", assay);
 		mav.addObject("queryString", FormatHelper.cleanJavaScript(request.getQueryString()));
 
@@ -956,9 +956,9 @@ public class GXDController {
 		StringBuffer ids = new StringBuffer();
 		while(gxdBatchFinder.hasNextMarkers())
 		{
-			SearchResults<SolrGxdMarker> searchResults = gxdBatchFinder.getNextMarkers();
+			SearchResults<ESGxdMarker> searchResults = gxdBatchFinder.getNextMarkers();
 			//add each marker ID to the ids list
-			for (SolrGxdMarker solrMarker : searchResults.getResultObjects()) {
+			for (ESGxdMarker solrMarker : searchResults.getResultObjects()) {
 				ids.append(solrMarker.getMgiid() + ", ");
 			}
 		}
@@ -993,12 +993,12 @@ public class GXDController {
 		logger.info("gxdMarkerSummaryJson() started");
 		populateMarkerIDs(session, query);
 
-		SearchResults<SolrGxdMarker> searchResults = getGxdMarkerResults(request, query, page, result);
-		List<SolrGxdMarker> markerList = searchResults.getResultObjects();
+		SearchResults<ESGxdMarker> searchResults = getGxdMarkerResults(request, query, page, result);
+		List<ESGxdMarker> markerList = searchResults.getResultObjects();
 
 		List<GxdMarkerSummaryRow> summaryRows = new ArrayList<GxdMarkerSummaryRow>();
 		GxdMarkerSummaryRow row;
-		for (SolrGxdMarker marker : markerList) {
+		for (ESGxdMarker marker : markerList) {
 			if (marker != null){
 				row = new GxdMarkerSummaryRow(marker);
 				summaryRows.add(row);
@@ -1031,13 +1031,13 @@ public class GXDController {
 		logger.debug("gxdAssaySummaryJson() started");
 		populateMarkerIDs(session, query);
 
-		SearchResults<SolrGxdAssay> searchResults = getGxdAssays(request, query, page, result);
-		List<SolrGxdAssay> assayList = searchResults.getResultObjects();
+		SearchResults<ESGxdAssay> searchResults = getGxdAssays(request, query, page, result);
+		List<ESGxdAssay> assayList = searchResults.getResultObjects();
 
 		List<GxdAssaySummaryRow> summaryRows = new ArrayList<GxdAssaySummaryRow>();
 		GxdAssaySummaryRow row;
 
-		for (SolrGxdAssay assay : assayList) {
+		for (ESGxdAssay assay : assayList) {
 			if (assay != null){
 				row = new GxdAssaySummaryRow(assay);
 				summaryRows.add(row);
@@ -1071,13 +1071,13 @@ public class GXDController {
 		logger.debug("querystring: " + request.getQueryString());
 		populateMarkerIDs(session, query);
 
-		SearchResults<SolrAssayResult> searchResults = getGxdAssayResults(request, query, page, result);
+		SearchResults<ESAssayResult> searchResults = getGxdAssayResults(request, query, page, result);
 
-		List<SolrAssayResult> resultList = searchResults.getResultObjects();
+		List<ESAssayResult> resultList = searchResults.getResultObjects();
 
 		List<GxdAssayResultSummaryRow> summaryRows = new ArrayList<GxdAssayResultSummaryRow>();
 		GxdAssayResultSummaryRow row;
-		for (SolrAssayResult gxdAssayResult : resultList) {
+		for (ESAssayResult gxdAssayResult : resultList) {
 			if (gxdAssayResult != null){
 				row = new GxdAssayResultSummaryRow(gxdAssayResult);
 				summaryRows.add(row);
@@ -1105,12 +1105,12 @@ public class GXDController {
 		logger.debug("gxdImageSummaryJson() started");
 		populateMarkerIDs(session, query);
 
-		SearchResults<SolrGxdImage> searchResults = getGxdImages(request, query, page, result);
-		List<SolrGxdImage> imageList = searchResults.getResultObjects();
+		SearchResults<ESGxdImage> searchResults = getGxdImages(request, query, page, result);
+		List<ESGxdImage> imageList = searchResults.getResultObjects();
 		//List<SolrGxdAssay> assayList = searchResults.getResultObjects();
 
 		List<GxdImageSummaryRow> summaryRows = new ArrayList<GxdImageSummaryRow>();
-		for (SolrGxdImage image : imageList) {
+		for (ESGxdImage image : imageList) {
 			if (image != null){
 				GxdImageSummaryRow row = new GxdImageSummaryRow(image);
 				summaryRows.add(row);
@@ -1151,11 +1151,11 @@ public class GXDController {
 		// sort using byAssayType
 		params.setSorts(Arrays.asList(new Sort(SortConstants.BY_IMAGE_ASSAY_TYPE)));
 
-		SearchResults<SolrGxdImage> results = gxdFinder.searchImages(params);
+		SearchResults<ESGxdImage> results = gxdFinder.searchImages(params);
 
-		List<SolrGxdImage> imageList = results.getResultObjects();
+		List<ESGxdImage> imageList = results.getResultObjects();
 
-		for (SolrGxdImage image : imageList) {
+		for (ESGxdImage image : imageList) {
 			if (image != null){
 				GxdImageSummaryRow row = new GxdImageSummaryRow(image);
 				row.setMaxWidth(90);
@@ -2745,11 +2745,11 @@ public class GXDController {
 		sorts.add(new Sort(GxdResultFields.M_BY_MRK_SYMBOL, false));
 		params.setSorts(sorts);
 
-		SearchResults<SolrGxdMarker> searchResults = gxdFinder.searchMarkers(params);
-		List<SolrGxdMarker> markerList = searchResults.getResultObjects();
+		SearchResults<ESGxdMarker> searchResults = gxdFinder.searchMarkers(params);
+		List<ESGxdMarker> markerList = searchResults.getResultObjects();
 
 		List<String> matrixDisplayList = new ArrayList<String>();
-		for (SolrGxdMarker marker : markerList) {
+		for (ESGxdMarker marker : markerList) {
 			if (marker != null){
 				matrixDisplayList.add(marker.getMgiid());
 			}
@@ -3981,12 +3981,12 @@ public class GXDController {
 		params.setFilter(parseGxdQueryForm(query));
 		params.setPageSize(200000);
 
-		SearchResults<SolrGxdMarker> searchResults = gxdFinder.searchMarkers(params);
-		List<SolrGxdMarker> list = searchResults.getResultObjects();
+		SearchResults<ESGxdMarker> searchResults = gxdFinder.searchMarkers(params);
+		List<ESGxdMarker> list = searchResults.getResultObjects();
 
 		StringBuffer ids = new StringBuffer();
 		if (list != null && list.size() > 0) {
-			for(SolrGxdMarker m: list) {
+			for(ESGxdMarker m: list) {
 				ids.append(m.getMgiid() + ",");
 			}
 		}
@@ -4186,7 +4186,7 @@ public class GXDController {
 	// Therefore, these normally private methods are publicly exposed.
 	// -----------------------------------------------------------------//
 
-	public SearchResults<SolrGxdMarker> getGxdMarkerResults(
+	public SearchResults<ESGxdMarker> getGxdMarkerResults(
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query,
 			@ModelAttribute Paginator page,
@@ -4218,7 +4218,7 @@ public class GXDController {
 		}
 	}
 
-	public SearchResults<SolrGxdAssay> getGxdAssays(
+	public SearchResults<ESGxdAssay> getGxdAssays(
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query,
 			@ModelAttribute Paginator page,
@@ -4250,7 +4250,7 @@ public class GXDController {
 		}
 	}
 
-	public SearchResults<SolrAssayResult> getGxdAssayResults(
+	public SearchResults<ESAssayResult> getGxdAssayResults(
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query,
 			@ModelAttribute Paginator page,
@@ -4280,7 +4280,7 @@ public class GXDController {
 		}
 	}
 
-	public SearchResults<SolrGxdImage> getGxdImages(
+	public SearchResults<ESGxdImage> getGxdImages(
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query,
 			@ModelAttribute Paginator page,

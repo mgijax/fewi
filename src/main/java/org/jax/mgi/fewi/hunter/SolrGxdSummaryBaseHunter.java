@@ -23,10 +23,10 @@ import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
-import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdAssay;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
+import org.jax.mgi.fewi.searchUtil.entities.ESAssayResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdAssay;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdImage;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrString;
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
 import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
@@ -272,7 +272,7 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 			String pubmedId = (String) doc
 					.getFieldValue(GxdResultFields.PUBMED_ID);
 
-			SolrAssayResult resultObject = new SolrAssayResult();
+			ESAssayResult resultObject = new ESAssayResult();
 			resultObject.setAssayKey(assayKey);
 			resultObject.setAssayType(assayType);
 			resultObject.setAge(age);
@@ -340,7 +340,7 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 			SolrDocument sd = g.getResult().get(0);
 			if (gc.getName().equals(GxdResultFields.MARKER_KEY)) {
 				// we got ourselves a good old fashioned marker object
-				SolrGxdMarker m = new SolrGxdMarker();
+				ESGxdMarker m = new ESGxdMarker();
 				m.setMgiid((String) sd
 						.getFieldValue(GxdResultFields.MARKER_MGIID));
 				m.setSymbol((String) sd
@@ -361,7 +361,7 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 				sr.addResultObjects(m);
 			} else if (gc.getName().equals(GxdResultFields.ASSAY_KEY)) {
 				// we got ourselves a good old fashioned assay object
-				SolrGxdAssay a = new SolrGxdAssay();
+				ESGxdAssay a = new ESGxdAssay();
 				a.setMarkerSymbol((String) sd
 						.getFieldValue(GxdResultFields.MARKER_SYMBOL));
 				a.setAssayKey((String) sd
@@ -433,7 +433,7 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 
 		for (SolrDocument doc : sdl) {
 
-			SolrGxdImage image = new SolrGxdImage();
+			ESGxdImage image = new ESGxdImage();
 			image.setImagePaneKey((Integer) doc.getFieldValue(ImagePaneFields.IMAGE_PANE_KEY));
 			image.setImageID((String) doc.getFieldValue(IndexConstants.IMAGE_ID));
 			String pixeldbID = (String) doc.getFieldValue(ImagePaneFields.IMAGE_PIXELDBID);

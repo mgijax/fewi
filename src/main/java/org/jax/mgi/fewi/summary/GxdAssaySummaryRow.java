@@ -1,7 +1,7 @@
 package org.jax.mgi.fewi.summary;
 
 import org.jax.mgi.fewi.config.ContextLoader;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdAssay;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdAssay;
 
 public class GxdAssaySummaryRow {
 
@@ -10,7 +10,7 @@ public class GxdAssaySummaryRow {
 	// -------------------
 
 	// encapsulated row object
-	private final SolrGxdAssay assay;
+	private final ESGxdAssay assay;
 
 	// config values
 	String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
@@ -21,7 +21,7 @@ public class GxdAssaySummaryRow {
 	// -------------
 	// constructors
 	// -------------
-	public GxdAssaySummaryRow(SolrGxdAssay assay) {
+	public GxdAssaySummaryRow(ESGxdAssay assay) {
 		this.assay = assay;
 	}
 

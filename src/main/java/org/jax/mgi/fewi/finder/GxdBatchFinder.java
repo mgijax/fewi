@@ -5,8 +5,8 @@ import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
+import org.jax.mgi.fewi.searchUtil.entities.ESAssayResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdMarker;
 
 /**
  * A special finder that can query the GXD data in batches for generating reports
@@ -56,14 +56,14 @@ public class GxdBatchFinder
 		return true;
 	}
 	
-	public SearchResults<SolrAssayResult> getNextResults()
+	public SearchResults<ESAssayResult> getNextResults()
 	{
 		if(currentOffset.equals(0)) totalCount = null;
 		Paginator p = new Paginator();
 		p.setResults(batchSize);
 		p.setStartIndex(currentOffset);
 		searchParams.setPaginator(p);
-		SearchResults<SolrAssayResult> results = finder.searchAssayResults(searchParams);
+		SearchResults<ESAssayResult> results = finder.searchAssayResults(searchParams);
 		currentOffset += batchSize;
 		totalCount = results.getTotalCount();
 		return results;
@@ -78,14 +78,14 @@ public class GxdBatchFinder
 		return true;
 	}
 	
-	public SearchResults<SolrGxdMarker> getNextMarkers()
+	public SearchResults<ESGxdMarker> getNextMarkers()
 	{
 		if(currentOffset.equals(0)) totalCount = null;
 		Paginator p = new Paginator();
 		p.setResults(batchSize);
 		p.setStartIndex(currentOffset);
 		searchParams.setPaginator(p);
-		SearchResults<SolrGxdMarker> results = finder.searchMarkers(searchParams);
+		SearchResults<ESGxdMarker> results = finder.searchMarkers(searchParams);
 		currentOffset += batchSize;
 		totalCount = results.getTotalCount();
 		return results;

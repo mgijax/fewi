@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.GxdBatchFinder;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdMarker;
 import org.jax.mgi.fewi.summary.GxdMarkerSummaryRow;
 
 public class TextGxdMarkersSummary extends AbstractTextView
@@ -49,8 +49,8 @@ public class TextGxdMarkersSummary extends AbstractTextView
 
 		while(finder.hasNextMarkers())
 		{
-			SearchResults<SolrGxdMarker> markers = finder.getNextMarkers();
-			for (SolrGxdMarker m : markers.getResultObjects())
+			SearchResults<ESGxdMarker> markers = finder.getNextMarkers();
+			for (ESGxdMarker m : markers.getResultObjects())
 			{
 				// use the Marker Summary row to get the correct Genome Location text
 				GxdMarkerSummaryRow mr = new GxdMarkerSummaryRow(m);

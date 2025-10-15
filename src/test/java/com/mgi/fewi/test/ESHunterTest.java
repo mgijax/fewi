@@ -17,9 +17,9 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.entities.ESAggLongCount;
-import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
+import org.jax.mgi.fewi.searchUtil.entities.ESAssayResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdImage;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdMarker;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.shr.fe.indexconstants.ImagePaneFields;
@@ -39,7 +39,7 @@ import co.elastic.clients.json.JsonData;
 
 /*
  * 
-Elasticsearch has more end points
+Elasticsearch endpoints
 	/_search → main workhorse (JSON DSL query)
 	/_query → new ES|QL endpoint (pipeline syntax)
 	/_count → just counts
@@ -164,10 +164,10 @@ public class ESHunterTest {
 	@Before
 	public void setUp() {
 		log.info("ESHunterTest: " + ES_HOST + " " + ES_PORT);
-		this.gxdHasResultHunter = new ESGxdResultHunter(SolrAssayResult.class, ES_HOST, ES_PORT, "gxd_result");
+		this.gxdHasResultHunter = new ESGxdResultHunter(ESAssayResult.class, ES_HOST, ES_PORT, "gxd_result");
 		this.gxdHasResultHasImageHunter = new ESGxdResultHasImageHunter(ESEntity.class, ES_HOST, ES_PORT,
 				"gxd_result_has_image");
-		this.gxdImagePaneHunter = new ESGxdImagePaneHunter(SolrGxdImage.class, ES_HOST, ES_PORT, "gxd_image_pane");
+		this.gxdImagePaneHunter = new ESGxdImagePaneHunter(ESGxdImage.class, ES_HOST, ES_PORT, "gxd_image_pane");
 	}
 
 	/*
@@ -179,11 +179,11 @@ public class ESHunterTest {
 		SearchParams searchParams = new SearchParams();
 		searchParams.setFilter(Filter.equal(GxdResultFields.NOMENCLATURE, "Apob"));
 
-		SearchResults<SolrAssayResult> searchResults = new SearchResults<SolrAssayResult>();
+		SearchResults<ESAssayResult> searchResults = new SearchResults<ESAssayResult>();
 		ESSearchOption searchOption = new ESSearchOption();
 		this.gxdHasResultHunter.hunt(searchParams, searchResults, searchOption);
 
-		List<SolrAssayResult> resultObjects = searchResults.getResultObjects();
+		List<ESAssayResult> resultObjects = searchResults.getResultObjects();
 		Assert.assertTrue(resultObjects.size() > 0);
 		log.info("resultObjects size: " + resultObjects.size());
 		show(resultObjects, 5);
@@ -202,13 +202,15 @@ public class ESHunterTest {
 		List<Filter> filters = new ArrayList<Filter>();
 		filters.add(Filter.equal(GxdResultFields.NOMENCLATURE, "Apob"));
 		filters.add(Filter.equal(GxdResultFields.ASSAY_TYPE, "Western blot"));
+		String spatialQueryString = SolrLocationTranslator.getQueryValue("Chr12:3000000-10000000", "bp");
+		filters.add(new Filter(SearchConstants.MOUSE_COORDINATE, spatialQueryString, Filter.Operator.OP_SHAPE));
 		searchParams.setFilter(Filter.and(filters));
 
-		SearchResults<SolrAssayResult> searchResults = new SearchResults<SolrAssayResult>();
+		SearchResults<ESAssayResult> searchResults = new SearchResults<ESAssayResult>();
 		ESSearchOption searchOption = new ESSearchOption();
-		searchOption.setReturnFields(SolrAssayResult.RETURN_FIELDS);
+		searchOption.setReturnFields(ESAssayResult.RETURN_FIELDS);
 		this.gxdHasResultHunter.hunt(searchParams, searchResults, searchOption);
-		List<SolrAssayResult> resultObjects = searchResults.getResultObjects();
+		List<ESAssayResult> resultObjects = searchResults.getResultObjects();
 		Assert.assertEquals(searchParams.getPageSize(), resultObjects.size());
 		log.info("resultObjects size: " + resultObjects.size() + ", pageSize: " + searchParams.getPageSize());
 		show(resultObjects, 5);
@@ -219,16 +221,18 @@ public class ESHunterTest {
 	public void testAggregationBy() {
 		log.info("Test: testAggregationBy");
 		SearchParams searchParams = new SearchParams();
-		searchParams.setFilter(Filter.equal(GxdResultFields.ASSAY_TYPE, "Western blot"));
+//		searchParams.setFilter(Filter.equal(GxdResultFields.ASSAY_TYPE, "Western blot"));
 		searchParams.addSort(new Sort(GxdResultFields.M_BY_MRK_SYMBOL, true));
+		searchParams.setPageSize(10);
+		searchParams.setStartIndex(2);
 		
 		SearchResults<ESEntity> searchResults = new SearchResults<ESEntity>();
 		ESSearchOption searchOption = new ESSearchOption();
 		searchOption.setGetTotalCount(true);;
 		searchOption.setGroupField(GxdResultFields.MARKER_KEY);	
 		searchOption.setGetGroupFirstDoc(true);
-		searchOption.setReturnFields(SolrGxdMarker.RETURN_FIELDS);
-
+		searchOption.setReturnFields(ESGxdMarker.RETURN_FIELDS);
+		
 		this.gxdHasResultHunter.hunt(searchParams, searchResults, searchOption);
 
 		List<ESEntity> resultObjects = searchResults.getResultObjects();
@@ -370,12 +374,12 @@ public class ESHunterTest {
 		filters.add(new Filter(SearchConstants.MOUSE_COORDINATE, spatialQueryString, Filter.Operator.OP_SHAPE));
 		searchParams.setFilter(Filter.and(filters));
 
-		SearchResults<SolrGxdImage> searchResults = new SearchResults<SolrGxdImage>();
+		SearchResults<ESGxdImage> searchResults = new SearchResults<ESGxdImage>();
 		ESSearchOption searchOption = new ESSearchOption();
 		searchOption.setEsQuery(lookUpJoin);
 		this.gxdImagePaneHunter.hunt(searchParams, searchResults, searchOption);
 
-		List<SolrGxdImage> resultObjects = searchResults.getResultObjects();
+		List<ESGxdImage> resultObjects = searchResults.getResultObjects();
 		Assert.assertTrue(resultObjects.size() > 0);
 		log.info("resultObjects size: " + resultObjects.size());
 		show(resultObjects, 5);
@@ -405,7 +409,7 @@ public class ESHunterTest {
 
 		SearchParams searchParams2 = new SearchParams();
 		searchParams2.setFilter(Filter.or(clauses));
-		SearchResults<SolrGxdImage> searchResults2 = new SearchResults<SolrGxdImage>();
+		SearchResults<ESGxdImage> searchResults2 = new SearchResults<ESGxdImage>();
 		ESSearchOption searchOption2 = new ESSearchOption();
 
 		this.gxdImagePaneHunter.hunt(searchParams2, searchResults2, searchOption2);
