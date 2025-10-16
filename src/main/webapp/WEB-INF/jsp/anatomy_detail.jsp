@@ -145,6 +145,7 @@ var pathCheck = null;	// ID of interval-based check for defaultPath
 var selectedNodeID = null;	// ID of the currently highlighted node
 var alreadyScrolled = false;	// have we already scrolled for this term?
 var gxdResultCount = null;	// count of GXD results for selectedNodeID
+var htExperimentCount = null;	// count of HT experiments for selectedNodeID
 var phenotypeAnnotationCount = null;	// count of phenotype annotations for selectedNodeID
 var logging = false;		// enable logging to browser console?
 
@@ -231,6 +232,16 @@ function fetchPhenotypeAnnotationCount(selectedNodeID) {
     fetchAndCall(sUrl, setPhenotypeAnnotationCount);
 }
 
+function setHtExperimentCount(s) {
+    htExperimentCount = s;
+    return
+}
+
+function fetchHtExperimentCount(selectedNodeID) {
+    var sUrl = "${configBean.FEWI_URL}/gxd/htexp_index/summary/totalCount?structureID=" + selectedNodeID
+    fetchAndCall(sUrl, setHtExperimentCount);
+}
+
 function setGxdResultCount(s) {
     gxdResultCount = s;
     highlightSelectedTerm();
@@ -313,6 +324,7 @@ function resetTree(snID, fullRebuild) {
     selectedNodeID = snID;
 //    setSelectedNode(snID);
     gxdResultCount = null;
+    htExperimentCount = null;
     phenotypeAnnotationCount = null;
     if ((treeView === null) || (fullRebuild === true)) {
 		log(' - in if');
@@ -334,6 +346,21 @@ function resetTree(snID, fullRebuild) {
     	$('#treeViewDiv span').removeClass('bold').removeClass('highlight');
     	highlightSelectedTerm();
     }
+}
+
+// format and return a link for phenotype annotations, if the count is > 0
+function htExperimentLink() {
+    if ((htExperimentCount === null) || (htExperimentCount == '-1') || (htExperimentCount == '0')) {
+	return ''
+    }
+
+    var htText = 'RNA-seq or microarray experiment';
+    if (htExperimentCount != '1') {
+	htText = htText + 's';
+    }
+    var url = '${configBean.FEWI_URL}gxd/htexp_index/summary?structure=' + selectedNodeID;
+
+    return '<a href="' + url + '"><span class="htExperimentCount">' + numberWithCommas(htExperimentCount) + '</span></a> ' + htText;
 }
 
 // format and return a link for phenotype annotations, if the count is > 0
@@ -399,16 +426,21 @@ function highlightSelectedTerm () {
  
     var spaces = '&nbsp;&nbsp;&nbsp;&nbsp;';
 
+    var htLink = htExperimentLink();
+    if (htLink != '') {
+    	htLink = '; ' + htLink;	
+    }
+
     var phenoLink = phenotypeLink();
     if (phenoLink != '') {
     	phenoLink = '; ' + phenoLink;	
     }
     
     var link = '</a>' + spaces + '(<a href="' + url + '"><span class="expressionResultCount">' + countStr + '</span></a> '
-		+ resultText + phenoLink + ')';
+		+ resultText + htLink + phenoLink + ')';
 
     if (!linked) {
-        link = '</a>' + spaces + '(' + countStr + ' ' + resultText + phenoLink + ')';
+        link = '</a>' + spaces + '(' + countStr + ' ' + resultText + htLink + phenoLink + ')';
     }
 
 	// remove highights from previously selected nodes
@@ -660,6 +692,7 @@ function resetPanes(accID, rebuildTree) {
     selectedNode = null;
     selectedNodeID = accID;
     fetchResultCount(accID);
+    fetchHtExperimentCount(accID);
     fetchPhenotypeAnnotationCount(accID);
     fetchDetailDiv(accID);
     resetTree(accID, rebuildTree);
