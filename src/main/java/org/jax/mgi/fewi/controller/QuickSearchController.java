@@ -1559,7 +1559,7 @@ public class QuickSearchController {
 	private List<String> getVocabFacets(QuickSearchQueryForm queryForm, String filterName) throws Exception {
         // match either ID, term, or synonyms
         
-       	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, FEATURE);
+       	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, VOCAB_TERM);
        	if (searchParams == null) {
        		searchParams = getSearchParams(queryForm, BY_ANY, 0, VOCAB_TERM);
        	}
@@ -1580,7 +1580,7 @@ public class QuickSearchController {
 	private List<String> getAlleleFacets(QuickSearchQueryForm queryForm, String filterName) throws Exception {
         // match either ID, term, or synonyms
         
-       	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, FEATURE);
+       	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, ALLELE);
        	if (searchParams == null) {
        		searchParams = getSearchParams(queryForm, BY_ANY, 0, ALLELE);
        	}
@@ -1601,7 +1601,7 @@ public class QuickSearchController {
 	private List<String> getStrainFacets(QuickSearchQueryForm queryForm, String filterName) throws Exception {
         // match either ID, term, or synonyms
         
-       	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, FEATURE);
+       	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, STRAIN);
        	if (searchParams == null) {
        		searchParams = getSearchParams(queryForm, BY_ANY, 0, STRAIN);
        	}
@@ -1622,7 +1622,7 @@ public class QuickSearchController {
 	private List<String> getOtherFacets(QuickSearchQueryForm queryForm, String filterName) throws Exception {
         // match either ID, term, or synonyms
         
-       	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, FEATURE);
+       	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, OTHER);
        	if (searchParams == null) {
        		searchParams = getSearchParams(queryForm, BY_ANY, 0, OTHER);
        	}
@@ -1685,7 +1685,7 @@ public class QuickSearchController {
         	SearchParams orSearch = new SearchParams();
         	orSearch.setPaginator(new Paginator(0));
 
-        	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, FEATURE);
+        	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, VOCAB_TERM);
         	if (searchParams != null) {
         		orSearch.setFilter(searchParams.getFilter());
         	} else {
@@ -1803,7 +1803,7 @@ public class QuickSearchController {
         	SearchParams orSearch = new SearchParams();
         	orSearch.setPaginator(new Paginator(0));
 
-        	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, FEATURE);
+        	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, STRAIN);
         	if (searchParams != null) {
         		orSearch.setFilter(searchParams.getFilter());
         	} else {
@@ -1888,7 +1888,7 @@ public class QuickSearchController {
         	SearchParams orSearch = new SearchParams();
         	orSearch.setPaginator(new Paginator(0));
 
-        	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, FEATURE);
+        	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, ALLELE);
         	if (searchParams != null) {
         		// is a coordinate search
         		orSearch.setFilter(searchParams.getFilter());
@@ -2021,7 +2021,7 @@ public class QuickSearchController {
         	SearchParams orSearch = new SearchParams();
         	orSearch.setPaginator(new Paginator(0));
 
-        	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, FEATURE);
+        	SearchParams searchParams = getSearchParams(queryForm, BY_COORDS, 0, OTHER);
         	if (searchParams != null) {
         		orSearch.setFilter(searchParams.getFilter());
         	} else {
