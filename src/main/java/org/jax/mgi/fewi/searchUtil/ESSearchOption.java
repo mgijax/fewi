@@ -3,14 +3,19 @@ package org.jax.mgi.fewi.searchUtil;
 import java.util.List;
 
 public class ESSearchOption {
+	private boolean useCountEndpoint = false;
 	private String groupField;
 	private boolean getTotalCount = false;
 	private boolean getGroupInfo = false;
 	private boolean getGroupFirstDoc = false;
+	private boolean countNumOfBuckts = false; 
+	private boolean tractTopHit = false; 
+	private int precisionThreshold;
 	private List<String> returnFields;
 	private String extraJoinClause;
 	private ESQuery esQuery;
-	
+	private Class<?> clazz;
+
 	public ESSearchOption() {
 	}
 	
@@ -70,4 +75,43 @@ public class ESSearchOption {
 		this.esQuery = esQuery;
 	}
 
+	public Class<?> getClazz() {
+		return clazz;
+	}
+
+	public void setClazz(Class<?> clazz) {
+		this.clazz = clazz;
+	}
+
+	public boolean isCountNumOfBuckts() {
+		return countNumOfBuckts;
+	}
+
+	public void setCountNumOfBuckts(boolean countNumOfBuckts) {
+		this.countNumOfBuckts = countNumOfBuckts;
+	}
+
+	public boolean isUseCountEndpoint() {
+		return useCountEndpoint;
+	}
+
+	public void setUseCountEndpoint(boolean useCountEndpoint) {
+		this.useCountEndpoint = useCountEndpoint;
+	}
+
+	public boolean isTractTopHit() {
+		return tractTopHit;
+	}
+
+	public void setTractTopHit(boolean tractTopHit) {
+		this.tractTopHit = tractTopHit;
+	}
+
+	public int getPrecisionThreshold() {		
+		return precisionThreshold;
+	}
+
+	public void setPrecisionThreshold(int precisionThreshold) {
+		this.precisionThreshold = precisionThreshold;
+	}
 }

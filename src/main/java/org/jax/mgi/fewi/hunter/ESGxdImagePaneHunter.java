@@ -2,14 +2,22 @@ package org.jax.mgi.fewi.hunter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.jax.mgi.fewi.searchUtil.ESSearchOption;
+import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.SearchConstants;
+import org.jax.mgi.fewi.searchUtil.SearchParams;
+import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.searchUtil.entities.ESAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdImage;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.shr.fe.indexconstants.ImagePaneFields;
 import org.jax.mgi.shr.jsonmodel.GxdImageMeta;
-import org.jax.mgi.snpdatamodel.document.BaseESDocument;
 import org.jax.mgi.snpdatamodel.document.ESEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
@@ -24,18 +32,21 @@ import com.fasterxml.jackson.databind.JsonNode;
 @Repository
 public class ESGxdImagePaneHunter<T extends ESEntity> extends ESGxdSummaryBaseHunter<T> {
 
-    public ESGxdImagePaneHunter() {
-    	super((Class<T>)ESGxdImage.class);
-        keyString = ImagePaneFields.IMAGE_PANE_KEY;
-    }
+	@Autowired
+	private ESGxdResultHasImageHunter esGxdResultHasImageHunter;
 
-    public ESGxdImagePaneHunter(Class<T> clazz, String host, String port, String index) {
-        super(clazz);
-        keyString = ImagePaneFields.IMAGE_PANE_KEY;
-        this.esHost = host;
-        this.esPort = port;
-        this.esIndex = index;
-    }
+	public ESGxdImagePaneHunter() {
+		super((Class<T>) ESGxdImage.class);
+		keyString = ImagePaneFields.IMAGE_PANE_KEY;
+	}
+
+	public ESGxdImagePaneHunter(Class<T> clazz, String host, String port, String index) {
+		super(clazz);
+		keyString = ImagePaneFields.IMAGE_PANE_KEY;
+		this.esHost = host;
+		this.esPort = port;
+		this.esIndex = index;
+	}
 
 	@Value("${es.gxdimagepane.index}")
 	public void setESIndex(String esIndex) {
@@ -44,7 +55,6 @@ public class ESGxdImagePaneHunter<T extends ESEntity> extends ESGxdSummaryBaseHu
 
 	@Override
 	public <T extends ESEntity> List<T> processLookupResponse(JsonNode root, Class<T> clazz) throws Exception {
-//	public List<SolrGxdImage> processLookupResponse(JsonNode root) throws Exception {
 		List<String> columns = new ArrayList<>();
 		root.get("columns").forEach(col -> columns.add(col.get("name").asText()));
 
@@ -108,7 +118,7 @@ public class ESGxdImagePaneHunter<T extends ESEntity> extends ESGxdSummaryBaseHu
 		for (JsonNode row : root.get("values")) {
 			T tObj = clazz.getDeclaredConstructor().newInstance();
 			if (tObj instanceof ESGxdImage) {
-				ESGxdImage image = (ESGxdImage)tObj;
+				ESGxdImage image = (ESGxdImage) tObj;
 				if (idxImagePaneKey >= 0)
 					image.setImagePaneKey(row.get(idxImagePaneKey).asInt());
 				if (idxImageId >= 0)

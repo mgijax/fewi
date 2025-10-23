@@ -246,6 +246,42 @@ public class Filter {
 		}
 		return null;
 	}
+	
+	// collect all the filters for the given operator
+	public List<Filter> collectFilters(Filter.Operator operator) {
+		if (this.isBasicFilter() && this.getOperator() == operator) {
+			if (this.getValue() != null && !this.getValue().isEmpty()) {
+				return new ArrayList<>(List.of(this));
+			}
+		}
+
+		List<Filter> shapeFilters = new ArrayList<Filter>();
+		List<Filter> filters = this.getNestedFilters();
+		for (Filter f : filters) {
+			List<Filter> temp = f.collectFilters(operator);
+			if (temp != null) {
+				shapeFilters.addAll(temp);
+			}
+		}
+		return shapeFilters;
+	}
+	
+	// collect all the joinQuery
+	public List<Filter> collectJoinQueryFilters() {
+		if (this.getJoinQuery() != null) {
+			return new ArrayList<>(List.of(this));
+		}
+
+		List<Filter> shapeFilters = new ArrayList<Filter>();
+		List<Filter> filters = this.getNestedFilters();
+		for (Filter f : filters) {
+			List<Filter> temp = f.collectJoinQueryFilters();
+			if (temp != null) {
+				shapeFilters.addAll(temp);
+			}
+		}
+		return shapeFilters;
+	}
 
     //////////////////////////////////////////////////////////////////////////
     //  STATIC METHODS - CREATING NEW FILTERS

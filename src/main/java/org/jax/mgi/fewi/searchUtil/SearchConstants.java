@@ -379,4 +379,8 @@ public class SearchConstants {
 	public static final String QS_ATTRIBUTES = "attributes";			// special for strain bucket
 	public static final String QS_REFERENCE_COUNT = "referenceCount";
 	public static final String QS_REFERENCE_URI = "referenceUri";
+
+	public static final int SEARCH_MAX_RESULT_WINDOW = 1_000_000;
+	public static final int SEARCH_PRECISION_THRESHOLD = 400_000;  
+
 }

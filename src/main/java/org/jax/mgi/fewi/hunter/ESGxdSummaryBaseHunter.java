@@ -1,12 +1,15 @@
 package org.jax.mgi.fewi.hunter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.ss.formula.functions.T;
 import org.jax.mgi.fewi.propertyMapper.ESPropertyMapper;
+import org.jax.mgi.fewi.searchUtil.ESSearchOption;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
+import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
@@ -151,5 +154,47 @@ public class ESGxdSummaryBaseHunter<T extends ESEntity> extends ESHunter<T> {
 		 * subclasses define what they need to return; that is not dealt with here
 		 */
 	}
+	
+	@Override
+	protected SearchParams preProcessSearchParams(SearchParams searchParams, ESSearchOption searchOption) {
+		Filter filter = searchParams.getFilter();
+		if (!filter.isBasicFilter()) {
+			checkFilter(filter);
+		}
+		return searchParams;	}		
+	
+	private void checkFilter(Filter filter) {
+		if (filter.isBasicFilter()) {
+			return;
+		} else {
+			List<Filter> flist = filter.getNestedFilters();
+			Boolean foundTitle = Boolean.FALSE;
+			Boolean foundAbstract = Boolean.FALSE;
+			String textToSearch = "";
 
+			for (Filter f : flist) {
+				if (f.isBasicFilter()) {
+					if (f.getProperty().equals(
+							SearchConstants.REF_TEXT_ABSTRACT)) {
+						textToSearch = f.getValue();
+						foundAbstract = Boolean.TRUE;
+					}
+					if (f.getProperty().equals(SearchConstants.REF_TEXT_TITLE)) {
+						textToSearch = f.getValue();
+						foundTitle = Boolean.TRUE;
+					}
+
+				} else {
+					checkFilter(f);
+				}
+			}
+
+			if (foundTitle && foundAbstract) {
+				filter.setProperty(SearchConstants.REF_TEXT_TITLE_ABSTRACT);
+				filter.setValue(textToSearch);
+				filter.setOperator(Filter.Operator.OP_CONTAINS);
+				filter.setNestedFilters(new ArrayList<Filter>());
+			}
+		}
+	}
 }

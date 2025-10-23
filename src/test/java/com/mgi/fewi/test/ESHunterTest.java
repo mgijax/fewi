@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.jax.mgi.fewi.hunter.ESGxdImagePaneHunter;
+import org.jax.mgi.fewi.hunter.ESGxdProfileMarkerHunter;
 import org.jax.mgi.fewi.hunter.ESGxdResultHasImageHunter;
 import org.jax.mgi.fewi.hunter.ESGxdResultHunter;
 import org.jax.mgi.fewi.searchUtil.ESLookup;
@@ -160,6 +162,7 @@ public class ESHunterTest {
 	private ESGxdResultHunter gxdHasResultHunter;
 	private ESGxdResultHasImageHunter gxdHasResultHasImageHunter;
 	private ESGxdImagePaneHunter gxdImagePaneHunter;
+	private ESGxdProfileMarkerHunter gxdProfileMarkerHunter;
 
 	@Before
 	public void setUp() {
@@ -168,6 +171,8 @@ public class ESHunterTest {
 		this.gxdHasResultHasImageHunter = new ESGxdResultHasImageHunter(ESEntity.class, ES_HOST, ES_PORT,
 				"gxd_result_has_image");
 		this.gxdImagePaneHunter = new ESGxdImagePaneHunter(ESGxdImage.class, ES_HOST, ES_PORT, "gxd_image_pane");
+		this.gxdProfileMarkerHunter = new ESGxdProfileMarkerHunter(ESEntity.class, ES_HOST, ES_PORT,
+				"gxd_profile_marker");
 	}
 
 	/*
@@ -178,10 +183,9 @@ public class ESHunterTest {
 		log.info("Test: testSearchByParameter");
 		SearchParams searchParams = new SearchParams();
 		searchParams.setFilter(Filter.equal(GxdResultFields.NOMENCLATURE, "Apob"));
-
 		SearchResults<ESAssayResult> searchResults = new SearchResults<ESAssayResult>();
-		ESSearchOption searchOption = new ESSearchOption();
-		this.gxdHasResultHunter.hunt(searchParams, searchResults, searchOption);
+		
+		this.gxdHasResultHunter.huntDocs(searchParams, searchResults, ESAssayResult.RETURN_FIELDS);
 
 		List<ESAssayResult> resultObjects = searchResults.getResultObjects();
 		Assert.assertTrue(resultObjects.size() > 0);
@@ -216,7 +220,7 @@ public class ESHunterTest {
 		show(resultObjects, 5);
 		log.info("\n");
 	}
-	
+
 	@Test
 	public void testAggregationBy() {
 		log.info("Test: testAggregationBy");
@@ -225,14 +229,14 @@ public class ESHunterTest {
 		searchParams.addSort(new Sort(GxdResultFields.M_BY_MRK_SYMBOL, true));
 		searchParams.setPageSize(10);
 		searchParams.setStartIndex(2);
-		
+
 		SearchResults<ESEntity> searchResults = new SearchResults<ESEntity>();
 		ESSearchOption searchOption = new ESSearchOption();
-		searchOption.setGetTotalCount(true);;
-		searchOption.setGroupField(GxdResultFields.MARKER_KEY);	
+		searchOption.setGetTotalCount(true);
+		searchOption.setGroupField(GxdResultFields.MARKER_KEY);
 		searchOption.setGetGroupFirstDoc(true);
 		searchOption.setReturnFields(ESGxdMarker.RETURN_FIELDS);
-		
+
 		this.gxdHasResultHunter.hunt(searchParams, searchResults, searchOption);
 
 		List<ESEntity> resultObjects = searchResults.getResultObjects();
@@ -241,7 +245,7 @@ public class ESHunterTest {
 		log.info("total number of groups: " + resultObjects.size());
 		show(resultObjects, 5);
 		log.info("\n");
-	}		
+	}
 
 	@Test
 	public void testSearchByMouseCoordinates() {
@@ -295,8 +299,9 @@ public class ESHunterTest {
 
 		SearchResults<ESEntity> searchResults = new SearchResults<ESEntity>();
 		ESSearchOption searchOption = new ESSearchOption();
-		searchOption.setGetTotalCount(true);;
-		searchOption.setGroupField(GxdResultFields.MARKER_KEY);	
+		searchOption.setGetTotalCount(true);
+		;
+		searchOption.setGroupField(GxdResultFields.MARKER_KEY);
 		searchOption.setGetGroupFirstDoc(true);
 
 		this.gxdHasResultHunter.hunt(searchParams, searchResults, searchOption);
@@ -387,28 +392,86 @@ public class ESHunterTest {
 	}
 
 	@Test
-	public void testJoinTwoIndexes() {
-		log.info("Test: testJoinTwoIndexes");
+	public void testAssayCount() {
+		log.info("Test: testAssayCount");
 		SearchParams searchParams = new SearchParams();
-		SearchResults<ESEntity> searchResults = new SearchResults<ESEntity>();
+		searchParams.setFilter(Filter.equal(GxdResultFields.NOMENCLATURE, "Apob"));
+		long total = this.gxdHasResultHunter.huntCount(searchParams);
+		Assert.assertTrue(total > 0);
+		log.info("Total # of assays: " + total);
+		log.info("\n");
+	}
+
+	@Test
+	public void testImageCount() {
+		log.info("Test: testImageCount");
+		SearchParams searchParams = new SearchParams();
+		long totalEstimate = this.gxdHasResultHasImageHunter.huntEstimatedUniqueCount(searchParams,
+				ImagePaneFields.IMAGE_PANE_KEY, Optional.empty());
+		long total = this.gxdHasResultHasImageHunter.huntExactUniqueCount(searchParams, ImagePaneFields.IMAGE_PANE_KEY);
+		Assert.assertTrue(total > 0);
+		log.info("images estimation total: " + totalEstimate + ", total: " + total);
+		log.info("\n");
+	}
+
+	@Test
+	public void testGetProfileMarker() {
+		log.info("Test: testGetProfileMarker");
+		SearchParams searchParams = new SearchParams();
+		List<Filter> filters = new ArrayList<Filter>();
+		filters.add(Filter.equal("posRAncA", "18239165"));
+		searchParams.setFilter(Filter.and(filters));
+
+		SearchResults<ESAssayResult> searchResults = new SearchResults<ESAssayResult>();
 		ESSearchOption searchOption = new ESSearchOption();
-		searchOption.setGroupField(ImagePaneFields.IMAGE_PANE_KEY);
-		searchOption.setGetGroupInfo(true);
-		this.gxdHasResultHasImageHunter.hunt(searchParams, searchResults, searchOption);
+		searchOption.setClazz(ESAssayResult.class);
+		searchOption.setReturnFields(List.of(GxdResultFields.MARKER_MGIID));
+		this.gxdProfileMarkerHunter.hunt(searchParams, searchResults, searchOption);
+		List<ESAssayResult> resultObjects = searchResults.getResultObjects();
+
+		List<String> mgiidFilters = new ArrayList<String>();
+		for (ESAssayResult r : resultObjects) {
+			mgiidFilters.add(r.getMarkerMgiid());
+		}
+
+		List<Filter> allfilters = new ArrayList<Filter>();
+		allfilters.add(searchParams.getFilter());
+		allfilters.add(Filter.in(GxdResultFields.MARKER_MGIID, mgiidFilters));
+		searchParams.setFilter(Filter.and(allfilters));
+
+		ESSearchOption s = new ESSearchOption();
+		s.setGroupField(GxdResultFields.MARKER_KEY);
+		s.setGetTotalCount(true);
+		s.setCountNumOfBuckts(true);
+		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
+		gxdHasResultHunter.hunt(searchParams, results, searchOption);
+		log.info("gxd finder marker count =" + results.getTotalCount());
+
+		show(resultObjects, 5);
+		log.info("\n");
+	}
+
+	@Test
+	public void testRetrieveImages() {
+		log.info("Test: testRetrieveImages");
+		SearchParams searchParams = new SearchParams();
+		searchParams.setPageSize(1000);
+		SearchResults<ESEntity> searchResults = new SearchResults<ESEntity>();
+		this.gxdHasResultHasImageHunter.huntGroupInfo(searchParams, searchResults, ImagePaneFields.IMAGE_PANE_KEY);
 
 		List<ESEntity> resultObjects = searchResults.getResultObjects();
 		Assert.assertNotNull(resultObjects);
 		Assert.assertTrue(resultObjects.size() > 0);
 		show(resultObjects, 5);
 
-		List<Filter> clauses = new ArrayList<Filter>(resultObjects.size());
+		List<String> imagePaneKeys = new ArrayList<String>(resultObjects.size());
 		for (Object obj : resultObjects) {
 			ESAggLongCount row = (ESAggLongCount) obj;
-			clauses.add(new Filter(ImagePaneFields.IMAGE_PANE_KEY, row.getKey() + ""));
+			imagePaneKeys.add(row.getKey() + "");
 		}
 
 		SearchParams searchParams2 = new SearchParams();
-		searchParams2.setFilter(Filter.or(clauses));
+		searchParams2.setFilter(Filter.in(ImagePaneFields.IMAGE_PANE_KEY, imagePaneKeys));
 		SearchResults<ESGxdImage> searchResults2 = new SearchResults<ESGxdImage>();
 		ESSearchOption searchOption2 = new ESSearchOption();
 

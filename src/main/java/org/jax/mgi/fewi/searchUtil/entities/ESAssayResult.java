@@ -38,6 +38,7 @@ public class ESAssayResult extends ESEntity implements SolrGxdEntity {
 	private String strain;
 	private String sex;
 	private String notes;
+	private List<String> imagePaneKey;
 
 	public static final List<String> RETURN_FIELDS = List.of(GxdResultFields.JNUM, GxdResultFields.PUBMED_ID,
 			GxdResultFields.MARKER_SYMBOL, GxdResultFields.MARKER_MGIID, GxdResultFields.MARKER_NAME,
@@ -262,5 +263,13 @@ public class ESAssayResult extends ESEntity implements SolrGxdEntity {
 
 	public void setjNum(String jNum) {
 		this.jNum = jNum;
+	}
+
+	public List<String> getImagePaneKey() {
+		return imagePaneKey;
+	}
+
+	public void setImagePaneKey(List<String> imagePaneKey) {
+		this.imagePaneKey = imagePaneKey;
 	}
 }

@@ -3,10 +3,12 @@ package org.jax.mgi.fewi.finder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.hunter.ESGxdAssayResultHunter;
 import org.jax.mgi.fewi.hunter.ESGxdImagePaneHunter;
+import org.jax.mgi.fewi.hunter.ESGxdProfileMarkerHunter;
 import org.jax.mgi.fewi.hunter.ESGxdResultHasImageHunter;
 import org.jax.mgi.fewi.hunter.ESGxdResultHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdAssayTypeFacetHunter;
@@ -34,11 +36,11 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.entities.ESAggLongCount;
 import org.jax.mgi.fewi.searchUtil.entities.ESAssayResult;
-import org.jax.mgi.fewi.searchUtil.entities.SolrDagEdge;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdAssay;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdGeneMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdMarker;
+import org.jax.mgi.fewi.searchUtil.entities.SolrDagEdge;
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdGeneMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdPhenoMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRecombinaseMatrixResult;
@@ -51,6 +53,7 @@ import org.jax.mgi.shr.fe.indexconstants.DagEdgeFields;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.shr.fe.indexconstants.ImagePaneFields;
 import org.jax.mgi.snpdatamodel.document.ESEntity;
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +63,7 @@ import org.springframework.stereotype.Repository;
  * Centered around retrieving GXD data in various forms
  */
 @Repository
-@SuppressWarnings({"rawtypes", "unchecked"}) 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class GxdFinder {
 
 	private final Logger logger = LoggerFactory.getLogger(GxdFinder.class);
@@ -132,56 +135,38 @@ public class GxdFinder {
 	 * Only does the Solr query to return the total document (or group) count
 	 */
 	public Integer getMarkerCount(SearchParams params) {
-		ESSearchOption searchOption = new ESSearchOption();
-		searchOption.setGroupField(GxdResultFields.MARKER_KEY);
-		searchOption.setGetTotalCount(true);		
-		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
-		esGxdResultHunter.hunt(params, results, searchOption);
-		logger.info("gxd finder marker count =" + results.getTotalCount());
-		return results.getTotalCount();
+		int total = esGxdResultHunter.huntExactUniqueCount(params, GxdResultFields.MARKER_KEY);
+		logger.info("gxd finder marker count =" + total);
+		return total;
 	}
 
 	/*
 	 * Only does the Solr query to return the total document (or group) count
 	 */
 	public Integer getAssayCount(SearchParams params) {
-		ESSearchOption searchOption = new ESSearchOption();
-		searchOption.setGroupField(GxdResultFields.ASSAY_KEY);
-		searchOption.setGetTotalCount(true);		
-		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
-		esGxdResultHunter.hunt(params, results, searchOption);
-		logger.info("gxd finder assay count =" + results.getTotalCount());
-		return results.getTotalCount();
+		int total = esGxdResultHunter.huntExactUniqueCount(params, GxdResultFields.ASSAY_KEY);
+		logger.info("gxd finder assay count =" + total);
+		return total;
 	}
 
 	/*
 	 * Only does the Solr query to return the total document (or group) count
 	 */
 	public Integer getAssayResultCount(SearchParams params) {
-		ESSearchOption searchOption = new ESSearchOption();
-		searchOption.setGetTotalCount(true);
-		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
-		esGxdResultHunter.hunt(params, results, searchOption);
-		logger.info("gxd finder assay result count =" + results.getTotalCount());
-		return results.getTotalCount();
+		int total = esGxdResultHunter.huntCount(params);
+		logger.info("gxd finder assay result count =" + total);
+		return total;
 	}
 
 	public Integer getImageCount(SearchParams params) {
-		ESSearchOption searchOption = new ESSearchOption();
-		searchOption.setGroupField(ImagePaneFields.IMAGE_PANE_KEY);
-		searchOption.setGetTotalCount(true);
-		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
-		esGxdResultHasImageHunter.hunt(params, results, searchOption);
-		logger.debug("gxd finder image count =" + results.getTotalCount());
-		return results.getTotalCount();
+		int total = esGxdResultHasImageHunter.huntExactUniqueCount(params, ImagePaneFields.IMAGE_PANE_KEY);
+		logger.info("gxd finder assay count =" + total);
+		return total;
 	}
 
 	public SearchResults<ESAssayResult> searchAssayResults(SearchParams params) {
-		ESSearchOption searchOption = new ESSearchOption();
-		searchOption.setGetTotalCount(true);
-		searchOption.setReturnFields(ESAssayResult.RETURN_FIELDS);
 		SearchResults<ESAssayResult> result = new SearchResults<ESAssayResult>();
-		esGxdAssayResultHunter.hunt(params, result, searchOption);
+		esGxdAssayResultHunter.huntDocs(params, result, ESAssayResult.RETURN_FIELDS);
 
 		SearchResults<ESAssayResult> srAR = new SearchResults<ESAssayResult>();
 		srAR.cloneFrom(result, ESAssayResult.class);
@@ -189,13 +174,8 @@ public class GxdFinder {
 	}
 
 	public SearchResults<ESGxdAssay> searchAssays(SearchParams params) {
-		ESSearchOption searchOption = new ESSearchOption();
-		searchOption.setGroupField(GxdResultFields.ASSAY_KEY);
-		searchOption.setGetGroupFirstDoc(true);
-		searchOption.setGetTotalCount(true);
-		searchOption.setReturnFields(ESGxdAssay.RETURN_FIELDS);
-		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
-		esGxdResultHunter.hunt(params, results, searchOption);
+		SearchResults<ESGxdAssay> results = new SearchResults<ESGxdAssay>();
+		esGxdResultHunter.huntGroupFirstDoc(params, results, GxdResultFields.ASSAY_KEY, ESGxdAssay.RETURN_FIELDS);
 
 		SearchResults<ESGxdAssay> srGA = new SearchResults<ESGxdAssay>();
 		srGA.cloneFrom(results, ESGxdAssay.class);
@@ -208,14 +188,9 @@ public class GxdFinder {
 		return srGA;
 	}
 
-	public SearchResults<ESGxdMarker> searchMarkers(SearchParams params) {	
-		ESSearchOption searchOption = new ESSearchOption();
-		searchOption.setGroupField(GxdResultFields.MARKER_KEY);
-		searchOption.setGetGroupFirstDoc(true);
-		searchOption.setGetTotalCount(true);
-		searchOption.setReturnFields(ESGxdMarker.RETURN_FIELDS);
-		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
-		esGxdResultHunter.hunt(params, results, searchOption);
+	public SearchResults<ESGxdMarker> searchMarkers(SearchParams params) {
+		SearchResults<ESGxdMarker> results = new SearchResults<ESGxdMarker>();
+		esGxdResultHunter.huntGroupFirstDoc(params, results, GxdResultFields.MARKER_KEY, ESGxdMarker.RETURN_FIELDS);
 
 		SearchResults<ESGxdMarker> srGM = new SearchResults<ESGxdMarker>();
 		srGM.cloneFrom(results, ESGxdMarker.class);
@@ -223,13 +198,9 @@ public class GxdFinder {
 	}
 
 	public SearchResults<SolrString> searchStructureIds(SearchParams params) {
-		ESSearchOption searchOption = new ESSearchOption();
-		searchOption.setGroupField(GxdResultFields.STRUCTURE_EXACT);
-		searchOption.setGetGroupFirstDoc(true);
-		searchOption.setGetTotalCount(true);
-		searchOption.setReturnFields(List.of(GxdResultFields.STRUCTURE_EXACT));
 		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
-		esGxdResultHunter.hunt(params, results, searchOption);
+		esGxdResultHunter.huntGroupFirstDoc(params, results, GxdResultFields.STRUCTURE_EXACT,
+				List.of(GxdResultFields.STRUCTURE_EXACT));
 
 		SearchResults<SolrString> srGM = new SearchResults<SolrString>();
 		srGM.cloneFrom(results, SolrString.class);
@@ -237,13 +208,9 @@ public class GxdFinder {
 	}
 
 	public SearchResults<SolrString> searchStagesInMatrix(SearchParams params) {
-		ESSearchOption searchOption = new ESSearchOption();
-		searchOption.setGroupField(GxdResultFields.THEILER_STAGE);
-		searchOption.setGetGroupFirstDoc(true);
-		searchOption.setGetTotalCount(true);
-		searchOption.setReturnFields(List.of(GxdResultFields.THEILER_STAGE));
 		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
-		esGxdResultHunter.hunt(params, results, searchOption);
+		esGxdResultHunter.huntGroupFirstDoc(params, results, GxdResultFields.THEILER_STAGE,
+				List.of(GxdResultFields.THEILER_STAGE));
 
 		SearchResults<SolrString> srGM = new SearchResults<SolrString>();
 		srGM.cloneFrom(results, SolrString.class);
@@ -251,26 +218,23 @@ public class GxdFinder {
 	}
 
 	public SearchResults<ESGxdImage> searchImages(SearchParams params) {
-		ESSearchOption searchOption = new ESSearchOption();
-		searchOption.setGroupField(ImagePaneFields.IMAGE_PANE_KEY);
-		searchOption.setGetGroupInfo(true);
-		searchOption.setGetTotalCount(true);
-		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
-		esGxdResultHasImageHunter.hunt(params, results, searchOption);
+		SearchResults<ESEntity> searchResults = new SearchResults<ESEntity>();
+		esGxdResultHasImageHunter.huntGroupInfo(params, searchResults, ImagePaneFields.IMAGE_PANE_KEY);
 
-		List resultObjects = results.getResultObjects();
-		List<Filter> clauses = new ArrayList<Filter>(resultObjects.size());
+		List<ESEntity> resultObjects = searchResults.getResultObjects();
+		List<String> imagePaneKeys = new ArrayList<String>(resultObjects.size());
 		for (Object obj : resultObjects) {
-			ESAggLongCount row = (ESAggLongCount)obj;
-			clauses.add(new Filter(ImagePaneFields.IMAGE_PANE_KEY, row.getKey()+ ""));
-		}		
-		
-		SearchParams imageParams = new SearchParams();
-		imageParams.setFilter(Filter.or(clauses));
+			ESAggLongCount row = (ESAggLongCount) obj;
+			imagePaneKeys.add(row.getKey() + "");
+		}
+
+		SearchParams searchParams2 = new SearchParams();
+		searchParams2.setFilter(Filter.in(ImagePaneFields.IMAGE_PANE_KEY, imagePaneKeys));
 		SearchResults<ESGxdImage> imageResult = new SearchResults<ESGxdImage>();
-		ESSearchOption imageOption = new ESSearchOption();
-		esGxdImagePaneHunter.hunt(imageParams, imageResult, imageOption);
-		imageResult.setTotalCount(results.getTotalCount());
+		ESSearchOption searchOption2 = new ESSearchOption();
+
+		esGxdImagePaneHunter.hunt(searchParams2, imageResult, searchOption2);
+		imageResult.setTotalCount(imageResult.getTotalCount());
 		return imageResult;
 	}
 
