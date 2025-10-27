@@ -66,7 +66,9 @@ var gq_reset = function(e) {
 	
 	// age/stage ribbon
 	document.getElementById('theilerStage').selectedIndex = 0
-	document.getElementById('age').selectedIndex = 0
+	document.getElementById('ageUnit').selectedIndex = 0
+	document.getElementById('ageRange').value = ""
+	document.getElementById('ageRange').disabled = false
 	selectAge();
 	
 	// Sex ribbon
@@ -89,6 +91,23 @@ var gq_reset = function(e) {
 	// strain ribbon
 	$('input:text[name=strain]').val('');
 };
+
+(function () {
+	$('#ageUnit').on('change', e=> {
+	    var sel = e.target.value;
+	    if (['P','E','A','N'].indexOf(sel) >= 0){
+		$('#ageRange')[0].value = ''
+		$('#ageRange')[0].disabled = true
+	    }
+	    else if (sel === "ANY") {
+	        $('#ageRange')[0].value = ''
+		$('#ageRange')[0].disabled = false
+	    }
+	    else {
+		$('#ageRange')[0].disabled = false
+	    }
+	});
+})();
 
 // Initialize hierarchical checkbox behavior
 // The hierarchy of checkboxes is encoded in their id attributes.
@@ -316,9 +335,9 @@ function changeTab(tabElement,parentId)
 //Script to set up and control the ageStage tab widget (using jquery)
 var ageStageID = "ageStage";
 function selectTheilerStage()
-{ changeTab($('#'+ageStageID+' .tab-nav')[0],ageStageID); }
-function selectAge()
 { changeTab($('#'+ageStageID+' .tab-nav')[1],ageStageID); }
+function selectAge()
+{ changeTab($('#'+ageStageID+' .tab-nav')[0],ageStageID); }
 function ageStageChange(e)
 { if(!$(this).hasClass("active-tab")) changeTab(this,ageStageID); }
 // Init the event listener for clicking tabs

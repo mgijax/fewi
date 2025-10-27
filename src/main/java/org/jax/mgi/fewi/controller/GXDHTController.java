@@ -99,13 +99,6 @@ public class GXDHTController {
 			return errorMav(errorString);
 		}
 
-		// if both age and stage are submitted, prefer stage and remove consideration of age
-		if ((queryForm.getTheilerStage() != null) && (!queryForm.getTheilerStage().contains(GxdHtQueryForm.ANY_STAGE))) {
-			if ((queryForm.getAge() != null) && (!queryForm.getAge().contains(GxdHtQueryForm.ANY_AGE))) {
-				queryForm.setAge(GxdHtQueryForm.ANY_AGE);
-			}
-		}
-		
 		ModelAndView mav = new ModelAndView("gxdht/gxdht_query");
 		mav.addObject("queryString", request.getQueryString());
 		mav.addObject("queryForm", queryForm);
@@ -144,13 +137,10 @@ public class GXDHTController {
 	// determine if we searched by any sample-specific fields (not experiment-level fields); if
 	// so, then we will need to float the matching samples to the top and do highlighting
 	public boolean searchedBySampleFields(GxdHtQueryForm queryForm) {
-		if ((queryForm.getAge() != null) && (queryForm.getAge().size() > 0)) {
-			for (String age : queryForm.getAge()) {
-				if (!age.equals(queryForm.ANY_AGE)) {
-					return true;
-				}
-			}
-		}
+		String au = queryForm.getAgeUnit();
+		if ((au != null) && (au.length() > 0) && !au.equals(queryForm.ANY_AGE)) {
+			return true;
+		} 
 		if ((queryForm.getMutatedIn() != null) && (queryForm.getMutatedIn().length() > 0)) {
 			return true;
 		} 
@@ -325,12 +315,25 @@ public class GXDHTController {
 			}
 		}
 		
-		List<String> ages = query.getAge();
-		if (ages != null) {
-			Map<String,String> validAges = query.getAges();
-			for (String age : ages) {
-				if (!validAges.containsKey(age)) {
-					return "Invalid selection for Age: " + age;
+		String ageUnit = query.getAgeUnit();
+		String ageRange = query.getAgeRange();
+		if (ageUnit != null && !ageUnit.equals(GxdHtQueryForm.ANY_AGE)) {
+			Map<String,String> validAgeUnits = query.getAges();
+			if (!validAgeUnits.containsKey(ageUnit)) {
+				return "Invalid age unit selection: " + ageUnit;
+			}
+			if (ageUnit.matches("Ed|Pd|Pw|Pm|Py")) {
+				try {
+					// Give a better error message for empty string.
+					if (ageRange.equals("")) {
+						return "No age specified. Value required for " + validAgeUnits.get(ageUnit);
+					}
+
+					// Here we're just checking we can parse it. Don't care about the values.
+					parseAgeRange(ageRange, 0, 1);
+				}
+				catch (Exception e) {
+					return "Invalid age range specification. Cannot parse: " + ageRange;
 				}
 			}
 		}
@@ -686,7 +689,8 @@ public class GXDHTController {
 
 		// search by stage (if available) or fall back on age (if no stage)
 		List<Integer> stages = query.getTheilerStage();
-		List<String> ages = query.getAge();
+		String ageUnit = query.getAgeUnit();
+		String ageRange = query.getAgeRange();
 		if ((stages != null) && (stages.size() > 0) && (!stages.contains(GxdHtQueryForm.ANY_STAGE))) {
 			List<Filter> stageFilters = new ArrayList<Filter>();
 			for(Integer stage : stages)
@@ -697,50 +701,8 @@ public class GXDHTController {
 			}
 			filterList.add(Filter.or(stageFilters));		// add the theiler stage search filter 
 		}
-		// search by age
-		else if ((ages != null) && (ages.size() > 0) && (!ages.contains(GxdHtQueryForm.ANY_AGE))) {
-			// also do nothing if both postnatal and embryonic are selected, because it is equivalent to ANY
-			if (!(ages.contains(GxdHtQueryForm.EMBRYONIC) && ages.contains(GxdHtQueryForm.POSTNATAL)))
-			{
-				List<Filter> ageFilters = new ArrayList<Filter>();
-				//postnatal means TS 28 (and TS 27)
-				if (ages.contains(GxdHtQueryForm.POSTNATAL))
-				{
-					// same as TS 28 (and TS 27)
-					ageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE,28,Filter.Operator.OP_HAS_WORD));
-					ageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE,27,Filter.Operator.OP_HAS_WORD));
-				}
-				//embryonic means TS 1-26
-				// if they selected embryonic, none of the age selections matter
-				if (ages.contains(GxdHtQueryForm.EMBRYONIC))
-				{
-					ageFilters.add(Filter.range(SearchConstants.GXD_THEILER_STAGE, "1", "26"));
-				}
-				else
-				{
-					// iterate the legit age queries
-					for(String age : ages)
-					{
-						if(!age.equalsIgnoreCase(GxdHtQueryForm.EMBRYONIC)
-								&& !age.equalsIgnoreCase(GxdHtQueryForm.POSTNATAL))
-						{
-							try{
-								Filter ageMinFilter = new Filter(SearchConstants.GXD_AGE_MIN,age,Filter.Operator.OP_LESS_OR_EQUAL);
-								Filter ageMaxFilter = new Filter(SearchConstants.GXD_AGE_MAX,age,Filter.Operator.OP_GREATER_OR_EQUAL);
-								// AND the min and max query to make a range query;
-								ageFilters.add(Filter.and(Arrays.asList(ageMinFilter,ageMaxFilter)));
-							}
-							catch (NumberFormatException ne)
-							{
-								logger.info("an invalid age was passed to the form");
-								logger.info(ne.getMessage());
-								// ignore this. It just means someone manually entered an invalid url
-							}
-						}
-					}
-				}
-				filterList.add(Filter.or(ageFilters));
-			}
+		else if (ageUnit != null && !ageUnit.equals("") && !ageUnit.equals(GxdHtQueryForm.ANY_AGE) ) {
+			filterList.add(genAgeFilter(ageUnit, ageRange));
 		}
 		
 		// filter by experimental variables
@@ -777,5 +739,49 @@ public class GXDHTController {
 		}
 
 		return containerFilter;
+	}
+
+	private Filter genAgeFilter (String ageUnit, String ageRange) {
+		List<List<Float>> ranges = new ArrayList<List<Float>>();
+		switch (ageUnit) {
+		case "Ed" : ranges = parseAgeRange(ageRange, 0, 1); break;
+		case "Pd" : ranges = parseAgeRange(ageRange, (float) 21.01, 1); break;
+		case "Pw" : ranges = parseAgeRange(ageRange, (float) 21.01, 7); break;
+		case "Pm" : ranges = parseAgeRange(ageRange, (float) 21.01, 30); break;
+		case "Py" : ranges = parseAgeRange(ageRange, (float) 21.01, 365); break;
+		case "E"  : ranges = parseAgeRange("0-21", 0, 1); break;
+		case "P"  : ranges = parseAgeRange("21.01-1846.0", 0, 1); break;
+		case "A"  : ranges = parseAgeRange("42.01-1846.0", 0, 1); break;
+		case "N"  : ranges = parseAgeRange("21.01-25.0", 0, 1); break;
+		default   : break;
+		}
+
+		List<Filter> filterList = new ArrayList<Filter>();
+		for (List<Float> range : ranges) {
+			Filter ageMinFilter = new Filter(SearchConstants.GXD_AGE_MIN,range.get(0).toString(),Filter.Operator.OP_GREATER_OR_EQUAL);
+                	Filter ageMaxFilter = new Filter(SearchConstants.GXD_AGE_MAX,range.get(1).toString(),Filter.Operator.OP_LESS_OR_EQUAL);
+			filterList.add(Filter.and(Arrays.asList(ageMinFilter,ageMaxFilter)));
+		}
+		return Filter.or(filterList);
+	}
+
+	private List<List<Float>> parseAgeRange(String ageRange, float base, int multiplier) {
+		List<List<Float>> ranges = new ArrayList<List<Float>>();
+		for (String range : ageRange.split(",")) {
+			Float rmin, rmax;
+			String[] parts = range.split("-");
+			if (parts.length == 2) {
+				rmin = Float.valueOf(parts[0].trim());
+				rmax = Float.valueOf(parts[1].trim());
+			}
+			else {
+			        rmin = Float.valueOf(range.trim());
+				rmax = rmin;
+			}
+			rmin = base + multiplier * rmin;
+			rmax = base + multiplier * rmax;
+			ranges.add(Arrays.asList(rmin, rmax));
+		}
+		return ranges;
 	}
 }

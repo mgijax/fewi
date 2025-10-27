@@ -14,20 +14,32 @@ var instantiatedPaginator = false;
 var fewiUrl = null;
 
 var decode = function(s) {
-	return decodeURIComponent(s).replace(/[^A-Za-z0-9:_ ]/, ' ').replace(/\+/g, ' ');
+	return decodeURIComponent(s).replace(/[^-A-Za-z0-9:_,. ]/, ' ').replace(/\+/g, ' ');
 };
 
-// translate the float ages to have a prefixed 'E'
-var translateAges = function(ageList) {
-	var translated = [];
-	for (var i = 0; i < ageList.length; i++) {
-		if (ageList[i].match(/[0-9]+\.?[0-9]*/) != null) {
-			translated.push('E' + ageList[i]);
-		} else {
-			translated.push(ageList[i]);
-		}
-	}
-	return translated;
+var formatAgeRange = function(ageUnit, ageRange) {
+	var translated = ''
+	if (ageUnit[0] === 'P')
+	    translated = 'Postnatal'
+	else if (ageUnit[0] === 'E')
+	    translated = 'Embryonic'
+	else if (ageUnit[0] === 'A')
+	    translated = 'Adult'
+	else if (ageUnit[0] === 'N')
+	    translated = 'Newborn'
+
+	if (ageUnit[1] === 'd')
+	    translated += ' day'
+	else if (ageUnit[1] === 'w')
+	    translated += ' week'
+	else if (ageUnit[1] === 'm')
+	    translated += ' month'
+	else if (ageUnit[1] === 'y')
+	    translated += ' year'
+	else
+	    return translated
+
+	return translated + ' ' + decode(ageRange);
 };
 
 // update the You Searched For text (in the searchSummary div)
@@ -51,9 +63,8 @@ var updateYouSearchedFor = function() {
 
 	if (params.hasOwnProperty('theilerStage') && (JSON.stringify(params['theilerStage']) != JSON.stringify(['0']))) {
 		ysf = ysf + 'at developmental stage(s): <b>(TS:' + params['theilerStage'].join(')</b> or <b>(TS:') + ')</b><br/>';
-	} else if (params.hasOwnProperty('age') && (JSON.stringify(params['age']) != JSON.stringify(['ANY']))) {
-		var ages = translateAges(params['age']);
-		ysf = ysf + 'at age(s): <b>(' + ages.join(')</b> or <b>(') + ')</b><br/>';
+	} else if (params.hasOwnProperty('ageUnit') && (params['ageUnit'][0] !== 'ANY')) {
+		ysf = ysf + 'at age(s): <b>' + formatAgeRange(params['ageUnit'][0], (params['ageRange'] ? params['ageRange'][0] : '')) + '</b><br/>';
 	} else {
 		ysf = ysf + 'at developmental stage(s): <b>Any</b><br/>';
 	}
@@ -180,9 +191,6 @@ var updateAgeStageTab = function() {
 	if (parameters.hasOwnProperty('theilerStage') && (parameters['theilerStage'].indexOf('0') == -1)) {
 		selectTheilerStage();
 		scrollToSelected("#theilerStage");
-	} else if (parameters.hasOwnProperty('age') && (parameters['age'].indexOf('ANY') == -1)) {
-		selectAge();
-		scrollToSelected("#age");
 	} else {
 		selectAge();
 	}
