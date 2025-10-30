@@ -140,7 +140,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		<td>
 		    <div id="ageStage">
 				<div class="tab-header">
-					<div class="tab-nav active-tab" id="agesTab">Use Ages (dpc)</div>
+					<div class="tab-nav active-tab" id="agesTab">Use Ages</div>
 					<div class="tab-nav inactive-tab" id="stagesTab">Use Theiler Stages</div>
 				</div>
 				<div id="ageStageDiv" class="tab-content">
