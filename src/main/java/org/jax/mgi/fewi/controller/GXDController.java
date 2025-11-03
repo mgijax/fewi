@@ -3979,7 +3979,9 @@ public class GXDController {
 		populateMarkerIDs(session, query);
 		SearchParams params = new SearchParams();
 		params.setFilter(parseGxdQueryForm(query));
-		params.setPageSize(200000);
+//Hongping too big cause hang		
+//		params.setPageSize(200000);  
+		params.setPageSize(20000); 
 
 		SearchResults<ESGxdMarker> searchResults = gxdFinder.searchMarkers(params);
 		List<ESGxdMarker> list = searchResults.getResultObjects();

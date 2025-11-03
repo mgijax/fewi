@@ -18,7 +18,7 @@ public class ESGxdAssay extends ESEntity implements SolrGxdEntity {
 
 	public static final List<String> RETURN_FIELDS = List.of(GxdResultFields.MARKER_SYMBOL, GxdResultFields.ASSAY_KEY,
 			GxdResultFields.ASSAY_MGIID, GxdResultFields.ASSAY_TYPE, GxdResultFields.JNUM,
-			GxdResultFields.SHORT_CITATION, GxdResultFields.ASSAY_HAS_IMAGE, GxdResultFields.A_BY_SYMBOL
+			GxdResultFields.SHORT_CITATION, GxdResultFields.ASSAY_HAS_IMAGE
 	);
 
 	public String toString() {

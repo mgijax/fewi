@@ -47,7 +47,7 @@ public class ESAssayResult extends ESEntity implements SolrGxdEntity {
 			GxdResultFields.AGE, GxdResultFields.ASSAY_MGIID, GxdResultFields.ASSAY_KEY, GxdResultFields.ASSAY_TYPE,
 			GxdResultFields.DETECTION_LEVEL, GxdResultFields.SHORT_CITATION, GxdResultFields.TPM_LEVEL,
 			GxdResultFields.AVG_QN_TPM_LEVEL, GxdResultFields.BIOLOGICAL_REPLICATES, GxdResultFields.STRAIN,
-			GxdResultFields.SEX, GxdResultFields.NOTES, GxdResultFields.R_BY_ASSAY_TYPE);
+			GxdResultFields.SEX, GxdResultFields.NOTES);
 
 	// *** static variables ***//
 	private static NumberFormat fmt = null;

@@ -14,6 +14,7 @@ import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.searchUtil.entities.ESAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdAssay;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrString;
@@ -21,6 +22,7 @@ import org.jax.mgi.fewi.sortMapper.ESSortMapper;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.shr.fe.indexconstants.ImagePaneFields;
 import org.jax.mgi.snpdatamodel.document.ESEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregate;
 import co.elastic.clients.elasticsearch._types.aggregations.StringTermsAggregate;
@@ -31,8 +33,7 @@ import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.elasticsearch.core.search.HitsMetadata;
 import co.elastic.clients.json.JsonData;
 
-public class ESGxdSummaryBaseHunter<T extends ESEntity> extends ESHunter<T> {
-
+public class ESGxdSummaryBaseHunter<T extends ESEntity> extends ESHunter<T> {	
 	/***
 	 * The constructor sets up this hunter so that it is specific to gxd summary
 	 * pages. Each item in the constructor sets a value that it has inherited from
@@ -133,7 +134,7 @@ public class ESGxdSummaryBaseHunter<T extends ESEntity> extends ESHunter<T> {
 
 		// these are only available on the join index gxdImagePane (use wisely my
 		// friend)
-		sortMap.put(SortConstants.BY_IMAGE_ASSAY_TYPE, new ESSortMapper(GxdResultFields.A_BY_ASSAY_TYPE));
+		sortMap.put(SortConstants.BY_IMAGE_ASSAY_TYPE, new ESSortMapper(ImagePaneFields.BY_ASSAY_TYPE));
 		sortMap.put(SortConstants.BY_IMAGE_MARKER, new ESSortMapper(ImagePaneFields.BY_MARKER));
 		sortMap.put(SortConstants.BY_IMAGE_HYBRIDIZATION_ASC, new ESSortMapper(ImagePaneFields.BY_HYBRIDIZATION_ASC));
 		sortMap.put(SortConstants.BY_IMAGE_HYBRIDIZATION_DESC, new ESSortMapper(ImagePaneFields.BY_HYBRIDIZATION_DESC));
@@ -155,13 +156,39 @@ public class ESGxdSummaryBaseHunter<T extends ESEntity> extends ESHunter<T> {
 		 */
 	}
 	
-	@Override
-	protected SearchParams preProcessSearchParams(SearchParams searchParams, ESSearchOption searchOption) {
-		Filter filter = searchParams.getFilter();
-		if (!filter.isBasicFilter()) {
-			checkFilter(filter);
+	protected SearchParams preProcessSearchParams(SearchParams searchParams, ESSearchOption searchOption, ESGxdProfileMarkerHunter esGxdProfileMarkerHunter) {
+		if ( searchParams.getFilter() == null ) {
+			return searchParams;
 		}
-		return searchParams;	}		
+		List<Filter> joinQueryFilters = searchParams.getFilter().collectJoinQueryFilters();
+		if ( joinQueryFilters == null || joinQueryFilters.isEmpty() ) {
+			return searchParams;
+		}
+		
+		Filter joinFilter = joinQueryFilters.get(0);
+		if (!"gxdProfileMarker".equals(joinFilter.getFromIndex())) {
+			return searchParams;
+		}
+		
+		SearchParams p = new SearchParams();
+		p.setPageSize(60_000);   // max out total of gxd_profile_marker index
+		p.setFilter(joinFilter.getJoinQuery());
+		SearchResults<ESAssayResult> s = new SearchResults<ESAssayResult>();
+		ESSearchOption o = new ESSearchOption();
+		o.setClazz(ESAssayResult.class);
+		o.setReturnFields(List.of(GxdResultFields.MARKER_MGIID));
+		esGxdProfileMarkerHunter.hunt(p, s, o);
+		
+		List<String> mgiIds = new ArrayList<String>();
+		for (ESAssayResult r: s.getResultObjects()) {
+			mgiIds.add(r.getMarkerMgiid());
+		}
+		List<Filter> allfilters = new ArrayList<Filter>();
+		allfilters.add(searchParams.getFilter());
+		allfilters.add(Filter.in(GxdResultFields.MARKER_MGIID, mgiIds));
+		searchParams.setFilter(Filter.and(allfilters));
+		return super.preProcessSearchParams(searchParams, searchOption);
+	}	
 	
 	private void checkFilter(Filter filter) {
 		if (filter.isBasicFilter()) {

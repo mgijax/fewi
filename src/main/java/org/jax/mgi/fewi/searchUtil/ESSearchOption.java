@@ -10,6 +10,7 @@ public class ESSearchOption {
 	private boolean getGroupFirstDoc = false;
 	private boolean countNumOfBuckts = false; 
 	private boolean tractTopHit = false; 
+	private boolean getAllBuckets = false; 
 	private int precisionThreshold;
 	private List<String> returnFields;
 	private String extraJoinClause;
@@ -113,5 +114,13 @@ public class ESSearchOption {
 
 	public void setPrecisionThreshold(int precisionThreshold) {
 		this.precisionThreshold = precisionThreshold;
+	}
+
+	public boolean isGetAllBuckets() {
+		return getAllBuckets;
+	}
+
+	public void setGetAllBuckets(boolean getAllBuckets) {
+		this.getAllBuckets = getAllBuckets;
 	}
 }

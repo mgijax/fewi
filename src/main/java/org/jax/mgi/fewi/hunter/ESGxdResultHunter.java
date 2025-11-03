@@ -18,8 +18,8 @@ import org.springframework.stereotype.Repository;
 public class ESGxdResultHunter<T extends ESEntity> extends ESGxdSummaryBaseHunter<T> {
 
 	@Autowired
-	private ESGxdProfileMarkerHunter esGxdProfileMarkerHunter;
-
+	public ESGxdProfileMarkerHunter esGxdProfileMarkerHunter;	
+	
 	/***
 	 * Default constructor uses ESEntity as the type.
 	 */
@@ -48,41 +48,15 @@ public class ESGxdResultHunter<T extends ESEntity> extends ESGxdSummaryBaseHunte
 		this.esPort = port;
 		this.esIndex = index;
 	}
-
+	
 	@Override
 	protected SearchParams preProcessSearchParams(SearchParams searchParams, ESSearchOption searchOption) {
-		if ( searchParams.getFilter() == null ) {
-			return searchParams;
-		}
-		List<Filter> joinQueryFilters = searchParams.getFilter().collectJoinQueryFilters();
-		if ( joinQueryFilters == null || joinQueryFilters.isEmpty() ) {
-			return searchParams;
-		}
+		super.preProcessSearchParams(searchParams, searchOption);
 		
-		Filter joinFilter = joinQueryFilters.get(0);
-		if (!"gxdProfileMarker".equals(joinFilter.getFromIndex())) {
-			return searchParams;
-		}
+		preProcessSearchParams(searchParams, searchOption, esGxdProfileMarkerHunter);
 		
-		SearchParams p = new SearchParams();
-		p.setPageSize(60_000);
-		p.setFilter(joinFilter.getJoinQuery());
-		SearchResults<ESAssayResult> s = new SearchResults<ESAssayResult>();
-		ESSearchOption option = new ESSearchOption();
-		option.setClazz(ESAssayResult.class);
-		option.setReturnFields(List.of(GxdResultFields.MARKER_MGIID));
-		this.esGxdProfileMarkerHunter.hunt(p, s, option);
-		
-		List<String> mgiIds = new ArrayList<String>();
-		for (ESAssayResult r: s.getResultObjects()) {
-			mgiIds.add(r.getMarkerMgiid());
-		}
-		List<Filter> allfilters = new ArrayList<Filter>();
-		allfilters.add(searchParams.getFilter());
-		allfilters.add(Filter.in(GxdResultFields.MARKER_MGIID, mgiIds));
-		searchParams.setFilter(Filter.and(allfilters));
 		return searchParams;
-	}
+	} 	
 
 	@Value("${es.gxdresult.index}")
 	public void setESIndex(String esIndex) {

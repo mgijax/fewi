@@ -1,14 +1,13 @@
 package org.jax.mgi.fewi.finder;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.hunter.ESGxdAssayResultHunter;
 import org.jax.mgi.fewi.hunter.ESGxdImagePaneHunter;
-import org.jax.mgi.fewi.hunter.ESGxdProfileMarkerHunter;
 import org.jax.mgi.fewi.hunter.ESGxdResultHasImageHunter;
 import org.jax.mgi.fewi.hunter.ESGxdResultHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdAssayTypeFacetHunter;
@@ -34,6 +33,7 @@ import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.entities.ESAggLongCount;
 import org.jax.mgi.fewi.searchUtil.entities.ESAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdAssay;
@@ -53,7 +53,6 @@ import org.jax.mgi.shr.fe.indexconstants.DagEdgeFields;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.shr.fe.indexconstants.ImagePaneFields;
 import org.jax.mgi.snpdatamodel.document.ESEntity;
-import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -165,11 +164,13 @@ public class GxdFinder {
 	}
 
 	public SearchResults<ESAssayResult> searchAssayResults(SearchParams params) {
-		SearchResults<ESAssayResult> result = new SearchResults<ESAssayResult>();
-		esGxdAssayResultHunter.huntDocs(params, result, ESAssayResult.RETURN_FIELDS);
+		SearchResults<ESAssayResult> results = new SearchResults<ESAssayResult>();
+		esGxdAssayResultHunter.huntDocs(params, results, ESAssayResult.RETURN_FIELDS);
 
+		// get total count
+		results.setTotalCount(esGxdAssayResultHunter.huntCount(params));
 		SearchResults<ESAssayResult> srAR = new SearchResults<ESAssayResult>();
-		srAR.cloneFrom(result, ESAssayResult.class);
+		srAR.cloneFrom(results, ESAssayResult.class);
 		return srAR;
 	}
 
@@ -177,9 +178,10 @@ public class GxdFinder {
 		SearchResults<ESGxdAssay> results = new SearchResults<ESGxdAssay>();
 		esGxdResultHunter.huntGroupFirstDoc(params, results, GxdResultFields.ASSAY_KEY, ESGxdAssay.RETURN_FIELDS);
 
+		results.setTotalCount(esGxdResultHunter.huntExactUniqueCount(params, GxdResultFields.ASSAY_KEY));
+
 		SearchResults<ESGxdAssay> srGA = new SearchResults<ESGxdAssay>();
 		srGA.cloneFrom(results, ESGxdAssay.class);
-
 		for (ESGxdAssay result : srGA.getResultObjects()) {
 			if ("RNA-Seq".equals(result.getAssayType())) {
 				result.setMarkerSymbol("Whole Genome");
@@ -192,6 +194,7 @@ public class GxdFinder {
 		SearchResults<ESGxdMarker> results = new SearchResults<ESGxdMarker>();
 		esGxdResultHunter.huntGroupFirstDoc(params, results, GxdResultFields.MARKER_KEY, ESGxdMarker.RETURN_FIELDS);
 
+		results.setTotalCount(esGxdResultHunter.huntExactUniqueCount(params, GxdResultFields.MARKER_KEY));
 		SearchResults<ESGxdMarker> srGM = new SearchResults<ESGxdMarker>();
 		srGM.cloneFrom(results, ESGxdMarker.class);
 		return srGM;
@@ -218,23 +221,30 @@ public class GxdFinder {
 	}
 
 	public SearchResults<ESGxdImage> searchImages(SearchParams params) {
+		SearchParams resultImageParams = new SearchParams();
+		resultImageParams.setFilter(params.getFilter());		
 		SearchResults<ESEntity> searchResults = new SearchResults<ESEntity>();
-		esGxdResultHasImageHunter.huntGroupInfo(params, searchResults, ImagePaneFields.IMAGE_PANE_KEY);
+		esGxdResultHasImageHunter.huntGroupInfo(resultImageParams, searchResults, ImagePaneFields.IMAGE_PANE_KEY);
 
+		SearchParams imagePaneParams = new SearchParams();
+		imagePaneParams.setSorts(params.getSorts());
+		imagePaneParams.setStartIndex(params.getStartIndex());
+		imagePaneParams.setPageSize(params.getPageSize());
 		List<ESEntity> resultObjects = searchResults.getResultObjects();
 		List<String> imagePaneKeys = new ArrayList<String>(resultObjects.size());
 		for (Object obj : resultObjects) {
 			ESAggLongCount row = (ESAggLongCount) obj;
 			imagePaneKeys.add(row.getKey() + "");
+			if ( imagePaneKeys.size() > 50000 ) {  //Hongping es will hang if too big
+				break;
+			}
 		}
-
-		SearchParams searchParams2 = new SearchParams();
-		searchParams2.setFilter(Filter.in(ImagePaneFields.IMAGE_PANE_KEY, imagePaneKeys));
+		imagePaneParams.setFilter(Filter.in(ImagePaneFields.IMAGE_PANE_KEY, imagePaneKeys));
 		SearchResults<ESGxdImage> imageResult = new SearchResults<ESGxdImage>();
 		ESSearchOption searchOption2 = new ESSearchOption();
-
-		esGxdImagePaneHunter.hunt(searchParams2, imageResult, searchOption2);
-		imageResult.setTotalCount(imageResult.getTotalCount());
+		esGxdImagePaneHunter.hunt(imagePaneParams, imageResult, searchOption2);
+		
+		imageResult.setTotalCount(esGxdResultHasImageHunter.huntExactUniqueCount(params, ImagePaneFields.IMAGE_PANE_KEY));
 		return imageResult;
 	}
 

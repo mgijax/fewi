@@ -18,15 +18,17 @@ public class ESGxdMarker extends ESEntity implements SolrGxdEntity {
 	String cytoband;
 	String cm;
 	String type;
+	private int byMrkSymbol;
+	private int markerKey;
 
-	public static final List<String> RETURN_FIELDS = List.of(GxdResultFields.MARKER_MGIID,
+	public static final List<String> RETURN_FIELDS = List.of(GxdResultFields.MARKER_KEY, GxdResultFields.MARKER_MGIID,
 			GxdResultFields.MARKER_SYMBOL, GxdResultFields.MARKER_NAME, GxdResultFields.MARKER_TYPE,
 			GxdResultFields.CHROMOSOME, GxdResultFields.CENTIMORGAN, GxdResultFields.CYTOBAND,
 			GxdResultFields.START_COORD, GxdResultFields.END_COORD, GxdResultFields.STRAND,
 			GxdResultFields.M_BY_MRK_SYMBOL, GxdResultFields.M_BY_LOCATION);
 
 	public String toString() {
-		return "SolrGxdMarker: " + mgiid + " " + symbol + ", " + name;
+		return "SolrGxdMarker: " + markerKey + " " + byMrkSymbol + " " + symbol;
 	}
 
 	public String getMgiid() {
@@ -107,6 +109,22 @@ public class ESGxdMarker extends ESEntity implements SolrGxdEntity {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public int getByMrkSymbol() {
+		return byMrkSymbol;
+	}
+
+	public void setByMrkSymbol(int byMrkSymbol) {
+		this.byMrkSymbol = byMrkSymbol;
+	}
+
+	public int getMarkerKey() {
+		return markerKey;
+	}
+
+	public void setMarkerKey(int markerKey) {
+		this.markerKey = markerKey;
 	}
 
 }
