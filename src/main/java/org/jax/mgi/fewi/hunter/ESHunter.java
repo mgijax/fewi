@@ -620,8 +620,9 @@ public class ESHunter<T extends ESEntity> {
 		if (inFilters != null && !inFilters.isEmpty()) {
 			for (Filter filter : inFilters) {
 				if (filter.getValues() != null && !filter.getValues().isEmpty()) {
+					String field = getMappedField(filter.getProperty());					
 					List<FieldValue> values = filter.getValues().stream().map(FieldValue::of).toList();
-					TermsQuery.Builder termsBuilder = new TermsQuery.Builder().field(filter.getProperty())
+					TermsQuery.Builder termsBuilder = new TermsQuery.Builder().field(field)
 							.terms(t -> t.value(values));
 					queryList.add(new Query.Builder().terms(termsBuilder.build()).build());
 				}
@@ -632,8 +633,9 @@ public class ESHunter<T extends ESEntity> {
 		if (notInFilters != null && !notInFilters.isEmpty()) {
 			for (Filter filter : notInFilters) {
 				if (filter.getValues() != null && !filter.getValues().isEmpty()) {
+					String field = getMappedField(filter.getProperty());
 					List<FieldValue> values = filter.getValues().stream().map(FieldValue::of).toList();
-					TermsQuery termsQuery = new TermsQuery.Builder().field(filter.getProperty())
+					TermsQuery termsQuery = new TermsQuery.Builder().field(field)
 							.terms(t -> t.value(values)).build();
 					// Wrap in a bool.must_not
 					Query notInQuery = new Query.Builder().bool(b -> b.mustNot(q -> q.terms(termsQuery))).build();
@@ -821,6 +823,16 @@ public class ESHunter<T extends ESEntity> {
 		}
 		return results;
 	}
+	
+	protected String getMappedField(String uiProperty) {
+		
+		if (propertyMap.containsKey(uiProperty)) {
+			ESPropertyMapper pm = propertyMap.get(uiProperty);
+			return pm.getField();
+		} else {
+			return uiProperty;
+		}
+	}
 
 	protected String translateFilter(Filter filter, HashMap<String, ESPropertyMapper> propertyMap) {
 		/**
@@ -961,7 +973,6 @@ public class ESHunter<T extends ESEntity> {
 				if (!sortMap.isEmpty()) {
 					for (String key : sortMap.keySet()) {
 						a.aggregations(getAggSortKeyName(key), sub -> sub.min(m -> m.field(key)));
-						log.info("SORT: " + key);
 					}
 				}
 
@@ -1191,7 +1202,6 @@ public class ESHunter<T extends ESEntity> {
 			if (sortMap.containsKey(sort.getSort())) {
 				List<SortOptions> sol = new ArrayList<SortOptions>();
 				for (String ssm : sortMap.get(sort.getSort()).getSortList()) {
-					log.info("SORT: " + sort.getSort() + " " + ssm);
 					fsb = new FieldSort.Builder();
 					fs = fsb.field(ssm).order(currentSort).build();
 					sob = new SortOptions.Builder();

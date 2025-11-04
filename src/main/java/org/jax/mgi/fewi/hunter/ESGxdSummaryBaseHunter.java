@@ -170,6 +170,17 @@ public class ESGxdSummaryBaseHunter<T extends ESEntity> extends ESHunter<T> {
 			return searchParams;
 		}
 		
+		// check if ui pass in markerMgiid
+		List<Filter> inFilters = searchParams.getFilter().collectFilters(Filter.Operator.OP_IN);
+		for (Filter filter : inFilters) {
+			if (filter.getValues() != null && !filter.getValues().isEmpty()) {
+				String field = getMappedField(filter.getProperty());
+				if ( GxdResultFields.MARKER_MGIID.equals(field) ) {
+					return searchParams;
+				}
+			}
+		}
+		
 		SearchParams p = new SearchParams();
 		p.setPageSize(60_000);   // max out total of gxd_profile_marker index
 		p.setFilter(joinFilter.getJoinQuery());

@@ -191,6 +191,12 @@ public class GxdFinder {
 	}
 
 	public SearchResults<ESGxdMarker> searchMarkers(SearchParams params) {
+//		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
+//		gxdResultHunter.hunt(params, results, SearchConstants.MRK_KEY);
+//
+//		SearchResults<ESGxdMarker> srGM = new SearchResults<ESGxdMarker>();
+//		srGM.cloneFrom(results, ESGxdMarker.class);		
+		
 		SearchResults<ESGxdMarker> results = new SearchResults<ESGxdMarker>();
 		esGxdResultHunter.huntGroupFirstDoc(params, results, GxdResultFields.MARKER_KEY, ESGxdMarker.RETURN_FIELDS);
 
@@ -201,6 +207,12 @@ public class GxdFinder {
 	}
 
 	public SearchResults<SolrString> searchStructureIds(SearchParams params) {
+//		SearchResults<SolrGxdEntity> result = new SearchResults<SolrGxdEntity>();
+//		gxdResultHunter.hunt(params, result, SearchConstants.STRUCTURE_EXACT);
+//
+//		SearchResults<SolrString> srGM = new SearchResults<SolrString>();
+//		srGM.cloneFrom(result, SolrString.class);	
+		
 		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
 		esGxdResultHunter.huntGroupFirstDoc(params, results, GxdResultFields.STRUCTURE_EXACT,
 				List.of(GxdResultFields.STRUCTURE_EXACT));
