@@ -95,7 +95,7 @@ var gq_reset = function(e) {
 (function () {
 	$('#ageUnit').on('change', e=> {
 	    var sel = e.target.value;
-	    if (['P','E','A','N'].indexOf(sel) >= 0){
+	    if (['P','E','A','N','ANY'].indexOf(sel) >= 0){
 		$('#ageRange')[0].value = ''
 		$('#ageRange')[0].disabled = true
 	    }
