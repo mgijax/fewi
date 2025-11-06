@@ -148,7 +148,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 						<form:select path="ageUnit" items="${queryForm.ages}">
 							<form:options items="${ages}" />
 						</form:select>
-						<form:input path="ageRange" disabled="true" />
+						<form:input path="ageRange" />
 						<div style="text-align: left; font-size: 9px; padding-left: 6px; padding-top: 6px; max-width: 280px; ">
 						  Examples: <br/>
 						  &nbsp;Embryonic day 10.5 <br/>

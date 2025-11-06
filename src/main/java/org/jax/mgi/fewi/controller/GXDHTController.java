@@ -758,8 +758,11 @@ public class GXDHTController {
 
 		List<Filter> filterList = new ArrayList<Filter>();
 		for (List<Float> range : ranges) {
-			Filter ageMinFilter = new Filter(SearchConstants.GXD_AGE_MIN,range.get(0).toString(),Filter.Operator.OP_GREATER_OR_EQUAL);
-                	Filter ageMaxFilter = new Filter(SearchConstants.GXD_AGE_MAX,range.get(1).toString(),Filter.Operator.OP_LESS_OR_EQUAL);
+			float rmin = range.get(0);
+			float rmax = range.get(1);
+			if (ageUnit.equals("Ed")) rmax = Math.min(rmax, (float) 21.0);
+			Filter ageMinFilter = new Filter(SearchConstants.GXD_AGE_MIN,rmin+"",Filter.Operator.OP_GREATER_OR_EQUAL);
+                	Filter ageMaxFilter = new Filter(SearchConstants.GXD_AGE_MAX,rmax+"",Filter.Operator.OP_LESS_OR_EQUAL);
 			filterList.add(Filter.and(Arrays.asList(ageMinFilter,ageMaxFilter)));
 		}
 		return Filter.or(filterList);

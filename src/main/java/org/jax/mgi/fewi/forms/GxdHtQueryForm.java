@@ -14,7 +14,7 @@ public class GxdHtQueryForm {
     // instance variables
     //--------------------//
 
-	private String ageUnit = "";
+	private String ageUnit = ANY_AGE;
 	private String ageRange = "";
 	private List<Integer> theilerStage = new ArrayList<Integer>();
 	private List<String> variable = new ArrayList<String>();

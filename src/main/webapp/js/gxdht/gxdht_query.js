@@ -57,6 +57,13 @@ var gq_tsTooltips = {
 
 /*** functions ***/
 
+function resetAgeStage() {
+    document.getElementById('theilerStage').selectedIndex = 0
+    document.getElementById('ageUnit').selectedIndex = 0
+    document.getElementById('ageRange').value = ""
+    document.getElementById('ageRange').disabled = true
+}
+
 // reset the fields on the query form
 var gq_reset = function(e) {
 	e.preventDefault();
@@ -65,10 +72,7 @@ var gq_reset = function(e) {
 	$('input:text[name=structure]').val('');
 	
 	// age/stage ribbon
-	document.getElementById('theilerStage').selectedIndex = 0
-	document.getElementById('ageUnit').selectedIndex = 0
-	document.getElementById('ageRange').value = ""
-	document.getElementById('ageRange').disabled = false
+	resetAgeStage();
 	selectAge();
 	
 	// Sex ribbon
@@ -92,22 +96,20 @@ var gq_reset = function(e) {
 	$('input:text[name=strain]').val('');
 };
 
-(function () {
-	$('#ageUnit').on('change', e=> {
-	    var sel = e.target.value;
-	    if (['P','E','A','N','ANY'].indexOf(sel) >= 0){
-		$('#ageRange')[0].value = ''
-		$('#ageRange')[0].disabled = true
-	    }
-	    else if (sel === "ANY") {
-	        $('#ageRange')[0].value = ''
-		$('#ageRange')[0].disabled = false
-	    }
-	    else {
-		$('#ageRange')[0].disabled = false
-	    }
-	});
-})();
+function enableDisableAgeInput() {
+    var elt = $('#ageUnit')[0]
+    var sel = elt.value
+    if (['P','E','A','N','ANY'].indexOf(sel) >= 0){
+	$('#ageRange')[0].value = ''
+	$('#ageRange')[0].disabled = true
+    }
+    else {
+	$('#ageRange')[0].disabled = false
+    }
+}
+
+enableDisableAgeInput(); 
+$('#ageUnit').on('change', enableDisableAgeInput);
 
 // Initialize hierarchical checkbox behavior
 // The hierarchy of checkboxes is encoded in their id attributes.
@@ -338,8 +340,12 @@ function selectTheilerStage()
 { changeTab($('#'+ageStageID+' .tab-nav')[1],ageStageID); }
 function selectAge()
 { changeTab($('#'+ageStageID+' .tab-nav')[0],ageStageID); }
-function ageStageChange(e)
-{ if(!$(this).hasClass("active-tab")) changeTab(this,ageStageID); }
+function ageStageChange(e) {
+    if(!$(this).hasClass("active-tab")) {
+	resetAgeStage();
+        changeTab(this,ageStageID); 
+    }
+}
 // Init the event listener for clicking tabs
 $('#'+ageStageID+' .tab-nav').click(ageStageChange);
 
