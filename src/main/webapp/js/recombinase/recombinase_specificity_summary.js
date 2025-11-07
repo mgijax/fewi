@@ -9,7 +9,7 @@ function main() {
             label:"<b>Structure</b>",
             width:112, 
             sortable:true},
-        {key:"cellTypes", 
+        {key:"cellType", 
             label:"<b>Cell Type</b>",
             maxAutoWidth:80, 
             sortable:false},
