@@ -22,11 +22,13 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.entities.ESAggLongCount;
 import org.jax.mgi.fewi.searchUtil.entities.ESAggStringCount;
+import org.jax.mgi.fewi.searchUtil.entities.ESAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdAssay;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrString;
 import org.jax.mgi.fewi.sortMapper.ESSortMapper;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
+import org.jax.mgi.shr.fe.indexconstants.ImagePaneFields;
 import org.jax.mgi.snpdatamodel.document.BaseESDocument;
 import org.jax.mgi.snpdatamodel.document.ESEntity;
 import org.slf4j.Logger;
@@ -239,6 +241,26 @@ public class ESHunter<T extends ESEntity> {
 		searchOption.setGetGroupInfo(true);
 		hunt(searchParams, searchResults, searchOption);
 	}
+	
+	// get grouped keys
+	public void huntFacets(SearchParams searchParams, SearchResults<T> searchResults, String groupField) {
+		huntGroupInfo(searchParams, searchResults, groupField);
+		
+		List<T> resultObjects = searchResults.getResultObjects();
+		if ( resultObjects == null ) {
+			return;
+		}
+		
+		List<String> facets = new ArrayList<String>(resultObjects.size());
+		for (Object obj : resultObjects) {
+			if ( obj instanceof ESAggLongCount) {
+				facets.add(((ESAggLongCount) obj).getKey() + "");
+			} else if ( obj instanceof ESAggStringCount) {
+				facets.add(((ESAggStringCount) obj).getKey());
+			}
+		}
+		searchResults.setResultFacets(facets);
+	}	
 
 	// retrieve grouped bucket with first doc
 	public void huntGroupFirstDoc(SearchParams searchParams, SearchResults<T> searchResults, String groupField,
@@ -265,7 +287,10 @@ public class ESHunter<T extends ESEntity> {
 		createESConnection();
 
 		// Invoke the hook, editing the search params as needed by subclass.
-		searchParams = preProcessSearchParams(searchParams, searchOption);
+		if ( preProcessSearchParams(searchParams, searchOption) ) {
+			log.info("Stopped after preProcessSearchParams");
+			return;
+		}
 
 		if (searchParams.getReturnFilterQuery())
 			searchResults.setFilterQuery(translateFilter(searchParams.getFilter(), propertyMap));
@@ -437,12 +462,8 @@ public class ESHunter<T extends ESEntity> {
 		}
 
 		List<Filter> shapeFilters = null;
-		List<Filter> inFilters = null; // to do
-		List<Filter> notInFilters = null; // to do
 		if (searchParams.getFilter() != null) {
 			shapeFilters = searchParams.getFilter().collectFilters(Filter.Operator.OP_SHAPE);
-			inFilters = searchParams.getFilter().collectFilters(Filter.Operator.OP_IN);
-			notInFilters = searchParams.getFilter().collectFilters(Filter.Operator.OP_NOT_IN);
 		}
 
 		if (shapeFilters != null && !shapeFilters.isEmpty()) {
@@ -603,11 +624,9 @@ public class ESHunter<T extends ESEntity> {
 
 		List<Filter> shapeFilters = null;
 		List<Filter> inFilters = null;
-		List<Filter> notInFilters = null;
 		if (searchParams.getFilter() != null) {
 			shapeFilters = searchParams.getFilter().collectFilters(Filter.Operator.OP_SHAPE);
-			inFilters = searchParams.getFilter().collectFilters(Filter.Operator.OP_IN);
-			notInFilters = searchParams.getFilter().collectFilters(Filter.Operator.OP_NOT_IN);
+			inFilters = searchParams.getFilter().collectFilters(Filter.Operator.OP_TERM_IN);
 		}
 
 		// "Shape Query"
@@ -625,21 +644,6 @@ public class ESHunter<T extends ESEntity> {
 					TermsQuery.Builder termsBuilder = new TermsQuery.Builder().field(field)
 							.terms(t -> t.value(values));
 					queryList.add(new Query.Builder().terms(termsBuilder.build()).build());
-				}
-			}
-		}
-
-		// "Not In Filters" -> convert each filter into a bool must_not query
-		if (notInFilters != null && !notInFilters.isEmpty()) {
-			for (Filter filter : notInFilters) {
-				if (filter.getValues() != null && !filter.getValues().isEmpty()) {
-					String field = getMappedField(filter.getProperty());
-					List<FieldValue> values = filter.getValues().stream().map(FieldValue::of).toList();
-					TermsQuery termsQuery = new TermsQuery.Builder().field(field)
-							.terms(t -> t.value(values)).build();
-					// Wrap in a bool.must_not
-					Query notInQuery = new Query.Builder().bool(b -> b.mustNot(q -> q.terms(termsQuery))).build();
-					queryList.add(notInQuery);
 				}
 			}
 		}
@@ -756,7 +760,7 @@ public class ESHunter<T extends ESEntity> {
 			return null;
 		}
 
-		Query shapeQuery = Query.of(q -> q.shape(g -> g.field("mc")
+		Query shapeQuery = Query.of(q -> q.shape(g -> g.field(GxdResultFields.MOUSE_COORDINATE)
 				.shape(s -> s.relation(GeoShapeRelation.Intersects).shape(JsonData.of(geometryCollection)))));
 		return shapeQuery;
 	}
@@ -857,8 +861,7 @@ public class ESHunter<T extends ESEntity> {
 
 		if (filter.isBasicFilter()) {
 			// do nothing for shape parameter
-			if (filter.getOperator() == Filter.Operator.OP_SHAPE || filter.getOperator() == Filter.Operator.OP_IN
-					|| filter.getOperator() == Filter.Operator.OP_NOT_IN) {
+			if (filter.getOperator() == Filter.Operator.OP_SHAPE || filter.getOperator() == Filter.Operator.OP_TERM_IN) {
 				return "";
 			}
 			// Check to see if the property is null or an empty string,
@@ -1257,14 +1260,14 @@ public class ESHunter<T extends ESEntity> {
 	 * preprocessSearchParams
 	 * 
 	 * @param SearchParams
-	 * @return SearchParams
+	 * @return boolean if false, stop the further process
 	 *
 	 *         This is a hook, any class that needs to modify the searchParams
 	 *         before doing its work will override this method.
 	 *
 	 */
-	protected SearchParams preProcessSearchParams(SearchParams searchParams, ESSearchOption searchOption) {
-		return searchParams;
+	protected boolean preProcessSearchParams(SearchParams searchParams, ESSearchOption searchOption) {
+		return false;
 	}
 
 	private int getTotalNumberOfBuckets(SearchParams searchParams, SearchResults searchResults,

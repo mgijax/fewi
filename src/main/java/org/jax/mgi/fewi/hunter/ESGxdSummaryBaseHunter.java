@@ -156,18 +156,18 @@ public class ESGxdSummaryBaseHunter<T extends ESEntity> extends ESHunter<T> {
 		 */
 	}
 	
-	protected SearchParams preProcessSearchParams(SearchParams searchParams, ESSearchOption searchOption, ESGxdProfileMarkerHunter esGxdProfileMarkerHunter) {
+	protected boolean doJoinProfileMarker(SearchParams searchParams, ESSearchOption searchOption, ESGxdProfileMarkerHunter esGxdProfileMarkerHunter) {
 		if ( searchParams.getFilter() == null ) {
-			return searchParams;
+			return false;
 		}
 		List<Filter> joinQueryFilters = searchParams.getFilter().collectJoinQueryFilters();
 		if ( joinQueryFilters == null || joinQueryFilters.isEmpty() ) {
-			return searchParams;
+			return false;
 		}
 		
 		Filter joinFilter = joinQueryFilters.get(0);
 		if (!"gxdProfileMarker".equals(joinFilter.getFromIndex())) {
-			return searchParams;
+			return false;
 		}
 		
 		// check if ui pass in markerMgiid
@@ -176,13 +176,13 @@ public class ESGxdSummaryBaseHunter<T extends ESEntity> extends ESHunter<T> {
 			if (filter.getValues() != null && !filter.getValues().isEmpty()) {
 				String field = getMappedField(filter.getProperty());
 				if ( GxdResultFields.MARKER_MGIID.equals(field) ) {
-					return searchParams;
+					return false;
 				}
 			}
 		}
 		
 		SearchParams p = new SearchParams();
-		p.setPageSize(60_000);   // max out total of gxd_profile_marker index
+		p.setPageSize(SearchConstants.SEARCH_MAX_PAGE_SIZE_FOR_MARKER_PROFILE);   // max out total of gxd_profile_marker index
 		p.setFilter(joinFilter.getJoinQuery());
 		SearchResults<ESAssayResult> s = new SearchResults<ESAssayResult>();
 		ESSearchOption o = new ESSearchOption();
@@ -190,15 +190,19 @@ public class ESGxdSummaryBaseHunter<T extends ESEntity> extends ESHunter<T> {
 		o.setReturnFields(List.of(GxdResultFields.MARKER_MGIID));
 		esGxdProfileMarkerHunter.hunt(p, s, o);
 		
+		if ( s.getResultObjects() == null || s.getResultObjects().size() < 1) {
+			return true;
+		}
+		
 		List<String> mgiIds = new ArrayList<String>();
 		for (ESAssayResult r: s.getResultObjects()) {
 			mgiIds.add(r.getMarkerMgiid());
 		}
 		List<Filter> allfilters = new ArrayList<Filter>();
 		allfilters.add(searchParams.getFilter());
-		allfilters.add(Filter.in(GxdResultFields.MARKER_MGIID, mgiIds));
+		allfilters.add(Filter.term_in(GxdResultFields.MARKER_MGIID, mgiIds));
 		searchParams.setFilter(Filter.and(allfilters));
-		return super.preProcessSearchParams(searchParams, searchOption);
+		return false;
 	}	
 	
 	private void checkFilter(Filter filter) {

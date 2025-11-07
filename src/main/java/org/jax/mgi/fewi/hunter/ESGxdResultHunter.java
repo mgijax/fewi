@@ -50,12 +50,8 @@ public class ESGxdResultHunter<T extends ESEntity> extends ESGxdSummaryBaseHunte
 	}
 	
 	@Override
-	protected SearchParams preProcessSearchParams(SearchParams searchParams, ESSearchOption searchOption) {
-		super.preProcessSearchParams(searchParams, searchOption);
-		
-		preProcessSearchParams(searchParams, searchOption, esGxdProfileMarkerHunter);
-		
-		return searchParams;
+	protected boolean preProcessSearchParams(SearchParams searchParams, ESSearchOption searchOption) {
+		return doJoinProfileMarker(searchParams, searchOption, esGxdProfileMarkerHunter);
 	} 	
 
 	@Value("${es.gxdresult.index}")

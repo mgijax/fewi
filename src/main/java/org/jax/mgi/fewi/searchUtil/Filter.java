@@ -336,6 +336,13 @@ public class Filter {
 	public static Filter in(String property, List<String> values) {
 		return new Filter(property, values, Operator.OP_IN);
 	}
+	
+	/**
+	 * Create a new Filter using the IN operator.
+	 */
+	public static Filter term_in(String property, List<String> values) {
+		return new Filter(property, values, Operator.OP_TERM_IN);
+	}	
 
 	/**
 	 * Create a new Filter using the NOT IN operator.
@@ -535,6 +542,7 @@ public class Filter {
 		OP_RANGE(201, "RANGE"),
 		OP_JOIN(301, "JOIN"),
 		OP_SHAPE(301, "SHAPE"),
+		OP_TERM_IN(302, "TERM IN"),
 	    ;
 		
 		private int	id = 0;

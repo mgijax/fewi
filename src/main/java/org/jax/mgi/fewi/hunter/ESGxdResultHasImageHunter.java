@@ -46,12 +46,8 @@ public class ESGxdResultHasImageHunter<T extends ESEntity> extends ESGxdSummaryB
     }
     
 	@Override
-	protected SearchParams preProcessSearchParams(SearchParams searchParams, ESSearchOption searchOption) {
-		super.preProcessSearchParams(searchParams, searchOption);
-		
-		preProcessSearchParams(searchParams, searchOption, esGxdProfileMarkerHunter);
-		
-		return searchParams;
+	protected boolean preProcessSearchParams(SearchParams searchParams, ESSearchOption searchOption) {
+		return doJoinProfileMarker(searchParams, searchOption, esGxdProfileMarkerHunter);
 	}    
 
     @Value("${es.gxdresulthasimage.index}")

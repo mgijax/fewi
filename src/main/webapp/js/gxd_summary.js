@@ -757,7 +757,7 @@ function addNotDetectedFilter() {
 // check the 'Detected' filter values to see if any are 'No'.  If so, show the given 'message' below
 // the grid
 function showGridMessage(message, request) {
-	$.get('/gxd/facet/detected?' + request,
+	$.get(fewiurl + '/gxd/facet/detected?' + request,
 		function(response) {
 			var showIt = false;
 			if ('resultFacets' in response) {

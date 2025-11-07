@@ -49,6 +49,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRnaSeqHeatMapResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdStageMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrString;
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
+import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.DagEdgeFields;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.shr.fe.indexconstants.ImagePaneFields;
@@ -179,7 +180,6 @@ public class GxdFinder {
 		esGxdResultHunter.huntGroupFirstDoc(params, results, GxdResultFields.ASSAY_KEY, ESGxdAssay.RETURN_FIELDS);
 
 		results.setTotalCount(esGxdResultHunter.huntExactUniqueCount(params, GxdResultFields.ASSAY_KEY));
-
 		SearchResults<ESGxdAssay> srGA = new SearchResults<ESGxdAssay>();
 		srGA.cloneFrom(results, ESGxdAssay.class);
 		for (ESGxdAssay result : srGA.getResultObjects()) {
@@ -190,13 +190,7 @@ public class GxdFinder {
 		return srGA;
 	}
 
-	public SearchResults<ESGxdMarker> searchMarkers(SearchParams params) {
-//		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
-//		gxdResultHunter.hunt(params, results, SearchConstants.MRK_KEY);
-//
-//		SearchResults<ESGxdMarker> srGM = new SearchResults<ESGxdMarker>();
-//		srGM.cloneFrom(results, ESGxdMarker.class);		
-		
+	public SearchResults<ESGxdMarker> searchMarkers(SearchParams params) {	
 		SearchResults<ESGxdMarker> results = new SearchResults<ESGxdMarker>();
 		esGxdResultHunter.huntGroupFirstDoc(params, results, GxdResultFields.MARKER_KEY, ESGxdMarker.RETURN_FIELDS);
 
@@ -207,12 +201,6 @@ public class GxdFinder {
 	}
 
 	public SearchResults<SolrString> searchStructureIds(SearchParams params) {
-//		SearchResults<SolrGxdEntity> result = new SearchResults<SolrGxdEntity>();
-//		gxdResultHunter.hunt(params, result, SearchConstants.STRUCTURE_EXACT);
-//
-//		SearchResults<SolrString> srGM = new SearchResults<SolrString>();
-//		srGM.cloneFrom(result, SolrString.class);	
-		
 		SearchResults<ESEntity> results = new SearchResults<ESEntity>();
 		esGxdResultHunter.huntGroupFirstDoc(params, results, GxdResultFields.STRUCTURE_EXACT,
 				List.of(GxdResultFields.STRUCTURE_EXACT));
@@ -247,7 +235,7 @@ public class GxdFinder {
 		for (Object obj : resultObjects) {
 			ESAggLongCount row = (ESAggLongCount) obj;
 			imagePaneKeys.add(row.getKey() + "");
-			if ( imagePaneKeys.size() > 50000 ) {  //Hongping es will hang if too big
+			if ( imagePaneKeys.size() > SearchConstants.SEARCH_MAX_POST_SIZE ) {  //Hongping es will hang if too big
 				break;
 			}
 		}
@@ -488,16 +476,15 @@ public class GxdFinder {
 
 	public SearchResults<SolrString> getSystemFacet(SearchParams params) {
 		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
-		gxdSystemFacetHunter.hunt(params, results);
+		esGxdResultHunter.huntFacets(params, results, IndexConstants.GXD_SYSTEM_FACET);
 		SearchResults<SolrString> srSS = new SearchResults<SolrString>();
 		srSS.cloneFrom(results, SolrString.class);
 		return srSS;
 	}
 
 	public SearchResults<SolrString> getAssayTypeFacet(SearchParams params) {
-		ESSearchOption searchOption = new ESSearchOption();
-		SearchResults<ESAssayResult> results = new SearchResults<ESAssayResult>();
-		esGxdResultHunter.hunt(params, results, searchOption);
+		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
+		esGxdResultHunter.huntFacets(params, results, IndexConstants.GXD_ASSAY_TYPE_FACET);
 		SearchResults<SolrString> srSS = new SearchResults<SolrString>();
 		srSS.cloneFrom(results, SolrString.class);
 		return srSS;
@@ -505,7 +492,7 @@ public class GxdFinder {
 
 	public SearchResults<SolrString> getTmpLevelFacet(SearchParams params) {
 		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
-		gxdTmpLevelFacetHunter.hunt(params, results);
+		esGxdResultHunter.huntFacets(params, results, IndexConstants.GXD_TMPLEVEL_FACET);
 		SearchResults<SolrString> srSS = new SearchResults<SolrString>();
 		srSS.cloneFrom(results, SolrString.class);
 		return srSS;
@@ -513,7 +500,7 @@ public class GxdFinder {
 
 	public SearchResults<SolrString> getMarkerTypeFacet(SearchParams params) {
 		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
-		gxdMarkerTypeFacetHunter.hunt(params, results);
+		esGxdResultHunter.huntFacets(params, results, IndexConstants.GXD_MARKER_TYPE_FACET);
 		SearchResults<SolrString> srSS = new SearchResults<SolrString>();
 		srSS.cloneFrom(results, SolrString.class);
 		return srSS;
@@ -521,7 +508,7 @@ public class GxdFinder {
 
 	public SearchResults<SolrString> getDetectedFacet(SearchParams params) {
 		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
-		gxdDetectedFacetHunter.hunt(params, results);
+		esGxdResultHunter.huntFacets(params, results, IndexConstants.GXD_DETECTED_FACET);
 		SearchResults<SolrString> srSS = new SearchResults<SolrString>();
 		srSS.cloneFrom(results, SolrString.class);
 		return srSS;
@@ -529,7 +516,7 @@ public class GxdFinder {
 
 	public SearchResults<SolrString> getWildtypeFacet(SearchParams params) {
 		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
-		gxdWildtypeFacetHunter.hunt(params, results);
+		esGxdResultHunter.huntFacets(params, results, IndexConstants.GXD_WILDTYPE_FACET);
 		SearchResults<SolrString> srSS = new SearchResults<SolrString>();
 		srSS.cloneFrom(results, SolrString.class);
 		return srSS;
@@ -537,50 +524,46 @@ public class GxdFinder {
 
 	public SearchResults<SolrString> getTheilerStageFacet(SearchParams params) {
 		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
-		gxdTheilerStageFacetHunter.hunt(params, results);
+		esGxdResultHunter.huntFacets(params, results, IndexConstants.GXD_THEILER_STAGE_FACET);		
 		SearchResults<SolrString> srSS = new SearchResults<SolrString>();
 		srSS.cloneFrom(results, SolrString.class);
 		return srSS;
 	}
 
 	public SearchResults<SolrString> getMpFacet(SearchParams params) {
-		logger.debug("Starting: getMpFacet");
 		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
-		gxdMpFacetHunter.hunt(params, results);
+		esGxdResultHunter.huntFacets(params, results, IndexConstants.GXD_MP_FACET);		
 		SearchResults<SolrString> srSS = new SearchResults<SolrString>();
 		srSS.cloneFrom(results, SolrString.class);
 		return srSS;
 	}
 
 	public SearchResults<SolrString> getDoFacet(SearchParams params) {
-		logger.debug("Starting: getDoFacet");
 		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
-		gxdDoFacetHunter.hunt(params, results);
+		esGxdResultHunter.huntFacets(params, results, IndexConstants.GXD_DO_FACET);		
 		SearchResults<SolrString> srSS = new SearchResults<SolrString>();
 		srSS.cloneFrom(results, SolrString.class);
 		return srSS;
 	}
 
 	public SearchResults<SolrString> getCoFacet(SearchParams params) {
-		logger.debug("Starting: getCoFacet");
 		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
-		gxdCoFacetHunter.hunt(params, results);
+		esGxdResultHunter.huntFacets(params, results, IndexConstants.GXD_CO_FACET);		
 		SearchResults<SolrString> srSS = new SearchResults<SolrString>();
 		srSS.cloneFrom(results, SolrString.class);
 		return srSS;
 	}
 
 	public SearchResults<SolrString> getGoFacet(SearchParams params, String dag) {
-		logger.debug("Starting: getGoFacet");
 		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
+		esGxdResultHunter.huntFacets(params, results, IndexConstants.GXD_DO_FACET);				
 		if ("BP".equals(dag)) {
-			gxdGoFacetHunter.setFacetField(GxdResultFields.GO_HEADERS_BP);
+			esGxdResultHunter.huntFacets(params, results, GxdResultFields.GO_HEADERS_BP);
 		} else if ("CC".equals(dag)) {
-			gxdGoFacetHunter.setFacetField(GxdResultFields.GO_HEADERS_CC);
+			esGxdResultHunter.huntFacets(params, results, GxdResultFields.GO_HEADERS_CC);
 		} else {
-			gxdGoFacetHunter.setFacetField(GxdResultFields.GO_HEADERS_MF);
+			esGxdResultHunter.huntFacets(params, results, GxdResultFields.GO_HEADERS_MF);
 		}
-		gxdGoFacetHunter.hunt(params, results);
 		SearchResults<SolrString> srSS = new SearchResults<SolrString>();
 		srSS.cloneFrom(results, SolrString.class);
 		return srSS;

@@ -383,5 +383,7 @@ public class SearchConstants {
 	public static final int SEARCH_MAX_RESULT_WINDOW = 500_000;
 	public static final int SEARCH_MAX_GROUP_BASE_MAX_SIZE = 500_000;
 	public static final int SEARCH_PRECISION_THRESHOLD = 400_000;  
+	public static final int SEARCH_MAX_POST_SIZE = 50_000; 
+	public static final int SEARCH_MAX_PAGE_SIZE_FOR_MARKER_PROFILE = 60_000; 
 
 }
