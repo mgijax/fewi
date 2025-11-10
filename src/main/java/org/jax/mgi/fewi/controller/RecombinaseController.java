@@ -108,6 +108,23 @@ public class RecombinaseController {
     // JSON Results for Summary
     //-------------------------------//
 
+    @RequestMapping("/alleleCountByCellType/{cellTypeKey}")
+    public @ResponseBody String alleleCountByCellType (
+		HttpServletResponse response,
+		@PathVariable("cellTypeKey") String cellTypeKey )
+    {
+    	return ""+getAlleleCountByCellType(cellTypeKey);
+    }
+
+    public int getAlleleCountByCellType (String cellTypeKey) {
+	RecombinaseQueryForm query = new RecombinaseQueryForm();
+	query.setCellTypeKey(cellTypeKey);
+        SearchParams params = new SearchParams();
+        params.setFilter(parseRecombinaseQueryForm(query));
+        SearchResults<Allele> searchResults = recombinaseFinder.searchRecombinases(params);
+	return searchResults.getTotalCount();
+    }
+
     @RequestMapping("/json")
     public @ResponseBody JsonSummaryResponse<RecombinaseSummary> recombinaseSummaryJson(
             HttpServletRequest request,
@@ -168,7 +185,7 @@ public class RecombinaseController {
         jsonResponse.setSummaryRows (summaries);
         jsonResponse.setTotalCount (searchResults.getTotalCount());
 
-        logger.info("done generating summary response");
+        logger.info("done generating summary response.");
         return jsonResponse;
     }
 
@@ -561,6 +578,13 @@ public class RecombinaseController {
 			}
 			filterList.add(new Filter(SearchConstants.ALL_DRIVER,
 					drivers, Filter.Operator.OP_IN));
+        }
+
+        // build cellType query filter
+        String cellTypeKey = query.getCellTypeKey();
+        if ((cellTypeKey != null) && (!"".equals(cellTypeKey))) {
+            filterList.add(new Filter (SearchConstants.CRE_ALL_CELL_TYPES, cellTypeKey,
+                Filter.Operator.OP_EQUAL));
         }
 
         // build system query filter

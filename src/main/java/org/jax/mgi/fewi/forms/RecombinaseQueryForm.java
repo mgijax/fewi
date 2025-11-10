@@ -14,6 +14,7 @@ public class RecombinaseQueryForm {
         private String structures;
 	private String nowhereElse;
 	private String structureOperator; /* obsolete? */
+	private String cellTypeKey;
 
 	private String detected; /* obsolete? */
 	private String notDetected; /* obsolete? */
@@ -86,6 +87,14 @@ public class RecombinaseQueryForm {
 		return structure;
 	}
 
+	// Cell type key
+	public void setCellTypeKey(String cellTypeKey) {
+		this.cellTypeKey = cellTypeKey;
+	}
+	public String getCellTypeKey() {
+		return cellTypeKey;
+	}
+
 	// Structures
 	public void setStructures(String structures) {
 		this.structures = structures;
@@ -145,7 +154,9 @@ public class RecombinaseQueryForm {
 				+ ", notDetected=" + notDetected
 				+ ", systemDetected=" + systemDetected
 				+ ", systemNotDetected=" + systemNotDetected
-				+ ", systemKey=" + systemKey + "]";
+				+ ", systemKey=" + systemKey
+				+ ", cellTypeKey=" + cellTypeKey
+				+ "]";
 	}
 
 }
