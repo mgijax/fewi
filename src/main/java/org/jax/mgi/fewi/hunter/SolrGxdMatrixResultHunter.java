@@ -16,10 +16,10 @@ import org.jax.mgi.fewi.searchUtil.MetaData;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.entities.SolrDagEdge;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdGeneMatrixResult;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMatrixResult;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdStageMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESDagEdge;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdGeneMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdStageMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
 import org.jax.mgi.shr.fe.indexconstants.DagEdgeFields;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
@@ -86,7 +86,7 @@ public class SolrGxdMatrixResultHunter extends SolrGxdSummaryBaseHunter {
 			 String geneSymbol = (String)
 					 doc.getFieldValue(GxdResultFields.MARKER_SYMBOL);
 			
-			 SolrGxdMatrixResult resultObject = new SolrGxdMatrixResult();
+			 ESGxdMatrixResult resultObject = new ESGxdMatrixResult();
 			
 			 resultObject.setDetectionLevel(detectionLevel);
 			 //resultObject.setPrintname(printname);
@@ -141,7 +141,7 @@ public class SolrGxdMatrixResultHunter extends SolrGxdSummaryBaseHunter {
 				Integer theilerStage = (Integer) sd
 						.getFieldValue(GxdResultFields.THEILER_STAGE);
 
-				SolrGxdStageMatrixResult resultObject = new SolrGxdStageMatrixResult();
+				ESGxdStageMatrixResult resultObject = new ESGxdStageMatrixResult();
 
 				resultObject.setDetectionLevel(detectionLevel);
 				resultObject.setStructureId(structureId);
@@ -163,7 +163,7 @@ public class SolrGxdMatrixResultHunter extends SolrGxdSummaryBaseHunter {
 				String geneSymbol = (String) sd
 						.getFieldValue(GxdResultFields.MARKER_SYMBOL);
 
-				SolrGxdGeneMatrixResult resultObject = new SolrGxdGeneMatrixResult();
+				ESGxdGeneMatrixResult resultObject = new ESGxdGeneMatrixResult();
 
 				resultObject.setDetectionLevel(detectionLevel);
 				resultObject.setStructureId(structureId);
@@ -216,7 +216,7 @@ public class SolrGxdMatrixResultHunter extends SolrGxdSummaryBaseHunter {
 
 		for (SolrDocument doc : sdl) {
 
-			SolrDagEdge edge = new SolrDagEdge();
+			ESDagEdge edge = new ESDagEdge();
 			edge.setChildId((String) doc.getFieldValue(DagEdgeFields.CHILD_ID));
 			edge.setChildTerm((String) doc
 					.getFieldValue(DagEdgeFields.CHILD_TERM));

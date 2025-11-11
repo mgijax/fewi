@@ -5,7 +5,7 @@ import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRnaSeqConsolidatedSample;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdRnaSeqConsolidatedSample;
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
@@ -48,7 +48,7 @@ public class SolrGxdRnaSeqConsolidatedSampleHunter extends SolrGxdSummaryBaseHun
 		
 		 for (SolrDocument doc : sdl)
 		 {
-			 SolrGxdRnaSeqConsolidatedSample resultObject = new SolrGxdRnaSeqConsolidatedSample();
+			 ESGxdRnaSeqConsolidatedSample resultObject = new ESGxdRnaSeqConsolidatedSample();
 			
 			 // consolidated sample (bioreplicate set) fields
 			 

@@ -39,6 +39,8 @@ public class ESAssayResult extends ESEntity implements SolrGxdEntity {
 	private String sex;
 	private String notes;
 	private List<String> imagePaneKey;
+	private String emapsId;
+	private String structureExact;
 
 	public static final List<String> RETURN_FIELDS = List.of(GxdResultFields.JNUM, GxdResultFields.PUBMED_ID,
 			GxdResultFields.MARKER_SYMBOL, GxdResultFields.MARKER_MGIID, GxdResultFields.MARKER_NAME,
@@ -47,7 +49,7 @@ public class ESAssayResult extends ESEntity implements SolrGxdEntity {
 			GxdResultFields.AGE, GxdResultFields.ASSAY_MGIID, GxdResultFields.ASSAY_KEY, GxdResultFields.ASSAY_TYPE,
 			GxdResultFields.DETECTION_LEVEL, GxdResultFields.SHORT_CITATION, GxdResultFields.TPM_LEVEL,
 			GxdResultFields.AVG_QN_TPM_LEVEL, GxdResultFields.BIOLOGICAL_REPLICATES, GxdResultFields.STRAIN,
-			GxdResultFields.SEX, GxdResultFields.NOTES);
+			GxdResultFields.SEX, GxdResultFields.NOTES, GxdResultFields.EMAPS_ID, GxdResultFields.STRUCTURE_EXACT);
 
 	// *** static variables ***//
 	private static NumberFormat fmt = null;
@@ -271,5 +273,21 @@ public class ESAssayResult extends ESEntity implements SolrGxdEntity {
 
 	public void setImagePaneKey(List<String> imagePaneKey) {
 		this.imagePaneKey = imagePaneKey;
+	}
+
+	public String getEmapsId() {
+		return emapsId;
+	}
+
+	public void setEmapsId(String emapsId) {
+		this.emapsId = emapsId;
+	}
+
+	public String getStructureExact() {
+		return structureExact;
+	}
+
+	public void setStructureExact(String structureExact) {
+		this.structureExact = structureExact;
 	}
 }

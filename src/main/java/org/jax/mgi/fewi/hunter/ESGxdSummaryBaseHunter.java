@@ -17,6 +17,7 @@ import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.ESAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdAssay;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdMarker;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdGeneMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrString;
 import org.jax.mgi.fewi.sortMapper.ESSortMapper;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
@@ -203,6 +204,103 @@ public class ESGxdSummaryBaseHunter<T extends ESEntity> extends ESHunter<T> {
 		allfilters.add(Filter.term_in(GxdResultFields.MARKER_MGIID, mgiIds));
 		searchParams.setFilter(Filter.and(allfilters));
 		return false;
+	}	
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	protected <T extends ESEntity> void parseFirstDoc(SearchResponse resp, SearchResults<T> searchResults,
+			SearchParams searchParams) {
+
+		Map<String, Aggregate> aggs = resp.aggregations();
+
+		for (Map.Entry<String, Aggregate> entry : aggs.entrySet()) {
+			String aggName = entry.getKey();
+			Aggregate groupAgg = entry.getValue();
+
+			if (groupAgg == null || !groupAgg.isSterms()) {
+				continue;
+			}
+
+			List<StringTermsBucket> buckets = groupAgg.sterms().buckets().array();
+
+			for (StringTermsBucket bucket : buckets) {
+				Aggregate topAgg = bucket.aggregations().get("first_doc");
+				if (topAgg == null || !topAgg.isTopHits())
+					continue;
+
+				HitsMetadata<JsonData> hitsMeta = topAgg.topHits().hits();
+				if (hitsMeta == null || hitsMeta.hits().isEmpty())
+					continue;
+
+				Map<String, Object> src = hitsMeta.hits().get(0).source().to(Map.class);
+
+				switch (aggName) {
+				case GxdResultFields.MARKER_KEY -> {
+					searchResults.addResultObjects((T) mapToMarker(src));
+				}
+				case GxdResultFields.ASSAY_KEY -> {
+					searchResults.addResultObjects((T) mapToAssay(src));
+				}
+				case GxdResultFields.STRUCTURE_EXACT -> {
+					String structureId = (String) src.get(GxdResultFields.STRUCTURE_EXACT);
+					searchResults.addResultObjects((T) new SolrString(structureId));
+				}
+				case GxdResultFields.THEILER_STAGE -> {
+					Object stageObj = src.get(GxdResultFields.THEILER_STAGE);
+					if (stageObj != null) {
+						searchResults.addResultObjects((T) new SolrString(stageObj.toString()));
+					}
+				}
+				case GxdResultFields.STAGE_MATRIX_GROUP -> {
+					searchResults.addResultObjects((T) mapToGeneMatrix(src));
+				}				
+				case GxdResultFields.GENE_MATRIX_GROUP -> {
+					searchResults.addResultObjects((T) mapToGeneMatrix(src));
+				}				
+				}
+			}
+		}
+	}
+	
+	private ESGxdGeneMatrixResult mapToGeneMatrix(Map<String, Object> src) {
+		ESGxdGeneMatrixResult mResult = new ESGxdGeneMatrixResult();
+		mResult.setDetectionLevel((String) src.get(GxdResultFields.DETECTION_LEVEL));
+		mResult.setStructureId((String) src.get(GxdResultFields.STRUCTURE_EXACT));
+		mResult.setTheilerStage(toInt(src.get(GxdResultFields.THEILER_STAGE)));		
+		mResult.setGeneSymbol((String) src.get(GxdResultFields.MARKER_SYMBOL));
+		mResult.setPrintname((String) src.get(GxdResultFields.STRUCTURE_PRINTNAME));
+		return mResult;
+	}	
+
+	// Helper: map source to marker
+	private ESGxdMarker mapToMarker(Map<String, Object> src) {
+		ESGxdMarker marker = new ESGxdMarker();
+		marker.setMgiid((String) src.get(GxdResultFields.MARKER_MGIID));
+		marker.setSymbol((String) src.get(GxdResultFields.MARKER_SYMBOL));
+		marker.setName((String) src.get(GxdResultFields.MARKER_NAME));
+		marker.setType((String) src.get(GxdResultFields.MARKER_TYPE));
+		marker.setChr((String) src.get(GxdResultFields.CHROMOSOME));
+		marker.setCm(getString(src.get(GxdResultFields.CENTIMORGAN)));
+		marker.setCytoband((String) src.get(GxdResultFields.CYTOBAND));
+		marker.setStartCoord(getString(src.get(GxdResultFields.START_COORD)));
+		marker.setEndCoord(getString(src.get(GxdResultFields.END_COORD)));
+		marker.setStrand((String) src.get(GxdResultFields.STRAND));
+		marker.setMarkerKey(toInt(src.get(GxdResultFields.MARKER_KEY)));
+		marker.setByMrkSymbol(toInt(src.get(GxdResultFields.M_BY_MRK_SYMBOL)));
+		return marker;
+	}
+
+	// Helper: map source to assay
+	private ESGxdAssay mapToAssay(Map<String, Object> src) {
+		ESGxdAssay assay = new ESGxdAssay();
+		assay.setMarkerSymbol((String) src.get(GxdResultFields.MARKER_SYMBOL));
+		assay.setAssayKey((String) src.get(GxdResultFields.ASSAY_KEY));
+		assay.setAssayMgiid((String) src.get(GxdResultFields.ASSAY_MGIID));
+		assay.setAssayType((String) src.get(GxdResultFields.ASSAY_TYPE));
+		assay.setJNum((String) src.get(GxdResultFields.JNUM));
+		assay.setMiniCitation((String) src.get(GxdResultFields.SHORT_CITATION));
+		assay.setHasImage(Boolean.TRUE.equals(src.get(GxdResultFields.ASSAY_HAS_IMAGE)));
+		return assay;
 	}	
 	
 	private void checkFilter(Filter filter) {

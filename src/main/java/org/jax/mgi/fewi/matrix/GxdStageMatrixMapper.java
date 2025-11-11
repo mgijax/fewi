@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jax.mgi.fewi.searchUtil.entities.SolrDagEdge;
+import org.jax.mgi.fewi.searchUtil.entities.ESDagEdge;
 
 /**
  * Adding logic specific to the Gxd Tissue by Stage Matrix
@@ -19,7 +19,7 @@ public class GxdStageMatrixMapper extends GxdMatrixMapper {
 		super();
 	}
 
-	public GxdStageMatrixMapper(List<SolrDagEdge> edges) {
+	public GxdStageMatrixMapper(List<ESDagEdge> edges) {
 		super(edges);
 	}
 

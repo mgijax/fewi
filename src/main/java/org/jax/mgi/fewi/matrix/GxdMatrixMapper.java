@@ -3,8 +3,8 @@ package org.jax.mgi.fewi.matrix;
 import java.util.List;
 import java.util.Map;
 
-import org.jax.mgi.fewi.searchUtil.entities.SolrDagEdge;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESDagEdge;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdMatrixResult;
 
 /**
  * Adding logic specific to the Gxd Matrix views (both tissue by stage and
@@ -19,7 +19,7 @@ public class GxdMatrixMapper extends DagMatrixMapper {
 		super();
 	}
 
-	public GxdMatrixMapper(List<SolrDagEdge> edges) {
+	public GxdMatrixMapper(List<ESDagEdge> edges) {
 		super(edges);
 	}
 
@@ -40,7 +40,7 @@ public class GxdMatrixMapper extends DagMatrixMapper {
 	protected void insertNewCell(Map<String, GridDataCell> columnMap,
 			String rowId, String columnId, MatrixResult result,
 			boolean isParent, boolean isChild) {
-		SolrGxdMatrixResult gxdResult = (SolrGxdMatrixResult) result;
+		ESGxdMatrixResult gxdResult = (ESGxdMatrixResult) result;
 		if (!columnMap.containsKey(columnId)) {
 			columnMap.put(columnId, new GxdMatrixCell(rowId, columnId,
 					gxdResult.getDetectionLevel(), gxdResult.getCount(),
@@ -61,11 +61,11 @@ public class GxdMatrixMapper extends DagMatrixMapper {
 				&& edgeMap.get(parentTerm.getRowId()).contains(
 						result.getRowId())
 				&& isResultInStageRange((GxdMatrixRow) parentTerm,
-						(SolrGxdMatrixResult) result);
+						(ESGxdMatrixResult) result);
 	}
 
 	private boolean isResultInStageRange(GxdMatrixRow parentTerm,
-			SolrGxdMatrixResult result) {
+			ESGxdMatrixResult result) {
 		return result.getTheilerStage() >= parentTerm.getStartStage()
 				&& result.getTheilerStage() <= parentTerm.getEndStage();
 	}

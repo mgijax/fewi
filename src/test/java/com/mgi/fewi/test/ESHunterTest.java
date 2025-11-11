@@ -4,12 +4,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-import org.apache.logging.log4j.core.jackson.ListOfMapEntryDeserializer;
+import org.jax.mgi.fewi.hunter.ESGxdConsolidatedSampleHunter;
 import org.jax.mgi.fewi.hunter.ESGxdImagePaneHunter;
-import org.jax.mgi.fewi.hunter.ESGxdResultHasImageHunter;
 import org.jax.mgi.fewi.hunter.ESGxdProfileMarkerHunter;
+import org.jax.mgi.fewi.hunter.ESGxdResultHasImageHunter;
 import org.jax.mgi.fewi.hunter.ESGxdResultHunter;
 import org.jax.mgi.fewi.searchUtil.ESLookup;
 import org.jax.mgi.fewi.searchUtil.ESLookupIndex;
@@ -23,6 +22,10 @@ import org.jax.mgi.fewi.searchUtil.entities.ESAggLongCount;
 import org.jax.mgi.fewi.searchUtil.entities.ESAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdMarker;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdRnaSeqHeatMapResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdRnaSeqConsolidatedSample;
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRnaSeqHeatMapResult;
+import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.shr.fe.indexconstants.ImagePaneFields;
@@ -164,6 +167,7 @@ public class ESHunterTest {
 	private ESGxdResultHasImageHunter esGxdResultHasImageHunter;
 	private ESGxdImagePaneHunter esGxdImagePaneHunter;
 	private ESGxdProfileMarkerHunter esGxdProfileMarkerHunter;
+	private ESGxdConsolidatedSampleHunter esGxdConsolidatedSampleHunter;
 
 	@Before
 	public void setUp() {
@@ -175,10 +179,71 @@ public class ESHunterTest {
 		this.esGxdResultHasImageHunter = new ESGxdResultHasImageHunter(ESEntity.class, ES_HOST, ES_PORT,
 				"gxd_result_has_image");
 		this.esGxdResultHasImageHunter.esGxdProfileMarkerHunter = this.esGxdProfileMarkerHunter;
-		
+
 		this.esGxdImagePaneHunter = new ESGxdImagePaneHunter(ESGxdImage.class, ES_HOST, ES_PORT, "gxd_image_pane");
+		this.esGxdConsolidatedSampleHunter = new ESGxdConsolidatedSampleHunter(ESGxdRnaSeqConsolidatedSample.class,
+				ES_HOST, ES_PORT, "gxd_consolidated_sample");
 	}
-	
+
+	@Test
+	public void testConsolidateSamples() {
+		log.info("Test: testConsolidateSamples");
+		SearchParams searchParams = new SearchParams();
+
+		SearchResults<ESGxdRnaSeqConsolidatedSample> results = new SearchResults<ESGxdRnaSeqConsolidatedSample>();
+		esGxdConsolidatedSampleHunter.huntDocs(searchParams, results, ESGxdRnaSeqConsolidatedSample.RETURN_FIELDS);
+
+		show(results.getResultObjects(), 25);
+		log.info("\n");
+	}
+
+	@Test
+	public void testRNSSeqHeaMapResult() {
+		log.info("Test: testRNSSeqHeaMapResult");
+		SearchParams searchParams = new SearchParams();
+
+		ESSearchOption searchOption = new ESSearchOption();
+		searchOption.setClazz(ESGxdRnaSeqHeatMapResult.class);
+		searchOption.setReturnFields(ESGxdRnaSeqHeatMapResult.RETURN_FIELDS);
+
+		SearchResults<ESGxdRnaSeqHeatMapResult> results = new SearchResults<ESGxdRnaSeqHeatMapResult>();
+		esGxdResultHunter.hunt(searchParams, results, searchOption);
+
+		String wildType = "wild-type";
+		List<SolrGxdRnaSeqHeatMapResult> solrResults = new ArrayList<SolrGxdRnaSeqHeatMapResult>();
+		if (results.getResultObjects() != null) {
+			for (ESGxdRnaSeqHeatMapResult esResult : results.getResultObjects()) {
+				SolrGxdRnaSeqHeatMapResult solrResult = new SolrGxdRnaSeqHeatMapResult();
+				solrResult.setStructureID(esResult.getStructureExact());
+				solrResult.setTheilerStage(esResult.getTheilerStage());
+				solrResult.setStrain(esResult.getStrain());
+				
+				String genotype = esResult.getGenotype();
+				 if (genotype == null) {
+					 genotype = wildType;
+				 } else {
+					 genotype = FormatHelper.stripAlleleTags(genotype).replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+				 }				
+				solrResult.setAlleles(genotype);
+				
+				solrResult.setAssayMgiID(esResult.getAssayMgiid());
+				solrResult.setAge(esResult.getAge());
+				solrResult.setStructure(esResult.getPrintname());
+				solrResult.setConsolidatedSampleKey(esResult.getConsolidatedSampleKey());
+				solrResult.setSex(esResult.getSex());
+				solrResult.setMarkerSymbol(esResult.getMarkerSymbol());
+				solrResult.setMarkerMgiID(esResult.getMarkerMgiid());
+				solrResult.setMarkerSymbol(esResult.getMarkerSymbol());
+				solrResult.setMarkerEnsemblGeneModelID(esResult.getEnsemblGeneModelID());
+				solrResult.setAvergageQNTPM(esResult.getAvgQnTpmLevel());
+				solrResults.add(solrResult);				
+			}
+		}
+		
+		show(results.getResultObjects(), 25);
+		log.info("\n");
+	}
+
 	@Test
 	public void testImageCount() {
 		log.info("Test: testImageCount");
@@ -190,77 +255,76 @@ public class ESHunterTest {
 //		long total = this.esGxdResultHasImageHunter.huntExactUniqueCount(searchParams, ImagePaneFields.IMAGE_PANE_KEY);
 //		Assert.assertTrue(total > 0);
 //		log.info("images estimation total: " + totalEstimate + ", total: " + total);
-		
+
 		List<Filter> joinFilters = new ArrayList<Filter>();
 		joinFilters.add(Filter.equal("posCAncA", "18239046"));
 		joinFilters.add(Filter.notEqual("posCAncA", "18239679"));
 		Filter joinQuery = Filter.and(joinFilters);
-		
+
 		List<Filter> filters = new ArrayList<Filter>();
 
 		filters.add(Filter.join("gxdProfileMarker", "markerMgiid", "markerMgiid", joinQuery));
 		filters.add(Filter.notEqual(GxdResultFields.ASSAY_TYPE, "RNA-Seq"));
 		filters.add(Filter.equal(GxdResultFields.IS_WILD_TYPE, "wild type"));
-		
-		
-		List<Filter> structIdFilters = new ArrayList<Filter>();		
+
+		List<Filter> structIdFilters = new ArrayList<Filter>();
 		structIdFilters.add(Filter.equal(GxdResultFields.STRUCTURE_ID, "EMAPA:16105"));
 		structIdFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "Yes"));
-		
-		List<Filter> structExtactFilters = new ArrayList<Filter>();		
+
+		List<Filter> structExtactFilters = new ArrayList<Filter>();
 		structExtactFilters.add(Filter.equal(GxdResultFields.STRUCTURE_EXACT, "EMAPA:16846"));
 		structExtactFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "No"));
-		
+
 		List<Filter> structFilters = new ArrayList<Filter>();
 		structFilters.add(Filter.and(structIdFilters));
 		structFilters.add(Filter.and(structExtactFilters));
-		
+
 		filters.add(Filter.or(structFilters));
-		
+
 		searchParams.setFilter(Filter.and(filters));
 		long total = this.esGxdResultHasImageHunter.huntExactUniqueCount(searchParams, ImagePaneFields.IMAGE_PANE_KEY);
 		log.info("images exact total: " + total);
 		log.info("\n");
-	}		
-	
+	}
+
 	@Test
 	public void testSearchMarker() {
 		log.info("Test: testSearchMarker");
 		SearchParams searchParams = new SearchParams();
-		
+
 		List<Filter> joinFilters = new ArrayList<Filter>();
 		joinFilters.add(Filter.equal("posCAncA", "18239046"));
 		joinFilters.add(Filter.notEqual("posCAncA", "18239679"));
 		Filter joinQuery = Filter.and(joinFilters);
-		
+
 		List<Filter> filters = new ArrayList<Filter>();
 
 		filters.add(Filter.join("gxdProfileMarker", "markerMgiid", "markerMgiid", joinQuery));
 		filters.add(Filter.notEqual(GxdResultFields.ASSAY_TYPE, "RNA-Seq"));
 		filters.add(Filter.equal(GxdResultFields.IS_WILD_TYPE, "wild type"));
-		
-		
-		List<Filter> structIdFilters = new ArrayList<Filter>();		
+
+		List<Filter> structIdFilters = new ArrayList<Filter>();
 		structIdFilters.add(Filter.equal(GxdResultFields.STRUCTURE_ID, "EMAPA:16105"));
 		structIdFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "Yes"));
-		
-		List<Filter> structExtactFilters = new ArrayList<Filter>();		
+
+		List<Filter> structExtactFilters = new ArrayList<Filter>();
 		structExtactFilters.add(Filter.equal(GxdResultFields.STRUCTURE_EXACT, "EMAPA:16846"));
 		structExtactFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "No"));
-		
+
 		List<Filter> structFilters = new ArrayList<Filter>();
 		structFilters.add(Filter.and(structIdFilters));
 		structFilters.add(Filter.and(structExtactFilters));
-		
+
 		filters.add(Filter.or(structFilters));
-		
+
 		searchParams.setFilter(Filter.and(filters));
 
 		Sort sort = new Sort(GxdResultFields.M_BY_MRK_SYMBOL);
 		searchParams.addSort(sort);
-		
+
 		SearchResults<ESGxdMarker> results = new SearchResults<ESGxdMarker>();
-		esGxdResultHunter.huntGroupFirstDoc(searchParams, results, GxdResultFields.MARKER_KEY, ESGxdMarker.RETURN_FIELDS);
+		esGxdResultHunter.huntGroupFirstDoc(searchParams, results, GxdResultFields.MARKER_KEY,
+				ESGxdMarker.RETURN_FIELDS);
 
 		show(results.getResultObjects(), 25);
 		log.info("\n");
@@ -301,7 +365,7 @@ public class ESHunterTest {
 
 		show(resultObjects, 5);
 		log.info("\n");
-	}	
+	}
 
 	/*
 	 * Test search with a single parameter
@@ -312,7 +376,7 @@ public class ESHunterTest {
 		SearchParams searchParams = new SearchParams();
 		searchParams.setFilter(Filter.equal(GxdResultFields.NOMENCLATURE, "Apob"));
 		SearchResults<ESAssayResult> searchResults = new SearchResults<ESAssayResult>();
-		
+
 		this.esGxdResultHunter.huntDocs(searchParams, searchResults, ESAssayResult.RETURN_FIELDS);
 
 		List<ESAssayResult> resultObjects = searchResults.getResultObjects();
@@ -353,35 +417,35 @@ public class ESHunterTest {
 	public void testAggregationBy() {
 		log.info("Test: testAggregationBy");
 		SearchParams searchParams = new SearchParams();
-		//searchParams.setFilter(Filter.equal(GxdResultFields.ASSAY_TYPE, "Western blot"));
-		
+		// searchParams.setFilter(Filter.equal(GxdResultFields.ASSAY_TYPE, "Western
+		// blot"));
+
 		List<Filter> joinFilters = new ArrayList<Filter>();
 		joinFilters.add(Filter.equal("posCAncA", "18239046"));
 		joinFilters.add(Filter.notEqual("posCAncA", "18239679"));
 		Filter joinQuery = Filter.and(joinFilters);
-		
+
 		List<Filter> filters = new ArrayList<Filter>();
 
 		filters.add(Filter.join("gxdProfileMarker", "markerMgiid", "markerMgiid", joinQuery));
 		filters.add(Filter.notEqual(GxdResultFields.ASSAY_TYPE, "RNA-Seq"));
 		filters.add(Filter.equal(GxdResultFields.IS_WILD_TYPE, "wild type"));
-		
-		
-		List<Filter> structIdFilters = new ArrayList<Filter>();		
+
+		List<Filter> structIdFilters = new ArrayList<Filter>();
 		structIdFilters.add(Filter.equal(GxdResultFields.STRUCTURE_ID, "EMAPA:16105"));
 		structIdFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "Yes"));
-		
-		List<Filter> structExtactFilters = new ArrayList<Filter>();		
+
+		List<Filter> structExtactFilters = new ArrayList<Filter>();
 		structExtactFilters.add(Filter.equal(GxdResultFields.STRUCTURE_EXACT, "EMAPA:16846"));
 		structExtactFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "No"));
-		
+
 		List<Filter> structFilters = new ArrayList<Filter>();
 		structFilters.add(Filter.and(structIdFilters));
 		structFilters.add(Filter.and(structExtactFilters));
-		
+
 		filters.add(Filter.or(structFilters));
 		searchParams.setFilter(Filter.and(filters));
-		
+
 		searchParams.addSort(new Sort(GxdResultFields.M_BY_MRK_SYMBOL, false));
 		searchParams.setPageSize(100);
 //		searchParams.setStartIndex(2);
@@ -560,36 +624,10 @@ public class ESHunterTest {
 	@Test
 	public void testRetrieveImages() {
 		log.info("Test: testRetrieveImages");
-//		SearchParams searchParams = new SearchParams();
-//		searchParams.setPageSize(1000);
-//		SearchResults<ESEntity> searchResults = new SearchResults<ESEntity>();
-//		this.esGxdResultHasImageHunter.huntGroupInfo(searchParams, searchResults, ImagePaneFields.IMAGE_PANE_KEY);
-//
-//		List<ESEntity> resultObjects = searchResults.getResultObjects();
-//		Assert.assertNotNull(resultObjects);
-//		Assert.assertTrue(resultObjects.size() > 0);
-//
-//		List<String> imagePaneKeys = new ArrayList<String>(resultObjects.size());
-//		for (Object obj : resultObjects) {
-//			ESAggLongCount row = (ESAggLongCount) obj;
-//			imagePaneKeys.add(row.getKey() + "");
-//		}
-//
-//		SearchParams searchParams2 = new SearchParams();
-//		searchParams2.setFilter(Filter.in(ImagePaneFields.IMAGE_PANE_KEY, imagePaneKeys));
-//		SearchResults<ESGxdImage> searchResults2 = new SearchResults<ESGxdImage>();
-//		ESSearchOption searchOption2 = new ESSearchOption();
-//
-//		this.esGxdImagePaneHunter.hunt(searchParams2, searchResults2, searchOption2);
-//		List resultObjects2 = searchResults2.getResultObjects();
-//		Assert.assertNotNull(resultObjects2);
-//		Assert.assertTrue(resultObjects2.size() > 0);
-//		log.info("\n");
-		
 		SearchParams params = new SearchParams();
-		
+
 		SearchParams resultImageParams = new SearchParams();
-		resultImageParams.setFilter(params.getFilter());		
+		resultImageParams.setFilter(params.getFilter());
 		SearchResults<ESEntity> searchResults = new SearchResults<ESEntity>();
 		esGxdResultHasImageHunter.huntGroupInfo(resultImageParams, searchResults, ImagePaneFields.IMAGE_PANE_KEY);
 
@@ -602,7 +640,7 @@ public class ESHunterTest {
 		for (Object obj : resultObjects) {
 			ESAggLongCount row = (ESAggLongCount) obj;
 			imagePaneKeys.add(row.getKey() + "");
-			if ( imagePaneKeys.size() > 50000 ) {  //Hongping to do
+			if (imagePaneKeys.size() > 50000) { // Hongping to do
 				break;
 			}
 		}
@@ -610,11 +648,12 @@ public class ESHunterTest {
 		SearchResults<ESGxdImage> imageResult = new SearchResults<ESGxdImage>();
 		ESSearchOption searchOption2 = new ESSearchOption();
 		esGxdImagePaneHunter.hunt(imagePaneParams, imageResult, searchOption2);
-		
-		imageResult.setTotalCount(esGxdResultHasImageHunter.huntExactUniqueCount(params, ImagePaneFields.IMAGE_PANE_KEY));		
+
+		imageResult
+				.setTotalCount(esGxdResultHasImageHunter.huntExactUniqueCount(params, ImagePaneFields.IMAGE_PANE_KEY));
 		List resultObjects2 = imageResult.getResultObjects();
 		Assert.assertNotNull(resultObjects2);
-		Assert.assertTrue(resultObjects2.size() > 0);		
+		Assert.assertTrue(resultObjects2.size() > 0);
 		log.info("\n");
 	}
 

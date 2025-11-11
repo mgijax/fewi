@@ -1,9 +1,13 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
+import java.util.List;
+
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
+import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
+import org.jax.mgi.snpdatamodel.document.ESEntity;
 
 
-public class SolrGxdMatrixResult implements SolrGxdEntity {
+public class ESGxdMatrixResult extends ESEntity implements SolrGxdEntity {
 	protected String printname;
 	protected String structureId;
 	protected Integer theilerStage;
@@ -11,6 +15,10 @@ public class SolrGxdMatrixResult implements SolrGxdEntity {
 	protected String geneSymbol;
 
 	protected Integer count;
+	
+	public static final List<String> RETURN_FIELDS = List.of(GxdResultFields.STRUCTURE_PRINTNAME,
+			GxdResultFields.STRUCTURE_EXACT, GxdResultFields.THEILER_STAGE, GxdResultFields.DETECTION_LEVEL,
+			GxdResultFields.MARKER_SYMBOL);
 
 	public String getPrintname() {
 		return printname;

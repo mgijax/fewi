@@ -1,8 +1,12 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
-import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
+import java.util.List;
 
-public class SolrGxdRnaSeqConsolidatedSample implements SolrGxdEntity {
+import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
+import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
+import org.jax.mgi.snpdatamodel.document.ESEntity;
+
+public class ESGxdRnaSeqConsolidatedSample extends ESEntity implements SolrGxdEntity {
 	protected String structure;
 	protected String structureID;
 	protected Integer theilerStage;
@@ -13,6 +17,11 @@ public class SolrGxdRnaSeqConsolidatedSample implements SolrGxdEntity {
 	protected String consolidatedSampleKey;
 	protected String assayMgiID;
 	protected Integer bioreplicateCount;
+	
+	public static final List<String> RETURN_FIELDS = List.of(GxdResultFields.STRUCTURE_EXACT,
+			GxdResultFields.THEILER_STAGE, GxdResultFields.STRAIN, GxdResultFields.GENOTYPE,
+			GxdResultFields.ASSAY_MGIID, GxdResultFields.AGE, GxdResultFields.STRUCTURE_PRINTNAME,
+			GxdResultFields.CONSOLIDATED_SAMPLE_KEY, GxdResultFields.SEX, GxdResultFields.BIOREPLICATE_COUNT);	
 
 	public String getStructure() {
 		return structure;

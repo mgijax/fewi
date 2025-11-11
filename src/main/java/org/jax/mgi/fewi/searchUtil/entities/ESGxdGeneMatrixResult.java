@@ -2,7 +2,7 @@ package org.jax.mgi.fewi.searchUtil.entities;
 
 import org.jax.mgi.fewi.matrix.MatrixResult;
 
-public class SolrGxdGeneMatrixResult extends SolrGxdMatrixResult implements MatrixResult {
+public class ESGxdGeneMatrixResult extends ESGxdMatrixResult implements MatrixResult {
 	/*
 	 * define the basic MatrixResult interface methods
 	 */

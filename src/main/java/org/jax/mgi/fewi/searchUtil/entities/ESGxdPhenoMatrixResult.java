@@ -1,6 +1,6 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
-public class SolrGxdPhenoMatrixResult extends SolrGxdGeneMatrixResult {
+public class ESGxdPhenoMatrixResult extends ESGxdGeneMatrixResult {
 	// This type of grid has two types of cells:  GXD cells (gene x tissue) and PHENO cells (genocluster x tissue)
 	public static final String GXD = "GXD";
 	public static final String PHENO = "Pheno";
@@ -10,7 +10,7 @@ public class SolrGxdPhenoMatrixResult extends SolrGxdGeneMatrixResult {
 	protected String genoclusterKey;		// key of the genocluster (for PHENO cells)
 	protected String phenoAnnotationCount;	// annotation count for this cell (for PHENO cells)
 	
-	public SolrGxdPhenoMatrixResult (SolrGxdGeneMatrixResult r) {
+	public ESGxdPhenoMatrixResult (ESGxdGeneMatrixResult r) {
 		this.cellType = GXD;
 		this.printname = r.printname;
 		this.structureId = r.structureId;

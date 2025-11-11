@@ -1,6 +1,6 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
-public class SolrGxdRecombinaseMatrixResult extends SolrGxdGeneMatrixResult {
+public class ESGxdRecombinaseMatrixResult extends ESGxdGeneMatrixResult {
 	// This type of grid has two types of cells:  GXD cells (gene x tissue) and Recombinase cells (allele x tissue)
 	public static final String GXD = "GXD";
 	public static final String RECOMBINASE = "Recombinase";
@@ -8,7 +8,7 @@ public class SolrGxdRecombinaseMatrixResult extends SolrGxdGeneMatrixResult {
 	protected String cellType;				// type of matrix cell:  GXD or RECOMBINASE
 	protected String symbol;				// gene or allele symbol
 	
-	public SolrGxdRecombinaseMatrixResult (SolrGxdGeneMatrixResult r) {
+	public ESGxdRecombinaseMatrixResult (ESGxdGeneMatrixResult r) {
 		this.cellType = GXD;
 		this.printname = r.printname;
 		this.structureId = r.structureId;

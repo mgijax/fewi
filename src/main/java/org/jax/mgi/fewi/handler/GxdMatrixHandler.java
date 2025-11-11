@@ -12,7 +12,7 @@ import org.jax.mgi.fewi.forms.GxdQueryForm;
 import org.jax.mgi.fewi.matrix.DagMatrixRowOpener;
 import org.jax.mgi.fewi.matrix.GxdMatrixRow;
 import org.jax.mgi.fewi.matrix.OpenCloseState;
-import org.jax.mgi.fewi.searchUtil.entities.SolrDagEdge;
+import org.jax.mgi.fewi.searchUtil.entities.ESDagEdge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -256,7 +256,7 @@ public class GxdMatrixHandler {
 		return query.getStructureIDFilter()!= null && query.getStructureIDFilter().size() > 0;
 	}
 
-	public List<GxdMatrixRow> assignOpenCloseState(List<GxdMatrixRow> matrixRows, GxdQueryForm query, List<SolrDagEdge> edges)
+	public List<GxdMatrixRow> assignOpenCloseState(List<GxdMatrixRow> matrixRows, GxdQueryForm query, List<ESDagEdge> edges)
 	{
 		matrixRows = this.getFlatTermList(matrixRows,null);
 		
@@ -264,7 +264,7 @@ public class GxdMatrixHandler {
 		logger.debug("assignOpenCloseState-> querying for DAG edges");
 		//List<SolrDagEdge> edges = getDAGDirectRelationships(query,matrixRows).getResultObjects();
 		Set<String> rowsWithChildren = new HashSet<String>();
-		for(SolrDagEdge edge : edges)
+		for(ESDagEdge edge : edges)
 		{
 			//logger.debug("row with children="+edge);
 			rowsWithChildren.add(edge.getParentId());

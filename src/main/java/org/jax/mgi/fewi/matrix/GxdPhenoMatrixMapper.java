@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jax.mgi.fewi.searchUtil.entities.SolrDagEdge;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdPhenoMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESDagEdge;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdPhenoMatrixResult;
 
 /**
  * Adding logic specific to the Correlation Matrix view (tissue by gene [expression]
@@ -21,7 +21,7 @@ public class GxdPhenoMatrixMapper extends DagMatrixMapper {
 		super();
 	}
 
-	public GxdPhenoMatrixMapper(List<SolrDagEdge> edges) {
+	public GxdPhenoMatrixMapper(List<ESDagEdge> edges) {
 		super(edges);
 	}
 
@@ -36,7 +36,7 @@ public class GxdPhenoMatrixMapper extends DagMatrixMapper {
 */
 	public List<GxdPhenoMatrixCell> mapPhenoGridCells(
 			List<GxdMatrixRow> parentRows,
-			List<SolrGxdPhenoMatrixResult> results) {
+			List<ESGxdPhenoMatrixResult> results) {
 		Map<String, Map<String, GxdPhenoMatrixCell>> rowColumnMap = new HashMap<String, Map<String, GxdPhenoMatrixCell>>();
 
 		// init parent terms
@@ -44,7 +44,7 @@ public class GxdPhenoMatrixMapper extends DagMatrixMapper {
 			Map<String, GxdPhenoMatrixCell> columnMap = new HashMap<String, GxdPhenoMatrixCell>();
 			rowColumnMap.put(parentRow.getRowId(), columnMap);
 
-			for (SolrGxdPhenoMatrixResult result : (List<SolrGxdPhenoMatrixResult>) results) {
+			for (ESGxdPhenoMatrixResult result : (List<ESGxdPhenoMatrixResult>) results) {
 				// do we add this cell? Answer: only if it is a child of the
 				// parent or is the parent itself
 				boolean isParent = isResultAParent(parentRow, result);
@@ -77,14 +77,14 @@ public class GxdPhenoMatrixMapper extends DagMatrixMapper {
 			String rowId, String columnId, MatrixResult result,
 			boolean isParent, boolean isChild, String symbol) {
 
-		SolrGxdPhenoMatrixResult gxdResult = (SolrGxdPhenoMatrixResult) result;
+		ESGxdPhenoMatrixResult gxdResult = (ESGxdPhenoMatrixResult) result;
 		GxdPhenoMatrixCell cell;			// the cell we're inserting (or aggregating)
 		
 		// need to check cell type here and handle GXD and Pheno differently
 		
-		if (SolrGxdPhenoMatrixResult.GXD.equals(gxdResult.getCellType())) {
+		if (ESGxdPhenoMatrixResult.GXD.equals(gxdResult.getCellType())) {
 			if (!columnMap.containsKey(columnId)) {
-				cell = new GxdPhenoMatrixCell(SolrGxdPhenoMatrixResult.GXD, rowId, columnId, !isParent);
+				cell = new GxdPhenoMatrixCell(ESGxdPhenoMatrixResult.GXD, rowId, columnId, !isParent);
 				cell.initializeGxd(gxdResult.getDetectionLevel(), gxdResult.getCount());
 				cell.setSymbol(symbol);
 				columnMap.put(columnId, cell);
@@ -103,13 +103,13 @@ public class GxdPhenoMatrixMapper extends DagMatrixMapper {
 	@Override
 	protected boolean isResultAChild(MatrixRow parentTerm, MatrixResult result) {
 		return edgeMap.containsKey(parentTerm.getRowId())
-				&& edgeMap.get(parentTerm.getRowId()).contains( ((SolrGxdPhenoMatrixResult) result).getRowId())
+				&& edgeMap.get(parentTerm.getRowId()).contains( ((ESGxdPhenoMatrixResult) result).getRowId())
 				&& isResultInStageRange((GxdMatrixRow) parentTerm,
-						(SolrGxdPhenoMatrixResult) result);
+						(ESGxdPhenoMatrixResult) result);
 	}
 
 	private boolean isResultInStageRange(GxdMatrixRow parentTerm,
-			SolrGxdPhenoMatrixResult result) {
+			ESGxdPhenoMatrixResult result) {
 		return result.getTheilerStage() >= parentTerm.getStartStage()
 				&& result.getTheilerStage() <= parentTerm.getEndStage();
 	}

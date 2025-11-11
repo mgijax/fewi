@@ -54,7 +54,7 @@ public class ESGxdImagePaneHunter<T extends ESEntity> extends ESGxdSummaryBaseHu
 	}
 
 	@Override
-	public <T extends ESEntity> List<T> processLookupResponse(JsonNode root, Class<T> clazz) throws Exception {
+	protected <T extends ESEntity> List<T> processLookupResponse(JsonNode root, Class<T> clazz) throws Exception {
 		List<String> columns = new ArrayList<>();
 		root.get("columns").forEach(col -> columns.add(col.get("name").asText()));
 

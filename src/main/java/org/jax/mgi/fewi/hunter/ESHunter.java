@@ -22,13 +22,8 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.entities.ESAggLongCount;
 import org.jax.mgi.fewi.searchUtil.entities.ESAggStringCount;
-import org.jax.mgi.fewi.searchUtil.entities.ESAssayResult;
-import org.jax.mgi.fewi.searchUtil.entities.ESGxdAssay;
-import org.jax.mgi.fewi.searchUtil.entities.ESGxdMarker;
-import org.jax.mgi.fewi.searchUtil.entities.SolrString;
 import org.jax.mgi.fewi.sortMapper.ESSortMapper;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
-import org.jax.mgi.shr.fe.indexconstants.ImagePaneFields;
 import org.jax.mgi.snpdatamodel.document.BaseESDocument;
 import org.jax.mgi.snpdatamodel.document.ESEntity;
 import org.slf4j.Logger;
@@ -69,7 +64,6 @@ import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Highlight;
 import co.elastic.clients.elasticsearch.core.search.HighlightField;
 import co.elastic.clients.elasticsearch.core.search.Hit;
-import co.elastic.clients.elasticsearch.core.search.HitsMetadata;
 import co.elastic.clients.elasticsearch.core.search.TrackHits;
 import co.elastic.clients.elasticsearch.esql.EsqlFormat;
 import co.elastic.clients.elasticsearch.esql.QueryRequest;
@@ -241,26 +235,26 @@ public class ESHunter<T extends ESEntity> {
 		searchOption.setGetGroupInfo(true);
 		hunt(searchParams, searchResults, searchOption);
 	}
-	
+
 	// get grouped keys
 	public void huntFacets(SearchParams searchParams, SearchResults<T> searchResults, String groupField) {
 		huntGroupInfo(searchParams, searchResults, groupField);
-		
+
 		List<T> resultObjects = searchResults.getResultObjects();
-		if ( resultObjects == null ) {
+		if (resultObjects == null) {
 			return;
 		}
-		
+
 		List<String> facets = new ArrayList<String>(resultObjects.size());
 		for (Object obj : resultObjects) {
-			if ( obj instanceof ESAggLongCount) {
+			if (obj instanceof ESAggLongCount) {
 				facets.add(((ESAggLongCount) obj).getKey() + "");
-			} else if ( obj instanceof ESAggStringCount) {
+			} else if (obj instanceof ESAggStringCount) {
 				facets.add(((ESAggStringCount) obj).getKey());
 			}
 		}
 		searchResults.setResultFacets(facets);
-	}	
+	}
 
 	// retrieve grouped bucket with first doc
 	public void huntGroupFirstDoc(SearchParams searchParams, SearchResults<T> searchResults, String groupField,
@@ -287,7 +281,7 @@ public class ESHunter<T extends ESEntity> {
 		createESConnection();
 
 		// Invoke the hook, editing the search params as needed by subclass.
-		if ( preProcessSearchParams(searchParams, searchOption) ) {
+		if (preProcessSearchParams(searchParams, searchOption)) {
 			log.info("Stopped after preProcessSearchParams");
 			return;
 		}
@@ -639,10 +633,9 @@ public class ESHunter<T extends ESEntity> {
 		if (inFilters != null && !inFilters.isEmpty()) {
 			for (Filter filter : inFilters) {
 				if (filter.getValues() != null && !filter.getValues().isEmpty()) {
-					String field = getMappedField(filter.getProperty());					
+					String field = getMappedField(filter.getProperty());
 					List<FieldValue> values = filter.getValues().stream().map(FieldValue::of).toList();
-					TermsQuery.Builder termsBuilder = new TermsQuery.Builder().field(field)
-							.terms(t -> t.value(values));
+					TermsQuery.Builder termsBuilder = new TermsQuery.Builder().field(field).terms(t -> t.value(values));
 					queryList.add(new Query.Builder().terms(termsBuilder.build()).build());
 				}
 			}
@@ -765,21 +758,7 @@ public class ESHunter<T extends ESEntity> {
 		return shapeQuery;
 	}
 
-	/**
-	 * Processes the JSON response returned from a lookup request and converts it
-	 * into a list of domain objects.
-	 * <p>
-	 * This method is responsible for parsing the provided {@link JsonNode}
-	 * structure and mapping its contents into a list of {@code T} instances.
-	 * Subclasses or implementations can override this method to customize the
-	 * parsing and mapping logic.
-	 *
-	 * @param root the root {@link JsonNode} representing the lookup response
-	 *             payload
-	 * @return a list of parsed objects of type {@code T}
-	 * @throws Exception if an error occurs while parsing or converting the response
-	 */
-	public <T extends ESEntity> List<T> processLookupResponse(JsonNode root, Class<T> clazz) throws Exception {
+	protected <T extends ESEntity> List<T> processLookupResponse(JsonNode root, Class<T> clazz) throws Exception {
 		List<String> columns = new ArrayList<>();
 		root.get("columns").forEach(col -> columns.add(col.get("name").asText()));
 
@@ -827,9 +806,9 @@ public class ESHunter<T extends ESEntity> {
 		}
 		return results;
 	}
-	
+
 	protected String getMappedField(String uiProperty) {
-		
+
 		if (propertyMap.containsKey(uiProperty)) {
 			ESPropertyMapper pm = propertyMap.get(uiProperty);
 			return pm.getField();
@@ -861,7 +840,8 @@ public class ESHunter<T extends ESEntity> {
 
 		if (filter.isBasicFilter()) {
 			// do nothing for shape parameter
-			if (filter.getOperator() == Filter.Operator.OP_SHAPE || filter.getOperator() == Filter.Operator.OP_TERM_IN) {
+			if (filter.getOperator() == Filter.Operator.OP_SHAPE
+					|| filter.getOperator() == Filter.Operator.OP_TERM_IN) {
 				return "";
 			}
 			// Check to see if the property is null or an empty string,
@@ -991,121 +971,13 @@ public class ESHunter<T extends ESEntity> {
 			return a;
 		});
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	protected <T extends ESEntity> void parseFirstDoc(SearchResponse resp, SearchResults<T> searchResults,
 			SearchParams searchParams) {
-
-		Map<String, Aggregate> aggs = resp.aggregations();
-
-		for (Map.Entry<String, Aggregate> entry : aggs.entrySet()) {
-			String aggName = entry.getKey();
-			Aggregate groupAgg = entry.getValue();
-
-			if (groupAgg == null || !groupAgg.isSterms()) {
-				continue;
-			}
-
-			List<StringTermsBucket> buckets = groupAgg.sterms().buckets().array();
-
-			for (StringTermsBucket bucket : buckets) {
-				Aggregate topAgg = bucket.aggregations().get("first_doc");
-				if (topAgg == null || !topAgg.isTopHits())
-					continue;
-
-				HitsMetadata<JsonData> hitsMeta = topAgg.topHits().hits();
-				if (hitsMeta == null || hitsMeta.hits().isEmpty())
-					continue;
-
-				Map<String, Object> src = hitsMeta.hits().get(0).source().to(Map.class);
-
-				switch (aggName) {
-				case GxdResultFields.MARKER_KEY -> {
-					searchResults.addResultObjects((T) mapToMarker(src));
-				}
-				case GxdResultFields.ASSAY_KEY -> {
-					searchResults.addResultObjects((T) mapToAssay(src));
-				}
-				case GxdResultFields.STRUCTURE_EXACT -> {
-					String structureId = (String) src.get(GxdResultFields.STRUCTURE_EXACT);
-					searchResults.addResultObjects((T) new SolrString(structureId));
-				}
-				case GxdResultFields.THEILER_STAGE -> {
-					Object stageObj = src.get(GxdResultFields.THEILER_STAGE);
-					if (stageObj != null) {
-						searchResults.addResultObjects((T) new SolrString(stageObj.toString()));
-					}
-				}
-				}
-			}
-		}
 	}
 
-	@SuppressWarnings("unchecked")
-	protected <T extends ESEntity> void parseCompositeFirstDoc(SearchResponse resp, SearchResults<T> searchResults,
-			SearchParams searchParams, ESSearchOption searchOption) {
-
-		String groupField = searchOption.getGroupField();
-		Map<String, Aggregate> aggs = resp.aggregations();
-		Aggregate compositeAgg = aggs.get(getAggCompositeBucketsKey(groupField));
-		if (compositeAgg == null) {
-			return;
-		}
-
-		CompositeAggregate composite = compositeAgg.composite();
-		List<CompositeBucket> buckets = composite.buckets().array();
-
-		for (CompositeBucket bucket : buckets) {
-			Aggregate topAgg = bucket.aggregations().get("first_doc");
-			if (topAgg == null || !topAgg.isTopHits())
-				continue;
-
-			HitsMetadata<JsonData> hitsMeta = topAgg.topHits().hits();
-			if (hitsMeta == null || hitsMeta.hits().isEmpty())
-				continue;
-
-			Map<String, Object> src = hitsMeta.hits().get(0).source().to(Map.class);
-
-			switch (groupField) {
-			case GxdResultFields.MARKER_KEY -> {
-				searchResults.addResultObjects((T) mapToMarker(src));
-			}
-			case GxdResultFields.ASSAY_KEY -> {
-				searchResults.addResultObjects((T) mapToAssay(src));
-			}
-			case GxdResultFields.STRUCTURE_EXACT -> {
-				String structureId = (String) src.get(GxdResultFields.STRUCTURE_EXACT);
-				searchResults.addResultObjects((T) new SolrString(structureId));
-			}
-			case GxdResultFields.THEILER_STAGE -> {
-				Object stageObj = src.get(GxdResultFields.THEILER_STAGE);
-				if (stageObj != null) {
-					searchResults.addResultObjects((T) new SolrString(stageObj.toString()));
-				}
-			}
-			}
-		}
-	}
-
-	// Helper: map source to marker
-	private ESGxdMarker mapToMarker(Map<String, Object> src) {
-		ESGxdMarker marker = new ESGxdMarker();
-		marker.setMgiid((String) src.get(GxdResultFields.MARKER_MGIID));
-		marker.setSymbol((String) src.get(GxdResultFields.MARKER_SYMBOL));
-		marker.setName((String) src.get(GxdResultFields.MARKER_NAME));
-		marker.setType((String) src.get(GxdResultFields.MARKER_TYPE));
-		marker.setChr((String) src.get(GxdResultFields.CHROMOSOME));
-		marker.setCm(getString(src.get(GxdResultFields.CENTIMORGAN)));
-		marker.setCytoband((String) src.get(GxdResultFields.CYTOBAND));
-		marker.setStartCoord(getString(src.get(GxdResultFields.START_COORD)));
-		marker.setEndCoord(getString(src.get(GxdResultFields.END_COORD)));
-		marker.setStrand((String) src.get(GxdResultFields.STRAND));
-		marker.setMarkerKey(toInt(src.get(GxdResultFields.MARKER_KEY)));
-		marker.setByMrkSymbol(toInt(src.get(GxdResultFields.M_BY_MRK_SYMBOL)));
-		return marker;
-	}
-
-	private int toInt(Object obj) {
+	protected int toInt(Object obj) {
 		if (obj == null) {
 			return 0;
 		}
@@ -1117,21 +989,8 @@ public class ESHunter<T extends ESEntity> {
 		}
 	}
 
-	// Helper: map source to assay
-	private ESGxdAssay mapToAssay(Map<String, Object> src) {
-		ESGxdAssay assay = new ESGxdAssay();
-		assay.setMarkerSymbol((String) src.get(GxdResultFields.MARKER_SYMBOL));
-		assay.setAssayKey((String) src.get(GxdResultFields.ASSAY_KEY));
-		assay.setAssayMgiid((String) src.get(GxdResultFields.ASSAY_MGIID));
-		assay.setAssayType((String) src.get(GxdResultFields.ASSAY_TYPE));
-		assay.setJNum((String) src.get(GxdResultFields.JNUM));
-		assay.setMiniCitation((String) src.get(GxdResultFields.SHORT_CITATION));
-		assay.setHasImage(Boolean.TRUE.equals(src.get(GxdResultFields.ASSAY_HAS_IMAGE)));
-		return assay;
-	}
-
 	// Helper: safely convert object to string
-	private String getString(Object obj) {
+	protected String getString(Object obj) {
 		return obj != null ? obj.toString() : null;
 	}
 
@@ -1189,7 +1048,7 @@ public class ESHunter<T extends ESEntity> {
 		SortOptions so = null;
 		SortOptions.Builder sob = null;
 
-		for (Sort sort : searchParams.getSorts()) {			
+		for (Sort sort : searchParams.getSorts()) {
 			// Determine the direction of the sort.
 
 			if (sort.isDesc()) {

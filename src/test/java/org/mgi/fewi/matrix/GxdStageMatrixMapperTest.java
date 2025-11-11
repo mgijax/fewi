@@ -8,8 +8,8 @@ import org.jax.mgi.fewi.matrix.GxdDummyMatrixCell;
 import org.jax.mgi.fewi.matrix.GxdMatrixCell;
 import org.jax.mgi.fewi.matrix.GxdMatrixRow;
 import org.jax.mgi.fewi.matrix.GxdStageMatrixMapper;
-import org.jax.mgi.fewi.searchUtil.entities.SolrDagEdge;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdStageMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESDagEdge;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdStageMatrixResult;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +35,7 @@ public class GxdStageMatrixMapperTest {
 		 * Create a situation where only one cell will have the dummy stage
 		 * indicator.
 		 */
-		List<SolrDagEdge> edges = mockEdges();
+		List<ESDagEdge> edges = mockEdges();
 		mapper.setEdges(edges);
 
 		GxdMatrixRow mockParent = term("parent1", "p1");
@@ -46,7 +46,7 @@ public class GxdStageMatrixMapperTest {
 		mockParent2.setEndStage(2);
 		List<GxdMatrixRow> parentTerms = mockTerms(mockParent, mockParent2);
 
-		List<SolrGxdStageMatrixResult> results = mockResults(result("p1", 1, "Yes"),
+		List<ESGxdStageMatrixResult> results = mockResults(result("p1", 1, "Yes"),
 				result("p2", 1, "Yes"), result("p2", 2, "Yes"));
 		List<GxdMatrixCell> cells = mapper.mapCells(parentTerms, results);
 
@@ -57,7 +57,7 @@ public class GxdStageMatrixMapperTest {
 
 	@Test
 	public void testDummyStageIndicatorCellNoValidResults() {
-		List<SolrDagEdge> edges = mockEdges();
+		List<ESDagEdge> edges = mockEdges();
 		mapper.setEdges(edges);
 
 		GxdMatrixRow mockParent = term("parent1", "p1");
@@ -65,7 +65,7 @@ public class GxdStageMatrixMapperTest {
 		mockParent.setEndStage(1);
 		List<GxdMatrixRow> parentTerms = mockTerms(mockParent);
 
-		List<SolrGxdStageMatrixResult> results = mockResults();
+		List<ESGxdStageMatrixResult> results = mockResults();
 		List<GxdMatrixCell> cells = mapper.mapCells(parentTerms, results);
 
 		Assert.assertEquals(0, cells.size());
@@ -81,7 +81,7 @@ public class GxdStageMatrixMapperTest {
 		 * Basically... stage 28 column shouldn't exist. We make sure dummy cell
 		 * doesn't get created for it.
 		 */
-		List<SolrDagEdge> edges = mockEdges();
+		List<ESDagEdge> edges = mockEdges();
 		mapper.setEdges(edges);
 
 		GxdMatrixRow mockParent = term("parent1", "p1");
@@ -89,7 +89,7 @@ public class GxdStageMatrixMapperTest {
 		mockParent.setEndStage(28);
 		List<GxdMatrixRow> parentTerms = mockTerms(mockParent);
 
-		List<SolrGxdStageMatrixResult> results = mockResults(result("p1", 27, "Yes"));
+		List<ESGxdStageMatrixResult> results = mockResults(result("p1", 27, "Yes"));
 		List<GxdMatrixCell> cells = mapper.mapCells(parentTerms, results);
 
 		cells = filterOnlyDummyCells(cells);
@@ -109,7 +109,7 @@ public class GxdStageMatrixMapperTest {
 		return filteredCells;
 	}
 
-	private List<SolrDagEdge> mockEdges(SolrDagEdge... edges) {
+	private List<ESDagEdge> mockEdges(ESDagEdge... edges) {
 		return Arrays.asList(edges);
 	}
 
@@ -126,17 +126,17 @@ public class GxdStageMatrixMapperTest {
 		return Arrays.asList(terms);
 	}
 
-	private SolrGxdStageMatrixResult result(String structureId, int stage,
+	private ESGxdStageMatrixResult result(String structureId, int stage,
 			String detectionLevel) {
-		SolrGxdStageMatrixResult mr = new SolrGxdStageMatrixResult();
+		ESGxdStageMatrixResult mr = new ESGxdStageMatrixResult();
 		mr.setStructureId(structureId);
 		mr.setTheilerStage(stage);
 		mr.setDetectionLevel(detectionLevel);
 		return mr;
 	}
 
-	private List<SolrGxdStageMatrixResult> mockResults(
-			SolrGxdStageMatrixResult... results) {
+	private List<ESGxdStageMatrixResult> mockResults(
+			ESGxdStageMatrixResult... results) {
 		return Arrays.asList(results);
 	}
 }

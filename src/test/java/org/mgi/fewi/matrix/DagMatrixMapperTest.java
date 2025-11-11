@@ -9,7 +9,7 @@ import org.jax.mgi.fewi.matrix.DagMatrixMapper;
 import org.jax.mgi.fewi.matrix.GridDataCell;
 import org.jax.mgi.fewi.matrix.MatrixResult;
 import org.jax.mgi.fewi.matrix.MatrixRow;
-import org.jax.mgi.fewi.searchUtil.entities.SolrDagEdge;
+import org.jax.mgi.fewi.searchUtil.entities.ESDagEdge;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class DagMatrixMapperTest {
 	 */
 	@Test
 	public void testNoResults() {
-		List<SolrDagEdge> edges = mockEdges();
+		List<ESDagEdge> edges = mockEdges();
 		mapper.setEdges(edges);
 
 		List<TestMatrixRow> parentTerms = mockTerms();
@@ -47,7 +47,7 @@ public class DagMatrixMapperTest {
 
 	@Test
 	public void testOneParentResult() {
-		List<SolrDagEdge> edges = mockEdges();
+		List<ESDagEdge> edges = mockEdges();
 		mapper.setEdges(edges);
 
 		List<TestMatrixRow> parentTerms = mockTerms(term("parent1", "p1"));
@@ -60,7 +60,7 @@ public class DagMatrixMapperTest {
 
 	@Test
 	public void testOneChildResult() {
-		List<SolrDagEdge> edges = mockEdges(edge("p1", "c1"));
+		List<ESDagEdge> edges = mockEdges(edge("p1", "c1"));
 		mapper.setEdges(edges);
 
 		List<TestMatrixRow> parentTerms = mockTerms(term("parent1", "p1"));
@@ -73,7 +73,7 @@ public class DagMatrixMapperTest {
 
 	@Test
 	public void testOneChildResultManyEdges() {
-		List<SolrDagEdge> edges = mockEdges(edge("p1", "c1"), edge("p1", "c2"),
+		List<ESDagEdge> edges = mockEdges(edge("p1", "c1"), edge("p1", "c2"),
 				edge("p2", "c3"), edge("p3", "c4"));
 		mapper.setEdges(edges);
 
@@ -88,7 +88,7 @@ public class DagMatrixMapperTest {
 
 	@Test
 	public void testOneChildResultManyParents() {
-		List<SolrDagEdge> edges = mockEdges(edge("p1", "c1"), edge("p2", "c1"));
+		List<ESDagEdge> edges = mockEdges(edge("p1", "c1"), edge("p2", "c1"));
 		mapper.setEdges(edges);
 
 		List<TestMatrixRow> parentTerms = mockTerms(term("parent1", "p1"),
@@ -116,14 +116,14 @@ public class DagMatrixMapperTest {
 		return cellRowIds;
 	}
 
-	private SolrDagEdge edge(String parentId, String childId) {
-		SolrDagEdge child = new SolrDagEdge();
+	private ESDagEdge edge(String parentId, String childId) {
+		ESDagEdge child = new ESDagEdge();
 		child.setChildId(childId);
 		child.setParentId(parentId);
 		return child;
 	}
 
-	private List<SolrDagEdge> mockEdges(SolrDagEdge... edges) {
+	private List<ESDagEdge> mockEdges(ESDagEdge... edges) {
 		return Arrays.asList(edges);
 	}
 

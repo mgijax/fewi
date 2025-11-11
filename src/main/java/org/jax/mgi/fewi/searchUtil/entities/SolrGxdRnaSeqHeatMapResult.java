@@ -1,9 +1,10 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
+import org.jax.mgi.snpdatamodel.document.ESEntity;
 
 
-public class SolrGxdRnaSeqHeatMapResult implements SolrGxdEntity {
+public class SolrGxdRnaSeqHeatMapResult extends ESEntity implements SolrGxdEntity {
 	protected String structure;
 	protected String structureID;
 	protected Integer theilerStage;

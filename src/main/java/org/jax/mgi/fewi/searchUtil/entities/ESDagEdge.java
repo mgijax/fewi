@@ -2,8 +2,9 @@ package org.jax.mgi.fewi.searchUtil.entities;
 
 import org.jax.mgi.fewi.matrix.DagEdge;
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
+import org.jax.mgi.snpdatamodel.document.ESEntity;
 
-public class SolrDagEdge implements SolrGxdEntity,DagEdge {
+public class ESDagEdge extends ESEntity implements SolrGxdEntity,DagEdge {
 	private String parentId;
 	private String parentTerm;
 	private Integer parentStartStage;

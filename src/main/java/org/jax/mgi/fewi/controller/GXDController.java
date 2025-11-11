@@ -72,16 +72,16 @@ import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAnatomyTerm;
 import org.jax.mgi.fewi.searchUtil.entities.ESAssayResult;
-import org.jax.mgi.fewi.searchUtil.entities.SolrDagEdge;
+import org.jax.mgi.fewi.searchUtil.entities.ESDagEdge;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdAssay;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdGeneMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdGeneMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdMarker;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdPhenoMatrixResult;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRecombinaseMatrixResult;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRnaSeqConsolidatedSample;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdPhenoMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdRecombinaseMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdRnaSeqConsolidatedSample;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRnaSeqHeatMapResult;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdStageMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdStageMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrMPCorrelationMatrixCell;
 import org.jax.mgi.fewi.searchUtil.entities.SolrRecombinaseMatrixCell;
 import org.jax.mgi.fewi.searchUtil.entities.SolrString;
@@ -1842,10 +1842,10 @@ public class GXDController {
 			fromCache = samples.size();
 
 			if (keys.size() > 0) {
-				SearchResults<SolrGxdRnaSeqConsolidatedSample> searchResults = gxdFinder.searchRnaSeqConsolidatedSamples(keys);
-				List<SolrGxdRnaSeqConsolidatedSample> results = searchResults.getResultObjects();
+				SearchResults<ESGxdRnaSeqConsolidatedSample> searchResults = gxdFinder.searchRnaSeqConsolidatedSamples(keys);
+				List<ESGxdRnaSeqConsolidatedSample> results = searchResults.getResultObjects();
 				if (results != null) {
-					for (SolrGxdRnaSeqConsolidatedSample result : results) {
+					for (ESGxdRnaSeqConsolidatedSample result : results) {
 						GxdRnaSeqHeatMapSample sample = new GxdRnaSeqHeatMapSample();
 						sample.setAge(result.getAge());
 						sample.setAlleles(result.getAlleles());
@@ -2159,7 +2159,7 @@ public class GXDController {
 
                 Filter mkFilter = params.getFilter().getFirstFilterFor("marker_key");
                 int totCount = 0;
-                List<SolrGxdStageMatrixResult> resultList = null;
+                List<ESGxdStageMatrixResult> resultList = null;
 
                 /* The following is a terrible hack to try to ease a problem when profile queries
                  * generate queries containing 1000s of marker IDs in a gigantic OR expression. The following breaks up the
@@ -2173,17 +2173,17 @@ public class GXDController {
                         List<String> mkeys = mkFilter.getValues();
                         logger.info("Marker keys = " + mkeys.toString());
                         int chunkSize = 500;
-                        resultList = new ArrayList<SolrGxdStageMatrixResult>();
+                        resultList = new ArrayList<ESGxdStageMatrixResult>();
                         for(int i = 0; i < mkeys.size(); i += chunkSize) {
                                 int j = Math.min(i+chunkSize,mkeys.size());
                                 logger.info("Marker key chunk: " + i + " to " + (j-1));
                                 mkFilter.setValues(mkeys.subList(i,j));
-                                SearchResults<SolrGxdStageMatrixResult> searchResults = gxdFinder.searchStageMatrixResults(params);
+                                SearchResults<ESGxdStageMatrixResult> searchResults = gxdFinder.searchStageMatrixResults(params);
                                 totCount += searchResults.getTotalCount();
                                 resultList.addAll(searchResults.getResultObjects());
                         }
                 } else {
-                        SearchResults<SolrGxdStageMatrixResult> searchResults = gxdFinder.searchStageMatrixResults(params);
+                        SearchResults<ESGxdStageMatrixResult> searchResults = gxdFinder.searchStageMatrixResults(params);
                         totCount = searchResults.getTotalCount();
                         resultList = searchResults.getResultObjects();
                 }
@@ -2201,13 +2201,13 @@ public class GXDController {
 
 
 		// this gets all edges, but we only need all of them for the first page
-		List<SolrDagEdge> edges = getDAGDescendentRelationships(query,flatRows).getResultObjects();
+		List<ESDagEdge> edges = getDAGDescendentRelationships(query,flatRows).getResultObjects();
 
 		// prune empty data rows
 		if(isFirstPage)
 		{
 			Set<String> rowsWithChildren = new HashSet<String>();
-			for(SolrDagEdge edge : edges)
+			for(ESDagEdge edge : edges)
 			{
 				rowsWithChildren.add(edge.getParentId());
 			}
@@ -2321,9 +2321,9 @@ public class GXDController {
 		SearchParams params = new SearchParams();
 		params.setPaginator(page);
 		params.setFilter(parseGxdQueryForm(query));
-		SearchResults<SolrGxdRecombinaseMatrixResult> searchResults = gxdFinder.searchRecombinaseMatrixResults(params);
+		SearchResults<ESGxdRecombinaseMatrixResult> searchResults = gxdFinder.searchRecombinaseMatrixResults(params);
 		logger.debug("got recombinase matrix results");
-		List<SolrGxdRecombinaseMatrixResult> resultList = searchResults.getResultObjects();
+		List<ESGxdRecombinaseMatrixResult> resultList = searchResults.getResultObjects();
 
 		// cache total count of assay results
 		session.setAttribute(totalCountSessionId,searchResults.getTotalCount());
@@ -2334,13 +2334,13 @@ public class GXDController {
 		List<GxdMatrixRow> flatRows = gxdMatrixHandler.getFlatTermList(parentTerms);
 
 		// this gets all edges, but we only need all of them for the first page
-		List<SolrDagEdge> edges = getDAGDescendentRelationships(query,flatRows).getResultObjects();
+		List<ESDagEdge> edges = getDAGDescendentRelationships(query,flatRows).getResultObjects();
 
 		// prune empty data rows
 		if(isFirstPage)
 		{
 			Set<String> rowsWithChildren = new HashSet<String>();
-			for(SolrDagEdge edge : edges)
+			for(ESDagEdge edge : edges)
 			{
 				rowsWithChildren.add(edge.getParentId());
 			}
@@ -2476,9 +2476,9 @@ public class GXDController {
 		SearchParams params = new SearchParams();
 		params.setPaginator(page);
 		params.setFilter(parseGxdQueryForm(query));
-		SearchResults<SolrGxdPhenoMatrixResult> searchResults = gxdFinder.searchPhenoMatrixResults(params);
+		SearchResults<ESGxdPhenoMatrixResult> searchResults = gxdFinder.searchPhenoMatrixResults(params);
 		logger.debug("got pheno matrix results");
-		List<SolrGxdPhenoMatrixResult> resultList = searchResults.getResultObjects();
+		List<ESGxdPhenoMatrixResult> resultList = searchResults.getResultObjects();
 
 		// cache total count of assay results
 		session.setAttribute(totalCountSessionId,searchResults.getTotalCount());
@@ -2489,13 +2489,13 @@ public class GXDController {
 		List<GxdMatrixRow> flatRows = gxdMatrixHandler.getFlatTermList(parentTerms);
 
 		// this gets all edges, but we only need all of them for the first page
-		List<SolrDagEdge> edges = getDAGDescendentRelationships(query,flatRows).getResultObjects();
+		List<ESDagEdge> edges = getDAGDescendentRelationships(query,flatRows).getResultObjects();
 
 		// prune empty data rows
 		if(isFirstPage)
 		{
 			Set<String> rowsWithChildren = new HashSet<String>();
-			for(SolrDagEdge edge : edges)
+			for(ESDagEdge edge : edges)
 			{
 				rowsWithChildren.add(edge.getParentId());
 			}
@@ -2816,7 +2816,7 @@ public class GXDController {
 
                 Filter mkFilter = params.getFilter().getFirstFilterFor("marker_key");
                 int totCount = 0;
-                List<SolrGxdGeneMatrixResult> resultList = null;
+                List<ESGxdGeneMatrixResult> resultList = null;
 
                 /* Thie following is a hack. See notes in handler for gxd/stagegrid/json 
 		 *
@@ -2826,17 +2826,17 @@ public class GXDController {
                         List<String> mkeys = mkFilter.getValues();
                         logger.info("Marker keys = " + mkeys.toString());
                         int chunkSize = 500;
-                        resultList = new ArrayList<SolrGxdGeneMatrixResult>();
+                        resultList = new ArrayList<ESGxdGeneMatrixResult>();
                         for(int i = 0; i < mkeys.size(); i += chunkSize) {
                                 int j = Math.min(i+chunkSize,mkeys.size());
                                 logger.info("Marker key chunk: " + i + " to " + (j-1));
                                 mkFilter.setValues(mkeys.subList(i,j));
-                                SearchResults<SolrGxdGeneMatrixResult> searchResults = gxdFinder.searchGeneMatrixResults(params);
+                                SearchResults<ESGxdGeneMatrixResult> searchResults = gxdFinder.searchGeneMatrixResults(params);
                                 totCount += searchResults.getTotalCount();
                                 resultList.addAll(searchResults.getResultObjects());
                         }
                 } else {
-                        SearchResults<SolrGxdGeneMatrixResult> searchResults = gxdFinder.searchGeneMatrixResults(params);
+                        SearchResults<ESGxdGeneMatrixResult> searchResults = gxdFinder.searchGeneMatrixResults(params);
                         totCount = searchResults.getTotalCount();
                         resultList = searchResults.getResultObjects();
                 }
@@ -2850,13 +2850,13 @@ public class GXDController {
 		List<GxdMatrixRow> flatRows = gxdMatrixHandler.getFlatTermList(parentTerms);
 
 		// this gets all edges, but we only need all of them for the first page
-		List<SolrDagEdge> edges = getDAGDescendentRelationships(query,flatRows).getResultObjects();
+		List<ESDagEdge> edges = getDAGDescendentRelationships(query,flatRows).getResultObjects();
 
 		// prune empty data rows
 		if(isFirstPage)
 		{
 			Set<String> rowsWithChildren = new HashSet<String>();
-			for(SolrDagEdge edge : edges)
+			for(ESDagEdge edge : edges)
 			{
 				rowsWithChildren.add(edge.getParentId());
 			}
@@ -4723,7 +4723,7 @@ public class GXDController {
 	/*
 	 * Matrix related methods 
 	 */
-	public SearchResults<SolrDagEdge> getDAGDirectRelationships(GxdQueryForm query,List<GxdMatrixRow> parentTerms)
+	public SearchResults<ESDagEdge> getDAGDirectRelationships(GxdQueryForm query,List<GxdMatrixRow> parentTerms)
 	{
 		SearchParams params = new SearchParams();
 		params.setPageSize(100000);
@@ -4736,7 +4736,7 @@ public class GXDController {
 		return gxdFinder.searchMatrixDAGDirectEdges(params, parentIds);
 	}
 
-	public SearchResults<SolrDagEdge> getDAGDescendentRelationships(GxdQueryForm query,List<GxdMatrixRow> parentTerms)
+	public SearchResults<ESDagEdge> getDAGDescendentRelationships(GxdQueryForm query,List<GxdMatrixRow> parentTerms)
 	{
 		SearchParams params = new SearchParams();
 		params.setPageSize(100000);

@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jax.mgi.fewi.searchUtil.entities.SolrDagEdge;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRecombinaseMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESDagEdge;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdRecombinaseMatrixResult;
 
 /**
  * Adding logic specific to the Recombinase Matrix view (tissue by gene [expression]
@@ -21,7 +21,7 @@ public class GxdRecombinaseMatrixMapper extends DagMatrixMapper {
 		super();
 	}
 
-	public GxdRecombinaseMatrixMapper(List<SolrDagEdge> edges) {
+	public GxdRecombinaseMatrixMapper(List<ESDagEdge> edges) {
 		super(edges);
 	}
 
@@ -30,7 +30,7 @@ public class GxdRecombinaseMatrixMapper extends DagMatrixMapper {
 	 */
 	public List<GxdRecombinaseMatrixCell> mapRecombinaseGridCells(
 			List<GxdMatrixRow> parentRows,
-			List<SolrGxdRecombinaseMatrixResult> results) {
+			List<ESGxdRecombinaseMatrixResult> results) {
 		Map<String, Map<String, GxdRecombinaseMatrixCell>> rowColumnMap = new HashMap<String, Map<String, GxdRecombinaseMatrixCell>>();
 
 		// init parent terms
@@ -38,7 +38,7 @@ public class GxdRecombinaseMatrixMapper extends DagMatrixMapper {
 			Map<String, GxdRecombinaseMatrixCell> columnMap = new HashMap<String, GxdRecombinaseMatrixCell>();
 			rowColumnMap.put(parentRow.getRowId(), columnMap);
 
-			for (SolrGxdRecombinaseMatrixResult result : (List<SolrGxdRecombinaseMatrixResult>) results) {
+			for (ESGxdRecombinaseMatrixResult result : (List<ESGxdRecombinaseMatrixResult>) results) {
 				// do we add this cell? Answer: only if it is a child of the
 				// parent or is the parent itself
 				boolean isParent = isResultAParent(parentRow, result);
@@ -71,14 +71,14 @@ public class GxdRecombinaseMatrixMapper extends DagMatrixMapper {
 			String rowId, String columnId, MatrixResult result,
 			boolean isParent, boolean isChild, String symbol) {
 
-		SolrGxdRecombinaseMatrixResult gxdResult = (SolrGxdRecombinaseMatrixResult) result;
+		ESGxdRecombinaseMatrixResult gxdResult = (ESGxdRecombinaseMatrixResult) result;
 		GxdRecombinaseMatrixCell cell;			// the cell we're inserting (or aggregating)
 		
 		// need to check cell type here and handle GXD and Recombinase differently
 		
-		if (SolrGxdRecombinaseMatrixResult.GXD.equals(gxdResult.getCellType())) {
+		if (ESGxdRecombinaseMatrixResult.GXD.equals(gxdResult.getCellType())) {
 			if (!columnMap.containsKey(columnId)) {
-				cell = new GxdRecombinaseMatrixCell(SolrGxdRecombinaseMatrixResult.GXD, rowId, columnId, !isParent);
+				cell = new GxdRecombinaseMatrixCell(ESGxdRecombinaseMatrixResult.GXD, rowId, columnId, !isParent);
 				cell.initializeGxd(gxdResult.getDetectionLevel(), gxdResult.getCount());
 				cell.setSymbol(symbol);
 				columnMap.put(columnId, cell);
@@ -97,13 +97,13 @@ public class GxdRecombinaseMatrixMapper extends DagMatrixMapper {
 	@Override
 	protected boolean isResultAChild(MatrixRow parentTerm, MatrixResult result) {
 		return edgeMap.containsKey(parentTerm.getRowId())
-				&& edgeMap.get(parentTerm.getRowId()).contains( ((SolrGxdRecombinaseMatrixResult) result).getRowId())
+				&& edgeMap.get(parentTerm.getRowId()).contains( ((ESGxdRecombinaseMatrixResult) result).getRowId())
 				&& isResultInStageRange((GxdMatrixRow) parentTerm,
-						(SolrGxdRecombinaseMatrixResult) result);
+						(ESGxdRecombinaseMatrixResult) result);
 	}
 
 	private boolean isResultInStageRange(GxdMatrixRow parentTerm,
-			SolrGxdRecombinaseMatrixResult result) {
+			ESGxdRecombinaseMatrixResult result) {
 		return result.getTheilerStage() >= parentTerm.getStartStage()
 				&& result.getTheilerStage() <= parentTerm.getEndStage();
 	}

@@ -2,7 +2,7 @@ package org.jax.mgi.fewi.matrix;
 
 import java.util.List;
 
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdMatrixResult;
 
 public class PhenoMatrixPopup {
 
@@ -98,13 +98,13 @@ public class PhenoMatrixPopup {
 		this.alleles = alleles;
 	}
 	// parse the set of results for display counts
-	public void setAssayResultList(List<SolrGxdMatrixResult> assayResultList) {
+	public void setAssayResultList(List<ESGxdMatrixResult> assayResultList) {
 
         // generate counts
 		int posCount = 0;
 		int negCount = 0;
 		int ambCount = 0;
-        for (SolrGxdMatrixResult assayResult : assayResultList) {
+        for (ESGxdMatrixResult assayResult : assayResultList) {
 			if (assayResult != null){
 
 				if (assayResult.getDetectionLevel().equals("Yes")) {
