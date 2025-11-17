@@ -11,6 +11,7 @@ import org.jax.mgi.fe.datamodel.Allele;
 import org.jax.mgi.fe.datamodel.AlleleSynonym;
 import org.jax.mgi.fe.datamodel.AlleleSystem;
 import org.jax.mgi.fe.datamodel.Marker;
+import org.jax.mgi.fe.datamodel.RecombinaseAffectedCellType;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.FormatHelper;
 
@@ -30,6 +31,7 @@ public class RecombinaseSummary {
 
 	private Set<String> detectedHighlights;
 	private Set<String> notDetectedHighlights;
+	private Set<String> detectedCellTypeHighlights;
 
 	private final String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
 
@@ -40,14 +42,16 @@ public class RecombinaseSummary {
 	// constructors
 	//-------------
 
-    public RecombinaseSummary (Allele allele,Set<String> detectedHighlights, Set<String> notDetectedHighlights) {
+    public RecombinaseSummary (Allele allele,Set<String> detectedHighlights, Set<String> notDetectedHighlights, Set<String> detectedCellTypeHighlights) {
     	this.allele = allele;
 
     	this.detectedHighlights=detectedHighlights;
     	this.notDetectedHighlights=notDetectedHighlights;
+    	this.detectedCellTypeHighlights=detectedCellTypeHighlights;
 
     	if(this.detectedHighlights==null) this.detectedHighlights = new HashSet<String>();
     	if(this.notDetectedHighlights==null) this.notDetectedHighlights = new HashSet<String>();
+    	if(this.detectedCellTypeHighlights==null) this.detectedCellTypeHighlights = new HashSet<String>();
     }
 
     //------------------------
@@ -58,6 +62,22 @@ public class RecombinaseSummary {
     	String refCounts = "<a href='"+fewiUrl+"/reference/allele/" + this.allele.getPrimaryID()
         		+ "?typeFilter=Literature' target='_blank'>" + this.allele.getCountOfReferences().toString() + "</a>";
     	return refCounts;
+    }
+
+    public String getAffectedCellTypes() {
+	List<RecombinaseAffectedCellType> affectedCellTypes = this.allele.getAffectedCellTypes();
+	StringBuffer result = new StringBuffer();
+	result.append("<div class='systemWrap'>");
+	int count = 0;
+	for (RecombinaseAffectedCellType ct : affectedCellTypes) {
+		if(count > 0) result.append(", ");
+		String cth = ct.getCellTypeHeader();
+		if (isSystemHighlighted(cth, this.detectedCellTypeHighlights)) cth = "<span class=\"systemHl exact\">"+cth+"</span>";
+		result.append(cth);
+		count += 1;
+	}
+	result.append("</div>");
+	return result.toString();
     }
 
     public String getDetectedSystems()

@@ -5,7 +5,7 @@ import java.util.List;
 import org.jax.mgi.fe.datamodel.group.RecombinaseEntity;
 
 /**
- * Holds information for highlighting systems on cre summary
+ * Holds information for highlighting systems (either anatomical or cell type header) on cre summary.
  */
 public class SolrCreSystemHighlight implements RecombinaseEntity {
 

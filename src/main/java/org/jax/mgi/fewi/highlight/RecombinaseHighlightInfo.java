@@ -18,8 +18,25 @@ public class RecombinaseHighlightInfo {
 	private final Map<String, Set<String>> detectedSystemsMap = new HashMap<String, Set<String>>();
 	// alleleKey to list of not detected system highlights
 	private final Map<String, Set<String>> notDetectedSystemsMap = new HashMap<String, Set<String>>();
+	// alleleKey to list of not detected celltype highlights
+	private final Map<String, Set<String>> detectedCellTypeMap = new HashMap<String, Set<String>>();
+	// Not highlighting notDetected cell types at this point
 	
 	
+	public void addCellTypeHighlights(List<SolrCreSystemHighlight> systemHighlights) {
+
+		for (SolrCreSystemHighlight systemHighlight : systemHighlights) {
+			String alleleKey = systemHighlight.getAlleleKey();
+			if (systemHighlight.getDetected()) {
+				if ( !detectedCellTypeMap.containsKey(alleleKey) ) {
+					detectedCellTypeMap.put(alleleKey, new HashSet<String>());
+				}
+				detectedCellTypeMap.get(alleleKey).addAll(systemHighlight.getSystems());
+				
+			}
+		}
+	}
+
 	/*
 	 * Maps a list of system group highlights to the 
 	 * 	detected and not detected systems maps by alleleKey
@@ -27,16 +44,12 @@ public class RecombinaseHighlightInfo {
 	public void addSystemHighlights(List<SolrCreSystemHighlight> systemHighlights) {
 		
 		for (SolrCreSystemHighlight systemHighlight : systemHighlights) {
-			
 			String alleleKey = systemHighlight.getAlleleKey();
-			
 			if (systemHighlight.getDetected()) {
-				
 				if ( !detectedSystemsMap.containsKey(alleleKey) ) {
 					detectedSystemsMap.put(alleleKey, new HashSet<String>());
 				}
 				detectedSystemsMap.get(alleleKey).addAll(systemHighlight.getSystems());
-				
 			}
 			else {
 				if ( !notDetectedSystemsMap.containsKey(alleleKey) ) {
@@ -59,6 +72,14 @@ public class RecombinaseHighlightInfo {
 		
 		if (notDetectedSystemsMap.containsKey(alleleKey)) {
 			return notDetectedSystemsMap.get(alleleKey);
+		}
+		return new HashSet<String>();
+	}
+
+	public Set<String> getDetectedCellTypeHighlights(String alleleKey) {
+		
+		if (detectedCellTypeMap.containsKey(alleleKey)) {
+			return detectedCellTypeMap.get(alleleKey);
 		}
 		return new HashSet<String>();
 	}

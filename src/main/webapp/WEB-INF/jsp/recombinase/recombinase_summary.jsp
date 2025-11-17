@@ -116,6 +116,13 @@
 					<br/>
 					<span>System(s) in bold contain matching search terms.</span>
 					<br/></c:if>
+
+				<c:if test="${not empty recombinaseQueryForm.cellTypeID}">
+					<b>Activity detected: </b> in <b>${e:forHtml(recombinaseQueryForm.cellType)}</b> <span class="smallGrey">${e:forHtml(recombinaseQueryForm.cellTypeID)}</span>
+					<span class="smallGrey"> includes subtypes</span>
+					<br/>
+					<span>Cell types(s) in bold contain matching search terms.</span>
+					<br/></c:if>
     	<div class="pageAdvice" style="height: 20px;">
 	    	Click column headings to sort table data.
     	</div>

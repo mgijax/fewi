@@ -118,6 +118,9 @@ public class SolrCreAssayResultSummaryHunter extends SolrHunter<RecombinaseEntit
         this.groupFields.put(SearchConstants.CRE_SYSTEM_HL_GROUP,
 				CreFields.SYSTEM_HL_GROUP);
 
+        this.groupFields.put(SearchConstants.CRE_CELL_TYPE_HL_GROUP,
+				CreFields.CELL_TYPE_HL_GROUP);
+
 
         /*
          * The name of the field we want to iterate through the documents for
@@ -164,9 +167,17 @@ public class SolrCreAssayResultSummaryHunter extends SolrHunter<RecombinaseEntit
 			SolrDocument sd = g.getResult().get(0);
 			if (gc.getName().equals(IndexConstants.ALL_KEY)) {
 				// Allele group
-				//String alleleKey = (String) sd.getFieldValue(IndexConstants.ALL_KEY);
+				/*
+				String alleleKey = (String) sd.getFieldValue(IndexConstants.ALL_KEY);
+				List<String> headers = (List<String>) sd.getFieldValue("allCellTypeHeaders");
 
-				//sr.addResultObjects();
+				logger.info("Recombinase allele key = " + alleleKey + " cell type headers: " + headers);
+
+				SolrCreSystemHighlight test = new SolrCreSystemHighlight();
+				test.setAlleleKey(alleleKey);
+				test.setSystems(headers);
+				sr.addResultObjects(test);
+				*/
 			}
 			else if (gc.getName().equals(CreFields.SYSTEM_HL_GROUP)) {
 				// System Highlight group
@@ -182,6 +193,22 @@ public class SolrCreAssayResultSummaryHunter extends SolrHunter<RecombinaseEntit
 				systemHighlight.setDetected(detected);
 
 				sr.addResultObjects(systemHighlight);
+			}
+			else if (gc.getName().equals(CreFields.CELL_TYPE_HL_GROUP)) {
+				// Cell type Highlight group
+				if (key != null && !key.equals("") && !key.equals("null")) {
+					String alleleKey = (String) sd.getFieldValue(IndexConstants.ALL_KEY);
+					List<String> headers = (List<String>) sd.getFieldValue(CreFields.CELL_TYPE_HEADERS);
+					if (headers == null) headers = new ArrayList<String>();
+					Boolean detected = (Boolean) sd.getFieldValue(CreFields.DETECTED);
+
+					SolrCreSystemHighlight systemHighlight = new SolrCreSystemHighlight();
+					systemHighlight.setAlleleKey(alleleKey);
+					systemHighlight.setSystems(headers);
+					systemHighlight.setDetected(detected);
+
+					sr.addResultObjects(systemHighlight);
+				}
 			}
 
 			/**

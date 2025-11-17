@@ -98,7 +98,9 @@ public class SearchConstants {
 	public static final String CRE_DETECTED 			= "detected";
 	public static final String CRE_SYSTEM_HL_GROUP		= "systemHlGroup";
 	public static final String CRE_ALL_STRUCTURES	= "allStructures";
+	public static final String CRE_CELL_TYPE_HL_GROUP		= "cellTypeHlGroup";
 	public static final String CRE_ALL_CELL_TYPES	= "allCellTypes";
+	public static final String CRE_CELL_TYPE_SEARCH = "cellTypeSearch";
 	public static final String CRE_ALL_STRUCTURES_DIRECT	= "allStructuresDirect";
 	public static final String CRE_EXCLUSIVE_STRUCTURES	= "exclusiveStructures";
 
