@@ -307,7 +307,15 @@ public class ESHunter<T extends ESEntity> {
 			}
 		} catch (ElasticsearchException e) {
 			if ( e.response() != null && e.response().error() != null ) {
-				log.error(e.response().error().causedBy() + "");
+				if ( e.response().error().causedBy() != null ) {
+					log.error(" ElasticsearchException: " + e.response().error().causedBy() + "");
+				} else {
+					log.error(" ElasticsearchException: " + e.response().error().reason());
+				}
+			} else if ( e.getMessage() != null ) {
+				log.error(" ElasticsearchException: " + e.getMessage());
+			} else {
+				e.printStackTrace();
 			}
 		} catch (Exception e) {			
 			e.printStackTrace();

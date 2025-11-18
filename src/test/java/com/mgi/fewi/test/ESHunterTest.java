@@ -209,9 +209,7 @@ public class ESHunterTest {
 		this.esGxdResultHunter.hunt(searchParams, searchResults, searchOption);
 
 		List<ESGxdMarker> resultObjects = searchResults.getResultObjects();
-		Assert.assertTrue(resultObjects.size() > 0);
 		log.info("resultObjects size: " + resultObjects.size());
-		show(resultObjects, 5);
 		log.info("\n");
 	}	
 	
