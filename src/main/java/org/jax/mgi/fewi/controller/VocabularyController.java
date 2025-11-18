@@ -105,6 +105,9 @@ public class VocabularyController {
     @Autowired
     private GXDHTController gxdHtController;
 
+    @Autowired
+    private RecombinaseController recombinaseController;
+
     /* OMIM vocabulary browser */
 
     @RequestMapping("/omim")
@@ -1670,10 +1673,13 @@ public class VocabularyController {
                 // gather all needed counts for this term
                 Integer resultCount = gxdController.getResultCountForCoID(id);
                 Integer htCount     = gxdHtController.getExperimentCountForCoID(id); 
-// TODO         Integer recomCount  = gxdController.getResultCountForCoID(id); 
-                //logger.info("---------- " + selectedTerm.getTerm() + " resultCount & htCount: " + resultCount + " " + htCount);
+                Integer recomCount  = recombinaseController.getAlleleCountByCellType(id); 
+                
+                logger.info("--- " + selectedTerm.getTerm() + " resultCount & htCount & recomCount: " 
+                	+ resultCount + " " + htCount + " " + recomCount);
+
                	selectedTerm.setHasAnnotations("");
-                if (resultCount > 0 || htCount > 0) {
+                if (resultCount > 0 || htCount > 0 || recomCount >0) {
 
                 	selectedTerm.setHasAnnotations("true");
 
@@ -1682,14 +1688,20 @@ public class VocabularyController {
                     if (resultCount > 0) {
                     	termAnnotLabel.append("<a id='resultLink_" + selectedTerm.getPrimaryID().getAccID() 
                     	+ "' href='" + baseUrl + "gxd/celltype/" + selectedTerm.getPrimaryID().getAccID() +"' target='_blank'>"
-                    	+ resultCount.toString() + " expression results" + "</a> ");
+                    	+ resultCount.toString() + "</a> expression results " );
                     }
                     if (htCount > 0) {
                     	termAnnotLabel.append("<a id='htLink_" + selectedTerm.getPrimaryID().getAccID() 
                     	+ "' href='" + baseUrl + "gxdhtexp_index/summary?cellType=" + selectedTerm.getTerm() +"' target='_blank'>"
-                    	+ htCount.toString() + " HT results" + "</a> ");
+                    	+ htCount.toString() + "</a> RNA-seq or microarray experiments ");
                     }
-                    selectedTerm.setAnnotationLabel( termAnnotLabel.toString() );
+                    if (recomCount > 0) {
+                    	termAnnotLabel.append("<a id='recomLink_" + selectedTerm.getPrimaryID().getAccID() 
+                    	+ "' href='" + baseUrl + "recombinase/summary?cellTypeID=" + selectedTerm.getPrimaryID().getAccID() 
+                    	+ "&cellType=" + selectedTerm.getTerm() + "' target='_blank'>"
+                    	+ recomCount.toString() + "</a> recombinase alleles ");
+                    }
+                    selectedTerm.setAnnotationLabel( termAnnotLabel.toString().trim() );
 
                    
                     // set count labels for all the children of this term
@@ -1698,9 +1710,13 @@ public class VocabularyController {
 
                         Integer childResultCount = gxdController.getResultCountForCoID(child.getPrimaryID());
                         Integer childHtCount     = gxdHtController.getExperimentCountForCoID(child.getPrimaryID()); 
-                        //logger.info("---------- " + child.getTerm() + " childResultCount & childHtCount: " + childResultCount + " " + childHtCount);
+                        Integer childRecomCount   = recombinaseController.getAlleleCountByCellType(child.getPrimaryID()); 
+                        
+                        logger.info("--- " + child.getTerm() + " childResultCount & childHtCount & childRecomCount: " 
+                        	+ childResultCount + " " + childHtCount + " " + childRecomCount);
+                        
                         child.setHasAnnotations("");
-                        if (childResultCount > 0 || childHtCount > 0) {
+                        if (childResultCount > 0 || childHtCount > 0 || childRecomCount > 0) {
 
                             child.setHasAnnotations("true"); 
 
@@ -1709,12 +1725,18 @@ public class VocabularyController {
                             if (childResultCount > 0) {
                             	childAnnotLabel.append("<a id='resultLink_" + child.getPrimaryID()
                             	+ "' href='" + baseUrl + "gxd/celltype/" + child.getPrimaryID() +"' target='_blank'>"
-                            	+ childResultCount.toString() + " expression results" + "</a> ");
+                            	+ childResultCount.toString() + "</a> expression results ");
                             }
                             if (childHtCount > 0) {
                     	        childAnnotLabel.append("<a id='htLink_" + child.getPrimaryID()
                     	        + "' href='" + baseUrl + "gxdhtexp_index/summary?cellType=" + child.getTerm() +"' target='_blank'>"
-                    	        + childHtCount.toString() + " HT results" + "</a> ");
+                    	        + childHtCount.toString() + "</a> RNA-seq or microarray experiments ");
+                            }
+                            if (childRecomCount > 0) {
+                    	        childAnnotLabel.append("<a id='htLink_" + child.getPrimaryID()
+                    	        + "' href='" + baseUrl + "recombinase/summary?cellTypeID=" + child.getPrimaryID() 
+                    	        + "&cellType=" + child.getTerm() + "' target='_blank'>"
+                    	        + childRecomCount.toString() + "</a> recombinase alleles ");
                             }
                             child.setAnnotationLabel( childAnnotLabel.toString() );
                         }
