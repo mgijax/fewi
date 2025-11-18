@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch._types.FieldSort;
 import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.GeoShapeRelation;
@@ -264,6 +265,10 @@ public class ESHunter<T extends ESEntity> {
 		searchOption.setGetGroupFirstDoc(true);
 		searchOption.setReturnFields(returnFields);
 		hunt(searchParams, searchResults, searchOption);
+		
+		if (searchResults.getTotalCount() < 1 && searchResults.getResultObjects() != null ) {
+			searchResults.setTotalCount(searchResults.getResultObjects().size());
+		}
 	}
 
 	// retrieve all buckets
@@ -300,7 +305,11 @@ public class ESHunter<T extends ESEntity> {
 				// ES endpoint "/query" for ESQL
 				huntDoQuery(searchParams, searchResults, searchOption);
 			}
-		} catch (Exception e) {
+		} catch (ElasticsearchException e) {
+			if ( e.response() != null && e.response().error() != null ) {
+				log.error(e.response().error().causedBy() + "");
+			}
+		} catch (Exception e) {			
 			e.printStackTrace();
 		}
 		log.debug("ESHunter.hunt finished");
@@ -414,9 +423,9 @@ public class ESHunter<T extends ESEntity> {
 				}
 			} else if (searchOption.isGetGroupInfo()) {
 				// parse out group info
-				Aggregate termAgg = resp.aggregations().get(groupField);
-				if (termAgg != null) {
-					parseGroupInfo(termAgg, searchResults);
+				Aggregate groupInfoAgg = resp.aggregations().get(groupField);
+				if (groupInfoAgg != null) {
+					parseGroupInfo(groupInfoAgg, searchResults);
 				}
 			} else if (searchOption.isGetGroupFirstDoc()) {
 				parseFirstDoc(resp, searchResults, searchParams);

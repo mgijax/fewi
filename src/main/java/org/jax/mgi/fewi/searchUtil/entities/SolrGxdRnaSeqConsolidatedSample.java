@@ -6,19 +6,17 @@ import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.snpdatamodel.document.ESEntity;
 
-public class ESGxdRnaSeqConsolidatedSample extends ESEntity implements SolrGxdEntity {
+public class SolrGxdRnaSeqConsolidatedSample extends ESEntity implements SolrGxdEntity {
 	protected String structure;
-	protected String structureExact;
+	protected String structureID;
 	protected Integer theilerStage;
 	protected String sex;
 	protected String age;
 	protected String strain;
 	protected String alleles;
 	protected String consolidatedSampleKey;
+	protected String assayMgiID;
 	protected Integer bioreplicateCount;
-	protected String genotype;
-	protected String assayMgiid;
-	protected String printname;
 	
 	public static final List<String> RETURN_FIELDS = List.of(GxdResultFields.STRUCTURE_EXACT,
 			GxdResultFields.THEILER_STAGE, GxdResultFields.STRAIN, GxdResultFields.GENOTYPE,
@@ -30,6 +28,12 @@ public class ESGxdRnaSeqConsolidatedSample extends ESEntity implements SolrGxdEn
 	}
 	public void setStructure(String structure) {
 		this.structure = structure;
+	}
+	public String getStructureID() {
+		return structureID;
+	}
+	public void setStructureID(String structureID) {
+		this.structureID = structureID;
 	}
 	public Integer getTheilerStage() {
 		return theilerStage;
@@ -67,34 +71,22 @@ public class ESGxdRnaSeqConsolidatedSample extends ESEntity implements SolrGxdEn
 	public void setConsolidatedSampleKey(String consolidatedSampleKey) {
 		this.consolidatedSampleKey = consolidatedSampleKey;
 	}
+	public String getAssayMgiID() {
+		return assayMgiID;
+	}
+	public void setAssayMgiID(String assayMgiID) {
+		this.assayMgiID = assayMgiID;
+	}
+
 	public Integer getBioreplicateCount() {
 		return bioreplicateCount;
 	}
 	public void setBioreplicateCount(Integer bioreplicateCount) {
 		this.bioreplicateCount = bioreplicateCount;
 	}
-	public String getStructureExact() {
-		return structureExact;
-	}
-	public void setStructureExact(String structureExact) {
-		this.structureExact = structureExact;
-	}
-	public String getGenotype() {
-		return genotype;
-	}
-	public void setGenotype(String genotype) {
-		this.genotype = genotype;
-	}
-	public String getAssayMgiid() {
-		return assayMgiid;
-	}
-	public void setAssayMgiid(String assayMgiid) {
-		this.assayMgiid = assayMgiid;
-	}
-	public String getPrintname() {
-		return printname;
-	}
-	public void setPrintname(String printname) {
-		this.printname = printname;
+	@Override
+	public String toString() {
+		return consolidatedSampleKey + " " + structure + " " + structureID + " " + theilerStage +
+				" " + sex + " " + age + " " + strain + " " + alleles + " " + assayMgiID + " " + bioreplicateCount;
 	}
 }

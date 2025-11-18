@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.ss.formula.functions.T;
 import org.jax.mgi.fewi.propertyMapper.ESPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.ESSearchOption;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
@@ -16,21 +15,18 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.ESAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdAssay;
-import org.jax.mgi.fewi.searchUtil.entities.ESGxdMarker;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdGeneMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdMarker;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdStageMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrString;
 import org.jax.mgi.fewi.sortMapper.ESSortMapper;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.shr.fe.indexconstants.ImagePaneFields;
 import org.jax.mgi.snpdatamodel.document.ESEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregate;
-import co.elastic.clients.elasticsearch._types.aggregations.StringTermsAggregate;
 import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
-import co.elastic.clients.elasticsearch._types.aggregations.TopHitsAggregate;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
-import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.elasticsearch.core.search.HitsMetadata;
 import co.elastic.clients.json.JsonData;
 
@@ -197,6 +193,9 @@ public class ESGxdSummaryBaseHunter<T extends ESEntity> extends ESHunter<T> {
 		
 		List<String> mgiIds = new ArrayList<String>();
 		for (ESAssayResult r: s.getResultObjects()) {
+			if ( r.getMarkerMgiid() == null || r.getMarkerMgiid().isBlank() ) {
+				continue;
+			}
 			mgiIds.add(r.getMarkerMgiid());
 		}
 		List<Filter> allfilters = new ArrayList<Filter>();
@@ -252,26 +251,42 @@ public class ESGxdSummaryBaseHunter<T extends ESEntity> extends ESHunter<T> {
 					}
 				}
 				case GxdResultFields.STAGE_MATRIX_GROUP -> {
-					searchResults.addResultObjects((T) mapToGeneMatrix(src));
+					searchResults.addResultObjects((T) mapToStageMatrix(src, bucket.docCount()));
 				}				
 				case GxdResultFields.GENE_MATRIX_GROUP -> {
-					searchResults.addResultObjects((T) mapToGeneMatrix(src));
+					searchResults.addResultObjects((T) mapToGeneMatrix(src, bucket.docCount()));
 				}				
 				}
 			}
 		}
 	}
 	
-	private ESGxdGeneMatrixResult mapToGeneMatrix(Map<String, Object> src) {
+	private ESGxdStageMatrixResult mapToStageMatrix(Map<String, Object> src, Long docCount) {
+		ESGxdStageMatrixResult mResult = new ESGxdStageMatrixResult();
+		mResult.setDetectionLevel((String) src.get(GxdResultFields.DETECTION_LEVEL));
+		mResult.setStructureId((String) src.get(GxdResultFields.STRUCTURE_EXACT));
+		mResult.setTheilerStage(toInt(src.get(GxdResultFields.THEILER_STAGE)));		
+		mResult.setGeneSymbol((String) src.get(GxdResultFields.MARKER_SYMBOL));
+		mResult.setPrintname((String) src.get(GxdResultFields.STRUCTURE_PRINTNAME));
+		if ( docCount != null ) {
+			mResult.setCount((int) docCount.longValue());
+		}
+		return mResult;
+	}		
+	
+	private ESGxdGeneMatrixResult mapToGeneMatrix(Map<String, Object> src, Long docCount) {
 		ESGxdGeneMatrixResult mResult = new ESGxdGeneMatrixResult();
 		mResult.setDetectionLevel((String) src.get(GxdResultFields.DETECTION_LEVEL));
 		mResult.setStructureId((String) src.get(GxdResultFields.STRUCTURE_EXACT));
 		mResult.setTheilerStage(toInt(src.get(GxdResultFields.THEILER_STAGE)));		
 		mResult.setGeneSymbol((String) src.get(GxdResultFields.MARKER_SYMBOL));
 		mResult.setPrintname((String) src.get(GxdResultFields.STRUCTURE_PRINTNAME));
+		if ( docCount != null ) {
+			mResult.setCount((int) docCount.longValue());
+		}
 		return mResult;
 	}	
-
+	
 	// Helper: map source to marker
 	private ESGxdMarker mapToMarker(Map<String, Object> src) {
 		ESGxdMarker marker = new ESGxdMarker();

@@ -79,7 +79,7 @@ import org.jax.mgi.fewi.searchUtil.entities.ESGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdMarker;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdPhenoMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdRecombinaseMatrixResult;
-import org.jax.mgi.fewi.searchUtil.entities.ESGxdRnaSeqConsolidatedSample;
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRnaSeqConsolidatedSample;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRnaSeqHeatMapResult;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdStageMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrMPCorrelationMatrixCell;
@@ -1679,7 +1679,7 @@ public class GXDController {
 		page.setStartIndex(0);
 		params.setPaginator(page);
 		
-		SearchResults<SolrGxdRnaSeqHeatMapResult> searchResults = gxdFinder.searchRnaSeqHeatMapResults(params);
+		SearchResults<SolrGxdRnaSeqHeatMapResult> searchResults = gxdFinder.searchRnaSeqHeatMapResultsCount(params);
 		logger.info("gxdRnaSeqHeatMapTotalCount() returning: " + searchResults.getTotalCount());
 
 		return Integer.toString(searchResults.getTotalCount());
@@ -1842,10 +1842,10 @@ public class GXDController {
 			fromCache = samples.size();
 
 			if (keys.size() > 0) {
-				SearchResults<ESGxdRnaSeqConsolidatedSample> searchResults = gxdFinder.searchRnaSeqConsolidatedSamples(keys);
-				List<ESGxdRnaSeqConsolidatedSample> results = searchResults.getResultObjects();
+				SearchResults<SolrGxdRnaSeqConsolidatedSample> searchResults = gxdFinder.searchRnaSeqConsolidatedSamples(keys);
+				List<SolrGxdRnaSeqConsolidatedSample> results = searchResults.getResultObjects();
 				if (results != null) {
-					for (ESGxdRnaSeqConsolidatedSample result : results) {
+					for (SolrGxdRnaSeqConsolidatedSample result : results) {
 						GxdRnaSeqHeatMapSample sample = new GxdRnaSeqHeatMapSample();
 						sample.setAge(result.getAge());
 						sample.setAlleles(result.getAlleles());

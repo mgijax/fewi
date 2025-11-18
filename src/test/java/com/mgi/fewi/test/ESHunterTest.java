@@ -23,7 +23,7 @@ import org.jax.mgi.fewi.searchUtil.entities.ESAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdMarker;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdRnaSeqHeatMapResult;
-import org.jax.mgi.fewi.searchUtil.entities.ESGxdRnaSeqConsolidatedSample;
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRnaSeqConsolidatedSample;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRnaSeqHeatMapResult;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.shr.fe.IndexConstants;
@@ -181,17 +181,47 @@ public class ESHunterTest {
 		this.esGxdResultHasImageHunter.esGxdProfileMarkerHunter = this.esGxdProfileMarkerHunter;
 
 		this.esGxdImagePaneHunter = new ESGxdImagePaneHunter(ESGxdImage.class, ES_HOST, ES_PORT, "gxd_image_pane");
-		this.esGxdConsolidatedSampleHunter = new ESGxdConsolidatedSampleHunter(ESGxdRnaSeqConsolidatedSample.class,
+		this.esGxdConsolidatedSampleHunter = new ESGxdConsolidatedSampleHunter(SolrGxdRnaSeqConsolidatedSample.class,
 				ES_HOST, ES_PORT, "gxd_consolidated_sample");
 	}
 
+	/*
+	 * Test LOOKUP JOIN of gxd_dag_edge, gxd_result, gxd_marker_profile
+	 */
+	@Test
+	public void testLookupJoinForGeneMatrix() {
+		log.info("Test: testLookupJoinForGeneMatrix");
+
+		ESLookup lookUpJoin = new ESLookup("gxd_result");
+
+		List<ESLookupIndex> lookupIndexes = new ArrayList<ESLookupIndex>();
+		lookupIndexes.add(new ESLookupIndex("gxd_dag_edge", GxdResultFields.EMAPS_ID, false));
+		//lookupIndexes.add(new ESLookupIndex("gxd_profile_marker", GxdResultFields.MARKER_MGIID, false));
+		lookUpJoin.setLookupIndexes(lookupIndexes);
+
+		SearchParams searchParams = new SearchParams();
+		List<Filter> filters = new ArrayList<Filter>();
+		filters.add(Filter.equal(GxdResultFields.MARKER_SYMBOL, "Apob"));
+
+		SearchResults<ESGxdMarker> searchResults = new SearchResults<ESGxdMarker>();
+		ESSearchOption searchOption = new ESSearchOption();
+		searchOption.setEsQuery(lookUpJoin);
+		this.esGxdResultHunter.hunt(searchParams, searchResults, searchOption);
+
+		List<ESGxdMarker> resultObjects = searchResults.getResultObjects();
+		Assert.assertTrue(resultObjects.size() > 0);
+		log.info("resultObjects size: " + resultObjects.size());
+		show(resultObjects, 5);
+		log.info("\n");
+	}	
+	
 	@Test
 	public void testConsolidateSamples() {
 		log.info("Test: testConsolidateSamples");
 		SearchParams searchParams = new SearchParams();
 
-		SearchResults<ESGxdRnaSeqConsolidatedSample> results = new SearchResults<ESGxdRnaSeqConsolidatedSample>();
-		esGxdConsolidatedSampleHunter.huntDocs(searchParams, results, ESGxdRnaSeqConsolidatedSample.RETURN_FIELDS);
+		SearchResults<SolrGxdRnaSeqConsolidatedSample> results = new SearchResults<SolrGxdRnaSeqConsolidatedSample>();
+		esGxdConsolidatedSampleHunter.huntDocs(searchParams, results, SolrGxdRnaSeqConsolidatedSample.RETURN_FIELDS);
 
 		show(results.getResultObjects(), 25);
 		log.info("\n");
