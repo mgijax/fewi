@@ -149,7 +149,6 @@ function initializeFilterLibrary(delay) {
 		filters.addFilter('methodFilter', 'Method', 'methodFilter', 'methodFilter', fewiurl + 'gxd/htexp_index/facet/method');
 		filters.setSummaryNames('filterSummary', 'filterList');
 		filters.registerCallback("htCallback", gs_updateRequest);
-		filters.registerCallback("htCallback2", gs_logFilters);
 		filters.setRemovalDivStyle('block');
 	} else {
 		setTimeout(function() { initializeFilterLibrary(delay) }, delay);

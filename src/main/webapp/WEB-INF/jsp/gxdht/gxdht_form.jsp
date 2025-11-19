@@ -117,7 +117,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 <table class="pad5 borderedTable" width="100%">
 	<tr class="buttonRow">
 		<td align="left" colspan="2">
-			<input class="buttonLabel" value="Search" type="submit" id="submit1" onClick="logSubmission()">
+			<input class="buttonLabel" value="Search" type="submit" id="submit1" >
 			&nbsp;&nbsp;
 			<input type="reset" id="reset1">
 			&nbsp;&nbsp;
@@ -215,7 +215,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 	</tr>
 	<tr class="buttonRow">
 		<td colspan="3" align="left">
-			<input class="buttonLabel" value="Search" type="submit"  id="submit2" onClick="logSubmission()">
+			<input class="buttonLabel" value="Search" type="submit"  id="submit2" >
 			&nbsp;&nbsp;
 			<input type="reset" id="reset2">
 		</td>

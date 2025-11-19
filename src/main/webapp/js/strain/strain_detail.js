@@ -24,7 +24,6 @@ $(".toggleImage").click(function(event) {
 	}
 
 	adjustDisplay(parent[0].id, action);
-	ga_logEvent('StrainDetailPageEvent', parent[0].id, action);
 });
 
 // Make any display adjustments needed when we open or close ribbons.  (Sometimes widths need to 
@@ -63,7 +62,6 @@ var loadSnpTable = function(sortBy, mode) {
 
 	// If this is same as last column sorted (and the same mode), swap the direction of the sort.
 	if ((sdSnpSortBy == sortBy) && (sdMode == mode)) {
-		if (alreadyLoadedOnce) ga_logEvent('StrainDetailPageEvent', 'snpTable', 'change sort direction');
 		if (sdSnpDir == 'asc') {
 			sdSnpDir = 'desc';
 		} else {
@@ -72,16 +70,13 @@ var loadSnpTable = function(sortBy, mode) {
 	} else if (sdMode != mode) {
 		// change in mode (all, same, diff) but same sortBy & direction
 		sdMode = mode; 
-		if (alreadyLoadedOnce) ga_logEvent('StrainDetailPageEvent', 'snpTable', 'change mode to ' + sdMode);
 	} else {
 		// Otherwise, this is a new column sort, go to default direction for that column.
 		sdSnpSortBy = sortBy;
 		if (sdSnpSortBy == 'strain') {
 			sdSnpDir = 'asc';
-			if (alreadyLoadedOnce) ga_logEvent('StrainDetailPageEvent', 'snpTable', 'sort by strain');
 		} else {
 			sdSnpDir = 'desc';
-			if (alreadyLoadedOnce) ga_logEvent('StrainDetailPageEvent', 'snpTable', 'sort by chromosome');
 		}
 	}
 	

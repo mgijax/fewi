@@ -349,7 +349,4 @@ function ageStageChange(e) {
 // Init the event listener for clicking tabs
 $('#'+ageStageID+' .tab-nav').click(ageStageChange);
 
-function logSubmission() {
-	ga_logEvent('GXD RNA-Seq and Microarray Experiment Search', 'QF Submitted');
-}
 log("loaded gxdht_query.js");

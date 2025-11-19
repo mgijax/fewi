@@ -69,11 +69,6 @@ var flipColumn = function(key) {
 
 var flipOptionalColumns = function(dontMove) {
 	hideOptionalColumns = !hideOptionalColumns;
-	if (hideOptionalColumns) {
-		ga_logEvent("GXD Assay Results", "Hid Additional Sample Data");
-	} else {
-		ga_logEvent("GXD Assay Results", "Showed Additional Sample Data");
-	}
 	flipColumn('biologicalReplicates');
 	flipColumn('strain');
 	flipColumn('sex');
@@ -671,9 +666,6 @@ handleNavigation = function (request, calledLocally) {
 		var GAState = "/gxd/summary/" + tabState + "?" + querystringWithFilters + '&records=' + getRecordsDisplayed();
 		if(GAState != previousGAState)
 		{
-			try {
-				ga_logPageview(GAState);
-			} catch (e) {};
 			previousGAState = GAState;
 		}
 	}
@@ -1204,7 +1196,6 @@ var gxdGenesTable = function (oCallback) {
 				recordOffset: Number(pRequest['startIndex']) || 0
 		};
         gtag('event', 'gxdSumGeneOffset', { 'recordOffset': oPayload.pagination.recordOffset });
-		ga_logPagination('GXD Summary', 'Genes', oPayload.pagination.recordOffset);
 		return true;
 	};
 
@@ -1323,7 +1314,6 @@ var gxdAssaysTable = function() {
 				recordOffset: Number(pRequest['startIndex']) || 0
 		};
         gtag('event', 'gxdSumAssayOffset', { 'recordOffset': oPayload.pagination.recordOffset });
-		ga_logPagination('GXD Summary', 'Assays', oPayload.pagination.recordOffset);
 		return true;
 	};
 
@@ -1448,7 +1438,6 @@ var gxdResultsTable = function() {
 				recordOffset: offset
 		};
         gtag('event', 'gxdSumResultOffset', { 'recordOffset': oPayload.pagination.recordOffset });
-		ga_logPagination('GXD Summary', 'Assay Results', oPayload.pagination.recordOffset);
 		return true;
 	};
 
@@ -1554,7 +1543,6 @@ var gxdImagesTable = function() {
 				recordOffset: Number(pRequest['startIndex']) || 0
 		};
         gtag('event', 'gxdSumImageOffset', { 'recordOffset': oPayload.pagination.recordOffset });
-		ga_logPagination('GXD Summary', 'Images', oPayload.pagination.recordOffset);
 		return true;
 	};
 
