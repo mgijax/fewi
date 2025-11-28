@@ -26,6 +26,7 @@ public class GxdHtExperiment
 	private Integer byDefault;
 	private Integer matchingSampleCount = 0;
 	private List<String> pubmedIDs;
+	private List<String> jnumIDs;
 	private Integer isInAtlas;
 	private Integer isLoaded;
 
@@ -159,6 +160,12 @@ public class GxdHtExperiment
 	}
 	public void setPubmedIDs(List<String> pubmedIDs) {
 		this.pubmedIDs = pubmedIDs;
+	}
+	public List<String> getJnumIDs() {
+		return jnumIDs;
+	}
+	public void setJnumIDs(List<String> jnumIDs) {
+		this.jnumIDs = jnumIDs;
 	}
 	@Override
 	public String toString() {

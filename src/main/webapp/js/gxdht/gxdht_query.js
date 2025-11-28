@@ -57,6 +57,13 @@ var gq_tsTooltips = {
 
 /*** functions ***/
 
+function resetAgeStage() {
+    document.getElementById('theilerStage').selectedIndex = 0
+    document.getElementById('ageUnit').selectedIndex = 0
+    document.getElementById('ageRange').value = ""
+    document.getElementById('ageRange').disabled = true
+}
+
 // reset the fields on the query form
 var gq_reset = function(e) {
 	e.preventDefault();
@@ -65,8 +72,7 @@ var gq_reset = function(e) {
 	$('input:text[name=structure]').val('');
 	
 	// age/stage ribbon
-	document.getElementById('theilerStage').selectedIndex = 0
-	document.getElementById('age').selectedIndex = 0
+	resetAgeStage();
 	selectAge();
 	
 	// Sex ribbon
@@ -89,6 +95,21 @@ var gq_reset = function(e) {
 	// strain ribbon
 	$('input:text[name=strain]').val('');
 };
+
+function enableDisableAgeInput() {
+    var elt = $('#ageUnit')[0]
+    var sel = elt.value
+    if (['P','E','A','N','ANY'].indexOf(sel) >= 0){
+	$('#ageRange')[0].value = ''
+	$('#ageRange')[0].disabled = true
+    }
+    else {
+	$('#ageRange')[0].disabled = false
+    }
+}
+
+enableDisableAgeInput(); 
+$('#ageUnit').on('change', enableDisableAgeInput);
 
 // Initialize hierarchical checkbox behavior
 // The hierarchy of checkboxes is encoded in their id attributes.
@@ -221,12 +242,15 @@ $(function() {
 			dataType: "json",
 			success: function( data ) {
 				response($.map(data["resultObjects"], function( item ) {
-					return {label: item.synonym, hasGxdHT: item.hasGxdHT,
+					return {accID:item.accID, label: item.synonym, hasGxdHT: item.hasGxdHT,
 						isStrictSynonym: item.isStrictSynonym,
 						original: item.structure};
 				}));
 			}
 		});
+	},
+	select: function (evt, ui) {
+	    $( "#structureID" )[0].value = ui.item.accID
 	},
 	minLength: 1
     }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
@@ -313,15 +337,16 @@ function changeTab(tabElement,parentId)
 //Script to set up and control the ageStage tab widget (using jquery)
 var ageStageID = "ageStage";
 function selectTheilerStage()
-{ changeTab($('#'+ageStageID+' .tab-nav')[0],ageStageID); }
-function selectAge()
 { changeTab($('#'+ageStageID+' .tab-nav')[1],ageStageID); }
-function ageStageChange(e)
-{ if(!$(this).hasClass("active-tab")) changeTab(this,ageStageID); }
+function selectAge()
+{ changeTab($('#'+ageStageID+' .tab-nav')[0],ageStageID); }
+function ageStageChange(e) {
+    if(!$(this).hasClass("active-tab")) {
+	resetAgeStage();
+        changeTab(this,ageStageID); 
+    }
+}
 // Init the event listener for clicking tabs
 $('#'+ageStageID+' .tab-nav').click(ageStageChange);
 
-function logSubmission() {
-	ga_logEvent('GXD RNA-Seq and Microarray Experiment Search', 'QF Submitted');
-}
 log("loaded gxdht_query.js");

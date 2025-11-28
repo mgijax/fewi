@@ -102,6 +102,12 @@ public class VocabularyController {
     @Autowired
     private GXDController gxdController;
     
+    @Autowired
+    private GXDHTController gxdHtController;
+
+    @Autowired
+    private RecombinaseController recombinaseController;
+
     /* OMIM vocabulary browser */
 
     @RequestMapping("/omim")
@@ -171,6 +177,18 @@ public class VocabularyController {
     }
 
     /*--- developmental anatomy browser ----------------------------------------------*/
+
+    private void addAnatomyFooter (ModelAndView mav) {
+	mav.addObject("message", "The Mouse Developmental Anatomy (EMAPA) Ontology was originally described in "
+		+ "<a href='https://www.sciencedirect.com/science/article/pii/S0925477398000690?via%3Dihub' target='_blank'>Bard et al., 1998</a> "
+		+ "and continues to be maintained, expanded, and refined by the GXD project "
+		+ "(<a href='https://jbiomedsem.biomedcentral.com/articles/10.1186/2041-1480-4-15' target='_blank'>Hayamizu et al., 2013</a>; "
+		+ "<a href='https://pmc.ncbi.nlm.nih.gov/articles/PMC4602063/' target='_blank'>Hayamizu et al. 2015</a>)."
+		+ "<br/><br/>" 
+		+ "Please <a href='mailto:MAontology@jax.org'>contact</a> us with suggestions, additions, or questions about the EMAPA Ontology. "
+		+ "Your input is welcome."
+		);
+    }
 
     /* support new GXD anatomy browser by dynamically looking up children for
      * a given node
@@ -491,6 +509,7 @@ public class VocabularyController {
 	ModelAndView mav = new ModelAndView("anatomy_term_pane");
 
 	mav.addObject("term", term);
+	addAnatomyFooter(mav);
 	mav.addObject("title", getAnatomyTermDetailTitle(term)); 
 
 	// compose the dropdown list for linking to term at other stages
@@ -584,6 +603,7 @@ public class VocabularyController {
 
 	ModelAndView mav = new ModelAndView("anatomy_detail");
 	mav.addObject("term", term);
+	addAnatomyFooter(mav);
 	mav.addObject("crossRef", id);
 
 	return mav;
@@ -625,6 +645,7 @@ public class VocabularyController {
 	mav.addObject("term", term);
 	mav.addObject("allele", allele);
 	mav.addObject("crossRef", id);
+	addAnatomyFooter(mav);
 
 	return mav;
     }
@@ -645,6 +666,7 @@ public class VocabularyController {
 
 	ModelAndView mav = new ModelAndView("anatomy_detail");
 	mav.addObject("term", term);
+	addAnatomyFooter(mav);
 
 	return mav;
     }
@@ -668,6 +690,7 @@ public class VocabularyController {
 
 	ModelAndView mav = new ModelAndView("anatomy_detail");
 	mav.addObject("term", term);
+	addAnatomyFooter(mav);
 
 	return mav;
     }
@@ -708,11 +731,13 @@ public class VocabularyController {
     	mav.addObject("treeInitialUrl", baseUrl + "treeInitial");
     	mav.addObject("treeChildrenUrl", baseUrl + "treeChildren");
     	mav.addObject("autocompleteUrl", ContextLoader.getConfigBean().getProperty("FEWI_URL") + "autocomplete/ma_ontology?query=");
-    	mav.addObject("message", "Your input is welcome. Please "
-    		+ "<a href='mailto:MAontology@jax.org'>contact</a> us with suggestions, additions, or questions "
-    		+ "about the Adult Mouse Anatomy Ontology.<p>The Adult Mouse Anatomy Ontology was originally described in "
+    	mav.addObject("message", "The Adult Mouse Anatomy (MA) Ontology was originally described in "
     		+ "<a href='https://genomebiology.biomedcentral.com/articles/10.1186/gb-2005-6-3-r29' target='_blank'>Hayamizu et al., 2005</a> "
-    		+ "and continues to be maintained, expanded, and refined by the GXD project.");
+		+ "and continues to be maintained, expanded, and refined by the GXD project "
+		+ "(<a href='https://pmc.ncbi.nlm.nih.gov/articles/PMC4602063/' target='_blank'>Hayamizu et al, 2015</a>). "
+		+ "<br/><br/> "
+		+ "Please <a href='mailto:MAontology@jax.org'>contact</a> us with suggestions, additions, or questions about the MA Ontology. "
+		+ "Your input is welcome.");
     	return mav;
     }
     
@@ -818,7 +843,11 @@ public class VocabularyController {
     	mav.addObject("treeInitialUrl", baseUrl + "treeInitial");
     	mav.addObject("treeChildrenUrl", baseUrl + "treeChildren");
     	mav.addObject("autocompleteUrl", ContextLoader.getConfigBean().getProperty("FEWI_URL") + "autocomplete/cell_ontology?query=");
-    	mav.addObject("message", "Your input is welcome.");
+    	mav.addObject("message", "The Cell Ontology (CL) is an OBO Foundry ontology and is available at: "
+		+ "<a href='https://obofoundry.org/ontology/cl.html' target='_blank'>https://obofoundry.org/ontology/cl.html</a>. "
+		+ "<br/><br/>Additional terms or revisions may be requested through the CL issue tracker at GitHub. "
+		+ "Your input is welcome."
+	);
     	return mav;
     }
     
@@ -1624,53 +1653,108 @@ public class VocabularyController {
     /* get the first term for the given id in the given vocabulary.  Return null if there are none.
      */
     private BrowserTerm getBrowserTerm(String id, String vocab) {
+
     	List<BrowserTerm> terms = vocabFinder.getBrowserTerm(id, vocab);
     	if (terms.size() < 1) {
     		terms = vocabFinder.getBrowserTerm(id.toUpperCase(), vocab);
     	}
+
     	if (terms.size() >= 1) {
-            BrowserTerm thisTerm = terms.get(0);
+
+            BrowserTerm selectedTerm = terms.get(0); // the selected browser term
             
             // Special handling for Cell Type Ontology.  Normally these counts are added in the
             // indexer layer (which was easier for other vocabs).  Cell Ontology result counts
             // are easiest to gather via controller-to-controller request.
             if (id.startsWith("CL:")) { // if it's a cell type ontology term
 
-                Integer resultCount = gxdController.getResultCountForCoID(id);
-                if (resultCount > 0) {
+				String baseUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");            
 
-                    // set label and url here; other browsers have these set upstream in indexer
-                    thisTerm.setAnnotationLabel(resultCount.toString() + " expression results");
-                    thisTerm.setAnnotationUrl("gxd/celltype/" + thisTerm.getPrimaryID().getAccID() );
-                    
-                    // set label and url for all the children of this term
-                    if (thisTerm.getChildren() != null) {
-                      for (BrowserChild child : thisTerm.getChildren() ) {
-                        Integer childResultCount = gxdController.getResultCountForCoID(child.getPrimaryID());
-                        if (childResultCount > 0) { 
-                            child.setAnnotationLabel(childResultCount.toString() + " expression results");
-                            child.setAnnotationUrl("gxd/celltype/" + child.getPrimaryID() );
-                        } else {
-                        	child.setHasNoAnnotations("true");
-                        }
-                      }
+                // gather all needed counts for this term
+                Integer resultCount = gxdController.getResultCountForCoID(id);
+                Integer htCount     = gxdHtController.getExperimentCountForCoID(id); 
+                Integer recomCount  = recombinaseController.getAlleleCountByCellType(id); 
+                
+                logger.info("--- " + selectedTerm.getTerm() + " resultCount & htCount & recomCount: " 
+                	+ resultCount + " " + htCount + " " + recomCount);
+
+               	selectedTerm.setHasAnnotations("");
+                if (resultCount > 0 || htCount > 0 || recomCount >0) {
+
+                	selectedTerm.setHasAnnotations("true");
+
+                    // set label here; other browsers have this set upstream in indexer
+                    StringBuilder termAnnotLabel = new StringBuilder("");
+                    if (resultCount > 0) {
+                    	termAnnotLabel.append("<a id='resultLink_" + selectedTerm.getPrimaryID().getAccID() 
+                    	+ "' href='" + baseUrl + "gxd/celltype/" + selectedTerm.getPrimaryID().getAccID() +"' target='_blank'>"
+                    	+ resultCount.toString() + "</a> expression results" );
                     }
-                } else { // no counts; set proper values to indicate this
-                    thisTerm.setHasNoAnnotations("true");
-                    
-                    // if the parent has no counts (rolled-up), neither do the children
-                    if (thisTerm.getChildren() != null) {
-                      for (BrowserChild child : thisTerm.getChildren() ) {
-                        child.setHasNoAnnotations("true");
+                    if (htCount > 0) {
+                    	if (termAnnotLabel.length() != 0 ) {termAnnotLabel.append("; "); }
+                    	termAnnotLabel.append("<a id='htLink_" + selectedTerm.getPrimaryID().getAccID() 
+                    	+ "' href='" + baseUrl + "gxdhtexp_index/summary?cellType=" + selectedTerm.getTerm() +"' target='_blank'>"
+                    	+ htCount.toString() + "</a> RNA-seq or microarray experiments");
+                    }
+                    if (recomCount > 0) {
+                    	if (termAnnotLabel.length() != 0 ) {termAnnotLabel.append("; "); }
+                    	termAnnotLabel.append("<a id='recomLink_" + selectedTerm.getPrimaryID().getAccID() 
+                    	+ "' href='" + baseUrl + "recombinase/summary?cellTypeID=" + selectedTerm.getPrimaryID().getAccID() 
+                    	+ "&cellType=" + selectedTerm.getTerm() + "' target='_blank'>"
+                    	+ recomCount.toString() + "</a> recombinase alleles");
+                    }
+                    selectedTerm.setAnnotationLabel( termAnnotLabel.toString().trim() );
+
+                   
+                    // set count labels for all the children of this term
+                    if (selectedTerm.getChildren() != null) {
+                      for (BrowserChild child : selectedTerm.getChildren() ) {
+
+                        Integer childResultCount = gxdController.getResultCountForCoID(child.getPrimaryID());
+                        Integer childHtCount     = gxdHtController.getExperimentCountForCoID(child.getPrimaryID()); 
+                        Integer childRecomCount   = recombinaseController.getAlleleCountByCellType(child.getPrimaryID()); 
+                        
+                        logger.info("--- " + child.getTerm() + " childResultCount & childHtCount & childRecomCount: " 
+                        	+ childResultCount + " " + childHtCount + " " + childRecomCount);
+                        
+                        child.setHasAnnotations("");
+                        if (childResultCount > 0 || childHtCount > 0 || childRecomCount > 0) {
+
+                            child.setHasAnnotations("true"); 
+
+                            // set label here; other browsers have this set upstream in indexer
+                            StringBuilder childAnnotLabel = new StringBuilder("");
+                            if (childResultCount > 0) {
+                            	childAnnotLabel.append("<a id='resultLink_" + child.getPrimaryID()
+                            	+ "' href='" + baseUrl + "gxd/celltype/" + child.getPrimaryID() +"' target='_blank'>"
+                            	+ childResultCount.toString() + "</a> expression results");
+                            }
+                            if (childHtCount > 0) {
+                            	if (childAnnotLabel.length() != 0 ) {childAnnotLabel.append("; "); }
+                    	        childAnnotLabel.append("<a id='htLink_" + child.getPrimaryID()
+                    	        + "' href='" + baseUrl + "gxdhtexp_index/summary?cellType=" + child.getTerm() +"' target='_blank'>"
+                    	        + childHtCount.toString() + "</a> RNA-seq or microarray experiments");
+                            }
+                            if (childRecomCount > 0) {
+                            	if (childAnnotLabel.length() != 0 ) {childAnnotLabel.append("; "); }
+                    	        childAnnotLabel.append("<a id='htLink_" + child.getPrimaryID()
+                    	        + "' href='" + baseUrl + "recombinase/summary?cellTypeID=" + child.getPrimaryID() 
+                    	        + "&cellType=" + child.getTerm() + "' target='_blank'>"
+                    	        + childRecomCount.toString() + "</a> recombinase alleles");
+                            }
+                            child.setAnnotationLabel( childAnnotLabel.toString() );
+                        }
                       }
                     }
                 }
             }
-    		return thisTerm;
+    		return selectedTerm;
     	}
     	return null;
     }
     
+
+
     /***--- special comparators for smart-alpha sorting vocab browser results (shared and EMAPA-specific) ---***/
     
     private class BrowserTermComparator extends SmartAlphaComparator<BrowserTerm> {

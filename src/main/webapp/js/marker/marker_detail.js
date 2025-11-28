@@ -151,7 +151,6 @@
 			}
 
 			adjustDisplay(parent[0].id, action);
-			ga_logEvent('MarkerDetailPageEvent', parent[0].id, action);
 		});
 		
 		try {
@@ -267,15 +266,12 @@ var strainRibbonGoButtonClick = function() {
 	if (option == 'fasta') {
 		// simplest one -- just get the base pairs from seqfetch.
 		
-		ga_logEvent('MarkerDetailPageEvent', 'strainMarkerTable', 'FASTA download');
 		form.action = getUrl('seqfetch');
 		form.submit();
 		
 	} else if (option == 'mgv') {
 		// We only want strains to appear in MGV if they're in the list of strains that have checks from the user.
 		// The base URL has all of them, so we need to remove any unchecked ones.
-
-		ga_logEvent('MarkerDetailPageEvent', 'strainMarkerTable', 'forward to MGV');
 
 		// We already know which checkboxes were checked; now we need to eliminate unwanted ones from the MGV URL.
 		var urlPieces = getUrl('mgv').split('&');
@@ -309,7 +305,6 @@ var strainRibbonGoButtonClick = function() {
 		
 	} else if (option == 'snps') {
 		window.open(getSangerUrl(), '_blank');
-		ga_logEvent('MarkerDetailPageEvent', 'strainMarkerTable', 'forward to Sanger SNP QF');
 		
 	} else {
 		console.log('Unrecognized value for strainOp: ' + option);

@@ -148,7 +148,9 @@
 							<td class="nowrap">${sm.location}</td>
 							<td class="sgCenter">
 							  <c:if test="${not empty sgID}">
-								<input type="checkbox" name="seqs" value="straingene!${sgID}!!!!!" class="sgCheckbox" />
+								<fmt:formatNumber value="${sm.startCoordinate}" pattern="#0" var="startCoord"/>
+								<fmt:formatNumber value="${sm.endCoordinate}" pattern="#0" var="endCoord"/>
+								<input type="checkbox" name="seqs" value="straingene!${sm.strainName}:${sgID}!${sm.chromosome}!${startCoord}!${endCoord}!${sm.strand}!" class="sgCheckbox" />
 							  </c:if>
 							</td>
 						</tr>

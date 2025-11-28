@@ -3036,7 +3036,7 @@ public class GXDController {
 	}
 
 	// lookup of result count for CellType Ontoloty term
-	public Integer getResultCountForCoID(String termID) {
+	public synchronized Integer getResultCountForCoID(String termID) {
 		logger.debug("in getResultCountForCoID(" + termID + ")");
 		SearchParams params = new SearchParams();
 		GxdQueryForm form = new GxdQueryForm();

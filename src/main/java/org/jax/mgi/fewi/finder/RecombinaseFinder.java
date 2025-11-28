@@ -157,28 +157,51 @@ public class RecombinaseFinder {
 
 
 	// Recombinase Allele Sumary - System Highlights
-	public RecombinaseHighlightInfo searchRecombinaseHighlights(SearchParams params) {
+	public RecombinaseHighlightInfo searchRecombinaseSystemHighlights(SearchParams params) {
 
-		logger.debug ("searchRecombinasesHighlights");
 		// adjust pageSize for this query
 		int originalPageSize = params.getPageSize();
 		params.setPageSize(100000);
 
+		RecombinaseHighlightInfo highlightInfo = new RecombinaseHighlightInfo();
+
+		//-----------
+		// Anatomical system highlights
 		SearchResults<RecombinaseEntity> results = new SearchResults<RecombinaseEntity>();
-
-		logger.debug ("hunt");
 		creAssayHunter.hunt(params, results, SearchConstants.CRE_SYSTEM_HL_GROUP);
-
-		// restore originalPageSize
-		params.setPageSize(originalPageSize);
 
 		SearchResults<SolrCreSystemHighlight> srSL = new SearchResults<SolrCreSystemHighlight>();
 		srSL.cloneFrom(results, SolrCreSystemHighlight.class);
 
-
-		RecombinaseHighlightInfo highlightInfo = new RecombinaseHighlightInfo();
 		highlightInfo.addSystemHighlights(srSL.getResultObjects());
 
+		// restore originalPageSize
+		params.setPageSize(originalPageSize);
+
+		return highlightInfo;
+	}
+
+	// Recombinase Allele Sumary - Cell type Highlights
+	public RecombinaseHighlightInfo searchRecombinaseCellTypeHighlights(SearchParams params) {
+
+		// adjust pageSize for this query
+		int originalPageSize = params.getPageSize();
+		params.setPageSize(100000);
+
+		RecombinaseHighlightInfo highlightInfo = new RecombinaseHighlightInfo();
+
+		//----------
+		// Cell type highlights
+		SearchResults<RecombinaseEntity> results2 = new SearchResults<RecombinaseEntity>();
+		creAssayHunter.hunt(params, results2, SearchConstants.CRE_CELL_TYPE_HL_GROUP);
+
+		SearchResults<SolrCreSystemHighlight> srSL2 = new SearchResults<SolrCreSystemHighlight>();
+		srSL2.cloneFrom(results2, SolrCreSystemHighlight.class);
+
+		highlightInfo.addCellTypeHighlights(srSL2.getResultObjects());
+
+		// restore originalPageSize
+		params.setPageSize(originalPageSize);
 
 		return highlightInfo;
 	}

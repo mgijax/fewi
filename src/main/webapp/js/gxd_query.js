@@ -809,7 +809,6 @@ function closeSummaryControl()
 
 // Instead of submitting the form, do an AJAX request
 var interceptSubmit = function(e) {
-	ga_logEvent("GXD Query Form Submission", currentQF);
 	YAHOO.util.Event.preventDefault(e);
 
 	// update GA4 with submission type (standard / profile / batch)
@@ -853,11 +852,6 @@ var interceptSubmit = function(e) {
 			// convert spaces to escaped version before submission
 			YAHOO.util.Dom.get('ids').value = YAHOO.util.Dom.get('ids').value.trimRight();
 			//YAHOO.util.Dom.get('ids').value = YAHOO.util.Dom.get('ids').value.replace(/ /g, '%20');
-		} else if (currentQF == 'standard') {
-			// If this is a search that includes RNA-Seq data, log it.
-			if (window.querystring.indexOf('assayType=RNA-Seq') >= 0) {
-				ga_logEvent('GXD Query Form: Parameters', 'Included RNA-Seq data');
-			}
 		}
 		resetYSF();
 	}

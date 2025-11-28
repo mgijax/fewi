@@ -114,7 +114,7 @@ public class GxdHtFinder {
 		// the count of matching samples for each).  If any sample-specific fields were submitted,
 		// we only want to consider relevant samples.
 		
-		if ((query.getAge() != null) || (query.getMutatedIn() != null) || (query.getSex() != null) ||
+		if ((query.getAgeUnit() != null) || (query.getMutatedIn() != null) || (query.getSex() != null) ||
 			(query.getStructure() != null) || (query.getTheilerStage() != null) || (query.getStrain() != null) ||
 			(query.getVariableFilter() != null) || (query.getStudyTypeFilter() != null) ||
 			(query.getStructureID() != null)) {

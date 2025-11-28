@@ -106,7 +106,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 <!--[if IE]> -->
 #ageStageDiv {width:21em;}
 #theilerStage {margin-left:0px;margin-right:12px;height:9.5em}
-#age {margin-left:7px;margin-right:7px;height:9.5em}
+#age {margin-left:7px;margin-right:7px;}
 #ageStageTd {height:12em;}
 <![endif]-->
 </style>
@@ -117,7 +117,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 <table class="pad5 borderedTable" width="100%">
 	<tr class="buttonRow">
 		<td align="left" colspan="2">
-			<input class="buttonLabel" value="Search" type="submit" id="submit1" onClick="logSubmission()">
+			<input class="buttonLabel" value="Search" type="submit" id="submit1" >
 			&nbsp;&nbsp;
 			<input type="reset" id="reset1">
 			&nbsp;&nbsp;
@@ -130,6 +130,8 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		<td><input type="text" size="40" name="structure" id="structureAC"
 			placeholder="any anatomical structure"
 			value="<c:out value="${queryForm.structure}"/>" />
+		    <input type="hidden" name="structureID", id="structureID" />
+
 		</td>
 	</tr>
 
@@ -138,20 +140,28 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		<td>
 		    <div id="ageStage">
 				<div class="tab-header">
-					<div class="tab-nav active-tab" id="stagesTab">Use Theiler Stages</div>
-					<div class="tab-nav inactive-tab" id="agesTab">Use Ages (dpc)</div>
+					<div class="tab-nav active-tab" id="agesTab">Use Ages</div>
+					<div class="tab-nav inactive-tab" id="stagesTab">Use Theiler Stages</div>
 				</div>
 				<div id="ageStageDiv" class="tab-content">
 					<div class="active-content">
-						<a href="${configBean.FEWI_URL}glossary/theiler" target="_blank"><img style="margin-bottom:82px;" id="" src="${configBean.WEBSHARE_URL}images/help_icon.png" /></a>
-						<form:select multiple="true" path="theilerStage" size="7" items="${queryForm.theilerStages}">
-							<form:options items="${theilerStages}" />
-	        	        </form:select>
+						<form:select path="ageUnit" items="${queryForm.ages}">
+							<form:options items="${ages}" />
+						</form:select>
+						<form:input path="ageRange" />
+						<div style="text-align: left; font-size: 9px; padding-left: 6px; padding-top: 6px; max-width: 280px; ">
+						  Examples: <br/>
+						  &nbsp;Embryonic day 10.5 <br/>
+						  &nbsp;Embryonic day 7.5-8.5 <br/>
+						  &nbsp;Postnatal week 1, 6-8 <br/>
+						</div>
 					</div>
 					<div class="inactive-content">
-						<form:select multiple="true" path="age" size="7" items="${queryForm.ages}">
-							<form:options items="${ages}" />
-	            		</form:select>
+						<a href="${configBean.FEWI_URL}glossary/theiler" target="_blank">
+						    <img style="margin-bottom:82px;" id="" src="${configBean.WEBSHARE_URL}images/help_icon.png" /></a>
+						<form:select multiple="true" path="theilerStage" size="7" items="${queryForm.theilerStages}">
+						    <form:options items="${theilerStages}" />
+						</form:select>
 					</div>
 				</div>
         	</div>
@@ -205,7 +215,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 	</tr>
 	<tr class="buttonRow">
 		<td colspan="3" align="left">
-			<input class="buttonLabel" value="Search" type="submit"  id="submit2" onClick="logSubmission()">
+			<input class="buttonLabel" value="Search" type="submit"  id="submit2" >
 			&nbsp;&nbsp;
 			<input type="reset" id="reset2">
 		</td>

@@ -66,7 +66,7 @@ public class GxdAssayResultSummaryRow {
 
 	public String getAssayID() {
 		if (result.getAssayType().startsWith("RNA-Seq")) {
-			return "<a class='extUrl' target='_blank' onClick='ga_logEvent(\"GXD Assay Results\", \"Clicked Expression Atlas link\")' href='" + expressionAtlasUrl.replace("@@@@", result.getJNum()) + "'>data</a><br/><span class='nowrap'> (" + result.getJNum() + ")</span>";
+			return "<a class='extUrl' target='_blank' href='" + expressionAtlasUrl.replace("@@@@", result.getJNum()) + "'>data</a><br/><span class='nowrap'> (" + result.getJNum() + ")</span>";
 		}
 		return "<a href='" + fewiUrl + "assay/" + result.getAssayMgiid()
 				+ "'>data</a><span> (" + result.getAssayMgiid() + ")</span>";

@@ -87,6 +87,14 @@ public class SolrGxdHtExperimentBaseHunter extends SolrHunter<GxdHtExperiment> {
 				experiment.setPubmedIDs(pmIDs);
 			}
 			
+			if (doc.getFieldValues(GxdHtFields.JNUM_IDS) != null) {
+				ArrayList<String> jnumIDs = new ArrayList<String>();
+				for (Object o : doc.getFieldValues(GxdHtFields.JNUM_IDS)) {
+					jnumIDs.add((String) o);
+				}
+				experiment.setJnumIDs(jnumIDs);
+			}
+			
 			List<String> variables = new ArrayList<String>();
 			for (Object o : doc.getFieldValues(GxdHtFields.EXPERIMENTAL_VARIABLES)) {
 				variables.add((String) o);

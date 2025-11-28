@@ -122,20 +122,6 @@ var qsProcessFilters = function() {
 	qsLastFilters = qsGetSelectedFilters();
 }
 
-// callback function: should be wired into the filters.js module as a callback.  This will track which filters are
-// applied and log a GA event when a new one has been added.
-var previousFilters = {};
-var qsLogFilters = function() {
-	var newFilters = filters.urlToHash(filters.getUrlFragment().substring(1));
-	
-	for (var field in newFilters) {
-		if (!(field in previousFilters)) {
-			ga_logEvent("QuickSearch: added filter", field);
-		}
-	}
-	previousFilters = newFilters; 
-}
-
 // show the "waiting" spinner in the given 'divName' (including the pound sign)
 var qsShowSpinner = function(divName) {
 	$(divName).html("<img src='/fewi/mgi/assets/images/loading.gif' height='21' width='21'> Waiting for results...");

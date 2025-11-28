@@ -169,8 +169,8 @@ public class RecomSpecificitySummaryRow {
     // cell types
     public String getCellTypes() {
         if (alleleSystemAssayResult.getCellTypeTerms() == null || alleleSystemAssayResult.getCellTypeTerms().size() < 1) {
-        	if (alleleSystemAssayResult.getCellTypes() != null) {
-                 return "<span class='summaryDataCell'>" + alleleSystemAssayResult.getCellTypes() + "</span>";
+        	if (alleleSystemAssayResult.getCellType() != null) {
+                 return "<span class='summaryDataCell'>" + alleleSystemAssayResult.getCellType() + "</span>";
        	    } else {
        	    	return "";
        		}        	

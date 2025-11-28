@@ -313,14 +313,6 @@ public class AccessionFinder {
     			searchResults.addResultObjects(
     				new Accession(ObjectTypes.PROBECLONE, "Probe/Clone", probe.getPrimaryID(), "MGI",
     					probe.getProbeKey(), probe.getName()) );
-    			List<ProbeSequence> seqs = probe.getSequences();
-    			if (seqs != null) {
-    				for (ProbeSequence seq : probe.getSequences()) {
-    					searchResults.addResultObjects(
-    						new Accession(ObjectTypes.SEQUENCE, "Sequence", seq.getPrimaryID(), seq.getLogicalDB(),
-    							seq.getUniqueKey(), seq.getSequence().getDescription()) );
-    				}
-    			}
     		}
     	}
     	return searchResults;

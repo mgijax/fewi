@@ -77,7 +77,7 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 
 		// jnum
 		propertyMap.put(SearchConstants.REF_ID, new SolrPropertyMapper(
-				GxdResultFields.JNUM));
+				GxdResultFields.JNUMS));
 
 		// marker ID
 		propertyMap.put(SearchConstants.MRK_ID, new SolrPropertyMapper(

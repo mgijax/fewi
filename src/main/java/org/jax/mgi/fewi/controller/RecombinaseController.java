@@ -20,10 +20,12 @@ import org.jax.mgi.fe.datamodel.AlleleSynonym;
 import org.jax.mgi.fe.datamodel.AlleleSystem;
 import org.jax.mgi.fe.datamodel.AlleleSystemAssayResult;
 import org.jax.mgi.fe.datamodel.Image;
+import org.jax.mgi.fe.datamodel.Term;
 import org.jax.mgi.fe.datamodel.group.RecombinaseEntity;
 import org.jax.mgi.fewi.finder.AlleleFinder;
 import org.jax.mgi.fewi.finder.ExpressionHelperFinder;
 import org.jax.mgi.fewi.finder.RecombinaseFinder;
+import org.jax.mgi.fewi.finder.TermFinder;
 import org.jax.mgi.fewi.forms.RecombinaseQueryForm;
 import org.jax.mgi.fewi.highlight.RecombinaseHighlightInfo;
 import org.jax.mgi.fewi.searchUtil.Filter;
@@ -77,6 +79,9 @@ public class RecombinaseController {
     private RecombinaseFinder recombinaseFinder;
 
     @Autowired
+    private TermFinder termFinder;
+
+    @Autowired
     private AlleleFinder alleleFinder;
 
     @Autowired
@@ -107,6 +112,23 @@ public class RecombinaseController {
     //-------------------------------//
     // JSON Results for Summary
     //-------------------------------//
+
+    @RequestMapping("/alleleCountByCellType/{cellTypeID}")
+    public @ResponseBody String alleleCountByCellType (
+		HttpServletResponse response,
+		@PathVariable("cellTypeID") String cellTypeID )
+    {
+    	return ""+getAlleleCountByCellType(cellTypeID);
+    }
+
+    public int getAlleleCountByCellType (String cellTypeID) {
+	RecombinaseQueryForm query = new RecombinaseQueryForm();
+	query.setCellTypeID(cellTypeID);
+        SearchParams params = new SearchParams();
+        params.setFilter(parseRecombinaseQueryForm(query));
+        SearchResults<Allele> searchResults = recombinaseFinder.searchRecombinases(params);
+	return searchResults.getTotalCount();
+    }
 
     @RequestMapping("/json")
     public @ResponseBody JsonSummaryResponse<RecombinaseSummary> recombinaseSummaryJson(
@@ -143,7 +165,14 @@ public class RecombinaseController {
         if (hasDetectedStructure || !empty(query.getSystem()) || !empty(query.getDetected()))
         {
         	// get highlight information
-        	highlightInfo = recombinaseFinder.searchRecombinaseHighlights(params);
+        	highlightInfo = recombinaseFinder.searchRecombinaseSystemHighlights(params);
+        }
+
+        RecombinaseHighlightInfo ctHighlightInfo = new RecombinaseHighlightInfo();
+        if (!empty(query.getCellTypeID()))
+        {
+        	// get highlight information
+        	ctHighlightInfo = recombinaseFinder.searchRecombinaseCellTypeHighlights(params);
         }
 
         // convert the Alleles to their RecombinaseSummary wrappers, and put
@@ -154,13 +183,8 @@ public class RecombinaseController {
         	String allKeyStr = ((Integer) allele.getAlleleKey()).toString();
         	Set<String> detectedHighlights = highlightInfo.getDetectedHighlights(allKeyStr);
         	Set<String> notDetectedHighlights = highlightInfo.getNotDetectedHighlights(allKeyStr);
-
-        	//logger.debug("allKey="+allKeyStr+" +hls=["+StringUtils.join(detectedHighlights,",")+"]");
-        	//logger.debug("allKey="+allKeyStr+" -hls=["+StringUtils.join(notDetectedHighlights,",")+"]");
-
-
-            summaries.add(new RecombinaseSummary(allele, detectedHighlights, notDetectedHighlights));
-            logger.debug(new RecombinaseSummary(allele, detectedHighlights, notDetectedHighlights).getDetectedSystems());
+        	Set<String> detectedCellTypeHighlights = ctHighlightInfo.getDetectedCellTypeHighlights(allKeyStr);
+		summaries.add(new RecombinaseSummary(allele, detectedHighlights, notDetectedHighlights, detectedCellTypeHighlights));
         }
 
         JsonSummaryResponse<RecombinaseSummary> jsonResponse = new JsonSummaryResponse<RecombinaseSummary>();
@@ -168,7 +192,7 @@ public class RecombinaseController {
         jsonResponse.setSummaryRows (summaries);
         jsonResponse.setTotalCount (searchResults.getTotalCount());
 
-        logger.info("done generating summary response");
+        logger.info("done generating summary response.");
         return jsonResponse;
     }
 
@@ -563,6 +587,24 @@ public class RecombinaseController {
 					drivers, Filter.Operator.OP_IN));
         }
 
+        // build cellType query filter
+        String cellTypeID = query.getCellTypeID();
+        if ((cellTypeID != null) && (!"".equals(cellTypeID))) {
+	    List<Term> cellTypeTerms = termFinder.getTermsByID(cellTypeID);
+	    if (cellTypeTerms.size() != 1) {
+	    	// cell type ID invalid. add a filter that returns nothing
+		filterList.add(new Filter (SearchConstants.CRE_ALL_CELL_TYPES, "-1",
+		    Filter.Operator.OP_EQUAL));
+	    } 
+	    else {
+		String cellTypeKey = Integer.toString(cellTypeTerms.get(0).getTermKey());
+		filterList.add(new Filter (SearchConstants.CRE_ALL_CELL_TYPES, cellTypeKey,
+		    Filter.Operator.OP_EQUAL));
+		filterList.add(new Filter (SearchConstants.CRE_CELL_TYPE_SEARCH, cellTypeKey,
+		    Filter.Operator.OP_EQUAL));
+	    }
+        }
+
         // build system query filter
         String system = query.getSystem();
         if ((system != null) && (!"".equals(system))) {
@@ -683,7 +725,7 @@ public class RecombinaseController {
     }
 
 
-    // generation of filters
+    // generation of filters for recombinase specificity
     private Filter genFilters(RecombinaseQueryForm query){
 
         logger.debug("->genFilters started");

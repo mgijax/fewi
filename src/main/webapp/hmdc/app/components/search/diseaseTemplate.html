@@ -34,7 +34,7 @@ function quote(s) {
 		<tbody>
 			<tr ng-repeat="row in displayedCollection">
 				<td><a target="_blank" href="{{FEWI_URL}}disease/{{ row.primaryId }}">{{ row.term }}</a></td>
-				<td><a target="_blank" href="http://www.disease-ontology.org/?id={{row.primaryId}}">{{ row.primaryId }}</a></td>
+				<td><a target="_blank" href="https://www.disease-ontology.org/?id={{row.primaryId}}">{{ row.primaryId }}</a></td>
 				<td>
 					<span ng-repeat="omimId in row.omimIds">
 						<a ng-if="!omimId.replace('OMIM:', '').startsWith('PS')" target="_blank" href="https://omim.org/entry/{{omimId.replace('OMIM:', '')}}">{{omimId}}</a><a ng-if="omimId.replace('OMIM:', '').startsWith('PS')" target="_blank" href="https://omim.org/phenotypicSeries/{{omimId.replace('OMIM:', '')}}">{{omimId}}</a><span ng-if="!$last">, </span>

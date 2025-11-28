@@ -23,7 +23,6 @@
 
 	var show_${functionID} = function(e) {
 		YAHOO.diseaseDetail.container.panel${functionID}.show(YAHOO.diseaseDetail.container.panel${functionID});
-		ga_logEvent("MarkerDetailPageEvent", "disease ID popup", "${functionID}");
 	};
 
 	YAHOO.util.Event.onDOMReady(function() {
