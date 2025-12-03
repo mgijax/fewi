@@ -297,7 +297,7 @@ public class FormatHelper {
 
 	/**
 	 * returns value used to forward a sequence to either the sequence retrieval
-	 * too, or mouse blast select-a-sequence report
+	 * tool, or mouse blast select-a-sequence report
 	 */
 	public static String getSeqForwardValue(Sequence seq) {
 		List<SequenceLocation> locList = seq.getLocations();

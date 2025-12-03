@@ -677,7 +677,13 @@ public class SequenceController {
 			    // We have an ID, so try to load the Sequence
 			    // object and add it to 'seq'.
 
+			    String provider = fields[0];
 			    String seqID = fields[1];
+			    if (provider.equals("straingene") || provider.equals("mousegenome")) {
+				// straingene and mousegenome seqIDs are prefixed with the strain
+				int i = seqID.indexOf(":");
+				if (i >= 0) seqID = seqID.substring(i+1);
+			    }
 			    seq.setSequenceID(seqID);
 
 			    Sequence seqObj = sequenceFinder.getSequenceByID(
