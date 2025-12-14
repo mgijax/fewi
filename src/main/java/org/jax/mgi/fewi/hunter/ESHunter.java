@@ -16,6 +16,7 @@ import org.jax.mgi.fewi.propertyMapper.ESPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.ESSearchOption;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.JoinClause;
+import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
@@ -265,8 +266,8 @@ public class ESHunter<T extends ESEntity> {
 		searchOption.setGetGroupFirstDoc(true);
 		searchOption.setReturnFields(returnFields);
 		hunt(searchParams, searchResults, searchOption);
-		
-		if (searchResults.getTotalCount() < 1 && searchResults.getResultObjects() != null ) {
+
+		if (searchResults.getTotalCount() < 1 && searchResults.getResultObjects() != null) {
 			searchResults.setTotalCount(searchResults.getResultObjects().size());
 		}
 	}
@@ -306,18 +307,18 @@ public class ESHunter<T extends ESEntity> {
 				huntDoQuery(searchParams, searchResults, searchOption);
 			}
 		} catch (ElasticsearchException e) {
-			if ( e.response() != null && e.response().error() != null ) {
-				if ( e.response().error().causedBy() != null ) {
+			if (e.response() != null && e.response().error() != null) {
+				if (e.response().error().causedBy() != null) {
 					log.error(" ElasticsearchException: " + e.response().error().causedBy() + "");
 				} else {
 					log.error(" ElasticsearchException: " + e.response().error().reason());
 				}
-			} else if ( e.getMessage() != null ) {
+			} else if (e.getMessage() != null) {
 				log.error(" ElasticsearchException: " + e.getMessage());
 			} else {
 				e.printStackTrace();
 			}
-		} catch (Exception e) {			
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		log.debug("ESHunter.hunt finished");
@@ -658,6 +659,12 @@ public class ESHunter<T extends ESEntity> {
 			}
 		}
 
+		// use for nested struction
+		//addNestedJoinQuery(searchParams, queryList);
+		
+		// use for flatten the nested fields
+		addJoinQuery(searchParams, queryList);
+
 		Query combinedQuery = null;
 		if (!queryList.isEmpty()) {
 			if (queryList.size() == 1) {
@@ -672,6 +679,88 @@ public class ESHunter<T extends ESEntity> {
 			}
 		}
 		return combinedQuery;
+	}
+
+	private void addJoinQuery(SearchParams searchParams, List<Query> queryList) {
+		List<Filter> joinQueryFilters = searchParams.getFilter().collectJoinQueryFilters();
+		if (joinQueryFilters == null || joinQueryFilters.isEmpty()) {
+			return;
+		}
+
+		for (Filter joinFilter : joinQueryFilters) {
+			if (joinFilter.getJoinQuery() == null || joinFilter.getJoinQuery().getNestedFilters() == null) {
+				continue;
+			}
+			List<Query> clauseQueries = new ArrayList<>();
+			for (Filter causeFilter : joinFilter.getJoinQuery().getNestedFilters()) {
+				if (causeFilter.getValues() == null || causeFilter.getValues().isEmpty()) {
+					continue;
+				}
+
+				Query termsQuery = Query.of(q -> q.terms(t -> t.field(causeFilter.getProperty())
+						.terms(ts -> ts.value(causeFilter.getValues().stream().map(FieldValue::of).toList()))));
+				Query boolQuery = Query.of(q -> q.bool(b -> {
+					if (causeFilter.getOperator() == Operator.OP_NOT_IN) {
+						b.mustNot(mn -> () -> termsQuery);
+					} else {
+						b.must(mn -> () -> termsQuery);
+					}
+					return b;
+				}));
+				clauseQueries.add(boolQuery);
+			}
+			if (clauseQueries.isEmpty()) {
+				continue;
+			}
+			Query combined = Query.of(q -> q.bool(b -> {
+				clauseQueries.forEach(cq -> b.must(m -> () -> cq));
+				return b;
+			}));
+			queryList.add(combined);
+		}
+	}
+
+	private void addNestedJoinQuery(SearchParams searchParams, List<Query> queryList) {
+		List<Filter> joinQueryFilters = searchParams.getFilter().collectJoinQueryFilters();
+		if (joinQueryFilters != null && !joinQueryFilters.isEmpty()) {
+			for (Filter joinFilter : joinQueryFilters) {
+				if (joinFilter.getJoinQuery() == null || joinFilter.getJoinQuery().getNestedFilters() == null) {
+					continue;
+				}
+
+				List<Query> nestedFilterQueries = new ArrayList<>();
+				for (Filter causeFilter : joinFilter.getJoinQuery().getNestedFilters()) {
+					if (causeFilter.getValues() == null || causeFilter.getValues().isEmpty()) {
+						continue;
+					}
+					String field = joinFilter.getFromIndex() + "." + causeFilter.getProperty();
+					Query termsQuery = Query.of(q -> q.terms(t -> t.field(field)
+							.terms(ts -> ts.value(causeFilter.getValues().stream().map(FieldValue::of).toList()))));
+
+					Query boolQuery = Query.of(b -> b.bool(bb -> {
+						if (causeFilter.getOperator() == Operator.OP_NOT_IN) {
+							bb.mustNot(mn -> () -> termsQuery);
+						} else {
+							bb.must(mn -> () -> termsQuery);
+						}
+						return bb;
+					}));
+					nestedFilterQueries.add(boolQuery);
+				}
+
+				if (!nestedFilterQueries.isEmpty()) {
+					Query combinedBoolQuery = Query.of(b -> b.bool(bb -> {
+						for (Query q : nestedFilterQueries) {
+							bb.must(m -> () -> q);
+						}
+						return bb;
+					}));
+					Query nestedQuery = Query.of(n -> n
+							.nested(nn -> nn.path(joinFilter.getFromIndex()).query(qb -> () -> combinedBoolQuery)));
+					queryList.add(nestedQuery);
+				}
+			}
+		}
 	}
 
 	private <T extends ESEntity> void parseGroupInfo(Aggregate termAgg, SearchResults searchResults) {
@@ -988,7 +1077,7 @@ public class ESHunter<T extends ESEntity> {
 			return a;
 		});
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	protected <T extends ESEntity> void parseFirstDoc(SearchResponse resp, SearchResults<T> searchResults,
 			SearchParams searchParams) {

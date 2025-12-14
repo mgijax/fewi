@@ -47,12 +47,7 @@ public class ESGxdResultHunter<T extends ESEntity> extends ESGxdSummaryBaseHunte
 		this.esHost = host;
 		this.esPort = port;
 		this.esIndex = index;
-	}
-	
-	@Override
-	protected boolean preProcessSearchParams(SearchParams searchParams, ESSearchOption searchOption) {
-		return doJoinProfileMarker(searchParams, searchOption, esGxdProfileMarkerHunter);
-	} 	
+	}	
 
 	@Value("${es.gxdresult.index}")
 	public void setESIndex(String esIndex) {

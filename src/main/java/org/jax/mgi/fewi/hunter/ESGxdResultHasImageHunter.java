@@ -43,12 +43,7 @@ public class ESGxdResultHasImageHunter<T extends ESEntity> extends ESGxdSummaryB
         this.esHost = host;
         this.esPort = port;
         this.esIndex = index;
-    }
-    
-	@Override
-	protected boolean preProcessSearchParams(SearchParams searchParams, ESSearchOption searchOption) {
-		return doJoinProfileMarker(searchParams, searchOption, esGxdProfileMarkerHunter);
-	}    
+    }  
 
     @Value("${es.gxdresulthasimage.index}")
     public void setESIndex(String esIndex) {

@@ -23,6 +23,7 @@ import org.jax.mgi.fewi.searchUtil.entities.ESAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdMarker;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdRnaSeqHeatMapResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESGxdStageMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRnaSeqConsolidatedSample;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRnaSeqHeatMapResult;
 import org.jax.mgi.fewi.util.FormatHelper;
@@ -191,25 +192,42 @@ public class ESHunterTest {
 	@Test
 	public void testLookupJoinForGeneMatrix() {
 		log.info("Test: testLookupJoinForGeneMatrix");
-
-		ESLookup lookUpJoin = new ESLookup("gxd_result");
-
-		List<ESLookupIndex> lookupIndexes = new ArrayList<ESLookupIndex>();
-		lookupIndexes.add(new ESLookupIndex("gxd_dag_edge", GxdResultFields.EMAPS_ID, false));
-		//lookupIndexes.add(new ESLookupIndex("gxd_profile_marker", GxdResultFields.MARKER_MGIID, false));
-		lookUpJoin.setLookupIndexes(lookupIndexes);
-
+		
 		SearchParams searchParams = new SearchParams();
+		List<Filter> joinFilters = new ArrayList<Filter>();
+		joinFilters.add(Filter.equal("posCAncA", "18239046"));
+		joinFilters.add(Filter.notEqual("posCAncA", "18239679"));
+		Filter joinQuery = Filter.and(joinFilters);
 		List<Filter> filters = new ArrayList<Filter>();
-		filters.add(Filter.equal(GxdResultFields.MARKER_SYMBOL, "Apob"));
+		filters.add(Filter.join("gxdProfileMarker", "markerMgiid", "markerMgiid", joinQuery));
+		
+		filters.add(Filter.notEqual(GxdResultFields.ASSAY_TYPE, "RNA-Seq"));
+		filters.add(Filter.equal(GxdResultFields.IS_WILD_TYPE, "wild type"));
 
-		SearchResults<ESGxdMarker> searchResults = new SearchResults<ESGxdMarker>();
-		ESSearchOption searchOption = new ESSearchOption();
-		searchOption.setEsQuery(lookUpJoin);
-		this.esGxdResultHunter.hunt(searchParams, searchResults, searchOption);
+		List<Filter> structIdFilters = new ArrayList<Filter>();
+		structIdFilters.add(Filter.equal(GxdResultFields.STRUCTURE_ID, "EMAPA:16105"));
+		structIdFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "Yes"));
 
-		List<ESGxdMarker> resultObjects = searchResults.getResultObjects();
+		List<Filter> structExtactFilters = new ArrayList<Filter>();
+		structExtactFilters.add(Filter.equal(GxdResultFields.STRUCTURE_EXACT, "EMAPA:16846"));
+		structExtactFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "No"));
+
+		List<Filter> structFilters = new ArrayList<Filter>();
+		structFilters.add(Filter.and(structIdFilters));
+		structFilters.add(Filter.and(structExtactFilters));
+
+		filters.add(Filter.or(structFilters));
+
+		searchParams.setFilter(Filter.and(filters));
+		
+		SearchResults<ESGxdStageMatrixResult> results = new SearchResults<ESGxdStageMatrixResult>();
+		esGxdResultHunter.huntGroupFirstDoc(searchParams, results, GxdResultFields.STAGE_MATRIX_GROUP,
+				ESGxdStageMatrixResult.RETURN_FIELDS);
+
+
+		List<ESGxdStageMatrixResult> resultObjects = results.getResultObjects();
 		log.info("resultObjects size: " + resultObjects.size());
+		show(results.getResultObjects(), 5);
 		log.info("\n");
 	}	
 	

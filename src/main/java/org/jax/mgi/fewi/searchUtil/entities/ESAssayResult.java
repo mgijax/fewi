@@ -290,4 +290,5 @@ public class ESAssayResult extends ESEntity implements SolrGxdEntity {
 	public void setStructureExact(String structureExact) {
 		this.structureExact = structureExact;
 	}
+
 }

@@ -5,6 +5,7 @@ import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
 import org.jax.mgi.snpdatamodel.document.ESEntity;
 
 public class ESDagEdge extends ESEntity implements SolrGxdEntity,DagEdge {
+	private String uniqueKey;	
 	private String parentId;
 	private String parentTerm;
 	private Integer parentStartStage;
@@ -67,5 +68,11 @@ public class ESDagEdge extends ESEntity implements SolrGxdEntity,DagEdge {
 	public String toString() {
 		return "edge (" + parentId + "," + childId
 				+ ")";
+	}
+	public String getUniqueKey() {
+		return uniqueKey;
+	}
+	public void setUniqueKey(String uniqueKey) {
+		this.uniqueKey = uniqueKey;
 	}
 }

@@ -1,13 +1,12 @@
 package org.jax.mgi.fewi.finder;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.hunter.ESGxdAssayResultHunter;
 import org.jax.mgi.fewi.hunter.ESGxdConsolidatedSampleHunter;
 import org.jax.mgi.fewi.hunter.ESGxdDagEdgeHunter;
@@ -15,23 +14,9 @@ import org.jax.mgi.fewi.hunter.ESGxdImagePaneHunter;
 import org.jax.mgi.fewi.hunter.ESGxdProfileMarkerHunter;
 import org.jax.mgi.fewi.hunter.ESGxdResultHasImageHunter;
 import org.jax.mgi.fewi.hunter.ESGxdResultHunter;
-import org.jax.mgi.fewi.hunter.SolrGxdAssayTypeFacetHunter;
-import org.jax.mgi.fewi.hunter.SolrGxdCoFacetHunter;
-import org.jax.mgi.fewi.hunter.SolrGxdDetectedFacetHunter;
-import org.jax.mgi.fewi.hunter.SolrGxdDoFacetHunter;
-import org.jax.mgi.fewi.hunter.SolrGxdGoFacetHunter;
-import org.jax.mgi.fewi.hunter.SolrGxdMarkerTypeFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdMatrixResultHunter;
-import org.jax.mgi.fewi.hunter.SolrGxdMpFacetHunter;
-import org.jax.mgi.fewi.hunter.SolrGxdProfileHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdResultHasImageHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdResultHunter;
-import org.jax.mgi.fewi.hunter.SolrGxdRnaSeqConsolidatedSampleHunter;
-import org.jax.mgi.fewi.hunter.SolrGxdRnaSeqHeatMapResultHunter;
-import org.jax.mgi.fewi.hunter.SolrGxdSystemFacetHunter;
-import org.jax.mgi.fewi.hunter.SolrGxdTheilerStageFacetHunter;
-import org.jax.mgi.fewi.hunter.SolrGxdTmpLevelFacetHunter;
-import org.jax.mgi.fewi.hunter.SolrGxdWildtypeFacetHunter;
 import org.jax.mgi.fewi.searchUtil.ESSearchOption;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
@@ -95,7 +80,7 @@ public class GxdFinder {
 
 	@Autowired
 	public ESGxdConsolidatedSampleHunter esGxdConsolidatedSampleHunter;	
-/*	
+	
 	@Autowired
 	private SolrGxdResultHunter gxdResultHunter;
 
@@ -104,7 +89,7 @@ public class GxdFinder {
 
 	@Autowired
 	private SolrGxdMatrixResultHunter gxdMatrixResultHunter;
-
+/*
 	@Autowired
 	private SolrGxdRnaSeqHeatMapResultHunter gxdRnaSeqHeatMapResultHunter;
 
@@ -280,7 +265,9 @@ public class GxdFinder {
 	 */
 	public SearchResults<SolrGxdRnaSeqHeatMapResult> searchRnaSeqHeatMapResultsCount(SearchParams params) {
 		SearchResults<SolrGxdRnaSeqHeatMapResult> results = new SearchResults<SolrGxdRnaSeqHeatMapResult>();
+		long start = System.currentTimeMillis();
 		int total = esGxdResultHunter.huntCount(params);
+		out(start, "searchRnaSeqHeatMapResultsCount");
 		results.setTotalCount(total);
 		return results;
 	}
@@ -293,7 +280,9 @@ public class GxdFinder {
 		ESSearchOption searchOption = new ESSearchOption();
 		searchOption.setReturnFields(ESGxdRnaSeqHeatMapResult.RETURN_FIELDS);
 		searchOption.setClazz(ESGxdRnaSeqHeatMapResult.class);
+		long start = System.currentTimeMillis();
 		esGxdResultHunter.hunt(params, results, searchOption);
+		out(start, "searchRnaSeqHeatMapResults");
 
 		String wildType = "wild-type";
 		List<SolrGxdRnaSeqHeatMapResult> solrResults = new ArrayList<SolrGxdRnaSeqHeatMapResult>();
@@ -474,7 +463,7 @@ public class GxdFinder {
 	public SearchResults<ESGxdStageMatrixResult> searchStageMatrixResults(SearchParams params) {
 		SearchResults<ESGxdStageMatrixResult> results = new SearchResults<ESGxdStageMatrixResult>();
 		esGxdResultHunter.huntGroupFirstDoc(params, results, GxdResultFields.STAGE_MATRIX_GROUP,
-				ESGxdStageMatrixResult.RETURN_FIELDS);		
+				ESGxdStageMatrixResult.RETURN_FIELDS);
 
 		SearchResults<ESGxdStageMatrixResult> srMR = new SearchResults<ESGxdStageMatrixResult>();
 		srMR.cloneFrom(results, ESGxdStageMatrixResult.class);
@@ -569,8 +558,11 @@ public class GxdFinder {
 	}
 
 	public SearchResults<ESDagEdge> searchMatrixDAGDescendentEdges(SearchParams params, List<String> parentTermIds) {
+		long start;
 		SearchResults<ESAssayResult> assayResult = new SearchResults<ESAssayResult>();
+		start = System.currentTimeMillis();
 		esGxdResultHunter.huntDocs(params, assayResult, List.of(GxdResultFields.EMAPS_ID));
+		out(start, "RESULT");
 		Map<String, String> maps = new HashMap<String, String>();
 		if ( assayResult.getResultObjects() != null ) {
 			for (ESAssayResult r: assayResult.getResultObjects()) {
@@ -589,12 +581,18 @@ public class GxdFinder {
 		dagParams.setFilter(Filter.and(allfilters));		
 		
 		SearchResults<ESDagEdge> results = new SearchResults<ESDagEdge>();
+		start = System.currentTimeMillis();
 		esGxdDagEdgeHunter.hunt(dagParams, results);
-
+		out(start, "DAG");
 		SearchResults<ESDagEdge> srTC = new SearchResults<ESDagEdge>();
 		srTC.cloneFrom(results, ESDagEdge.class);
 		return srTC;
 	}
+	
+	public void out(long start, String message) {
+		long end = System.currentTimeMillis();
+		logger.warn(message + ": " + (end - start) + " ms");
+	}	
 
 	public List<String> searchProfile(SearchParams params) {
 		params.setPageSize(100000);
