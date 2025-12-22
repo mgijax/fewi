@@ -140,7 +140,7 @@ public class TreeNode {
 //			sb.append("\"");
 			sb.append(",href:\"javascript:resetPanes('");
 			sb.append (this.accID);
-			sb.append("');\"");
+			sb.append("',true,'" + this.label + "');\"");
 		}
 
 		sb.append(",enable_highlight:false");

@@ -143,6 +143,7 @@ var defaultPath = null;	// list of IDs on path from root to selected node
 var waitForPath = true;	// are we waiting for defaultPath to load?
 var pathCheck = null;	// ID of interval-based check for defaultPath
 var selectedNodeID = null;	// ID of the currently highlighted node
+var selectedNodeLabel = null;
 var alreadyScrolled = false;	// have we already scrolled for this term?
 var gxdResultCount = null;	// count of GXD results for selectedNodeID
 var htExperimentCount = null;	// count of HT experiments for selectedNodeID
@@ -322,6 +323,9 @@ function resetTree(snID, fullRebuild) {
     // instantiate from the initial data set shipped with the page itself:
     log('resetTree(' + snID + ', ' + fullRebuild + ')');
     selectedNodeID = snID;
+    if( typeof(selectedNodeID) !== 'string') {
+        throw "What gives???", selectedNodeID
+    }
 //    setSelectedNode(snID);
     gxdResultCount = null;
     htExperimentCount = null;
@@ -358,7 +362,8 @@ function htExperimentLink() {
     if (htExperimentCount != '1') {
 	htText = htText + 's';
     }
-    var url = '${configBean.FEWI_URL}gxd/htexp_index/summary?structure=' + selectedNodeID;
+    var label = selectedNodeLabel ? selectedNodeLabel.replaceAll(' ','+') : selectedNodeID ;
+    var url = '${configBean.FEWI_URL}gxd/htexp_index/summary?structureID=' + selectedNodeID + '&structure=' + selectedNodeLabel.replaceAll(' ','+');
 
     return '<a href="' + url + '"><span class="htExperimentCount">' + numberWithCommas(htExperimentCount) + '</span></a> ' + htText;
 }
@@ -640,9 +645,11 @@ function fillSearchPane(contents) {
 	    el.innerHTML = contents; 
 	    makeStructureAC("searchTerm", "structureContainer");
 
-	    var emapaID = contents.match(/EMAPA:[0-9]+/);
-	    if (emapaID != null) {
-		resetPanes(emapaID, true);
+	    var match = contents.match(/(EMAPA:[0-9]+)'[^']+'([^']+)'/);
+	    if (match != null) {
+		var emapaID = match[1]
+		var emapaLabel = match[2]
+		resetPanes(emapaID, true, emapaLabel);
 	    }
 		
 	}
@@ -673,7 +680,7 @@ function resetSearch() {
     refreshSearchPane("");
 }
 
-function resetPanes(accID, rebuildTree) {
+function resetPanes(accID, rebuildTree, label) {
     // initialize the term detail and tree view panes to show the term with
     // the given accID
 
@@ -682,7 +689,7 @@ function resetPanes(accID, rebuildTree) {
     // a different option the next time).  So, we reset the form to erase this
     // flawed memory.
 
-	log('resetPanes(' + accID + ', ' + rebuildTree + ')');
+    log('resetPanes(' + accID + ', ' + rebuildTree + ')');
     var stageLinkerForm = null;
     stageLinkerForm = document.getElementById("stageLinkerForm");
     if (stageLinkerForm) {
@@ -691,6 +698,10 @@ function resetPanes(accID, rebuildTree) {
 
     selectedNode = null;
     selectedNodeID = accID;
+    if( typeof(selectedNodeID) !== 'string') {
+        throw "What gives???", selectedNodeID
+    }
+    selectedNodeLabel = label ? label : selectedNodeID;
     fetchResultCount(accID);
     fetchHtExperimentCount(accID);
     fetchPhenotypeAnnotationCount(accID);
@@ -778,7 +789,7 @@ var w = window,
 resizePanes();
 YAHOO.namespace("example.container");
 YAHOO.util.Event.onDOMReady(function () {	
-	resetPanes("${term.primaryId}", true);
+	resetPanes("${term.primaryId}", true, "${term.term}");
 	refreshSearchPane(crossRef);
 	resizePanes();
 });
