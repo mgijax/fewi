@@ -17,8 +17,6 @@
 <meta name="robots" content="NOODP"/>
 <meta name="robots" content="NOYDIR"/>
 
-<c:set var="antigen" value="${antibody.antigen}"/>
-
 <c:set var="antibodyType" value=""/>
 <c:if test="${(antibody.antibodyType == 'Polyclonal') or (antibody.antibodyType == 'Monoclonal')}">
   <c:set var="antibodyType" value="${antibody.antibodyType} "/>
@@ -33,7 +31,7 @@
 </c:if>
 
 <meta name="description" content="View ${antibodyType}antibody ${antibody.name} with antigen, genes, and references."/>
-<meta name="keywords" content="MGI, GXD, mouse, mice, murine, Mus musculus, antibody, antigen, antiserum, ${antibody.name}, <c:if test='${not empty antibody.synonyms}'>${antibody.synonyms},</c:if> ${antibody.primaryID}, ${antigen.name}"/>
+<meta name="keywords" content="MGI, GXD, mouse, mice, murine, Mus musculus, antibody, antigen, antiserum, ${antibody.name}, <c:if test='${not empty antibody.synonyms}'>${antibody.synonyms},</c:if> ${antibody.primaryID}"/>
 
 <%  // Pull detail object into servlet scope
     Antibody antibody = (Antibody) request.getAttribute("antibody");
@@ -163,7 +161,7 @@
 
 
   <!-- ROW2 : antigen -->
-  <c:if test="${not empty antigen}">
+  <c:if test="${(not empty antibody.agRegionCovered) || (not empty antibody.agNote) || (antibody.agSpecies != 'Not Specified')}">
   <tr >
     <td class="<%=leftTdStyles.getNext() %>">
       Antigen
@@ -171,59 +169,55 @@
     <td class="<%=rightTdStyles.getNext() %>">
     <table>
 	<tr>
-	<td class="rightBorderThinGray padded" width="1%" nowrap="nowrap" align="right"><span class="label">Name:</span></td>
-	<td class="padded"> <fewi:super value="${antigen.name}"/> </td>
-	</tr>
-	<tr>
 	  <td class="rightBorderThinGray padded" width="1%" nowrap="nowrap" align="right"><span class="label">Species:</span></td>
-	  <td class="padded">${antigen.species}</td>
+	  <td class="padded">${antibody.agSpecies}</td>
 	</tr>
-	<c:if test="${(antigen.strain != 'Not Specified') && (antigen.strain != 'Not Applicable')}">
+	<c:if test="${(antibody.agStrain != 'Not Specified') && (antibody.agStrain != 'Not Applicable')}">
 	<tr>
 	  <td class="rightBorderThinGray padded" width="1%" nowrap="nowrap" align="right"><span class="label">Strain:</td>
-	  <td class="padded">${antigen.strain}</td>
+	  <td class="padded">${antibody.agStrain}</td>
 	</tr>
 	</c:if>
-	<c:if test="${(antigen.sex != 'Not Specified') && (antigen.sex != 'Not Applicable')}">
+	<c:if test="${(antibody.agSex != 'Not Specified') && (antibody.agSex != 'Not Applicable')}">
 	<tr>
 	  <td class="rightBorderThinGray padded" width="1%" nowrap="nowrap" align="right"><span class="label">Sex:</td>
-	  <td class="padded">${antigen.sex}</td>
+	  <td class="padded">${antibody.agSex}</td>
 	</tr>
 	</c:if>
-	<c:if test="${(antigen.age != 'Not Specified') && (antigen.age != 'Not Applicable')}">
+	<c:if test="${(antibody.agAge != 'Not Specified') && (antibody.agAge != 'Not Applicable')}">
 	<tr>
 	  <td class="rightBorderThinGray padded" width="1%" nowrap="nowrap" align="right"><span class="label">Age:</td>
-	  <td class="padded">${antigen.age}</td>
+	  <td class="padded">${antibody.agAge}</td>
 	</tr>
 	</c:if>
-	<c:if test="${(antigen.tissue != 'Not Specified') && (antigen.tissue != 'Not Applicable')}">
+	<c:if test="${(antibody.agTissue != 'Not Specified') && (antibody.agTissue != 'Not Applicable')}">
 	<tr>
 	  <td class="rightBorderThinGray padded" width="1%" nowrap="nowrap" align="right"><span class="label">Tissue:</td>
-	  <td class="padded">${antigen.tissue}</td>
+	  <td class="padded">${antibody.agTissue}</td>
 	</tr>
 	</c:if>
-	<c:if test="${not empty antigen.tissueDescription}">
+	<c:if test="${not empty antibody.agTissueDescription}">
 	<tr>
 	  <td class="rightBorderThinGray padded" width="1%" nowrap="nowrap" align="right"><span class="label">Tissue description:</td>
-	  <td class="padded">${antigen.tissueDescription}</td>
+	  <td class="padded">${antibody.agTissueDescription}</td>
 	</tr>
 	</c:if>
-	<c:if test="${(antigen.cellLine != 'Not Specified') && (antigen.cellLine != 'Not Applicable')}">
+	<c:if test="${(antibody.agCellLine != 'Not Specified') && (antibody.agCellLine != 'Not Applicable')}">
 	<tr>
 	  <td class="rightBorderThinGray padded" width="1%" nowrap="nowrap" align="right"><span class="label">Cell Line:</td>
-	  <td class="padded">${antigen.cellLine}</td>
+	  <td class="padded">${antibody.agCellLine}</td>
 	</tr>
 	</c:if>
-	<c:if test="${not empty antigen.regionCovered}">
+	<c:if test="${not empty antibody.agRegionCovered}">
 	<tr>
 	  <td class="rightBorderThinGray padded" width="1%" nowrap="nowrap" align="right"><span class="label">Region covered:</td>
-		  <td class="padded">${antigen.regionCovered}
+		  <td class="padded">${antibody.agRegionCovered}
 	</tr>
 	</c:if>
-	<c:if test="${not empty antigen.note}">
+	<c:if test="${not empty antibody.agNote}">
 	<tr>
 	  <td class="rightBorderThinGray padded" width="1%" nowrap="nowrap" align="right"><span class="label">Note:</td>
-	  <td class="padded">${antigen.note}</td>
+	  <td class="padded">${antibody.agNote}</td>
 	</tr>
 	</c:if>
       </table>

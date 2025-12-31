@@ -140,14 +140,6 @@ public class AccessionController {
 				url = linker.getFewiKeyLink(objectType, "" + acc.getObjectKey());
 			}
 
-			// error case - antigen links now unsupported.
-			else if (objectType.equals(ObjectTypes.ANTIGEN)) {
-				mav = new ModelAndView("error");
-				mav.addObject("errorMsg",
-						"Links to antigens are no longer supported");
-				return mav; 
-			}
-
 			else {
 				logger.debug("Base case.");
 				url = linker.getFewiIDLink(acc.getObjectType(), acc.getDisplayID());        			

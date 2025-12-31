@@ -20,7 +20,6 @@ public class ObjectTypes {
 	public static String HOMOLOGY = "Homology";
 	public static String MARKER_CLUSTER = "Marker Cluster";
 	public static String ANTIBODY = "Antibody";
-	public static String ANTIGEN = "Antigen";
 	public static String MAPPING = "Experiment";
 	public static String DISEASE = "Disease";
 	public static String GENE = "Gene";

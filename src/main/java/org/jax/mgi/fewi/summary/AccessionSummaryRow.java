@@ -88,8 +88,7 @@ public class AccessionSummaryRow {
     			objectType.equals(ObjectTypes.GO_BP) ||
     			objectType.equals(ObjectTypes.GO_MF) ||
     			objectType.equals(ObjectTypes.PROBECLONE) ||
-    			objectType.equals(ObjectTypes.ANTIBODY) ||
-    			objectType.equals(ObjectTypes.ANTIGEN)) {
+    			objectType.equals(ObjectTypes.ANTIBODY)) {
     		url = feLinker.getFewiKeyLink(objectType, "" + acc.getObjectKey());
     	}
     	else {
