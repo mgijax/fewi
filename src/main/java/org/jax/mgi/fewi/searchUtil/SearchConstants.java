@@ -296,6 +296,11 @@ public class SearchConstants {
 	public static final String PRB_SEGMENT_TYPE = "segmentType";
 	public static final String PRB_PROBE = "probe";
 
+	// antibodies
+	public static final String ANTIBODY_MARKER_ID = "markerID";
+	public static final String ANTIBODY_REFERENCE_ID = "referenceID";
+	public static final String ANTIBODY_JSON = "antibody";
+
 	// genetic mapping experiments
 	public static final String MLD_EXPERIMENT_KEY = "experimentKey";
 	public static final String MLD_EXPERIMENT = "experiment";

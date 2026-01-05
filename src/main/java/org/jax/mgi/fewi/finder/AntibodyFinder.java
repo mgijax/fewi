@@ -5,7 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jax.mgi.fe.datamodel.Antibody;
+import org.jax.mgi.fewi.hunter.SolrAntibodyHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
+import org.jax.mgi.shr.jsonmodel.AntibodyJ;
+import org.jax.mgi.fewi.searchUtil.SearchParams;
+import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +35,8 @@ public class AntibodyFinder {
     @Autowired
     private HibernateObjectGatherer<Antibody> antibodyGatherer;
 
+    @Autowired
+    private SolrAntibodyHunter antibodyHunter;
 
     /*-----------------------------------------*/
     /* Retrieval of a antibody, for a given ID
@@ -58,4 +64,20 @@ public class AntibodyFinder {
     {
         return antibodyGatherer.get( Antibody.class, antibodyID, "primaryID" );
     }
+
+	/* return all Antibodies (from Solr) objects matching the given search parameters
+	 */
+	public SearchResults<AntibodyJ> getAntibodies(SearchParams searchParams) {
+		logger.debug("->getAntibodies");
+
+		// result object to be returned
+		SearchResults<AntibodyJ> searchResults = new SearchResults<AntibodyJ>();
+
+		// ask the hunter to identify which objects to return
+		antibodyHunter.hunt(searchParams, searchResults);
+		logger.debug("->hunter found " + searchResults.getResultObjects().size() + " antibodies");
+
+		return searchResults;
+	}
+	
 }

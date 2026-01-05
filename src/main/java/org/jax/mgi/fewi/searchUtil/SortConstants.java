@@ -115,6 +115,9 @@ public class SortConstants {
 	public static final String PRB_BY_NAME = "byName";
 	public static final String PRB_BY_TYPE = "byType";
 
+	// antibody sorting options
+	public static final String ANTIBODY_BY_NAME = "byName";
+
     // faux entry;  used by webapp class template
 	public static final String FOO_SORT              = "fooSort";
 	
