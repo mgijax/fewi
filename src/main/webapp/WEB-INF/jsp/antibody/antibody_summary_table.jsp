@@ -15,7 +15,7 @@
 	<table id="antibodySummaryTable">
 		<tr>
 			<th>Antibody</th>
-			<th>Gene</th>
+			<th>Genes</th>
 			<th>Type</th>
 			<th>Host</th>
 			<th>References</th>

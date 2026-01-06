@@ -161,7 +161,6 @@
 
 
   <!-- ROW2 : antigen -->
-  <c:if test="${(not empty antibody.agRegionCovered) || (not empty antibody.agNote) || (antibody.agSpecies != 'Not Specified')}">
   <tr >
     <td class="<%=leftTdStyles.getNext() %>">
       Antigen
@@ -223,7 +222,6 @@
       </table>
     </td>
   </tr>
-  </c:if>
 
   <!-- ROW3 : genes -->
   <c:if test="${not empty antibody.markers}">

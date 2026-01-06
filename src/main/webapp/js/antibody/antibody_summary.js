@@ -96,7 +96,7 @@ var updateResultsDiv = function(startIndex, rowsPerPage) {
 			
 			if ((count == 0) || (totalCount == 0)) {
 				$("#resultSummary").html("No antibodies are available for this marker.");
-				updatePageReport(null, null, null, "antibody");
+				updatePageReport(null, null, null, "antibody", "antibodies");
 				updatePaginator(totalCount, null, updatePaginationParameters);
 				return;
 			}
@@ -112,7 +112,7 @@ var updateResultsDiv = function(startIndex, rowsPerPage) {
 			$("#resultSummary").html(newtext);
 			log("updated div on page");
 			
-			updatePageReport(start, end, totalCount, "antibody");
+			updatePageReport(start, end, totalCount, "antibody", "antibodies");
 			updatePaginator(totalCount, null, updatePaginationParameters);
 			
 			window.scrollTo(xPos, yPos);
@@ -121,19 +121,19 @@ var updateResultsDiv = function(startIndex, rowsPerPage) {
 };
 
 // update divs with the pageReport class to show a message about which items are displayed currently
-var updatePageReport = function(start, end, totalCount, item) {
-	if ((start == null) || (end == null) || (totalCount == null) || (item == null)) {
+var updatePageReport = function(start, end, totalCount, itemSingular, itemPlural) {
+	if ((start == null) || (end == null) || (totalCount == null) || (itemSingular == null) || (itemPlural == null)) {
 		$(".pageReport").html("");
 		return;
 	}
 
 	var message = "Showing ";
 	if (start == 0) {
-		message = message + item + "s 0 of " + totalCount;
+		message = message + itemPlural + " 0 of " + totalCount;
 	} else if (start == end) {
-		message = message + item + " " + start + " of " + totalCount;
+		message = message + itemSingular + " " + start + " of " + totalCount;
 	} else if (start < end) {
-		message = message + item + "s " + start + " - " + end + " of " + totalCount;
+		message = message + itemPlural + " " + start + " - " + end + " of " + totalCount;
 	} else {
 		message = "Searching...";
 	}
