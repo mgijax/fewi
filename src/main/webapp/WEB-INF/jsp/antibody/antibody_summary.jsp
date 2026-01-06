@@ -75,7 +75,6 @@ body.yui-skin-sam div#outerGxd {position:relative;}
     </div>
     <div id="gxdCenteredTitle">
 	<span class="titleBarMainTitleGxd">Antibody Summary</span>
-	<br>Detail
     </div>
     <div id="headerRightGxd">
     </div>

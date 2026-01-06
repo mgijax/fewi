@@ -30,6 +30,9 @@
 									</c:choose>
 									<div style="float: left; padding-right: 25px;">${item.countType} <a href="${reagentUrl}${reagentType}" id="${fn:replace(item.countType, ' ', '')}Link">${item.count}</a></div>
 								</c:forEach>
+								<c:if test="${marker.countOfAntibodies > 0}">
+									<div style="float: left; padding-right: 25px;">Antibodies <a href="${configBean.FEWI_URL}antibody/marker/${marker.primaryID}" id="antibodyLink">${marker.countOfAntibodies}</a></div>
+								</c:if>
 								<c:if test="${marker.countOfMicroarrayProbesets > 0}">
 									<br/>
 									<div style="float: left; padding-right: 25px;">Microarray probesets <a href="${configBean.FEWI_URL}marker/probeset/${marker.primaryID}" id="microarrayLink">${marker.countOfMicroarrayProbesets}</a></div>
