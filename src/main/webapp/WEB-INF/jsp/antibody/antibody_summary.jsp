@@ -43,7 +43,7 @@ td.summaryHeaderCat1Gxd { font-weight: bold; }
 
 #antibodySummaryTable { width: 100%; }
 #antibodySummaryTable tr:nth-child(odd) { background-color: #dddddd; }
-#antibodySummaryTable th { border: 1px solid gray; padding: 4px; background-color: #d0e0f0; font-weight: bold; }
+#antibodySummaryTable th { border: 1px solid gray; padding: 4px; background-color: #EBCA6D; font-weight: bold; }
 #antibodySummaryTable td { border: 1px solid gray; padding: 4px; }
 
 #sequenceType { margin-top: 5px; margin-bottom: 5px; }
@@ -68,34 +68,40 @@ body.yui-skin-sam div#outerGxd {position:relative;}
 <iframe id="yui-history-iframe" src="/fewi/blank.html"></iframe>
 <input id="yui-history-field" type="hidden">
 
-
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="EXPRESSION_antibody_summary_help.shtml" style="min-width: 1000px">
-	<div id="pageHeaderWrapper" style='display:inline-block; margin-top: 5px;'>
-	<span class="titleBarMainTitle">Antibody Summary</span>
-	</div>
+<div id="titleBarWrapperGxd" userdoc="EXPRESSION_antibody_summary_help.shtml">	
+    <div id="gxdLogoDiv">
+	<a href="${configBean.HOMEPAGES_URL}expression.shtml"><img class="gxdLogo" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="75"></a>
+    </div>
+    <div id="gxdCenteredTitle">
+	<span class="titleBarMainTitleGxd">Antibody Summary</span>
+	<br>Detail
+    </div>
+    <div id="headerRightGxd">
+    </div>
 </div>
+
 
 <c:if test="${not empty marker}">
   <!-- marker header -->
-  <%@ include file="/WEB-INF/jsp/marker_header.jsp" %>
+  <%@ include file="/WEB-INF/jsp/gxd/gxd_marker_header.jsp" %>
 </c:if>
 
 <c:if test="${not empty reference}">
   <!-- reference header (copied from sequence summary) -->
-<table class="summaryHeader">
-<tr>
-  <td class="summaryHeaderCat1"><b>Reference</b></td>
-  <td class="summaryHeaderData1">
-    <a style="font-size:large;  font-weight: bold; padding-bottom:10px;" 
-      href="${configBean.FEWI_URL}reference/${reference.jnumID}">
-      ${reference.jnumID}
-    </a>
-    <div style="padding:4px;"> </div>
-    ${reference.shortCitation}
-  </td>
-</tr>
-</table>
+  <table class="summaryHeader">
+  <tr>
+    <td class="summaryHeaderCat1Gxd"><b>Reference</b></td>
+    <td class="summaryHeaderData1">
+      <a style="font-size:large;  font-weight: bold; padding-bottom:10px;" 
+        href="${configBean.FEWI_URL}reference/${reference.jnumID}">
+        ${reference.jnumID}
+      </a>
+      <div style="padding:4px;"> </div>
+      ${reference.shortCitation}
+    </td>
+  </tr>
+  </table>
 </c:if>
 
 <br clear="all" />
