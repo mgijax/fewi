@@ -117,6 +117,8 @@ public class SortConstants {
 
 	// antibody sorting options
 	public static final String ANTIBODY_BY_NAME = "byName";
+	public static final String ANTIBODY_BY_GENE = "byGene";
+	public static final String ANTIBODY_BY_REF_COUNT = "byRefCount";
 
     // faux entry;  used by webapp class template
 	public static final String FOO_SORT              = "fooSort";

@@ -266,7 +266,15 @@ public class AntibodyController {
 		logger.debug("->genSorts started");
 
 		boolean desc = false;
-		String sort = SortConstants.PRB_BY_NAME;
+		String sort = SortConstants.ANTIBODY_BY_NAME;
+
+		String markerID = queryForm.getMarkerID();
+		String referenceID = queryForm.getReferenceID();
+		if( markerID != null && !markerID.equals("")) {
+		    sort = SortConstants.ANTIBODY_BY_REF_COUNT;
+		} else if (referenceID != null && !referenceID.equals("")) {
+		    sort = SortConstants.ANTIBODY_BY_GENE;
+		}
 		
 		List<Sort> sorts = new ArrayList<Sort>();
 		sorts.add(new Sort(sort, desc));
