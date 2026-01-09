@@ -42,7 +42,7 @@
 	<div class='legendSection legendFont'>
 		<div id='legendCredits' style="clear:both; padding-top: 3px; padding-bottom: 10px;">
 			Data file provided by GXD<br/>
-			Heat map visualization and analysis tools rendered by <a href="${externalUrls.MORPHEUS}" target="_blank" tabindex="-1" style="color:blue">Morpheus</a>
+			Heat map visualization and analysis tools rendered by <a href="/morpheus" target="_blank" tabindex="-1" style="color:blue">Morpheus</a>
 		</div>
 		
 		<div id="legendBioreplicates">
@@ -146,9 +146,9 @@
 		</div>
 		
 		<div id="legendDocs">	
-			<a href="${externalUrls.MORPHEUS}/documentation.html" target="_blank" tabIndex="-1" style="color:blue">Documentation</a>
+			<a href="/morpheus/documentation.html" target="_blank" tabIndex="-1" style="color:blue">Documentation</a>
 			and
-			<a href="${externalUrls.MORPHEUS}/tutorial.html" target="_blank" tabIndex="-1" style="color:blue">tutorial</a>
+			<a href="/morpheus/tutorial.html" target="_blank" tabIndex="-1" style="color:blue">tutorial</a>
 			can be found at Morpheus.
 		</div>
 	</div><!-- legendSection -->

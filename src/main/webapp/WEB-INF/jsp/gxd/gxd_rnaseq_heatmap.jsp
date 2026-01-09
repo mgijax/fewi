@@ -16,7 +16,7 @@
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/fewi_utils.js"></script>
 
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/gxd/gxd_summary.css" />
-<link rel="stylesheet" type="text/css" href="${externalUrls.MORPHEUS}/css/morpheus-latest.min.css" />
+<link rel="stylesheet" type="text/css" href="/morpheus/css/morpheus-latest.min.css" />
 
 <style>
   body.yui-skin-sam .yui-panel .hd,
@@ -92,7 +92,7 @@
 	<div id="ysfDiv">${ysf}
 	</div>
 	<div id="poweredByDiv">Visualization and analysis tools rendered by 
-	  <a href="${externalUrls.MORPHEUS}" target="_blank">
+	  <a href="/morpheus" target="_blank">
 		<B>Morpheus</B>
 		<svg id="morpheusIcon" width="24px" height="24px">
 			<g>
@@ -118,8 +118,8 @@
   <jsp:include page="gxd_rnaseq_heatmap_legend_popup.jsp"></jsp:include>
 </div>
 
-<script type="text/javascript" src="${externalUrls.MORPHEUS}/js/morpheus-latest.min.js"></script>
-<script type="text/javascript" src="${externalUrls.MORPHEUS}/js/morpheus-external-latest.min.js"></script>
+<script type="text/javascript" src="/morpheus/js/morpheus-latest.min.js"></script>
+<script type="text/javascript" src="/morpheus/js/morpheus-external-latest.min.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd/rnaseq_heatmap.js"></script>
 <script type="text/javascript">
 var queryString = '${e:forHtml(queryString)}';
