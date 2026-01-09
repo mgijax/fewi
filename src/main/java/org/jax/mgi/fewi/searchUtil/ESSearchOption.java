@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.searchUtil;
 
 import java.util.List;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 
 public class ESSearchOption {
 	private boolean useCountEndpoint = false;
@@ -16,6 +17,7 @@ public class ESSearchOption {
 	private String extraJoinClause;
 	private ESQuery esQuery;
 	private Class<?> clazz;
+	private List<Query> extraQueries;
 
 	public ESSearchOption() {
 	}
@@ -122,5 +124,13 @@ public class ESSearchOption {
 
 	public void setGetAllBuckets(boolean getAllBuckets) {
 		this.getAllBuckets = getAllBuckets;
+	}
+
+	public List<Query> getExtraQueries() {
+		return extraQueries;
+	}
+
+	public void setExtraQueries(List<Query> extraQueries) {
+		this.extraQueries = extraQueries;
 	}
 }

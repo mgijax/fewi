@@ -1,5 +1,6 @@
 package org.jax.mgi.fewi.hunter;
 
+import java.lang.System.Logger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.jax.mgi.snpdatamodel.document.ESEntity;
 
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregate;
 import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.HitsMetadata;
 import co.elastic.clients.json.JsonData;
@@ -151,9 +153,10 @@ public class ESGxdSummaryBaseHunter<T extends ESEntity> extends ESHunter<T> {
 		/*
 		 * subclasses define what they need to return; that is not dealt with here
 		 */
-	}
+	}	
 	
-	protected boolean doJoinProfileMarker(SearchParams searchParams, ESSearchOption searchOption, ESGxdProfileMarkerHunter esGxdProfileMarkerHunter) {
+	protected boolean doJoinProfileMarker(SearchParams searchParams, ESSearchOption searchOption, 
+			ESGxdProfileMarkerHunter esGxdProfileMarkerHunter, List<Query> extraQueries) {
 		if ( searchParams.getFilter() == null ) {
 			return false;
 		}
@@ -180,13 +183,12 @@ public class ESGxdSummaryBaseHunter<T extends ESEntity> extends ESHunter<T> {
 		
 		SearchParams p = new SearchParams();
 		p.setPageSize(SearchConstants.SEARCH_MAX_PAGE_SIZE_FOR_MARKER_PROFILE);   // max out total of gxd_profile_marker index
-		p.setFilter(joinFilter.getJoinQuery());
 		SearchResults<ESAssayResult> s = new SearchResults<ESAssayResult>();
 		ESSearchOption o = new ESSearchOption();
+		o.setExtraQueries(extraQueries);
 		o.setClazz(ESAssayResult.class);
 		o.setReturnFields(List.of(GxdResultFields.MARKER_MGIID));
 		esGxdProfileMarkerHunter.hunt(p, s, o);
-		
 		if ( s.getResultObjects() == null || s.getResultObjects().size() < 1) {
 			return true;
 		}

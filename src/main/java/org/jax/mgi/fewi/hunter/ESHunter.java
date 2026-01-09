@@ -2,6 +2,7 @@ package org.jax.mgi.fewi.hunter;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +59,7 @@ import co.elastic.clients.elasticsearch._types.aggregations.TopHitsAggregation;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryStringQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.TermQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.TermsQuery;
 import co.elastic.clients.elasticsearch.core.CountRequest;
 import co.elastic.clients.elasticsearch.core.CountResponse;
@@ -627,12 +629,6 @@ public class ESHunter<T extends ESEntity> {
 		List<Query> queryList = new ArrayList<>();
 		// create "Query String Query"
 		String queryString = translateFilter(searchParams.getFilter(), propertyMap);
-		if (queryString != null && !queryString.isEmpty()) {
-			QueryStringQuery.Builder qsb = new QueryStringQuery.Builder();
-			qsb.query(queryString);
-			Query queryStringQuery = new QueryStringQuery.Builder().query(queryString).build()._toQuery();
-			queryList.add(queryStringQuery);
-		}
 
 		List<Filter> shapeFilters = null;
 		List<Filter> inFilters = null;
@@ -659,12 +655,17 @@ public class ESHunter<T extends ESEntity> {
 			}
 		}
 
-		// use for nested struction
-		//addNestedJoinQuery(searchParams, queryList);
-		
-		// use for flatten the nested fields
-		addJoinQuery(searchParams, queryList);
+		if (searchOption.getExtraQueries() != null) {
+			queryList.addAll(searchOption.getExtraQueries());
+		}
 
+		if (queryString != null && !queryString.isEmpty()) {
+			QueryStringQuery.Builder qsb = new QueryStringQuery.Builder();
+			qsb.query(queryString);
+			Query queryStringQuery = new QueryStringQuery.Builder().query(queryString).build()._toQuery();
+			queryList.add(queryStringQuery);
+		}		
+		
 		Query combinedQuery = null;
 		if (!queryList.isEmpty()) {
 			if (queryList.size() == 1) {
@@ -681,17 +682,19 @@ public class ESHunter<T extends ESEntity> {
 		return combinedQuery;
 	}
 
-	private void addJoinQuery(SearchParams searchParams, List<Query> queryList) {
+	protected List<Query> getQueryFromJoinFilter(SearchParams searchParams) {
+		List<Query> queryList = new ArrayList<>();
 		List<Filter> joinQueryFilters = searchParams.getFilter().collectJoinQueryFilters();
 		if (joinQueryFilters == null || joinQueryFilters.isEmpty()) {
-			return;
+			return queryList;
 		}
 
 		for (Filter joinFilter : joinQueryFilters) {
 			if (joinFilter.getJoinQuery() == null || joinFilter.getJoinQuery().getNestedFilters() == null) {
 				continue;
 			}
-			List<Query> clauseQueries = new ArrayList<>();
+			List<Query> filters = new ArrayList<>();
+			List<Query> excludes = new ArrayList<>();
 			for (Filter causeFilter : joinFilter.getJoinQuery().getNestedFilters()) {
 				if (causeFilter.getValues() == null || causeFilter.getValues().isEmpty()) {
 					continue;
@@ -699,28 +702,32 @@ public class ESHunter<T extends ESEntity> {
 
 				Query termsQuery = Query.of(q -> q.terms(t -> t.field(causeFilter.getProperty())
 						.terms(ts -> ts.value(causeFilter.getValues().stream().map(FieldValue::of).toList()))));
-				Query boolQuery = Query.of(q -> q.bool(b -> {
-					if (causeFilter.getOperator() == Operator.OP_NOT_IN) {
-						b.mustNot(mn -> () -> termsQuery);
-					} else {
-						b.must(mn -> () -> termsQuery);
-					}
-					return b;
-				}));
-				clauseQueries.add(boolQuery);
+				if (causeFilter.getOperator() == Operator.OP_NOT_EQUAL || causeFilter.getOperator() == Operator.OP_NOT_IN) {
+					excludes.add(termsQuery);
+				} else {
+					filters.add(termsQuery);
+				}
 			}
-			if (clauseQueries.isEmpty()) {
+			if (filters.isEmpty() && excludes.isEmpty()) {
 				continue;
 			}
-			Query combined = Query.of(q -> q.bool(b -> {
-				clauseQueries.forEach(cq -> b.must(m -> () -> cq));
-				return b;
-			}));
-			queryList.add(combined);
+			Query finalQuery;
+			if (excludes.isEmpty() && filters.size() == 1) {
+				finalQuery = filters.get(0);
+			} else {
+				BoolQuery.Builder boolBuilder = new BoolQuery.Builder().filter(filters); 
+				if (!excludes.isEmpty()) {
+					boolBuilder.mustNot(excludes); // also filter context
+				}
+				finalQuery = new Query.Builder().bool(boolBuilder.build()).build();
+			}
+			queryList.add(finalQuery);
 		}
+		return queryList;
 	}
 
-	private void addNestedJoinQuery(SearchParams searchParams, List<Query> queryList) {
+	protected List<Query> getQueryFromNestedJoinQuery(SearchParams searchParams) {
+		List<Query> queryList = new ArrayList<>();
 		List<Filter> joinQueryFilters = searchParams.getFilter().collectJoinQueryFilters();
 		if (joinQueryFilters != null && !joinQueryFilters.isEmpty()) {
 			for (Filter joinFilter : joinQueryFilters) {
@@ -761,6 +768,7 @@ public class ESHunter<T extends ESEntity> {
 				}
 			}
 		}
+		return queryList;
 	}
 
 	private <T extends ESEntity> void parseGroupInfo(Aggregate termAgg, SearchResults searchResults) {

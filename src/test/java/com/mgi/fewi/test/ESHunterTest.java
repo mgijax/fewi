@@ -44,125 +44,15 @@ import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.json.JsonData;
 
-/*
- * 
-Elasticsearch endpoints
-	/_search → main workhorse (JSON DSL query)
-	/_query → new ES|QL endpoint (pipeline syntax)
-	/_count → just counts
-	/_msearch → batch searches
-	/_async_search → long-running searches
-	/_knn_search → vector-based semantic search
-	/_sql → SQL-style search
-	/_eql/search → sequence-based event queries
-
-Previously we only use the "query_string" to do all the query 
-	POST /gxd_result/_search?typed_keys=true
-	{
-	  "query": {
-	    "query_string": {
-	      "query": "((nomenclature:\"Apob\") AND (assayType:\"Western blot\"))"
-	    }
-	  }
-	}
-
-Added aggregation and shape query 
-	POST /gxd_result/_search?typed_keys=true
-	{
-	  "query": {
-	    "bool": {
-	      "must": [
-	        {
-	          "query_string": {
-	            "query": "(nomenclature:\"Apob \"~100 AND assayType:\"Western blot\")"
-	          }
-	        },
-	        {
-	          "shape": {
-	            "mc": {
-	              "relation": "intersects",
-	              "shape": {
-	                "type": "geometrycollection",
-	                "geometries": [
-	                  {
-	                    "type": "envelope",
-	                    "coordinates": [
-	                      [0, 10000000000],
-	                      [3310000000, 3302999999]
-	                    ]
-	                  }
-	                ]
-	              }
-	            }
-	          }
-	        }
-	      ]
-	    }
-	  },
-	  "aggregations": {
-	    "assayKey": {
-	      "terms": {
-	        "field": "assayKey",
-	        "order": [
-	          { "_key": "asc" }
-	        ],
-	        "size": 8
-	      },
-	      "aggregations": {
-	        "bucket_pagination": {
-	          "bucket_sort": {
-	            "from": 3,
-	            "size": 5,
-	            "sort": [
-	              { "_key": { "order": "asc" } }
-	            ]
-	          }
-	        },
-	        "first_doc": {
-	          "top_hits": {
-	            "size": 1,
-	            "_source": {
-	              "includes": [
-	                "markerSymbol",
-	                "assayKey",
-	                "assayMgiid",
-	                "assayType",
-	                "jNum",
-	                "shortCitation"
-	              ]
-	            }
-	          }
-	        }
-	      }
-	    }
-	  }
-	}
-
-/_query for joining of multiple indexes
-	POST /_query
-	{
-	  "query": """
-	    FROM gxd_result_has_image METADATA _id
-	    | LOOKUP JOIN gxd_image_pane ON resultKey
-	    | LOOKUP JOIN gxd_consolidated_sample ON strain
-	    | WHERE markerSymbol == "Wnt1"
-	    | KEEP markerSymbol, imageID, metaData
-	    | WHERE imageID is not NULL
-	  """
-	}
-
- * 
- * 
- * 
- */
-
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ESHunterTest {
 	private static final Logger log = LoggerFactory.getLogger(ESHunterTest.class);
 
 	private static final String ES_HOST = "bhmgigxdsolr01ld.jax.org";
-//	private static final String ES_HOST = "localhost";
 	private static final String ES_PORT = "9200";
+//	private static final String ES_HOST = "localhost";
+//	private static final String ES_HOST = "my-elasticsearch-project-e27cf3.es.us-east1.gcp.elastic.cloud";
+//	private static final String ES_PORT = "443";	
 
 	private ESGxdResultHunter esGxdResultHunter;
 	private ESGxdResultHasImageHunter esGxdResultHasImageHunter;
@@ -177,6 +67,7 @@ public class ESHunterTest {
 				"gxd_profile_marker");
 		this.esGxdResultHunter = new ESGxdResultHunter(ESAssayResult.class, ES_HOST, ES_PORT, "gxd_result");
 		this.esGxdResultHunter.esGxdProfileMarkerHunter = this.esGxdProfileMarkerHunter;
+		
 		this.esGxdResultHasImageHunter = new ESGxdResultHasImageHunter(ESEntity.class, ES_HOST, ES_PORT,
 				"gxd_result_has_image");
 		this.esGxdResultHasImageHunter.esGxdProfileMarkerHunter = this.esGxdProfileMarkerHunter;
@@ -195,8 +86,9 @@ public class ESHunterTest {
 		
 		SearchParams searchParams = new SearchParams();
 		List<Filter> joinFilters = new ArrayList<Filter>();
-		joinFilters.add(Filter.equal("posCAncA", "18239046"));
-		joinFilters.add(Filter.notEqual("posCAncA", "18239679"));
+		joinFilters.add(Filter.in("posCAncA", List.of("18239046", "18240789")));
+		joinFilters.add(Filter.equal("posCExact", "115407125"));
+		joinFilters.add(Filter.notIn("posCAncA", List.of("18239679")));
 		Filter joinQuery = Filter.and(joinFilters);
 		List<Filter> filters = new ArrayList<Filter>();
 		filters.add(Filter.join("gxdProfileMarker", "markerMgiid", "markerMgiid", joinQuery));
@@ -219,7 +111,7 @@ public class ESHunterTest {
 		filters.add(Filter.or(structFilters));
 
 		searchParams.setFilter(Filter.and(filters));
-		
+
 		SearchResults<ESGxdStageMatrixResult> results = new SearchResults<ESGxdStageMatrixResult>();
 		esGxdResultHunter.huntGroupFirstDoc(searchParams, results, GxdResultFields.STAGE_MATRIX_GROUP,
 				ESGxdStageMatrixResult.RETURN_FIELDS);
@@ -303,8 +195,9 @@ public class ESHunterTest {
 //		log.info("images estimation total: " + totalEstimate + ", total: " + total);
 
 		List<Filter> joinFilters = new ArrayList<Filter>();
-		joinFilters.add(Filter.equal("posCAncA", "18239046"));
-		joinFilters.add(Filter.notEqual("posCAncA", "18239679"));
+		joinFilters.add(Filter.in("posCAncA", List.of("18239046", "18240789")));
+		joinFilters.add(Filter.equal("posCExact", "115407125"));
+		joinFilters.add(Filter.notIn("posCAncA", List.of("18239679")));
 		Filter joinQuery = Filter.and(joinFilters);
 
 		List<Filter> filters = new ArrayList<Filter>();

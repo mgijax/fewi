@@ -1,5 +1,7 @@
 package org.jax.mgi.fewi.hunter;
 
+import java.util.List;
+
 import org.jax.mgi.fewi.searchUtil.ESSearchOption;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
@@ -8,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+
 /**
  * Generic hunter for the gxdResultHasImage index that can operate on any subclass of ESEntity.
  */
@@ -15,7 +19,7 @@ import org.springframework.stereotype.Repository;
 public class ESGxdResultHasImageHunter<T extends ESEntity> extends ESGxdSummaryBaseHunter<T> {
 
 	@Autowired
-	public ESGxdProfileMarkerHunter esGxdProfileMarkerHunter;		
+	public ESGxdProfileMarkerHunter esGxdProfileMarkerHunter;
 	
     /***
      * Default constructor uses ESEntity as the type.
@@ -44,6 +48,13 @@ public class ESGxdResultHasImageHunter<T extends ESEntity> extends ESGxdSummaryB
         this.esPort = port;
         this.esIndex = index;
     }  
+    
+	@Override
+	protected boolean preProcessSearchParams(SearchParams searchParams, ESSearchOption searchOption) {
+		List<Query> extraQueries = getQueryFromJoinFilter(searchParams);
+		searchOption.setExtraQueries(extraQueries);
+		return false;
+	}      
 
     @Value("${es.gxdresulthasimage.index}")
     public void setESIndex(String esIndex) {

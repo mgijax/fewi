@@ -14,11 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+
 @Repository
 public class ESGxdResultHunter<T extends ESEntity> extends ESGxdSummaryBaseHunter<T> {
 
 	@Autowired
-	public ESGxdProfileMarkerHunter esGxdProfileMarkerHunter;	
+	public ESGxdProfileMarkerHunter esGxdProfileMarkerHunter;
 	
 	/***
 	 * Default constructor uses ESEntity as the type.
@@ -47,6 +49,15 @@ public class ESGxdResultHunter<T extends ESEntity> extends ESGxdSummaryBaseHunte
 		this.esHost = host;
 		this.esPort = port;
 		this.esIndex = index;
+	}
+	
+	@Override
+	protected boolean preProcessSearchParams(SearchParams searchParams, ESSearchOption searchOption) {
+		List<Query> extraQueries = getQueryFromJoinFilter(searchParams);
+		searchOption.setExtraQueries(extraQueries);
+		return false;
+		
+		
 	}	
 
 	@Value("${es.gxdresult.index}")
