@@ -93,7 +93,7 @@ function updateLoadingMessage(s, supportLink = true) {
 var cellTPM = {};
 
 // number of cells to request in a single batch (sized to have progress meter updates every 11-12 seconds)
-var chunkSize = 150000;
+var chunkSize = 50000;
 
 // number of data cells already retrieved
 var countDone = 0;
@@ -108,7 +108,7 @@ var chunks = [];
 var chunksInProgress = 0;
 
 // max number of chunks to request simultaneously
-var maxRequests = 3;
+var maxRequests = 7;
 
 // Have we failed yet?  If so, we should ignore pending data requests and not overwrite error messages.
 var failed = false;
