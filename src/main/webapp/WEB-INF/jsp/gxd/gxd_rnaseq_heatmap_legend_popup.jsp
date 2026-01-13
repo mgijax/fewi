@@ -142,7 +142,14 @@
 			
 		<div id="legendTools">
 			Clustering tools can be found in the Tools dropdown.<br/>
-			Save Session and Save Dataset can be found in the File dropdown.
+			Save Session and Save Dataset can be found in the File dropdown.<br/><br/>
+			To view a summary of all GXD expression results (both classical and RNA-seq) for genes of interest:
+			<ul>
+			<li>Select a gene (heat map row) using Click.</li>
+			<li>Select a block of genes using Shift + Click.</li>
+			<li>Select multiple, scattered genes using Ctrl + Click (PC) or Command + Click (Mac).</li>
+			<li>From the Edit menu above the heat map, choose "Forward Selected Rows to GXD."`</li>
+			</ul>
 		</div>
 		
 		<div id="legendDocs">	
