@@ -380,6 +380,7 @@ public class SearchConstants {
 	public static final String QS_REFERENCE_COUNT = "referenceCount";
 	public static final String QS_REFERENCE_URI = "referenceUri";
 
+	public static final int MAX_LOG_MESSAGE_LENGTH = 2000;
 	public static final int SEARCH_MAX_RESULT_WINDOW = 500_000;
 	public static final int SEARCH_MAX_GROUP_BASE_MAX_SIZE = 500_000;
 	public static final int SEARCH_PRECISION_THRESHOLD = 400_000;  

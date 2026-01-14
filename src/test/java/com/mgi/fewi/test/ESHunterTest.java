@@ -553,7 +553,7 @@ public class ESHunterTest {
 	public void testAssayCount() {
 		log.info("Test: testAssayCount");
 		SearchParams searchParams = new SearchParams();
-		searchParams.setFilter(Filter.equal(GxdResultFields.NOMENCLATURE, "Apob"));
+		searchParams.setFilter(Filter.equal(GxdResultFields.NOMENCLATURE, "Wnt1"));
 		long total = this.esGxdResultHunter.huntCount(searchParams);
 		Assert.assertTrue(total > 0);
 		log.info("Total # of assays: " + total);

@@ -399,7 +399,11 @@ public class ESHunter<T extends ESEntity> {
 		}
 
 		SearchRequest searchRequest = srb.build();
-		log.info("Sending search request: " + searchRequest);
+		String msg = "Sending search request: " + searchRequest;
+		if (msg.length() > SearchConstants.MAX_LOG_MESSAGE_LENGTH) {
+		    msg = msg.substring(0, SearchConstants.MAX_LOG_MESSAGE_LENGTH) + "...[TRUNCATED]";
+		}
+		log.info(msg);
 
 		Class callClazz;
 		if (searchOption.getClazz() == null) {
@@ -625,10 +629,9 @@ public class ESHunter<T extends ESEntity> {
 		}
 	}
 
-	private Query getAllQuery(SearchParams searchParams, ESSearchOption searchOption) {
+	private Query getAllQueryNew(SearchParams searchParams, ESSearchOption searchOption) {
 		List<Query> queryList = new ArrayList<>();
 		// create "Query String Query"
-		String queryString = translateFilter(searchParams.getFilter(), propertyMap);
 
 		List<Filter> shapeFilters = null;
 		List<Filter> inFilters = null;
@@ -638,8 +641,175 @@ public class ESHunter<T extends ESEntity> {
 		}
 
 		// "Shape Query"
+//		if (shapeFilters != null && !shapeFilters.isEmpty()) {
+//			Query shapeQuery = getShapeQuery(shapeFilters);
+//			queryList.add(shapeQuery);
+//		}
+
+		// "In Filters" -> convert each filter into a terms query
+//		if (inFilters != null && !inFilters.isEmpty()) {
+//			for (Filter filter : inFilters) {
+//				if (filter.getValues() != null && !filter.getValues().isEmpty()) {
+//					String field = getMappedField(filter.getProperty());
+//					List<FieldValue> values = filter.getValues().stream().map(FieldValue::of).toList();
+//					TermsQuery.Builder termsBuilder = new TermsQuery.Builder().field(field).terms(t -> t.value(values));
+//					queryList.add(new Query.Builder().terms(termsBuilder.build()).build());
+//				}
+//			}
+//		}
+
+		if (searchOption.getExtraQueries() != null) {
+			queryList.addAll(searchOption.getExtraQueries());
+		}
+
+//		String queryString = translateFilter(searchParams.getFilter(), propertyMap);
+//		if (queryString != null && !queryString.isEmpty()) {
+//			QueryStringQuery.Builder qsb = new QueryStringQuery.Builder();
+//			qsb.query(queryString);
+//			Query queryStringQuery = new QueryStringQuery.Builder().query(queryString).build()._toQuery();
+//			queryList.add(queryStringQuery);
+//		}		
+		Query queryStringQuery = translateFilterQuery(searchParams.getFilter(), propertyMap);
+		if ( queryStringQuery != null ) {
+			queryList.add(queryStringQuery);
+		}
+		
+		Query combinedQuery = null;
+		if (!queryList.isEmpty()) {
+			if (queryList.size() == 1) {
+				combinedQuery = queryList.get(0);
+			} else {
+				// combine "Query String Query" and "Shape Query" together
+				BoolQuery.Builder boolBuilder = new BoolQuery.Builder();
+				for (Query query : queryList) {
+					boolBuilder.must(query);
+				}
+				combinedQuery = new Query.Builder().bool(boolBuilder.build()).build();
+			}
+		}
+		return combinedQuery;
+	}
+	
+	private Query getTermInQuery(Filter filter) {
+		if (filter.getValues() == null || filter.getValues().isEmpty()) {
+			return null;
+		}
+		String field = getMappedField(filter.getProperty());
+		List<FieldValue> values = filter.getValues().stream().map(FieldValue::of).toList();
+		TermsQuery.Builder termsBuilder = new TermsQuery.Builder().field(field).terms(t -> t.value(values));
+		return new Query.Builder().terms(termsBuilder.build()).build();
+	}
+	
+	protected Query translateFilterQuery(Filter filter, HashMap<String, ESPropertyMapper> propertyMap) {
+		if (filter == null)
+			return null;
+
+		String filterProperty = filter.getProperty();
+		ESPropertyMapper pm = propertyMap.getOrDefault(filterProperty, new ESPropertyMapper(filterProperty));
+
+		if (filter.isBasicFilter()) {
+			if (filter.getOperator() == Filter.Operator.OP_SHAPE ) {
+				return getShapeQueryOne(filter);
+			}
+			if (filter.getOperator() == Filter.Operator.OP_TERM_IN) {
+				return getTermInQuery(filter);
+			}
+
+			if (filterProperty == null || filterProperty.isEmpty()) {
+				return null;
+			}
+
+			Operator op = filter.getOperator();
+			if (op != Operator.OP_IN && op != Operator.OP_NOT_IN) {
+				return pm.getClauseQuery(filter);
+			}
+			boolean negate = (op == Operator.OP_NOT_IN);
+			List<Query> clauses = new ArrayList<>();
+			if (!pm.getField().isEmpty()) {
+				// single field
+				clauses.add(inQuery(pm.getField(), filter.getValues()));
+			} else {
+				// multi-field OR join
+				for (String field : pm.getFieldList()) {
+					clauses.add(inQuery(field, filter.getValues()));
+				}
+			}
+
+			Query joined = orJoin(clauses);
+			return negate ? negate(joined) : joined;
+		}
+
+		/*
+		 * ============================== NESTED FILTER ==============================
+		 */
+		List<Query> subQueries = new ArrayList<>();
+
+		for (Filter f : filter.getNestedFilters()) {
+			Query q = translateFilterQuery(f, propertyMap);
+			if (q != null) {
+				subQueries.add(q);
+			}
+		}
+
+		if (subQueries.isEmpty())
+			return null;
+
+		Query joined;
+		JoinClause join = filter.getFilterJoinClause(); // AND / OR
+		if (join == JoinClause.FC_AND) {
+		    joined = andJoin(subQueries);
+		} else if (join == JoinClause.FC_OR) {
+		    joined = orJoin(subQueries);
+		} else {
+		    throw new IllegalArgumentException("Unknown join clause: " + join);
+		}
+		
+		return filter.isNegate() ? negate(joined) : joined;
+	}
+	
+	private Query inQuery(String field, List<String> values) {
+	    return Query.of(q -> q.terms(t -> t
+	        .field(field)
+	        .terms(v -> v.value(
+	            values.stream()
+	                .map(co.elastic.clients.elasticsearch._types.FieldValue::of)
+	                .toList()
+	        ))
+	    ));
+	}
+	
+	private Query andJoin(List<Query> clauses) {
+	    return Query.of(q -> q.bool(b -> {
+	        clauses.forEach(b::must);
+	        return b;
+	    }));
+	}
+	
+	private Query orJoin(List<Query> clauses) {
+	    return Query.of(q -> q.bool(b -> {
+	        clauses.forEach(b::should);
+	        b.minimumShouldMatch("1");
+	        return b;
+	    }));
+	}	
+	
+	private Query negate(Query q) {
+	    return Query.of(qb -> qb.bool(b -> b.mustNot(q)));
+	}	
+	
+	private Query getAllQuery(SearchParams searchParams, ESSearchOption searchOption) {
+		List<Query> queryList = new ArrayList<>();
+		// create "Query String Query"
+		List<Filter> shapeFilters = null;
+		List<Filter> inFilters = null;
+		if (searchParams.getFilter() != null) {
+			shapeFilters = searchParams.getFilter().collectFilters(Filter.Operator.OP_SHAPE);
+			inFilters = searchParams.getFilter().collectFilters(Filter.Operator.OP_TERM_IN);
+		}
+
+		// "Shape Query"
 		if (shapeFilters != null && !shapeFilters.isEmpty()) {
-			Query shapeQuery = getShapeQuery(queryString, shapeFilters);
+			Query shapeQuery = getShapeQuery(shapeFilters);
 			queryList.add(shapeQuery);
 		}
 
@@ -659,6 +829,7 @@ public class ESHunter<T extends ESEntity> {
 			queryList.addAll(searchOption.getExtraQueries());
 		}
 
+		String queryString = translateFilter(searchParams.getFilter(), propertyMap);		
 		if (queryString != null && !queryString.isEmpty()) {
 			QueryStringQuery.Builder qsb = new QueryStringQuery.Builder();
 			qsb.query(queryString);
@@ -840,7 +1011,7 @@ public class ESHunter<T extends ESEntity> {
 		}
 	}
 
-	private Query getShapeQuery(String queryString, List<Filter> shapeFilters) {
+	private Query getShapeQuery(List<Filter> shapeFilters) {
 
 		List<Map<String, Object>> geometries = new ArrayList<Map<String, Object>>();
 		for (Filter filter : shapeFilters) {
@@ -871,6 +1042,37 @@ public class ESHunter<T extends ESEntity> {
 				.shape(s -> s.relation(GeoShapeRelation.Intersects).shape(JsonData.of(geometryCollection)))));
 		return shapeQuery;
 	}
+	
+	private Query getShapeQueryOne(Filter filter) {
+		String value = filter.getValue();
+		if (value == null) {
+			return null;
+		}		
+
+		List<Map<String, Object>> geometries = new ArrayList<Map<String, Object>>();
+		value = value.replaceAll("[\\[\\]\\s]", "");
+		String[] points = value.split("TO");
+		long[] point1 = parsePoint(points[0]);
+		long[] point2 = parsePoint(points[1]);
+
+		List<List<Long>> envelopeCoordinates = List.of(List.of(point1[0], point2[1]), // top-left (minX, maxY)
+				List.of(point2[0], point1[1]) // bottom-right (maxX, minY)
+		);
+
+		Map<String, Object> geoJsonEnvelope = Map.of("type", "envelope", "coordinates", envelopeCoordinates);
+		geometries.add(geoJsonEnvelope);
+		
+
+		Map<String, Object> geometryCollection = Map.of("type", "geometrycollection", "geometries", geometries);
+
+		if (geometries.isEmpty()) {
+			return null;
+		}
+
+		Query shapeQuery = Query.of(q -> q.shape(g -> g.field(GxdResultFields.MOUSE_COORDINATE)
+				.shape(s -> s.relation(GeoShapeRelation.Intersects).shape(JsonData.of(geometryCollection)))));
+		return shapeQuery;
+	}	
 
 	protected <T extends ESEntity> List<T> processLookupResponse(JsonNode root, Class<T> clazz) throws Exception {
 		List<String> columns = new ArrayList<>();
