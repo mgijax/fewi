@@ -1920,7 +1920,7 @@ $('#maxCount').html(numberWithCommas(maxResults));
 
 // handle the button for popping up an RNA-Seq heat map window
 var popupHeatMap = function() {
-        var windowSpecs = 'width=1200,height=800,resizable=yes,scrollbars=yes,alwaysRaised=yes'
+        var windowSpecs = 'width=1200,height=1200,resizable=yes,scrollbars=yes,alwaysRaised=yes'
 	var url = fewiurl + 'gxd/rnaSeqHeatMap?';
 	var parameters = getQueryStringWithFilters();
         var form = buildForm('resultsExportForm', url)
