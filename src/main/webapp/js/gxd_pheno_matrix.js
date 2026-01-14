@@ -45,10 +45,13 @@ function resolveGxdGridColorClass(cell)
 	var cc = "gold";
 	if(cell.detected>0)
 	{
+		console.log(cell.detected);
 		// apply the detected bin
 		if(cell.detected < 5) {	cc = "blue1"; }
 		else if(cell.detected < 51) { cc = "blue2";	}
-		else { cc = "blue3"; }
+		else if(cell.detected < 1001) { cc = "blue3";	}
+		else if(cell.detected < 10000) { cc = "blue4";	}
+		else { cc = "blue5"; }
 	}
 	else if(cell.ambiguous>0) { cc = "gray"; }
 	else if(cell.notDetected>0)

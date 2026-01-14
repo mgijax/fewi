@@ -9,9 +9,18 @@
 		<h4>Number of results annotated as</h4>
 		
 		<div>present in structure and/or substructures</div>
+
+		<div class='legendSelectionRow'>
+			<div class='legendExampleCell blue5'></div>
+			<span class='legendExampleRange'> > 10000 </span>
+		</div>
+		<div class='legendSelectionRow'>
+			<div class='legendExampleCell blue4'></div>
+			<span class='legendExampleRange'> 1001 - 10000 </span>
+		</div>
 		<div class='legendSelectionRow'>
 			<div class='legendExampleCell blue3'></div>
-			<span class='legendExampleRange'> > 50 </span>
+			<span class='legendExampleRange'> 51 - 1000 </span>
 		</div>
 		<div class='legendSelectionRow'>
 			<div class='legendExampleCell blue2'></div>

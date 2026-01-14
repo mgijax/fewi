@@ -414,15 +414,23 @@ border-collapse: collapse;
 #phenoGridTarget .phenoBlue4 {
 	fill: #002255;
 }
+
 #sgTarget .blue1, #ggTarget .blue1, #phenoGridTarget .blue1, #geneRecomGridTarget .blue1 {
 	fill: rgb(215,228,255);
 }
 #sgTarget .blue2, #ggTarget .blue2, #phenoGridTarget .blue2, #geneRecomGridTarget .blue2 {
-	fill: rgb(102,153,255);
+	fill: rgb(130,180,255);
 }
 #sgTarget .blue3, #ggTarget .blue3, #phenoGridTarget .blue3, #geneRecomGridTarget .blue3 {
+	fill: rgb(75,120,255);
+}
+#sgTarget .blue4, #ggTarget .blue4, #phenoGridTarget .blue4, #geneRecomGridTarget .blue4 {
 	fill: rgb(0,64,192);
 }
+#sgTarget .blue5, #ggTarget .blue5, #phenoGridTarget .blue5, #geneRecomGridTarget .blue5 {
+	fill: rgb(0, 0, 175);
+}
+
 #sgTarget .red1, #ggTarget .red1, #phenoGridTarget .red1, #geneRecomGridTarget .red1 {
 	fill: rgb(255,215,215);
 }
@@ -430,8 +438,18 @@ border-collapse: collapse;
 	fill: rgb(255,103,103);
 }
 #sgTarget .red3, #ggTarget .red3, #phenoGridTarget .red3, #geneRecomGridTarget .red3 {
-	fill: rgb(192,0,0);
+	fill: rgb(255,0,0);
 }
+#sgTarget .red4, #ggTarget .red4, #phenoGridTarget .red4, #geneRecomGridTarget .red4 {
+	fill: rgb(200,0,0);
+}
+#sgTarget .red5, #ggTarget .red5, #phenoGridTarget .red5, #geneRecomGridTarget .red5 {
+	fill: rgb(160,0,0);
+}
+
+
+
+
 #sgTarget .gray {
 	/* fill: rgb(191,191,191); */
 	fill: url(#sash28);
@@ -541,31 +559,48 @@ border-collapse: collapse;
 	top: -6px;
 	left: 0;
 }
+
 .legendExampleCell.blue1 {
 	background-color: rgb(215,228,255);
-	margin-left: 50px;
+	margin-left: 90px;
 }
 .legendExampleCell.blue2 {
-	background-color: rgb(102,153,255);
-	margin-left: 30px;
+	background-color: rgb(130,180,255);
+	margin-left: 70px;
 }
 .legendExampleCell.blue3 {
-	background-color: rgb(0,64,192);
-	margin-left: 10px;
-}
-.legendExampleCell.red1 {
-	background-color: rgb(255,215,215);
+	background-color: rgb(75,120,255);
 	margin-left: 50px;
 }
-.legendExampleCell.red2 {
-	background-color: rgb(255,103,103);
+.legendExampleCell.blue4 {
+	background-color: rgb(0,64,192);
 	margin-left: 30px;
 }
-.legendExampleCell.red3 {
-	background-color: rgb(192,0,0);
+.legendExampleCell.blue5 {
+	background-color: rgb(0, 0, 175);
 	margin-left: 10px;
 }
 
+.legendExampleCell.red1 {
+	background-color: rgb(255,215,215);
+	margin-left: 90px;
+}
+.legendExampleCell.red2 {
+	background-color: rgb(255,103,103);
+	margin-left: 70px;
+}
+.legendExampleCell.red3 {
+	background-color: rgb(255,0,0);
+	margin-left: 50px;
+}
+.legendExampleCell.red4 {
+	background-color: rgb(200,0,0);
+	margin-left: 30px;
+}
+.legendExampleCell.red5 {
+	background-color: rgb(160,0,0);
+	margin-left: 10px;
+}
 
 .legendExampleCell.phenoBlue4 {
 	background-color: #002255;

@@ -16,34 +16,40 @@ function resolveGridColorClass(cell)
 	if(cell.detected>0)
 	{
 		// apply the detected bin
-		if(cell.detected < 5)
-		{
+		if(cell.detected < 5) {
 			cc = "blue1";
 		}
-		else if(cell.detected < 51)
-		{
+		else if(cell.detected < 51){
 			cc = "blue2";
 		}
-		else
-		{
+		else if (cell.detected < 1001){
 			cc = "blue3";
+		}
+		else if (cell.detected < 10000){
+			cc = "blue4";
+		}	
+		else {
+			cc = "blue5";
 		}
 	}
 	else if(cell.ambiguous>0) cc = "gray";
 	else if(cell.notDetected>0)
 	{
 		// apply the not detected bin
-		if(cell.notDetected < 5)
-		{
+		if(cell.notDetected < 5) {
 			cc = "red1";
 		}
-		else if(cell.notDetected < 21)
-		{
+		else if(cell.notDetected < 51) {
 			cc = "red2";
 		}
-		else
-		{
+		else if (cell.notDetected < 1001) {
 			cc = "red3";
+		}
+		else if (cell.notDetected < 10000) {
+			cc = "red4";
+		}
+		else {
+			cc = "red5";
 		}
 	}
 	return cc;
@@ -103,18 +109,37 @@ function drawStructureMatrixCell(d3Target,cellSize,cell)
 			.attr("class",fillClass);
 
 		if(indicateNegativeMatrixResultsConflict(cell)){
-			addNegativeResultConflictIndicator(g,cellSize);
+			addNegativeResultConflictIndicator(g,cellSize, cell);
 		}
 	}
 }
-function addNegativeResultConflictIndicator(d3Target,cellSize)
+function addNegativeResultConflictIndicator(d3Target,cellSize, cell)
 {
 	var points = [(cellSize - (cellSize/1.5))+","+0,
 	              (cellSize)+","+0,
 	              (cellSize)+","+(cellSize/1.5)];
+
+		cc = "red5"
+		if(cell.notDetected < 5) {
+			cc = "red1";
+		}
+		else if(cell.notDetected < 51) {
+			cc = "red2";
+		}
+		else if (cell.notDetected < 1001) {
+			cc = "red3";
+		}
+		else if (cell.notDetected < 10000) {
+			cc = "red4";
+		}
+		else {
+			cc = "red5";
+		}
+
+
 	d3Target.append("polygon")
 		.attr("points",points.join(" "))
-		.attr("class","red2");
+		.attr("class",cc);
 }
 
 
