@@ -148,7 +148,7 @@
 			<li>Select a gene (heat map row) using Click.</li>
 			<li>Select a block of genes using Shift + Click.</li>
 			<li>Select multiple, scattered genes using Ctrl + Click (PC) or Command + Click (Mac).</li>
-			<li>From the Edit menu above the heat map, choose "Forward Selected Rows to GXD."`</li>
+			<li>From the Edit menu above the heat map, choose "Forward Selected Rows to GXD."</li>
 			</ul>
 		</div>
 		
