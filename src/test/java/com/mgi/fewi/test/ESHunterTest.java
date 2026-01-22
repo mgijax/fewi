@@ -77,6 +77,55 @@ public class ESHunterTest {
 				ES_HOST, ES_PORT, "gxd_consolidated_sample");
 	}
 
+	@Test
+	public void testSearchMatrixDAGDescendentEdges() {
+		log.info("Test: testSearchMatrixDAGDescendentEdges");
+		
+		SearchParams searchParams = new SearchParams();
+		searchParams.setPageSize(100000);
+		List<Filter> filters = new ArrayList<Filter>();
+
+		List<Filter> joinFilters = new ArrayList<Filter>();
+		joinFilters.add(Filter.in("posCAncA", List.of("18242470")));  // brain detected
+		joinFilters.add(Filter.notIn("posCAncA", List.of("18239679")));  // liver not detected
+		Filter joinQuery = Filter.and(joinFilters);
+		filters.add(Filter.join("gxdProfileMarker", "markerMgiid", "markerMgiid", joinQuery));	
+		
+		filters.add(Filter.notEqual(GxdResultFields.ASSAY_TYPE, "RNA-Seq"));
+		filters.add(Filter.equal(GxdResultFields.IS_WILD_TYPE, "wild type"));
+
+		List<Filter> structIdFilters = new ArrayList<Filter>();
+		structIdFilters.add(Filter.equal(GxdResultFields.STRUCTURE_ID, "EMAPA:16894"));
+		structIdFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "Yes"));
+
+		List<Filter> structExtactFilters = new ArrayList<Filter>();
+		structExtactFilters.add(Filter.equal(GxdResultFields.STRUCTURE_EXACT, "EMAPA:16846"));
+		structExtactFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "No"));	
+		
+		List<Filter> structFilters = new ArrayList<Filter>();
+		structFilters.add(Filter.and(structIdFilters));
+		structFilters.add(Filter.and(structExtactFilters));
+
+		filters.add(Filter.or(structFilters));
+
+		searchParams.setFilter(Filter.and(filters));		
+		
+		SearchResults<ESAssayResult> assayResult = new SearchResults<ESAssayResult>();
+		long start = System.currentTimeMillis();
+		esGxdResultHunter.huntDocsScroll(searchParams, assayResult, List.of(GxdResultFields.EMAPS_ID));
+		ESSearchOption.logRunTime(log, start, "searchMatrixDAGDescendentEdges_result");
+
+		start = System.currentTimeMillis();
+		esGxdResultHunter.huntDocs(searchParams, assayResult, List.of(GxdResultFields.EMAPS_ID));
+		ESSearchOption.logRunTime(log, start, "searchMatrixDAGDescendentEdges_result");
+		
+		List<ESAssayResult> resultObjects = assayResult.getResultObjects();
+		log.info("resultObjects size: " + resultObjects.size());
+		show(assayResult.getResultObjects(), 5);
+		log.info("\n");	
+	}
+	
+	
 	/*
 	 * Test LOOKUP JOIN of gxd_dag_edge, gxd_result, gxd_marker_profile
 	 */

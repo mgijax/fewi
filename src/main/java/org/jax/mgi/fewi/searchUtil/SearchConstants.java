@@ -386,5 +386,7 @@ public class SearchConstants {
 	public static final int SEARCH_PRECISION_THRESHOLD = 400_000;  
 	public static final int SEARCH_MAX_POST_SIZE = 50_000; 
 	public static final int SEARCH_MAX_PAGE_SIZE_FOR_MARKER_PROFILE = 60_000; 
+	public static final String SEARCH_SCROLL_TIME = "5m";  // 2 minutes 
+	public static final int SEARCH_SCROLL_SIZE = 10000; 
 
 }

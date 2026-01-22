@@ -267,7 +267,7 @@ public class GxdFinder {
 		SearchResults<SolrGxdRnaSeqHeatMapResult> results = new SearchResults<SolrGxdRnaSeqHeatMapResult>();
 		long start = System.currentTimeMillis();
 		int total = esGxdResultHunter.huntCount(params);
-		out(start, "searchRnaSeqHeatMapResultsCount");
+		ESSearchOption.logRunTime(logger, start, "searchRnaSeqHeatMapResultsCount");
 		results.setTotalCount(total);
 		return results;
 	}
@@ -282,7 +282,7 @@ public class GxdFinder {
 		searchOption.setClazz(ESGxdRnaSeqHeatMapResult.class);
 		long start = System.currentTimeMillis();
 		esGxdResultHunter.hunt(params, results, searchOption);
-		out(start, "searchRnaSeqHeatMapResults");
+		ESSearchOption.logRunTime(logger, start, "searchRnaSeqHeatMapResults");
 
 		String wildType = "wild-type";
 		List<SolrGxdRnaSeqHeatMapResult> solrResults = new ArrayList<SolrGxdRnaSeqHeatMapResult>();
@@ -461,10 +461,12 @@ public class GxdFinder {
 	 * Group by the tissue x stage relevant fields
 	 */
 	public SearchResults<ESGxdStageMatrixResult> searchStageMatrixResults(SearchParams params) {
+		long start = System.currentTimeMillis();
 		SearchResults<ESGxdStageMatrixResult> results = new SearchResults<ESGxdStageMatrixResult>();
 		esGxdResultHunter.huntGroupFirstDoc(params, results, GxdResultFields.STAGE_MATRIX_GROUP,
 				ESGxdStageMatrixResult.RETURN_FIELDS);
-
+		ESSearchOption.logRunTime(logger, start, "searchStageMatrixResults");
+		
 		SearchResults<ESGxdStageMatrixResult> srMR = new SearchResults<ESGxdStageMatrixResult>();
 		srMR.cloneFrom(results, ESGxdStageMatrixResult.class);
 		return srMR;
@@ -531,7 +533,7 @@ public class GxdFinder {
 
 	public SearchResults<ESDagEdge> searchMatrixDAGDirectEdges(SearchParams params, List<String> parentTermIds) {
 		SearchResults<ESAssayResult> assayResult = new SearchResults<ESAssayResult>();
-		esGxdResultHunter.huntDocs(params, assayResult, List.of(GxdResultFields.STRUCTURE_EXACT));
+		esGxdResultHunter.huntDocsScroll(params, assayResult, List.of(GxdResultFields.STRUCTURE_EXACT));
 		Map<String, String> maps = new HashMap<String, String>();
 		if ( assayResult.getResultObjects() != null ) {
 			for (ESAssayResult r: assayResult.getResultObjects()) {
@@ -561,8 +563,8 @@ public class GxdFinder {
 		long start;
 		SearchResults<ESAssayResult> assayResult = new SearchResults<ESAssayResult>();
 		start = System.currentTimeMillis();
-		esGxdResultHunter.huntDocs(params, assayResult, List.of(GxdResultFields.EMAPS_ID));
-		out(start, "RESULT");
+		esGxdResultHunter.huntDocsScroll(params, assayResult, List.of(GxdResultFields.EMAPS_ID));
+		ESSearchOption.logRunTime(logger, start, "searchMatrixDAGDescendentEdges_result");
 		Map<String, String> maps = new HashMap<String, String>();
 		if ( assayResult.getResultObjects() != null ) {
 			for (ESAssayResult r: assayResult.getResultObjects()) {
@@ -583,16 +585,11 @@ public class GxdFinder {
 		SearchResults<ESDagEdge> results = new SearchResults<ESDagEdge>();
 		start = System.currentTimeMillis();
 		esGxdDagEdgeHunter.hunt(dagParams, results);
-		out(start, "DAG");
+		ESSearchOption.logRunTime(logger, start, "searchMatrixDAGDescendentEdges_dag");
 		SearchResults<ESDagEdge> srTC = new SearchResults<ESDagEdge>();
 		srTC.cloneFrom(results, ESDagEdge.class);
 		return srTC;
 	}
-	
-	public void out(long start, String message) {
-		long end = System.currentTimeMillis();
-		logger.warn(message + ": " + (end - start) + " ms");
-	}	
 
 	public List<String> searchProfile(SearchParams params) {
 		params.setPageSize(100000);

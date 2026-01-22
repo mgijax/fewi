@@ -2,7 +2,6 @@ package org.jax.mgi.fewi.hunter;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +41,7 @@ import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.GeoShapeRelation;
 import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.elasticsearch._types.SortOrder;
+import co.elastic.clients.elasticsearch._types.Time;
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregate;
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
 import co.elastic.clients.elasticsearch._types.aggregations.AggregationRange;
@@ -57,12 +57,15 @@ import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
 import co.elastic.clients.elasticsearch._types.aggregations.TopHitsAggregate;
 import co.elastic.clients.elasticsearch._types.aggregations.TopHitsAggregation;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.FieldAndFormat;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryStringQuery;
-import co.elastic.clients.elasticsearch._types.query_dsl.TermQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.TermsQuery;
+import co.elastic.clients.elasticsearch.core.ClearScrollRequest;
 import co.elastic.clients.elasticsearch.core.CountRequest;
 import co.elastic.clients.elasticsearch.core.CountResponse;
+import co.elastic.clients.elasticsearch.core.ScrollRequest;
+import co.elastic.clients.elasticsearch.core.ScrollResponse;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Highlight;
@@ -224,6 +227,14 @@ public class ESHunter<T extends ESEntity> {
 		searchOption.setReturnFields(returnFields);
 		hunt(searchParams, searchResults, searchOption);
 	}
+	
+	// retrieve docs for the index with search filter, specifying return fields, using scroll for large data
+	public void huntDocsScroll(SearchParams searchParams, SearchResults<T> searchResults, List<String> returnFields) {
+		ESSearchOption searchOption = new ESSearchOption();
+		searchOption.setReturnFields(returnFields);
+		searchOption.setUseScroll(true);
+		hunt(searchParams, searchResults, searchOption);
+	}	
 
 	/*
 	 * parse out key and doc_count group information
@@ -266,6 +277,7 @@ public class ESHunter<T extends ESEntity> {
 		ESSearchOption searchOption = new ESSearchOption();
 		searchOption.setGroupField(groupField);
 		searchOption.setGetGroupFirstDoc(true);
+		//searchOption.setUseSearchAfter(true);
 		searchOption.setReturnFields(returnFields);
 		hunt(searchParams, searchResults, searchOption);
 
@@ -303,7 +315,11 @@ public class ESHunter<T extends ESEntity> {
 				huntDoCount(searchParams, searchResults, searchOption);
 			} else if (searchOption.getEsQuery() == null) {
 				// ES endpint "/search"
-				huntDoSearch(searchParams, searchResults, searchOption);
+				if ( searchOption.isUseSearchAfter() ) {
+					huntDoSearchWithSearchAfter(searchParams, searchResults, searchOption);
+				} else {
+					huntDoSearch(searchParams, searchResults, searchOption);
+				}
 			} else {
 				// ES endpoint "/query" for ESQL
 				huntDoQuery(searchParams, searchResults, searchOption);
@@ -344,37 +360,182 @@ public class ESHunter<T extends ESEntity> {
 		log.info("Total matching documents: " + countResponse.count());
 		searchResults.setTotalCount((int) countResponse.count());
 	}
+	
+	public <T extends ESEntity> void huntDoSearchWithSearchAfter(SearchParams searchParams,
+			SearchResults<T> searchResults, ESSearchOption searchOption) throws Exception {
+		log.info("PAGE: " + searchParams.getPageSize());
+		int pageSize = 5000;
 
+		String groupField = searchOption.getGroupField();
+
+		List<String> returnFields = searchOption.getReturnFields() == null ? List.of() : searchOption.getReturnFields();
+
+		Map<String, FieldValue> afterKey = null;
+
+		log.info("Starting composite aggregation pagination...");
+
+		while (true) {
+
+			SearchRequest.Builder srb = new SearchRequest.Builder().index(esIndex).size(0);
+
+			Query query = getAllQuery(searchParams, searchOption);
+			if (query != null) {
+				srb.query(query);
+			}
+
+			// ---- top_hits(first_doc) ----
+			TopHitsAggregation topHits = new TopHitsAggregation.Builder().size(1)
+					.source(src -> src.filter(f -> f.includes(returnFields))).build();
+
+			// ---- composite sources ----
+			CompositeAggregationSource groupSource = new CompositeAggregationSource.Builder()
+					.terms(t -> t.field(groupField)).build();
+
+			CompositeAggregation.Builder compositeBuilder = new CompositeAggregation.Builder().size(pageSize)
+					.sources(List.of(Map.of(groupField, groupSource)));
+
+			if (afterKey != null) {
+				compositeBuilder.after(afterKey);
+			}
+
+			Aggregation compositeAgg = new Aggregation.Builder().composite(compositeBuilder.build())
+					.aggregations("first_doc", a -> a.topHits(topHits)).build();
+
+			srb.aggregations(groupField, compositeAgg);
+
+			SearchRequest request = srb.build();
+			logSearchRequest(request);
+
+			SearchResponse<Void> response = esClient.search(request, Void.class);
+
+			Aggregate agg = response.aggregations().get(groupField);
+			if (agg == null || !agg.isComposite()) {
+				break;
+			}
+
+			CompositeAggregate composite = agg.composite();
+			List<CompositeBucket> buckets = composite.buckets().array();
+
+			if (buckets.isEmpty()) {
+				log.info("No more buckets found. Exiting pagination.");
+				break;
+			}
+
+			log.info("# of buckets in page: {}", buckets.size());
+
+			for (CompositeBucket bucket : buckets) {
+
+				Aggregate firstDocAgg = bucket.aggregations().get("first_doc");
+				if (firstDocAgg == null || !firstDocAgg.isTopHits()) {
+					continue;
+				}
+
+				List<Hit<JsonData>> hits = firstDocAgg.topHits().hits().hits();
+				if (hits.isEmpty()) {
+					continue;
+				}
+
+				Map<String, Object> src = hits.get(0).source().to(Map.class);
+				T entity = mapGroupResult(groupField, src, bucket.docCount());
+				if (entity != null) {
+					searchResults.addResultObjects(entity);
+				}
+			}
+
+			afterKey = composite.afterKey();
+			if (afterKey == null) {
+				log.info("Reached the end of pagination.");
+				break;
+			}
+		}
+		searchResults.setTotalCount(searchResults.getResultObjects().size());
+		log.info("Total hits retrieved via search_after: " + searchResults.getTotalCount());
+	}
+	
+	private boolean addResultObjects(SearchResults searchResults, SearchResponse<T> response, List resultObjects, int pageSize) {
+		for (var hit : response.hits().hits()) {
+			T obj = hit.source(); // requires _source enabled
+			if (obj != null) {
+				resultObjects.add(obj);
+			}
+			if (resultObjects.size() >= pageSize) {
+				searchResults.setResultObjects(resultObjects);
+				searchResults.setTotalCount(resultObjects.size());				
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public <T extends ESEntity> void huntDoSearchScroll(SearchParams searchParams, SearchResults<T> searchResults,
+			ESSearchOption searchOption, SearchRequest.Builder srb, Class callClazz) throws Exception {
+		srb.size(SearchConstants.SEARCH_SCROLL_SIZE);
+		srb.scroll(Time.of(t -> t.time(SearchConstants.SEARCH_SCROLL_TIME)));
+		srb.sort(so -> so.field(f -> f.field("_doc").order(SortOrder.Asc)));
+		srb.requestCache(false);
+		List<FieldAndFormat> fields = searchOption.getReturnFields().stream()
+				.map(name -> FieldAndFormat.of(f -> f.field(name))).collect(Collectors.toList());
+		srb.fields(fields);
+
+		SearchRequest searchRequest = srb.build();
+		logSearchRequest(searchRequest);
+		SearchResponse response = esClient.search(searchRequest, callClazz);
+		String scrollId = response.scrollId();
+		int hitsCount = response.hits().hits().size();
+
+		int batchCnt = 0;
+		List resultObjects = new ArrayList<T>();
+		if (addResultObjects(searchResults, response, resultObjects, searchParams.getPageSize())) {
+			return;
+		}
+
+		while (true) {
+			batchCnt++;
+			if (scrollId == null || scrollId.isEmpty())
+				break;
+			ScrollResponse<T> scrollResponse = esClient.scroll(
+					new ScrollRequest.Builder().scroll(Time.of(t -> t.time("2m"))).scrollId(scrollId).build(),
+					callClazz);
+			hitsCount = scrollResponse.hits().hits().size();
+			log.info("Scroll " + batchCnt + ": " +  resultObjects.size() + "/" +  searchParams.getPageSize());
+			if (hitsCount == 0)
+				break;
+			if (addResultObjects(searchResults, response, resultObjects, searchParams.getPageSize())) {
+				return;
+			}
+			scrollId = scrollResponse.scrollId();
+		}
+		if (scrollId != null && !scrollId.isEmpty()) {
+			ClearScrollRequest.Builder clearBuilder = new ClearScrollRequest.Builder();
+			clearBuilder.scrollId(scrollId);
+			esClient.clearScroll(clearBuilder.build());
+		}
+	}
+	
 	public <T extends ESEntity> void huntDoSearch(SearchParams searchParams, SearchResults<T> searchResults,
 			ESSearchOption searchOption) throws Exception {
 
 		String groupField = searchOption.getGroupField();
-
 		SearchRequest.Builder srb = new SearchRequest.Builder();
 		srb.index(esIndex);
-
 		Query query = getAllQuery(searchParams, searchOption);
 		if (query != null) {
 			srb.query(query);
 		}
-
 		if (searchOption.isGetAllBuckets()) {
 			getAllBuckets(searchParams, searchResults, searchOption);
 			return;
 		}
-
 		SearchResponse<T> resp = null;
 		if (searchOption.isTractTopHit()) {
 			TrackHits.Builder th = new TrackHits.Builder();
 			th.enabled(true);
 			srb.trackTotalHits(th.build());
 		}
-
 		Highlight highlight = addHighlightingFields(searchParams);
 		if (highlight != null) {
 			srb.highlight(highlight);
 		}
-
 		if (groupField == null) {
 			if (searchOption.getReturnFields() != null && !searchOption.getReturnFields().isEmpty()) {
 				srb.source(src -> src.filter(f -> f.includes(searchOption.getReturnFields())));
@@ -397,20 +558,19 @@ public class ESHunter<T extends ESEntity> {
 			}
 			srb.aggregations(rangeSpec.getName(), t -> t.range(f -> f.field(rangeSpec.getField()).ranges(aggRanges)));
 		}
-
-		SearchRequest searchRequest = srb.build();
-		String msg = "Sending search request: " + searchRequest;
-		if (msg.length() > SearchConstants.MAX_LOG_MESSAGE_LENGTH) {
-		    msg = msg.substring(0, SearchConstants.MAX_LOG_MESSAGE_LENGTH) + "...[TRUNCATED]";
-		}
-		log.info(msg);
-
 		Class callClazz;
 		if (searchOption.getClazz() == null) {
 			callClazz = this.clazz;
 		} else {
 			callClazz = searchOption.getClazz();
 		}
+		if ( searchOption.isUseScroll() ) {
+			huntDoSearchScroll(searchParams, searchResults, searchOption, srb, callClazz);
+			return;
+		}
+		
+		SearchRequest searchRequest = srb.build();
+		logSearchRequest(searchRequest);
 		resp = (SearchResponse<T>) esClient.search(searchRequest, callClazz);
 		log.info("Total hits: " + resp.hits().total().value());
 
@@ -440,10 +600,12 @@ public class ESHunter<T extends ESEntity> {
 				// parse out group info
 				Aggregate groupInfoAgg = resp.aggregations().get(groupField);
 				if (groupInfoAgg != null) {
-					parseGroupInfo(groupInfoAgg, searchResults);
+					List<ESEntity> results = parseGroupInfo(groupInfoAgg);
+					searchResults.setResultObjects((List<T>) results);
 				}
 			} else if (searchOption.isGetGroupFirstDoc()) {
-				parseFirstDoc(resp, searchResults, searchParams);
+				List<ESEntity> results = parseFirstDoc(resp);
+				searchResults.setResultObjects((List<T>) results);
 			}
 			// left over, might be used in SNP query
 			if (facetString != null) {
@@ -628,67 +790,6 @@ public class ESHunter<T extends ESEntity> {
 			}
 		}
 	}
-
-	private Query getAllQueryNew(SearchParams searchParams, ESSearchOption searchOption) {
-		List<Query> queryList = new ArrayList<>();
-		// create "Query String Query"
-
-		List<Filter> shapeFilters = null;
-		List<Filter> inFilters = null;
-		if (searchParams.getFilter() != null) {
-			shapeFilters = searchParams.getFilter().collectFilters(Filter.Operator.OP_SHAPE);
-			inFilters = searchParams.getFilter().collectFilters(Filter.Operator.OP_TERM_IN);
-		}
-
-		// "Shape Query"
-//		if (shapeFilters != null && !shapeFilters.isEmpty()) {
-//			Query shapeQuery = getShapeQuery(shapeFilters);
-//			queryList.add(shapeQuery);
-//		}
-
-		// "In Filters" -> convert each filter into a terms query
-//		if (inFilters != null && !inFilters.isEmpty()) {
-//			for (Filter filter : inFilters) {
-//				if (filter.getValues() != null && !filter.getValues().isEmpty()) {
-//					String field = getMappedField(filter.getProperty());
-//					List<FieldValue> values = filter.getValues().stream().map(FieldValue::of).toList();
-//					TermsQuery.Builder termsBuilder = new TermsQuery.Builder().field(field).terms(t -> t.value(values));
-//					queryList.add(new Query.Builder().terms(termsBuilder.build()).build());
-//				}
-//			}
-//		}
-
-		if (searchOption.getExtraQueries() != null) {
-			queryList.addAll(searchOption.getExtraQueries());
-		}
-
-//		String queryString = translateFilter(searchParams.getFilter(), propertyMap);
-//		if (queryString != null && !queryString.isEmpty()) {
-//			QueryStringQuery.Builder qsb = new QueryStringQuery.Builder();
-//			qsb.query(queryString);
-//			Query queryStringQuery = new QueryStringQuery.Builder().query(queryString).build()._toQuery();
-//			queryList.add(queryStringQuery);
-//		}		
-		Query queryStringQuery = translateFilterQuery(searchParams.getFilter(), propertyMap);
-		if ( queryStringQuery != null ) {
-			queryList.add(queryStringQuery);
-		}
-		
-		Query combinedQuery = null;
-		if (!queryList.isEmpty()) {
-			if (queryList.size() == 1) {
-				combinedQuery = queryList.get(0);
-			} else {
-				// combine "Query String Query" and "Shape Query" together
-				BoolQuery.Builder boolBuilder = new BoolQuery.Builder();
-				for (Query query : queryList) {
-					boolBuilder.must(query);
-				}
-				combinedQuery = new Query.Builder().bool(boolBuilder.build()).build();
-			}
-		}
-		return combinedQuery;
-	}
 	
 	private Query getTermInQuery(Filter filter) {
 		if (filter.getValues() == null || filter.getValues().isEmpty()) {
@@ -767,6 +868,19 @@ public class ESHunter<T extends ESEntity> {
 		return filter.isNegate() ? negate(joined) : joined;
 	}
 	
+	private void logSearchRequest(SearchRequest request) {
+		String msg = "Sending search request: " + request;
+		if (msg.length() > SearchConstants.MAX_LOG_MESSAGE_LENGTH) {
+			msg = msg.substring(0, SearchConstants.MAX_LOG_MESSAGE_LENGTH) + "...[TRUNCATED]";
+		}
+		log.info(msg);
+	}
+
+	@SuppressWarnings("unchecked")
+	protected <T extends ESEntity> T mapGroupResult(String groupField, Map<String, Object> src, long docCount) {
+		return null;
+	}	
+	
 	private Query inQuery(String field, List<String> values) {
 	    return Query.of(q -> q.terms(t -> t
 	        .field(field)
@@ -795,9 +909,36 @@ public class ESHunter<T extends ESEntity> {
 	
 	private Query negate(Query q) {
 	    return Query.of(qb -> qb.bool(b -> b.mustNot(q)));
+	}
+	
+	private Query getAllQueryUseQuery(SearchParams searchParams, ESSearchOption searchOption) {
+		List<Query> queryList = new ArrayList<>();
+
+		if (searchOption.getExtraQueries() != null) {
+			queryList.addAll(searchOption.getExtraQueries());
+		}
+	
+		Query queryStringQuery = translateFilterQuery(searchParams.getFilter(), propertyMap);
+		if ( queryStringQuery != null ) {
+			queryList.add(queryStringQuery);
+		}
+		
+		Query combinedQuery = null;
+		if (!queryList.isEmpty()) {
+			if (queryList.size() == 1) {
+				combinedQuery = queryList.get(0);
+			} else {
+				BoolQuery.Builder boolBuilder = new BoolQuery.Builder();
+				for (Query query : queryList) {
+					boolBuilder.must(query);
+				}
+				combinedQuery = new Query.Builder().bool(boolBuilder.build()).build();
+			}
+		}
+		return combinedQuery;
 	}	
 	
-	private Query getAllQuery(SearchParams searchParams, ESSearchOption searchOption) {
+	protected Query getAllQuery(SearchParams searchParams, ESSearchOption searchOption) {
 		List<Query> queryList = new ArrayList<>();
 		// create "Query String Query"
 		List<Filter> shapeFilters = null;
@@ -942,22 +1083,21 @@ public class ESHunter<T extends ESEntity> {
 		return queryList;
 	}
 
-	private <T extends ESEntity> void parseGroupInfo(Aggregate termAgg, SearchResults searchResults) {
+	private <T extends ESEntity> List<ESEntity> parseGroupInfo(Aggregate termAgg) {
+		List<ESEntity> results = new ArrayList<ESEntity>();
 		if (termAgg.isSterms()) {
 			StringTermsAggregate stringAgg = termAgg.sterms();
-			List<ESAggStringCount> resultObjects = new ArrayList<ESAggStringCount>();
 			for (StringTermsBucket term : stringAgg.buckets().array()) {
-				resultObjects.add(new ESAggStringCount(term.key().stringValue(), term.docCount()));
+				results.add(new ESAggStringCount(term.key().stringValue(), term.docCount()));
 			}
-			searchResults.setResultObjects(resultObjects);
+			
 		} else if (termAgg.isLterms()) {
 			LongTermsAggregate longAgg = termAgg.lterms();
-			List<ESAggLongCount> resultObjects = new ArrayList<ESAggLongCount>();
 			for (LongTermsBucket term : longAgg.buckets().array()) {
-				resultObjects.add(new ESAggLongCount(term.key(), term.docCount()));
+				results.add(new ESAggLongCount(term.key(), term.docCount()));
 			}
-			searchResults.setResultObjects(resultObjects);
 		}
+		return results;
 	}
 
 	private String toPolygon(Filter filter) {
@@ -1289,8 +1429,8 @@ public class ESHunter<T extends ESEntity> {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <T extends ESEntity> void parseFirstDoc(SearchResponse resp, SearchResults<T> searchResults,
-			SearchParams searchParams) {
+	protected <T extends ESEntity> List<ESEntity> parseFirstDoc(SearchResponse resp) {
+		return null;
 	}
 
 	protected int toInt(Object obj) {

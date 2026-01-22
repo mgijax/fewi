@@ -1,6 +1,9 @@
 package org.jax.mgi.fewi.searchUtil;
 
 import java.util.List;
+
+import org.slf4j.Logger;
+
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 
 public class ESSearchOption {
@@ -12,6 +15,8 @@ public class ESSearchOption {
 	private boolean countNumOfBuckts = false; 
 	private boolean tractTopHit = false; 
 	private boolean getAllBuckets = false; 
+	private boolean useSearchAfter = false; 	
+	private boolean useScroll = false; 	
 	private int precisionThreshold;
 	private List<String> returnFields;
 	private String extraJoinClause;
@@ -26,6 +31,11 @@ public class ESSearchOption {
 		this.groupField = groupField;
 		this.getTotalCount = isGetTotalCount;
 	}
+	
+	public static void logRunTime(Logger logger, long start, String message) {
+		long end = System.currentTimeMillis();
+		logger.warn("RUN_TIME " + message + ": " + (end - start) + " ms");
+	}		
 	
 	public String getGroupField() {
 		return groupField;
@@ -132,5 +142,21 @@ public class ESSearchOption {
 
 	public void setExtraQueries(List<Query> extraQueries) {
 		this.extraQueries = extraQueries;
+	}
+
+	public boolean isUseSearchAfter() {
+		return useSearchAfter;
+	}
+
+	public void setUseSearchAfter(boolean useSearchAfter) {
+		this.useSearchAfter = useSearchAfter;
+	}
+
+	public boolean isUseScroll() {
+		return useScroll;
+	}
+
+	public void setUseScroll(boolean useScroll) {
+		this.useScroll = useScroll;
 	}
 }

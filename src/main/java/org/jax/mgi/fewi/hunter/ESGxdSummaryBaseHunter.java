@@ -1,6 +1,5 @@
 package org.jax.mgi.fewi.hunter;
 
-import java.lang.System.Logger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -209,9 +208,8 @@ public class ESGxdSummaryBaseHunter<T extends ESEntity> extends ESHunter<T> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	protected <T extends ESEntity> void parseFirstDoc(SearchResponse resp, SearchResults<T> searchResults,
-			SearchParams searchParams) {
-
+	protected <T extends ESEntity> List<ESEntity> parseFirstDoc(SearchResponse resp) {
+		List<ESEntity> results = new ArrayList<ESEntity>();
 		Map<String, Aggregate> aggs = resp.aggregations();
 
 		for (Map.Entry<String, Aggregate> entry : aggs.entrySet()) {
@@ -235,33 +233,62 @@ public class ESGxdSummaryBaseHunter<T extends ESEntity> extends ESHunter<T> {
 
 				Map<String, Object> src = hitsMeta.hits().get(0).source().to(Map.class);
 
-				switch (aggName) {
-				case GxdResultFields.MARKER_KEY -> {
-					searchResults.addResultObjects((T) mapToMarker(src));
+				T entity = mapGroupResult(aggName, src, bucket.docCount());
+				if (entity != null) {
+					results.add(entity);
 				}
-				case GxdResultFields.ASSAY_KEY -> {
-					searchResults.addResultObjects((T) mapToAssay(src));
-				}
-				case GxdResultFields.STRUCTURE_EXACT -> {
-					String structureId = (String) src.get(GxdResultFields.STRUCTURE_EXACT);
-					searchResults.addResultObjects((T) new SolrString(structureId));
-				}
-				case GxdResultFields.THEILER_STAGE -> {
-					Object stageObj = src.get(GxdResultFields.THEILER_STAGE);
-					if (stageObj != null) {
-						searchResults.addResultObjects((T) new SolrString(stageObj.toString()));
-					}
-				}
-				case GxdResultFields.STAGE_MATRIX_GROUP -> {
-					searchResults.addResultObjects((T) mapToStageMatrix(src, bucket.docCount()));
-				}				
-				case GxdResultFields.GENE_MATRIX_GROUP -> {
-					searchResults.addResultObjects((T) mapToGeneMatrix(src, bucket.docCount()));
-				}				
-				}
+				
+//	            switch (aggName) {
+//                case GxdResultFields.MARKER_KEY -> results.add((T) mapToMarker(src));
+//                case GxdResultFields.ASSAY_KEY -> results.add((T) mapToAssay(src));
+//                case GxdResultFields.STRUCTURE_EXACT -> {
+//                    String structureId = (String) src.get(GxdResultFields.STRUCTURE_EXACT);
+//                    results.add((T) new SolrString(structureId));
+//                }
+//                case GxdResultFields.THEILER_STAGE -> {
+//                    Object stageObj = src.get(GxdResultFields.THEILER_STAGE);
+//                    if (stageObj != null) {
+//                        results.add((T) new SolrString(stageObj.toString()));
+//                    }
+//                }
+//                case GxdResultFields.STAGE_MATRIX_GROUP -> results.add((T) mapToStageMatrix(src, bucket.docCount()));
+//                case GxdResultFields.GENE_MATRIX_GROUP -> results.add((T) mapToGeneMatrix(src, bucket.docCount()));
+//            }
 			}
 		}
+		return results;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	protected <T extends ESEntity> T mapGroupResult(String groupField, Map<String, Object> src, long docCount) {
+
+	    return switch (groupField) {
+	        case GxdResultFields.MARKER_KEY ->
+	                (T) mapToMarker(src);
+
+	        case GxdResultFields.ASSAY_KEY ->
+	                (T) mapToAssay(src);
+
+	        case GxdResultFields.STRUCTURE_EXACT ->
+	                (T) new SolrString(
+	                        (String) src.get(GxdResultFields.STRUCTURE_EXACT)
+	                );
+
+	        case GxdResultFields.THEILER_STAGE -> {
+	            Object stage = src.get(GxdResultFields.THEILER_STAGE);
+	            yield stage != null ? (T) new SolrString(stage.toString()) : null;
+	        }
+
+	        case GxdResultFields.STAGE_MATRIX_GROUP ->
+	                (T) mapToStageMatrix(src, docCount);
+
+	        case GxdResultFields.GENE_MATRIX_GROUP ->
+	                (T) mapToGeneMatrix(src, docCount);
+
+	        default -> null;
+	    };
+	}	
 	
 	private ESGxdStageMatrixResult mapToStageMatrix(Map<String, Object> src, Long docCount) {
 		ESGxdStageMatrixResult mResult = new ESGxdStageMatrixResult();
