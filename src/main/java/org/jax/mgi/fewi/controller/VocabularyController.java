@@ -1686,19 +1686,19 @@ public class VocabularyController {
                     // set label here; other browsers have this set upstream in indexer
                     StringBuilder termAnnotLabel = new StringBuilder("");
                     if (resultCount > 0) {
-                    	termAnnotLabel.append("<a id='resultLink_" + selectedTerm.getPrimaryID().getAccID() 
+                    	termAnnotLabel.append("<a id='resultLink_" + selectedTerm.getPrimaryID().getAccID().replace(":", "") 
                     	+ "' href='" + baseUrl + "gxd/celltype/" + selectedTerm.getPrimaryID().getAccID() +"' target='_blank'>"
                     	+ resultCount.toString() + "</a> expression results" );
                     }
                     if (htCount > 0) {
                     	if (termAnnotLabel.length() != 0 ) {termAnnotLabel.append("; "); }
-                    	termAnnotLabel.append("<a id='htLink_" + selectedTerm.getPrimaryID().getAccID() 
+                    	termAnnotLabel.append("<a id='htLink_" + selectedTerm.getPrimaryID().getAccID().replace(":", "") 
                     	+ "' href='" + baseUrl + "gxdhtexp_index/summary?cellType=" + selectedTerm.getTerm() +"' target='_blank'>"
                     	+ htCount.toString() + "</a> RNA-seq or microarray experiments");
                     }
                     if (recomCount > 0) {
                     	if (termAnnotLabel.length() != 0 ) {termAnnotLabel.append("; "); }
-                    	termAnnotLabel.append("<a id='recomLink_" + selectedTerm.getPrimaryID().getAccID() 
+                    	termAnnotLabel.append("<a id='recomLink_" + selectedTerm.getPrimaryID().getAccID().replace(":", "") 
                     	+ "' href='" + baseUrl + "recombinase/summary?cellTypeID=" + selectedTerm.getPrimaryID().getAccID() 
                     	+ "&cellType=" + selectedTerm.getTerm() + "' target='_blank'>"
                     	+ recomCount.toString() + "</a> recombinase alleles");
@@ -1725,19 +1725,19 @@ public class VocabularyController {
                             // set label here; other browsers have this set upstream in indexer
                             StringBuilder childAnnotLabel = new StringBuilder("");
                             if (childResultCount > 0) {
-                            	childAnnotLabel.append("<a id='resultLink_" + child.getPrimaryID()
+                            	childAnnotLabel.append("<a id='resultLink_" + child.getPrimaryID().replace(":", "")
                             	+ "' href='" + baseUrl + "gxd/celltype/" + child.getPrimaryID() +"' target='_blank'>"
                             	+ childResultCount.toString() + "</a> expression results");
                             }
                             if (childHtCount > 0) {
                             	if (childAnnotLabel.length() != 0 ) {childAnnotLabel.append("; "); }
-                    	        childAnnotLabel.append("<a id='htLink_" + child.getPrimaryID()
+                    	        childAnnotLabel.append("<a id='htLink_" + child.getPrimaryID().replace(":", "")
                     	        + "' href='" + baseUrl + "gxdhtexp_index/summary?cellType=" + child.getTerm() +"' target='_blank'>"
                     	        + childHtCount.toString() + "</a> RNA-seq or microarray experiments");
                             }
                             if (childRecomCount > 0) {
                             	if (childAnnotLabel.length() != 0 ) {childAnnotLabel.append("; "); }
-                    	        childAnnotLabel.append("<a id='htLink_" + child.getPrimaryID()
+                    	        childAnnotLabel.append("<a id='recomLink_" + child.getPrimaryID().replace(":", "")
                     	        + "' href='" + baseUrl + "recombinase/summary?cellTypeID=" + child.getPrimaryID() 
                     	        + "&cellType=" + child.getTerm() + "' target='_blank'>"
                     	        + childRecomCount.toString() + "</a> recombinase alleles");
