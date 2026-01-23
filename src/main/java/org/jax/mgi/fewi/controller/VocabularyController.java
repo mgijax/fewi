@@ -1651,17 +1651,17 @@ public class VocabularyController {
                             child.setAnnotationLabel(childResultCount.toString() + " expression results");
                             child.setAnnotationUrl("gxd/celltype/" + child.getPrimaryID() );
                         } else {
-                        	child.setHasNoAnnotations("true");
+                        	child.setHasAnnotations("true");
                         }
                       }
                     }
                 } else { // no counts; set proper values to indicate this
-                    thisTerm.setHasNoAnnotations("true");
+                    thisTerm.setHasAnnotations("true");
                     
                     // if the parent has no counts (rolled-up), neither do the children
                     if (thisTerm.getChildren() != null) {
                       for (BrowserChild child : thisTerm.getChildren() ) {
-                        child.setHasNoAnnotations("true");
+                        child.setHasAnnotations("true");
                       }
                     }
                 }
