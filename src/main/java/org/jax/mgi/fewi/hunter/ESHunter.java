@@ -203,7 +203,7 @@ public class ESHunter<T extends BaseESDocument> {
                                 List<AggregationRange> aggRanges = new ArrayList<AggregationRange>();
                                 for (long[] r : rangeSpec.getRanges()) {
                                     AggregationRange.Builder arb = new AggregationRange.Builder();
-                                    aggRanges.add(arb.from(""+r[0]).to(""+r[1]).build());
+                                    aggRanges.add(arb.from(Double.valueOf(r[0])).to(Double.valueOf(r[1])).build());
                                 }
                                 srb.aggregations(rangeSpec.getName(), t -> t.range(f -> 
                                     f.field(rangeSpec.getField())
