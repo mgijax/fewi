@@ -111,7 +111,7 @@ function drawMatrixCell(d3Target,cellSize,cell){
 				.attr("class",fillClass);
 	
 			if(indicateNegativeMatrixResultsConflict(cell)){
-				addNegativeResultConflictIndicator(g,cellSize);
+				addNegativeResultConflictIndicator(g,cellSize,cell);
 			}
 		}
 	}

@@ -14,39 +14,47 @@
 		<div>present in structure and/or substructures</div>
 		<div class='legendSelectionRow'>
 			<div class='legendExampleCell blue5'></div>
-			<span class='legendExampleRange'> > 10000 </span>
+			<span class='legendExampleRange'> > 10,000 </span>
 		</div>
 		<div class='legendSelectionRow'>
 			<div class='legendExampleCell blue4'></div>
-			<span class='legendExampleRange'> 1001 - 10000 </span>
+			<span class='legendExampleRange'> 1,001 - 10,000 </span>
 		</div>
 		<div class='legendSelectionRow'>
 			<div class='legendExampleCell blue3'></div>
-			<span class='legendExampleRange'> 51 - 1000 </span>
+			<span class='legendExampleRange'> 51 - 1,000 </span>
 		</div>
 		<div class='legendSelectionRow'>
 			<div class='legendExampleCell blue2'></div>
-			<span class='legendExampleRange'> 5-50 </span>
+			<span class='legendExampleRange'> 5 - 50 </span>
 		</div>
 		<div class='legendSelectionRow'>
 			<div class='legendExampleCell blue1'></div>
-			<span class='legendExampleRange'> 1-4 </span>
+			<span class='legendExampleRange'> 1 - 4 </span>
 		</div>
 	</div>
 
 	<div class='legendSection'>
 		<div>absent in structure</div>
 		<div class='legendSelectionRow'>
+			<div class='legendExampleCell red5'></div>
+			<span class='legendExampleRange'> > 10,000 </span>
+		</div>
+		<div class='legendSelectionRow'>
+			<div class='legendExampleCell red4'></div>
+			<span class='legendExampleRange'> 1,001 - 10,000 </span>
+		</div>
+		<div class='legendSelectionRow'>
 			<div class='legendExampleCell red3'></div>
-			<span class='legendExampleRange'> > 20 </span>
+			<span class='legendExampleRange'> 51 - 1,000</span>
 		</div>
 		<div class='legendSelectionRow'>
 			<div class='legendExampleCell red2'></div>
-			<span class='legendExampleRange'> 5-20 </span>
+			<span class='legendExampleRange'> 5 - 50 </span>
 		</div>
 		<div class='legendSelectionRow'>
 			<div class='legendExampleCell red1'></div>
-			<span class='legendExampleRange'> 1-4 </span>
+			<span class='legendExampleRange'> 1 - 4 </span>
 		</div>
 	</div>
 
@@ -179,6 +187,9 @@
 	</div>
 
 
+        <div class="legendSection" style="text-align: center;font-style: italic;">
+            Click on a grid cell to access annotation details.
+       </div>
 
 </div>
 

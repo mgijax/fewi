@@ -23,11 +23,11 @@
 		</div>
 		<div class='legendSelectionRow'>
 			<div class='legendExampleCell blue2'></div>
-			<span class='legendExampleRange'> 5-50 </span>
+			<span class='legendExampleRange'> 5 - 50 </span>
 		</div>
 		<div class='legendSelectionRow'>
 			<div class='legendExampleCell blue1'></div>
-			<span class='legendExampleRange'> 1-4 </span>
+			<span class='legendExampleRange'> 1 - 4 </span>
 		</div>
 	</div>
 
@@ -47,11 +47,11 @@
 		</div>
 		<div class='legendSelectionRow'>
 			<div class='legendExampleCell red2'></div>
-			<span class='legendExampleRange'> 5-50 </span>
+			<span class='legendExampleRange'> 5 - 50 </span>
 		</div>
 		<div class='legendSelectionRow'>
 			<div class='legendExampleCell red1'></div>
-			<span class='legendExampleRange'> 1-4 </span>
+			<span class='legendExampleRange'> 1 - 4 </span>
 		</div>
 	</div>
 
