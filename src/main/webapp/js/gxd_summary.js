@@ -1580,6 +1580,7 @@ var structureStageGrid = function()
 		if (typeof getQueryString == 'function') window.querystring = getQueryString().replace('&idFile=&', '&');
 
 		currentStageGrid = GxdTissueMatrix({
+			name : "structureStageGrid",
 			target : "sgTarget",
 			// the datasource allows supergrid to make ajax calls for the initial data,
 			// 	as well as subsequent calls for expanding rows
@@ -1604,19 +1605,9 @@ var structureStageGrid = function()
 	        },
 	        openCloseStateKey: "sg_"+querystring,
 	        legendClickHandler: function(e){ structMatrixLegendPopupPanel.show(); },
-	        filterSubmitHandler: function(rows,cols)
+	        filterSubmitHandler: function(rowIds,colIds)
 	        {
 	        	var newFacets = window.facets;
-	        	var rowIds = [];
-	        	rows.forEach(function(row){
-	        		rowIds[rowIds.length] = row.rowId;
-	        	});
-
-				var colIds = [];
-				cols.forEach(function(col){
-					colIds[colIds.length] = col.cid;
-				});
-
 	        	if (rowIds.length > 0)
 	        	{
 	        		newFacets["structureIDFilter"] = rowIds;
@@ -1777,6 +1768,7 @@ var structureGeneGrid = function()
 		if (typeof getQueryString == 'function') window.querystring = getQueryString().replace('&idFile=&','&');
 
 		currentGeneGrid = GxdTissueMatrix({
+			name : "structureGeneGrid",
 			target : "ggTarget",
 			// the datasource allows supergrid to make ajax calls for the initial data,
 			// 	as well as subsequent calls for expanding rows
@@ -1797,18 +1789,9 @@ var structureGeneGrid = function()
 			verticalColumnLabels: true,
 	        openCloseStateKey: "gg_"+querystring,
 	        legendClickHandler: function(e){ geneMatrixLegendPopupPanel.show(); },
-	        filterSubmitHandler: function(rows,cols)
+	        filterSubmitHandler: function(rowIds,colIds)
 	        {
 	        	var newFacets = window.facets;
-	        	var rowIds = [];
-	        	rows.forEach(function(row){
-	        		rowIds[rowIds.length] = row.rowId;
-	        	});
-	        	var colIds = [];
-	        	cols.forEach(function(col){
-	        		colIds[colIds.length] = col.cid;
-	        	});
-
 	        	if (rowIds.length > 0)
 	        	{
 	        		newFacets["structureIDFilter"] = rowIds;

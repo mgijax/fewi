@@ -815,6 +815,10 @@ var interceptSubmit = function(e) {
 	console.log("Updating GA4 - GXD Form Submission: " + currentQF);
 	gtag('event', 'gxdSumSubType', { 'submissionType': currentQF });
 
+	// On every query form submission, clear the SuperGrid selection carts (if any).
+	// This really doesn't belong here, but other places seem equally yucky. 
+	window.sgCarts = null;
+
 	if (!runValidation()){
 		// Do not allow any content to overflow the outer
 		// div when it is hiding
