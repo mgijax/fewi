@@ -532,6 +532,7 @@ handleNavigation = function (request, calledLocally) {
 	genePopupPanel.hide();
 	geneMatrixLegendPopupPanel.hide();
 	structMatrixLegendPopupPanel.hide();
+	//selectionsPopupPanel.hide();
 
 	if (calledLocally==undefined)
 		calledLocally = false;
@@ -1605,6 +1606,7 @@ var structureStageGrid = function()
 	        },
 	        openCloseStateKey: "sg_"+querystring,
 	        legendClickHandler: function(e){ structMatrixLegendPopupPanel.show(); },
+		selectionsClickHandler: function(e){ selectionsPopupPanel.show(); },
 	        filterSubmitHandler: function(rowIds,colIds)
 	        {
 	        	var newFacets = window.facets;
@@ -1789,6 +1791,7 @@ var structureGeneGrid = function()
 			verticalColumnLabels: true,
 	        openCloseStateKey: "gg_"+querystring,
 	        legendClickHandler: function(e){ geneMatrixLegendPopupPanel.show(); },
+		selectionsClickHandler: function(e){ selectionsPopupPanel.show(); },
 	        filterSubmitHandler: function(rowIds,colIds)
 	        {
 	        	var newFacets = window.facets;
@@ -1836,6 +1839,12 @@ window.structMatrixLegendPopupPanel = new YAHOO.widget.Panel("structLegendPopupP
 });
 window.structMatrixLegendPopupPanel.render();
 
+//popup for column selections
+window.selectionsPopupPanel = new YAHOO.widget.Panel("selectionsPopupPanel",
+		{ width:"260px", visible:false, constraintoviewport:true,
+			context:['tabSummaryContent', 'tl', 'tr',['beforeShow','windowResize']]
+});
+window.selectionsPopupPanel.render();
 
 // Handle legend default behavior
 window.SHOW_MATRIX_LEGENDS = true;

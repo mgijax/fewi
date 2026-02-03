@@ -226,6 +226,10 @@
   <jsp:include page="gxd_legend_popup.jsp"></jsp:include>
 </div>
 
+<div id="selectionsPopupPanel" style="visibility: hidden;" class="facetFilter">
+  <jsp:include page="gxd_selections_popup.jsp"></jsp:include>
+</div>
+
 <div id="heatMapLimit" style="display:none" title="Too many results">
 <p>Too many RNA-Seq results for export to heat map. Please refine your search to bring total RNA-Seq results under 10,000,000.</p>
 </div>
