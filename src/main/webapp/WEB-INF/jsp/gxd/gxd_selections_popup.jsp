@@ -12,7 +12,7 @@
        background-color: lightgray;
    }
 </style>
-<div class="hd">Column Selections</div>
+<div class="hd">Gene Cart</div>
 <div class="bd">
     <ul id="selectionsPopupList">
     </ul>
