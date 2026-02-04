@@ -214,6 +214,8 @@ public class GXDController {
 	@Value("${solr.factetNumberDefault}")
 	private Integer facetLimit;
 
+	private Map<String, Integer> resultCountCache = new HashMap<>();
+
 	// -----------------------------------------------------------------//
 	// public methods mapped to URLs
 	// -----------------------------------------------------------------//
@@ -3022,6 +3024,9 @@ public class GXDController {
 	// lookup of result count based solely on EMAPA/EMAPS ID
 	public Integer getResultCountForID(String termID) {
 		logger.debug("in getResultCountForID(" + termID + ")");
+
+		Integer resultCount = 0;
+
 		SearchParams params = new SearchParams();
 		GxdQueryForm form = new GxdQueryForm();
 		if (termID.startsWith("EMAP")) {
@@ -3038,13 +3043,25 @@ public class GXDController {
 	// lookup of result count for CellType Ontoloty term
 	public synchronized Integer getResultCountForCoID(String termID) {
 		logger.debug("in getResultCountForCoID(" + termID + ")");
-		SearchParams params = new SearchParams();
-		GxdQueryForm form = new GxdQueryForm();
-		form.setAnnotationId(termID);
-		params.setFilter(parseGxdQueryForm(form));
-		params.setPageSize(0);
 
-		return gxdFinder.getAssayResultCount(params);
+		Integer resultCount = 0;
+
+		if (resultCountCache.containsKey(termID)) {
+			logger.info("---FROM CACHE");
+			resultCount = resultCountCache.get(termID);
+		} else {
+			logger.info("---NOT FROM CACHE");
+
+			SearchParams params = new SearchParams();
+			GxdQueryForm form = new GxdQueryForm();
+			form.setAnnotationId(termID);
+			params.setFilter(parseGxdQueryForm(form));
+			params.setPageSize(0);
+			resultCount = gxdFinder.getAssayResultCount(params);
+			resultCountCache.put(termID, resultCount);
+		}
+
+		return resultCount;
 	}	
 
 	@RequestMapping("/images/totalCount")

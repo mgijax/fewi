@@ -60,6 +60,9 @@ public class GXDHTController {
 	@Autowired
 	private IDLinker idLinker;
 
+	private Map<String, Integer> htCountCache = new HashMap<>();
+
+
 	//--- public methods ---//
 
 	// retrieves the query form
@@ -124,14 +127,24 @@ public class GXDHTController {
 
 		logger.debug("---in getExperimentCountForCoID(" + termID + ")");
 
-		SearchParams params = new SearchParams();
-		GxdHtQueryForm query = new GxdHtQueryForm();
+		Integer htCount = 0;
 
-		query.setCellTypeID(termID);
-		params.setFilter(genFilters(query));
-		params.setPageSize(0);
+		if (htCountCache.containsKey(termID)) {
+			logger.info("---FROM CACHE");
+			htCount = htCountCache.get(termID);
+		} else {
+			logger.info("---NOT FROM CACHE");
 
-		return gxdHtFinder.getExperimentCount(params, query);
+			SearchParams params = new SearchParams();
+			GxdHtQueryForm query = new GxdHtQueryForm();
+			query.setCellTypeID(termID);
+			params.setFilter(genFilters(query));
+			params.setPageSize(0);
+			htCount = gxdHtFinder.getExperimentCount(params, query);
+			htCountCache.put(termID, htCount);
+		}
+
+		return htCount;
 	}
 
 	// determine if we searched by any sample-specific fields (not experiment-level fields); if
