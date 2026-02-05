@@ -958,6 +958,7 @@ function SuperGrid(config)
         _self.legendClickHandler = config.legendClickHandler || null;
 	
 	// selection cart config
+	_self.selectionsTitle = config.selectionsTitle || null;
 	_self.selectionsClickHandler = config.selectionsClickHandler || null;
 
         /*
@@ -1111,7 +1112,11 @@ function SuperGrid(config)
 
 		        	_self.renderCompletedFunction();
 
-				_self.syncVisibleColumnsWithCart();
+				if (_self.selectionsClickHandler) {
+				    _self.syncVisibleColumnsWithCart();
+				} else {
+				    selectionsPopupPanel.hide();
+				}
 		        });
         }
     }
@@ -1322,7 +1327,7 @@ function SuperGrid(config)
 	    .attr("y", buttonYOffset+4)
 	    .attr("dy", "1em")
 	    .style("cursor","pointer")
-	    .text("Gene Cart")
+	    .text(_self.selectionsTitle)
 	    .attr("class","matrixButtonText")
 	    .attr("id","selectionsTextID")
 	    .style("font-size","13px")
@@ -1408,7 +1413,7 @@ function SuperGrid(config)
     this.filterClickHandler = function()
     {
 	var filteredRows = _self.getFilteredRows().map(r => r.rowId);
-	var filteredColumns = _self.cart.getItems();
+	var filteredColumns = _self.getFilteredColumns();
     	// only fire the handler if there are actually filtered selected
     	if((filteredRows && filteredRows.length) || (filteredColumns && filteredColumns.length))
     	{
@@ -1437,15 +1442,7 @@ function SuperGrid(config)
 
     this.getFilteredColumns = function()
     {
-    	var filteredCols = [];
-    	var visibleCols = _self.data.getColumnsInRange(0,_self.maxColumns);
-    	visibleCols.forEach(function(col){
-    		if(col.checked)
-    		{
-    			filteredCols[filteredCols.length] = col;
-    		}
-    	});
-    	return filteredCols;
+	return _self.cart.getItems();
     }
 
     this.calculateSvgHeight = function()
@@ -2493,7 +2490,8 @@ function SuperGrid(config)
 	{
 		_self.colFilterCheck(col, "check", el);
 		_self.cart.addToCart(col.cid);
-		if (_self.cart.size() === 1) {
+		if (_self.cart.size() === 1 && _self.selectionsClickHandler) {
+		    // First item in cart. Show the cart to remind the user it's there.
 		    selectionsPopupPanel.show();
 		}
 	}
@@ -2517,11 +2515,12 @@ function SuperGrid(config)
     }
 
     this.updateSelectionsPopup = function () {
-	var items = _self.cart.getItems().sort((a,b) => {
+	var items = _self.getFilteredColumns().sort((a,b) => {
 	    a = a.toLowerCase();
 	    b = b.toLowerCase();
 	    return a.localeCompare(b);
 	});
+	selectionsPopupPanel.header.innerText = _self.selectionsTitle;
 	var lstContents = items.map(i => `<li>${i}</li>`).join('');
 	var contents = '<ul id="selectionsPopupList">' + lstContents + '</ul><br/><button type="button">Clear all</button>';
 	var bdy = selectionsPopupPanel.body;
@@ -2538,6 +2537,7 @@ function SuperGrid(config)
 	    _self.syncVisibleColumnsWithCart();
 	});
 	if (liElts.length === 0) {
+	    // if the popup has become empty, disappear it.
 	    selectionsPopupPanel.hide();
 	}
     }
@@ -2552,7 +2552,7 @@ function SuperGrid(config)
 	    return;
 	}
 	var displayedColumns = Array.from(document.querySelectorAll(`#${gridid} #colGroupInner > g`))
-	var cart = new Set(_self.cart.getItems());
+	var cart = new Set(_self.getFilteredColumns());
         displayedColumns.forEach(elt => {
 	    var col = elt.__data__;
 	    var d3elt = d3.select(elt.querySelector('image'));
@@ -2570,21 +2570,19 @@ function SuperGrid(config)
     this.rowFilterClick = function(row)
     {
     	var el = d3.select(this);
-		if(row.checked)
-		{
-			_self.rowFilterCheck(row, "uncheck", el);
-		}
-		else
-		{
-			_self.rowFilterCheck(row, "check", el);
-		}
+	if(row.checked)
+	{
+		_self.rowFilterCheck(row, "uncheck", el);
+	}
+	else
+	{
+		_self.rowFilterCheck(row, "check", el);
+	}
 
-		_self.lastFilterRow = row;
-		_self.updateFilterTree();
-		_self.updateFilterHighlights();
-		_self.updateButtons();
-
-    	// update filter button
+	_self.lastFilterRow = row;
+	_self.updateFilterTree();
+	_self.updateFilterHighlights();
+	_self.updateButtons();
 
     }
 
@@ -2594,7 +2592,7 @@ function SuperGrid(config)
     this.updateButtons = function()
     {
     	var filteredRows = _self.getFilteredRows();
-	var filteredColumns = _self.cart.getItems();
+	var filteredColumns = _self.getFilteredColumns();
     	if((filteredRows && filteredRows.length) || (filteredColumns && filteredColumns.length))
     	{
 		_self.filterButtonGroup.select("#filterTextID").style("opacity","1");
@@ -2606,13 +2604,15 @@ function SuperGrid(config)
 		_self.filterButtonGroup.select("#filterIconID").style("opacity","0.5");
 	}
 
-	if ((filteredColumns && filteredColumns.length)) 
-	{
-		_self.selectionsButtonGroup.style("visibility","visible");
-	}
-	else 
-	{
-		_self.selectionsButtonGroup.style("visibility","hidden");
+	if (_self.selectionsClickHandler) {
+	    if (filteredColumns && filteredColumns.length)
+	    {
+		    _self.selectionsButtonGroup.style("visibility","visible");
+	    }
+	    else 
+	    {
+		    _self.selectionsButtonGroup.style("visibility","hidden");
+	    }
 	}
     }
 

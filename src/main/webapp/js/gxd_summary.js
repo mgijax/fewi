@@ -1606,6 +1606,7 @@ var structureStageGrid = function()
 	        },
 	        openCloseStateKey: "sg_"+querystring,
 	        legendClickHandler: function(e){ structMatrixLegendPopupPanel.show(); },
+		selectionsTitle: "Stage Cart",
 		selectionsClickHandler: function(e){ selectionsPopupPanel.show(); },
 	        filterSubmitHandler: function(rowIds,colIds)
 	        {
@@ -1791,6 +1792,7 @@ var structureGeneGrid = function()
 			verticalColumnLabels: true,
 	        openCloseStateKey: "gg_"+querystring,
 	        legendClickHandler: function(e){ geneMatrixLegendPopupPanel.show(); },
+		selectionsTitle: "Gene Cart",
 		selectionsClickHandler: function(e){ selectionsPopupPanel.show(); },
 	        filterSubmitHandler: function(rowIds,colIds)
 	        {
