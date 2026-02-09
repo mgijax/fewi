@@ -125,16 +125,11 @@ public class GXDHTController {
 	// lookup of experiment count for CellType Ontoloty term
 	public synchronized Integer getExperimentCountForCoID(String termID) {
 
-		logger.debug("---in getExperimentCountForCoID(" + termID + ")");
-
 		Integer htCount = 0;
 
 		if (htCountCache.containsKey(termID)) {
-			logger.info("---FROM CACHE");
 			htCount = htCountCache.get(termID);
 		} else {
-			logger.info("---NOT FROM CACHE");
-
 			SearchParams params = new SearchParams();
 			GxdHtQueryForm query = new GxdHtQueryForm();
 			query.setCellTypeID(termID);
@@ -143,7 +138,6 @@ public class GXDHTController {
 			htCount = gxdHtFinder.getExperimentCount(params, query);
 			htCountCache.put(termID, htCount);
 		}
-
 		return htCount;
 	}
 

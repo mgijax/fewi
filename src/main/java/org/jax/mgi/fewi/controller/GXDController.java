@@ -3042,16 +3042,12 @@ public class GXDController {
 
 	// lookup of result count for CellType Ontoloty term
 	public synchronized Integer getResultCountForCoID(String termID) {
-		logger.debug("in getResultCountForCoID(" + termID + ")");
 
 		Integer resultCount = 0;
 
 		if (resultCountCache.containsKey(termID)) {
-			logger.info("---FROM CACHE");
 			resultCount = resultCountCache.get(termID);
 		} else {
-			logger.info("---NOT FROM CACHE");
-
 			SearchParams params = new SearchParams();
 			GxdQueryForm form = new GxdQueryForm();
 			form.setAnnotationId(termID);
@@ -3060,7 +3056,6 @@ public class GXDController {
 			resultCount = gxdFinder.getAssayResultCount(params);
 			resultCountCache.put(termID, resultCount);
 		}
-
 		return resultCount;
 	}	
 
