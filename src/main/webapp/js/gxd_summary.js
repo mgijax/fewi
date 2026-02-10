@@ -309,9 +309,6 @@ function reverseEngineerFormInput(request)
 		// profile params handled above
 		if (key.startsWith("profile")) continue;
 
-		console.log("--in reverseEngineerFormInput: key=" + key);
-		console.log("in reverseEngineerFormInput: params[key]=" + params[key]);
-
 		// Special handling for idFile field.
 		// Do not set this to an empty string!
 		if (key == 'idFile') {
@@ -1606,8 +1603,8 @@ var structureStageGrid = function()
 	        },
 	        openCloseStateKey: "sg_"+querystring,
 	        legendClickHandler: function(e){ structMatrixLegendPopupPanel.show(); },
-		selectionsTitle: "Stage Cart",
-		selectionsClickHandler: function(e){ selectionsPopupPanel.show(); },
+		//selectionsTitle: "Stage Cart",
+		//selectionsClickHandler: function(e){ selectionsPopupPanel.show(); },
 	        filterSubmitHandler: function(rowIds,colIds)
 	        {
 	        	var newFacets = window.facets;

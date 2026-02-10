@@ -200,7 +200,9 @@ window.GxdRender = new function()
     	var labelPaddingBottom = 4;
         // draw a label
     	var g = d3Target;
-        g.append("text")
+
+	g.attr("emapid",d => d.rowId)
+         .append("text")
             .attr("x",labelPaddingLeft)
             .attr("y",cellHeight-labelPaddingBottom)
             .text(function(d){return d.term;})

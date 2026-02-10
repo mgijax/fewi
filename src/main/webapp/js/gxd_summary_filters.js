@@ -55,13 +55,11 @@ function gsfLog(msg) {
 //encode an individual value selected for a filter, to be URL-safe
 function encode(val) {
 	var newVal = val.replace('&', '%26');
-	gsfLog('encode(' + val + ') ==> ' + newVal);
 	return newVal;
 }
 
 function decode(val) {
 	var newVal = val.replace('%26', '&');
-	gsfLog('decode(' + val + ') ==> ' + newVal);
 	return newVal;
 }
 
@@ -84,7 +82,6 @@ var extractFilters = function(pRequest) {
 	}
 	s = s + "}";
 
-	gsfLog("extractFilters() : " + s);
 	populateFilterSummary();
 };
 
@@ -106,7 +103,6 @@ var getFilterCriteria = function() {
 			s = s + key + '=' + encode(list[i].replace('*', ','));
 		}
 	}
-	gsfLog("getFilterCriteria() : " + s);
 	return s;
 };
 
@@ -123,10 +119,8 @@ var showLoadingMessage = function() {
 /* populate a dialog box for a facet
  */
 var populateFacetDialog = function (title, body, error) {
-	gsfLog("populateFacetDialog() - entered");
 
 	if (gsfFacetDialog === null) {
-		gsfLog("found null gsfFacetDialog; repairing");
 		prepFilters();
 	}
 
@@ -137,9 +131,7 @@ var populateFacetDialog = function (title, body, error) {
 	for (k in buttons) {
 		buttons[k].set('disabled', error);
 	}
-	gsfLog("populateFacetDialog() - showing dialog");
 	gsfFacetDialog.show();
-	gsfLog("populateFacetDialog() - exiting");
 };
 
 /* parse the results we get back to populate a filter
@@ -370,19 +362,16 @@ var buildFacetDialog = function() {
 		var selections = this.getData();
 		var list = [];
 		for (i in selections) {
-			gsfLog("facets[" + i + "] = " + selections[i]);
 			facets[i] = selections[i];
 		}
 		submitFacets(facets);
 		refreshTabCounts();
-		gsfLog("executing this.submit()");
 		this.submit();
 	};
 
 	var handleSuccess = function(o) {
 		var response = o.responseText;
 		response = response.split("<!")[0];
-		gsfLog("handleSuccess() response: " + response);
 	};
 
 	var handleFailure = function(o) {
@@ -444,12 +433,10 @@ var prepFilters = function(qfRequest) {
 	};
 
 	var buildFacetDataSource = function (name) {
-		gsfLog("facet data source name : " + name);
 
 		var url = fewiurl + "gxd/facet/" + name;
 
 		var facetDS = new YAHOO.util.DataSource (url, { 'connMethodPost' : true });
-		gsfLog("facetDataSource url : " + url);
 
 		facetDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
 

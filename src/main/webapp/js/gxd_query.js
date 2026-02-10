@@ -817,7 +817,7 @@ var interceptSubmit = function(e) {
 
 	// On every query form submission, clear the SuperGrid selection carts (if any).
 	// This really doesn't belong here, but other places seem equally yucky. 
-	window.sgCarts = null;
+	window.SG_SELECTIONS = null;
 
 	if (!runValidation()){
 		// Do not allow any content to overflow the outer
@@ -1387,7 +1387,6 @@ var getQueryString = function(form) {
 	for(var i=0; i<form.elements.length; i++)
 	{
 		var element = form.elements[i];
-		console.log("getQueryString - element:" + element.name);
 		if(element.name != ""
 			&& element.name !="_theilerStage" && element.name !="_age"
 			&& element.name !="_difTheilerStage" && element.name !="_difAge")
