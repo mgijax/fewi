@@ -211,6 +211,7 @@ public class GxdQueryForm implements Cloneable {
 		idTypes.put("auto", "Search all input types");
 		idTypes.put("MGI", "MGI Gene/Marker ID");
 		idTypes.put("current symbol", "Current Symbols Only");
+		idTypes.put("current symbol plus", "Current Symbols and Synonyms");
 		idTypes.put("nomen", "All Symbols/Synonyms/Homologs");
 		idTypes.put("Entrez Gene", "Entrez Gene ID");
 		idTypes.put("Ensembl", "Ensembl ID");
