@@ -1117,6 +1117,9 @@ function SuperGrid(config)
 
 				if (_self.selectionsClickHandler) {
 				    _self.syncVisibleColumnsWithCart();
+				    if (_self.colCart.size() > 0) {
+				        selectionsPopupPanel.show();
+				    }
 				} else {
 				    selectionsPopupPanel.hide();
 				}
