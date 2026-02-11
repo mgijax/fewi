@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jax.mgi.fewi.hunter.ESGxdConsolidatedSampleHunter;
+import org.jax.mgi.fewi.hunter.ESGxdDagEdgeHunter;
 import org.jax.mgi.fewi.hunter.ESGxdImagePaneHunter;
 import org.jax.mgi.fewi.hunter.ESGxdProfileMarkerHunter;
 import org.jax.mgi.fewi.hunter.ESGxdResultHasImageHunter;
@@ -20,6 +21,7 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.entities.ESAggLongCount;
 import org.jax.mgi.fewi.searchUtil.entities.ESAssayResult;
+import org.jax.mgi.fewi.searchUtil.entities.ESDagEdge;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdMarker;
 import org.jax.mgi.fewi.searchUtil.entities.ESGxdRnaSeqHeatMapResult;
@@ -28,6 +30,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRnaSeqConsolidatedSample;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdRnaSeqHeatMapResult;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.shr.fe.IndexConstants;
+import org.jax.mgi.shr.fe.indexconstants.DagEdgeFields;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.shr.fe.indexconstants.ImagePaneFields;
 import org.jax.mgi.shr.fe.query.SolrLocationTranslator;
@@ -49,6 +52,7 @@ public class ESHunterTest {
 	private static final Logger log = LoggerFactory.getLogger(ESHunterTest.class);
 
 	private static final String ES_HOST = "bhmgigxdsolr01ld.jax.org";
+//	private static final String ES_HOST = "34.74.34.59";
 	private static final String ES_PORT = "9200";
 //	private static final String ES_HOST = "localhost";
 //	private static final String ES_HOST = "my-elasticsearch-project-e27cf3.es.us-east1.gcp.elastic.cloud";
@@ -76,6 +80,131 @@ public class ESHunterTest {
 		this.esGxdConsolidatedSampleHunter = new ESGxdConsolidatedSampleHunter(SolrGxdRnaSeqConsolidatedSample.class,
 				ES_HOST, ES_PORT, "gxd_consolidated_sample");
 	}
+	
+	@Test
+	public void testSearchDagEdge() {
+		log.info("Test: testSearchDagEdge");
+		
+		SearchParams searchParams = new SearchParams();
+		searchParams.setPageSize(10);
+		List<Filter> filters = new ArrayList<Filter>();
+
+		List<Filter> joinFilters = new ArrayList<Filter>();		
+		joinFilters.add(Filter.in(GxdResultFields.PROF_POS_C_ANC_A, List.of("18242470")));   // brain detected
+		joinFilters.add(Filter.notIn(GxdResultFields.PROF_POS_C_ANC_A, List.of("18239679")));  // liver not detected
+		Filter joinQuery = Filter.and(joinFilters);
+		filters.add(Filter.join("gxd_profile_marker", "markerMgiid", "markerMgiid", joinQuery));	
+
+		filters.add(Filter.join("gxd_dag_edge", "emapsId", "emapsId", new Filter()));	
+		
+		filters.add(Filter.notEqual(GxdResultFields.ASSAY_TYPE, "RNA-Seq"));
+		filters.add(Filter.equal(GxdResultFields.IS_WILD_TYPE, "wild type"));
+
+		List<Filter> structIdFilters = new ArrayList<Filter>();
+		structIdFilters.add(Filter.equal(SearchConstants.STRUCTURE_ID, "EMAPA:16894"));
+		structIdFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "Yes"));
+
+		List<Filter> structExtactFilters = new ArrayList<Filter>();
+		structExtactFilters.add(Filter.equal(SearchConstants.STRUCTURE_EXACT, "EMAPA:16846"));
+		structExtactFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "No"));	
+		
+		List<Filter> structFilters = new ArrayList<Filter>();
+		structFilters.add(Filter.and(structIdFilters));
+		structFilters.add(Filter.and(structExtactFilters));
+
+		filters.add(Filter.or(structFilters));
+
+		searchParams.setFilter(Filter.and(filters));		
+		
+		SearchResults<ESDagEdgeJoin> assayResult = new SearchResults<ESDagEdgeJoin>();
+		long start = System.currentTimeMillis();
+		esGxdResultHunter.huntDocs(searchParams, assayResult, ESDagEdgeJoin.RETURN_FIELDS, true, ESDagEdgeJoin.class);
+		ESSearchOption.logRunTime(log, start, "searchMatrixDAGDescendentEdges_result");
+
+		List<ESDagEdgeJoin> resultObjects = assayResult.getResultObjects();
+		log.info("resultObjects size: " + resultObjects.size());
+		show(assayResult.getResultObjects(), 5);
+		log.info("\n");	
+	}	
+	
+	@Test
+	public void testLookupJoinThreeIndex() {
+		log.info("Test: testLookupJoinThreeIndex");
+
+		ESLookup lookUpJoin = new ESLookup("gxd_result");
+
+		List<ESLookupIndex> lookupIndexes = new ArrayList<ESLookupIndex>();
+		lookupIndexes.add(new ESLookupIndex("gxd_profile_marker", GxdResultFields.MARKER_MGIID, false));
+		lookupIndexes.add(new ESLookupIndex("gxd_dag_edge", GxdResultFields.EMAPS_ID, false));
+		lookUpJoin.setLookupIndexes(lookupIndexes);
+
+		List<String> extraStatements = new ArrayList<String>();
+		
+		List<String> keeps = new ArrayList<String>();
+		keeps.add(GxdResultFields.MARKER_SYMBOL);
+		keeps.addAll(ESDagEdgeJoin.RETURN_FIELDS);
+		keeps.add(GxdResultFields.PROF_POS_R_EXACT);
+		keeps.add(GxdResultFields.EMAPS_ID);
+		keeps.add(GxdResultFields.ASSAY_MGIID);
+		String keep = "KEEP ";
+		keep = "GROUP BY ";
+		int cnt = 0;
+		for (String k: keeps) {
+			if ( cnt > 0) {
+				keep += ",";
+		    }
+			keep += k;
+			cnt++;
+		}
+		extraStatements.add(keep);
+//		extraStatements.add("WHERE " + DagEdgeFields.PARENT_ID + " IS NOT NULL");
+//		extraStatements.add("WHERE " + GxdResultFields.EMAPS_ID + " IS NOT NULL");
+		lookUpJoin.setExtraStatements(extraStatements);
+
+		SearchParams searchParams = new SearchParams();
+		searchParams.setPageSize(100);
+		
+		List<Filter> filters = new ArrayList<Filter>();
+
+//		List<Filter> joinFilters = new ArrayList<Filter>();
+//		joinFilters.add(Filter.in("posCAncA", List.of("18242470")));  // brain detected
+//		joinFilters.add(Filter.notIn("posCAncA", List.of("18239679")));  // liver not detected
+//		Filter joinQuery = Filter.and(joinFilters);
+//		filters.add(Filter.join("gxdProfileMarker", "markerMgiid", "markerMgiid", joinQuery));	
+		
+//		filters.add(Filter.notEqual(GxdResultFields.ASSAY_TYPE, "RNA-Seq"));
+//		filters.add(Filter.equal(GxdResultFields.IS_WILD_TYPE, "wild type"));
+
+		List<Filter> structIdFilters = new ArrayList<Filter>();
+		structIdFilters.add(Filter.equal(SearchConstants.STRUCTURE_ID, "EMAPA:16894"));
+		structIdFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "Yes"));
+
+		List<Filter> structExtactFilters = new ArrayList<Filter>();
+		structExtactFilters.add(Filter.equal(SearchConstants.STRUCTURE_ID, "EMAPA:16846"));
+		structExtactFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "No"));	
+		
+		List<Filter> structFilters = new ArrayList<Filter>();
+		structFilters.add(Filter.and(structIdFilters));
+		structFilters.add(Filter.and(structExtactFilters));
+
+		filters.add(Filter.or(structFilters));		
+		
+//		filters.add(Filter.equal(GxdResultFields.MARKER_SYMBOL, "Apob"));
+//		String spatialQueryString = SolrLocationTranslator.getQueryValue("Chr12:3000000-10000000", "bp");
+//		filters.add(new Filter(SearchConstants.MOUSE_COORDINATE, spatialQueryString, Filter.Operator.OP_SHAPE));
+//		searchParams.setFilter(Filter.and(filters));
+
+		SearchResults<ESDagEdge> searchResults = new SearchResults<ESDagEdge>();
+		ESSearchOption searchOption = new ESSearchOption();
+		searchOption.setEsQuery(lookUpJoin);
+		this.esGxdResultHunter.hunt(searchParams, searchResults, searchOption);
+
+		List<ESDagEdge> resultObjects = searchResults.getResultObjects();
+		Assert.assertTrue(resultObjects.size() > 0);
+		log.info("resultObjects size: " + resultObjects.size());
+		show(resultObjects, 5);
+		log.info("\n");
+	}		
 
 	@Test
 	public void testSearchMatrixDAGDescendentEdges() {
@@ -95,11 +224,11 @@ public class ESHunterTest {
 		filters.add(Filter.equal(GxdResultFields.IS_WILD_TYPE, "wild type"));
 
 		List<Filter> structIdFilters = new ArrayList<Filter>();
-		structIdFilters.add(Filter.equal(GxdResultFields.STRUCTURE_ID, "EMAPA:16894"));
+		structIdFilters.add(Filter.equal(SearchConstants.STRUCTURE_ID, "EMAPA:16894"));
 		structIdFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "Yes"));
 
 		List<Filter> structExtactFilters = new ArrayList<Filter>();
-		structExtactFilters.add(Filter.equal(GxdResultFields.STRUCTURE_EXACT, "EMAPA:16846"));
+		structExtactFilters.add(Filter.equal(SearchConstants.STRUCTURE_ID, "EMAPA:16846"));
 		structExtactFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "No"));	
 		
 		List<Filter> structFilters = new ArrayList<Filter>();
@@ -146,11 +275,11 @@ public class ESHunterTest {
 		filters.add(Filter.equal(GxdResultFields.IS_WILD_TYPE, "wild type"));
 
 		List<Filter> structIdFilters = new ArrayList<Filter>();
-		structIdFilters.add(Filter.equal(GxdResultFields.STRUCTURE_ID, "EMAPA:16105"));
+		structIdFilters.add(Filter.equal(SearchConstants.STRUCTURE_ID, "EMAPA:16105"));
 		structIdFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "Yes"));
 
 		List<Filter> structExtactFilters = new ArrayList<Filter>();
-		structExtactFilters.add(Filter.equal(GxdResultFields.STRUCTURE_EXACT, "EMAPA:16846"));
+		structExtactFilters.add(Filter.equal(SearchConstants.STRUCTURE_ID, "EMAPA:16846"));
 		structExtactFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "No"));
 
 		List<Filter> structFilters = new ArrayList<Filter>();
@@ -256,11 +385,11 @@ public class ESHunterTest {
 		filters.add(Filter.equal(GxdResultFields.IS_WILD_TYPE, "wild type"));
 
 		List<Filter> structIdFilters = new ArrayList<Filter>();
-		structIdFilters.add(Filter.equal(GxdResultFields.STRUCTURE_ID, "EMAPA:16105"));
+		structIdFilters.add(Filter.equal(SearchConstants.STRUCTURE_ID, "EMAPA:16105"));
 		structIdFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "Yes"));
 
 		List<Filter> structExtactFilters = new ArrayList<Filter>();
-		structExtactFilters.add(Filter.equal(GxdResultFields.STRUCTURE_EXACT, "EMAPA:16846"));
+		structExtactFilters.add(Filter.equal(SearchConstants.STRUCTURE_ID, "EMAPA:16846"));
 		structExtactFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "No"));
 
 		List<Filter> structFilters = new ArrayList<Filter>();
@@ -292,11 +421,11 @@ public class ESHunterTest {
 		filters.add(Filter.equal(GxdResultFields.IS_WILD_TYPE, "wild type"));
 
 		List<Filter> structIdFilters = new ArrayList<Filter>();
-		structIdFilters.add(Filter.equal(GxdResultFields.STRUCTURE_ID, "EMAPA:16105"));
+		structIdFilters.add(Filter.equal(SearchConstants.STRUCTURE_ID, "EMAPA:16105"));
 		structIdFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "Yes"));
 
 		List<Filter> structExtactFilters = new ArrayList<Filter>();
-		structExtactFilters.add(Filter.equal(GxdResultFields.STRUCTURE_EXACT, "EMAPA:16846"));
+		structExtactFilters.add(Filter.equal(SearchConstants.STRUCTURE_ID, "EMAPA:16846"));
 		structExtactFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "No"));
 
 		List<Filter> structFilters = new ArrayList<Filter>();
@@ -362,7 +491,7 @@ public class ESHunterTest {
 	public void testSimpleSearch() {
 		log.info("Test: testSearchByParameter");
 		SearchParams searchParams = new SearchParams();
-		searchParams.setFilter(Filter.equal(GxdResultFields.NOMENCLATURE, "Apob"));
+		searchParams.setFilter(Filter.equal(GxdResultFields.NOMENCLATURE, "apob"));
 		SearchResults<ESAssayResult> searchResults = new SearchResults<ESAssayResult>();
 
 		this.esGxdResultHunter.huntDocs(searchParams, searchResults, ESAssayResult.RETURN_FIELDS);
@@ -420,11 +549,11 @@ public class ESHunterTest {
 		filters.add(Filter.equal(GxdResultFields.IS_WILD_TYPE, "wild type"));
 
 		List<Filter> structIdFilters = new ArrayList<Filter>();
-		structIdFilters.add(Filter.equal(GxdResultFields.STRUCTURE_ID, "EMAPA:16105"));
+		structIdFilters.add(Filter.equal(SearchConstants.STRUCTURE_ID, "EMAPA:16105"));
 		structIdFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "Yes"));
 
 		List<Filter> structExtactFilters = new ArrayList<Filter>();
-		structExtactFilters.add(Filter.equal(GxdResultFields.STRUCTURE_EXACT, "EMAPA:16846"));
+		structExtactFilters.add(Filter.equal(SearchConstants.STRUCTURE_ID, "EMAPA:16846"));
 		structExtactFilters.add(Filter.equal(GxdResultFields.DETECTION_LEVEL, "No"));
 
 		List<Filter> structFilters = new ArrayList<Filter>();

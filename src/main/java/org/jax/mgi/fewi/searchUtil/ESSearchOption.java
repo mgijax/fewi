@@ -16,7 +16,8 @@ public class ESSearchOption {
 	private boolean tractTopHit = false; 
 	private boolean getAllBuckets = false; 
 	private boolean useSearchAfter = false; 	
-	private boolean useScroll = false; 	
+	private boolean useScroll = false; 
+	private boolean useESQL = false; 	
 	private int precisionThreshold;
 	private List<String> returnFields;
 	private String extraJoinClause;
@@ -158,5 +159,13 @@ public class ESSearchOption {
 
 	public void setUseScroll(boolean useScroll) {
 		this.useScroll = useScroll;
+	}
+
+	public boolean isUseESQL() {
+		return useESQL;
+	}
+
+	public void setUseESQL(boolean useESQL) {
+		this.useESQL = useESQL;
 	}
 }

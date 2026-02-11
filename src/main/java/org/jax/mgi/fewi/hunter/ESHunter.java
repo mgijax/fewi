@@ -13,6 +13,8 @@ import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.jax.mgi.fewi.propertyMapper.ESPropertyMapper;
+import org.jax.mgi.fewi.propertyMapper.ValueType;
+import org.jax.mgi.fewi.searchUtil.ESQuery;
 import org.jax.mgi.fewi.searchUtil.ESSearchOption;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.JoinClause;
@@ -23,6 +25,7 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.entities.ESAggLongCount;
 import org.jax.mgi.fewi.searchUtil.entities.ESAggStringCount;
+import org.jax.mgi.fewi.searchUtil.entities.ESDagEdge;
 import org.jax.mgi.fewi.sortMapper.ESSortMapper;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.jax.mgi.snpdatamodel.document.BaseESDocument;
@@ -164,7 +167,16 @@ public class ESHunter<T extends ESEntity> {
 	protected Map<String, String> groupFields = new HashMap<String, String>();
 
 	private Class<T> clazz;
-
+	
+	private static final Map<String, String> JOIN_INDEX_MAP = new HashMap<>(Map.of(
+		    "gxdImagePane", "gxd_image_pane",
+		    "gxdProfileMarker", "gxd_profile_marker",
+		    "gxdDagEdge", "gxd_dag_edge",
+		    "gxdConsolidatedSample", "gxd_consolidated_sample",
+		    "gxdResultHasImage", "gxd_result_has_image",
+		    "gxdResult", "gxd_result"
+		));
+	
 	public ESHunter(Class<T> clazz) {
 		this.clazz = clazz;
 		filterClauseMap.put(Filter.JoinClause.FC_AND, " AND ");
@@ -223,18 +235,26 @@ public class ESHunter<T extends ESEntity> {
 
 	// retrieve docs for the index with search filter, specifying return fields
 	public void huntDocs(SearchParams searchParams, SearchResults<T> searchResults, List<String> returnFields) {
+		huntDocs(searchParams, searchResults, returnFields, false, null);
+	}	
+	
+	// retrieve docs for the index with search filter, specifying return fields
+	public void huntDocs(SearchParams searchParams, SearchResults<T> searchResults, List<String> returnFields, boolean isUseESQL, Class cls) {
 		ESSearchOption searchOption = new ESSearchOption();
 		searchOption.setReturnFields(returnFields);
+		searchOption.setUseESQL(isUseESQL);
+		searchOption.setClazz(cls);
 		hunt(searchParams, searchResults, searchOption);
 	}
-	
-	// retrieve docs for the index with search filter, specifying return fields, using scroll for large data
+
+	// retrieve docs for the index with search filter, specifying return fields,
+	// using scroll for large data
 	public void huntDocsScroll(SearchParams searchParams, SearchResults<T> searchResults, List<String> returnFields) {
 		ESSearchOption searchOption = new ESSearchOption();
 		searchOption.setReturnFields(returnFields);
 		searchOption.setUseScroll(true);
 		hunt(searchParams, searchResults, searchOption);
-	}	
+	}
 
 	/*
 	 * parse out key and doc_count group information
@@ -277,7 +297,6 @@ public class ESHunter<T extends ESEntity> {
 		ESSearchOption searchOption = new ESSearchOption();
 		searchOption.setGroupField(groupField);
 		searchOption.setGetGroupFirstDoc(true);
-		//searchOption.setUseSearchAfter(true);
 		searchOption.setReturnFields(returnFields);
 		hunt(searchParams, searchResults, searchOption);
 
@@ -313,16 +332,16 @@ public class ESHunter<T extends ESEntity> {
 			if (searchOption.isUseCountEndpoint()) {
 				// ES endpint "/count"
 				huntDoCount(searchParams, searchResults, searchOption);
-			} else if (searchOption.getEsQuery() == null) {
+			} else if (searchOption.isUseESQL()) {
+				// ES endpoint "/query" for ESQL
+				huntDoESQL(searchParams, searchResults, searchOption);
+			} else {
 				// ES endpint "/search"
-				if ( searchOption.isUseSearchAfter() ) {
+				if (searchOption.isUseSearchAfter()) {
 					huntDoSearchWithSearchAfter(searchParams, searchResults, searchOption);
 				} else {
 					huntDoSearch(searchParams, searchResults, searchOption);
 				}
-			} else {
-				// ES endpoint "/query" for ESQL
-				huntDoQuery(searchParams, searchResults, searchOption);
 			}
 		} catch (ElasticsearchException e) {
 			if (e.response() != null && e.response().error() != null) {
@@ -360,7 +379,7 @@ public class ESHunter<T extends ESEntity> {
 		log.info("Total matching documents: " + countResponse.count());
 		searchResults.setTotalCount((int) countResponse.count());
 	}
-	
+
 	public <T extends ESEntity> void huntDoSearchWithSearchAfter(SearchParams searchParams,
 			SearchResults<T> searchResults, ESSearchOption searchOption) throws Exception {
 		log.info("PAGE: " + searchParams.getPageSize());
@@ -451,8 +470,9 @@ public class ESHunter<T extends ESEntity> {
 		searchResults.setTotalCount(searchResults.getResultObjects().size());
 		log.info("Total hits retrieved via search_after: " + searchResults.getTotalCount());
 	}
-	
-	private boolean addResultObjects(SearchResults searchResults, SearchResponse<T> response, List resultObjects, int pageSize) {
+
+	private boolean addResultObjects(SearchResults searchResults, SearchResponse<T> response, List resultObjects,
+			int pageSize) {
 		for (var hit : response.hits().hits()) {
 			T obj = hit.source(); // requires _source enabled
 			if (obj != null) {
@@ -460,7 +480,7 @@ public class ESHunter<T extends ESEntity> {
 			}
 			if (resultObjects.size() >= pageSize) {
 				searchResults.setResultObjects(resultObjects);
-				searchResults.setTotalCount(resultObjects.size());				
+				searchResults.setTotalCount(resultObjects.size());
 				return true;
 			}
 		}
@@ -497,7 +517,7 @@ public class ESHunter<T extends ESEntity> {
 					new ScrollRequest.Builder().scroll(Time.of(t -> t.time("2m"))).scrollId(scrollId).build(),
 					callClazz);
 			hitsCount = scrollResponse.hits().hits().size();
-			log.info("Scroll " + batchCnt + ": " +  resultObjects.size() + "/" +  searchParams.getPageSize());
+			log.info("Scroll " + batchCnt + ": " + resultObjects.size() + "/" + searchParams.getPageSize());
 			if (hitsCount == 0)
 				break;
 			if (addResultObjects(searchResults, response, resultObjects, searchParams.getPageSize())) {
@@ -511,7 +531,7 @@ public class ESHunter<T extends ESEntity> {
 			esClient.clearScroll(clearBuilder.build());
 		}
 	}
-	
+
 	public <T extends ESEntity> void huntDoSearch(SearchParams searchParams, SearchResults<T> searchResults,
 			ESSearchOption searchOption) throws Exception {
 
@@ -558,17 +578,12 @@ public class ESHunter<T extends ESEntity> {
 			}
 			srb.aggregations(rangeSpec.getName(), t -> t.range(f -> f.field(rangeSpec.getField()).ranges(aggRanges)));
 		}
-		Class callClazz;
-		if (searchOption.getClazz() == null) {
-			callClazz = this.clazz;
-		} else {
-			callClazz = searchOption.getClazz();
-		}
-		if ( searchOption.isUseScroll() ) {
+		Class callClazz = getResponseClass(searchOption);
+		if (searchOption.isUseScroll()) {
 			huntDoSearchScroll(searchParams, searchResults, searchOption, srb, callClazz);
 			return;
 		}
-		
+
 		SearchRequest searchRequest = srb.build();
 		logSearchRequest(searchRequest);
 		resp = (SearchResponse<T>) esClient.search(searchRequest, callClazz);
@@ -631,40 +646,50 @@ public class ESHunter<T extends ESEntity> {
 			searchResults.getResultObjects().add(hit.source());
 		}
 	}
+	
+	private Class getResponseClass(ESSearchOption searchOption) {
+		if (searchOption.getClazz() != null) {
+			return searchOption.getClazz();
+		}
+		return this.clazz;
+	}
 
-	private <T extends ESEntity> void huntDoQuery(SearchParams searchParams, SearchResults<T> searchResults,
+	private <T extends ESEntity> void huntDoESQL(SearchParams searchParams, SearchResults<T> searchResults,
 			ESSearchOption searchOption) throws Exception {
-
-		List<String> whereCauses = new ArrayList<String>();
-		String queryString = translateFilter(searchParams.getFilter(), propertyMap);
-		if (queryString != null && !queryString.isEmpty()) {
-			whereCauses.add(queryString.replaceAll(":", "==").replaceAll("~100", ""));
-		}
-
-		List<Filter> shapeFilters = null;
-		if (searchParams.getFilter() != null) {
-			shapeFilters = searchParams.getFilter().collectFilters(Filter.Operator.OP_SHAPE);
-		}
-
-		if (shapeFilters != null && !shapeFilters.isEmpty()) {
-			List<String> polygons = new ArrayList<String>();
-			for (Filter filter : shapeFilters) {
-				String polygon = toPolygon(filter);
-				if (polygon != null) {
-					polygons.add(polygon);
+		StringBuffer esql = new StringBuffer();
+		esql.append("FROM " + this.esIndex);
+		
+		String whereCauseStr = translateFilterESQL(searchParams.getFilter(), propertyMap);
+		if (whereCauseStr != null && !whereCauseStr.isEmpty()) {
+			Map<String, String> multiValueFields = new HashMap<String, String>();
+			filterMultiValueFields(searchParams.getFilter(), propertyMap, multiValueFields);
+			if ( !multiValueFields.isEmpty() ) {
+				for (String f: multiValueFields.keySet()) {
+					esql.append(" | MV_EXPAND " + f);
 				}
 			}
-			if (polygons != null && !polygons.isEmpty()) {
-				String joinedPolygons = polygons.stream()
-						.map(p -> "ST_INTERSECTS(mc, \"" + p + "\" :: cartesian_shape)")
-						.collect(Collectors.joining(" OR "));
-				whereCauses.add(joinedPolygons);
+			
+			esql.append(" | WHERE " + whereCauseStr);
+		}
+		List<Filter> joinQueryFilters = searchParams.getFilter().collectJoinQueryFilters();
+		if (joinQueryFilters != null ) {
+			for (Filter joinFilter : joinQueryFilters) {
+				String causes = joinQueryToESQLCause(joinFilter);
+				if ( causes != null && !causes.isEmpty() ) {
+					esql.append(" | " + causes);
+				}
 			}
 		}
+		
+		if ( searchOption.getReturnFields() != null && !searchOption.getReturnFields().isEmpty()) {
+			esql.append(" | KEEP " + String.join(",", searchOption.getReturnFields()));
+		}
+		if (searchParams.getPageSize() > 0) {
+			esql.append(" | LIMIT " + searchParams.getPageSize());
+		}
 
-		String query = searchOption.getEsQuery().toQuery(whereCauses, searchParams.getPageSize(),
-				searchOption.isGetTotalCount());
-		log.info("esquery: " + query);
+		log.info("esql: " + esql);
+		final String query = esql.toString();
 		BinaryResponse binResp = esClient.esql().query(QueryRequest.of(q -> q.query(query).format(EsqlFormat.Json)));
 
 		JsonNode root = mapper.readTree(binResp.content());
@@ -672,10 +697,159 @@ public class ESHunter<T extends ESEntity> {
 			int totalCount = root.path("values").get(0).get(0).asInt();
 			searchResults.setTotalCount(totalCount);
 		} else {
-			List results = processLookupResponse(root, clazz);
+			List results = processLookupResponse(root, getResponseClass(searchOption));
 			searchResults.setResultObjects(results);
+			searchResults.setTotalCount(results.size());
 		}
 		log.info("esql found: " + searchResults.getTotalCount());
+	}
+	
+	private String joinQueryToESQLCause(Filter joinFilter) {
+		if (joinFilter.getJoinQuery() == null || joinFilter.getJoinQuery().getNestedFilters() == null) {
+			return null;
+		}
+		StringBuffer ret = new StringBuffer();
+		ret.append(" LOOKUP JOIN " + getJoinIndexName(joinFilter.getFromIndex()) + " ON " + joinFilter.getFromField());
+		
+		Map<String, String> multiValueFields = new HashMap<String, String>();
+		filterMultiValueFields(joinFilter.getJoinQuery(), propertyMap, multiValueFields);
+		if ( !multiValueFields.isEmpty() ) {
+			for (String f: multiValueFields.keySet()) {
+				ret.append(" | MV_EXPAND " + f);
+			}
+		}
+		for (Filter causeFilter : joinFilter.getJoinQuery().getNestedFilters()) {
+			String causes = translateFilterESQL(causeFilter, propertyMap);
+			if ( causes != null && !causes.isEmpty() ) {
+				ret.append(" | WHERE " + causes);
+			}
+		}
+		return ret.toString();
+	}
+
+	protected String translateFilterESQL(Filter filter, HashMap<String, ESPropertyMapper> propertyMap) {
+		if (filter == null ) {
+			return null;
+		}
+		String filterProperty = filter.getProperty();
+		ESPropertyMapper pm = propertyMap.getOrDefault(filterProperty, new ESPropertyMapper(filterProperty));
+		ValueType valueType = pm.getValueType();
+		if ( valueType == null) {
+			valueType = ValueType.STRING;
+		}
+		
+		if (filter.isBasicFilter()) {
+			String cause = null;
+			Operator op = filter.getOperator();
+			if (op == Operator.OP_SHAPE) {
+				cause = getShapeESQL(filter);				
+			} else if ( op == Operator.OP_TERM_IN) {
+				cause = getTermInESQL(filter, valueType);
+			} else if (op != Operator.OP_IN && op != Operator.OP_NOT_IN) {
+				cause = pm.getClauseESQL(filter, valueType);
+			} else {
+				boolean negate = (op == Operator.OP_NOT_IN);
+				List<String> values = filter.getValues();
+	
+				String inExpr;
+				if (!pm.getField().isEmpty()) {
+					inExpr = buildInEsql(pm.getField(), values, valueType);
+				} else {
+					List<String> clauses = new ArrayList<>();
+					for (String field : pm.getFieldList()) {
+						clauses.add(buildInEsql(field, values, valueType));
+					}
+					inExpr = "(" + String.join(" OR ", clauses) + ")";
+				}
+				cause = negate ? "NOT (" + inExpr + ")" : inExpr;
+			}
+			return cause;
+		}
+
+		List<String> subExprs = new ArrayList<>();
+		for (Filter f : filter.getNestedFilters()) {
+			String expr = translateFilterESQL(f, propertyMap);
+			if (expr != null && !expr.isEmpty()) {
+				subExprs.add(expr);
+			}
+		}
+		if (subExprs.isEmpty()) {
+			return null;
+		}
+		String joined;
+		JoinClause join = filter.getFilterJoinClause(); // AND / OR
+
+		if (join == JoinClause.FC_AND) {
+			joined = "(" + String.join(" AND ", subExprs) + ")";
+		} else if (join == JoinClause.FC_OR) {
+			joined = "(" + String.join(" OR ", subExprs) + ")";
+		} else {
+			throw new IllegalArgumentException("Unknown join clause: " + join);
+		}
+		return filter.isNegate() ? "NOT (" + joined + ")" : joined;
+	}
+	
+	protected void filterMultiValueFields(Filter filter, HashMap<String, ESPropertyMapper> propertyMap, Map<String, String> multiValueFields ) {
+		if (filter == null ) {
+			return;
+		}
+		String filterProperty = filter.getProperty();
+		ESPropertyMapper pm = propertyMap.getOrDefault(filterProperty, new ESPropertyMapper(filterProperty));
+		if (filter.isBasicFilter()) {
+			if ( pm.isMutipleValues() ) {
+				multiValueFields.put(pm.getField(), null);
+			}
+			return;
+		}
+		for (Filter f : filter.getNestedFilters()) {
+			filterMultiValueFields(f, propertyMap, multiValueFields);
+		}
+	}
+	
+	private String getShapeESQL(Filter filter) {
+		String value = filter.getValue();
+		if (value == null) {
+			return null;
+		}
+
+		List<String> polygons = new ArrayList<String>();
+		
+		String polygon = toPolygon(filter);
+		if (polygon != null) {
+			polygons.add(polygon);
+		}
+		if (polygons.isEmpty()) {
+			return null;
+		}
+		String joinedPolygons = polygons.stream()
+				.map(p -> "ST_INTERSECTS(mc, \"" + p + "\" :: cartesian_shape)")
+				.collect(Collectors.joining(" OR "));
+		return joinedPolygons;
+	}	
+	
+	private String getTermInESQL(Filter filter, ValueType valueType) {
+	    if (filter.getValues() == null || filter.getValues().isEmpty()) {
+	        return null;
+	    }
+	    String field = getMappedField(filter.getProperty());
+	    String values;
+	    if ( valueType == ValueType.STRING ) {
+	    	values = filter.getValues().stream().map(v -> "\"" + v + "\"").collect(Collectors.joining(", "));
+	    } else {
+	    	values = filter.getValues().stream().map(v -> v).collect(Collectors.joining(", "));
+	    }
+
+	    return field + " IN (" + values + ")";
+	}	
+
+	private String buildInEsql(String field, List<String> values, ValueType valueType) {
+	    String joined;
+		if ( valueType == ValueType.STRING ) {
+			joined = values.stream().map(v -> "\"" + v + "\"").reduce((a, b) -> a + ", " + b).orElse("");
+		} else {
+			joined = values.stream().map(v -> v).reduce((a, b) -> a + ", " + b).orElse("");
+		}	
+		return field + " IN (" + joined + ")";
 	}
 
 	public <T extends ESEntity> void getAllBuckets(SearchParams searchParams, SearchResults<T> searchResults,
@@ -790,7 +964,7 @@ public class ESHunter<T extends ESEntity> {
 			}
 		}
 	}
-	
+
 	private Query getTermInQuery(Filter filter) {
 		if (filter.getValues() == null || filter.getValues().isEmpty()) {
 			return null;
@@ -800,7 +974,7 @@ public class ESHunter<T extends ESEntity> {
 		TermsQuery.Builder termsBuilder = new TermsQuery.Builder().field(field).terms(t -> t.value(values));
 		return new Query.Builder().terms(termsBuilder.build()).build();
 	}
-	
+
 	protected Query translateFilterQuery(Filter filter, HashMap<String, ESPropertyMapper> propertyMap) {
 		if (filter == null)
 			return null;
@@ -809,7 +983,7 @@ public class ESHunter<T extends ESEntity> {
 		ESPropertyMapper pm = propertyMap.getOrDefault(filterProperty, new ESPropertyMapper(filterProperty));
 
 		if (filter.isBasicFilter()) {
-			if (filter.getOperator() == Filter.Operator.OP_SHAPE ) {
+			if (filter.getOperator() == Filter.Operator.OP_SHAPE) {
 				return getShapeQueryOne(filter);
 			}
 			if (filter.getOperator() == Filter.Operator.OP_TERM_IN) {
@@ -858,16 +1032,16 @@ public class ESHunter<T extends ESEntity> {
 		Query joined;
 		JoinClause join = filter.getFilterJoinClause(); // AND / OR
 		if (join == JoinClause.FC_AND) {
-		    joined = andJoin(subQueries);
+			joined = andJoin(subQueries);
 		} else if (join == JoinClause.FC_OR) {
-		    joined = orJoin(subQueries);
+			joined = orJoin(subQueries);
 		} else {
-		    throw new IllegalArgumentException("Unknown join clause: " + join);
+			throw new IllegalArgumentException("Unknown join clause: " + join);
 		}
-		
+
 		return filter.isNegate() ? negate(joined) : joined;
 	}
-	
+
 	private void logSearchRequest(SearchRequest request) {
 		String msg = "Sending search request: " + request;
 		if (msg.length() > SearchConstants.MAX_LOG_MESSAGE_LENGTH) {
@@ -879,50 +1053,44 @@ public class ESHunter<T extends ESEntity> {
 	@SuppressWarnings("unchecked")
 	protected <T extends ESEntity> T mapGroupResult(String groupField, Map<String, Object> src, long docCount) {
 		return null;
-	}	
-	
+	}
+
 	private Query inQuery(String field, List<String> values) {
-	    return Query.of(q -> q.terms(t -> t
-	        .field(field)
-	        .terms(v -> v.value(
-	            values.stream()
-	                .map(co.elastic.clients.elasticsearch._types.FieldValue::of)
-	                .toList()
-	        ))
-	    ));
+		return Query.of(q -> q.terms(t -> t.field(field).terms(
+				v -> v.value(values.stream().map(co.elastic.clients.elasticsearch._types.FieldValue::of).toList()))));
 	}
-	
+
 	private Query andJoin(List<Query> clauses) {
-	    return Query.of(q -> q.bool(b -> {
-	        clauses.forEach(b::must);
-	        return b;
-	    }));
+		return Query.of(q -> q.bool(b -> {
+			clauses.forEach(b::must);
+			return b;
+		}));
 	}
-	
+
 	private Query orJoin(List<Query> clauses) {
-	    return Query.of(q -> q.bool(b -> {
-	        clauses.forEach(b::should);
-	        b.minimumShouldMatch("1");
-	        return b;
-	    }));
-	}	
-	
-	private Query negate(Query q) {
-	    return Query.of(qb -> qb.bool(b -> b.mustNot(q)));
+		return Query.of(q -> q.bool(b -> {
+			clauses.forEach(b::should);
+			b.minimumShouldMatch("1");
+			return b;
+		}));
 	}
-	
+
+	private Query negate(Query q) {
+		return Query.of(qb -> qb.bool(b -> b.mustNot(q)));
+	}
+
 	private Query getAllQueryUseQuery(SearchParams searchParams, ESSearchOption searchOption) {
 		List<Query> queryList = new ArrayList<>();
 
 		if (searchOption.getExtraQueries() != null) {
 			queryList.addAll(searchOption.getExtraQueries());
 		}
-	
+
 		Query queryStringQuery = translateFilterQuery(searchParams.getFilter(), propertyMap);
-		if ( queryStringQuery != null ) {
+		if (queryStringQuery != null) {
 			queryList.add(queryStringQuery);
 		}
-		
+
 		Query combinedQuery = null;
 		if (!queryList.isEmpty()) {
 			if (queryList.size() == 1) {
@@ -936,8 +1104,8 @@ public class ESHunter<T extends ESEntity> {
 			}
 		}
 		return combinedQuery;
-	}	
-	
+	}
+
 	protected Query getAllQuery(SearchParams searchParams, ESSearchOption searchOption) {
 		List<Query> queryList = new ArrayList<>();
 		// create "Query String Query"
@@ -970,14 +1138,14 @@ public class ESHunter<T extends ESEntity> {
 			queryList.addAll(searchOption.getExtraQueries());
 		}
 
-		String queryString = translateFilter(searchParams.getFilter(), propertyMap);		
+		String queryString = translateFilter(searchParams.getFilter(), propertyMap);
 		if (queryString != null && !queryString.isEmpty()) {
 			QueryStringQuery.Builder qsb = new QueryStringQuery.Builder();
 			qsb.query(queryString);
 			Query queryStringQuery = new QueryStringQuery.Builder().query(queryString).build()._toQuery();
 			queryList.add(queryStringQuery);
-		}		
-		
+		}
+
 		Query combinedQuery = null;
 		if (!queryList.isEmpty()) {
 			if (queryList.size() == 1) {
@@ -1014,7 +1182,8 @@ public class ESHunter<T extends ESEntity> {
 
 				Query termsQuery = Query.of(q -> q.terms(t -> t.field(causeFilter.getProperty())
 						.terms(ts -> ts.value(causeFilter.getValues().stream().map(FieldValue::of).toList()))));
-				if (causeFilter.getOperator() == Operator.OP_NOT_EQUAL || causeFilter.getOperator() == Operator.OP_NOT_IN) {
+				if (causeFilter.getOperator() == Operator.OP_NOT_EQUAL
+						|| causeFilter.getOperator() == Operator.OP_NOT_IN) {
 					excludes.add(termsQuery);
 				} else {
 					filters.add(termsQuery);
@@ -1027,7 +1196,7 @@ public class ESHunter<T extends ESEntity> {
 			if (excludes.isEmpty() && filters.size() == 1) {
 				finalQuery = filters.get(0);
 			} else {
-				BoolQuery.Builder boolBuilder = new BoolQuery.Builder().filter(filters); 
+				BoolQuery.Builder boolBuilder = new BoolQuery.Builder().filter(filters);
 				if (!excludes.isEmpty()) {
 					boolBuilder.mustNot(excludes); // also filter context
 				}
@@ -1090,7 +1259,7 @@ public class ESHunter<T extends ESEntity> {
 			for (StringTermsBucket term : stringAgg.buckets().array()) {
 				results.add(new ESAggStringCount(term.key().stringValue(), term.docCount()));
 			}
-			
+
 		} else if (termAgg.isLterms()) {
 			LongTermsAggregate longAgg = termAgg.lterms();
 			for (LongTermsBucket term : longAgg.buckets().array()) {
@@ -1182,12 +1351,12 @@ public class ESHunter<T extends ESEntity> {
 				.shape(s -> s.relation(GeoShapeRelation.Intersects).shape(JsonData.of(geometryCollection)))));
 		return shapeQuery;
 	}
-	
+
 	private Query getShapeQueryOne(Filter filter) {
 		String value = filter.getValue();
 		if (value == null) {
 			return null;
-		}		
+		}
 
 		List<Map<String, Object>> geometries = new ArrayList<Map<String, Object>>();
 		value = value.replaceAll("[\\[\\]\\s]", "");
@@ -1201,7 +1370,6 @@ public class ESHunter<T extends ESEntity> {
 
 		Map<String, Object> geoJsonEnvelope = Map.of("type", "envelope", "coordinates", envelopeCoordinates);
 		geometries.add(geoJsonEnvelope);
-		
 
 		Map<String, Object> geometryCollection = Map.of("type", "geometrycollection", "geometries", geometries);
 
@@ -1212,7 +1380,7 @@ public class ESHunter<T extends ESEntity> {
 		Query shapeQuery = Query.of(q -> q.shape(g -> g.field(GxdResultFields.MOUSE_COORDINATE)
 				.shape(s -> s.relation(GeoShapeRelation.Intersects).shape(JsonData.of(geometryCollection)))));
 		return shapeQuery;
-	}	
+	}
 
 	protected <T extends ESEntity> List<T> processLookupResponse(JsonNode root, Class<T> clazz) throws Exception {
 		List<String> columns = new ArrayList<>();
@@ -1220,14 +1388,10 @@ public class ESHunter<T extends ESEntity> {
 
 		List<T> results = new ArrayList<>();
 		for (JsonNode row : root.get("values")) {
-
 			T obj = clazz.getDeclaredConstructor().newInstance();
-
 			for (int i = 0; i < columns.size(); i++) {
 				String colName = columns.get(i);
 				JsonNode valueNode = row.get(i);
-
-				// Try to find a matching field in the class
 				Field field;
 				try {
 					field = clazz.getDeclaredField(colName);
@@ -1236,7 +1400,6 @@ public class ESHunter<T extends ESEntity> {
 				}
 
 				field.setAccessible(true);
-
 				if (valueNode.isNull()) {
 					field.set(obj, null);
 				} else if (field.getType().equals(Integer.class)) {
@@ -1264,7 +1427,6 @@ public class ESHunter<T extends ESEntity> {
 	}
 
 	protected String getMappedField(String uiProperty) {
-
 		if (propertyMap.containsKey(uiProperty)) {
 			ESPropertyMapper pm = propertyMap.get(uiProperty);
 			return pm.getField();
@@ -1667,4 +1829,11 @@ public class ESHunter<T extends ESEntity> {
 	public void setClazz(Class<T> clazz) {
 		this.clazz = clazz;
 	}
+	
+	private String getJoinIndexName(String key) {
+		if ( JOIN_INDEX_MAP.containsKey(key)) {
+			return JOIN_INDEX_MAP.get(key);
+		}
+		return key;
+	}	
 }

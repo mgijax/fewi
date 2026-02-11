@@ -35,6 +35,10 @@ public class ESPropertyMapper {
 	int operand = 0;
 	protected String singleField = "";
 	protected String joinClause = "";
+	
+	protected ValueType valueType = ValueType.STRING;
+	
+	protected boolean isMutipleValues = false;
 
 	/**
 	 * The constructor that allows us to have an entire fieldlist.
@@ -57,7 +61,17 @@ public class ESPropertyMapper {
 	public ESPropertyMapper(String field) {
 		this.singleField = field;
 	}
+	
+	public ESPropertyMapper(String field, ValueType valueType) {
+		this(field);
+		this.valueType = valueType;
+	}	
 
+	public ESPropertyMapper(String field, ValueType valueType, boolean isMutipleValues) {
+		this(field, valueType);
+		this.isMutipleValues = isMutipleValues;
+	}	
+	
 	public String getField() {
 		return singleField;
 	}
@@ -198,178 +212,266 @@ public class ESPropertyMapper {
 			val = "-(" + val + ")";
 		return val;
 	}
-	
-    /* ==============================
-    Public API
-    ============================== */
 
-	 public Query getClauseQuery(Filter filter) {
-	     if (filter.getOperator() == Operator.OP_RANGE) {
-	         return getClauseQuery(filter.getValues(), filter.getOperator(), filter.isNegate());
-	     }
-	     return getClauseQuery(
-	         filter.getValue(),
-	         filter.getOperator(),
-	         filter.isNegate(),
-	         filter.getProximity()
-	     );
-	 }
-	
-	 public Query getClauseQuery(String value, Operator operator, boolean negate, int proximity) {
-	     Query base;
-	
-	     if (!singleField.isEmpty()) {
-	         base = handleOperandQuery(operator, value, singleField, proximity);
-	     } else {
-	         List<Query> clauses = new ArrayList<>();
-	         for (String field : fieldList) {
-	             clauses.add(handleOperandQuery(operator, value, field, proximity));
-	         }
-	         base = orJoin(clauses);
-	     }
-	
-	     return negate ? negate(base) : base;
-	 }
-	
-	 public Query getClauseQuery(List<String> values, Operator operator, boolean negate) {
-	     Query base;
-	
-	     if (!singleField.isEmpty()) {
-	         base = handleOperandQuery(operator, values, singleField);
-	     } else {
-	         List<Query> clauses = new ArrayList<>();
-	         for (String field : fieldList) {
-	             clauses.add(handleOperandQuery(operator, values, field));
-	         }
-	         base = orJoin(clauses);
-	     }
-	
-	     return negate ? negate(base) : base;
-	 }
-	
-	 /* ==============================
-	    Operator Handlers (String)
-	    ============================== */
-	
-	 protected Query handleOperandQuery(Operator op, String value, String field, int proximity) {
-	
-	     switch (op) {
-	
-	         case OP_EQUAL:
-	         case OP_EQUAL_WILDCARD_ALLOWED:
-	             return term(field, value);
-	
-	         case OP_PROXIMITY:
-	             return proximity > 0
-	                 ? matchPhrase(field, value, proximity)
-	                 : term(field, value);
-	
-	         case OP_GREATER_THAN:
-	         	 return numberRange(field, r -> r.gt(Double.parseDouble(value)));
-	
-	         case OP_GREATER_OR_EQUAL:
-	             return numberRange(field, r -> r.gte(Double.parseDouble(value)));
-	
-	         case OP_LESS_THAN:
-	             return numberRange(field, r -> r.lt(Double.parseDouble(value)));
-	
-	         case OP_LESS_OR_EQUAL:
-	             return numberRange(field, r -> r.lte(Double.parseDouble(value)));
-	
-	         case OP_WORD_BEGINS:
-	         case OP_HAS_WORD:
-	         case OP_BEGINS:
-	             return prefix(field, value);
-	
-	         case OP_ENDS:
-	             return wildcard(field, "*" + value);
-	
-	         case OP_CONTAINS:
-	         case OP_CONTAINS_WITH_COLON:
-	         case OP_STRING_CONTAINS:
-	             return wildcard(field, "*" + value + "*");
-	
-	         case OP_NOT_EQUAL:
-	         case OP_NOT_HAS:
-	             return negate(term(field, value));
-	
-	         case OP_GREEDY_BEGINS:
-	             return orJoin(List.of(
-	                 term(field, value),
-	                 prefix(field, value)
-	             ));
-	
-	         default:
-	             throw new UnsupportedOperationException("Unsupported operator: " + op);
-	     }
-	 }
-	
-	 /* ==============================
-	    Operator Handlers (Range List)
-	    ============================== */
-	
-	 protected Query handleOperandQuery(Operator op, List<String> values, String field) {
-	     if (op == Operator.OP_RANGE) {
-	         return Query.of(q -> q.range(r -> r
-	             .number(n -> n
-	                 .field(field)
-	                 .gte(Double.parseDouble(values.get(0)))
-	                 .lte(Double.parseDouble(values.get(1)))
-	             )
-	         ));
-	     }
-	     throw new UnsupportedOperationException("Unsupported list operator: " + op);
-	 }
-	
-	 /* ==============================
-	    Query Builders
-	    ============================== */
-	
-	 private Query term(String field, String value) {
-	     return Query.of(q -> q.term(t -> t.field(field).value(value)));
-	 }
-	
-	 private Query prefix(String field, String value) {
-	     return Query.of(q -> q.prefix(p -> p.field(field).value(value)));
-	 }
-	
-	 private Query wildcard(String field, String value) {
-	     return Query.of(q -> q.wildcard(w -> w.field(field).value(value)));
-	 }
-	
-	 private Query matchPhrase(String field, String value, int slop) {
-	     return Query.of(q -> q.matchPhrase(mp -> mp
-	         .field(field)
-	         .query(value)
-	         .slop(slop)
-	     ));
-	 }
-	
-	 private Query numberRange(
-	 	    String field,
-	 	    java.util.function.Function<NumberRangeQuery.Builder, NumberRangeQuery.Builder> fn
-	 	) {
-	 	    NumberRangeQuery nrq = fn
-	 	        .apply(new NumberRangeQuery.Builder().field(field))
-	 	        .build();   // ✅ BUILD IT
-	
-	 	    return Query.of(q -> q.range(r -> r.number(nrq)));
-	 	}
-	
-	
-	 /* ==============================
-	    Bool Helpers
-	    ============================== */
-	
-	 private Query orJoin(List<Query> clauses) {
-	     return Query.of(q -> q.bool(b -> {
-	         clauses.forEach(b::should);
-	         b.minimumShouldMatch("1");
-	         return b;
-	     }));
-	 }
-	
-	 private Query negate(Query q) {
-	     return Query.of(qb -> qb.bool(b -> b.mustNot(q)));
-	 }	
+	/* ============================== Public API (DSL) ============================== */
+
+	public Query getClauseQuery(Filter filter) {
+		if (filter.getOperator() == Operator.OP_RANGE) {
+			return buildDslRange(filter.getValues(), filter.isNegate());
+		}
+		return buildDslValue(
+			filter.getValue(),
+			filter.getOperator(),
+			filter.isNegate(),
+			filter.getProximity()
+		);
+	}
+
+	/* ============================== Public API (ES|QL) ============================== */
+
+	public String getClauseESQL(Filter filter, ValueType valueType) {
+		if (filter.getOperator() == Operator.OP_RANGE) {
+			return buildEsqlRange(filter.getValues(), filter.isNegate());
+		}
+		return buildEsqlValue(filter.getValue(), filter.getOperator(), filter.isNegate(), valueType);
+	}
+
+	/* ============================== DSL Builders ============================== */
+
+	private Query buildDslValue(String value, Operator op, boolean negate, int proximity) {
+		Query base;
+
+		if (!singleField.isEmpty()) {
+			base = handleDslOperator(op, value, singleField, proximity);
+		} else {
+			List<Query> clauses = new ArrayList<>();
+			for (String field : fieldList) {
+				clauses.add(handleDslOperator(op, value, field, proximity));
+			}
+			base = orJoin(clauses);
+		}
+
+		return negate ? negate(base) : base;
+	}
+
+	private Query buildDslRange(List<String> values, boolean negate) {
+		Query base;
+
+		if (!singleField.isEmpty()) {
+			base = range(singleField, values);
+		} else {
+			List<Query> clauses = new ArrayList<>();
+			for (String field : fieldList) {
+				clauses.add(range(field, values));
+			}
+			base = orJoin(clauses);
+		}
+
+		return negate ? negate(base) : base;
+	}
+
+	private Query handleDslOperator(Operator op, String value, String field, int proximity) {
+
+		switch (op) {
+
+		case OP_EQUAL:
+		case OP_EQUAL_WILDCARD_ALLOWED:
+			return term(field, value);
+
+		case OP_PROXIMITY:
+			return proximity > 0
+				? matchPhrase(field, value, proximity)
+				: term(field, value);
+
+		case OP_GREATER_THAN:
+			return numberRange(field, r -> r.gt(Double.parseDouble(value)));
+
+		case OP_GREATER_OR_EQUAL:
+			return numberRange(field, r -> r.gte(Double.parseDouble(value)));
+
+		case OP_LESS_THAN:
+			return numberRange(field, r -> r.lt(Double.parseDouble(value)));
+
+		case OP_LESS_OR_EQUAL:
+			return numberRange(field, r -> r.lte(Double.parseDouble(value)));
+
+		case OP_WORD_BEGINS:
+		case OP_HAS_WORD:
+		case OP_BEGINS:
+			return prefix(field, value);
+
+		case OP_ENDS:
+			return wildcard(field, "*" + value);
+
+		case OP_CONTAINS:
+		case OP_CONTAINS_WITH_COLON:
+		case OP_STRING_CONTAINS:
+			return wildcard(field, "*" + value + "*");
+
+		case OP_NOT_EQUAL:
+		case OP_NOT_HAS:
+			return negate(term(field, value));
+
+		case OP_GREEDY_BEGINS:
+			return orJoin(List.of(term(field, value), prefix(field, value)));
+
+		default:
+			throw new UnsupportedOperationException("Unsupported DSL operator: " + op);
+		}
+	}
+
+	/* ============================== ES|QL Builders ============================== */
+
+	private String buildEsqlValue(String value, Operator op, boolean negate, ValueType valueType) {
+		String base;
+
+		if (singleField != null && !singleField.isEmpty()) {
+			base = handleEsqlOperator(op, value, singleField, valueType);
+		} else {
+			if ( fieldList == null || fieldList.isEmpty()) {
+				return null;
+			}
+			List<String> clauses = new ArrayList<>();
+			for (String field : fieldList) {
+				clauses.add(handleEsqlOperator(op, value, field, valueType));
+			}
+			base = "(" + StringUtils.join(clauses, " " + joinClause + " ") + ")";
+		}
+
+		return negate ? "NOT (" + base + ")" : base;
+	}
+
+	private String buildEsqlRange(List<String> values, boolean negate) {
+		String expr;
+
+		if (!singleField.isEmpty()) {
+			expr = rangeEsql(singleField, values);
+		} else {
+			List<String> clauses = new ArrayList<>();
+			for (String field : fieldList) {
+				clauses.add(rangeEsql(field, values));
+			}
+			expr = "(" + StringUtils.join(clauses, " " + joinClause + " ") + ")";
+		}
+
+		return negate ? "NOT (" + expr + ")" : expr;
+	}
+
+	private String handleEsqlOperator(Operator op, String value, String field, ValueType valueType) {
+
+		switch (op) {
+
+		case OP_EQUAL:
+			if ( valueType == ValueType.STRING ) {
+				return field + " == \"" + value + "\"";
+			} else {
+				return field + " == " + value;
+			}			
+		case OP_NOT_EQUAL:
+			if ( valueType == ValueType.STRING ) {
+				return field + " != \"" + value + "\"";
+			} else {
+				return field + " != " + value;
+			}			
+		case OP_GREATER_THAN:
+			return field + " > " + value;
+
+		case OP_GREATER_OR_EQUAL:
+			return field + " >= " + value;
+
+		case OP_LESS_THAN:
+			return field + " < " + value;
+
+		case OP_LESS_OR_EQUAL:
+			return field + " <= " + value;
+
+		case OP_BEGINS:
+		case OP_WORD_BEGINS:
+			return field + " LIKE \"" + value + "*\"";
+
+		case OP_ENDS:
+			return field + " LIKE \"*" + value + "\"";
+
+		case OP_CONTAINS:
+		case OP_STRING_CONTAINS:
+		case OP_CONTAINS_WITH_COLON:
+		case OP_HAS_WORD:
+			//return field + " LIKE \"*" + value + "*\"";
+			return field + " == " + value;
+
+		default:
+			throw new UnsupportedOperationException("Unsupported ES|QL operator: " + op);
+		}
+	}
+
+	private String rangeEsql(String field, List<String> values) {
+		return field + " >= " + values.get(0) +
+		       " AND " +
+		       field + " <= " + values.get(1);
+	}
+
+	/* ============================== DSL Helpers ============================== */
+
+	private Query term(String field, String value) {
+		return Query.of(q -> q.term(t -> t.field(field).value(value)));
+	}
+
+	private Query prefix(String field, String value) {
+		return Query.of(q -> q.prefix(p -> p.field(field).value(value)));
+	}
+
+	private Query wildcard(String field, String value) {
+		return Query.of(q -> q.wildcard(w -> w.field(field).value(value)));
+	}
+
+	private Query matchPhrase(String field, String value, int slop) {
+		return Query.of(q -> q.matchPhrase(mp -> mp.field(field).query(value).slop(slop)));
+	}
+
+	private Query range(String field, List<String> values) {
+		return Query.of(q -> q.range(r -> r.number(n -> n
+			.field(field)
+			.gte(Double.parseDouble(values.get(0)))
+			.lte(Double.parseDouble(values.get(1)))
+		)));
+	}
+
+	private Query numberRange(
+		String field,
+		java.util.function.Function<NumberRangeQuery.Builder, NumberRangeQuery.Builder> fn
+	) {
+		NumberRangeQuery nrq = fn.apply(
+			new NumberRangeQuery.Builder().field(field)
+		).build();
+
+		return Query.of(q -> q.range(r -> r.number(nrq)));
+	}
+
+	private Query orJoin(List<Query> clauses) {
+		return Query.of(q -> q.bool(b -> {
+			clauses.forEach(b::should);
+			b.minimumShouldMatch("1");
+			return b;
+		}));
+	}
+
+	private Query negate(Query q) {
+		return Query.of(qb -> qb.bool(b -> b.mustNot(q)));
+	}
+
+	public ValueType getValueType() {
+		return valueType;
+	}
+
+	public void setValueType(ValueType valueType) {
+		this.valueType = valueType;
+	}
+
+	public boolean isMutipleValues() {
+		return isMutipleValues;
+	}
+
+	public void setMutipleValues(boolean isMutipleValues) {
+		this.isMutipleValues = isMutipleValues;
+	}
 }

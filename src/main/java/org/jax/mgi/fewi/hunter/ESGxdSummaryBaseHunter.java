@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jax.mgi.fewi.propertyMapper.ESPropertyMapper;
+import org.jax.mgi.fewi.propertyMapper.ValueType;
 import org.jax.mgi.fewi.searchUtil.ESSearchOption;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.Filter;
@@ -90,7 +91,7 @@ public class ESGxdSummaryBaseHunter<T extends ESEntity> extends ESHunter<T> {
 				new ESPropertyMapper(GxdResultFields.ANNOTATED_STRUCTURE_KEY));
 
 		// structure ID
-		propertyMap.put(SearchConstants.STRUCTURE_ID, new ESPropertyMapper(GxdResultFields.STRUCTURE_ID));
+		propertyMap.put(SearchConstants.STRUCTURE_ID, new ESPropertyMapper(GxdResultFields.STRUCTURE_ID, ValueType.STRING, true));
 
 		// allele ID
 		propertyMap.put(SearchConstants.ALL_ID, new ESPropertyMapper(GxdResultFields.ALLELE_ID));
@@ -115,6 +116,15 @@ public class ESGxdSummaryBaseHunter<T extends ESEntity> extends ESHunter<T> {
 
 		// mouse coordinates
 		propertyMap.put(SearchConstants.MOUSE_COORDINATE, new ESPropertyMapper(GxdResultFields.MOUSE_COORDINATE));
+		
+		propertyMap.put(GxdResultFields.PROF_POS_C_EXACT, new ESPropertyMapper(GxdResultFields.PROF_POS_C_EXACT, ValueType.INTEGER, true));
+		propertyMap.put(GxdResultFields.PROF_POS_C_ANC, new ESPropertyMapper(GxdResultFields.PROF_POS_C_ANC, ValueType.INTEGER, true));
+		propertyMap.put(GxdResultFields.PROF_POS_C_EXACT_A, new ESPropertyMapper(GxdResultFields.PROF_POS_C_EXACT_A, ValueType.INTEGER, true));
+		propertyMap.put(GxdResultFields.PROF_POS_C_ANC_A, new ESPropertyMapper(GxdResultFields.PROF_POS_C_ANC_A, ValueType.INTEGER, true));
+		propertyMap.put(GxdResultFields.PROF_POS_R_EXACT, new ESPropertyMapper(GxdResultFields.PROF_POS_R_EXACT, ValueType.INTEGER, true));
+		propertyMap.put(GxdResultFields.PROF_POS_R_ANC, new ESPropertyMapper(GxdResultFields.PROF_POS_R_ANC, ValueType.INTEGER, true));
+		propertyMap.put(GxdResultFields.PROF_POS_R_EXACT_A, new ESPropertyMapper(GxdResultFields.PROF_POS_R_EXACT_A, ValueType.INTEGER, true));
+		propertyMap.put(GxdResultFields.PROF_POS_R_ANC_A, new ESPropertyMapper(GxdResultFields.PROF_POS_R_ANC_A, ValueType.INTEGER, true));
 
 		/*
 		 * Setup the sort mapping.

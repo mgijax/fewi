@@ -533,7 +533,7 @@ public class GxdFinder {
 
 	public SearchResults<ESDagEdge> searchMatrixDAGDirectEdges(SearchParams params, List<String> parentTermIds) {
 		SearchResults<ESAssayResult> assayResult = new SearchResults<ESAssayResult>();
-		esGxdResultHunter.huntDocsScroll(params, assayResult, List.of(GxdResultFields.STRUCTURE_EXACT));
+		esGxdResultHunter.huntDocs(params, assayResult, List.of(GxdResultFields.STRUCTURE_EXACT));
 		Map<String, String> maps = new HashMap<String, String>();
 		if ( assayResult.getResultObjects() != null ) {
 			for (ESAssayResult r: assayResult.getResultObjects()) {
@@ -563,7 +563,7 @@ public class GxdFinder {
 		long start;
 		SearchResults<ESAssayResult> assayResult = new SearchResults<ESAssayResult>();
 		start = System.currentTimeMillis();
-		esGxdResultHunter.huntDocsScroll(params, assayResult, List.of(GxdResultFields.EMAPS_ID));
+		esGxdResultHunter.huntDocs(params, assayResult, List.of(GxdResultFields.EMAPS_ID));
 		ESSearchOption.logRunTime(logger, start, "searchMatrixDAGDescendentEdges_result");
 		Map<String, String> maps = new HashMap<String, String>();
 		if ( assayResult.getResultObjects() != null ) {
