@@ -77,6 +77,7 @@ public class GxdQueryForm implements Cloneable {
 	private List<String> detectedFilter = new ArrayList<String>();
 	private List<String> theilerStageFilter = new ArrayList<String>();
 	private List<String> wildtypeFilter = new ArrayList<String>();
+	private List<String> sexFilter = new ArrayList<String>();
 	private List<String> mpFilter = new ArrayList<String>();
 	private List<String> doFilter = new ArrayList<String>();
 	private List<String> coFilter = new ArrayList<String>();
@@ -547,6 +548,14 @@ public class GxdQueryForm implements Cloneable {
 		this.wildtypeFilter = wildtypeFilter;
 	}
 
+	public List<String> getSexFilter() {
+		return sexFilter;
+	}
+
+	public void setSexFilter(List<String> sexFilter) {
+		this.sexFilter = sexFilter;
+	}
+
 	public List<String> getMpFilter() {
 		return mpFilter;
 	}
@@ -801,6 +810,7 @@ public class GxdQueryForm implements Cloneable {
 				+ ", markerTypeFilter=" + markerTypeFilter
 				+ ", theilerStageFilter=" + theilerStageFilter
 				+ ", structureIDFilter=" + structureIDFilter
+				+ ", sexFilter=" + sexFilter 
 				+ ", wildtypeFilter=" + wildtypeFilter 
 				+ ", profileStructureID=" + profileStructureID.toString() 
 				+ ", profileDetected=" + profileDetected.toString() 

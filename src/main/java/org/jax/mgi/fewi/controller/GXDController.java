@@ -1546,6 +1546,19 @@ public class GXDController {
 			lines.add(sb.toString());
 		}
 		
+		// sex
+		if ((query.getSexFilter() != null) && (query.getSexFilter().size() > 0)) {
+			sb = new StringBuffer();
+			sb.append("in specimens with sex: ");
+			String sep = "";
+			for(String s : query.getSexFilter()) {
+			    sb.append(sep);
+			    sb.append(FormatHelper.bold(s) + ' ');
+			    sep = ", ";
+			}
+			lines.add(sb.toString());
+		}
+
 		// age
 		if ((query.getAgesSelected() != null) && (!"".equals(query.getAgesSelected())) ) {
 			sb = new StringBuffer();
@@ -3608,9 +3621,9 @@ public class GXDController {
 					query.getDetectedFilter(), Filter.Operator.OP_IN));
 		}
 
-		if (query.getTheilerStageFilter().size() > 0) {
-			facetList.add(new Filter(FacetConstants.GXD_THEILER_STAGE,
-					query.getTheilerStageFilter(), Filter.Operator.OP_IN));
+		if (query.getSexFilter().size() > 0) {
+			facetList.add(new Filter(FacetConstants.GXD_SEX,
+					query.getSexFilter(), Filter.Operator.OP_IN));
 		}
 
 		if (query.getWildtypeFilter().size() > 0) {
