@@ -463,6 +463,7 @@ var prepFilters = function(qfRequest) {
 	var facetTheilerStageDS = buildFacetDataSource("theilerStage");
 	var facetMpDS = buildFacetDataSource("mp");
 	var facetCoDS = buildFacetDataSource("co");
+	var facetSexDS = buildFacetDataSource("sex");
 	var facetDoDS = buildFacetDataSource("do");
 	var facetGoMfDS = buildFacetDataSource("goMf");
 	var facetGoBpDS = buildFacetDataSource("goBp");
@@ -500,6 +501,7 @@ var prepFilters = function(qfRequest) {
 	var mpCallback = buildCallback('mpFilter', 'Phenotype');
 	var tmpLevelCallback = buildCallback('tmpLevelFilter', 'TPM Level');
 	var coCallback = buildCallback('coFilter', 'Cell Type');
+	var sexCallback = buildCallback('sexFilter', 'Sex');
 	var doCallback = buildCallback('doFilter', 'Disease');
 	var goMfCallback = buildCallback('goMfFilter', 'Molecular Function');
 	var goBpCallback = buildCallback('goBpFilter', 'Biological Process'); 
@@ -536,6 +538,12 @@ var prepFilters = function(qfRequest) {
 		showLoadingMessage();
 		facetCoDS.flushCache();
 		facetCoDS.sendRequest(getQS() + getFilterCriteria(), coCallback);
+	};
+
+	var populateSexDialog = function() {
+		showLoadingMessage();
+		facetSexDS.flushCache();
+		facetSexDS.sendRequest(getQS() + getFilterCriteria(), sexCallback);
 	};
 
 	var populateDoDialog = function() {
@@ -592,6 +600,7 @@ var prepFilters = function(qfRequest) {
 	YAHOO.util.Event.removeListener('markerTypeFilter', 'click');
 	YAHOO.util.Event.removeListener('mpFilter', 'click');
 	YAHOO.util.Event.removeListener('coFilter', 'click');
+	YAHOO.util.Event.removeListener('sexFilter', 'click');
 	YAHOO.util.Event.removeListener('doFilter', 'click');
 	YAHOO.util.Event.removeListener('goMfFilter', 'click');
 	YAHOO.util.Event.removeListener('goBpFilter', 'click');
@@ -611,6 +620,8 @@ var prepFilters = function(qfRequest) {
 			populateMpDialog, true);
 	YAHOO.util.Event.addListener('coFilter', 'click',
 			populateCoDialog, true);
+	YAHOO.util.Event.addListener('sexFilter', 'click',
+			populateSexDialog, true);
 	YAHOO.util.Event.addListener('doFilter', 'click',
 			populateDoDialog, true);
 	YAHOO.util.Event.addListener('goMfFilter', 'click',

@@ -4438,6 +4438,20 @@ public class GXDController {
 				FacetConstants.GXD_CO);
 	}
 
+	/* gets a list of Sex values for the facet list, returned
+	 * as JSON
+	 */
+	@RequestMapping("/facet/sex")
+	public @ResponseBody Map<String, List<String>> facetSex(
+			HttpSession session,
+			@ModelAttribute GxdQueryForm query,
+			BindingResult result) {
+
+		populateMarkerIDs(session, query);
+		return facetGeneric(query, result,
+				FacetConstants.GXD_SEX);
+	}
+
 	/* gets a list of DO values for the facet list, returned
 	 * as JSON
 	 */
@@ -4564,6 +4578,8 @@ public class GXDController {
 			facetResults = gxdFinder.getMpFacet(params);
 		} else if (FacetConstants.GXD_CO.equals(facetType)) {
 			facetResults = gxdFinder.getCoFacet(params);
+		} else if (FacetConstants.GXD_SEX.equals(facetType)) {
+			facetResults = gxdFinder.getSexFacet(params);
 		} else if (FacetConstants.GXD_DO.equals(facetType)) {
 			emptyListMsg = "No genes found with ontology associations.";
 			facetResults = gxdFinder.getDoFacet(params);
