@@ -1533,7 +1533,7 @@ public class GXDController {
 		// anatomical system
 		if ((query.getSystemFilter() != null) && (query.getSystemFilter().size() > 0)) {
 			sb = new StringBuffer();
-			sb.append("within anatomical systems: ");
+			sb.append("Within anatomical systems: ");
 			boolean isFirst = true;
 			for (String system : query.getSystemFilter()) {
 				if (!isFirst) {
@@ -1549,12 +1549,12 @@ public class GXDController {
 		// sex
 		if ((query.getSexFilter() != null) && (query.getSexFilter().size() > 0)) {
 			sb = new StringBuffer();
-			sb.append("in specimens with sex: ");
+			sb.append("In bioreplicate sets with sex: ");
 			String sep = "";
 			for(String s : query.getSexFilter()) {
 			    sb.append(sep);
 			    sb.append(FormatHelper.bold(s) + ' ');
-			    sep = ", ";
+			    sep = " or ";
 			}
 			lines.add(sb.toString());
 		}
@@ -1562,7 +1562,7 @@ public class GXDController {
 		// age
 		if ((query.getAgesSelected() != null) && (!"".equals(query.getAgesSelected())) ) {
 			sb = new StringBuffer();
-			sb.append("at age(s): ");
+			sb.append("At age(s): ");
 			sb.append(FormatHelper.bold(query.getAgesSelected()));
 			lines.add(sb.toString());
 		}
@@ -1572,7 +1572,7 @@ public class GXDController {
 			// skip display in only default TS of zero
 			if ((query.getTheilerStage().size() > 1) || (query.getTheilerStage().get(0) != 0)) {
 				sb = new StringBuffer();
-				sb.append("at developmental stage(s): ");
+				sb.append("At developmental stage(s): ");
 				boolean isFirst = true;
 				for (Integer ts : query.getTheilerStage()) {
 					if (!isFirst) {
