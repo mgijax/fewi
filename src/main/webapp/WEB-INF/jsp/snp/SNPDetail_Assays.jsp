@@ -76,10 +76,10 @@
 					<c:forEach var="pop" items="${ss.populations}">
 					  <c:if test="${fn:length(pop.alleles) == 0}">
 					    <tr>
-					        <td<c:if test="${ss.exemplar}"> class="exemplar"</c:if>><a href="${fn:replace(externalUrls.SubSNP, '@@@@', ss.accid)}" target="_blank">${ss.accid}</a></td>
-						<td><a href="${fn:replace(externalUrls.SubmitterSNP, '@@@@', ss.submitterId)}" target="_blank">${ss.submitterId}</a></td>
-						<td><a href="${fn:replace(externalUrls.Submitter_Handle, '@@@@', pop.subHandleName)}" target="_blank">${pop.subHandleName}</a></td>
-						<td><a href="${fn:replace(externalUrls.SubSNP_Population, '@@@@', pop.accid)}" target="_blank">${pop.populationName}</a></td>
+					        <td<c:if test="${ss.exemplar}"> class="exemplar"</c:if>>${ss.accid}</td>
+						<td>${ss.submitterId}</td>
+						<td>${pop.subHandleName}</td>
+						<td>${pop.populationName}</td>
 						<td>${ss.orientation}</td>
 						<td>${ss.variationClass}</td>
 						<td>${ss.alleleSummary}</td>
