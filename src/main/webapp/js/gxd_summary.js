@@ -44,13 +44,13 @@ var resultsTableDefs = [
 	{key: "age", label: "Age", sortable: true },
 	{key: "structure", label: "Structure",sortable: true},
 	{key: "cellType", label: "Cell<br/>Type", sortable: false},
+	{key: "sex",label: "Sex",sortable: false,hidden: false},
 	{key: "detectionLevel",label: "Detected?",sortable: true},
 	{key: "tpmLevel",label: "TPM Level<br/>(RNA-Seq)",sortable: false,hidden: false},
 	{key: "biologicalReplicates",label: "Biological Replicates<br/>(RNA-Seq)",sortable: false,hidden: true},
 	{key: "figures", label: "Images",sortable: false},
 	{key: "genotype",label: "Mutant Allele(s)",sortable: false},
 	{key: "strain",label: "Strain",sortable: false,hidden: true},
-	{key: "sex",label: "Sex",sortable: false,hidden: true},
 	{key: "notes",label: "Notes<br/>(RNA-Seq)",sortable: false,hidden: true},
 	{key: "reference",label: "Reference",sortable: true},
 	{key: "score",label: "score",sortable: false,hidden: true}
@@ -71,7 +71,6 @@ var flipOptionalColumns = function(dontMove) {
 	hideOptionalColumns = !hideOptionalColumns;
 	flipColumn('biologicalReplicates');
 	flipColumn('strain');
-	flipColumn('sex');
 	flipColumn('notes');
 	if (!dontMove) {
 		historyInit();
