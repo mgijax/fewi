@@ -45,7 +45,6 @@ function resolveGxdGridColorClass(cell)
 	var cc = "gold";
 	if(cell.detected>0)
 	{
-		console.log(cell.detected);
 		// apply the detected bin
 		if(cell.detected < 5) {	cc = "blue1"; }
 		else if(cell.detected < 51) { cc = "blue2";	}
@@ -300,12 +299,15 @@ window.PhenoMatrixRender = new function()
 		d3Target.append("text")
 	    	.attr("x", 0)
 	    	.attr("y",cellSize-labelPaddingBottom)
-	    	.text(function(d){ 
+		.html(function(d){
 	    		var displayValue = d.colDisplay.trim();
 	    		if (displayValue.length > 33){
 	    			displayValue = displayValue.substring(0,32) + "...";
 	    		}
-	    		return displayValue;})	    	
+                        displayValue = displayValue.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+                        var linkUrl = (d.colOffset > 0 && d.genoclusterKey) ? ('/diseasePortal/genoCluster/view/' + d.genoclusterKey) : ''
+                        var html = linkUrl ? `<a href="${linkUrl}">${displayValue}</a>` : displayValue
+			return html;})
 	    	.style("fill",function(d){ 
 	    		if (d.highlightColumn) {
 	    			return "#000000";

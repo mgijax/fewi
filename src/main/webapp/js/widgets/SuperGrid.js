@@ -422,8 +422,8 @@ function SGData(config)
     	// make sure this row is flagged as having data
     	_self.rows[cell.ri]._d=true;
 
-        // make sure column is unique
-        cell.ci = _self.addColumn({cid:cell.cid, colDisplay: cell.colDisplay, mgiId: cell.mgiId, highlightColumn: cell.highlightColumn, driverSpecies: cell.driverSpecies});
+        // 
+        cell.ci = _self.addColumn(cell);
 
         // set master lookup with row/col indices
         _self.registerCell(cell);
