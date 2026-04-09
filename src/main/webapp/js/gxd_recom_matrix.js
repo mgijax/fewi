@@ -314,6 +314,7 @@ var geneRecomSuperGrid = function()
 		if (typeof getQueryString == 'function') window.querystring = getQueryString().replace('&idFile=&','&');
 
 		currentGeneGrid = GxdTissueMatrix({
+			name : "recombinaseGrid",
 			target : "geneRecomGridTarget",
 			// the datasource allows supergrid to make ajax calls for the initial data,
 			// 	as well as subsequent calls for expanding rows

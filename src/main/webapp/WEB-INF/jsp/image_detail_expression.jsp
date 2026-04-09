@@ -51,7 +51,7 @@
        <div style="padding-top:7px;">
          <a href="${configBean.FEWI_URL}reference/${reference.jnumID}">
            ${reference.jnumID}</a>
-         ${reference.miniCitation}
+         ${reference.shortCitation}
        </div>
        <div style="padding-top:3px;">
          ${image.figureLabel}

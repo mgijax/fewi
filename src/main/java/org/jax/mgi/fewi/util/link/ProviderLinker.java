@@ -101,14 +101,14 @@ public class ProviderLinker
         else if (seqProvider.equals(DBConstants.PROVIDER_MGP)) {
 			
 			// need to pull the strain out of the ID, then insert it into the URL, and insert the ID into the URL
-			String[] pieces = seqID.split("_");
-			if (pieces.length == 3) {
-				String myUrl = mgpSeqUrl.replace("<strain>", tweakStrainValue(pieces[1])).replaceAll("<id>", seqID);
-				links.append("<a href='" + myUrl + "'>Ensembl</a>");
-			} else {
-				// bad ID format, just show the provider
-				links.append("Mouse Genomes Project");
-			}
+//			String[] pieces = seqID.split("_");
+//			if (pieces.length == 3) {
+//				String myUrl = mgpSeqUrl.replace("<strain>", tweakStrainValue(pieces[1])).replaceAll("<id>", seqID);
+//				links.append("<a href='" + myUrl + "'>Ensembl</a>");
+//			} else {
+//				// bad ID format, just show the provider
+//				links.append("Mouse Genomes Project");
+//			}
 
 		}
         else if (seqProvider.equals(DBConstants.PROVIDER_MGI_SGM)) {

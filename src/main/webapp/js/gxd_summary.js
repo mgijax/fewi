@@ -44,13 +44,13 @@ var resultsTableDefs = [
 	{key: "age", label: "Age", sortable: true },
 	{key: "structure", label: "Structure",sortable: true},
 	{key: "cellType", label: "Cell<br/>Type", sortable: false},
+	{key: "sex",label: "Sex",sortable: false,hidden: false},
 	{key: "detectionLevel",label: "Detected?",sortable: true},
 	{key: "tpmLevel",label: "TPM Level<br/>(RNA-Seq)",sortable: false,hidden: false},
 	{key: "biologicalReplicates",label: "Biological Replicates<br/>(RNA-Seq)",sortable: false,hidden: true},
 	{key: "figures", label: "Images",sortable: false},
 	{key: "genotype",label: "Mutant Allele(s)",sortable: false},
 	{key: "strain",label: "Strain",sortable: false,hidden: true},
-	{key: "sex",label: "Sex",sortable: false,hidden: true},
 	{key: "notes",label: "Notes<br/>(RNA-Seq)",sortable: false,hidden: true},
 	{key: "reference",label: "Reference",sortable: true},
 	{key: "score",label: "score",sortable: false,hidden: true}
@@ -71,7 +71,6 @@ var flipOptionalColumns = function(dontMove) {
 	hideOptionalColumns = !hideOptionalColumns;
 	flipColumn('biologicalReplicates');
 	flipColumn('strain');
-	flipColumn('sex');
 	flipColumn('notes');
 	if (!dontMove) {
 		historyInit();
@@ -309,9 +308,6 @@ function reverseEngineerFormInput(request)
 		// profile params handled above
 		if (key.startsWith("profile")) continue;
 
-		console.log("--in reverseEngineerFormInput: key=" + key);
-		console.log("in reverseEngineerFormInput: params[key]=" + params[key]);
-
 		// Special handling for idFile field.
 		// Do not set this to an empty string!
 		if (key == 'idFile') {
@@ -532,6 +528,7 @@ handleNavigation = function (request, calledLocally) {
 	genePopupPanel.hide();
 	geneMatrixLegendPopupPanel.hide();
 	structMatrixLegendPopupPanel.hide();
+	//selectionsPopupPanel.hide();
 
 	if (calledLocally==undefined)
 		calledLocally = false;
@@ -1580,6 +1577,7 @@ var structureStageGrid = function()
 		if (typeof getQueryString == 'function') window.querystring = getQueryString().replace('&idFile=&', '&');
 
 		currentStageGrid = GxdTissueMatrix({
+			name : "structureStageGrid",
 			target : "sgTarget",
 			// the datasource allows supergrid to make ajax calls for the initial data,
 			// 	as well as subsequent calls for expanding rows
@@ -1604,19 +1602,11 @@ var structureStageGrid = function()
 	        },
 	        openCloseStateKey: "sg_"+querystring,
 	        legendClickHandler: function(e){ structMatrixLegendPopupPanel.show(); },
-	        filterSubmitHandler: function(rows,cols)
+		//selectionsTitle: "Stage Cart",
+		//selectionsClickHandler: function(e){ selectionsPopupPanel.show(); },
+	        filterSubmitHandler: function(rowIds,colIds)
 	        {
 	        	var newFacets = window.facets;
-	        	var rowIds = [];
-	        	rows.forEach(function(row){
-	        		rowIds[rowIds.length] = row.rowId;
-	        	});
-
-				var colIds = [];
-				cols.forEach(function(col){
-					colIds[colIds.length] = col.cid;
-				});
-
 	        	if (rowIds.length > 0)
 	        	{
 	        		newFacets["structureIDFilter"] = rowIds;
@@ -1777,6 +1767,7 @@ var structureGeneGrid = function()
 		if (typeof getQueryString == 'function') window.querystring = getQueryString().replace('&idFile=&','&');
 
 		currentGeneGrid = GxdTissueMatrix({
+			name : "structureGeneGrid",
 			target : "ggTarget",
 			// the datasource allows supergrid to make ajax calls for the initial data,
 			// 	as well as subsequent calls for expanding rows
@@ -1797,18 +1788,11 @@ var structureGeneGrid = function()
 			verticalColumnLabels: true,
 	        openCloseStateKey: "gg_"+querystring,
 	        legendClickHandler: function(e){ geneMatrixLegendPopupPanel.show(); },
-	        filterSubmitHandler: function(rows,cols)
+		selectionsTitle: "Gene Cart",
+		selectionsClickHandler: function(e){ selectionsPopupPanel.show(); },
+	        filterSubmitHandler: function(rowIds,colIds)
 	        {
 	        	var newFacets = window.facets;
-	        	var rowIds = [];
-	        	rows.forEach(function(row){
-	        		rowIds[rowIds.length] = row.rowId;
-	        	});
-	        	var colIds = [];
-	        	cols.forEach(function(col){
-	        		colIds[colIds.length] = col.cid;
-	        	});
-
 	        	if (rowIds.length > 0)
 	        	{
 	        		newFacets["structureIDFilter"] = rowIds;
@@ -1853,6 +1837,12 @@ window.structMatrixLegendPopupPanel = new YAHOO.widget.Panel("structLegendPopupP
 });
 window.structMatrixLegendPopupPanel.render();
 
+//popup for column selections
+window.selectionsPopupPanel = new YAHOO.widget.Panel("selectionsPopupPanel",
+		{ width:"260px", visible:false, constraintoviewport:true,
+			context:['tabSummaryContent', 'tl', 'tr',['beforeShow','windowResize']]
+});
+window.selectionsPopupPanel.render();
 
 // Handle legend default behavior
 window.SHOW_MATRIX_LEGENDS = true;

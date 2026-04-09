@@ -8,6 +8,7 @@
 *	SGUtil - static utility functions
 *	SGDataSource - Used by data manager to perform queries to load and update the matrix data
 *	SGData - Data manager for the matrix cells, rows, and columns
+*	SGCart - Holds row and column selections
 *	SuperGrid - The actual widget containing UI controls and display logic.
 *
 *   author: kstone
@@ -354,7 +355,7 @@ function SGData(config)
 	this.addRows = function(rows)
 	{
 		_self.originalRows = rows;
-    	var flatRows = _self.processTrees(rows); // flatten any tree rows
+		var flatRows = _self.processTrees(rows); // flatten any tree rows
 		flatRows.forEach(function(row){
 			_self.addRow(row);
 		});
@@ -421,8 +422,8 @@ function SGData(config)
     	// make sure this row is flagged as having data
     	_self.rows[cell.ri]._d=true;
 
-        // make sure column is unique
-        cell.ci = _self.addColumn({cid:cell.cid, colDisplay: cell.colDisplay, mgiId: cell.mgiId, highlightColumn: cell.highlightColumn, driverSpecies: cell.driverSpecies});
+        // 
+        cell.ci = _self.addColumn(cell);
 
         // set master lookup with row/col indices
         _self.registerCell(cell);
@@ -859,10 +860,44 @@ function SGData(config)
     this.loadConfig(config);
 }
 
+// Super Grid Cart - for holding row/column selections
+//
+function SGCart (name) 
+{
+    //    Actual cart data is stored in the window object, and may outlive 
+    //    the SuperGrid instance that owns it.
+    if (!window.SG_SELECTIONS) window.SG_SELECTIONS = {};
+    if (!window.SG_SELECTIONS[name]) window.SG_SELECTIONS[name] = new Set();
+
+    this.cart = window.SG_SELECTIONS[name];
+    this.name = name;
+
+    var _self = this;
+    this.size = function () {
+        return _self.cart.size;
+    }
+    this.items = function () {
+        return Array.from(_self.cart);
+    }
+    this.clear = function () {
+        _self.cart.clear();
+    }
+    this.add = function (item) {
+	_self.cart.add(item);
+    }
+    this.remove = function (item) {
+    	_self.cart.delete(item);
+    }
+    this.has = function (item) {
+	return _self.cart.has(item);
+    }
+}
+
 // Super Grid Class
 function SuperGrid(config)
 {
     var _self = this;
+
     /*
     * Parses all the available config options
     *
@@ -876,6 +911,13 @@ function SuperGrid(config)
     */
     this.loadConfig = function(config)
     {
+	// required name
+	_self.name = config.name;
+
+	//
+	_self.colCart = new SGCart(_self.name + " colCart");
+	_self.rowCart = new SGCart(_self.name + " rowCart");
+
         // required configs
         _self.target = config.target;
 
@@ -918,6 +960,10 @@ function SuperGrid(config)
          *  	matrixLegendText
          */
         _self.legendClickHandler = config.legendClickHandler || null;
+	
+	// selection cart config
+	_self.selectionsTitle = config.selectionsTitle || null;
+	_self.selectionsClickHandler = config.selectionsClickHandler || null;
 
         /*
          * filter config
@@ -937,6 +983,7 @@ function SuperGrid(config)
         _self.openImageUrl = config.openImageUrl || "";
         _self.spinnerImageUrl = config.spinnerImageUrl || "/fewi/mgi/assets/images/loading.gif";
         _self.legendButtonIconUrl = config.legendButtonIconUrl || "";
+        _self.selectionsButtonIconUrl = config.selectionsButtonIconUrl || "";
         _self.filterButtonIconUrl = config.filterButtonIconUrl || "";
         _self.filterUncheckedUrl = config.filterUncheckedUrl || "";
         _self.filterCheckedUrl = config.filterCheckedUrl || "";
@@ -1013,7 +1060,6 @@ function SuperGrid(config)
     	$("#"+_self.target).html(_self.dataSource.MSG_EMPTY);
     }
 
-
     // adds data incrementally
     this.dataSourceHandler = function(e,data)
     {
@@ -1068,6 +1114,19 @@ function SuperGrid(config)
 		        	_self.refreshSvgHeight();
 
 		        	_self.renderCompletedFunction();
+
+				if (_self.selectionsClickHandler) {
+				    _self.syncVisibleColumnsWithCart();
+				    if (_self.colCart.size() > 0) {
+				        selectionsPopupPanel.show();
+				    }
+				} else {
+				    selectionsPopupPanel.hide();
+				}
+
+				if (_self.rowCart.size() > 0) {
+				    _self.setFilteredRows();
+				}
 		        });
         }
     }
@@ -1173,8 +1232,13 @@ function SuperGrid(config)
 		// add legend to spacer if legend click handler is specified
         if(_self.legendClickHandler)
         {
-        	_self.renderLegend();
+        	_self.renderLegendButton();
         }
+
+	if(_self.selectionsClickHandler) 
+	{
+        	_self.renderSelectionsButton();
+	}
 
 
         if(_self.doFilters())
@@ -1186,7 +1250,7 @@ function SuperGrid(config)
         _self.initFilters();
     }
 
-    this.renderLegend = function()
+    this.renderLegendButton = function()
     {
     	var buttonXOffset = 50;
        	var buttonYOffset = 30;
@@ -1235,6 +1299,61 @@ function SuperGrid(config)
 			.attr("height",_self.cellSize * (3/5))
 			.attr("xlink:href",_self.legendButtonIconUrl)
 			.append("svg:title").text("Click for information about the matrix color scheme.");
+    }
+
+    this.renderSelectionsButton = function()
+    {
+    	var buttonXOffset = 140;
+       	var buttonYOffset = 30;
+
+       	var selectionsGroup = _self.spacerGroup.append("g")
+			.style("cursor","pointer")
+			.on("click",_self.selectionsClickHandler);
+
+	// underlay rect
+	selectionsGroup.append("rect")
+	.attr("x",buttonXOffset)
+	.attr("y",buttonYOffset)
+	.attr("height",25)
+	.attr("width",106)
+	.style("fill","#aaa")
+	.style("stroke","black")
+		.append("svg:title")
+		.text("");
+
+	//overlay rect
+	selectionsGroup.append("rect")
+	.attr("x",buttonXOffset+1)
+	.attr("y",buttonYOffset+1)
+	.attr("height",21)
+	.attr("width",102)
+		.style("fill","#fafafa")
+		.style("stroke","#fafafa")
+		.append("svg:title").text("");
+
+	// legend button text
+	selectionsGroup.append("text")
+	    .attr("x", buttonXOffset+8)
+	    .attr("y", buttonYOffset+4)
+	    .attr("dy", "1em")
+	    .style("cursor","pointer")
+	    .text(_self.selectionsTitle)
+	    .attr("class","matrixButtonText")
+	    .attr("id","selectionsTextID")
+	    .style("font-size","13px")
+	    .append("svg:title").text("");
+
+	// selection button 'info' image
+	selectionsGroup.append("image")
+		.attr("x", buttonXOffset+85)
+		.attr("y", buttonYOffset+4)
+		.attr("width",_self.cellSize * (3/5))
+		.attr("height",_self.cellSize * (3/5))
+		.attr("xlink:href",_self.selectionsButtonIconUrl)
+		.attr("id","selectionsIconID")
+		.append("svg:title").text("");
+
+	_self.selectionsButtonGroup = selectionsGroup;
     }
 
     this.renderFilterButton = function()
@@ -1287,8 +1406,8 @@ function SuperGrid(config)
     			.attr("width",_self.cellSize * (1/2))
     			.attr("height",_self.cellSize * (1/2))
     			.attr("xlink:href",_self.filterButtonIconUrl)
-			    .attr("id","filterIconID")
-			    .style("opacity","0.5")
+			.attr("id","filterIconID")
+			.style("opacity","0.5")
 	    		.append("svg:title").text("Click to apply row/column filters");
     	}
     	else
@@ -1303,44 +1422,38 @@ function SuperGrid(config)
 
     this.filterClickHandler = function()
     {
-    	var filteredRows = _self.getFilteredRows();
-    	var filteredColumns = _self.getFilteredColumns();
+	var filteredRows = _self.getFilteredRows();
+	var filteredColumns = _self.getFilteredColumns();
     	// only fire the handler if there are actually filtered selected
     	if((filteredRows && filteredRows.length) || (filteredColumns && filteredColumns.length))
     	{
     		_self.filterSubmitHandler(filteredRows,filteredColumns);
+		_self.colCart.clear();
+		_self.rowCart.clear();
     	}
     }
 
     this.getFilteredRows = function()
     {
-    	var filteredRows = [];
-    	var visibleRows = _self.data.getVisibleRowsInRange(0,_self.maxRows);
-    	visibleRows.forEach(function(row){
-    		// ignore rows where parent is already checked
-    		if(row.hasOwnProperty("parent") && row.parent.checked)
-    		{
-    			return;
-    		}
-    		if(row.checked)
-    		{
-    			filteredRows[filteredRows.length] = row;
-    		}
-    	});
-    	return filteredRows;
+	//return _self.data.rows.filter(r=>r.checked && !(r.parent && r.parent.checked)).map(r=>r.rowId);
+	return _self.rowCart.items();
+    }
+
+    this.setFilteredRows = function () {
+	_self.rowCart.items().forEach(rowId => {
+	    document.querySelectorAll('#rowGroupInner g[emapid="' + rowId + '"]').forEach(g => {
+	        var row = g.__data__;
+		_self.rowFilterCheck(row, 'check', null, true);
+	    });
+	})
+
+	_self.updateFilterHighlights();
+	_self.updateButtons();
     }
 
     this.getFilteredColumns = function()
     {
-    	var filteredCols = [];
-    	var visibleCols = _self.data.getColumnsInRange(0,_self.maxColumns);
-    	visibleCols.forEach(function(col){
-    		if(col.checked)
-    		{
-    			filteredCols[filteredCols.length] = col;
-    		}
-    	});
-    	return filteredCols;
+	return _self.colCart.items();
     }
 
     this.calculateSvgHeight = function()
@@ -2379,16 +2492,23 @@ function SuperGrid(config)
     this.colFilterClick = function(col)
     {
     	var el = d3.select(this);
-		if(col.checked)
-		{
-			_self.colFilterCheck(col, "uncheck", el);
+	if(col.checked)
+	{
+		_self.colFilterCheck(col, "uncheck", el);
+		_self.colCart.remove(col.cid);
+	}
+	else
+	{
+		_self.colFilterCheck(col, "check", el);
+		_self.colCart.add(col.cid);
+		if (_self.colCart.size() === 1 && _self.selectionsClickHandler) {
+		    // First item in cart. Show the cart to remind the user it's there.
+		    selectionsPopupPanel.show();
 		}
-		else
-		{
-			_self.colFilterCheck(col, "check", el);
-		}
-		_self.updateFilterHighlights();
-		_self.updateFilterButton();
+	}
+	_self.updateFilterHighlights();
+	_self.updateButtons();
+	_self.updateSelectionsPopup();
     }
 
     this.colFilterCheck = function(col, type, d3Target)
@@ -2405,55 +2525,123 @@ function SuperGrid(config)
     	}
     }
 
+    this.updateSelectionsPopup = function () {
+	var items = _self.getFilteredColumns().sort((a,b) => {
+	    a = a.toLowerCase();
+	    b = b.toLowerCase();
+	    return a.localeCompare(b);
+	});
+	selectionsPopupPanel.header.innerText = _self.selectionsTitle;
+	var lstContents = items.map(i => `<li>${i}</li>`).join('');
+	var contents = '<ul id="selectionsPopupList">' + lstContents + '</ul><br/><button type="button">Clear all</button>';
+	var bdy = selectionsPopupPanel.body;
+	bdy.innerHTML = contents;
+	var liElts = Array.from(bdy.querySelectorAll('li'));
+	liElts.forEach(elt => elt.addEventListener('click', e => {
+	    var item = e.target.innerText;
+	    _self.colCart.remove(item);
+	    _self.syncVisibleColumnsWithCart();
+	}));
+	var clearBtn = bdy.querySelector('button');
+	clearBtn.addEventListener('click', e => {
+	    _self.colCart.clear();
+	    _self.syncVisibleColumnsWithCart();
+	});
+	if (liElts.length === 0) {
+	    // if the popup has become empty, disappear it.
+	    selectionsPopupPanel.hide();
+	}
+    }
+
+    this.syncVisibleColumnsWithCart = function () {
+	var gridid;
+	if (_self.name === 'structureStageGrid') {
+	    gridid = 'stagegriddata';
+	} else if (_self.name === 'structureGeneGrid') {
+	    gridid = 'genegriddata';
+	} else {
+	    return;
+	}
+	var displayedColumns = Array.from(document.querySelectorAll(`#${gridid} #colGroupInner > g`))
+	var cart = new Set(_self.getFilteredColumns());
+        displayedColumns.forEach(elt => {
+	    var col = elt.__data__;
+	    var d3elt = d3.select(elt.querySelector('image'));
+	    var action = cart.has(col.cid) ? 'check' : 'uncheck';
+	    _self.colFilterCheck(col, action, d3elt);
+	})
+	_self.updateFilterHighlights();
+	_self.updateButtons();
+	_self.updateSelectionsPopup();
+    }
+
     /*
      * What happens when you select a filter
      */
     this.rowFilterClick = function(row)
     {
     	var el = d3.select(this);
-		if(row.checked)
-		{
-			_self.rowFilterCheck(row, "uncheck", el);
-		}
-		else
-		{
-			_self.rowFilterCheck(row, "check", el);
-		}
+	if(row.checked)
+	{
+		_self.rowFilterCheck(row, "uncheck", el);
+	}
+	else
+	{
+		_self.rowFilterCheck(row, "check", el);
+	}
 
-		_self.lastFilterRow = row;
-		_self.updateFilterTree();
-		_self.updateFilterHighlights();
-		_self.updateFilterButton();
+	_self.lastFilterRow = row;
+	_self.updateFilterTree();
+	_self.updateFilterHighlights();
 
-    	// update filter button
+	_self.data.rows.forEach(r => {
+	    if (r.checked && !(r.parent && r.parent.checked)) {
+	    //if (r.checked) {
+	        _self.rowCart.add(r.rowId)
+	    } else {
+	        _self.rowCart.remove(r.rowId)
+	    }
+	})
 
+	_self.updateButtons();
     }
 
     /*
-     * activates filter button if anything is selected
+     * activates Filter and Selections buttons if anything is selected
      */
-    this.updateFilterButton = function()
+    this.updateButtons = function()
     {
     	var filteredRows = _self.getFilteredRows();
-    	var filteredColumns = _self.getFilteredColumns();
+	var filteredColumns = _self.getFilteredColumns();
     	if((filteredRows && filteredRows.length) || (filteredColumns && filteredColumns.length))
     	{
-			_self.filterButtonGroup.select("#filterTextID").style("opacity","1");
-			_self.filterButtonGroup.select("#filterIconID").style("opacity","1");
+		_self.filterButtonGroup.select("#filterTextID").style("opacity","1");
+		_self.filterButtonGroup.select("#filterIconID").style("opacity","1");
     	}
     	else
     	{
     		_self.filterButtonGroup.select("#filterTextID").style("opacity","0.5");
-			_self.filterButtonGroup.select("#filterIconID").style("opacity","0.5");
-		}
+		_self.filterButtonGroup.select("#filterIconID").style("opacity","0.5");
 	}
+
+	if (_self.selectionsClickHandler) {
+	    if (filteredColumns && filteredColumns.length)
+	    {
+		    _self.selectionsButtonGroup.style("visibility","visible");
+	    }
+	    else 
+	    {
+		    _self.selectionsButtonGroup.style("visibility","hidden");
+	    }
+	}
+    }
 
     this.rowFilterCheck = function(row, type, d3Target, applyToChildren, applyToParents)
     {
     	d3Target = d3Target || _self.getFilterImageForData(row);
     	if(type == "check")
     	{
-    		if(d3Target && !(row.checked))
+		if(d3Target)
     		{
     			d3Target.attr("xlink:href",_self.filterCheckedUrl);
     		}

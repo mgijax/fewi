@@ -214,6 +214,8 @@ public class GXDController {
 	@Value("${solr.factetNumberDefault}")
 	private Integer facetLimit;
 
+	private Map<String, Integer> resultCountCache = new HashMap<>();
+
 	// -----------------------------------------------------------------//
 	// public methods mapped to URLs
 	// -----------------------------------------------------------------//
@@ -1531,7 +1533,7 @@ public class GXDController {
 		// anatomical system
 		if ((query.getSystemFilter() != null) && (query.getSystemFilter().size() > 0)) {
 			sb = new StringBuffer();
-			sb.append("within anatomical systems: ");
+			sb.append("Within anatomical systems: ");
 			boolean isFirst = true;
 			for (String system : query.getSystemFilter()) {
 				if (!isFirst) {
@@ -1544,10 +1546,23 @@ public class GXDController {
 			lines.add(sb.toString());
 		}
 		
+		// sex
+		if ((query.getSexFilter() != null) && (query.getSexFilter().size() > 0)) {
+			sb = new StringBuffer();
+			sb.append("In bioreplicate sets with sex: ");
+			String sep = "";
+			for(String s : query.getSexFilter()) {
+			    sb.append(sep);
+			    sb.append(FormatHelper.bold(s) + ' ');
+			    sep = " or ";
+			}
+			lines.add(sb.toString());
+		}
+
 		// age
 		if ((query.getAgesSelected() != null) && (!"".equals(query.getAgesSelected())) ) {
 			sb = new StringBuffer();
-			sb.append("at age(s): ");
+			sb.append("At age(s): ");
 			sb.append(FormatHelper.bold(query.getAgesSelected()));
 			lines.add(sb.toString());
 		}
@@ -1557,7 +1572,7 @@ public class GXDController {
 			// skip display in only default TS of zero
 			if ((query.getTheilerStage().size() > 1) || (query.getTheilerStage().get(0) != 0)) {
 				sb = new StringBuffer();
-				sb.append("at developmental stage(s): ");
+				sb.append("At developmental stage(s): ");
 				boolean isFirst = true;
 				for (Integer ts : query.getTheilerStage()) {
 					if (!isFirst) {
@@ -3022,6 +3037,9 @@ public class GXDController {
 	// lookup of result count based solely on EMAPA/EMAPS ID
 	public Integer getResultCountForID(String termID) {
 		logger.debug("in getResultCountForID(" + termID + ")");
+
+		Integer resultCount = 0;
+
 		SearchParams params = new SearchParams();
 		GxdQueryForm form = new GxdQueryForm();
 		if (termID.startsWith("EMAP")) {
@@ -3037,14 +3055,21 @@ public class GXDController {
 
 	// lookup of result count for CellType Ontoloty term
 	public synchronized Integer getResultCountForCoID(String termID) {
-		logger.debug("in getResultCountForCoID(" + termID + ")");
-		SearchParams params = new SearchParams();
-		GxdQueryForm form = new GxdQueryForm();
-		form.setAnnotationId(termID);
-		params.setFilter(parseGxdQueryForm(form));
-		params.setPageSize(0);
 
-		return gxdFinder.getAssayResultCount(params);
+		Integer resultCount = 0;
+
+		if (resultCountCache.containsKey(termID)) {
+			resultCount = resultCountCache.get(termID);
+		} else {
+			SearchParams params = new SearchParams();
+			GxdQueryForm form = new GxdQueryForm();
+			form.setAnnotationId(termID);
+			params.setFilter(parseGxdQueryForm(form));
+			params.setPageSize(0);
+			resultCount = gxdFinder.getAssayResultCount(params);
+			resultCountCache.put(termID, resultCount);
+		}
+		return resultCount;
 	}	
 
 	@RequestMapping("/images/totalCount")
@@ -3596,9 +3621,9 @@ public class GXDController {
 					query.getDetectedFilter(), Filter.Operator.OP_IN));
 		}
 
-		if (query.getTheilerStageFilter().size() > 0) {
-			facetList.add(new Filter(FacetConstants.GXD_THEILER_STAGE,
-					query.getTheilerStageFilter(), Filter.Operator.OP_IN));
+		if (query.getSexFilter().size() > 0) {
+			facetList.add(new Filter(FacetConstants.GXD_SEX,
+					query.getSexFilter(), Filter.Operator.OP_IN));
 		}
 
 		if (query.getWildtypeFilter().size() > 0) {
@@ -4426,6 +4451,20 @@ public class GXDController {
 				FacetConstants.GXD_CO);
 	}
 
+	/* gets a list of Sex values for the facet list, returned
+	 * as JSON
+	 */
+	@RequestMapping("/facet/sex")
+	public @ResponseBody Map<String, List<String>> facetSex(
+			HttpSession session,
+			@ModelAttribute GxdQueryForm query,
+			BindingResult result) {
+
+		populateMarkerIDs(session, query);
+		return facetGeneric(query, result,
+				FacetConstants.GXD_SEX);
+	}
+
 	/* gets a list of DO values for the facet list, returned
 	 * as JSON
 	 */
@@ -4552,6 +4591,8 @@ public class GXDController {
 			facetResults = gxdFinder.getMpFacet(params);
 		} else if (FacetConstants.GXD_CO.equals(facetType)) {
 			facetResults = gxdFinder.getCoFacet(params);
+		} else if (FacetConstants.GXD_SEX.equals(facetType)) {
+			facetResults = gxdFinder.getSexFacet(params);
 		} else if (FacetConstants.GXD_DO.equals(facetType)) {
 			emptyListMsg = "No genes found with ontology associations.";
 			facetResults = gxdFinder.getDoFacet(params);

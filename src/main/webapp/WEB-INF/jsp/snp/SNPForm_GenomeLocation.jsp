@@ -31,7 +31,7 @@
 					<input name="startMarker" size="12" value="${e:forHtml(snpQueryForm.startMarker)}">
 					and <input name="endMarker" size="12" value="${e:forHtml(snpQueryForm.endMarker)}">
 					<br/>
-	      			<span class="example" style="margin-left:50px;">Example: between D19Mit32 and Tbx10</span>
+	      			<span class="example" style="margin-left:50px;">Example: between Apoa2 and Cq2</span>
 				</div>
 
 			</div>

@@ -52,6 +52,12 @@ public class HibernateBatchSummaryHunter
 		ensemblItems.add("Ensembl Transcript");
 		typeMap.put("Ensembl", ensemblItems);
 		
+		List<String> currentPlusItems = new ArrayList<String>();
+		currentPlusItems.add("current symbol");
+		currentPlusItems.add("old symbol");
+		currentPlusItems.add("synonym");
+		typeMap.put("current symbol plus", currentPlusItems);
+
 		List<String> nomenItems = new ArrayList<String>();
 		nomenItems.add("old symbol");
 		nomenItems.add("%synonym");

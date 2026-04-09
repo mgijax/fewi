@@ -21,7 +21,7 @@ public class SearchResults<T> {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	// Database keys identified as the results from a search
+	// list of facet values 
 	protected List<String> resultFacets = new ArrayList<String>();
         //
         protected List<long[]> histogram = new ArrayList<long[]>(); // each entry is [startCoord, endCoord, count]

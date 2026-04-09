@@ -200,7 +200,9 @@ window.GxdRender = new function()
     	var labelPaddingBottom = 4;
         // draw a label
     	var g = d3Target;
-        g.append("text")
+
+	g.attr("emapid",d => d.rowId)
+         .append("text")
             .attr("x",labelPaddingLeft)
             .attr("y",cellHeight-labelPaddingBottom)
             .text(function(d){return d.term;})
@@ -238,6 +240,7 @@ window.GxdRender = new function()
 	this.RowClosedImgUrl = fewiurl+"assets/images/rightArrow.gif";
 
 	this.LegendIconUrl = fewiurl+"assets/images/info.gif";
+	this.SelectionsIconUrl = fewiurl + "assets/images/macChecked.png";
 	this.FilterIconUrl = fewiurl+"assets/images/filter.png";
 	this.FilterCheckedUrl = fewiurl+"assets/images/macChecked.png";
 	this.FilterUncheckedUrl = fewiurl+"assets/images/macUnchecked.png";
@@ -497,6 +500,7 @@ function GxdTissueMatrix(config)
 			openImageUrl: GxdRender.RowOpenedImgUrl,
 			spinnerImageUrl: LOADING_IMG_SRC,
 	        legendButtonIconUrl: GxdRender.LegendIconUrl,
+		selectionsButtonIconUrl : GxdRender.SelectionsIconUrl,
 	        filterButtonIconUrl: GxdRender.FilterIconUrl,
 	        filterUncheckedUrl: GxdRender.FilterUncheckedUrl,
 	        filterCheckedUrl: GxdRender.FilterCheckedUrl

@@ -815,6 +815,10 @@ var interceptSubmit = function(e) {
 	console.log("Updating GA4 - GXD Form Submission: " + currentQF);
 	gtag('event', 'gxdSumSubType', { 'submissionType': currentQF });
 
+	// On every query form submission, clear the SuperGrid selection carts (if any).
+	// This really doesn't belong here, but other places seem equally yucky. 
+	window.SG_SELECTIONS = null;
+
 	if (!runValidation()){
 		// Do not allow any content to overflow the outer
 		// div when it is hiding
@@ -1383,7 +1387,6 @@ var getQueryString = function(form) {
 	for(var i=0; i<form.elements.length; i++)
 	{
 		var element = form.elements[i];
-		console.log("getQueryString - element:" + element.name);
 		if(element.name != ""
 			&& element.name !="_theilerStage" && element.name !="_age"
 			&& element.name !="_difTheilerStage" && element.name !="_difAge")

@@ -87,6 +87,8 @@ public class RecombinaseController {
     @Autowired
     private ExpressionHelperFinder expressionHelper;
 
+    private Map<String, Integer> alleleCountCache = new HashMap<>();
+
     /*-------------------------*/
     /* public instance methods */
     /*-------------------------*/
@@ -121,13 +123,61 @@ public class RecombinaseController {
     	return ""+getAlleleCountByCellType(cellTypeID);
     }
 
-    public int getAlleleCountByCellType (String cellTypeID) {
-	RecombinaseQueryForm query = new RecombinaseQueryForm();
-	query.setCellTypeID(cellTypeID);
+    public synchronized int getAlleleCountByCellType (String cellTypeID) {
+
+        Integer alleleCount = 0;
+
+        if (alleleCountCache.containsKey(cellTypeID)) {
+            alleleCount = alleleCountCache.get(cellTypeID);
+        } else {
+            RecombinaseQueryForm query = new RecombinaseQueryForm();
+            query.setCellTypeID(cellTypeID);
+            SearchParams params = new SearchParams();
+            params.setFilter(parseRecombinaseQueryForm(query));
+            SearchResults<Allele> searchResults = recombinaseFinder.searchRecombinases(params);
+            alleleCount = searchResults.getTotalCount();
+            alleleCountCache.put(cellTypeID, alleleCount);
+        }
+        return alleleCount;
+
+
+
+
+
+
+
+/*
+
+        RecombinaseQueryForm query = new RecombinaseQueryForm();
+        query.setCellTypeID(cellTypeID);
         SearchParams params = new SearchParams();
         params.setFilter(parseRecombinaseQueryForm(query));
         SearchResults<Allele> searchResults = recombinaseFinder.searchRecombinases(params);
-	return searchResults.getTotalCount();
+        return searchResults.getTotalCount();
+
+
+
+
+
+
+        Integer resultCount = 0;
+
+        if (resultCountCache.containsKey(termID)) {
+            resultCount = resultCountCache.get(termID);
+        } else {
+            SearchParams params = new SearchParams();
+            GxdQueryForm form = new GxdQueryForm();
+            form.setAnnotationId(termID);
+            params.setFilter(parseGxdQueryForm(form));
+            params.setPageSize(0);
+            resultCount = gxdFinder.getAssayResultCount(params);
+            resultCountCache.put(termID, resultCount);
+        }
+        return resultCount;
+*/
+
+
+
     }
 
     @RequestMapping("/json")

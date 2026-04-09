@@ -60,6 +60,9 @@ public class GXDHTController {
 	@Autowired
 	private IDLinker idLinker;
 
+	private Map<String, Integer> htCountCache = new HashMap<>();
+
+
 	//--- public methods ---//
 
 	// retrieves the query form
@@ -122,16 +125,20 @@ public class GXDHTController {
 	// lookup of experiment count for CellType Ontoloty term
 	public synchronized Integer getExperimentCountForCoID(String termID) {
 
-		logger.debug("---in getExperimentCountForCoID(" + termID + ")");
+		Integer htCount = 0;
 
-		SearchParams params = new SearchParams();
-		GxdHtQueryForm query = new GxdHtQueryForm();
-
-		query.setCellTypeID(termID);
-		params.setFilter(genFilters(query));
-		params.setPageSize(0);
-
-		return gxdHtFinder.getExperimentCount(params, query);
+		if (htCountCache.containsKey(termID)) {
+			htCount = htCountCache.get(termID);
+		} else {
+			SearchParams params = new SearchParams();
+			GxdHtQueryForm query = new GxdHtQueryForm();
+			query.setCellTypeID(termID);
+			params.setFilter(genFilters(query));
+			params.setPageSize(0);
+			htCount = gxdHtFinder.getExperimentCount(params, query);
+			htCountCache.put(termID, htCount);
+		}
+		return htCount;
 	}
 
 	// determine if we searched by any sample-specific fields (not experiment-level fields); if
