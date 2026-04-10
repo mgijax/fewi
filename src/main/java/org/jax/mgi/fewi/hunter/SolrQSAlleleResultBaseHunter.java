@@ -100,6 +100,7 @@ public class SolrQSAlleleResultBaseHunter extends SolrHunter<QSAlleleResult> {
 				result.setDiseaseFacets((List<String>) doc.getFieldValue(IndexConstants.QS_DISEASE_FACETS));
 				result.setPhenotypeFacets((List<String>) doc.getFieldValue(IndexConstants.QS_PHENOTYPE_FACETS));
 				result.setMarkerTypeFacets((List<String>) doc.getFieldValue(IndexConstants.QS_MARKER_TYPE_FACETS));
+				result.setMutationFacets((List<String>) doc.getFieldValue(IndexConstants.QS_MUTATION_FACETS));
 
 				Integer weight = (Integer) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_WEIGHT);
 				if (weight == null) {

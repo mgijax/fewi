@@ -3,6 +3,7 @@
    <a id="featureTypeFilterA" class="filterButton">Feature Type <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
    <a id="phenotypeFilterA" class="filterButton">Phenotype <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
    <a id="diseaseFilterA" class="filterButton">Disease <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
+   <a id="mutationFilterA" class="filterButton">Mutation <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
 </div>
 <div id="breadboxA" class="hidden removeFilterDiv">
   <div id="filterSummaryA">
