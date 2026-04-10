@@ -33,6 +33,7 @@ public class QSAlleleResult extends QSResult {
 	private List<String> diseaseFacets;
 	private List<String> phenotypeFacets;
 	private List<String> markerTypeFacets;
+	private List<String> mutationFacets;
 
 	public String getSearchTermInexact() {
 		return searchTermInexact;
@@ -111,6 +112,12 @@ public class QSAlleleResult extends QSResult {
 	}
 	public void setMarkerTypeFacets(List<String> markerTypeFacets) {
 		this.markerTypeFacets = markerTypeFacets;
+	}
+	public List<String> getMutationFacets() {
+		return mutationFacets;
+	}
+	public void setMutationFacets(List<String> mutationFacets) {
+		this.mutationFacets = mutationFacets;
 	}
 	public String getStars() {
 		return stars;

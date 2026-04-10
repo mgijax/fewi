@@ -15,13 +15,18 @@ function b5Show(data) {
 	var toShow = b5PageSize;
 	if (data.rows.length > 0) {
 		tbl = '<TABLE ID="b5Table">';
-		tbl = tbl + '<TR><TH>Score' + qsScoreHelp() + '</TH><TH>Type</TH><TH>Symbol</TH><TH>Name</TH><TH>Best Match</TH></TR>';
+		tbl = tbl + '<TR><TH>Score' + qsScoreHelp() + '</TH>' +
+		    '<TH>Symbol</TH>' +
+		    '<TH>Name</TH>' +
+		    '<TH>Type</TH>' +
+		    '<TH>Molecular Mutations</TH>' +
+		    '<TH>Best Match</TH>' +
+		    '</TR>';
 
 		toShow = Math.min(100, data.rows.length);
 		for (var i = 0; i < toShow; i++) {
 			var item = data.rows[i];
 			tbl = tbl + '<TR><TD>' + qsFormatStars(item.stars) + '</TD>';
-			tbl = tbl + '<TD class="small">' + item.featureType + '</TD>';
 
 			var symbol = qsSuperscript(item.symbol);
 			var name = qsSuperscript(item.name);
@@ -33,6 +38,13 @@ function b5Show(data) {
 				tbl = tbl + '<TD><a target="_blank" href="' + item.detailUri + '">' + symbol + '</a></TD>';
 			}
 			tbl = tbl + '<TD class="nameCol">' + name + '</TD>';
+			tbl = tbl + '<TD class="small">' + item.featureType + '</TD>';
+
+			if (item.mutationFacets === null) {
+				tbl = tbl + '<TD>&nbsp;</TD>';
+			} else {
+				tbl = tbl + '<TD class="small">' + item.mutationFacets + '</TD>';
+			}
 
 			if (item.bestMatchType === null) {
 				tbl = tbl + '<TD>&nbsp;</TD></TR>';
