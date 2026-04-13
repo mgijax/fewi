@@ -22,4 +22,5 @@ public class QSAlleleResultWrapper {
 	public String getStrand() { return result.getStrand(); }
 	public String getBestMatchType() { return result.getSearchTermType(); }
 	public List<String> getMutationFacets() { return result.getMutationFacets(); }
+	public List<String> getAttributeFacets() { return result.getAttributeFacets(); }
 }

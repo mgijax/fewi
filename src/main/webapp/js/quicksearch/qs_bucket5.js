@@ -20,6 +20,7 @@ function b5Show(data) {
 		    '<TH>Name</TH>' +
 		    '<TH>Type</TH>' +
 		    '<TH>Molecular Mutations</TH>' +
+		    '<TH>Attributes</TH>' +
 		    '<TH>Best Match</TH>' +
 		    '</TR>';
 
@@ -43,7 +44,13 @@ function b5Show(data) {
 			if (item.mutationFacets === null) {
 				tbl = tbl + '<TD>&nbsp;</TD>';
 			} else {
-				tbl = tbl + '<TD class="small">' + item.mutationFacets + '</TD>';
+				tbl = tbl + '<TD class="small">' + item.mutationFacets.sort() + '</TD>';
+			}
+
+			if (item.attributeFacets === null) {
+				tbl = tbl + '<TD>&nbsp;</TD>';
+			} else {
+				tbl = tbl + '<TD class="small">' + item.attributeFacets.sort() + '</TD>';
 			}
 
 			if (item.bestMatchType === null) {

@@ -81,6 +81,7 @@ public class SolrQSAlleleResultHunter extends SolrHunter<QSAlleleResult> {
 				result.setPrimaryID((String) doc.getFieldValue(IndexConstants.QS_PRIMARY_ID));
 
 				result.setMutationFacets((List<String>) doc.getFieldValue(IndexConstants.QS_MUTATION_FACETS));
+				result.setAttributeFacets((List<String>) doc.getFieldValue(IndexConstants.QS_ATTRIBUTE_FACETS));
 
 				Integer weight = (Integer) doc.getFieldValue(IndexConstants.QS_SEARCH_TERM_WEIGHT);
 				if (weight == null) {
