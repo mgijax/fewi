@@ -361,6 +361,7 @@ public class SearchConstants {
 	public static final String QS_NAME = "name";
 	public static final String QS_IS_MARKER = "isMarker";
 	public static final String QS_FEATURE_TYPE = "featureType";
+	public static final String QS_ALLELE_TYPE = "featureType"; // not a mistake. qsAlleleBucket field is named featureType :-/
 	public static final String QS_CHROMOSOME = "chromosome";
 	public static final String QS_START_COORD = "startCoord";
 	public static final String QS_END_COORD = "endCoord";

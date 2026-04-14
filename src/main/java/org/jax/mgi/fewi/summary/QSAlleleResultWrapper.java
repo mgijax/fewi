@@ -12,7 +12,7 @@ public class QSAlleleResultWrapper {
 	}
 	
 	public String getStars() { return result.getStars(); }
-	public String getFeatureType() { return result.getFeatureType(); }
+	public String getAlleleType() { return result.getAlleleType(); }
 	public String getSymbol() { return result.getSymbol(); }
 	public String getName() { return result.getName(); }
 	public String getBestMatchText() { return result.getSearchTermDisplay(); }

@@ -17,7 +17,7 @@ public class QSAlleleResult extends QSResult {
 	private String stars;
 	private int starCount = 0;
 
-	private String featureType;
+	private String alleleType;
 	private String symbol;
 	private String primaryID;
 	private String name;
@@ -154,11 +154,11 @@ public class QSAlleleResult extends QSResult {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getFeatureType() {
-		return featureType;
+	public String getAlleleType() {
+		return alleleType;
 	}
-	public void setFeatureType(String featureType) {
-		this.featureType = featureType;
+	public void setAlleleType(String alleleType) {
+		this.alleleType = alleleType;
 	}
 	public String getDetailUri() {
 		return detailUri;

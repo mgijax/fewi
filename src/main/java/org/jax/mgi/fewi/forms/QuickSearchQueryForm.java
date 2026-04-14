@@ -49,6 +49,7 @@ public class QuickSearchQueryForm {
     private List<String> featureTypeFilterF;
 
     private List<String> featureTypeFilterA;	// Allele filters
+    private List<String> alleleTypeFilterA;
     private List<String> phenotypeFilterA;
     private List<String> diseaseFilterA;
     private List<String> mutationFilterA;
@@ -202,6 +203,12 @@ public class QuickSearchQueryForm {
 	}
 	public void setFeatureTypeFilterA(List<String> featureTypeFilterA) {
 		this.featureTypeFilterA = featureTypeFilterA;
+	}
+	public List<String> getAlleleTypeFilterA() {
+		return alleleTypeFilterA;
+	}
+	public void setAlleleTypeFilterA(List<String> alleleTypeFilterA) {
+		this.alleleTypeFilterA = alleleTypeFilterA;
 	}
 	public List<String> getPhenotypeFilterA() {
 		return phenotypeFilterA;

@@ -39,7 +39,7 @@ function b5Show(data) {
 				tbl = tbl + '<TD><a target="_blank" href="' + item.detailUri + '">' + symbol + '</a></TD>';
 			}
 			tbl = tbl + '<TD class="nameCol">' + name + '</TD>';
-			tbl = tbl + '<TD class="small">' + item.featureType + '</TD>';
+			tbl = tbl + '<TD class="small">' + item.alleleType + '</TD>';
 
 			if (item.mutationFacets === null) {
 				tbl = tbl + '<TD>&nbsp;</TD>';

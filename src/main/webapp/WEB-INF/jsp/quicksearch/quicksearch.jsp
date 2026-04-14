@@ -139,6 +139,7 @@ function initializeFilterLibrary(delay) {
 		filters.addFilter('phenotypeFilterA', 'Phenotype', 'phenotypeFilterA', 'phenotypeFilterA', fewiurl + 'quicksearch/alleleBucket/phenotype');
 		filters.addFilter('diseaseFilterA', 'Disease', 'diseaseFilterA', 'diseaseFilterA', fewiurl + 'quicksearch/alleleBucket/disease');
 		filters.addFilter('featureTypeFilterA', 'Feature Type', 'featureTypeFilterA', 'featureTypeFilterA', fewiurl + 'quicksearch/alleleBucket/featureType');
+		filters.addFilter('alleleTypeFilterA', 'Allele Type', 'alleleTypeFilterA', 'alleleTypeFilterA', fewiurl + 'quicksearch/alleleBucket/alleleType');
 		filters.addFilter('mutationFilterA', 'Mutation', 'mutationFilterA', 'mutationFilterA', fewiurl + 'quicksearch/alleleBucket/mutation');
 		filters.addFilter('attributeFilterA', 'Attribute', 'attributeFilterA', 'attributeFilterA', fewiurl + 'quicksearch/alleleBucket/attribute');
 
@@ -168,6 +169,7 @@ function initializeFilterLibrary(delay) {
 			'phenotypeFilterA' : [ 'filterSummaryA', 'filterListA' ],		// allele filters
 			'diseaseFilterA' : [ 'filterSummaryA', 'filterListA' ],
 			'featureTypeFilterA' : [ 'filterSummaryA', 'filterListA' ],
+			'alleleTypeFilterA' : [ 'filterSummaryA', 'filterListA' ],
 			'mutationFilterA' : [ 'filterSummaryA', 'filterListA' ],
 			'attributeFilterA' : [ 'filterSummaryA', 'filterListA' ],
 

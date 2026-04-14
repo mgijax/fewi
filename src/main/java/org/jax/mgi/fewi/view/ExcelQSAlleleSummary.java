@@ -79,7 +79,7 @@ public class ExcelQSAlleleSummary  extends AbstractBigExcelView
 			}
 
 			List<String> row = new ArrayList<String>();
-			row.add(allele.getFeatureType());
+			row.add(allele.getAlleleType());
 			row.add(primaryID);
 
 			row.add(allele.getSymbol());
