@@ -44,13 +44,13 @@ function b5Show(data) {
 			if (item.mutationFacets === null) {
 				tbl = tbl + '<TD>&nbsp;</TD>';
 			} else {
-				tbl = tbl + '<TD class="small">' + item.mutationFacets.sort() + '</TD>';
+				tbl = tbl + '<TD class="small">' + item.mutationFacets.sort().join(', ') + '</TD>';
 			}
 
 			if (item.attributeFacets === null) {
 				tbl = tbl + '<TD>&nbsp;</TD>';
 			} else {
-				tbl = tbl + '<TD class="small">' + item.attributeFacets.sort() + '</TD>';
+				tbl = tbl + '<TD class="small">' + item.attributeFacets.sort().join(', ') + '</TD>';
 			}
 
 			if (item.bestMatchType === null) {
