@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -76,7 +77,12 @@ public class AbstractReportView extends AbstractView
 			Date date = new Date();
 			DateFormat df = new SimpleDateFormat( "yyyyMMdd_HHmmss" ) ;
 			//df.setTimeZone( TimeZone.getTimeZone( "EST" )  ) ;
-	        String formattedDate = df.format(date);
-	        return (formattedDate);
+			String formattedDate = df.format(date);
+			return (formattedDate);
+		}
+
+		protected final String formatStrings(List<String> lst) {
+			if (lst == null) return "";
+			return String.join("|", lst);
 		}
 }
