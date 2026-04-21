@@ -18,6 +18,7 @@ function b5Show(data) {
 		tbl = tbl + '<TR><TH>Score' + qsScoreHelp() + '</TH>' +
 		    '<TH>Symbol</TH>' +
 		    '<TH>Name</TH>' +
+		    '<TH>Synonyms</TH>' +
 		    '<TH>Type</TH>' +
 		    '<TH>Molecular Mutations</TH>' +
 		    '<TH>Attributes</TH>' +
@@ -39,6 +40,12 @@ function b5Show(data) {
 				tbl = tbl + '<TD><a target="_blank" href="' + item.detailUri + '">' + symbol + '</a></TD>';
 			}
 			tbl = tbl + '<TD class="nameCol">' + name + '</TD>';
+			if (item.synonyms === null) {
+				tbl = tbl + '<TD>&nbsp;</TD>';
+			} else {
+				var syns = item.synonyms.sort().map(s => qsSuperscript(s))
+				tbl = tbl + '<TD class="small">' + syns + '</TD>';
+			}
 			tbl = tbl + '<TD class="small">' + item.alleleType + '</TD>';
 
 			if (item.mutationFacets === null) {

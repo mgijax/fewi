@@ -15,6 +15,7 @@ public class QSAlleleResultWrapper {
 	public String getAlleleType() { return result.getAlleleType(); }
 	public String getSymbol() { return result.getSymbol(); }
 	public String getName() { return result.getName(); }
+	public List<String> getSynonyms() { return result.getSynonyms(); }
 	public String getBestMatchText() { return result.getSearchTermDisplay(); }
 	public String getDetailUri() { return "/allele/" + result.getPrimaryID(); }
 	public String getChromosome() { return result.getChromosome(); }

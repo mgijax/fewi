@@ -94,6 +94,8 @@ public class SolrQSAlleleResultBaseHunter extends SolrHunter<QSAlleleResult> {
 				result.setAlleleType((String) doc.getFieldValue(IndexConstants.QS_ALLELE_TYPE));
 				result.setPrimaryID((String) doc.getFieldValue(IndexConstants.QS_PRIMARY_ID));
 				
+				result.setSynonyms((List<String>) doc.getFieldValue(IndexConstants.QS_SYNONYMS));
+
 				result.setGoProcessFacets((List<String>) doc.getFieldValue(IndexConstants.QS_GO_PROCESS_FACETS));
 				result.setGoFunctionFacets((List<String>) doc.getFieldValue(IndexConstants.QS_GO_FUNCTION_FACETS));
 				result.setGoComponentFacets((List<String>) doc.getFieldValue(IndexConstants.QS_GO_COMPONENT_FACETS));

@@ -80,6 +80,7 @@ public class SolrQSAlleleResultHunter extends SolrHunter<QSAlleleResult> {
 				result.setAlleleType((String) doc.getFieldValue(IndexConstants.QS_ALLELE_TYPE));
 				result.setPrimaryID((String) doc.getFieldValue(IndexConstants.QS_PRIMARY_ID));
 
+				result.setSynonyms((List<String>) doc.getFieldValue(IndexConstants.QS_SYNONYMS));
 				result.setMutationFacets((List<String>) doc.getFieldValue(IndexConstants.QS_MUTATION_FACETS));
 				result.setAttributeFacets((List<String>) doc.getFieldValue(IndexConstants.QS_ATTRIBUTE_FACETS));
 

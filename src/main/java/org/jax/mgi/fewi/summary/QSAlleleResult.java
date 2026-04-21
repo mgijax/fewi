@@ -21,6 +21,7 @@ public class QSAlleleResult extends QSResult {
 	private String symbol;
 	private String primaryID;
 	private String name;
+	private List<String> synonyms;
 	private String detailUri;
 	private String chromosome;
 	private String location;
@@ -153,6 +154,12 @@ public class QSAlleleResult extends QSResult {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public List<String> getSynonyms() {
+		return synonyms;
+	}
+	public void setSynonyms(List<String> synonyms) {
+		this.synonyms = synonyms;
 	}
 	public String getAlleleType() {
 		return alleleType;
