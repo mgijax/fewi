@@ -54,6 +54,7 @@ public class QuickSearchQueryForm {
     private List<String> diseaseFilterA;
     private List<String> mutationFilterA;
     private List<String> attributeFilterA;
+    private List<String> collectionFilterA;
 
     private List<String> processFilterV;		// Vocabulary Term filters
     private List<String> componentFilterV;
@@ -227,6 +228,12 @@ public class QuickSearchQueryForm {
 	}
 	public void setMutationFilterA(List<String> mutationFilterA) {
 		this.mutationFilterA = mutationFilterA;
+	}
+	public List<String> getCollectionFilterA() {
+		return collectionFilterA;
+	}
+	public void setCollectionFilterA(List<String> collectionFilterA) {
+		this.collectionFilterA = collectionFilterA;
 	}
 	public List<String> getAttributeFilterA() {
 		return attributeFilterA;

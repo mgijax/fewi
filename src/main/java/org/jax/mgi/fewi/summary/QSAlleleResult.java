@@ -23,6 +23,7 @@ public class QSAlleleResult extends QSResult {
 	private String name;
 	private List<String> synonyms;
 	private String detailUri;
+	private String collection;
 	private String chromosome;
 	private String location;
 	private String strand;
@@ -178,6 +179,12 @@ public class QSAlleleResult extends QSResult {
 	}
 	public void setSequenceNum(Long sequenceNum) {
 		this.sequenceNum = sequenceNum;
+	}
+	public String getCollection() {
+		return collection;
+	}
+	public void setCollection(String collection) {
+		this.collection = collection;
 	}
 	public String getChromosome() {
 		return chromosome;

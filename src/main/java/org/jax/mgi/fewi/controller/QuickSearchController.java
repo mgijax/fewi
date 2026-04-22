@@ -109,6 +109,7 @@ public class QuickSearchController {
 		validFacetFields.add(SearchConstants.QS_CELL_TYPE_FACETS);
 		validFacetFields.add(SearchConstants.QS_MUTATION_FACETS);
 		validFacetFields.add(SearchConstants.QS_ATTRIBUTE_FACETS);
+		validFacetFields.add(SearchConstants.QS_COLLECTION);
 	}
 
 	// Stemmed "words" that should not be matched alone in annotation-related fields (only in combination with
@@ -652,6 +653,7 @@ public class QuickSearchController {
 
 		} else if (bucket == ALLELE) {
 			filters.add(getFilterForOneField(SearchConstants.QS_ALLELE_TYPE, qf.getAlleleTypeFilterA()));
+			filters.add(getFilterForOneField(SearchConstants.QS_COLLECTION, qf.getCollectionFilterA()));
 			filters.add(getFilterForOneField(SearchConstants.QS_PHENOTYPE_FACETS, qf.getPhenotypeFilterA()));
 			filters.add(getFilterForOneField(SearchConstants.QS_DISEASE_FACETS, qf.getDiseaseFilterA()));
 			filters.add(getFilterForOneField(SearchConstants.QS_MARKER_TYPE_FACETS, qf.getFeatureTypeFilterA()));
@@ -1434,6 +1436,14 @@ public class QuickSearchController {
 	public @ResponseBody Map<String, List<String>> getAlleleTypeFacetA (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
 		AjaxUtils.prepareAjaxHeaders(response);
 		return getFacets(qf, SearchConstants.QS_ALLELE_TYPE, ALLELE);
+	}
+
+	/* Get the set of collection filter options for the allele bucket's current result set
+	 */
+	@RequestMapping("/alleleBucket/collection")
+	public @ResponseBody Map<String, List<String>> getCollectionFacetA (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_COLLECTION, ALLELE);
 	}
 
 	/* Get the set of mutations filter options for the allele bucket's current result set

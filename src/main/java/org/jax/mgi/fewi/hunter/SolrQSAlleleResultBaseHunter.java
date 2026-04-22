@@ -43,6 +43,7 @@ public class SolrQSAlleleResultBaseHunter extends SolrHunter<QSAlleleResult> {
 
 		propertyMap.put(SearchConstants.QS_FEATURE_TYPE, new SolrPropertyMapper(IndexConstants.QS_FEATURE_TYPE));
 		propertyMap.put(SearchConstants.QS_PRIMARY_ID, new SolrPropertyMapper(IndexConstants.QS_PRIMARY_ID));
+		propertyMap.put(SearchConstants.QS_COLLECTION, new SolrPropertyMapper(IndexConstants.QS_COLLECTION));
 
 		propertyMap.put(SearchConstants.QS_CHROMOSOME, new SolrPropertyMapper(IndexConstants.QS_CHROMOSOME));
 		propertyMap.put(SearchConstants.QS_START_COORD, new SolrPropertyMapper(IndexConstants.QS_START_COORD));
@@ -96,6 +97,7 @@ public class SolrQSAlleleResultBaseHunter extends SolrHunter<QSAlleleResult> {
 				
 				result.setSynonyms((List<String>) doc.getFieldValue(IndexConstants.QS_SYNONYMS));
 
+				result.setCollection((String) doc.getFieldValue(IndexConstants.QS_COLLECTION));
 				result.setGoProcessFacets((List<String>) doc.getFieldValue(IndexConstants.QS_GO_PROCESS_FACETS));
 				result.setGoFunctionFacets((List<String>) doc.getFieldValue(IndexConstants.QS_GO_FUNCTION_FACETS));
 				result.setGoComponentFacets((List<String>) doc.getFieldValue(IndexConstants.QS_GO_COMPONENT_FACETS));
