@@ -44,7 +44,12 @@ function b5Show(data) {
 				tbl = tbl + '<TD>&nbsp;</TD>';
 			} else {
 				var syns = item.synonyms.sort().map(s => qsSuperscript(s))
-				tbl = tbl + '<TD class="small">' + syns + '</TD>';
+				var ellipses = ""
+				if (syns.length > 4) {
+				    syns.splice(4)
+				    syns.push("...")
+				}
+				tbl = tbl + '<TD class="small">' + syns.join(", ") + '</TD>';
 			}
 			tbl = tbl + '<TD class="small">' + item.alleleType + '</TD>';
 
