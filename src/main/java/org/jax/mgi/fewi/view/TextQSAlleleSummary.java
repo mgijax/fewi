@@ -34,7 +34,11 @@ public class TextQSAlleleSummary extends AbstractTextView {
 				}
 			}
 			
-			writer.write(allele.getAlleleType() + "\t");
+			if (allele.getAlleleType() == null) {
+				writer.write("\t");
+			} else {
+				writer.write(allele.getAlleleType() + "\t");
+			}
 			writer.write(primaryID + "\t");
 
 			writer.write(allele.getSymbol() + "\t");

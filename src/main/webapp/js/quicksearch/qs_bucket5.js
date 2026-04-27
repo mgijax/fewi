@@ -51,7 +51,11 @@ function b5Show(data) {
 				}
 				tbl = tbl + '<TD class="small">' + syns.join(", ") + '</TD>';
 			}
-			tbl = tbl + '<TD class="small">' + item.alleleType + '</TD>';
+			if (item.alleleType === null) {
+			    tbl = tbl + '<TD class="small">&nbsp;</TD>';
+			} else {
+			    tbl = tbl + '<TD class="small">' + item.alleleType + '</TD>';
+			}
 
 			if (item.mutationFacets === null) {
 				tbl = tbl + '<TD>&nbsp;</TD>';
