@@ -88,7 +88,8 @@
 							</div>
 						</li>
 					</c:if>
-					<c:if test="${(marker.markerType == 'Gene') or (marker.markerType == 'Pseudogene')}">
+
+					<c:if test="${(marker.markerType != 'Cytogenetic Marker') and (marker.markerType != 'QTL') and (marker.markerType != 'Transgene')}">
 						<li>
 							<div class="label">Alliance</div>
 							<div class="value">
