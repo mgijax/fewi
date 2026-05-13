@@ -93,7 +93,7 @@
 						<li>
 							<div class="label">Alliance</div>
 							<div class="value">
-								<a id="allianceLink" href="${fn:replace(externalUrls.AGR_Gene, '@@@@', marker.primaryID)}" target="_blank">gene page</a>
+								<a id="allianceLink" href="${fn:replace(externalUrls.AGR_Gene, '@@@@', marker.primaryID)}" target="_blank">genome feature page</a>
 							</div>
 						</li>
 					</c:if>
