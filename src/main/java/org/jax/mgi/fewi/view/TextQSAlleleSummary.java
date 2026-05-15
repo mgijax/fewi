@@ -22,7 +22,7 @@ public class TextQSAlleleSummary extends AbstractTextView {
 		@SuppressWarnings("unchecked")
 		List<QSAlleleResultWrapper> alleles = (List<QSAlleleResultWrapper>) model.get("alleles");
 		
-		writer.write("Type\tMGI ID\tSymbol\tName\tSynonyms\tMutations\tAttributes\tChr\tStart\tEnd\tBuild\tStrand\tBest Match Type\tBest Match\tMatch Score\r\n");
+		writer.write("Type\tMGI ID\tSymbol\tName\tCollection\tSynonyms\tMutations\tAttributes\tChr\tStart\tEnd\tBuild\tStrand\tBest Match Type\tBest Match\tMatch Score\r\n");
 		
 		for (QSAlleleResultWrapper allele : alleles) {
 			ParsedLocation location = new ParsedLocation(allele.getLocation());
@@ -43,6 +43,11 @@ public class TextQSAlleleSummary extends AbstractTextView {
 
 			writer.write(allele.getSymbol() + "\t");
 			writer.write(allele.getName() + "\t");
+			if (allele.getCollection() == null) {
+				writer.write("\t");
+			} else {
+				writer.write(allele.getCollection() + "\t");
+			}
 			writer.write(formatStrings(allele.getSynonyms()) + "\t");
 
 			writer.write(formatStrings(allele.getMutationFacets()) + "\t");

@@ -48,23 +48,24 @@ public class ExcelQSAlleleSummary  extends AbstractBigExcelView
 		String[] headerTitles = {
 			"Type",
 			"MGI ID",
-			"Symbol",			// 2
+			"Symbol",
 			"Name",
-			"Synonyms",			// 4
+			"Collection",
+			"Synonyms",
 			"Mutations",
-			"Attributes",			// 6
+			"Attributes",
 			"Chr",
-			"Start",			// 8
+			"Start",
 			"End",
-			"Build",			// 10
+			"Build",
 			"Strand",
-			"Best Match Type",	// 12
+			"Best Match Type",
 			"Best Match",
-			"Match Score",		// 14
+			"Match Score",
 		};
 
-		int[] columnWidths = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0 };
-		int[] maxColumnWidths = { 50, 20, 50, 60, 60, 60, 60, 50, 10, 15, 10, 10, 20, 50, 10 };
+		int[] columnWidths = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0 };
+		int[] maxColumnWidths = { 50, 20, 50, 50, 60, 60, 60, 60, 50, 10, 15, 10, 10, 20, 50, 10 };
 
 		try {
 			addHeaderRow(sheet, columnWidths, styles, headerTitles);
@@ -91,6 +92,11 @@ public class ExcelQSAlleleSummary  extends AbstractBigExcelView
 
 			row.add(allele.getSymbol());
 			row.add(allele.getName());
+			if (allele.getCollection() == null) {
+				row.add("");
+			} else {
+				row.add(allele.getCollection());
+			}
 			row.add(formatStrings(allele.getSynonyms()));
 
 			row.add(formatStrings(allele.getMutationFacets()));
