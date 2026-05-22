@@ -3621,6 +3621,11 @@ public class GXDController {
 					query.getDetectedFilter(), Filter.Operator.OP_IN));
 		}
 
+		if (query.getTheilerStageFilter().size() > 0) {
+			facetList.add(new Filter(FacetConstants.GXD_THEILER_STAGE,
+					query.getTheilerStageFilter(), Filter.Operator.OP_IN));
+		}
+
 		if (query.getSexFilter().size() > 0) {
 			facetList.add(new Filter(FacetConstants.GXD_SEX,
 					query.getSexFilter(), Filter.Operator.OP_IN));
