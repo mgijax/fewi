@@ -483,6 +483,8 @@ function formatFastaArgs() {
 
 		<c:set var="molecularRefs" value=""/>
 		<c:forEach var="ref" items="${allele.molecularReferences}" varStatus="status">
+		    <!-- special handling for IMPC load ref. It is in the db as a molecular ref, but we do not what it displayed 
+		         as such for the curated molecular notes. -->
 		    <c:if test="${ref.jnumID != 'J:384794'}">
 			<c:if test="${not empty molecularRefs}"><c:set var="molecularRefs" value="${molecularRefs}, "/></c:if>
 			<c:set var="molecularRefs"
