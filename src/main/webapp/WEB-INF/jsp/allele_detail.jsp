@@ -483,7 +483,11 @@ function formatFastaArgs() {
 
 		<c:set var="molecularRefs" value=""/>
 		<c:forEach var="ref" items="${allele.molecularReferences}" varStatus="status">
-		<c:set var="molecularRefs" value="${molecularRefs}<a href='${configBean.FEWI_URL}reference/${ref.jnumID}' class='MP'>${ref.jnumID}</a>"/><c:if test="${!status.last}"><c:set var="molecularRefs" value="${molecularRefs}, "/></c:if>
+		    <c:if test="${ref.jnumID != 'J:384794'}">
+			<c:set var="molecularRefs"
+			    value="${molecularRefs}<a href='${configBean.FEWI_URL}reference/${ref.jnumID}' class='MP'>${ref.jnumID}</a>"/>
+			<c:if test="${!status.last}"><c:set var="molecularRefs" value="${molecularRefs}, "/></c:if>
+		    </c:if>
 		</c:forEach>
 
 		<c:if test="${not empty description or not empty descriptionIMPC}">
