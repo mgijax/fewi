@@ -501,8 +501,15 @@ function formatFastaArgs() {
 		      <div id="rightArrowMutationDescription" onClick="toggleMutationDescription();" style="float: right; cursor: pointer; position: relative; z-index: 1; display: none;"><img src="${configBean.WEBSHARE_URL}images/rightArrow.gif" border="0"></div>
 		    </td>
 		    <td class="padded" width="*">Mutation details<span id='mutationDescription'>:&nbsp;<font class='small'>
-		      ${descriptionIMPC} <p/> ${description} 
-		      <c:if test="${not empty molecularRefs and not empty description}">(<i>${molecularRefs}</i>)</c:if>
+		      ${descriptionIMPC}
+		      <p/>
+		      <!-- Temporary: if both curated description and IMPC description are present, suppress display of curated description. 
+		           For details, see SPRT-330, requirements update dated 6/12/2026.
+		      -->
+		      <c:if test="${empty descriptionIMPC}">
+			  ${description} 
+			  <c:if test="${not empty molecularRefs and not empty description}">(<i>${molecularRefs}</i>)</c:if>
+		      </c:if>
 		      <c:if test="${not empty allele.incidentalMutations}">
 			    Additional
 			    <a href="${configBean.FTP_URL}datasets/incidental_muts/${allele.incidentalMutation.filename}">incidental mutations </a>
