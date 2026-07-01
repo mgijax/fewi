@@ -1,5 +1,7 @@
 package org.jax.mgi.fewi.summary;
 
+import java.util.List;
+
 // Is: a wrapper over a QSFeatureResult object, limiting the number of fields that are exposed for
 // conversion to JSON (minimizes transfer time)
 public class QSAlleleResultWrapper {
@@ -10,13 +12,17 @@ public class QSAlleleResultWrapper {
 	}
 	
 	public String getStars() { return result.getStars(); }
-	public String getFeatureType() { return result.getFeatureType(); }
+	public String getAlleleType() { return result.getAlleleType(); }
 	public String getSymbol() { return result.getSymbol(); }
 	public String getName() { return result.getName(); }
+	public String getCollection() { return result.getCollection(); }
+	public List<String> getSynonyms() { return result.getSynonyms(); }
 	public String getBestMatchText() { return result.getSearchTermDisplay(); }
 	public String getDetailUri() { return "/allele/" + result.getPrimaryID(); }
 	public String getChromosome() { return result.getChromosome(); }
 	public String getLocation() { return result.getLocation(); }
 	public String getStrand() { return result.getStrand(); }
 	public String getBestMatchType() { return result.getSearchTermType(); }
+	public List<String> getMutationFacets() { return result.getMutationFacets(); }
+	public List<String> getAttributeFacets() { return result.getAttributeFacets(); }
 }

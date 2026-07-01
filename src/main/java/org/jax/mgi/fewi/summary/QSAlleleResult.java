@@ -17,11 +17,13 @@ public class QSAlleleResult extends QSResult {
 	private String stars;
 	private int starCount = 0;
 
-	private String featureType;
+	private String alleleType;
 	private String symbol;
 	private String primaryID;
 	private String name;
+	private List<String> synonyms;
 	private String detailUri;
+	private String collection;
 	private String chromosome;
 	private String location;
 	private String strand;
@@ -33,6 +35,8 @@ public class QSAlleleResult extends QSResult {
 	private List<String> diseaseFacets;
 	private List<String> phenotypeFacets;
 	private List<String> markerTypeFacets;
+	private List<String> mutationFacets;
+	private List<String> attributeFacets;
 
 	public String getSearchTermInexact() {
 		return searchTermInexact;
@@ -112,6 +116,18 @@ public class QSAlleleResult extends QSResult {
 	public void setMarkerTypeFacets(List<String> markerTypeFacets) {
 		this.markerTypeFacets = markerTypeFacets;
 	}
+	public List<String> getMutationFacets() {
+		return mutationFacets;
+	}
+	public void setMutationFacets(List<String> mutationFacets) {
+		this.mutationFacets = mutationFacets;
+	}
+	public List<String> getAttributeFacets() {
+		return attributeFacets;
+	}
+	public void setAttributeFacets(List<String> attributeFacets) {
+		this.attributeFacets = attributeFacets;
+	}
 	public String getStars() {
 		return stars;
 	}
@@ -140,11 +156,17 @@ public class QSAlleleResult extends QSResult {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getFeatureType() {
-		return featureType;
+	public List<String> getSynonyms() {
+		return synonyms;
 	}
-	public void setFeatureType(String featureType) {
-		this.featureType = featureType;
+	public void setSynonyms(List<String> synonyms) {
+		this.synonyms = synonyms;
+	}
+	public String getAlleleType() {
+		return alleleType;
+	}
+	public void setAlleleType(String alleleType) {
+		this.alleleType = alleleType;
 	}
 	public String getDetailUri() {
 		return detailUri;
@@ -157,6 +179,12 @@ public class QSAlleleResult extends QSResult {
 	}
 	public void setSequenceNum(Long sequenceNum) {
 		this.sequenceNum = sequenceNum;
+	}
+	public String getCollection() {
+		return collection;
+	}
+	public void setCollection(String collection) {
+		this.collection = collection;
 	}
 	public String getChromosome() {
 		return chromosome;

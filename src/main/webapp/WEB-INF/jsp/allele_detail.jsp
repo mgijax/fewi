@@ -483,19 +483,33 @@ function formatFastaArgs() {
 
 		<c:set var="molecularRefs" value=""/>
 		<c:forEach var="ref" items="${allele.molecularReferences}" varStatus="status">
-		<c:set var="molecularRefs" value="${molecularRefs}<a href='${configBean.FEWI_URL}reference/${ref.jnumID}' class='MP'>${ref.jnumID}</a>"/><c:if test="${!status.last}"><c:set var="molecularRefs" value="${molecularRefs}, "/></c:if>
+		    <!-- special handling for IMPC load ref. It is in the db as a molecular ref, but we do not what it displayed 
+		         as such for the curated molecular notes. -->
+		    <c:if test="${ref.jnumID != 'J:384794'}">
+			<c:if test="${not empty molecularRefs}"><c:set var="molecularRefs" value="${molecularRefs}, "/></c:if>
+			<c:set var="molecularRefs"
+			    value="${molecularRefs}<a href='${configBean.FEWI_URL}reference/${ref.jnumID}' class='MP'>${ref.jnumID}</a>"/>
+		    </c:if>
 		</c:forEach>
 
-		<c:if test="${not empty description}">
+		<c:if test="${not empty description or not empty descriptionIMPC}">
 		<tr>
-		  <c:if test="${fn:length(description) > 100}">
+		  <c:if test="${fn:length(description) > 100 or not empty descriptionIMPC}">
 		    <td class="rightBorderThinGray" align="right" width="1%" nowrap="nowrap" valign="top">&nbsp;</td>
 		    <td class="padded" style="vertical-align: top;">
 		      <div id="downArrowMutationDescription" onClick="toggleMutationDescription();" style="cursor: pointer; position: relative; z-index: 1;"><img src="${configBean.WEBSHARE_URL}images/downArrow.gif" border="0"></div>
 		      <div id="rightArrowMutationDescription" onClick="toggleMutationDescription();" style="float: right; cursor: pointer; position: relative; z-index: 1; display: none;"><img src="${configBean.WEBSHARE_URL}images/rightArrow.gif" border="0"></div>
 		    </td>
-		    <td class="padded" width="*">Mutation details<span id='mutationDescription'>:&nbsp;<font class='small'>${description}
-		      <c:if test="${not empty molecularRefs}">(<i>${molecularRefs}</i>)</c:if>
+		    <td class="padded" width="*">Mutation details<span id='mutationDescription'>:&nbsp;<font class='small'>
+		      ${descriptionIMPC}
+		      <p/>
+		      <!-- Temporary: if both curated description and IMPC description are present, suppress display of curated description. 
+		           For details, see SPRT-330, requirements update dated 6/12/2026.
+		      -->
+		      <c:if test="${empty descriptionIMPC}">
+			  ${description} 
+			  <c:if test="${not empty molecularRefs and not empty description}">(<i>${molecularRefs}</i>)</c:if>
+		      </c:if>
 		      <c:if test="${not empty allele.incidentalMutations}">
 			    Additional
 			    <a href="${configBean.FTP_URL}datasets/incidental_muts/${allele.incidentalMutation.filename}">incidental mutations </a>
@@ -505,7 +519,7 @@ function formatFastaArgs() {
 			</font></span>
 		    </td>
 		  </c:if>
-		  <c:if test="${fn:length(description) <= 100}">
+		  <c:if test="${fn:length(description) > 0 and fn:length(description) <= 100 and empty descriptionIMPC}">
 		    <td class="rightBorderThinGray" align="right" width="1%" valign="top">&nbsp;</td>
 		    <td style="vertical-align: top;">&nbsp;</td>
 		    <td class="padded" width="*">

@@ -139,6 +139,10 @@ function initializeFilterLibrary(delay) {
 		filters.addFilter('phenotypeFilterA', 'Phenotype', 'phenotypeFilterA', 'phenotypeFilterA', fewiurl + 'quicksearch/alleleBucket/phenotype');
 		filters.addFilter('diseaseFilterA', 'Disease', 'diseaseFilterA', 'diseaseFilterA', fewiurl + 'quicksearch/alleleBucket/disease');
 		filters.addFilter('featureTypeFilterA', 'Feature Type', 'featureTypeFilterA', 'featureTypeFilterA', fewiurl + 'quicksearch/alleleBucket/featureType');
+		filters.addFilter('alleleTypeFilterA', 'Allele Type', 'alleleTypeFilterA', 'alleleTypeFilterA', fewiurl + 'quicksearch/alleleBucket/alleleType');
+		filters.addFilter('mutationFilterA', 'Mutation', 'mutationFilterA', 'mutationFilterA', fewiurl + 'quicksearch/alleleBucket/mutation');
+		filters.addFilter('attributeFilterA', 'Attribute', 'attributeFilterA', 'attributeFilterA', fewiurl + 'quicksearch/alleleBucket/attribute');
+		filters.addFilter('collectionFilterA', 'Collection', 'collectionFilterA', 'collectionFilterA', fewiurl + 'quicksearch/alleleBucket/collection');
 
 		filters.addFilter('goProcessFilterV', 'Process', 'processFilterV', 'processFilterV', fewiurl + 'quicksearch/vocabBucket/process');
 		filters.addFilter('goFunctionFilterV', 'Function', 'functionFilterV', 'functionFilterV', fewiurl + 'quicksearch/vocabBucket/function');
@@ -166,6 +170,10 @@ function initializeFilterLibrary(delay) {
 			'phenotypeFilterA' : [ 'filterSummaryA', 'filterListA' ],		// allele filters
 			'diseaseFilterA' : [ 'filterSummaryA', 'filterListA' ],
 			'featureTypeFilterA' : [ 'filterSummaryA', 'filterListA' ],
+			'alleleTypeFilterA' : [ 'filterSummaryA', 'filterListA' ],
+			'mutationFilterA' : [ 'filterSummaryA', 'filterListA' ],
+			'attributeFilterA' : [ 'filterSummaryA', 'filterListA' ],
+			'collectionFilterA' : [ 'filterSummaryA', 'filterListA' ],
 
 			'goProcessFilterV' : [ 'filterSummaryV', 'filterListV' ],		// vocabulary terms filters
 			'goFunctionFilterV' : [ 'filterSummaryV', 'filterListV' ],

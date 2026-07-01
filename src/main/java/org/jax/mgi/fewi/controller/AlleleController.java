@@ -812,6 +812,11 @@ public class AlleleController {
 		seoDescription.append (allele.getSymbol());
 		seoDescription.append (" allele: origin");
 
+		if (allele.getMolecularIMPCDescription() != null && allele.getMolecularIMPCDescription().length() != 0) {
+			seoDescription.append (", molecular description");
+			mav.addObject("descriptionIMPC", allele.getMolecularIMPCDescription());
+		}
+
 		if (allele.getMolecularDescription() != null && allele.getMolecularDescription().length() != 0) {
 			seoDescription.append (", molecular description");
 			mav.addObject("description", allele.getMolecularDescription());

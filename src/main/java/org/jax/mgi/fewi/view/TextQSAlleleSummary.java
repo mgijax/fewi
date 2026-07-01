@@ -22,7 +22,7 @@ public class TextQSAlleleSummary extends AbstractTextView {
 		@SuppressWarnings("unchecked")
 		List<QSAlleleResultWrapper> alleles = (List<QSAlleleResultWrapper>) model.get("alleles");
 		
-		writer.write("Type\tMGI ID\tSymbol\tName\tChr\tStart\tEnd\tBuild\tStrand\tBest Match Type\tBest Match\tMatch Score\r\n");
+		writer.write("Type\tMGI ID\tSymbol\tName\tCollection\tSynonyms\tMutations\tAttributes\tChr\tStart\tEnd\tBuild\tStrand\tBest Match Type\tBest Match\tMatch Score\r\n");
 		
 		for (QSAlleleResultWrapper allele : alleles) {
 			ParsedLocation location = new ParsedLocation(allele.getLocation());
@@ -34,13 +34,26 @@ public class TextQSAlleleSummary extends AbstractTextView {
 				}
 			}
 			
-			writer.write(allele.getFeatureType() + "\t");
+			if (allele.getAlleleType() == null) {
+				writer.write("\t");
+			} else {
+				writer.write(allele.getAlleleType() + "\t");
+			}
 			writer.write(primaryID + "\t");
 
 			writer.write(allele.getSymbol() + "\t");
 			writer.write(allele.getName() + "\t");
-			writer.write(allele.getChromosome() + "\t");
+			if (allele.getCollection() == null) {
+				writer.write("\t");
+			} else {
+				writer.write(allele.getCollection() + "\t");
+			}
+			writer.write(formatStrings(allele.getSynonyms()) + "\t");
 
+			writer.write(formatStrings(allele.getMutationFacets()) + "\t");
+			writer.write(formatStrings(allele.getAttributeFacets()) + "\t");
+
+			writer.write(allele.getChromosome() + "\t");
 			writer.write(location.getStartCoord() + "\t");
 			writer.write(location.getEndCoord() + "\t");
 			writer.write(location.getBuild() + "\t");

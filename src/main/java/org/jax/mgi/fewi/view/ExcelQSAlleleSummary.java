@@ -48,20 +48,24 @@ public class ExcelQSAlleleSummary  extends AbstractBigExcelView
 		String[] headerTitles = {
 			"Type",
 			"MGI ID",
-			"Symbol",			// 2
+			"Symbol",
 			"Name",
-			"Chr",				// 4
+			"Collection",
+			"Synonyms",
+			"Mutations",
+			"Attributes",
+			"Chr",
 			"Start",
-			"End",				// 6
+			"End",
 			"Build",
-			"Strand",			// 8
+			"Strand",
 			"Best Match Type",
-			"Best Match",		// 10
-			"Match Score",		// 11
+			"Best Match",
+			"Match Score",
 		};
 
-		int[] columnWidths = { 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0 };
-		int[] maxColumnWidths = { 50, 20, 50, 60, 50, 10, 15, 10, 10, 20, 50, 10 };
+		int[] columnWidths = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0 };
+		int[] maxColumnWidths = { 50, 20, 50, 50, 60, 60, 60, 60, 50, 10, 15, 10, 10, 20, 50, 10 };
 
 		try {
 			addHeaderRow(sheet, columnWidths, styles, headerTitles);
@@ -79,13 +83,26 @@ public class ExcelQSAlleleSummary  extends AbstractBigExcelView
 			}
 
 			List<String> row = new ArrayList<String>();
-			row.add(allele.getFeatureType());
+			if (allele.getAlleleType() == null) {
+				row.add("");
+			} else {
+				row.add(allele.getAlleleType());
+			}
 			row.add(primaryID);
 
 			row.add(allele.getSymbol());
 			row.add(allele.getName());
+			if (allele.getCollection() == null) {
+				row.add("");
+			} else {
+				row.add(allele.getCollection());
+			}
+			row.add(formatStrings(allele.getSynonyms()));
+
+			row.add(formatStrings(allele.getMutationFacets()));
+			row.add(formatStrings(allele.getAttributeFacets()));
+
 			row.add(allele.getChromosome());
-			
 			row.add(location.getStartCoord());
 			row.add(location.getEndCoord());
 			row.add(location.getBuild());

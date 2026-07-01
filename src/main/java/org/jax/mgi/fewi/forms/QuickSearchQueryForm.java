@@ -49,8 +49,12 @@ public class QuickSearchQueryForm {
     private List<String> featureTypeFilterF;
 
     private List<String> featureTypeFilterA;	// Allele filters
+    private List<String> alleleTypeFilterA;
     private List<String> phenotypeFilterA;
     private List<String> diseaseFilterA;
+    private List<String> mutationFilterA;
+    private List<String> attributeFilterA;
+    private List<String> collectionFilterA;
 
     private List<String> processFilterV;		// Vocabulary Term filters
     private List<String> componentFilterV;
@@ -201,6 +205,12 @@ public class QuickSearchQueryForm {
 	public void setFeatureTypeFilterA(List<String> featureTypeFilterA) {
 		this.featureTypeFilterA = featureTypeFilterA;
 	}
+	public List<String> getAlleleTypeFilterA() {
+		return alleleTypeFilterA;
+	}
+	public void setAlleleTypeFilterA(List<String> alleleTypeFilterA) {
+		this.alleleTypeFilterA = alleleTypeFilterA;
+	}
 	public List<String> getPhenotypeFilterA() {
 		return phenotypeFilterA;
 	}
@@ -212,6 +222,24 @@ public class QuickSearchQueryForm {
 	}
 	public void setDiseaseFilterA(List<String> diseaseFilterA) {
 		this.diseaseFilterA = diseaseFilterA;
+	}
+	public List<String> getMutationFilterA() {
+		return mutationFilterA;
+	}
+	public void setMutationFilterA(List<String> mutationFilterA) {
+		this.mutationFilterA = mutationFilterA;
+	}
+	public List<String> getCollectionFilterA() {
+		return collectionFilterA;
+	}
+	public void setCollectionFilterA(List<String> collectionFilterA) {
+		this.collectionFilterA = collectionFilterA;
+	}
+	public List<String> getAttributeFilterA() {
+		return attributeFilterA;
+	}
+	public void setAttributeFilterA(List<String> attributeFilterA) {
+		this.attributeFilterA = attributeFilterA;
 	}
 
 

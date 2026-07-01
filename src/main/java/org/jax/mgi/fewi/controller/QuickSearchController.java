@@ -104,8 +104,12 @@ public class QuickSearchController {
 		validFacetFields.add(SearchConstants.QS_PHENOTYPE_FACETS);
 		validFacetFields.add(SearchConstants.QS_DISEASE_FACETS);
 		validFacetFields.add(SearchConstants.QS_MARKER_TYPE_FACETS);
+		validFacetFields.add(SearchConstants.QS_ALLELE_TYPE);
 		validFacetFields.add(SearchConstants.QS_EXPRESSION_FACETS);
 		validFacetFields.add(SearchConstants.QS_CELL_TYPE_FACETS);
+		validFacetFields.add(SearchConstants.QS_MUTATION_FACETS);
+		validFacetFields.add(SearchConstants.QS_ATTRIBUTE_FACETS);
+		validFacetFields.add(SearchConstants.QS_COLLECTION);
 	}
 
 	// Stemmed "words" that should not be matched alone in annotation-related fields (only in combination with
@@ -620,8 +624,8 @@ public class QuickSearchController {
        				r.setChromosome(part.getChromosome());
        				r.setLocation(part.getLocation());
        				r.setStrand(part.getStrand());
-       				if ("Not Applicable allele".equals(r.getFeatureType())) {
-       					r.setFeatureType("");
+       				if ("Not Applicable allele".equals(r.getAlleleType())) {
+       					r.setAlleleType("");
        				}
        			} else {
        				logger.debug("Cannot find " + r.getPrimaryID());
@@ -648,9 +652,13 @@ public class QuickSearchController {
 			filters.add(getFilterForOneField(SearchConstants.QS_MARKER_TYPE_FACETS, qf.getFeatureTypeFilterF()));
 
 		} else if (bucket == ALLELE) {
+			filters.add(getFilterForOneField(SearchConstants.QS_ALLELE_TYPE, qf.getAlleleTypeFilterA()));
+			filters.add(getFilterForOneField(SearchConstants.QS_COLLECTION, qf.getCollectionFilterA()));
 			filters.add(getFilterForOneField(SearchConstants.QS_PHENOTYPE_FACETS, qf.getPhenotypeFilterA()));
 			filters.add(getFilterForOneField(SearchConstants.QS_DISEASE_FACETS, qf.getDiseaseFilterA()));
 			filters.add(getFilterForOneField(SearchConstants.QS_MARKER_TYPE_FACETS, qf.getFeatureTypeFilterA()));
+			filters.add(getFilterForOneField(SearchConstants.QS_MUTATION_FACETS, qf.getMutationFilterA()));
+			filters.add(getFilterForOneField(SearchConstants.QS_ATTRIBUTE_FACETS, qf.getAttributeFilterA()));
 
 		} else if (bucket == STRAIN) {
 			filters.add(getFilterForOneField(SearchConstants.QS_PHENOTYPE_FACETS, qf.getPhenotypeFilterS()));
@@ -1420,6 +1428,38 @@ public class QuickSearchController {
 	public @ResponseBody Map<String, List<String>> getFeatureTypeFacetA (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
 		AjaxUtils.prepareAjaxHeaders(response);
 		return getFacets(qf, SearchConstants.QS_MARKER_TYPE_FACETS, ALLELE);
+	}
+
+	/* Get the set of allele type filter options for the allele bucket's current result set
+	 */
+	@RequestMapping("/alleleBucket/alleleType")
+	public @ResponseBody Map<String, List<String>> getAlleleTypeFacetA (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_ALLELE_TYPE, ALLELE);
+	}
+
+	/* Get the set of collection filter options for the allele bucket's current result set
+	 */
+	@RequestMapping("/alleleBucket/collection")
+	public @ResponseBody Map<String, List<String>> getCollectionFacetA (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_COLLECTION, ALLELE);
+	}
+
+	/* Get the set of mutations filter options for the allele bucket's current result set
+	 */
+	@RequestMapping("/alleleBucket/mutation")
+	public @ResponseBody Map<String, List<String>> getMutationFacetA (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_MUTATION_FACETS, ALLELE);
+	}
+
+	/* Get the set of attributes filter options for the allele bucket's current result set
+	 */
+	@RequestMapping("/alleleBucket/attribute")
+	public @ResponseBody Map<String, List<String>> getAttributeFacetA (@ModelAttribute QuickSearchQueryForm qf, HttpServletResponse response) throws Exception {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return getFacets(qf, SearchConstants.QS_ATTRIBUTE_FACETS, ALLELE);
 	}
 
 	/* Get the set of GO Process filter options for the vocab bucket's current result set

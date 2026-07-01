@@ -15,13 +15,20 @@ function b5Show(data) {
 	var toShow = b5PageSize;
 	if (data.rows.length > 0) {
 		tbl = '<TABLE ID="b5Table">';
-		tbl = tbl + '<TR><TH>Score' + qsScoreHelp() + '</TH><TH>Type</TH><TH>Symbol</TH><TH>Name</TH><TH>Chr</TH><TH>Location (Genome Build)</TH><TH>Str</TH><TH>Best Match</TH></TR>';
+		tbl = tbl + '<TR><TH>Score' + qsScoreHelp() + '</TH>' +
+		    '<TH>Symbol</TH>' +
+		    '<TH>Name</TH>' +
+		    '<TH>Synonyms</TH>' +
+		    '<TH>Type</TH>' +
+		    '<TH>Molecular Mutations</TH>' +
+		    '<TH>Attributes</TH>' +
+		    '<TH>Best Match</TH>' +
+		    '</TR>';
 
 		toShow = Math.min(100, data.rows.length);
 		for (var i = 0; i < toShow; i++) {
 			var item = data.rows[i];
 			tbl = tbl + '<TR><TD>' + qsFormatStars(item.stars) + '</TD>';
-			tbl = tbl + '<TD class="small">' + item.featureType + '</TD>';
 
 			var symbol = qsSuperscript(item.symbol);
 			var name = qsSuperscript(item.name);
@@ -33,26 +40,35 @@ function b5Show(data) {
 				tbl = tbl + '<TD><a target="_blank" href="' + item.detailUri + '">' + symbol + '</a></TD>';
 			}
 			tbl = tbl + '<TD class="nameCol">' + name + '</TD>';
-
-			if (item.chromosome === null) {
-				tbl = tbl + '<TD class="small">&nbsp;</TD>';
-			} else {
-				tbl = tbl + '<TD class="small">' + item.chromosome + '</TD>';
-			}
-
-			if (item.location === null) {
-				tbl = tbl + '<TD>&nbsp;</TD>';
-			} else if (item.location.indexOf('-') < 0){
-				tbl = tbl + '<TD class="nowrap small">' + item.location + '</TD>';
-			} else {
-				tbl = tbl + '<TD class="nowrap small">' + item.location + ' (' + genomeBuild + ')</TD>';
-			}
-
-			if (item.strand === null) {
+			if (item.synonyms === null) {
 				tbl = tbl + '<TD>&nbsp;</TD>';
 			} else {
-				tbl = tbl + '<TD class="small">' + item.strand + '</TD>';
+				var syns = item.synonyms.sort().map(s => qsSuperscript(s))
+				var ellipses = ""
+				if (syns.length > 4) {
+				    syns.splice(4)
+				    syns.push("...")
+				}
+				tbl = tbl + '<TD class="small">' + syns.join(", ") + '</TD>';
 			}
+			if (item.alleleType === null) {
+			    tbl = tbl + '<TD class="small">&nbsp;</TD>';
+			} else {
+			    tbl = tbl + '<TD class="small">' + item.alleleType + '</TD>';
+			}
+
+			if (item.mutationFacets === null) {
+				tbl = tbl + '<TD>&nbsp;</TD>';
+			} else {
+				tbl = tbl + '<TD class="small">' + item.mutationFacets.sort().join(', ') + '</TD>';
+			}
+
+			if (item.attributeFacets === null) {
+				tbl = tbl + '<TD>&nbsp;</TD>';
+			} else {
+				tbl = tbl + '<TD class="small">' + item.attributeFacets.sort().join(', ') + '</TD>';
+			}
+
 			if (item.bestMatchType === null) {
 				tbl = tbl + '<TD>&nbsp;</TD></TR>';
 			} else {
