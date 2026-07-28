@@ -27,6 +27,11 @@
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
+                <dependency>
+                        <groupId>com.google.guava</groupId>
+                        <artifactId>guava</artifactId>
+                        <version>33.2.1-jre</version> <!-- Use the latest version available -->
+                </dependency>
 		<dependency>
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr</artifactId>
