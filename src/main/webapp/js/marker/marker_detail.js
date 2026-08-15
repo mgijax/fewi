@@ -234,9 +234,9 @@ var clickParentalStrainGenes = function() {
 // strain name has no slashes or other special characters.
 var getMungedStrainName = function(s) {
 	// If this is a strain gene ID, it will contain two underscores.  The strain name is between them.
-	var pieces = s.split('_');
+	var pieces = s.split(/[!:]/);
 	var name = s;
-	if (pieces.length == 3) {
+	if (pieces.length >= 2) {
 		name = pieces[1];
 	}
 	return name.replace(/\//g, '').replace('SPRETEiJ', 'SPRETUSEiJ');
