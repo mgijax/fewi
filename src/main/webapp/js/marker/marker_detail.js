@@ -223,7 +223,8 @@ var clickParentalStrainGenes = function() {
 		for (j = 0; j < parentalStrains.length; j++) {
 			// strain name (minus the slash) is embedded in the ID that is the checkbox's value string,
 			// bordered by underscores on either side
-			if (checkboxes[i].value.indexOf('_' + noSlash(parentalStrains[j]) + '_') >= 0) {
+			if (checkboxes[i].value.split(/[!:]/)[1] == parentalStrains[j]) {
+			//if (checkboxes[i].value.indexOf('_' + noSlash(parentalStrains[j]) + '_') >= 0) {
 				checkboxes[i].checked = true;
 			}
 		}
