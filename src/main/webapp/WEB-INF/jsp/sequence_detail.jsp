@@ -174,7 +174,7 @@
   </td>
   <td class="${rightTdStyles.next}" >
     <c:choose>
-    <c:when test="${sequence.logicalDB=='Sequence DB' || sequence.logicalDB=='RefSeq' || sequence.logicalDB=='Mouse Genome Project' || sequence.logicalDB=='MGI Strain Gene'}">
+    <c:when test="${sequence.logicalDB=='Sequence DB' || sequence.logicalDB=='RefSeq' || sequence.logicalDB=='Mouse Genome Project' || sequence.logicalDB=='MGI Strain Gene' || sequence.logicalDB=='Ensembl Strain Gene Model'}">
 
       <c:if test="${not empty sequence.sources}">
 	  <c:set var="seqSource" value="${sequence.sources[0]}"/>
