@@ -297,8 +297,7 @@ public class SequenceController {
     	// Options for making links:
     	// 1. has association to canonical marker and is from a CC strain
     	// 2. has association to canonical marker and is not from a CC strain
-    	// 3. has no association to canonical marker and is from a CC strain
-    	// 4. has no association to canonical marker and is not from a CC strain
+    	// 3. has no association to canonical marker 
     	
     	String refStrain = "";
     	String genomes = "";
@@ -326,23 +325,10 @@ public class SequenceController {
     		}
     		
     	} else {
+		// case 3 -- sequence's strain + highlighted marker, plus standard params
     		refStrain = "ref=" + seqStrain;
-   			highlight = "&highlight=" + seq.getPrimaryID();
-
-   			long flankPerSide = 100000;
-   			long startCoord = location.getStartCoordinate().longValue() - flankPerSide;
-   			long endCoord = location.getEndCoordinate().longValue() + flankPerSide;
-   			region = "&chr=" + location.getChromosome() + "&start=" + startCoord + "&end=" + endCoord;
-   			
-    		if (ccStrainSet.contains(seqStrain)) {
-    			// case 3 -- sequence's strain as reference, CC strains, by coordinates + 100kb flank, highlight gene model  
-    			genomes = "&genomes=" + String.join(",", ccStrains);
-
-    		} else {
-    			// case 4 -- sequence's strain as reference, other CC strains, by coordinates + 100kb flank, highlight gene model  
-    			ccStrains.remove(seqStrain);
-    			genomes = "&genomes=" + String.join(",", ccStrains);
-    		}
+		highlight = "&highlight=" + seq.getPrimaryID();
+		landmark = "&landmark=" + seq.getPrimaryID();
     	}
 
     	String mgv = ContextLoader.getConfigBean().getProperty("MGV_URL");
