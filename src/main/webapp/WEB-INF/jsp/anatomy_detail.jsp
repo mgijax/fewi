@@ -238,8 +238,17 @@ function setHtExperimentCount(s) {
     return
 }
 
+function makeSelectedNodeArgs (snID) {
+    var snStage = '';
+    if (snID.startsWith('EMAPS')) {
+        snStage = snID.substr(snID.length - 2);
+	snID = snID.substr(0,snID.length - 2).replace('EMAPS','EMAPA');
+    }
+    return 'structureID=' + snID + '&theilerStage=' + snStage + '&structure=' + snID;
+}
+
 function fetchHtExperimentCount(selectedNodeID) {
-    var sUrl = "${configBean.FEWI_URL}/gxd/htexp_index/summary/totalCount?structureID=" + selectedNodeID
+    var sUrl = "${configBean.FEWI_URL}/gxd/htexp_index/summary/totalCount?" + makeSelectedNodeArgs(selectedNodeID);
     fetchAndCall(sUrl, setHtExperimentCount);
 }
 
@@ -362,8 +371,8 @@ function htExperimentLink() {
     if (htExperimentCount != '1') {
 	htText = htText + 's';
     }
-    var label = selectedNodeLabel ? selectedNodeLabel.replaceAll(' ','+') : selectedNodeID ;
-    var url = '${configBean.FEWI_URL}gxd/htexp_index/summary?structureID=' + selectedNodeID + '&structure=' + selectedNodeLabel.replaceAll(' ','+');
+
+    var url = "${configBean.FEWI_URL}/gxd/htexp_index/summary?" + makeSelectedNodeArgs(selectedNodeID);
 
     return '<a href="' + url + '"><span class="htExperimentCount">' + numberWithCommas(htExperimentCount) + '</span></a> ' + htText;
 }
